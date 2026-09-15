@@ -42,10 +42,19 @@ class GateService : Service() {
         windowManager = getSystemService(Context.WINDOW_SERVICE) as WindowManager
         createChannel()
         startInForeground()
+        handler.removeCallbacks(tick)
         handler.post(tick)
     }
 
-    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int = START_STICKY
+    /**
+     * Rappelé à chaque startForegroundService, service déjà lancé ou non.
+     * Android exige startForeground dans les secondes qui suivent chacun de ces
+     * appels, sinon le processus est tué : on le refait donc à chaque fois.
+     */
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        startInForeground()
+        return START_STICKY
+    }
 
     override fun onDestroy() {
         handler.removeCallbacks(tick)

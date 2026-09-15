@@ -34,6 +34,11 @@ android {
         jvmTarget = "17"
     }
 
+    lint {
+        textReport = true
+        textOutput = file("build/reports/lint-results-debug.txt")
+    }
+
 }
 
 dependencies {

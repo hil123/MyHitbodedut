@@ -33,6 +33,11 @@ jobs:
         continue-on-error: true
         run: ./gradlew --no-daemon lintDebug
 
+      - name: Show lint findings
+        if: always()
+        working-directory: android
+        run: cat app/build/reports/lint-results-debug.txt || echo "aucun rapport texte"
+
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
