@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">MyHitbodedut</string>
+
+    <string name="status_done">Hitbodedout faite aujourd\'hui</string>
+    <string name="status_pending">Hitbodedout pas encore faite</string>
+    <string name="status_streak">%1$d jours d\'affilée</string>
+    <string name="status_streak_none">Série à relancer</string>
+
+    <string name="section_today">Cette semaine</string>
+    <string name="section_gate">Blocage du matin</string>
+    <string name="section_gate_hint">Les applications choisies restent fermées tant que la pratique n\'est pas validée.</string>
+    <string name="section_permissions">Autorisations nécessaires</string>
+    <string name="section_permissions_hint">Sans ces trois accès, le blocage ne peut pas fonctionner.</string>
+
+    <string name="settings_window">Fenêtre de blocage</string>
+    <string name="settings_snooze">Durée du report</string>
+    <string name="minutes_value">%1$d min</string>
+
+    <string name="action_mark_done">J\'ai fait ma hitbodedout</string>
+    <string name="action_undo">Annuler la validation du jour</string>
+    <string name="action_pick_apps">Choisir les applications</string>
+    <string name="action_grant">Accorder</string>
+
+    <string name="permission_overlay">Affichage par-dessus les autres applications</string>
+    <string name="permission_usage">Accès aux données d\'utilisation</string>
+    <string name="permission_battery">Batterie sans restriction</string>
+    <string name="permission_granted">Accordée</string>
+    <string name="permission_missing">Manquante</string>
+
+    <string name="apps_title">Applications à bloquer</string>
+    <string name="apps_loading">Chargement des applications…</string>
+
+    <string name="blocker_question">Tu as fait ta hitbodedout ?</string>
+    <string name="blocker_subtitle">Un moment seul avant le reste de la journée.</string>
+    <string name="blocker_streak">Série en cours : %1$d jours</string>
+    <string name="blocker_streak_none">Première journée de la série.</string>
+    <string name="blocker_done">Je l\'ai faite</string>
+    <string name="blocker_snooze">Plus tard (%1$d min)</string>
+
+    <string name="channel_name">Surveillance du matin</string>
+    <string name="channel_description">Notification permanente exigée par Android pendant la surveillance.</string>
+    <string name="service_title">Blocage actif</string>
+    <string name="service_text">Fenêtre %1$s – %2$s</string>
+
+    <plurals name="apps_selected">
+        <item quantity="one">%d application bloquée</item>
+        <item quantity="other">%d applications bloquées</item>
+    </plurals>
+</resources>

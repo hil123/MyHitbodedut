@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="status_done">התבודדת היום</string>
+    <string name="status_pending">עדיין לא התבודדת היום</string>
+    <string name="status_streak">%1$d ימים ברצף</string>
+    <string name="status_streak_none">הרצף מחכה להתחלה</string>
+
+    <string name="section_today">השבוע</string>
+    <string name="section_gate">חסימת הבוקר</string>
+    <string name="section_gate_hint">האפליקציות שתבחר יישארו סגורות עד שתאשר שהתבודדת.</string>
+    <string name="section_permissions">הרשאות נדרשות</string>
+    <string name="section_permissions_hint">בלי שלוש ההרשאות האלה החסימה לא תפעל.</string>
+
+    <string name="settings_window">חלון החסימה</string>
+    <string name="settings_snooze">משך הדחייה</string>
+    <string name="minutes_value">%1$d דק׳</string>
+
+    <string name="action_mark_done">התבודדתי</string>
+    <string name="action_undo">ביטול האישור של היום</string>
+    <string name="action_pick_apps">בחירת אפליקציות</string>
+    <string name="action_grant">אישור</string>
+
+    <string name="permission_overlay">הצגה מעל אפליקציות אחרות</string>
+    <string name="permission_usage">גישה לנתוני שימוש</string>
+    <string name="permission_battery">סוללה ללא הגבלה</string>
+    <string name="permission_granted">אושרה</string>
+    <string name="permission_missing">חסרה</string>
+
+    <string name="apps_title">אפליקציות לחסימה</string>
+    <string name="apps_loading">טוען אפליקציות…</string>
+
+    <string name="blocker_question">התבודדת היום?</string>
+    <string name="blocker_subtitle">רגע של התבודדות לפני כל השאר.</string>
+    <string name="blocker_streak">רצף נוכחי: %1$d ימים</string>
+    <string name="blocker_streak_none">היום הראשון ברצף.</string>
+    <string name="blocker_done">כבר התבודדתי</string>
+    <string name="blocker_snooze">אחר כך (%1$d דק׳)</string>
+
+    <string name="channel_name">מעקב בוקר</string>
+    <string name="channel_description">התראה קבועה שאנדרואיד דורש בזמן המעקב.</string>
+    <string name="service_title">החסימה פעילה</string>
+    <string name="service_text">חלון %1$s – %2$s</string>
+
+    <plurals name="apps_selected">
+        <item quantity="one">אפליקציה אחת חסומה</item>
+        <item quantity="two">%d אפליקציות חסומות</item>
+        <item quantity="many">%d אפליקציות חסומות</item>
+        <item quantity="other">%d אפליקציות חסומות</item>
+    </plurals>
+</resources>

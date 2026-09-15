@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="status_done">Hitbodedut done today</string>
+    <string name="status_pending">Hitbodedut not done yet</string>
+    <string name="status_streak">%1$d days in a row</string>
+    <string name="status_streak_none">Streak to restart</string>
+
+    <string name="section_today">This week</string>
+    <string name="section_gate">Morning gate</string>
+    <string name="section_gate_hint">The apps you choose stay closed until the practice is confirmed.</string>
+    <string name="section_permissions">Required permissions</string>
+    <string name="section_permissions_hint">The gate cannot work without these three.</string>
+
+    <string name="settings_window">Gate window</string>
+    <string name="settings_snooze">Snooze length</string>
+    <string name="minutes_value">%1$d min</string>
+
+    <string name="action_mark_done">I did my hitbodedut</string>
+    <string name="action_undo">Undo today\'s confirmation</string>
+    <string name="action_pick_apps">Choose apps</string>
+    <string name="action_grant">Grant</string>
+
+    <string name="permission_overlay">Display over other apps</string>
+    <string name="permission_usage">Usage access</string>
+    <string name="permission_battery">Unrestricted battery</string>
+    <string name="permission_granted">Granted</string>
+    <string name="permission_missing">Missing</string>
+
+    <string name="apps_title">Apps to block</string>
+    <string name="apps_loading">Loading apps…</string>
+
+    <string name="blocker_question">Did you do your hitbodedut?</string>
+    <string name="blocker_subtitle">A moment alone before the rest of the day.</string>
+    <string name="blocker_streak">Current streak: %1$d days</string>
+    <string name="blocker_streak_none">First day of the streak.</string>
+    <string name="blocker_done">I did it</string>
+    <string name="blocker_snooze">Later (%1$d min)</string>
+
+    <string name="channel_name">Morning watch</string>
+    <string name="channel_description">Ongoing notification Android requires while the gate is watching.</string>
+    <string name="service_title">Gate active</string>
+    <string name="service_text">Window %1$s – %2$s</string>
+
+    <plurals name="apps_selected">
+        <item quantity="one">%d app blocked</item>
+        <item quantity="other">%d apps blocked</item>
+    </plurals>
+</resources>
