@@ -1,0 +1,505 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Suivi d’habitudes intelligent</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.469.0/dist/umd/lucide.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet">
+  <style>
+    :root { --ink:#172b27; --muted:#6b7d76; --paper:#f4f7f2; --line:#dce7df; --green:#16775a; --mint:#dff5e8; --coral:#e9674d; }
+    * { box-sizing:border-box; }
+    .hidden { display:none !important; }
+    body { margin:0; font-family:"DM Sans",sans-serif; color:var(--ink); background:#f4f7f2; }
+    .app-shell { width:100%; min-height:100vh; background:#f4f7f2; overflow-x:hidden; }
+    .display-font { font-family:"Fraunces",serif; }
+    .ambient { background-image:radial-gradient(circle at 5% 0%, rgba(195,239,209,.72), transparent 30%), radial-gradient(circle at 96% 7%, rgba(255,222,184,.55), transparent 25%); }
+    .dashboard-card { border:1px solid rgba(220,231,223,.95); box-shadow:0 12px 28px rgba(33,69,56,.06); }
+    .stat-card { transition:transform .2s ease, box-shadow .2s ease; }
+    .stat-card:hover { transform:translateY(-3px); box-shadow:0 16px 32px rgba(33,69,56,.10); }
+    .habit-card { transition:transform .22s ease, border-color .22s ease, box-shadow .22s ease; }
+    .habit-card:hover { transform:translateY(-2px); border-color:#b9d8c5; box-shadow:0 16px 30px rgba(33,69,56,.08); }
+    .habit-card.done { border-color:#7ccda4; background:linear-gradient(120deg,#ffffff,#f0fbf4); }
+    .done-pulse { animation:donePulse .62s ease both; }
+    @keyframes donePulse { 0% { transform:scale(.97); } 55% { transform:scale(1.015); } 100% { transform:scale(1); } }
+    .reveal { animation:reveal .5s ease both; }
+    @keyframes reveal { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+    .heat-cell { min-height:52px; border:1px solid #e4ece6; transition:transform .2s ease; }
+    .heat-cell:hover { transform:translateY(-2px); }
+    .heat-0 { background:#f2f5f2; color:#93a199; }
+    .heat-1 { background:#dff4e7; color:#317a59; }
+    .heat-2 { background:#a9e1bd; color:#1f6948; }
+    .heat-3 { background:#4eae79; color:#fff; }
+    .menu-popover { display:none; }
+    .menu-popover.open { display:block; }
+    .toast { transform:translateY(120px); opacity:0; transition:.3s ease; pointer-events:none; }
+    .toast.show { transform:translateY(0); opacity:1; }
+    .modal-layer { display:none; }
+    .modal-layer.open { display:flex; }
+    button:focus-visible, input:focus-visible, select:focus-visible { outline:3px solid rgba(22,119,90,.32); outline-offset:2px; }
+    .progress-fill { transition:width .45s ease; }
+    @media (max-width: 640px) { .heat-cell { min-height:44px; } }
+  </style>
+</head>
+<body>
+  <div class="app-shell ambient">
+   <header class="w-full px-4 pt-5 sm:px-7 lg:px-10 lg:pt-8">
+    <div class="mx-auto max-w-7xl">
+     <div class="flex flex-col gap-5 rounded-[2rem] bg-[#173c32] px-6 py-7 text-white shadow-xl shadow-emerald-950/10 sm:flex-row sm:items-center sm:justify-between sm:px-9">
+      <div class="max-w-2xl">
+       <div class="mb-3 flex items-center gap-2 text-xs font-semibold uppercase tracking-[.18em] text-emerald-200"><span class="h-2 w-2 rounded-full bg-[#b8efcb]"></span> Votre espace quotidien</div>
+       <h1 class="display-font text-3xl font-bold leading-tight sm:text-4xl">Suivi d’habitudes intelligent</h1>
+       <p class="mt-2 max-w-xl text-sm leading-relaxed text-emerald-50/80 sm:text-base">Un tableau de bord qui apprend progressivement de votre rythme pour vous aider à rester constant.</p>
+      </div>
+      <div class="flex shrink-0 items-center gap-3 rounded-2xl border border-white/15 bg-white/10 px-4 py-3"><i data-lucide="sparkles" class="h-5 w-5 text-[#b8efcb]"></i>
+       <div>
+        <p class="text-xs text-emerald-100/70">Analyse adaptative</p>
+        <p id="learning-status" class="text-sm font-semibold">Observation en cours</p>
+       </div>
+      </div>
+     </div>
+    </div>
+   </header>
+   <main class="w-full px-4 pb-14 pt-5 sm:px-7 lg:px-10">
+    <div class="mx-auto max-w-7xl">
+     <section class="dashboard-card reveal mb-6 flex flex-col gap-3 rounded-3xl bg-[#fff9ef] p-5 sm:flex-row sm:items-center sm:justify-between">
+      <div class="flex items-start gap-3"><span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#ffe6bd] text-[#b7612a]"><i data-lucide="brain-circuit" class="h-5 w-5"></i></span>
+       <div>
+        <h2 class="font-semibold text-[#543b27]">Votre routine devient plus claire</h2>
+        <p class="mt-1 text-sm leading-relaxed text-[#725f50]">Chaque validation affine les suggestions de créneaux et révèle les habitudes les plus faciles à maintenir.</p>
+       </div>
+      </div><span id="suggested-time-chip" class="inline-flex w-fit items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-semibold text-[#376452] shadow-sm"><i data-lucide="clock-3" class="h-4 w-4"></i> Suggestion : 08:00</span>
+     </section>
+     <section aria-label="Vue d’ensemble" class="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
+      <article class="stat-card dashboard-card rounded-3xl bg-white p-5">
+       <div class="flex items-start justify-between">
+        <span class="rounded-xl bg-[#e2f5ea] p-2 text-[#16775a]"><i data-lucide="list-checks" class="h-5 w-5"></i></span><span class="text-xs font-semibold text-[#6b7d76]">ACTIVES</span>
+       </div>
+       <p id="active-count" class="mt-5 text-3xl font-bold">—</p>
+       <p class="mt-1 text-sm text-[#6b7d76]">habitudes à entretenir</p>
+      </article>
+      <article class="stat-card dashboard-card rounded-3xl bg-white p-5">
+       <div class="flex items-start justify-between">
+        <span class="rounded-xl bg-[#fff0dc] p-2 text-[#c66b2d]"><i data-lucide="sun" class="h-5 w-5"></i></span><span class="text-xs font-semibold text-[#6b7d76]">AUJOURD’HUI</span>
+       </div>
+       <p id="today-rate" class="mt-5 text-3xl font-bold">—</p>
+       <p class="mt-1 text-sm text-[#6b7d76]">de vos intentions réalisées</p>
+      </article>
+      <article class="stat-card dashboard-card rounded-3xl bg-white p-5">
+       <div class="flex items-start justify-between">
+        <span class="rounded-xl bg-[#e9e6ff] p-2 text-[#6656be]"><i data-lucide="flame" class="h-5 w-5"></i></span><span class="text-xs font-semibold text-[#6b7d76]">MEILLEURE SÉRIE</span>
+       </div>
+       <p id="best-streak" class="mt-5 text-3xl font-bold">—</p>
+       <p class="mt-1 text-sm text-[#6b7d76]">jours de constance</p>
+      </article>
+     </section>
+     <div class="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1.5fr)_minmax(320px,.8fr)]">
+      <div class="space-y-6">
+       <section class="dashboard-card rounded-3xl bg-white p-5 sm:p-6">
+        <div class="mb-5 flex items-center gap-3"><span class="flex h-10 w-10 items-center justify-center rounded-xl bg-[#173c32] text-white"><i data-lucide="plus" class="h-5 w-5"></i></span>
+         <div>
+          <h2 class="text-lg font-bold">Ajouter une habitude</h2>
+          <p class="text-sm text-[#6b7d76]">Commencez petit : la régularité compte davantage que la perfection.</p>
+         </div>
+        </div>
+        <form id="habit-form" class="grid grid-cols-1 gap-4 md:grid-cols-2">
+         <div class="md:col-span-2"><label class="mb-1.5 block text-sm font-semibold text-[#28473d]" for="habit-name">Nom de l’habitude</label> <input id="habit-name" required maxlength="70" class="w-full rounded-xl border border-[#dce7df] bg-[#f9fbf9] px-4 py-3 text-sm" type="text" placeholder="Ex. : 10 minutes de lecture"></div>
+         <div><label class="mb-1.5 block text-sm font-semibold text-[#28473d]" for="habit-category">Catégorie</label> <select id="habit-category" class="w-full rounded-xl border border-[#dce7df] bg-[#f9fbf9] px-4 py-3 text-sm"><option>Bien-être</option><option>Santé</option><option>Productivité</option><option>Apprentissage</option><option>Maison</option></select></div>
+         <div><label class="mb-1.5 block text-sm font-semibold text-[#28473d]" for="habit-frequency">Fréquence</label> <select id="habit-frequency" class="w-full rounded-xl border border-[#dce7df] bg-[#f9fbf9] px-4 py-3 text-sm"><option value="Quotidienne">Quotidienne</option><option value="Hebdomadaire">Hebdomadaire</option><option value="Personnalisée">Personnalisée</option></select></div>
+         <div><label class="mb-1.5 block text-sm font-semibold text-[#28473d]" for="habit-reminder">Heure de rappel suggérée</label> <input id="habit-reminder" required value="08:00" class="w-full rounded-xl border border-[#dce7df] bg-[#f9fbf9] px-4 py-3 text-sm" type="time"></div>
+         <div><label class="mb-1.5 block text-sm font-semibold text-[#28473d]" for="habit-goal">Objectif</label> <input id="habit-goal" required maxlength="80" class="w-full rounded-xl border border-[#dce7df] bg-[#f9fbf9] px-4 py-3 text-sm" type="text" placeholder="Ex. : finir un livre par mois"></div>
+         <div class="flex items-end md:col-span-2"><button id="add-habit-button" class="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#16775a] px-5 py-3.5 font-semibold text-white transition hover:brightness-95 sm:w-auto" type="submit">Ajouter à ma routine</button></div>
+        </form>
+       </section>
+       <section aria-labelledby="habits-heading">
+        <div class="mb-4 flex items-end justify-between">
+         <div>
+          <h2 id="habits-heading" class="text-xl font-bold">Mes habitudes du jour</h2>
+          <p class="mt-1 text-sm text-[#6b7d76]">Cochez vos avancées : votre tableau de bord s’adapte en temps réel.</p>
+         </div><span id="habit-list-count" class="rounded-full bg-[#e2f5ea] px-3 py-1 text-xs font-bold text-[#16775a]">0 habitude</span>
+        </div>
+        <div id="loading-state" class="dashboard-card rounded-3xl bg-white p-10 text-center">
+         <div class="mx-auto h-8 w-8 animate-spin rounded-full border-4 border-[#dff5e8] border-t-[#16775a]"></div>
+         <p class="mt-4 text-sm text-[#6b7d76]">Préparation de votre tableau de bord intelligent…</p>
+        </div>
+        <div id="empty-state" class="dashboard-card hidden rounded-3xl bg-white px-6 py-12 text-center"><span class="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-[#e2f5ea] text-[#16775a]"><i data-lucide="sprout" class="h-7 w-7"></i></span>
+         <h3 class="mt-4 text-lg font-bold">Votre nouvelle routine commence ici</h3>
+         <p class="mx-auto mt-2 max-w-sm text-sm text-[#6b7d76]">Ajoutez une habitude simple pour recevoir vos premières suggestions personnalisées.</p>
+        </div>
+        <div id="habit-list" class="space-y-3"></div>
+       </section>
+      </div>
+      <aside class="space-y-6">
+       <section class="dashboard-card rounded-3xl bg-[#173c32] p-5 text-white sm:p-6">
+        <div class="flex items-center justify-between">
+         <div>
+          <h2 class="text-lg font-bold">Analyses comportementales</h2>
+          <p class="mt-1 text-sm text-emerald-100/70">Les signaux qui comptent cette semaine.</p>
+         </div><i data-lucide="chart-no-axes-combined" class="h-6 w-6 text-[#b8efcb]"></i>
+        </div>
+        <div class="mt-5 space-y-3">
+         <div class="rounded-2xl bg-white/10 p-3"><p class="text-xs uppercase tracking-wide text-emerald-100/60">Meilleure heure</p><p id="best-time" class="mt-1 font-semibold">—</p></div>
+         <div class="rounded-2xl bg-white/10 p-3"><p class="text-xs uppercase tracking-wide text-emerald-100/60">La plus régulière</p><p id="most-regular" class="mt-1 font-semibold">—</p></div>
+         <div class="rounded-2xl bg-white/10 p-3"><p class="text-xs uppercase tracking-wide text-emerald-100/60">Jour à surveiller</p><p id="risk-day" class="mt-1 font-semibold">—</p></div>
+        </div>
+        <div class="mt-5 border-t border-white/10 pt-4">
+         <p class="text-xs font-semibold uppercase tracking-wide text-[#b8efcb]">Signal intelligent</p>
+         <p id="analysis-insight" class="mt-2 text-sm leading-relaxed text-white/90">Vos habitudes révèlent progressivement leur rythme.</p>
+        </div>
+       </section>
+       <section class="dashboard-card rounded-3xl bg-white p-5 sm:p-6">
+        <div class="flex items-center gap-3">
+         <span class="flex h-9 w-9 items-center justify-center rounded-xl bg-[#fff0dc] text-[#c66b2d]"><i data-lucide="lightbulb" class="h-5 w-5"></i></span>
+         <div>
+          <h2 class="font-bold">Recommandations du jour</h2>
+          <p class="text-xs text-[#6b7d76]">Des actions simples, basées sur votre historique.</p>
+         </div>
+        </div>
+        <ul id="recommendation-list" class="mt-5 space-y-3"></ul>
+       </section>
+       <section class="dashboard-card rounded-3xl bg-white p-5 sm:p-6">
+        <div class="flex items-center justify-between">
+         <div>
+          <h2 class="font-bold">Régularité hebdomadaire</h2>
+          <p class="mt-1 text-xs text-[#6b7d76]">Vos validations sur les 7 derniers jours.</p>
+         </div><i data-lucide="calendar-days" class="h-5 w-5 text-[#16775a]"></i>
+        </div>
+        <div id="weekly-heatmap" class="mt-5 grid grid-cols-7 gap-1.5"></div>
+        <div class="mt-4 flex items-center justify-between text-xs text-[#6b7d76]">
+         <span>Moins</span>
+         <div class="flex gap-1"><i class="h-3 w-3 rounded-sm bg-[#f2f5f2]"></i><i class="h-3 w-3 rounded-sm bg-[#dff4e7]"></i><i class="h-3 w-3 rounded-sm bg-[#a9e1bd]"></i><i class="h-3 w-3 rounded-sm bg-[#4eae79]"></i></div><span>Plus</span>
+        </div>
+       </section>
+      </aside>
+     </div>
+    </div>
+   </main>
+   <div id="edit-modal" class="modal-layer fixed inset-0 z-40 items-center justify-center bg-[#102720]/55 p-4" role="dialog" aria-modal="true" aria-labelledby="edit-modal-title">
+    <div class="w-full max-w-lg rounded-3xl bg-white p-6 shadow-2xl">
+     <div class="flex items-center justify-between">
+      <h2 id="edit-modal-title" class="text-xl font-bold">Modifier l’habitude</h2><button id="close-edit" class="rounded-lg p-2 text-[#6b7d76] hover:bg-[#f1f5f2]" type="button" aria-label="Fermer"><i data-lucide="x" class="h-5 w-5"></i></button>
+     </div>
+     <form id="edit-form" class="mt-5 space-y-4">
+      <div><label class="mb-1.5 block text-sm font-semibold text-[#28473d]" for="edit-name">Nom de l’habitude</label><input id="edit-name" required maxlength="70" class="w-full rounded-xl border border-[#dce7df] px-4 py-3" type="text"></div>
+      <div><label class="mb-1.5 block text-sm font-semibold text-[#28473d]" for="edit-reminder">Heure de rappel</label><input id="edit-reminder" required class="w-full rounded-xl border border-[#dce7df] px-4 py-3" type="time"></div>
+      <div><label class="mb-1.5 block text-sm font-semibold text-[#28473d]" for="edit-goal">Objectif</label><input id="edit-goal" required maxlength="80" class="w-full rounded-xl border border-[#dce7df] px-4 py-3" type="text"></div>
+      <div class="flex justify-end gap-3 pt-2">
+       <button id="edit-cancel" class="rounded-xl bg-[#eef3ef] px-4 py-3 font-semibold text-[#365047]" type="button">Annuler</button><button id="edit-save" class="rounded-xl bg-[#16775a] px-4 py-3 font-semibold text-white" type="submit">Enregistrer</button>
+      </div>
+     </form>
+    </div>
+   </div>
+   <div id="toast" class="toast fixed bottom-5 left-1/2 z-50 flex w-[calc(100%-2rem)] max-w-md -translate-x-1/2 items-center gap-3 rounded-2xl bg-[#173c32] px-4 py-3 text-sm font-medium text-white shadow-xl">
+    <i data-lucide="check-circle-2" class="h-5 w-5 text-[#b8efcb]"></i><span id="toast-message"></span>
+   </div>
+  </div>
+
+  <template id="habit-template">
+   <article class="habit-card dashboard-card relative rounded-3xl bg-white p-5">
+    <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+     <div class="min-w-0">
+      <div class="flex flex-wrap items-center gap-2"><span class="category-tag rounded-full bg-[#e2f5ea] px-2.5 py-1 text-xs font-bold text-[#16775a]"></span><span class="frequency-tag rounded-full bg-[#f2f5f2] px-2.5 py-1 text-xs font-medium text-[#6b7d76]"></span></div>
+      <h3 class="habit-name mt-3 text-lg font-bold"></h3>
+      <p class="habit-goal mt-1 text-sm text-[#6b7d76]"></p>
+     </div>
+     <div class="relative shrink-0">
+      <button class="menu-button rounded-xl p-2 text-[#6b7d76] hover:bg-[#f1f5f2]" type="button" aria-label="Options de l’habitude"><i data-lucide="more-horizontal" class="h-5 w-5"></i></button>
+      <div class="menu-popover absolute right-0 top-10 z-10 w-36 rounded-xl border border-[#dce7df] bg-white p-1.5 shadow-lg">
+       <button class="edit-button flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-sm hover:bg-[#f1f5f2]" type="button"><i data-lucide="pencil" class="h-4 w-4"></i>Modifier</button><button class="delete-button flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-sm text-[#c44d3b] hover:bg-[#fff2ef]" type="button"><i data-lucide="trash-2" class="h-4 w-4"></i><span class="delete-label">Supprimer</span></button>
+      </div>
+     </div>
+    </div>
+    <div class="mt-5 grid grid-cols-3 gap-2 border-y border-[#edf2ee] py-4 text-center">
+     <div><p class="text-[11px] font-semibold uppercase tracking-wide text-[#8a9a93]">Série</p><p class="streak-value mt-1 font-bold"></p></div>
+     <div><p class="text-[11px] font-semibold uppercase tracking-wide text-[#8a9a93]">Réussite</p><p class="completion-rate mt-1 font-bold"></p></div>
+     <div><p class="text-[11px] font-semibold uppercase tracking-wide text-[#8a9a93]">Rappel</p><p class="reminder-value mt-1 font-bold"></p></div>
+    </div>
+    <div class="mt-4">
+     <div class="mb-2 flex justify-between text-xs font-medium text-[#6b7d76]"><span>Progression</span><span class="progress-label"></span></div>
+     <div class="h-2 overflow-hidden rounded-full bg-[#edf2ee]"><div class="progress-fill h-full rounded-full bg-[#16775a]" style="width:0%"></div></div>
+    </div>
+    <div class="mt-5 flex flex-wrap items-center gap-2">
+     <button class="complete-button inline-flex items-center gap-2 rounded-xl bg-[#16775a] px-4 py-2.5 text-sm font-semibold text-white hover:bg-[#116447]" type="button"><i data-lucide="check" class="h-4 w-4"></i><span>Marquer comme faite</span></button><button class="undo-button hidden inline-flex items-center gap-2 rounded-xl bg-[#fff0dc] px-4 py-2.5 text-sm font-semibold text-[#a95325] hover:bg-[#ffe4c5]" type="button"><i data-lucide="undo-2" class="h-4 w-4"></i><span>Annuler</span></button><span class="today-status ml-auto text-xs font-semibold text-[#6b7d76]"></span>
+    </div>
+   </article>
+  </template>
+
+  <script>
+    // ---------------------------------------------------------------
+    // Couche de données locale (remplace le SDK Canva d'origine).
+    // Les habitudes sont persistées dans localStorage du navigateur.
+    // Même contrat : init(handler) / create / update / delete → { isOk }.
+    // ---------------------------------------------------------------
+    window.dataSdk = (() => {
+      const KEY = 'habit-tracker:v1';
+      let handler = null;
+      let records = [];
+      const load = () => { try { records = JSON.parse(localStorage.getItem(KEY) || '[]'); } catch { records = []; } };
+      const save = () => { try { localStorage.setItem(KEY, JSON.stringify(records)); return true; } catch { return false; } };
+      const notify = () => handler && handler.onDataChanged(records.map(r => ({ ...r })));
+      const uid = () => (crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random().toString(16).slice(2)}`);
+      return {
+        async init(h) { handler = h; load(); notify(); return { isOk: true }; },
+        async create(data) { records.push({ ...data, __backendId: uid() }); const ok = save(); notify(); return { isOk: ok }; },
+        async update(data) {
+          const i = records.findIndex(r => r.__backendId === data.__backendId);
+          if (i === -1) return { isOk: false };
+          records[i] = { ...data }; const ok = save(); notify(); return { isOk: ok };
+        },
+        async delete(data) {
+          records = records.filter(r => r.__backendId !== data.__backendId);
+          const ok = save(); notify(); return { isOk: ok };
+        }
+      };
+    })();
+
+    // Synchronise les onglets ouverts sur la même app.
+    window.addEventListener('storage', (e) => { if (e.key === 'habit-tracker:v1') window.dataSdk.init(dataHandler); });
+
+    // Clé de date locale au format AAAA-MM-JJ (fuseau du navigateur).
+    const dateKey = (date = new Date()) => new Intl.DateTimeFormat('en-CA').format(date);
+    const today = () => dateKey();
+    const shiftDays = (key, n) => { const d = new Date(key + 'T12:00:00'); d.setDate(d.getDate() + n); return dateKey(d); };
+    const state = { habits: [], editingId: null };
+
+    function parseCompletions(value) { try { return JSON.parse(value || '[]'); } catch { return []; } }
+    function prettyDay(date) { return new Intl.DateTimeFormat('fr-FR', { weekday: 'long' }).format(date); }
+    function recordFor(id) { return state.habits.find(item => item.__backendId === id); }
+    function isComplete(record, day = today()) { return parseCompletions(record.completions).some(item => item.date === day); }
+
+    // Jours attendus depuis la création (au moins 1).
+    function expectedDays(record) {
+      const start = new Date(dateKey(new Date(record.created_at)) + 'T12:00:00');
+      const end = new Date(today() + 'T12:00:00');
+      return Math.max(1, Math.round((end - start) / 86400000) + 1);
+    }
+    function completionRate(record) {
+      const done = new Set(parseCompletions(record.completions).map(c => c.date)).size;
+      return Math.min(100, Math.round((done / expectedDays(record)) * 100));
+    }
+    // Série = jours consécutifs validés, en remontant depuis aujourd'hui (ou hier si aujourd'hui n'est pas encore fait).
+    function streakOf(record) {
+      const days = new Set(parseCompletions(record.completions).map(c => c.date));
+      let cursor = days.has(today()) ? today() : shiftDays(today(), -1);
+      let streak = 0;
+      while (days.has(cursor)) { streak++; cursor = shiftDays(cursor, -1); }
+      return streak;
+    }
+
+    function showToast(message, error = false) {
+      const toast = document.getElementById('toast');
+      toast.querySelector('#toast-message').textContent = message;
+      toast.classList.toggle('bg-[#8e3c32]', error); toast.classList.toggle('bg-[#173c32]', !error);
+      toast.classList.add('show'); clearTimeout(showToast.timer); showToast.timer = setTimeout(() => toast.classList.remove('show'), 3200);
+    }
+
+    function renderHabits() {
+      const list = document.getElementById('habit-list');
+      const empty = document.getElementById('empty-state');
+      const old = new Map([...list.children].map(el => [el.dataset.id, el]));
+      state.habits.forEach(record => {
+        let card = old.get(record.__backendId);
+        if (!card) {
+          card = document.getElementById('habit-template').content.firstElementChild.cloneNode(true);
+          card.dataset.id = record.__backendId;
+          list.appendChild(card);
+        }
+        updateHabitCard(card, record);
+        old.delete(record.__backendId);
+      });
+      old.forEach(el => el.remove());
+      empty.classList.toggle('hidden', state.habits.length !== 0);
+      document.getElementById('habit-list-count').textContent = `${state.habits.length} habitude${state.habits.length > 1 ? 's' : ''}`;
+      if (window.lucide) lucide.createIcons();
+    }
+
+    function updateHabitCard(card, record) {
+      const done = isComplete(record);
+      const rate = completionRate(record);
+      card.classList.toggle('done', done);
+      card.querySelector('.category-tag').textContent = record.category;
+      card.querySelector('.frequency-tag').textContent = record.frequency;
+      card.querySelector('.habit-name').textContent = record.name;
+      card.querySelector('.habit-goal').textContent = record.goal;
+      card.querySelector('.streak-value').textContent = `${streakOf(record)} j`;
+      card.querySelector('.completion-rate').textContent = `${rate}%`;
+      card.querySelector('.reminder-value').textContent = record.reminder_time;
+      card.querySelector('.progress-label').textContent = `${rate}%`;
+      card.querySelector('.progress-fill').style.width = `${rate}%`;
+      card.querySelector('.today-status').textContent = done ? '✓ Réalisée aujourd’hui' : 'À faire aujourd’hui';
+      card.querySelector('.complete-button').classList.toggle('hidden', done);
+      card.querySelector('.undo-button').classList.toggle('hidden', !done);
+      const pop = card.querySelector('.menu-popover');
+      card.querySelector('.menu-button').onclick = (e) => { e.stopPropagation(); closeMenus(pop); pop.classList.toggle('open'); };
+      card.querySelector('.complete-button').onclick = () => completeHabit(record.__backendId, card);
+      card.querySelector('.undo-button').onclick = () => undoHabit(record.__backendId);
+      card.querySelector('.edit-button').onclick = () => { pop.classList.remove('open'); openEdit(record.__backendId); };
+      card.querySelector('.delete-button').onclick = (e) => deleteHabit(record.__backendId, e.currentTarget);
+    }
+    function closeMenus(except) { document.querySelectorAll('.menu-popover.open').forEach(p => { if (p !== except) p.classList.remove('open'); }); }
+    document.addEventListener('click', (e) => { if (!e.target.closest('.menu-popover, .menu-button')) closeMenus(); });
+
+    function updateDashboard() {
+      const active = state.habits.length;
+      const done = state.habits.filter(item => isComplete(item)).length;
+      const best = state.habits.reduce((max, item) => Math.max(max, streakOf(item)), 0);
+      document.getElementById('active-count').textContent = active;
+      document.getElementById('today-rate').textContent = active ? `${Math.round(done / active * 100)}%` : '—';
+      document.getElementById('best-streak').textContent = best ? `${best} j` : '—';
+      updateAnalytics(); updateHeatmap(); updateRecommendations();
+    }
+
+    function allCompletions() { return state.habits.flatMap(h => parseCompletions(h.completions).map(c => ({ ...c, habit: h }))); }
+
+    function updateAnalytics() {
+      const entries = allCompletions();
+      const timeCount = {};
+      entries.forEach(entry => { timeCount[entry.time] = (timeCount[entry.time] || 0) + 1; });
+      const bestTime = Object.entries(timeCount).sort((a, b) => b[1] - a[1])[0]?.[0];
+      const regular = [...state.habits].sort((a, b) => completionRate(b) - completionRate(a))[0];
+      const dayCount = {};
+      entries.forEach(entry => { const day = prettyDay(new Date(entry.date + 'T12:00:00')); dayCount[day] = (dayCount[day] || 0) + 1; });
+      const days = ['lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi', 'dimanche'];
+      const leastDay = days.sort((a, b) => (dayCount[a] || 0) - (dayCount[b] || 0))[0];
+      document.getElementById('best-time').textContent = bestTime ? `${bestTime} · créneau gagnant` : 'En apprentissage';
+      document.getElementById('most-regular').textContent = regular ? `${regular.name} · ${completionRate(regular)}%` : 'Ajoutez une habitude';
+      document.getElementById('risk-day').textContent = entries.length > 2 ? `${leastDay[0].toUpperCase() + leastDay.slice(1)} · attention` : 'Encore quelques données';
+      const chip = document.getElementById('suggested-time-chip');
+      chip.innerHTML = '<i data-lucide="clock-3" class="h-4 w-4"></i> ';
+      chip.append(`Suggestion : ${bestTime || '08:00'}`);
+      document.getElementById('learning-status').textContent = entries.length >= 6 ? 'Rythme identifié' : 'Observation en cours';
+      const risk = state.habits.filter(h => expectedDays(h) > 1 && completionRate(h) < 55)[0];
+      document.getElementById('analysis-insight').textContent = risk
+        ? `« ${risk.name} » mérite un rappel plus visible. Essayez ${bestTime || risk.reminder_time}, votre créneau le plus favorable.`
+        : entries.length
+          ? `Votre constance prend forme. Votre rythme répond particulièrement bien autour de ${bestTime || 'votre rappel habituel'}.`
+          : 'Ajoutez quelques validations : les recommandations deviendront plus précises.';
+      if (window.lucide) lucide.createIcons();
+    }
+
+    function updateHeatmap() {
+      const grid = document.getElementById('weekly-heatmap'); grid.innerHTML = '';
+      for (let i = 6; i >= 0; i--) {
+        const d = new Date(); d.setDate(d.getDate() - i); const key = dateKey(d);
+        const count = state.habits.filter(h => isComplete(h, key)).length;
+        const ratio = state.habits.length ? count / state.habits.length : 0;
+        const level = ratio === 0 ? 0 : ratio < .4 ? 1 : ratio < .75 ? 2 : 3;
+        const el = document.createElement('div');
+        el.className = `heat-cell heat-${level} flex flex-col items-center justify-center rounded-xl text-center`;
+        const label = document.createElement('span'); label.className = 'text-[10px] font-semibold uppercase';
+        label.textContent = new Intl.DateTimeFormat('fr-FR', { weekday: 'short' }).format(d).slice(0, 2);
+        const num = document.createElement('strong'); num.className = 'mt-1 text-sm'; num.textContent = count;
+        el.append(label, num);
+        el.title = `${count} habitude${count > 1 ? 's' : ''} complétée${count > 1 ? 's' : ''}`;
+        grid.appendChild(el);
+      }
+    }
+
+    function updateRecommendations() {
+      const list = document.getElementById('recommendation-list'); list.innerHTML = '';
+      const incomplete = state.habits.filter(h => !isComplete(h));
+      const atRisk = [...state.habits].sort((a, b) => completionRate(a) - completionRate(b))[0];
+      const entries = allCompletions();
+      const recommendations = [];
+      if (incomplete.length) recommendations.push(`Commencez par « ${incomplete[0].name} » : une petite action maintenant protège votre série.`);
+      if (atRisk && expectedDays(atRisk) > 2 && completionRate(atRisk) < 65) recommendations.push(`« ${atRisk.name} » est à risque d’oubli. Rapprochez-la d’un moment déjà bien installé.`);
+      if (entries.length >= 4) recommendations.push('Votre historique confirme que les routines courtes ont le meilleur potentiel de réussite.');
+      if (!recommendations.length) recommendations.push(state.habits.length ? 'Tout est validé pour aujourd’hui. Belle constance !' : 'Ajoutez votre première habitude : nous apprendrons progressivement ce qui vous aide à réussir.');
+      recommendations.slice(0, 3).forEach((text, index) => {
+        const li = document.createElement('li');
+        li.className = 'flex gap-3 rounded-2xl bg-[#f5f8f5] p-3 text-sm leading-relaxed text-[#456057]';
+        const badge = document.createElement('span'); badge.className = 'flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#dff5e8] text-xs font-bold text-[#16775a]'; badge.textContent = index + 1;
+        const body = document.createElement('span'); body.textContent = text;
+        li.append(badge, body);
+        list.appendChild(li);
+      });
+    }
+
+    async function completeHabit(id, card) {
+      const record = recordFor(id); if (!record || isComplete(record)) return;
+      const button = card.querySelector('.complete-button'); button.disabled = true;
+      const entries = parseCompletions(record.completions);
+      entries.push({ date: today(), time: new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', hour12: false }) });
+      const result = await window.dataSdk.update({ ...record, completions: JSON.stringify(entries) });
+      button.disabled = false;
+      if (result.isOk) { card.classList.add('done-pulse'); setTimeout(() => card.classList.remove('done-pulse'), 700); showToast(`Belle avancée : « ${record.name} » est validée.`); }
+      else showToast('La validation n’a pas pu être enregistrée.', true);
+    }
+
+    async function undoHabit(id) {
+      const record = recordFor(id); if (!record) return;
+      const entries = parseCompletions(record.completions).filter(entry => entry.date !== today());
+      const result = await window.dataSdk.update({ ...record, completions: JSON.stringify(entries) });
+      if (result.isOk) showToast('La validation du jour a été annulée.'); else showToast('Impossible d’annuler cette validation.', true);
+    }
+
+    async function deleteHabit(id, button) {
+      const record = recordFor(id); if (!record) return;
+      if (!button.dataset.confirming) {
+        button.dataset.confirming = 'true'; button.querySelector('.delete-label').textContent = 'Confirmer ?';
+        setTimeout(() => { if (button.isConnected) { button.dataset.confirming = ''; button.querySelector('.delete-label').textContent = 'Supprimer'; } }, 3000);
+        return;
+      }
+      button.disabled = true;
+      const result = await window.dataSdk.delete(record);
+      if (result.isOk) showToast('Habitude supprimée.'); else { button.disabled = false; showToast('Impossible de supprimer cette habitude.', true); }
+    }
+
+    function openEdit(id) {
+      const record = recordFor(id); if (!record) return;
+      state.editingId = id;
+      document.getElementById('edit-name').value = record.name;
+      document.getElementById('edit-reminder').value = record.reminder_time;
+      document.getElementById('edit-goal').value = record.goal;
+      document.getElementById('edit-modal').classList.add('open');
+      document.getElementById('edit-name').focus();
+    }
+    function closeEdit() { state.editingId = null; document.getElementById('edit-modal').classList.remove('open'); }
+
+    document.getElementById('habit-form').addEventListener('submit', async (event) => {
+      event.preventDefault();
+      if (state.habits.length >= 999) { showToast('Limite de 999 habitudes atteinte. Supprimez-en une avant d’ajouter.', true); return; }
+      const button = document.getElementById('add-habit-button'); button.disabled = true;
+      const data = {
+        name: document.getElementById('habit-name').value.trim(),
+        category: document.getElementById('habit-category').value,
+        frequency: document.getElementById('habit-frequency').value,
+        reminder_time: document.getElementById('habit-reminder').value,
+        goal: document.getElementById('habit-goal').value.trim(),
+        created_at: new Date().toISOString(),
+        completions: '[]'
+      };
+      const result = await window.dataSdk.create(data);
+      button.disabled = false;
+      if (result.isOk) { event.target.reset(); document.getElementById('habit-reminder').value = '08:00'; showToast('Nouvelle habitude ajoutée à votre rythme.'); }
+      else showToast('Impossible d’ajouter cette habitude.', true);
+    });
+
+    document.getElementById('edit-form').addEventListener('submit', async (event) => {
+      event.preventDefault(); const record = recordFor(state.editingId); if (!record) return;
+      const button = document.getElementById('edit-save'); button.disabled = true;
+      const updated = { ...record, name: document.getElementById('edit-name').value.trim(), reminder_time: document.getElementById('edit-reminder').value, goal: document.getElementById('edit-goal').value.trim() };
+      const result = await window.dataSdk.update(updated); button.disabled = false;
+      if (result.isOk) { closeEdit(); showToast('Habitude mise à jour. Les analyses s’adaptent.'); } else showToast('La modification n’a pas été enregistrée.', true);
+    });
+    document.getElementById('close-edit').onclick = closeEdit;
+    document.getElementById('edit-cancel').onclick = closeEdit;
+    document.getElementById('edit-modal').addEventListener('click', (e) => { if (e.target.id === 'edit-modal') closeEdit(); });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') { closeEdit(); closeMenus(); } });
+
+    const dataHandler = {
+      onDataChanged(data) {
+        state.habits = [...data].sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
+        document.getElementById('loading-state').classList.add('hidden');
+        renderHabits(); updateDashboard();
+      }
+    };
+    (async () => {
+      const init = await window.dataSdk.init(dataHandler);
+      if (!init.isOk) { document.getElementById('loading-state').classList.add('hidden'); showToast('Les données ne sont pas disponibles pour le moment.', true); }
+      if (window.lucide) lucide.createIcons();
+    })();
+  </script>
+</body>
+</html>
