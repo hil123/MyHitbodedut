@@ -27,7 +27,7 @@ class BlockerView(
 
         val streak = Store.streak(context)
         findViewById<TextView>(R.id.blocker_streak).text = if (streak > 0) {
-            context.getString(R.string.blocker_streak, streak)
+            context.resources.getQuantityString(R.plurals.blocker_streak, streak, streak)
         } else {
             context.getString(R.string.blocker_streak_none)
         }

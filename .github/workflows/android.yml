@@ -30,7 +30,6 @@ jobs:
 
       - name: Lint
         working-directory: android
-        continue-on-error: true
         run: ./gradlew --no-daemon lintDebug
 
       - name: Show lint findings

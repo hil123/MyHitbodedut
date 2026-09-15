@@ -100,7 +100,7 @@ class MainActivity : AppCompatActivity() {
         statusTitle.setText(if (done) R.string.status_done else R.string.status_pending)
         val streak = Store.streak(this)
         statusStreak.text = if (streak > 0) {
-            getString(R.string.status_streak, streak)
+            resources.getQuantityString(R.plurals.status_streak, streak, streak)
         } else {
             getString(R.string.status_streak_none)
         }

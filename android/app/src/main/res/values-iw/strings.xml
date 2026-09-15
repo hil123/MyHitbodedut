@@ -2,7 +2,6 @@
 <resources>
     <string name="status_done">התבודדת היום</string>
     <string name="status_pending">עדיין לא התבודדת היום</string>
-    <string name="status_streak">%1$d ימים ברצף</string>
     <string name="status_streak_none">הרצף מחכה להתחלה</string>
 
     <string name="section_today">השבוע</string>
@@ -31,7 +30,6 @@
 
     <string name="blocker_question">התבודדת היום?</string>
     <string name="blocker_subtitle">רגע של התבודדות לפני כל השאר.</string>
-    <string name="blocker_streak">רצף נוכחי: %1$d ימים</string>
     <string name="blocker_streak_none">היום הראשון ברצף.</string>
     <string name="blocker_done">כבר התבודדתי</string>
     <string name="blocker_snooze">אחר כך (%1$d דק׳)</string>
@@ -41,10 +39,21 @@
     <string name="service_title">החסימה פעילה</string>
     <string name="service_text">חלון %1$s – %2$s</string>
 
+    <plurals name="status_streak">
+        <item quantity="one">%d יום ברצף</item>
+        <item quantity="two">%d ימים ברצף</item>
+        <item quantity="other">%d ימים ברצף</item>
+    </plurals>
+
+    <plurals name="blocker_streak">
+        <item quantity="one">רצף נוכחי: %d יום</item>
+        <item quantity="two">רצף נוכחי: %d ימים</item>
+        <item quantity="other">רצף נוכחי: %d ימים</item>
+    </plurals>
+
     <plurals name="apps_selected">
         <item quantity="one">אפליקציה אחת חסומה</item>
         <item quantity="two">%d אפליקציות חסומות</item>
-        <item quantity="many">%d אפליקציות חסומות</item>
         <item quantity="other">%d אפליקציות חסומות</item>
     </plurals>
 </resources>

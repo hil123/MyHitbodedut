@@ -65,7 +65,7 @@ class AppPickerActivity : AppCompatActivity() {
                 entries.clear()
                 entries.addAll(found)
                 empty.visibility = View.GONE
-                adapter.notifyDataSetChanged()
+                adapter.notifyItemRangeInserted(0, entries.size)
             }
         }.start()
     }

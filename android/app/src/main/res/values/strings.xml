@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">MyHitbodedut</string>
+    <string name="app_name" translatable="false">MyHitbodedut</string>
 
     <string name="status_done">Hitbodedout faite aujourd\'hui</string>
     <string name="status_pending">Hitbodedout pas encore faite</string>
-    <string name="status_streak">%1$d jours d\'affilée</string>
     <string name="status_streak_none">Série à relancer</string>
 
     <string name="section_today">Cette semaine</string>
@@ -33,7 +32,6 @@
 
     <string name="blocker_question">Tu as fait ta hitbodedout ?</string>
     <string name="blocker_subtitle">Un moment seul avant le reste de la journée.</string>
-    <string name="blocker_streak">Série en cours : %1$d jours</string>
     <string name="blocker_streak_none">Première journée de la série.</string>
     <string name="blocker_done">Je l\'ai faite</string>
     <string name="blocker_snooze">Plus tard (%1$d min)</string>
@@ -42,6 +40,16 @@
     <string name="channel_description">Notification permanente exigée par Android pendant la surveillance.</string>
     <string name="service_title">Blocage actif</string>
     <string name="service_text">Fenêtre %1$s – %2$s</string>
+
+    <plurals name="status_streak">
+        <item quantity="one">%d jour d\'affilée</item>
+        <item quantity="other">%d jours d\'affilée</item>
+    </plurals>
+
+    <plurals name="blocker_streak">
+        <item quantity="one">Série en cours : %d jour</item>
+        <item quantity="other">Série en cours : %d jours</item>
+    </plurals>
 
     <plurals name="apps_selected">
         <item quantity="one">%d application bloquée</item>
