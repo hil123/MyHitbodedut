@@ -62,8 +62,13 @@ Internet.
 ### Construire
 
 Le plus simple, sans rien installer : le workflow GitHub Actions `Android`
-compile à chaque envoi sur `main` et publie l'APK de débogage en artefact.
-Ouvrez l'onglet Actions, la dernière exécution, puis `myhitbodedut-debug-apk`.
+compile à chaque envoi sur `main` et publie l'APK dans la release `latest`.
+
+Lien de téléchargement direct, dépôt privé donc connexion GitHub nécessaire :
+<https://github.com/hil123/MyHitbodedut/releases/latest/download/MyHitbodedut-debug.apk>
+
+L'APK est signé avec la clé de débogage. Android demandera d'autoriser
+l'installation depuis une source inconnue pour le navigateur utilisé.
 
 En local, avec Android Studio ou le SDK en ligne de commande :
 
