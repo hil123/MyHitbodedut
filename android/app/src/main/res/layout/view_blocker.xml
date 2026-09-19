@@ -1,76 +1,100 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/brand_dark"
-    android:gravity="center"
-    android:orientation="vertical"
-    android:padding="32dp">
+    android:fillViewport="true">
 
-    <TextView
-        android:id="@+id/blocker_preview_badge"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="18dp"
-        android:background="@drawable/bg_badge"
-        android:paddingHorizontal="14dp"
-        android:paddingVertical="6dp"
-        android:text="@string/blocker_preview_badge"
-        android:textColor="@color/white"
-        android:textSize="12sp"
-        android:visibility="gone" />
-
-    <TextView
-        android:id="@+id/blocker_title"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textAlignment="center"
-        android:textColor="@color/white"
-        android:textSize="30sp"
-        android:textStyle="bold" />
+        android:gravity="center"
+        android:minHeight="400dp"
+        android:orientation="vertical"
+        android:paddingHorizontal="28dp"
+        android:paddingVertical="24dp">
 
-    <TextView
-        android:id="@+id/blocker_subtitle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="14dp"
-        android:textAlignment="center"
-        android:textColor="@color/mint"
-        android:textSize="16sp" />
+        <TextView
+            android:id="@+id/blocker_preview_badge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="14dp"
+            android:background="@drawable/bg_badge"
+            android:paddingHorizontal="14dp"
+            android:paddingVertical="6dp"
+            android:text="@string/blocker_preview_badge"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            android:visibility="gone" />
 
-    <TextView
-        android:id="@+id/blocker_streak"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:textAlignment="center"
-        android:textColor="@color/mint"
-        android:textSize="14sp" />
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_stage"
+            android:padding="10dp">
 
-    <Button
-        android:id="@+id/blocker_primary"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="36dp"
-        android:paddingVertical="14dp"
-        android:textSize="16sp" />
+            <ImageView
+                android:id="@+id/blocker_character"
+                android:layout_width="match_parent"
+                android:layout_height="190dp"
+                android:adjustViewBounds="true"
+                android:contentDescription="@null"
+                android:scaleType="fitCenter" />
+        </FrameLayout>
 
-    <Button
-        android:id="@+id/blocker_secondary"
-        style="@style/Widget.Material3.Button.OutlinedButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:paddingVertical="12dp"
-        android:textColor="@color/mint"
-        android:textSize="15sp" />
+        <TextView
+            android:id="@+id/blocker_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="22dp"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="27sp"
+            android:textStyle="bold" />
 
-    <Button
-        android:id="@+id/blocker_snooze"
-        style="@style/Widget.Material3.Button.TextButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:textColor="@color/mint"
-        android:textSize="14sp" />
-</LinearLayout>
+        <TextView
+            android:id="@+id/blocker_subtitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:textAlignment="center"
+            android:textColor="@color/mint"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/blocker_streak"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:textAlignment="center"
+            android:textColor="@color/mint"
+            android:textSize="14sp" />
+
+        <Button
+            android:id="@+id/blocker_primary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:paddingVertical="14dp"
+            android:textSize="16sp" />
+
+        <Button
+            android:id="@+id/blocker_secondary"
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:paddingVertical="12dp"
+            android:textColor="@color/mint"
+            android:textSize="15sp" />
+
+        <Button
+            android:id="@+id/blocker_snooze"
+            style="@style/Widget.Material3.Button.TextButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textColor="@color/mint"
+            android:textSize="14sp" />
+    </LinearLayout>
+</ScrollView>

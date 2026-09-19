@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.Button
 import android.widget.FrameLayout
+import android.widget.ImageView
 import android.widget.TextView
 
 /** Ce que l'écran de garde propose, selon le moment. */
@@ -42,6 +43,7 @@ class BlockerView(
         val subtitle = findViewById<TextView>(R.id.blocker_subtitle)
         val streakLabel = findViewById<TextView>(R.id.blocker_streak)
         val preview = findViewById<TextView>(R.id.blocker_preview_badge)
+        val art = findViewById<ImageView>(R.id.blocker_character)
         val primary = findViewById<Button>(R.id.blocker_primary)
         val secondary = findViewById<Button>(R.id.blocker_secondary)
         val snooze = findViewById<Button>(R.id.blocker_snooze)
@@ -57,6 +59,7 @@ class BlockerView(
 
         when (mode) {
             BlockerMode.PROMPT -> {
+                art.setImageResource(Character.call())
                 title.setText(R.string.blocker_question)
                 subtitle.setText(R.string.blocker_subtitle)
                 primary.text = context.getString(
@@ -73,6 +76,7 @@ class BlockerView(
             }
 
             BlockerMode.SESSION_RUNNING -> {
+                art.setImageResource(Character.during())
                 title.setText(R.string.blocker_session_title)
                 val remaining = Store.sessionEndsAt(context) - System.currentTimeMillis()
                 val minutes = ((remaining.coerceAtLeast(0) + 59_999L) / 60_000L).toInt()
@@ -87,6 +91,7 @@ class BlockerView(
             }
 
             BlockerMode.PREVIEW -> {
+                art.setImageResource(Character.call())
                 title.setText(R.string.blocker_question)
                 subtitle.setText(R.string.blocker_subtitle)
                 primary.setText(R.string.blocker_close_preview)

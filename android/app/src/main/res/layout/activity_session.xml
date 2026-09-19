@@ -1,98 +1,122 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/brand_dark"
-    android:gravity="center"
-    android:orientation="vertical"
-    android:padding="28dp">
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/session_screen_title"
-        android:textColor="@color/mint"
-        android:textSize="14sp"
-        android:letterSpacing="0.12" />
-
-    <TextView
-        android:id="@+id/session_countdown"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="18dp"
-        android:textColor="@color/white"
-        android:textSize="64sp"
-        android:textStyle="bold" />
-
-    <TextView
-        android:id="@+id/session_caption"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:textAlignment="center"
-        android:textColor="@color/mint"
-        android:textSize="15sp" />
+    android:fillViewport="true">
 
     <LinearLayout
-        android:id="@+id/session_durations"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="28dp"
-        android:orientation="horizontal">
+        android:gravity="center"
+        android:minHeight="400dp"
+        android:orientation="vertical"
+        android:paddingHorizontal="26dp"
+        android:paddingVertical="24dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:letterSpacing="0.14"
+            android:text="@string/session_screen_title"
+            android:textColor="@color/mint"
+            android:textSize="13sp" />
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/bg_stage"
+            android:padding="10dp">
+
+            <ImageView
+                android:id="@+id/session_character"
+                android:layout_width="match_parent"
+                android:layout_height="190dp"
+                android:adjustViewBounds="true"
+                android:contentDescription="@null"
+                android:scaleType="fitCenter" />
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/session_countdown"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:textColor="@color/white"
+            android:textSize="56sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/session_caption"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:textAlignment="center"
+            android:textColor="@color/mint"
+            android:textSize="15sp" />
+
+        <LinearLayout
+            android:id="@+id/session_durations"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/duration_10"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:tag="10"
+                android:textColor="@color/mint" />
+
+            <Button
+                android:id="@+id/duration_20"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="6dp"
+                android:layout_weight="1"
+                android:tag="20"
+                android:textColor="@color/mint" />
+
+            <Button
+                android:id="@+id/duration_30"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="6dp"
+                android:layout_weight="1"
+                android:tag="30"
+                android:textColor="@color/mint" />
+
+            <Button
+                android:id="@+id/duration_60"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="6dp"
+                android:layout_weight="1"
+                android:tag="60"
+                android:textColor="@color/mint" />
+        </LinearLayout>
 
         <Button
-            android:id="@+id/duration_10"
-            style="@style/Widget.Material3.Button.OutlinedButton"
-            android:layout_width="0dp"
+            android:id="@+id/session_primary"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:tag="10"
-            android:textColor="@color/mint" />
+            android:layout_marginTop="22dp"
+            android:paddingVertical="14dp"
+            android:textSize="16sp" />
 
         <Button
-            android:id="@+id/duration_20"
-            style="@style/Widget.Material3.Button.OutlinedButton"
-            android:layout_width="0dp"
+            android:id="@+id/session_secondary"
+            style="@style/Widget.Material3.Button.TextButton"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="6dp"
-            android:layout_weight="1"
-            android:tag="20"
-            android:textColor="@color/mint" />
-
-        <Button
-            android:id="@+id/duration_30"
-            style="@style/Widget.Material3.Button.OutlinedButton"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="6dp"
-            android:layout_weight="1"
-            android:tag="30"
-            android:textColor="@color/mint" />
-
-        <Button
-            android:id="@+id/duration_60"
-            style="@style/Widget.Material3.Button.OutlinedButton"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="6dp"
-            android:layout_weight="1"
-            android:tag="60"
+            android:layout_marginTop="4dp"
             android:textColor="@color/mint" />
     </LinearLayout>
-
-    <Button
-        android:id="@+id/session_primary"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="28dp"
-        android:paddingVertical="14dp"
-        android:textSize="16sp" />
-
-    <Button
-        android:id="@+id/session_secondary"
-        style="@style/Widget.Material3.Button.TextButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="6dp"
-        android:textColor="@color/mint" />
-</LinearLayout>
+</ScrollView>

@@ -9,6 +9,7 @@ import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
@@ -140,6 +141,7 @@ class MainActivity : AppCompatActivity() {
     private fun renderToday() {
         val record = Store.record(this)
         val done = record != null
+        findViewById<ImageView>(R.id.hero_character).setImageResource(Character.greeting(done))
         findViewById<TextView>(R.id.status_title)
             .setText(if (done) R.string.status_done else R.string.status_pending)
 

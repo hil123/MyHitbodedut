@@ -43,16 +43,31 @@
             android:paddingBottom="24dp"
             android:clipToPadding="false" />
 
-        <TextView
+        <LinearLayout
             android:id="@+id/journal_empty"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_margin="32dp"
-            android:text="@string/journal_empty"
-            android:textAlignment="center"
-            android:textColor="@color/muted"
-            android:textSize="15sp"
-            android:visibility="gone" />
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="32dp"
+            android:visibility="gone">
+
+            <ImageView
+                android:layout_width="180dp"
+                android:layout_height="150dp"
+                android:contentDescription="@null"
+                android:scaleType="fitCenter"
+                android:src="@drawable/char_writing" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/journal_empty"
+                android:textAlignment="center"
+                android:textColor="@color/muted"
+                android:textSize="15sp" />
+        </LinearLayout>
     </FrameLayout>
 </LinearLayout>

@@ -6,6 +6,7 @@ import android.os.Looper
 import android.view.View
 import android.view.WindowManager
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -21,6 +22,7 @@ class SessionActivity : AppCompatActivity() {
     private lateinit var primary: Button
     private lateinit var secondary: Button
     private lateinit var durations: View
+    private lateinit var art: ImageView
 
     private val tick = object : Runnable {
         override fun run() {
@@ -39,6 +41,7 @@ class SessionActivity : AppCompatActivity() {
         primary = findViewById(R.id.session_primary)
         secondary = findViewById(R.id.session_secondary)
         durations = findViewById(R.id.session_durations)
+        art = findViewById(R.id.session_character)
 
         intArrayOf(R.id.duration_10, R.id.duration_20, R.id.duration_30, R.id.duration_60)
             .forEach { id ->
@@ -66,6 +69,7 @@ class SessionActivity : AppCompatActivity() {
 
     private fun render() {
         if (Store.isSessionRunning(this)) {
+            art.setImageResource(Character.during())
             val remaining = (Store.sessionEndsAt(this) - System.currentTimeMillis()).coerceAtLeast(0)
             val minutes = remaining / 60_000L
             val seconds = (remaining / 1_000L) % 60
@@ -84,6 +88,9 @@ class SessionActivity : AppCompatActivity() {
             secondary.setText(R.string.session_cancel)
             secondary.setOnClickListener { confirmCancel() }
         } else {
+            art.setImageResource(
+                if (Store.isDone(this)) Character.joy() else Character.call()
+            )
             countdown.text = Store.formatDuration(Store.targetMinutes(this))
             caption.setText(
                 if (Store.isDone(this)) R.string.session_idle_done else R.string.session_idle_caption

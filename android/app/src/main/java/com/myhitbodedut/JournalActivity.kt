@@ -37,7 +37,7 @@ class JournalActivity : AppCompatActivity() {
         rows.addAll(Store.days(this).values.sortedByDescending { it.date })
         adapter.notifyDataSetChanged()
 
-        val empty = findViewById<TextView>(R.id.journal_empty)
+        val empty = findViewById<View>(R.id.journal_empty)
         empty.visibility = if (rows.isEmpty()) View.VISIBLE else View.GONE
 
         val total = Store.totalMinutes(this)

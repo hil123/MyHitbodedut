@@ -67,6 +67,26 @@ délibéré. L'accessibilité détecterait les changements d'application
 instantanément, mais Google Play en restreint l'usage aux applications
 d'accessibilité, et s'en servir pour autre chose expose à un retrait.
 
+### Les illustrations
+
+Le personnage vient d'une planche de seize portraits et de quatre rendus pleins.
+La planche est découpée en une grille de 4 par 4, chaque vignette est détourée,
+puis exportée en WebP dans `res/drawable-nodpi`. Vingt images, 492 Ko au total.
+
+Le détourage mérite une note. Le fond des rendus est mesuré entre 254 et 255,
+et la chemise blanche du personnage atteint elle aussi 255 : un seuil de
+luminosité trouerait le vêtement. `tools/decoupe_planche.py` identifie donc le
+fond par connexité depuis le bord de l'image, ce qui laisse intacte toute zone
+claire enfermée dans la silhouette.
+
+Il subsiste un liseré clair le long des contours, inévitable sur un fond blanc.
+Les écrans sombres posent donc les personnages sur un panneau clair, où ce
+liseré ne se voit pas.
+
+`Character.kt` répartit les images par moment : accueil, appel à la pratique,
+pendant la séance, après la séance. Le choix est stable sur une journée entière
+et change le lendemain.
+
 ### Autorisations demandées
 
 | Autorisation | Pourquoi |
