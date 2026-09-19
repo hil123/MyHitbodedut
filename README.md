@@ -14,21 +14,53 @@ jusqu'à confirmation de la mise des tefillin.
 
 **Le principe.** Pendant une fenêtre horaire que vous définissez, par défaut
 06:00 à 11:00, l'ouverture d'une application que vous avez désignée fait
-apparaître un écran plein : « Tu as fait ta hitbodedout ? ». Deux issues
-seulement, valider la pratique ou reporter de quelques minutes. Une fois la
-journée validée, la barrière ne se déclenche plus jusqu'au lendemain.
+apparaître un écran plein : « Tu as fait ta hitbodedout ? ». Trois issues :
+commencer la séance tout de suite, déclarer qu'elle est déjà faite, ou reporter
+de quelques minutes. Une fois la journée validée, la barrière se tait jusqu'au
+lendemain.
 
-**Ce qu'elle suit.** Les jours validés, la série en cours, et une bande des
-sept derniers jours sur l'écran principal.
+**La séance.** Un minuteur tourne dans un service d'arrière-plan, pour que le
+téléphone puisse être posé. La durée est réglable, par défaut soixante minutes.
+La journée est validée par le temps réellement passé, pas par une simple
+déclaration. Si une application bloquée est ouverte pendant la séance, l'écran
+rappelle le temps restant et ne propose que d'y retourner.
+
+**Le journal.** Chaque séance peut recevoir une note libre. L'historique garde
+la durée et la note, jour par jour.
+
+**Pourquoi la barrière n'agit pas.** L'écran principal affiche en permanence
+l'état de la barrière et, si elle n'agit pas, la raison exacte : autorisation
+manquante, blocage éteint, aucune application choisie, journée déjà validée,
+jour sans obligation, report en cours, ou heure hors de la fenêtre. Un bouton
+affiche l'écran de blocage à la demande, à n'importe quelle heure et sans
+aucun effet, pour vérifier qu'il fonctionne.
+
+**Shabbat et fêtes.** Le samedi, la barrière se met en pause et la série n'est
+pas cassée. Un interrupteur permet de déclarer le jour courant comme jour de
+fête. La détection se fait par le jour de la semaine, ce qui est exact pour une
+fenêtre située le matin ; une fenêtre qui traverserait le coucher du soleil
+demanderait un calcul de zmanim, donc la localisation.
+
+**Rappel quotidien.** Une notification à l'heure choisie, tant que la pratique
+du jour n'est pas faite. L'alarme est volontairement inexacte : elle se
+déclenche même en veille profonde sans exiger la permission d'alarme exacte,
+que Google Play restreint.
+
+**Sauvegarde.** Export et import d'un fichier JSON par le sélecteur de fichiers
+du système, sans aucune permission de stockage. À faire de temps en temps :
+sinon un téléphone perdu emporte l'historique.
 
 ### Comment le blocage fonctionne
 
 | Élément | Rôle |
 | --- | --- |
+| `GateStatus` | Source unique de vérité : la barrière est-elle armée, et sinon pourquoi |
 | `GateService` | Service au premier plan, interroge `UsageStatsManager` pour connaître l'application affichée |
-| `BlockerView` | Écran plein ajouté au `WindowManager` en `TYPE_APPLICATION_OVERLAY`, intercepte le bouton retour |
-| `Store` | `SharedPreferences` : jours validés, fenêtre, report, liste des applications bloquées |
-| `BootReceiver` | Relance la surveillance après un redémarrage |
+| `BlockerView` | Écran plein en `TYPE_APPLICATION_OVERLAY`, intercepte le bouton retour |
+| `SessionService` | Décompte de la séance, notification avec le temps restant |
+| `Store` | `SharedPreferences` : journées, durées, notes, réglages, sauvegarde JSON |
+| `Reminder` | Rappel quotidien par alarme inexacte |
+| `BootReceiver` | Relance la surveillance et le rappel après un redémarrage |
 
 Le choix de `UsageStatsManager` plutôt qu'un `AccessibilityService` est
 délibéré. L'accessibilité détecterait les changements d'application
