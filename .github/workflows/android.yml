@@ -27,13 +27,13 @@ jobs:
       - name: Ensure Android platform 35
         run: yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "platforms;android-35" "build-tools;35.0.0" || true
 
-      - name: Build signed release APK
+      - name: Build both signed editions
         working-directory: android
-        run: ./gradlew --no-daemon assembleRelease
+        run: ./gradlew --no-daemon assembleFullRelease assembleLightRelease
 
       - name: Lint
         working-directory: android
-        run: ./gradlew --no-daemon lintDebug
+        run: ./gradlew --no-daemon lintFullRelease
 
       - name: Show lint findings
         if: always()
@@ -44,7 +44,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: myhitbodedut-apk
-          path: android/app/build/outputs/apk/release/*.apk
+          path: android/app/build/outputs/apk/*/release/*.apk
           if-no-files-found: error
 
       # Publie l'APK dans une release au nom fixe « latest », ce qui donne un
@@ -55,11 +55,12 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         working-directory: android
         run: |
-          cp app/build/outputs/apk/release/app-release.apk MyHitbodedut.apk
+          cp app/build/outputs/apk/full/release/app-full-release.apk MyHitbodedut.apk
+          cp app/build/outputs/apk/light/release/app-light-release.apk MyHitbodedut-Light.apk
           gh release delete latest --yes --cleanup-tag || true
-          gh release create latest MyHitbodedut.apk \
+          gh release create latest MyHitbodedut.apk MyHitbodedut-Light.apk \
             --title "MyHitbodedut" \
-            --notes "APK signe, construit depuis le commit ${{ github.sha }}." \
+            --notes "Deux editions signees, construites depuis le commit ${{ github.sha }}. Light n'embarque pas la barriere du matin ni ses permissions." \
             --latest
 
       - name: Upload lint report

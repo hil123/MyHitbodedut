@@ -2,26 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
-    <uses-permission
-        android:name="android.permission.PACKAGE_USAGE_STATS"
-        tools:ignore="ProtectedPermissions" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-
-    <!--
-        Visibilité des applications lançables, pour que l'utilisateur puisse les
-        choisir dans la liste. On évite volontairement QUERY_ALL_PACKAGES, dont
-        Google Play restreint l'usage à une courte liste de cas approuvés.
-    -->
-    <queries>
-        <intent>
-            <action android:name="android.intent.action.MAIN" />
-            <category android:name="android.intent.category.LAUNCHER" />
-        </intent>
-    </queries>
 
     <application
         android:allowBackup="true"
@@ -52,20 +36,6 @@
             android:name=".JournalActivity"
             android:exported="false"
             android:label="@string/journal_title" />
-
-        <activity
-            android:name=".AppPickerActivity"
-            android:exported="false"
-            android:label="@string/apps_title" />
-
-        <service
-            android:name=".GateService"
-            android:exported="false"
-            android:foregroundServiceType="specialUse">
-            <property
-                android:name="android.app.PROPERTY_SPECIAL_USE_FOREGROUND_SERVICE_SUBTYPE"
-                android:value="Interposes a confirmation screen over user-selected apps during a user-defined morning window, until the user confirms their daily practice." />
-        </service>
 
         <service
             android:name=".SessionService"

@@ -42,6 +42,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         Notifications.ensureChannels(this)
         wireActions()
+        applyEdition()
         if (intent?.getBooleanExtra(EXTRA_ASK_NOTE, false) == true) {
             NoteDialog.show(this, Store.today()) { refresh() }
         }
@@ -118,6 +119,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun previewGate() {
+        if (!BuildConfig.HAS_GATE) return
         if (!Permissions.canDrawOverlays(this)) {
             Toast.makeText(this, R.string.preview_needs_overlay, Toast.LENGTH_LONG).show()
             safeStart(Permissions.overlayIntent(this))
@@ -131,7 +133,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun refresh() {
         renderToday()
-        renderDiagnostic()
+        if (BuildConfig.HAS_GATE) renderDiagnostic()
         renderWeek()
         renderSwitches()
         renderSettings()
@@ -211,7 +213,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun renderSwitches() {
-        bindSwitch(R.id.enable_switch, Store.isEnabled(this)) { checked ->
+        if (BuildConfig.HAS_GATE) bindSwitch(R.id.enable_switch, Store.isEnabled(this)) { checked ->
             Store.setEnabled(this, checked)
             if (checked) askNotifications()
             applyServiceState()
@@ -264,8 +266,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun renderPermissions() {
-        renderPermission(R.id.state_overlay, R.id.grant_overlay, Permissions.canDrawOverlays(this))
-        renderPermission(R.id.state_usage, R.id.grant_usage, Permissions.hasUsageAccess(this))
+        if (BuildConfig.HAS_GATE) {
+            renderPermission(R.id.state_overlay, R.id.grant_overlay, Permissions.canDrawOverlays(this))
+            renderPermission(R.id.state_usage, R.id.grant_usage, Permissions.hasUsageAccess(this))
+        }
         renderPermission(
             R.id.state_battery,
             R.id.grant_battery,
@@ -286,8 +290,17 @@ class MainActivity : AppCompatActivity() {
     // --- Service, permissions, sauvegarde -----------------------------------
 
     private fun applyServiceState() {
-        if (GateStatus.shouldRunService(this)) GateService.start(this) else GateService.stop(this)
+        if (BuildConfig.HAS_GATE) {
+            if (GateStatus.shouldRunService(this)) GateService.start(this) else GateService.stop(this)
+        }
         Reminder.reschedule(this)
+    }
+
+    /** L'édition légère n'embarque pas la barrière : on retire ce qui la concerne. */
+    private fun applyEdition() {
+        if (BuildConfig.HAS_GATE) return
+        intArrayOf(R.id.card_gate_state, R.id.card_gate_settings, R.id.row_overlay, R.id.row_usage)
+            .forEach { findViewById<View>(it).visibility = View.GONE }
     }
 
     private fun askNotifications() {

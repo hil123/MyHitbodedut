@@ -132,6 +132,26 @@ cd android && ./gradlew assembleDebug
 
 Pré-requis : JDK 17 et le SDK Android, plateforme 35.
 
+### Deux éditions
+
+| Édition | Contenu | Permissions sensibles |
+| --- | --- | --- |
+| `MyHitbodedut.apk` | Tout, barrière du matin comprise | Affichage par-dessus les autres applications, accès aux données d'utilisation |
+| `MyHitbodedut-Light.apk` | Minuteur, journal, série, rappel, Shabbat, sauvegarde | Aucune |
+
+L'édition légère existe pour une raison précise. Le couple affichage par-dessus
+les autres applications et accès aux données d'utilisation est exactement celui
+des logiciels de surveillance, et Play Protect refuse volontiers une application
+hors boutique qui le demande. Sans la barrière, ce motif disparaît, et
+l'installation passe sans discussion.
+
+Elle sert aussi de test : si la légère s'installe et l'autre non, le blocage
+vient bien des permissions, et pas du fichier ni du téléphone.
+
+Les deux portent un identifiant différent et peuvent coexister sur le même
+téléphone. Leurs données ne sont pas partagées ; l'export JSON permet de passer
+de l'une à l'autre.
+
 ### Si l'installation échoue
 
 Deux causes distinctes, souvent confondues.

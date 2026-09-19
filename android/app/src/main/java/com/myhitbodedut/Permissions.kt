@@ -42,6 +42,7 @@ object Permissions {
 
     fun batteryIntent(): Intent = Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS)
 
+    /** En édition légère il n'y a pas de barrière, donc rien à accorder. */
     fun allGranted(context: Context): Boolean =
-        canDrawOverlays(context) && hasUsageAccess(context)
+        !BuildConfig.HAS_GATE || (canDrawOverlays(context) && hasUsageAccess(context))
 }

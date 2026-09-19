@@ -8,7 +8,9 @@ import android.content.Intent
 class BootReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         if (intent.action != Intent.ACTION_BOOT_COMPLETED) return
-        if (GateStatus.shouldRunService(context)) GateService.start(context)
+        if (BuildConfig.HAS_GATE && GateStatus.shouldRunService(context)) {
+            GateService.start(context)
+        }
         Reminder.reschedule(context)
     }
 }

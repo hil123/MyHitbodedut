@@ -54,6 +54,37 @@ android {
         jvmTarget = "17"
     }
 
+    buildFeatures {
+        buildConfig = true
+    }
+
+    /*
+     * Deux éditions.
+     *
+     * « full » contient la barrière du matin, donc l'affichage par-dessus les
+     * autres applications et l'accès aux données d'utilisation. Cette paire de
+     * permissions est exactement celle des logiciels de surveillance, et Play
+     * Protect bloque volontiers une application hors boutique qui la demande.
+     *
+     * « light » retire la barrière et ces permissions. Il reste le minuteur, le
+     * journal, la série, le rappel et la sauvegarde. Elle s'installe sans heurt,
+     * et sert aussi à isoler la cause quand l'autre est refusée.
+     */
+    flavorDimensions += "edition"
+
+    productFlavors {
+        create("full") {
+            dimension = "edition"
+            buildConfigField("boolean", "HAS_GATE", "true")
+        }
+        create("light") {
+            dimension = "edition"
+            applicationIdSuffix = ".light"
+            versionNameSuffix = "-light"
+            buildConfigField("boolean", "HAS_GATE", "false")
+        }
+    }
+
     lint {
         textReport = true
         textOutput = file("build/reports/lint-results-debug.txt")

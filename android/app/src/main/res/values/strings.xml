@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name" translatable="false">MyHitbodedut</string>
+    <string name="app_name_light" translatable="false">MyHitbodedut Light</string>
 
     <!-- Bandeau et journée -->
     <string name="status_done">Hitbodedout faite aujourd\'hui</string>

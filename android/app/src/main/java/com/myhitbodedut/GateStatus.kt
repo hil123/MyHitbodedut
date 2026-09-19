@@ -37,7 +37,7 @@ object GateStatus {
 
     /** Le service doit-il tourner ? Oui dès que les réglages sont bons, même hors fenêtre. */
     fun shouldRunService(context: Context): Boolean =
-        Store.isEnabled(context) && Permissions.allGranted(context)
+        BuildConfig.HAS_GATE && Store.isEnabled(context) && Permissions.allGranted(context)
 
     fun titleOf(state: GateState): Int = when (state) {
         GateState.ARMED -> R.string.gate_armed_title
