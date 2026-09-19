@@ -27,9 +27,9 @@ jobs:
       - name: Ensure Android platform 35
         run: yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "platforms;android-35" "build-tools;35.0.0" || true
 
-      - name: Build debug APK
+      - name: Build signed release APK
         working-directory: android
-        run: ./gradlew --no-daemon assembleDebug
+        run: ./gradlew --no-daemon assembleRelease
 
       - name: Lint
         working-directory: android
@@ -43,8 +43,8 @@ jobs:
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: myhitbodedut-debug-apk
-          path: android/app/build/outputs/apk/debug/*.apk
+          name: myhitbodedut-apk
+          path: android/app/build/outputs/apk/release/*.apk
           if-no-files-found: error
 
       # Publie l'APK dans une release au nom fixe « latest », ce qui donne un
@@ -55,11 +55,11 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         working-directory: android
         run: |
-          cp app/build/outputs/apk/debug/app-debug.apk MyHitbodedut-debug.apk
+          cp app/build/outputs/apk/release/app-release.apk MyHitbodedut.apk
           gh release delete latest --yes --cleanup-tag || true
-          gh release create latest MyHitbodedut-debug.apk \
-            --title "MyHitbodedut - build de developpement" \
-            --notes "APK de debogage construit depuis le commit ${{ github.sha }}." \
+          gh release create latest MyHitbodedut.apk \
+            --title "MyHitbodedut" \
+            --notes "APK signe, construit depuis le commit ${{ github.sha }}." \
             --latest
 
       - name: Upload lint report

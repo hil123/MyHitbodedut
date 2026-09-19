@@ -24,7 +24,8 @@ object Character {
         R.drawable.char_walking,
         R.drawable.char_tehilim,
         R.drawable.char_thinking,
-        R.drawable.char_welcome
+        R.drawable.char_welcome,
+        R.drawable.char_open_arms
     )
 
     /** Pendant la séance : seul, tourné vers le haut. */
@@ -41,7 +42,8 @@ object Character {
         R.drawable.char_dancing_joy,
         R.drawable.char_dancing,
         R.drawable.char_guitar,
-        R.drawable.char_thumbs_up
+        R.drawable.char_thumbs_up,
+        R.drawable.char_open_arms
     )
 
     val JOURNAL = R.drawable.char_writing

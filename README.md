@@ -117,10 +117,11 @@ Le plus simple, sans rien installer : le workflow GitHub Actions `Android`
 compile à chaque envoi sur `main` et publie l'APK dans la release `latest`.
 
 Lien de téléchargement direct, dépôt privé donc connexion GitHub nécessaire :
-<https://github.com/hil123/MyHitbodedut/releases/latest/download/MyHitbodedut-debug.apk>
+<https://github.com/hil123/MyHitbodedut/releases/latest/download/MyHitbodedut.apk>
 
-L'APK est signé avec la clé de débogage. Android demandera d'autoriser
-l'installation depuis une source inconnue pour le navigateur utilisé.
+L'APK est signé par la clé stable de `android/keystore`, et n'est pas déboguable.
+Android demandera d'autoriser l'installation depuis une source inconnue pour le
+navigateur utilisé.
 
 En local, avec Android Studio ou le SDK en ligne de commande :
 
@@ -130,6 +131,28 @@ cd android && ./gradlew assembleDebug
 ```
 
 Pré-requis : JDK 17 et le SDK Android, plateforme 35.
+
+### Si l'installation échoue
+
+Deux causes distinctes, souvent confondues.
+
+**Une version antérieure est déjà installée.** Jusqu'au 19 septembre 2026, chaque
+compilation était signée par une clé de débogage régénérée à neuf, donc une
+identité différente à chaque fois. Android refuse d'installer une application
+par-dessus une autre signée différemment. Le dépôt utilise désormais une clé
+fixe, mais il faut désinstaller une fois les versions posées avant ce changement.
+
+**Play Protect bloque l'installation.** Une application installée hors du Play
+Store, qui demande l'affichage par-dessus les autres applications et l'accès aux
+données d'utilisation, présente exactement le profil d'un logiciel de
+surveillance. Le blocage est attendu. Sur l'avertissement, ouvrir « Plus de
+détails » puis « Installer quand même ». Le blocage disparaît avec une
+publication signée sur le Play Store, pas avant.
+
+**Après l'installation, sur Android 13 et au-delà**, le système interdit
+d'accorder l'accès aux données d'utilisation à une application installée hors
+boutique tant que l'on n'a pas levé la restriction : informations sur
+l'application, menu à trois points, « Autoriser les paramètres restreints ».
 
 ### Publier sur Google Play
 

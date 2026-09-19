@@ -15,9 +15,29 @@ android {
         versionName = "1.0"
     }
 
+    /*
+     * Clé de signature stable. Sans elle, chaque compilation utilisait une clé
+     * de débogage régénérée à neuf, donc une identité différente à chaque fois,
+     * et Android refusait d'installer la nouvelle version par-dessus l'ancienne.
+     *
+     * Le trousseau versionné n'est qu'une clé de développement, son mot de passe
+     * est public. Pour une publication sur le Play Store, générer une autre clé
+     * gardée hors du dépôt et la fournir par les variables ci-dessous.
+     */
+    signingConfigs {
+        create("release") {
+            storeFile = file(System.getenv("KEYSTORE_PATH") ?: "../keystore/myhitbodedut-dev.jks")
+            storePassword = System.getenv("KEYSTORE_PASSWORD") ?: "myhitbodedut"
+            keyAlias = System.getenv("KEY_ALIAS") ?: "myhitbodedut"
+            keyPassword = System.getenv("KEY_PASSWORD") ?: "myhitbodedut"
+        }
+    }
+
     buildTypes {
         release {
+            signingConfig = signingConfigs.getByName("release")
             isMinifyEnabled = false
+            isDebuggable = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
