@@ -3,41 +3,121 @@
     <string name="status_done">התבודדת היום</string>
     <string name="status_pending">עדיין לא התבודדת היום</string>
     <string name="status_streak_none">הרצף מחכה להתחלה</string>
+    <string name="status_total">%1$s בסך הכול</string>
+    <string name="today_minutes">היום: %1$s של התבודדות</string>
+    <string name="today_declared">אושר בלי טיימר</string>
 
-    <string name="section_today">השבוע</string>
+    <string name="section_practice">ההתבודדות שלי</string>
+    <string name="section_gate_state">מצב החסימה</string>
     <string name="section_gate">חסימת הבוקר</string>
-    <string name="section_gate_hint">האפליקציות שתבחר יישארו סגורות עד שתאשר שהתבודדת.</string>
+    <string name="section_gate_hint">האפליקציות שתבחר יישארו סגורות עד שתתבודד.</string>
+    <string name="section_rhythm">קצב</string>
     <string name="section_permissions">הרשאות נדרשות</string>
-    <string name="section_permissions_hint">בלי שלוש ההרשאות האלה החסימה לא תפעל.</string>
+    <string name="section_permissions_hint">בלי שתי הראשונות החסימה לא תפעל.</string>
+    <string name="section_data">הנתונים שלי</string>
+    <string name="section_data_hint">הכול נשמר בטלפון הזה בלבד. כדאי לייצא מדי פעם.</string>
+
+    <string name="gate_armed_title">החסימה פעילה</string>
+    <string name="gate_armed_detail">%1$d אפליקציות חסומות עד %2$s או עד שתתבודד.</string>
+    <string name="gate_permissions_title">חסרות הרשאות</string>
+    <string name="gate_permissions_detail">אשר הצגה מעל אפליקציות אחרות וגישה לנתוני שימוש, למטה.</string>
+    <string name="gate_disabled_title">החסימה כבויה</string>
+    <string name="gate_disabled_detail">הפעל את מתג חסימת הבוקר כדי שתפעל.</string>
+    <string name="gate_no_apps_title">לא נבחרה אפליקציה</string>
+    <string name="gate_no_apps_detail">אין מה לחסום. בחר לפחות אפליקציה אחת.</string>
+    <string name="gate_done_title">היום אושר</string>
+    <string name="gate_done_detail">היום כבר לא ייחסם דבר. החסימה תחזור מחר.</string>
+    <string name="gate_exempt_title">יום ללא חובה</string>
+    <string name="gate_exempt_detail">שבת או חג: החסימה בהפסקה והרצף נשמר.</string>
+    <string name="gate_snoozed_title">נדחה</string>
+    <string name="gate_snoozed_detail">ביקשת דחייה. החסימה תחזור בסיומה.</string>
+    <string name="gate_window_title">מחוץ לחלון</string>
+    <string name="gate_window_detail">החסימה פועלת בין %1$s ל־%2$s. מחוץ לזה דבר לא נחסם.</string>
+
+    <string name="action_start_session">להתחיל התבודדות של %1$s</string>
+    <string name="action_another_session">עוד התבודדות</string>
+    <string name="action_back_to_session">חזרה להתבודדות</string>
+    <string name="action_write_note">לכתוב הערה</string>
+    <string name="action_journal">לפתוח את היומן</string>
+    <string name="action_preview_gate">להציג את מסך החסימה עכשיו</string>
+    <string name="action_pick_apps">בחירת אפליקציות</string>
+    <string name="action_grant">אישור</string>
+    <string name="action_export">ייצוא</string>
+    <string name="action_import">ייבוא</string>
+    <string name="action_save">שמירה</string>
+    <string name="action_later">אחר כך</string>
+    <string name="action_back">חזרה</string>
 
     <string name="settings_window">חלון החסימה</string>
     <string name="settings_snooze">משך הדחייה</string>
-    <string name="minutes_value">%1$d דק׳</string>
-
-    <string name="action_mark_done">התבודדתי</string>
-    <string name="action_undo">ביטול האישור של היום</string>
-    <string name="action_pick_apps">בחירת אפליקציות</string>
-    <string name="action_grant">אישור</string>
+    <string name="settings_target">משך ההתבודדות</string>
+    <string name="settings_reminder">תזכורת יומית</string>
+    <string name="settings_reminder_time">שעת התזכורת</string>
+    <string name="settings_shabbat">הפסקה בשבת</string>
+    <string name="settings_shabbat_hint">בשבת אין חסימה, והרצף לא נשבר.</string>
+    <string name="settings_exempt_today">היום יום חג</string>
+    <string name="settings_exempt_today_hint">להפעיל ביום טוב או ביום נסיעה.</string>
+    <string name="settings_screen_missing">מסך ההגדרות הזה לא קיים בטלפון.</string>
 
     <string name="permission_overlay">הצגה מעל אפליקציות אחרות</string>
     <string name="permission_usage">גישה לנתוני שימוש</string>
     <string name="permission_battery">סוללה ללא הגבלה</string>
     <string name="permission_granted">אושרה</string>
     <string name="permission_missing">חסרה</string>
+    <string name="preview_needs_overlay">קודם אשר הצגה מעל אפליקציות אחרות.</string>
 
     <string name="apps_title">אפליקציות לחסימה</string>
     <string name="apps_loading">טוען אפליקציות…</string>
+    <string name="apps_select_all">לבחור הכול</string>
+    <string name="apps_clear">לנקות הכול</string>
+    <string name="apps_none_warning">לא נבחרה אפליקציה: דבר לא ייחסם.</string>
 
     <string name="blocker_question">התבודדת היום?</string>
     <string name="blocker_subtitle">רגע של התבודדות לפני כל השאר.</string>
     <string name="blocker_streak_none">היום הראשון ברצף.</string>
-    <string name="blocker_done">כבר התבודדתי</string>
+    <string name="blocker_start">להתחיל עכשיו, %1$s</string>
+    <string name="blocker_already_done">כבר התבודדתי</string>
     <string name="blocker_snooze">אחר כך (%1$d דק׳)</string>
+    <string name="blocker_session_title">התבודדות בעיצומה</string>
+    <string name="blocker_session_subtitle">נותרו %1$s. הטלפון יכול לחכות.</string>
+    <string name="blocker_back_to_session">חזרה להתבודדות</string>
+    <string name="blocker_preview_badge">תצוגה מקדימה, ללא השפעה</string>
+    <string name="blocker_close_preview">לסגור את התצוגה</string>
 
-    <string name="channel_name">מעקב בוקר</string>
-    <string name="channel_description">התראה קבועה שאנדרואיד דורש בזמן המעקב.</string>
-    <string name="service_title">החסימה פעילה</string>
-    <string name="service_text">חלון %1$s – %2$s</string>
+    <string name="session_screen_title">התבודדות</string>
+    <string name="session_idle_caption">בחר משך, והנח את הטלפון.</string>
+    <string name="session_idle_done">כבר אושר היום. אפשר להתחיל שוב.</string>
+    <string name="session_start">להתחיל, %1$s</string>
+    <string name="session_target">התבודדות של %1$s</string>
+    <string name="session_finish_now">לסיים עכשיו</string>
+    <string name="session_cancel">לוותר</string>
+    <string name="session_finish_title">לסיים את ההתבודדות?</string>
+    <string name="session_finish_message">הזמן שכבר עבר יישמר והיום יאושר.</string>
+    <string name="session_cancel_title">לוותר על ההתבודדות?</string>
+    <string name="session_cancel_message">דבר לא יישמר והיום יישאר פתוח.</string>
+    <string name="session_running_title">התבודדות בעיצומה</string>
+    <string name="session_remaining">נותרו %1$s</string>
+    <string name="session_done_title">ההתבודדות הסתיימה</string>
+    <string name="session_done_text">%1$s של התבודדות. הקש כדי להוסיף הערה.</string>
+
+    <string name="journal_title">יומן</string>
+    <string name="journal_empty">עדיין לא נרשמה התבודדות.</string>
+    <string name="note_title">הערה על ההתבודדות</string>
+    <string name="note_hint">מה עלה, מה ביקשת…</string>
+
+    <string name="reminder_title">הגיע זמן ההתבודדות</string>
+    <string name="reminder_text">מחכה לך התבודדות של %1$s.</string>
+    <string name="channel_gate">חסימת הבוקר</string>
+    <string name="channel_gate_description">התראה קבועה שאנדרואיד דורש בזמן המעקב.</string>
+    <string name="channel_session">התבודדות בעיצומה</string>
+    <string name="channel_session_description">ספירה לאחור בזמן ההתבודדות.</string>
+    <string name="channel_reminder">תזכורות</string>
+    <string name="channel_reminder_description">תזכורת יומית וסיום התבודדות.</string>
+
+    <string name="export_ok">הגיבוי נשמר.</string>
+    <string name="export_failed">הייצוא נכשל.</string>
+    <string name="import_failed">לא ניתן לקרוא את הקובץ.</string>
+    <string name="import_invalid">הקובץ אינו גיבוי של MyHitbodedut.</string>
 
     <plurals name="status_streak">
         <item quantity="one">%d יום ברצף</item>
@@ -52,8 +132,20 @@
     </plurals>
 
     <plurals name="apps_selected">
-        <item quantity="one">אפליקציה אחת חסומה</item>
+        <item quantity="one">אפליקציה %d חסומה</item>
         <item quantity="two">%d אפליקציות חסומות</item>
         <item quantity="other">%d אפליקציות חסומות</item>
+    </plurals>
+
+    <plurals name="import_ok">
+        <item quantity="one">יובא %d יום</item>
+        <item quantity="two">יובאו %d ימים</item>
+        <item quantity="other">יובאו %d ימים</item>
+    </plurals>
+
+    <plurals name="journal_summary">
+        <item quantity="one">התבודדות %1$d, %2$s בסך הכול</item>
+        <item quantity="two">%1$d התבודדויות, %2$s בסך הכול</item>
+        <item quantity="other">%1$d התבודדויות, %2$s בסך הכול</item>
     </plurals>
 </resources>

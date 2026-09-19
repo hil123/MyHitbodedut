@@ -2,28 +2,46 @@ package com.myhitbodedut
 
 import android.content.Context
 import android.content.SharedPreferences
+import org.json.JSONObject
+import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
+import java.util.Locale
+
+/** Une journée de pratique : durée effective et note laissée après la séance. */
+data class DayRecord(val date: String, val minutes: Int, val note: String)
 
 /**
- * Persistance locale : jours de pratique validés, fenêtre de blocage,
- * applications bloquées, report en cours. Rien ne quitte l'appareil.
+ * Toute la persistance de l'application, dans les préférences locales.
+ * Rien ne quitte l'appareil : aucune permission Internet n'est déclarée.
  */
 object Store {
 
     private const val PREFS = "myhitbodedut"
-    private const val KEY_DONE = "done_dates"
+
+    private const val KEY_DAYS = "days"
+    private const val KEY_LEGACY_DONE = "done_dates"
     private const val KEY_APPS = "blocked_apps"
     private const val KEY_START = "window_start"
     private const val KEY_END = "window_end"
     private const val KEY_SNOOZE = "snooze_minutes"
     private const val KEY_SNOOZED_UNTIL = "snoozed_until"
     private const val KEY_ENABLED = "enabled"
+    private const val KEY_TARGET = "target_minutes"
+    private const val KEY_PAUSE_SHABBAT = "pause_shabbat"
+    private const val KEY_PAUSED_DATES = "paused_dates"
+    private const val KEY_REMINDER_ON = "reminder_on"
+    private const val KEY_REMINDER_MIN = "reminder_minutes"
+    private const val KEY_SESSION_END = "session_ends_at"
+    private const val KEY_SESSION_TARGET = "session_target"
+    private const val KEY_SESSION_START = "session_started_at"
 
     const val DEFAULT_START = 6 * 60
     const val DEFAULT_END = 11 * 60
     const val DEFAULT_SNOOZE = 15
+    const val DEFAULT_TARGET = 60
+    const val DEFAULT_REMINDER = 7 * 60
 
     private val FORMAT: DateTimeFormatter = DateTimeFormatter.ISO_LOCAL_DATE
 
@@ -32,46 +50,137 @@ object Store {
 
     fun today(): String = LocalDate.now().format(FORMAT)
 
-    fun doneDates(context: Context): Set<String> =
-        prefs(context).getStringSet(KEY_DONE, emptySet()) ?: emptySet()
+    fun parse(date: String): LocalDate = LocalDate.parse(date, FORMAT)
 
-    fun isDone(context: Context, date: String = today()): Boolean =
-        doneDates(context).contains(date)
+    // --- Journées -----------------------------------------------------------
 
-    fun markDoneToday(context: Context) {
-        val dates = doneDates(context).toMutableSet()
-        dates.add(today())
-        prefs(context).edit().putStringSet(KEY_DONE, dates).apply()
+    /** Lit la carte des journées, en reprenant l'ancien format s'il existe encore. */
+    fun days(context: Context): Map<String, DayRecord> {
+        val result = linkedMapOf<String, DayRecord>()
+        val raw = prefs(context).getString(KEY_DAYS, null)
+        if (raw != null) {
+            runCatching {
+                val root = JSONObject(raw)
+                for (date in root.keys()) {
+                    val entry = root.optJSONObject(date) ?: continue
+                    result[date] = DayRecord(
+                        date = date,
+                        minutes = entry.optInt("minutes", 0),
+                        note = entry.optString("note", "")
+                    )
+                }
+            }
+        }
+        // Reprise des jours validés par les versions précédentes.
+        val legacy = prefs(context).getStringSet(KEY_LEGACY_DONE, emptySet()) ?: emptySet()
+        legacy.forEach { date ->
+            if (!result.containsKey(date)) result[date] = DayRecord(date, 0, "")
+        }
+        return result
+    }
+
+    private fun writeDays(context: Context, days: Map<String, DayRecord>) {
+        val root = JSONObject()
+        days.values.forEach { record ->
+            root.put(
+                record.date,
+                JSONObject().put("minutes", record.minutes).put("note", record.note)
+            )
+        }
+        prefs(context).edit()
+            .putString(KEY_DAYS, root.toString())
+            .remove(KEY_LEGACY_DONE)
+            .apply()
+    }
+
+    fun record(context: Context, date: String = today()): DayRecord? = days(context)[date]
+
+    fun isDone(context: Context, date: String = today()): Boolean = days(context).containsKey(date)
+
+    /** Valide la journée. Les minutes s'ajoutent si plusieurs séances ont lieu. */
+    fun addSession(context: Context, minutes: Int, note: String? = null) {
+        val all = days(context).toMutableMap()
+        val existing = all[today()]
+        all[today()] = DayRecord(
+            date = today(),
+            minutes = (existing?.minutes ?: 0) + minutes.coerceAtLeast(0),
+            note = note ?: existing?.note ?: ""
+        )
+        writeDays(context, all)
         clearSnooze(context)
     }
 
-    fun unmarkToday(context: Context) {
-        val dates = doneDates(context).toMutableSet()
-        dates.remove(today())
-        prefs(context).edit().putStringSet(KEY_DONE, dates).apply()
+    fun setNote(context: Context, date: String, note: String) {
+        val all = days(context).toMutableMap()
+        val existing = all[date] ?: DayRecord(date, 0, "")
+        all[date] = existing.copy(note = note)
+        writeDays(context, all)
     }
 
-    /** Jours consécutifs validés, en remontant depuis aujourd'hui (ou hier si non fait). */
+    fun unmarkToday(context: Context) {
+        val all = days(context).toMutableMap()
+        all.remove(today())
+        writeDays(context, all)
+    }
+
+    fun totalMinutes(context: Context): Int = days(context).values.sumOf { it.minutes }
+
+    // --- Jours sans obligation ---------------------------------------------
+
+    fun pauseOnShabbat(context: Context): Boolean = prefs(context).getBoolean(KEY_PAUSE_SHABBAT, true)
+
+    fun setPauseOnShabbat(context: Context, value: Boolean) {
+        prefs(context).edit().putBoolean(KEY_PAUSE_SHABBAT, value).apply()
+    }
+
+    fun pausedDates(context: Context): Set<String> =
+        prefs(context).getStringSet(KEY_PAUSED_DATES, emptySet()) ?: emptySet()
+
+    fun togglePausedDate(context: Context, date: String) {
+        val dates = pausedDates(context).toMutableSet()
+        if (!dates.remove(date)) dates.add(date)
+        prefs(context).edit().putStringSet(KEY_PAUSED_DATES, HashSet(dates)).apply()
+    }
+
+    /**
+     * Jour où la pratique n'est pas attendue : Shabbat si l'option est active,
+     * ou une date marquée à la main comme jour de fête.
+     */
+    fun isExempt(context: Context, date: LocalDate): Boolean {
+        if (pausedDates(context).contains(date.format(FORMAT))) return true
+        return pauseOnShabbat(context) && date.dayOfWeek == DayOfWeek.SATURDAY
+    }
+
+    // --- Série --------------------------------------------------------------
+
+    /** Jours consécutifs validés. Les jours exemptés ne comptent pas et ne cassent pas. */
     fun streak(context: Context): Int {
-        val dates = doneDates(context)
+        val done = days(context).keys
         var day = LocalDate.now()
-        if (!dates.contains(day.format(FORMAT))) day = day.minusDays(1)
+        if (!done.contains(day.format(FORMAT)) && !isExempt(context, day)) day = day.minusDays(1)
         var count = 0
-        while (dates.contains(day.format(FORMAT))) {
-            count++
+        var guard = 0
+        while (guard++ < 3650) {
+            val key = day.format(FORMAT)
+            when {
+                done.contains(key) -> count++
+                isExempt(context, day) -> Unit
+                else -> return count
+            }
             day = day.minusDays(1)
         }
         return count
     }
 
-    /** Les 7 derniers jours, du plus ancien au plus récent. */
-    fun lastWeek(context: Context): List<Pair<LocalDate, Boolean>> {
-        val dates = doneDates(context)
+    fun lastWeek(context: Context): List<Triple<LocalDate, Boolean, Boolean>> {
+        val done = days(context).keys
         return (6 downTo 0).map { offset ->
             val day = LocalDate.now().minusDays(offset.toLong())
-            day to dates.contains(day.format(FORMAT))
+            Triple(day, done.contains(day.format(FORMAT)), isExempt(context, day))
         }
     }
+
+    // --- Applications bloquées ---------------------------------------------
 
     fun blockedApps(context: Context): Set<String> =
         prefs(context).getStringSet(KEY_APPS, emptySet()) ?: emptySet()
@@ -79,6 +188,8 @@ object Store {
     fun setBlockedApps(context: Context, apps: Set<String>) {
         prefs(context).edit().putStringSet(KEY_APPS, HashSet(apps)).apply()
     }
+
+    // --- Fenêtre, report, durée --------------------------------------------
 
     fun windowStart(context: Context): Int = prefs(context).getInt(KEY_START, DEFAULT_START)
 
@@ -88,7 +199,6 @@ object Store {
         prefs(context).edit().putInt(KEY_START, startMinutes).putInt(KEY_END, endMinutes).apply()
     }
 
-    /** Vrai si l'heure courante est dans la fenêtre (gère le passage par minuit). */
     fun inWindow(context: Context): Boolean {
         val now = LocalTime.now()
         val minutes = now.hour * 60 + now.minute
@@ -104,6 +214,8 @@ object Store {
         prefs(context).edit().putInt(KEY_SNOOZE, minutes).apply()
     }
 
+    fun snoozedUntil(context: Context): Long = prefs(context).getLong(KEY_SNOOZED_UNTIL, 0L)
+
     fun snooze(context: Context) {
         val until = System.currentTimeMillis() + snoozeMinutes(context) * 60_000L
         prefs(context).edit().putLong(KEY_SNOOZED_UNTIL, until).apply()
@@ -113,8 +225,13 @@ object Store {
         prefs(context).edit().putLong(KEY_SNOOZED_UNTIL, 0L).apply()
     }
 
-    fun isSnoozed(context: Context): Boolean =
-        prefs(context).getLong(KEY_SNOOZED_UNTIL, 0L) > System.currentTimeMillis()
+    fun isSnoozed(context: Context): Boolean = snoozedUntil(context) > System.currentTimeMillis()
+
+    fun targetMinutes(context: Context): Int = prefs(context).getInt(KEY_TARGET, DEFAULT_TARGET)
+
+    fun setTargetMinutes(context: Context, minutes: Int) {
+        prefs(context).edit().putInt(KEY_TARGET, minutes).apply()
+    }
 
     fun isEnabled(context: Context): Boolean = prefs(context).getBoolean(KEY_ENABLED, false)
 
@@ -122,6 +239,142 @@ object Store {
         prefs(context).edit().putBoolean(KEY_ENABLED, enabled).apply()
     }
 
+    // --- Rappel quotidien ---------------------------------------------------
+
+    fun reminderEnabled(context: Context): Boolean = prefs(context).getBoolean(KEY_REMINDER_ON, false)
+
+    fun setReminderEnabled(context: Context, enabled: Boolean) {
+        prefs(context).edit().putBoolean(KEY_REMINDER_ON, enabled).apply()
+    }
+
+    fun reminderMinutes(context: Context): Int = prefs(context).getInt(KEY_REMINDER_MIN, DEFAULT_REMINDER)
+
+    fun setReminderMinutes(context: Context, minutes: Int) {
+        prefs(context).edit().putInt(KEY_REMINDER_MIN, minutes).apply()
+    }
+
+    // --- Séance en cours ----------------------------------------------------
+
+    fun sessionEndsAt(context: Context): Long = prefs(context).getLong(KEY_SESSION_END, 0L)
+
+    fun sessionStartedAt(context: Context): Long = prefs(context).getLong(KEY_SESSION_START, 0L)
+
+    fun sessionTarget(context: Context): Int = prefs(context).getInt(KEY_SESSION_TARGET, 0)
+
+    fun isSessionRunning(context: Context): Boolean = sessionEndsAt(context) > System.currentTimeMillis()
+
+    fun beginSession(context: Context, minutes: Int) {
+        val now = System.currentTimeMillis()
+        prefs(context).edit()
+            .putLong(KEY_SESSION_START, now)
+            .putLong(KEY_SESSION_END, now + minutes * 60_000L)
+            .putInt(KEY_SESSION_TARGET, minutes)
+            .apply()
+    }
+
+    /** Termine la séance et renvoie les minutes réellement écoulées. */
+    fun endSession(context: Context): Int {
+        val started = sessionStartedAt(context)
+        val elapsed = if (started == 0L) 0
+        else ((System.currentTimeMillis() - started) / 60_000L).toInt()
+        prefs(context).edit()
+            .remove(KEY_SESSION_START)
+            .remove(KEY_SESSION_END)
+            .remove(KEY_SESSION_TARGET)
+            .apply()
+        return elapsed.coerceAtLeast(0)
+    }
+
+    // --- Sauvegarde ---------------------------------------------------------
+
+    fun exportJson(context: Context): String {
+        val root = JSONObject()
+        root.put("format", "myhitbodedut")
+        root.put("version", 1)
+        root.put("exported_at", java.time.Instant.now().toString())
+
+        val daysJson = JSONObject()
+        days(context).values.forEach { record ->
+            daysJson.put(
+                record.date,
+                JSONObject().put("minutes", record.minutes).put("note", record.note)
+            )
+        }
+        root.put("days", daysJson)
+
+        val settings = JSONObject()
+            .put("window_start", windowStart(context))
+            .put("window_end", windowEnd(context))
+            .put("snooze_minutes", snoozeMinutes(context))
+            .put("target_minutes", targetMinutes(context))
+            .put("pause_shabbat", pauseOnShabbat(context))
+            .put("reminder_enabled", reminderEnabled(context))
+            .put("reminder_minutes", reminderMinutes(context))
+        root.put("settings", settings)
+        root.put("paused_dates", org.json.JSONArray(pausedDates(context).toList()))
+        root.put("blocked_apps", org.json.JSONArray(blockedApps(context).toList()))
+        return root.toString(2)
+    }
+
+    /** Fusionne une sauvegarde. Renvoie le nombre de journées importées, ou null si le fichier est invalide. */
+    fun importJson(context: Context, text: String): Int? {
+        val root = runCatching { JSONObject(text) }.getOrNull() ?: return null
+        if (root.optString("format") != "myhitbodedut") return null
+
+        val merged = days(context).toMutableMap()
+        var imported = 0
+        root.optJSONObject("days")?.let { daysJson ->
+            for (date in daysJson.keys()) {
+                val entry = daysJson.optJSONObject(date) ?: continue
+                val incoming = DayRecord(date, entry.optInt("minutes", 0), entry.optString("note", ""))
+                val existing = merged[date]
+                merged[date] = when {
+                    existing == null -> incoming
+                    // En cas de conflit on garde la séance la plus longue et la note non vide.
+                    else -> DayRecord(
+                        date,
+                        maxOf(existing.minutes, incoming.minutes),
+                        existing.note.ifBlank { incoming.note }
+                    )
+                }
+                imported++
+            }
+        }
+        writeDays(context, merged)
+
+        root.optJSONObject("settings")?.let { settings ->
+            setWindow(
+                context,
+                settings.optInt("window_start", windowStart(context)),
+                settings.optInt("window_end", windowEnd(context))
+            )
+            setSnoozeMinutes(context, settings.optInt("snooze_minutes", snoozeMinutes(context)))
+            setTargetMinutes(context, settings.optInt("target_minutes", targetMinutes(context)))
+            setPauseOnShabbat(context, settings.optBoolean("pause_shabbat", pauseOnShabbat(context)))
+            setReminderEnabled(context, settings.optBoolean("reminder_enabled", reminderEnabled(context)))
+            setReminderMinutes(context, settings.optInt("reminder_minutes", reminderMinutes(context)))
+        }
+        root.optJSONArray("paused_dates")?.let { array ->
+            val dates = pausedDates(context).toMutableSet()
+            for (i in 0 until array.length()) dates.add(array.optString(i))
+            prefs(context).edit().putStringSet(KEY_PAUSED_DATES, HashSet(dates.filter { it.isNotBlank() })).apply()
+        }
+        root.optJSONArray("blocked_apps")?.let { array ->
+            val apps = blockedApps(context).toMutableSet()
+            for (i in 0 until array.length()) apps.add(array.optString(i))
+            setBlockedApps(context, apps.filter { it.isNotBlank() }.toSet())
+        }
+        return imported
+    }
+
+    // --- Format -------------------------------------------------------------
+
     fun formatMinutes(minutes: Int): String =
-        String.format(java.util.Locale.US, "%02d:%02d", minutes / 60, minutes % 60)
+        String.format(Locale.US, "%02d:%02d", (minutes / 60) % 24, minutes % 60)
+
+    fun formatDuration(minutes: Int): String = when {
+        minutes < 60 -> "$minutes min"
+        minutes % 60 == 0 -> "${minutes / 60} h"
+        else -> "${minutes / 60} h ${minutes % 60}"
+    }
 }

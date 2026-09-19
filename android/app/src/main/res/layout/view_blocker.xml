@@ -8,48 +8,69 @@
     android:padding="32dp">
 
     <TextView
+        android:id="@+id/blocker_preview_badge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/blocker_question"
+        android:layout_marginBottom="18dp"
+        android:background="@drawable/bg_badge"
+        android:paddingHorizontal="14dp"
+        android:paddingVertical="6dp"
+        android:text="@string/blocker_preview_badge"
+        android:textColor="@color/white"
+        android:textSize="12sp"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/blocker_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:textAlignment="center"
         android:textColor="@color/white"
         android:textSize="30sp"
         android:textStyle="bold" />
 
     <TextView
-        android:layout_width="wrap_content"
+        android:id="@+id/blocker_subtitle"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="14dp"
-        android:text="@string/blocker_subtitle"
         android:textAlignment="center"
         android:textColor="@color/mint"
         android:textSize="16sp" />
 
     <TextView
         android:id="@+id/blocker_streak"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="28dp"
-        android:textAlignment="center"
-        android:textColor="@color/mint"
-        android:textSize="15sp" />
-
-    <Button
-        android:id="@+id/blocker_done"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="24dp"
+        android:textAlignment="center"
+        android:textColor="@color/mint"
+        android:textSize="14sp" />
+
+    <Button
+        android:id="@+id/blocker_primary"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="36dp"
         android:paddingVertical="14dp"
-        android:text="@string/blocker_done"
         android:textSize="16sp" />
 
     <Button
-        android:id="@+id/blocker_snooze"
-        style="?attr/materialButtonOutlinedStyle"
+        android:id="@+id/blocker_secondary"
+        style="@style/Widget.Material3.Button.OutlinedButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:paddingVertical="14dp"
+        android:layout_marginTop="10dp"
+        android:paddingVertical="12dp"
         android:textColor="@color/mint"
         android:textSize="15sp" />
+
+    <Button
+        android:id="@+id/blocker_snooze"
+        style="@style/Widget.Material3.Button.TextButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:textColor="@color/mint"
+        android:textSize="14sp" />
 </LinearLayout>

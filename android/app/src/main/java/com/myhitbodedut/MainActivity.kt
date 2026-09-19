@@ -4,86 +4,45 @@ import android.Manifest
 import android.app.TimePickerDialog
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.view.View
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.google.android.material.materialswitch.MaterialSwitch
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 
-/** Écran unique : état du jour, réglages et accès spéciaux à accorder. */
+/** Écran principal : état du jour, diagnostic de la barrière, réglages. */
 class MainActivity : AppCompatActivity() {
 
     private val requestNotifications =
-        registerForActivityResult(ActivityResultContracts.RequestPermission()) { }
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { refresh() }
 
-    private lateinit var statusTitle: TextView
-    private lateinit var statusStreak: TextView
-    private lateinit var weekStrip: LinearLayout
-    private lateinit var markButton: Button
-    private lateinit var enableSwitch: MaterialSwitch
+    private val exportFile =
+        registerForActivityResult(ActivityResultContracts.CreateDocument("application/json")) { uri ->
+            if (uri != null) writeBackup(uri)
+        }
+
+    private val importFile =
+        registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
+            if (uri != null) readBackup(uri)
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        statusTitle = findViewById(R.id.status_title)
-        statusStreak = findViewById(R.id.status_streak)
-        weekStrip = findViewById(R.id.week_strip)
-        markButton = findViewById(R.id.mark_button)
-        enableSwitch = findViewById(R.id.enable_switch)
-
-        markButton.setOnClickListener {
-            if (Store.isDone(this)) Store.unmarkToday(this) else Store.markDoneToday(this)
-            refresh()
-        }
-
-        enableSwitch.setOnCheckedChangeListener { _, checked ->
-            Store.setEnabled(this, checked)
-            if (checked) askNotifications()
-            applyServiceState()
-            refresh()
-        }
-
-        findViewById<Button>(R.id.grant_overlay).setOnClickListener {
-            startActivity(Permissions.overlayIntent(this))
-        }
-        findViewById<Button>(R.id.grant_usage).setOnClickListener {
-            startActivity(Permissions.usageAccessIntent())
-        }
-        findViewById<Button>(R.id.grant_battery).setOnClickListener {
-            startActivity(Permissions.batteryIntent())
-        }
-        findViewById<Button>(R.id.pick_apps).setOnClickListener {
-            startActivity(Intent(this, AppPickerActivity::class.java))
-        }
-        findViewById<Button>(R.id.window_start).setOnClickListener {
-            pickTime(Store.windowStart(this)) { minutes ->
-                Store.setWindow(this, minutes, Store.windowEnd(this))
-                refresh()
-            }
-        }
-        findViewById<Button>(R.id.window_end).setOnClickListener {
-            pickTime(Store.windowEnd(this)) { minutes ->
-                Store.setWindow(this, Store.windowStart(this), minutes)
-                refresh()
-            }
-        }
-        findViewById<Button>(R.id.snooze_length).setOnClickListener {
-            val options = intArrayOf(5, 10, 15, 30, 60)
-            val labels = options.map { getString(R.string.minutes_value, it) }.toTypedArray()
-            androidx.appcompat.app.AlertDialog.Builder(this)
-                .setTitle(R.string.settings_snooze)
-                .setItems(labels) { _, which ->
-                    Store.setSnoozeMinutes(this, options[which])
-                    refresh()
-                }
-                .show()
+        Notifications.ensureChannels(this)
+        wireActions()
+        if (intent?.getBooleanExtra(EXTRA_ASK_NOTE, false) == true) {
+            NoteDialog.show(this, Store.today()) { refresh() }
         }
     }
 
@@ -93,73 +52,240 @@ class MainActivity : AppCompatActivity() {
         refresh()
     }
 
+    // --- Actions ------------------------------------------------------------
+
+    private fun wireActions() {
+        findViewById<Button>(R.id.start_session).setOnClickListener {
+            startActivity(Intent(this, SessionActivity::class.java))
+        }
+        findViewById<Button>(R.id.open_journal).setOnClickListener {
+            startActivity(Intent(this, JournalActivity::class.java))
+        }
+        findViewById<Button>(R.id.today_note).setOnClickListener {
+            NoteDialog.show(this, Store.today()) { refresh() }
+        }
+        findViewById<Button>(R.id.preview_gate).setOnClickListener { previewGate() }
+        findViewById<Button>(R.id.pick_apps).setOnClickListener {
+            startActivity(Intent(this, AppPickerActivity::class.java))
+        }
+        findViewById<Button>(R.id.window_start).setOnClickListener {
+            pickTime(Store.windowStart(this)) {
+                Store.setWindow(this, it, Store.windowEnd(this))
+                refresh()
+            }
+        }
+        findViewById<Button>(R.id.window_end).setOnClickListener {
+            pickTime(Store.windowEnd(this)) {
+                Store.setWindow(this, Store.windowStart(this), it)
+                refresh()
+            }
+        }
+        findViewById<Button>(R.id.snooze_length).setOnClickListener {
+            pickMinutes(R.string.settings_snooze, intArrayOf(5, 10, 15, 30, 60)) {
+                Store.setSnoozeMinutes(this, it)
+                refresh()
+            }
+        }
+        findViewById<Button>(R.id.target_length).setOnClickListener {
+            pickMinutes(R.string.settings_target, intArrayOf(5, 10, 15, 20, 30, 45, 60)) {
+                Store.setTargetMinutes(this, it)
+                refresh()
+            }
+        }
+        findViewById<Button>(R.id.reminder_time).setOnClickListener {
+            pickTime(Store.reminderMinutes(this)) {
+                Store.setReminderMinutes(this, it)
+                Reminder.reschedule(this)
+                refresh()
+            }
+        }
+        findViewById<Button>(R.id.grant_overlay).setOnClickListener {
+            safeStart(Permissions.overlayIntent(this))
+        }
+        findViewById<Button>(R.id.grant_usage).setOnClickListener {
+            safeStart(Permissions.usageAccessIntent())
+        }
+        findViewById<Button>(R.id.grant_battery).setOnClickListener {
+            safeStart(Permissions.batteryIntent())
+        }
+        findViewById<Button>(R.id.export_data).setOnClickListener {
+            exportFile.launch("myhitbodedut-${Store.today()}.json")
+        }
+        findViewById<Button>(R.id.import_data).setOnClickListener {
+            importFile.launch(arrayOf("application/json", "text/plain", "*/*"))
+        }
+    }
+
+    private fun previewGate() {
+        if (!Permissions.canDrawOverlays(this)) {
+            Toast.makeText(this, R.string.preview_needs_overlay, Toast.LENGTH_LONG).show()
+            safeStart(Permissions.overlayIntent(this))
+            return
+        }
+        GateService.preview(this)
+        moveTaskToBack(true)
+    }
+
     // --- Rendu --------------------------------------------------------------
 
     private fun refresh() {
-        val done = Store.isDone(this)
-        statusTitle.setText(if (done) R.string.status_done else R.string.status_pending)
+        renderToday()
+        renderDiagnostic()
+        renderWeek()
+        renderSwitches()
+        renderSettings()
+        renderPermissions()
+    }
+
+    private fun renderToday() {
+        val record = Store.record(this)
+        val done = record != null
+        findViewById<TextView>(R.id.status_title)
+            .setText(if (done) R.string.status_done else R.string.status_pending)
+
         val streak = Store.streak(this)
-        statusStreak.text = if (streak > 0) {
+        findViewById<TextView>(R.id.status_streak).text = if (streak > 0) {
             resources.getQuantityString(R.plurals.status_streak, streak, streak)
         } else {
             getString(R.string.status_streak_none)
         }
-        markButton.setText(if (done) R.string.action_undo else R.string.action_mark_done)
 
-        enableSwitch.setOnCheckedChangeListener(null)
-        enableSwitch.isChecked = Store.isEnabled(this)
-        enableSwitch.setOnCheckedChangeListener { _, checked ->
+        val total = Store.totalMinutes(this)
+        findViewById<TextView>(R.id.status_total).text =
+            getString(R.string.status_total, Store.formatDuration(total))
+
+        val minutesToday = record?.minutes ?: 0
+        val detail = findViewById<TextView>(R.id.today_detail)
+        detail.visibility = if (done) View.VISIBLE else View.GONE
+        if (done) {
+            detail.text = if (minutesToday > 0) {
+                getString(R.string.today_minutes, Store.formatDuration(minutesToday))
+            } else {
+                getString(R.string.today_declared)
+            }
+        }
+        findViewById<Button>(R.id.today_note).visibility = if (done) View.VISIBLE else View.GONE
+
+        findViewById<Button>(R.id.start_session).text = when {
+            Store.isSessionRunning(this) -> getString(R.string.action_back_to_session)
+            done -> getString(R.string.action_another_session)
+            else -> getString(
+                R.string.action_start_session,
+                Store.formatDuration(Store.targetMinutes(this))
+            )
+        }
+    }
+
+    private fun renderDiagnostic() {
+        val state = GateStatus.evaluate(this)
+        findViewById<TextView>(R.id.gate_state_title).apply {
+            setText(GateStatus.titleOf(state))
+            setTextColor(ContextCompat.getColor(this@MainActivity, GateStatus.colorOf(state)))
+        }
+        findViewById<TextView>(R.id.gate_state_detail).text = GateStatus.detailOf(this, state)
+    }
+
+    private fun renderWeek() {
+        val strip = findViewById<LinearLayout>(R.id.week_strip)
+        strip.removeAllViews()
+        val formatter = DateTimeFormatter.ofPattern("EEE", Locale.getDefault())
+        Store.lastWeek(this).forEach { (day, done, exempt) ->
+            val cell = layoutInflater.inflate(R.layout.item_day, strip, false)
+            cell.findViewById<TextView>(R.id.day_label).text = day.format(formatter)
+            cell.findViewById<TextView>(R.id.day_mark).text = when {
+                done -> "✓"
+                exempt -> "—"
+                else -> "·"
+            }
+            cell.setBackgroundResource(
+                when {
+                    done -> R.drawable.bg_day_done
+                    exempt -> R.drawable.bg_day_exempt
+                    else -> R.drawable.bg_day_todo
+                }
+            )
+            strip.addView(cell)
+        }
+    }
+
+    private fun renderSwitches() {
+        bindSwitch(R.id.enable_switch, Store.isEnabled(this)) { checked ->
             Store.setEnabled(this, checked)
             if (checked) askNotifications()
             applyServiceState()
             refresh()
         }
+        bindSwitch(R.id.reminder_switch, Store.reminderEnabled(this)) { checked ->
+            Store.setReminderEnabled(this, checked)
+            if (checked) askNotifications()
+            Reminder.reschedule(this)
+            refresh()
+        }
+        bindSwitch(R.id.shabbat_switch, Store.pauseOnShabbat(this)) { checked ->
+            Store.setPauseOnShabbat(this, checked)
+            refresh()
+        }
+        bindSwitch(R.id.exempt_today_switch, Store.pausedDates(this).contains(Store.today())) {
+            Store.togglePausedDate(this, Store.today())
+            refresh()
+        }
+    }
 
-        renderPermission(R.id.state_overlay, R.id.grant_overlay, Permissions.canDrawOverlays(this))
-        renderPermission(R.id.state_usage, R.id.grant_usage, Permissions.hasUsageAccess(this))
-        renderPermission(R.id.state_battery, R.id.grant_battery, Permissions.isBatteryUnrestricted(this))
+    /** Pose la valeur sans déclencher l'écouteur, puis le réarme. */
+    private fun bindSwitch(id: Int, checked: Boolean, onChange: (Boolean) -> Unit) {
+        val view = findViewById<MaterialSwitch>(id)
+        view.setOnCheckedChangeListener(null)
+        view.isChecked = checked
+        view.setOnCheckedChangeListener { _, value -> onChange(value) }
+    }
 
+    private fun renderSettings() {
         findViewById<Button>(R.id.window_start).text = Store.formatMinutes(Store.windowStart(this))
         findViewById<Button>(R.id.window_end).text = Store.formatMinutes(Store.windowEnd(this))
         findViewById<Button>(R.id.snooze_length).text =
-            getString(R.string.minutes_value, Store.snoozeMinutes(this))
+            Store.formatDuration(Store.snoozeMinutes(this))
+        findViewById<Button>(R.id.target_length).text =
+            Store.formatDuration(Store.targetMinutes(this))
+        findViewById<Button>(R.id.reminder_time).text =
+            Store.formatMinutes(Store.reminderMinutes(this))
 
-        val blocked = Store.blockedApps(this).size
-        findViewById<TextView>(R.id.apps_summary).text =
-            resources.getQuantityString(R.plurals.apps_selected, blocked, blocked)
+        val count = Store.blockedApps(this).size
+        val summary = findViewById<TextView>(R.id.apps_summary)
+        summary.text = if (count == 0) {
+            getString(R.string.apps_none_warning)
+        } else {
+            resources.getQuantityString(R.plurals.apps_selected, count, count)
+        }
+        summary.setTextColor(
+            ContextCompat.getColor(this, if (count == 0) R.color.warning else R.color.muted)
+        )
+    }
 
-        renderWeek()
+    private fun renderPermissions() {
+        renderPermission(R.id.state_overlay, R.id.grant_overlay, Permissions.canDrawOverlays(this))
+        renderPermission(R.id.state_usage, R.id.grant_usage, Permissions.hasUsageAccess(this))
+        renderPermission(
+            R.id.state_battery,
+            R.id.grant_battery,
+            Permissions.isBatteryUnrestricted(this)
+        )
     }
 
     private fun renderPermission(stateId: Int, buttonId: Int, granted: Boolean) {
-        val state = findViewById<TextView>(stateId)
-        state.setText(if (granted) R.string.permission_granted else R.string.permission_missing)
-        state.setTextColor(
-            ContextCompat.getColor(this, if (granted) R.color.brand else R.color.warning)
-        )
+        findViewById<TextView>(stateId).apply {
+            setText(if (granted) R.string.permission_granted else R.string.permission_missing)
+            setTextColor(
+                ContextCompat.getColor(this@MainActivity, if (granted) R.color.brand else R.color.warning)
+            )
+        }
         findViewById<Button>(buttonId).isEnabled = !granted
     }
 
-    private fun renderWeek() {
-        weekStrip.removeAllViews()
-        val formatter = DateTimeFormatter.ofPattern("EEE", Locale.getDefault())
-        Store.lastWeek(this).forEach { (day, done) ->
-            val cell = layoutInflater.inflate(R.layout.item_day, weekStrip, false)
-            cell.findViewById<TextView>(R.id.day_label).text = day.format(formatter)
-            cell.findViewById<TextView>(R.id.day_mark).text = if (done) "✓" else "·"
-            cell.setBackgroundResource(if (done) R.drawable.bg_day_done else R.drawable.bg_day_todo)
-            weekStrip.addView(cell)
-        }
-    }
-
-    // --- Service et permissions --------------------------------------------
+    // --- Service, permissions, sauvegarde -----------------------------------
 
     private fun applyServiceState() {
-        if (Store.isEnabled(this) && Permissions.allGranted(this)) {
-            GateService.start(this)
-        } else {
-            GateService.stop(this)
-        }
+        if (GateStatus.shouldRunService(this)) GateService.start(this) else GateService.stop(this)
+        Reminder.reschedule(this)
     }
 
     private fun askNotifications() {
@@ -170,13 +296,68 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun writeBackup(uri: Uri) {
+        val ok = runCatching {
+            contentResolver.openOutputStream(uri)?.use { stream ->
+                stream.write(Store.exportJson(this).toByteArray())
+            } ?: error("flux indisponible")
+        }.isSuccess
+        Toast.makeText(
+            this,
+            if (ok) R.string.export_ok else R.string.export_failed,
+            Toast.LENGTH_LONG
+        ).show()
+    }
+
+    private fun readBackup(uri: Uri) {
+        val text = runCatching {
+            contentResolver.openInputStream(uri)?.bufferedReader()?.use { it.readText() }
+        }.getOrNull()
+        if (text == null) {
+            Toast.makeText(this, R.string.import_failed, Toast.LENGTH_LONG).show()
+            return
+        }
+        val imported = Store.importJson(this, text)
+        if (imported == null) {
+            Toast.makeText(this, R.string.import_invalid, Toast.LENGTH_LONG).show()
+            return
+        }
+        Toast.makeText(
+            this,
+            resources.getQuantityString(R.plurals.import_ok, imported, imported),
+            Toast.LENGTH_LONG
+        ).show()
+        applyServiceState()
+        refresh()
+    }
+
+    // --- Sélecteurs ---------------------------------------------------------
+
     private fun pickTime(currentMinutes: Int, onPicked: (Int) -> Unit) {
         TimePickerDialog(
             this,
             { _, hour, minute -> onPicked(hour * 60 + minute) },
-            currentMinutes / 60,
+            (currentMinutes / 60) % 24,
             currentMinutes % 60,
             true
         ).show()
+    }
+
+    private fun pickMinutes(titleId: Int, options: IntArray, onPicked: (Int) -> Unit) {
+        val labels = options.map { Store.formatDuration(it) }.toTypedArray()
+        AlertDialog.Builder(this)
+            .setTitle(titleId)
+            .setItems(labels) { _, which -> onPicked(options[which]) }
+            .show()
+    }
+
+    private fun safeStart(intent: Intent) {
+        runCatching { startActivity(intent) }.onFailure {
+            Toast.makeText(this, R.string.settings_screen_missing, Toast.LENGTH_LONG).show()
+        }
+    }
+
+    companion object {
+        const val EXTRA_ASK_NOTE = "ask_note"
     }
 }

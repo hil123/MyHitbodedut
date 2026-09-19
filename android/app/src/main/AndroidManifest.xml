@@ -43,6 +43,17 @@
         </activity>
 
         <activity
+            android:name=".SessionActivity"
+            android:exported="false"
+            android:label="@string/session_screen_title"
+            android:launchMode="singleTop" />
+
+        <activity
+            android:name=".JournalActivity"
+            android:exported="false"
+            android:label="@string/journal_title" />
+
+        <activity
             android:name=".AppPickerActivity"
             android:exported="false"
             android:label="@string/apps_title" />
@@ -56,6 +67,15 @@
                 android:value="Interposes a confirmation screen over user-selected apps during a user-defined morning window, until the user confirms their daily practice." />
         </service>
 
+        <service
+            android:name=".SessionService"
+            android:exported="false"
+            android:foregroundServiceType="specialUse">
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FOREGROUND_SERVICE_SUBTYPE"
+                android:value="Runs the countdown of a user-started meditation session and shows the remaining time, so the phone can be put down." />
+        </service>
+
         <receiver
             android:name=".BootReceiver"
             android:exported="true">
@@ -63,5 +83,9 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
+
+        <receiver
+            android:name=".ReminderReceiver"
+            android:exported="false" />
     </application>
 </manifest>

@@ -10,55 +10,71 @@
         android:orientation="vertical"
         android:paddingBottom="32dp">
 
-        <!-- Bandeau -->
+        <!-- Bandeau : où j'en suis aujourd'hui -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/brand_dark"
+            android:background="@drawable/bg_hero"
             android:orientation="vertical"
-            android:padding="24dp">
+            android:paddingHorizontal="24dp"
+            android:paddingTop="28dp"
+            android:paddingBottom="24dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/app_name"
+                android:textColor="@color/mint"
+                android:textSize="13sp"
+                android:letterSpacing="0.12" />
+
+            <TextView
+                android:id="@+id/status_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
                 android:textColor="@color/white"
                 android:textSize="26sp"
                 android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/status_title"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:textColor="@color/mint"
-                android:textSize="16sp" />
+                android:layout_marginTop="14dp"
+                android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/status_streak"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
-                android:textColor="@color/mint"
-                android:textSize="14sp" />
+                <TextView
+                    android:id="@+id/status_streak"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_badge"
+                    android:paddingHorizontal="12dp"
+                    android:paddingVertical="6dp"
+                    android:textColor="@color/white"
+                    android:textSize="13sp" />
+
+                <TextView
+                    android:id="@+id/status_total"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:background="@drawable/bg_badge"
+                    android:paddingHorizontal="12dp"
+                    android:paddingVertical="6dp"
+                    android:textColor="@color/white"
+                    android:textSize="13sp" />
+            </LinearLayout>
         </LinearLayout>
 
-        <!-- Aujourd'hui -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            android:background="@drawable/bg_card"
-            android:orientation="vertical"
-            android:padding="18dp">
+        <!-- La séance -->
+        <LinearLayout style="@style/Card">
+
+            <TextView style="@style/CardTitle" android:text="@string/section_practice" />
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/section_today"
-                android:textColor="@color/ink"
-                android:textSize="17sp"
-                android:textStyle="bold" />
+                android:id="@+id/today_detail"
+                style="@style/CardHint"
+                android:visibility="gone" />
 
             <LinearLayout
                 android:id="@+id/week_strip"
@@ -68,26 +84,70 @@
                 android:orientation="horizontal" />
 
             <Button
-                android:id="@+id/mark_button"
+                android:id="@+id/start_session"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp" />
-        </LinearLayout>
-
-        <!-- Blocage -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="16dp"
-            android:background="@drawable/bg_card"
-            android:orientation="vertical"
-            android:padding="18dp">
+                android:layout_marginTop="16dp"
+                android:paddingVertical="14dp"
+                android:textSize="16sp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center_vertical"
+                android:layout_marginTop="8dp"
                 android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/today_note"
+                    style="@style/Widget.Material3.Button.TextButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/action_write_note"
+                    android:visibility="gone" />
+
+                <Button
+                    android:id="@+id/open_journal"
+                    style="@style/Widget.Material3.Button.TextButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/action_journal" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Diagnostic de la barrière : pourquoi elle agit, ou pourquoi non -->
+        <LinearLayout style="@style/Card">
+
+            <TextView style="@style/CardTitle" android:text="@string/section_gate_state" />
+
+            <TextView
+                android:id="@+id/gate_state_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/gate_state_detail"
+                style="@style/CardHint"
+                android:layout_marginTop="4dp"
+                android:textSize="14sp" />
+
+            <Button
+                android:id="@+id/preview_gate"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:text="@string/action_preview_gate" />
+        </LinearLayout>
+
+        <!-- Réglages de la barrière -->
+        <LinearLayout style="@style/Card">
+
+            <LinearLayout style="@style/SettingRow" android:layout_marginTop="0dp">
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -95,21 +155,9 @@
                     android:layout_weight="1"
                     android:orientation="vertical">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/section_gate"
-                        android:textColor="@color/ink"
-                        android:textSize="17sp"
-                        android:textStyle="bold" />
+                    <TextView style="@style/CardTitle" android:text="@string/section_gate" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="2dp"
-                        android:text="@string/section_gate_hint"
-                        android:textColor="@color/muted"
-                        android:textSize="13sp" />
+                    <TextView style="@style/CardHint" android:text="@string/section_gate_hint" />
                 </LinearLayout>
 
                 <com.google.android.material.materialswitch.MaterialSwitch
@@ -118,73 +166,35 @@
                     android:layout_height="wrap_content" />
             </LinearLayout>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginVertical="14dp"
-                android:background="@color/line" />
+            <View style="@style/Divider" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
+            <LinearLayout style="@style/SettingRow" android:layout_marginTop="0dp">
 
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/settings_window"
-                    android:textColor="@color/ink"
-                    android:textSize="15sp" />
+                <TextView style="@style/SettingLabel" android:text="@string/settings_window" />
 
                 <Button
                     android:id="@+id/window_start"
-                    style="?attr/materialButtonOutlinedStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    style="@style/SettingValue" />
 
                 <Button
                     android:id="@+id/window_end"
-                    style="?attr/materialButtonOutlinedStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    style="@style/SettingValue"
                     android:layout_marginStart="8dp" />
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
+            <LinearLayout style="@style/SettingRow">
 
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/settings_snooze"
-                    android:textColor="@color/ink"
-                    android:textSize="15sp" />
+                <TextView style="@style/SettingLabel" android:text="@string/settings_snooze" />
 
-                <Button
-                    android:id="@+id/snooze_length"
-                    style="?attr/materialButtonOutlinedStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                <Button android:id="@+id/snooze_length" style="@style/SettingValue" />
             </LinearLayout>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginVertical="14dp"
-                android:background="@color/line" />
+            <View style="@style/Divider" />
 
             <TextView
                 android:id="@+id/apps_summary"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/muted"
                 android:textSize="14sp" />
 
             <Button
@@ -195,37 +205,38 @@
                 android:text="@string/action_pick_apps" />
         </LinearLayout>
 
-        <!-- Autorisations -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            android:background="@drawable/bg_card"
-            android:orientation="vertical"
-            android:padding="18dp">
+        <!-- Rythme de la pratique -->
+        <LinearLayout style="@style/Card">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/section_permissions"
-                android:textColor="@color/ink"
-                android:textSize="17sp"
-                android:textStyle="bold" />
+            <TextView style="@style/CardTitle" android:text="@string/section_rhythm" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
-                android:text="@string/section_permissions_hint"
-                android:textColor="@color/muted"
-                android:textSize="13sp" />
+            <LinearLayout style="@style/SettingRow">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
+                <TextView style="@style/SettingLabel" android:text="@string/settings_target" />
+
+                <Button android:id="@+id/target_length" style="@style/SettingValue" />
+            </LinearLayout>
+
+            <LinearLayout style="@style/SettingRow">
+
+                <TextView style="@style/SettingLabel" android:text="@string/settings_reminder" />
+
+                <com.google.android.material.materialswitch.MaterialSwitch
+                    android:id="@+id/reminder_switch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <LinearLayout style="@style/SettingRow">
+
+                <TextView style="@style/SettingLabel" android:text="@string/settings_reminder_time" />
+
+                <Button android:id="@+id/reminder_time" style="@style/SettingValue" />
+            </LinearLayout>
+
+            <View style="@style/Divider" />
+
+            <LinearLayout style="@style/SettingRow" android:layout_marginTop="0dp">
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -233,12 +244,53 @@
                     android:layout_weight="1"
                     android:orientation="vertical">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/permission_overlay"
-                        android:textColor="@color/ink"
-                        android:textSize="15sp" />
+                    <TextView style="@style/SettingLabel" android:text="@string/settings_shabbat" />
+
+                    <TextView style="@style/CardHint" android:text="@string/settings_shabbat_hint" />
+                </LinearLayout>
+
+                <com.google.android.material.materialswitch.MaterialSwitch
+                    android:id="@+id/shabbat_switch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <LinearLayout style="@style/SettingRow">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView style="@style/SettingLabel" android:text="@string/settings_exempt_today" />
+
+                    <TextView style="@style/CardHint" android:text="@string/settings_exempt_today_hint" />
+                </LinearLayout>
+
+                <com.google.android.material.materialswitch.MaterialSwitch
+                    android:id="@+id/exempt_today_switch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Autorisations -->
+        <LinearLayout style="@style/Card">
+
+            <TextView style="@style/CardTitle" android:text="@string/section_permissions" />
+
+            <TextView style="@style/CardHint" android:text="@string/section_permissions_hint" />
+
+            <LinearLayout style="@style/SettingRow" android:layout_marginTop="14dp">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView style="@style/SettingLabel" android:text="@string/permission_overlay" />
 
                     <TextView
                         android:id="@+id/state_overlay"
@@ -249,18 +301,11 @@
 
                 <Button
                     android:id="@+id/grant_overlay"
-                    style="?attr/materialButtonOutlinedStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    style="@style/SettingValue"
                     android:text="@string/action_grant" />
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
+            <LinearLayout style="@style/SettingRow">
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -268,12 +313,7 @@
                     android:layout_weight="1"
                     android:orientation="vertical">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/permission_usage"
-                        android:textColor="@color/ink"
-                        android:textSize="15sp" />
+                    <TextView style="@style/SettingLabel" android:text="@string/permission_usage" />
 
                     <TextView
                         android:id="@+id/state_usage"
@@ -284,18 +324,11 @@
 
                 <Button
                     android:id="@+id/grant_usage"
-                    style="?attr/materialButtonOutlinedStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    style="@style/SettingValue"
                     android:text="@string/action_grant" />
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
+            <LinearLayout style="@style/SettingRow">
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -303,12 +336,7 @@
                     android:layout_weight="1"
                     android:orientation="vertical">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/permission_battery"
-                        android:textColor="@color/ink"
-                        android:textSize="15sp" />
+                    <TextView style="@style/SettingLabel" android:text="@string/permission_battery" />
 
                     <TextView
                         android:id="@+id/state_battery"
@@ -319,10 +347,40 @@
 
                 <Button
                     android:id="@+id/grant_battery"
-                    style="?attr/materialButtonOutlinedStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    style="@style/SettingValue"
                     android:text="@string/action_grant" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Sauvegarde -->
+        <LinearLayout style="@style/Card">
+
+            <TextView style="@style/CardTitle" android:text="@string/section_data" />
+
+            <TextView style="@style/CardHint" android:text="@string/section_data_hint" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/export_data"
+                    style="@style/Widget.Material3.Button.OutlinedButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/action_export" />
+
+                <Button
+                    android:id="@+id/import_data"
+                    style="@style/Widget.Material3.Button.OutlinedButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_weight="1"
+                    android:text="@string/action_import" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

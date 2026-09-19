@@ -4,19 +4,32 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.view.KeyEvent
 import android.view.LayoutInflater
+import android.view.View
 import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.TextView
 
-/**
- * L'écran plein affiché par-dessus une application bloquée.
- * Deux issues seulement : valider la pratique, ou reporter.
- */
+/** Ce que l'écran de garde propose, selon le moment. */
+enum class BlockerMode {
+    /** Rien n'a encore été fait aujourd'hui. */
+    PROMPT,
+
+    /** Une séance est en cours : la seule issue est d'y retourner. */
+    SESSION_RUNNING,
+
+    /** Aperçu déclenché depuis les réglages : aucun effet. */
+    PREVIEW
+}
+
+/** L'écran plein affiché par-dessus une application bloquée. */
 @SuppressLint("ViewConstructor")
 class BlockerView(
     context: Context,
-    private val onDone: () -> Unit,
-    private val onSnooze: () -> Unit
+    private val mode: BlockerMode,
+    private val onStartSession: () -> Unit,
+    private val onAlreadyDone: () -> Unit,
+    private val onSnooze: () -> Unit,
+    private val onDismiss: () -> Unit
 ) : FrameLayout(context) {
 
     init {
@@ -25,24 +38,71 @@ class BlockerView(
         isFocusable = true
         isFocusableInTouchMode = true
 
+        val title = findViewById<TextView>(R.id.blocker_title)
+        val subtitle = findViewById<TextView>(R.id.blocker_subtitle)
+        val streakLabel = findViewById<TextView>(R.id.blocker_streak)
+        val preview = findViewById<TextView>(R.id.blocker_preview_badge)
+        val primary = findViewById<Button>(R.id.blocker_primary)
+        val secondary = findViewById<Button>(R.id.blocker_secondary)
+        val snooze = findViewById<Button>(R.id.blocker_snooze)
+
         val streak = Store.streak(context)
-        findViewById<TextView>(R.id.blocker_streak).text = if (streak > 0) {
+        streakLabel.text = if (streak > 0) {
             context.resources.getQuantityString(R.plurals.blocker_streak, streak, streak)
         } else {
             context.getString(R.string.blocker_streak_none)
         }
 
-        findViewById<Button>(R.id.blocker_done).setOnClickListener { onDone() }
+        preview.visibility = if (mode == BlockerMode.PREVIEW) View.VISIBLE else View.GONE
 
-        findViewById<Button>(R.id.blocker_snooze).apply {
-            text = context.getString(R.string.blocker_snooze, Store.snoozeMinutes(context))
-            setOnClickListener { onSnooze() }
+        when (mode) {
+            BlockerMode.PROMPT -> {
+                title.setText(R.string.blocker_question)
+                subtitle.setText(R.string.blocker_subtitle)
+                primary.text = context.getString(
+                    R.string.blocker_start,
+                    Store.formatDuration(Store.targetMinutes(context))
+                )
+                primary.setOnClickListener { onStartSession() }
+                secondary.visibility = View.VISIBLE
+                secondary.setText(R.string.blocker_already_done)
+                secondary.setOnClickListener { onAlreadyDone() }
+                snooze.visibility = View.VISIBLE
+                snooze.text = context.getString(R.string.blocker_snooze, Store.snoozeMinutes(context))
+                snooze.setOnClickListener { onSnooze() }
+            }
+
+            BlockerMode.SESSION_RUNNING -> {
+                title.setText(R.string.blocker_session_title)
+                val remaining = Store.sessionEndsAt(context) - System.currentTimeMillis()
+                val minutes = ((remaining.coerceAtLeast(0) + 59_999L) / 60_000L).toInt()
+                subtitle.text = context.getString(
+                    R.string.blocker_session_subtitle,
+                    Store.formatDuration(minutes)
+                )
+                primary.setText(R.string.blocker_back_to_session)
+                primary.setOnClickListener { onStartSession() }
+                secondary.visibility = View.GONE
+                snooze.visibility = View.GONE
+            }
+
+            BlockerMode.PREVIEW -> {
+                title.setText(R.string.blocker_question)
+                subtitle.setText(R.string.blocker_subtitle)
+                primary.setText(R.string.blocker_close_preview)
+                primary.setOnClickListener { onDismiss() }
+                secondary.visibility = View.GONE
+                snooze.visibility = View.GONE
+            }
         }
     }
 
     /** Le bouton retour ne doit pas contourner l'écran. */
     override fun dispatchKeyEvent(event: KeyEvent): Boolean {
-        if (event.keyCode == KeyEvent.KEYCODE_BACK) return true
+        if (event.keyCode == KeyEvent.KEYCODE_BACK) {
+            if (mode == BlockerMode.PREVIEW) onDismiss()
+            return true
+        }
         return super.dispatchKeyEvent(event)
     }
 }

@@ -3,41 +3,121 @@
     <string name="status_done">Hitbodedut done today</string>
     <string name="status_pending">Hitbodedut not done yet</string>
     <string name="status_streak_none">Streak to restart</string>
+    <string name="status_total">%1$s in total</string>
+    <string name="today_minutes">Today: %1$s of practice</string>
+    <string name="today_declared">Confirmed without a timer</string>
 
-    <string name="section_today">This week</string>
+    <string name="section_practice">My practice</string>
+    <string name="section_gate_state">Gate status</string>
     <string name="section_gate">Morning gate</string>
-    <string name="section_gate_hint">The apps you choose stay closed until the practice is confirmed.</string>
+    <string name="section_gate_hint">The apps you choose stay closed until the practice is done.</string>
+    <string name="section_rhythm">Rhythm</string>
     <string name="section_permissions">Required permissions</string>
-    <string name="section_permissions_hint">The gate cannot work without these three.</string>
+    <string name="section_permissions_hint">Without the first two, the gate cannot work.</string>
+    <string name="section_data">My data</string>
+    <string name="section_data_hint">Everything is stored on this phone only. Export from time to time.</string>
+
+    <string name="gate_armed_title">The gate is watching</string>
+    <string name="gate_armed_detail">%1$d apps are blocked until %2$s or until your session.</string>
+    <string name="gate_permissions_title">Permissions missing</string>
+    <string name="gate_permissions_detail">Grant display over other apps and usage access, further down.</string>
+    <string name="gate_disabled_title">Gate switched off</string>
+    <string name="gate_disabled_detail">Turn on the morning gate switch for it to act.</string>
+    <string name="gate_no_apps_title">No app selected</string>
+    <string name="gate_no_apps_detail">The gate has nothing to block. Choose at least one app.</string>
+    <string name="gate_done_title">Day confirmed</string>
+    <string name="gate_done_detail">Nothing will be blocked today. The gate returns tomorrow.</string>
+    <string name="gate_exempt_title">Day off</string>
+    <string name="gate_exempt_detail">Shabbat or a festival: the gate pauses and the streak stays intact.</string>
+    <string name="gate_snoozed_title">Snoozed</string>
+    <string name="gate_snoozed_detail">You asked for a delay. The gate returns when it ends.</string>
+    <string name="gate_window_title">Outside the window</string>
+    <string name="gate_window_detail">The gate acts between %1$s and %2$s. Outside that, nothing is blocked.</string>
+
+    <string name="action_start_session">Start a %1$s session</string>
+    <string name="action_another_session">Another session</string>
+    <string name="action_back_to_session">Back to the running session</string>
+    <string name="action_write_note">Write a note</string>
+    <string name="action_journal">Open the journal</string>
+    <string name="action_preview_gate">Preview the gate screen now</string>
+    <string name="action_pick_apps">Choose apps</string>
+    <string name="action_grant">Grant</string>
+    <string name="action_export">Export</string>
+    <string name="action_import">Import</string>
+    <string name="action_save">Save</string>
+    <string name="action_later">Later</string>
+    <string name="action_back">Back</string>
 
     <string name="settings_window">Gate window</string>
     <string name="settings_snooze">Snooze length</string>
-    <string name="minutes_value">%1$d min</string>
-
-    <string name="action_mark_done">I did my hitbodedut</string>
-    <string name="action_undo">Undo today\'s confirmation</string>
-    <string name="action_pick_apps">Choose apps</string>
-    <string name="action_grant">Grant</string>
+    <string name="settings_target">Session length</string>
+    <string name="settings_reminder">Daily reminder</string>
+    <string name="settings_reminder_time">Reminder time</string>
+    <string name="settings_shabbat">Pause on Shabbat</string>
+    <string name="settings_shabbat_hint">No blocking on Saturday, and the streak is not broken.</string>
+    <string name="settings_exempt_today">Festival day today</string>
+    <string name="settings_exempt_today_hint">Turn on for a Yom Tov or a travel day.</string>
+    <string name="settings_screen_missing">This settings screen does not exist on this phone.</string>
 
     <string name="permission_overlay">Display over other apps</string>
     <string name="permission_usage">Usage access</string>
     <string name="permission_battery">Unrestricted battery</string>
     <string name="permission_granted">Granted</string>
     <string name="permission_missing">Missing</string>
+    <string name="preview_needs_overlay">Grant display over other apps first.</string>
 
     <string name="apps_title">Apps to block</string>
     <string name="apps_loading">Loading apps…</string>
+    <string name="apps_select_all">Select all</string>
+    <string name="apps_clear">Clear all</string>
+    <string name="apps_none_warning">No app selected: nothing will be blocked.</string>
 
     <string name="blocker_question">Did you do your hitbodedut?</string>
     <string name="blocker_subtitle">A moment alone before the rest of the day.</string>
     <string name="blocker_streak_none">First day of the streak.</string>
-    <string name="blocker_done">I did it</string>
+    <string name="blocker_start">Start now, %1$s</string>
+    <string name="blocker_already_done">I already did it</string>
     <string name="blocker_snooze">Later (%1$d min)</string>
+    <string name="blocker_session_title">Session in progress</string>
+    <string name="blocker_session_subtitle">%1$s left. The phone can wait.</string>
+    <string name="blocker_back_to_session">Back to the session</string>
+    <string name="blocker_preview_badge">PREVIEW, NO EFFECT</string>
+    <string name="blocker_close_preview">Close the preview</string>
 
-    <string name="channel_name">Morning watch</string>
-    <string name="channel_description">Ongoing notification Android requires while the gate is watching.</string>
-    <string name="service_title">Gate active</string>
-    <string name="service_text">Window %1$s – %2$s</string>
+    <string name="session_screen_title">HITBODEDUT</string>
+    <string name="session_idle_caption">Pick a length, then put the phone down.</string>
+    <string name="session_idle_done">Already confirmed today. You can start again.</string>
+    <string name="session_start">Start, %1$s</string>
+    <string name="session_target">%1$s session</string>
+    <string name="session_finish_now">Finish now</string>
+    <string name="session_cancel">Abandon</string>
+    <string name="session_finish_title">Finish the session?</string>
+    <string name="session_finish_message">The time already elapsed is recorded and the day confirmed.</string>
+    <string name="session_cancel_title">Abandon the session?</string>
+    <string name="session_cancel_message">Nothing is recorded and the day stays open.</string>
+    <string name="session_running_title">Session in progress</string>
+    <string name="session_remaining">%1$s left</string>
+    <string name="session_done_title">Session complete</string>
+    <string name="session_done_text">%1$s of hitbodedut. Tap to leave a note.</string>
+
+    <string name="journal_title">Journal</string>
+    <string name="journal_empty">No session recorded yet.</string>
+    <string name="note_title">Session note</string>
+    <string name="note_hint">What came up, what was asked…</string>
+
+    <string name="reminder_title">Time for hitbodedut</string>
+    <string name="reminder_text">A %1$s session is waiting.</string>
+    <string name="channel_gate">Morning gate</string>
+    <string name="channel_gate_description">Ongoing notification Android requires while the gate is watching.</string>
+    <string name="channel_session">Session in progress</string>
+    <string name="channel_session_description">Countdown shown during a session.</string>
+    <string name="channel_reminder">Reminders</string>
+    <string name="channel_reminder_description">Daily reminder and end of session.</string>
+
+    <string name="export_ok">Backup saved.</string>
+    <string name="export_failed">Export failed.</string>
+    <string name="import_failed">The file could not be read.</string>
+    <string name="import_invalid">This file is not a MyHitbodedut backup.</string>
 
     <plurals name="status_streak">
         <item quantity="one">%d day in a row</item>
@@ -52,5 +132,15 @@
     <plurals name="apps_selected">
         <item quantity="one">%d app blocked</item>
         <item quantity="other">%d apps blocked</item>
+    </plurals>
+
+    <plurals name="import_ok">
+        <item quantity="one">%d day imported</item>
+        <item quantity="other">%d days imported</item>
+    </plurals>
+
+    <plurals name="journal_summary">
+        <item quantity="one">%1$d session, %2$s in total</item>
+        <item quantity="other">%1$d sessions, %2$s in total</item>
     </plurals>
 </resources>

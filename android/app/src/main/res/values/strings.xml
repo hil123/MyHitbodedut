@@ -2,45 +2,138 @@
 <resources>
     <string name="app_name" translatable="false">MyHitbodedut</string>
 
+    <!-- Bandeau et journée -->
     <string name="status_done">Hitbodedout faite aujourd\'hui</string>
     <string name="status_pending">Hitbodedout pas encore faite</string>
     <string name="status_streak_none">Série à relancer</string>
+    <string name="status_total">%1$s au total</string>
+    <string name="today_minutes">Aujourd\'hui : %1$s de pratique</string>
+    <string name="today_declared">Validée sans minuteur</string>
 
-    <string name="section_today">Cette semaine</string>
+    <!-- Sections -->
+    <string name="section_practice">Ma pratique</string>
+    <string name="section_gate_state">État de la barrière</string>
     <string name="section_gate">Blocage du matin</string>
-    <string name="section_gate_hint">Les applications choisies restent fermées tant que la pratique n\'est pas validée.</string>
+    <string name="section_gate_hint">Les applications choisies restent fermées tant que la pratique n\'est pas faite.</string>
+    <string name="section_rhythm">Rythme</string>
     <string name="section_permissions">Autorisations nécessaires</string>
-    <string name="section_permissions_hint">Sans ces trois accès, le blocage ne peut pas fonctionner.</string>
+    <string name="section_permissions_hint">Sans les deux premières, le blocage ne peut pas fonctionner.</string>
+    <string name="section_data">Mes données</string>
+    <string name="section_data_hint">Tout est stocké sur ce téléphone uniquement. Exportez de temps en temps.</string>
 
-    <string name="settings_window">Fenêtre de blocage</string>
-    <string name="settings_snooze">Durée du report</string>
-    <string name="minutes_value">%1$d min</string>
+    <!-- Diagnostic -->
+    <string name="gate_armed_title">La barrière veille</string>
+    <string name="gate_armed_detail">%1$d applications sont bloquées jusqu\'à %2$s ou jusqu\'à votre séance.</string>
+    <string name="gate_permissions_title">Autorisations manquantes</string>
+    <string name="gate_permissions_detail">Accordez l\'affichage par-dessus les autres applications et l\'accès aux données d\'utilisation, plus bas.</string>
+    <string name="gate_disabled_title">Blocage désactivé</string>
+    <string name="gate_disabled_detail">Activez l\'interrupteur du blocage du matin pour que la barrière agisse.</string>
+    <string name="gate_no_apps_title">Aucune application choisie</string>
+    <string name="gate_no_apps_detail">La barrière n\'a rien à bloquer. Choisissez au moins une application.</string>
+    <string name="gate_done_title">Journée validée</string>
+    <string name="gate_done_detail">Plus rien ne sera bloqué aujourd\'hui. La barrière reprendra demain.</string>
+    <string name="gate_exempt_title">Jour sans obligation</string>
+    <string name="gate_exempt_detail">Shabbat ou jour de fête : la barrière est en pause et la série reste intacte.</string>
+    <string name="gate_snoozed_title">Report en cours</string>
+    <string name="gate_snoozed_detail">Vous avez demandé un délai. La barrière revient à la fin du report.</string>
+    <string name="gate_window_title">Hors de la fenêtre</string>
+    <string name="gate_window_detail">La barrière agit entre %1$s et %2$s. En dehors, rien n\'est bloqué.</string>
 
-    <string name="action_mark_done">J\'ai fait ma hitbodedout</string>
-    <string name="action_undo">Annuler la validation du jour</string>
+    <!-- Actions -->
+    <string name="action_start_session">Commencer une séance de %1$s</string>
+    <string name="action_another_session">Faire une séance de plus</string>
+    <string name="action_back_to_session">Revenir à la séance en cours</string>
+    <string name="action_write_note">Écrire une note</string>
+    <string name="action_journal">Voir le journal</string>
+    <string name="action_preview_gate">Voir l\'écran de blocage maintenant</string>
     <string name="action_pick_apps">Choisir les applications</string>
     <string name="action_grant">Accorder</string>
+    <string name="action_export">Exporter</string>
+    <string name="action_import">Importer</string>
+    <string name="action_save">Enregistrer</string>
+    <string name="action_later">Plus tard</string>
+    <string name="action_back">Retour</string>
 
+    <!-- Réglages -->
+    <string name="settings_window">Fenêtre de blocage</string>
+    <string name="settings_snooze">Durée du report</string>
+    <string name="settings_target">Durée d\'une séance</string>
+    <string name="settings_reminder">Rappel quotidien</string>
+    <string name="settings_reminder_time">Heure du rappel</string>
+    <string name="settings_shabbat">Pause le Shabbat</string>
+    <string name="settings_shabbat_hint">Le samedi, aucun blocage, et la série n\'est pas cassée.</string>
+    <string name="settings_exempt_today">Jour de fête aujourd\'hui</string>
+    <string name="settings_exempt_today_hint">À activer pour un Yom Tov ou un jour de voyage.</string>
+    <string name="settings_screen_missing">Cet écran de réglages n\'existe pas sur ce téléphone.</string>
+
+    <!-- Autorisations -->
     <string name="permission_overlay">Affichage par-dessus les autres applications</string>
     <string name="permission_usage">Accès aux données d\'utilisation</string>
     <string name="permission_battery">Batterie sans restriction</string>
     <string name="permission_granted">Accordée</string>
     <string name="permission_missing">Manquante</string>
+    <string name="preview_needs_overlay">Accordez d\'abord l\'affichage par-dessus les autres applications.</string>
 
+    <!-- Applications -->
     <string name="apps_title">Applications à bloquer</string>
     <string name="apps_loading">Chargement des applications…</string>
+    <string name="apps_select_all">Tout sélectionner</string>
+    <string name="apps_clear">Tout retirer</string>
+    <string name="apps_none_warning">Aucune application choisie : rien ne sera bloqué.</string>
 
+    <!-- Écran de garde -->
     <string name="blocker_question">Tu as fait ta hitbodedout ?</string>
     <string name="blocker_subtitle">Un moment seul avant le reste de la journée.</string>
     <string name="blocker_streak_none">Première journée de la série.</string>
-    <string name="blocker_done">Je l\'ai faite</string>
+    <string name="blocker_start">Commencer maintenant, %1$s</string>
+    <string name="blocker_already_done">Je l\'ai déjà faite</string>
     <string name="blocker_snooze">Plus tard (%1$d min)</string>
+    <string name="blocker_session_title">Séance en cours</string>
+    <string name="blocker_session_subtitle">Il reste %1$s. Le téléphone peut attendre.</string>
+    <string name="blocker_back_to_session">Revenir à la séance</string>
+    <string name="blocker_preview_badge">APERÇU, AUCUN EFFET</string>
+    <string name="blocker_close_preview">Fermer l\'aperçu</string>
 
-    <string name="channel_name">Surveillance du matin</string>
-    <string name="channel_description">Notification permanente exigée par Android pendant la surveillance.</string>
-    <string name="service_title">Blocage actif</string>
-    <string name="service_text">Fenêtre %1$s – %2$s</string>
+    <!-- Séance -->
+    <string name="session_screen_title">HITBODEDOUT</string>
+    <string name="session_idle_caption">Choisissez une durée, posez le téléphone.</string>
+    <string name="session_idle_done">Déjà validée aujourd\'hui. Vous pouvez recommencer.</string>
+    <string name="session_start">Commencer, %1$s</string>
+    <string name="session_target">Séance de %1$s</string>
+    <string name="session_finish_now">Terminer maintenant</string>
+    <string name="session_cancel">Abandonner</string>
+    <string name="session_finish_title">Terminer la séance ?</string>
+    <string name="session_finish_message">Le temps déjà écoulé sera enregistré et la journée validée.</string>
+    <string name="session_cancel_title">Abandonner la séance ?</string>
+    <string name="session_cancel_message">Rien ne sera enregistré et la journée restera à faire.</string>
+    <string name="session_running_title">Séance en cours</string>
+    <string name="session_remaining">Il reste %1$s</string>
+    <string name="session_done_title">Séance terminée</string>
+    <string name="session_done_text">%1$s de hitbodedout. Touchez pour laisser une note.</string>
 
+    <!-- Journal et notes -->
+    <string name="journal_title">Journal</string>
+    <string name="journal_empty">Aucune séance enregistrée pour l\'instant.</string>
+    <string name="note_title">Note de la séance</string>
+    <string name="note_hint">Ce qui est monté, ce qui a été demandé…</string>
+
+    <!-- Rappel et notifications -->
+    <string name="reminder_title">C\'est l\'heure de la hitbodedout</string>
+    <string name="reminder_text">Une séance de %1$s vous attend.</string>
+    <string name="channel_gate">Barrière du matin</string>
+    <string name="channel_gate_description">Notification permanente exigée par Android pendant la surveillance.</string>
+    <string name="channel_session">Séance en cours</string>
+    <string name="channel_session_description">Décompte affiché pendant une séance.</string>
+    <string name="channel_reminder">Rappels</string>
+    <string name="channel_reminder_description">Rappel quotidien et fin de séance.</string>
+
+    <!-- Sauvegarde -->
+    <string name="export_ok">Sauvegarde enregistrée.</string>
+    <string name="export_failed">L\'export a échoué.</string>
+    <string name="import_failed">Le fichier n\'a pas pu être lu.</string>
+    <string name="import_invalid">Ce fichier n\'est pas une sauvegarde MyHitbodedut.</string>
+
+    <!-- Pluriels -->
     <plurals name="status_streak">
         <item quantity="one">%d jour d\'affilée</item>
         <item quantity="other">%d jours d\'affilée</item>
@@ -54,5 +147,15 @@
     <plurals name="apps_selected">
         <item quantity="one">%d application bloquée</item>
         <item quantity="other">%d applications bloquées</item>
+    </plurals>
+
+    <plurals name="import_ok">
+        <item quantity="one">%d journée importée</item>
+        <item quantity="other">%d journées importées</item>
+    </plurals>
+
+    <plurals name="journal_summary">
+        <item quantity="one">%1$d séance, %2$s au total</item>
+        <item quantity="other">%1$d séances, %2$s au total</item>
     </plurals>
 </resources>
