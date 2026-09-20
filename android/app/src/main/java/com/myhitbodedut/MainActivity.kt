@@ -63,6 +63,12 @@ class MainActivity : AppCompatActivity() {
         findViewById<Button>(R.id.music_button).setOnClickListener {
             startActivity(Intent(this, MusicActivity::class.java))
         }
+        findViewById<TextView>(R.id.app_version).text = getString(
+            R.string.app_version,
+            BuildConfig.VERSION_NAME,
+            BuildConfig.VERSION_CODE,
+            getString(if (BuildConfig.HAS_GATE) R.string.edition_full else R.string.edition_light)
+        )
         findViewById<Button>(R.id.open_journal).setOnClickListener {
             startActivity(Intent(this, JournalActivity::class.java))
         }
@@ -222,6 +228,10 @@ class MainActivity : AppCompatActivity() {
             applyServiceState()
             refresh()
         }
+        bindSwitch(R.id.music_switch_main, Store.musicEnabled(this)) { checked ->
+            Store.setMusicEnabled(this, checked)
+            refresh()
+        }
         bindSwitch(R.id.reminder_switch, Store.reminderEnabled(this)) { checked ->
             Store.setReminderEnabled(this, checked)
             if (checked) askNotifications()
@@ -255,9 +265,12 @@ class MainActivity : AppCompatActivity() {
             Store.formatDuration(Store.targetMinutes(this))
         findViewById<Button>(R.id.reminder_time).text =
             Store.formatMinutes(Store.reminderMinutes(this))
-        findViewById<Button>(R.id.music_button).text = when {
-            !Store.musicEnabled(this) -> getString(R.string.music_off_short)
-            else -> MusicLibrary.selected(this)?.title ?: getString(R.string.music_off_short)
+
+        val track = MusicLibrary.selected(this)
+        findViewById<TextView>(R.id.music_state).text = when {
+            !Store.musicEnabled(this) -> getString(R.string.music_off_summary)
+            track == null -> getString(R.string.music_none_summary)
+            else -> getString(R.string.music_on_summary, track.title, Store.musicVolume(this))
         }
 
         val count = Store.blockedApps(this).size

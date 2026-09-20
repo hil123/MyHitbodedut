@@ -146,6 +146,59 @@
             </LinearLayout>
         </LinearLayout>
 
+        <!-- Musique -->
+        <LinearLayout style="@style/Card">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <FrameLayout
+                    android:layout_width="72dp"
+                    android:layout_height="88dp"
+                    android:background="@drawable/bg_stage_soft"
+                    android:padding="5dp">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:contentDescription="@null"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/char_guitar" />
+                </FrameLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="14dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView style="@style/CardTitle" android:text="@string/music_title" />
+
+                    <TextView
+                        android:id="@+id/music_state"
+                        style="@style/CardHint"
+                        android:layout_marginTop="4dp"
+                        android:textSize="14sp" />
+                </LinearLayout>
+
+                <com.google.android.material.materialswitch.MaterialSwitch
+                    android:id="@+id/music_switch_main"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/music_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:text="@string/music_open_library" />
+        </LinearLayout>
+
         <!-- Diagnostic de la barrière : pourquoi elle agit, ou pourquoi non -->
         <LinearLayout android:id="@+id/card_gate_state" style="@style/Card">
 
@@ -245,13 +298,6 @@
                 <TextView style="@style/SettingLabel" android:text="@string/settings_target" />
 
                 <Button android:id="@+id/target_length" style="@style/SettingValue" />
-            </LinearLayout>
-
-            <LinearLayout style="@style/SettingRow">
-
-                <TextView style="@style/SettingLabel" android:text="@string/settings_music" />
-
-                <Button android:id="@+id/music_button" style="@style/SettingValue" />
             </LinearLayout>
 
             <LinearLayout style="@style/SettingRow">
@@ -425,5 +471,14 @@
                     android:text="@string/action_import" />
             </LinearLayout>
         </LinearLayout>
+
+        <TextView
+            android:id="@+id/app_version"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:textAlignment="center"
+            android:textColor="@color/muted"
+            android:textSize="12sp" />
     </LinearLayout>
 </ScrollView>
