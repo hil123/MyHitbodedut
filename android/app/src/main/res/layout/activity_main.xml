@@ -256,6 +256,66 @@
                 android:text="@string/tips_open" />
         </LinearLayout>
 
+        <!-- Tikoun HaKlali -->
+        <LinearLayout style="@style/Card">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <FrameLayout
+                    android:layout_width="72dp"
+                    android:layout_height="88dp"
+                    android:background="@drawable/bg_stage_soft"
+                    android:padding="5dp">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:contentDescription="@null"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/char_tehilim" />
+                </FrameLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="14dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/CardTitle"
+                        android:layoutDirection="rtl"
+                        android:text="@string/tikkun_title_he"
+                        android:textAlignment="viewStart"
+                        android:textSize="19sp" />
+
+                    <TextView
+                        style="@style/CardHint"
+                        android:layout_marginTop="4dp"
+                        android:text="@string/tikkun_hint"
+                        android:textSize="14sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tikkun_state"
+                style="@style/CardHint"
+                android:layout_marginTop="12dp"
+                android:textColor="@color/brand"
+                android:textSize="14sp" />
+
+            <Button
+                android:id="@+id/tikkun_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="@string/tikkun_open" />
+        </LinearLayout>
+
         <!-- Bibliothèque -->
         <LinearLayout style="@style/Card">
 

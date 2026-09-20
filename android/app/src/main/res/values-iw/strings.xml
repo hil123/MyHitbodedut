@@ -249,4 +249,22 @@
     <string name="moment_relance">חוזרים לדרך</string>
     <string name="moment_cloture">לסיום</string>
     <string name="moment_lieu">המקום והזמן</string>
+
+    <!-- Section Tikoun HaKlali -->
+    <string name="tikkun_title">תיקון הכללי</string>
+    <string name="tikkun_hint">עשרת המזמורים של רבי נחמן, לפי הסדר: טז, לב, מא, מב, נט, עז, צ, קה, קלז, קנ.</string>
+    <string name="tikkun_open">פתיחת התיקון</string>
+    <string name="tikkun_psalm_he">תהילים %1$d</string>
+    <string name="tikkun_verses">%1$d פסוקים</string>
+    <string name="tikkun_position">מזמור %1$d מתוך %2$d · %3$d פסוקים</string>
+    <string name="tikkun_progress_none">%1$d מזמורים, %2$d פסוקים</string>
+    <string name="tikkun_progress">%1$d מתוך %2$d מזמורים נאמרו היום</string>
+    <string name="tikkun_progress_all">נאמר במלואו היום.</string>
+    <string name="tikkun_start">להתחיל במזמור %1$d</string>
+    <string name="tikkun_resume">להמשיך ממזמור %1$d</string>
+    <string name="tikkun_next">המזמור הבא</string>
+    <string name="tikkun_mark">סימון כנאמר</string>
+    <string name="tikkun_unmark">הסרת הסימון</string>
+    <string name="tikkun_said">נאמר</string>
+    <string name="tikkun_reset">להתחיל מחדש</string>
 </resources>

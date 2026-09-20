@@ -244,4 +244,22 @@
     <string name="moment_relance">Back on the road</string>
     <string name="moment_cloture">To close</string>
     <string name="moment_lieu">The place and the hour</string>
+
+    <!-- Section Tikoun HaKlali -->
+    <string name="tikkun_title">Tikkun HaKlali</string>
+    <string name="tikkun_hint">The ten psalms of Rebbe Nachman, in order: 16, 32, 41, 42, 59, 77, 90, 105, 137, 150.</string>
+    <string name="tikkun_open">Open the Tikkun</string>
+    <string name="tikkun_psalm_he">תהילים %1$d</string>
+    <string name="tikkun_verses">%1$d verses</string>
+    <string name="tikkun_position">Psalm %1$d of %2$d · %3$d verses</string>
+    <string name="tikkun_progress_none">%1$d psalms, %2$d verses</string>
+    <string name="tikkun_progress">%1$d of %2$d psalms said today</string>
+    <string name="tikkun_progress_all">Said in full today.</string>
+    <string name="tikkun_start">Begin with psalm %1$d</string>
+    <string name="tikkun_resume">Resume at psalm %1$d</string>
+    <string name="tikkun_next">Next psalm</string>
+    <string name="tikkun_mark">Mark as said</string>
+    <string name="tikkun_unmark">Remove the mark</string>
+    <string name="tikkun_said">said</string>
+    <string name="tikkun_reset">Start over</string>
 </resources>

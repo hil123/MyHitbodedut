@@ -16,6 +16,10 @@ object DataFiles {
 
     val library: Library get() = LibraryLoader.parse(bibliothequeJson)
 
+    val tikkunJson: String get() = read("tikkun_haklali.json")
+
+    val tikkun: Tikkun get() = TikkunLoader.parse(tikkunJson)
+
     private fun read(name: String): String {
         val file = File("src/main/res/raw/$name")
         require(file.exists()) { "ressource absente : ${file.absolutePath}" }

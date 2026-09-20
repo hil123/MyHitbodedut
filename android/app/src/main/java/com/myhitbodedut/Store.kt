@@ -58,6 +58,8 @@ object Store {
     private const val KEY_MUSIC_TRACK = "music_track"
     private const val KEY_MUSIC_VOLUME = "music_volume"
     private const val KEY_MUSIC_USER = "music_user_tracks"
+    private const val KEY_TIKKUN_DAY = "tikkun_day"
+    private const val KEY_TIKKUN_DONE = "tikkun_done"
     private const val KEY_CHIZUK_BAG = "chizuk_bag_"
     private const val KEY_CHIZUK_LAST = "chizuk_last_"
     private const val KEY_MUSIC_NAMES = "music_names"
@@ -375,6 +377,41 @@ object Store {
 
     fun setMusicNames(context: Context, json: String) {
         prefs(context).edit().putString(KEY_MUSIC_NAMES, json).apply()
+    }
+
+    // --- Tikoun HaKlali -------------------------------------------------------
+
+    /**
+     * Les psaumes deja dits aujourd'hui.
+     *
+     * Le Tikoun se dit d'un trait, mais rarement sans interruption : la
+     * progression est gardee pour qu'un appel ou un enfant ne renvoie pas au
+     * premier psaume. Elle repart a zero chaque jour — c'est une pratique
+     * quotidienne, pas un compteur qui s'accumule.
+     */
+    fun tikkunDone(context: Context): Set<Int> {
+        val prefs = prefs(context)
+        if (prefs.getString(KEY_TIKKUN_DAY, "") != today()) return emptySet()
+        return prefs.getString(KEY_TIKKUN_DONE, "").orEmpty()
+            .split(',')
+            .mapNotNull { it.trim().toIntOrNull() }
+            .toSet()
+    }
+
+    fun setTikkunDone(context: Context, numero: Int, done: Boolean) {
+        val courant = tikkunDone(context).toMutableSet()
+        if (done) courant.add(numero) else courant.remove(numero)
+        prefs(context).edit()
+            .putString(KEY_TIKKUN_DAY, today())
+            .putString(KEY_TIKKUN_DONE, courant.sorted().joinToString(","))
+            .apply()
+    }
+
+    fun resetTikkun(context: Context) {
+        prefs(context).edit()
+            .putString(KEY_TIKKUN_DAY, today())
+            .putString(KEY_TIKKUN_DONE, "")
+            .apply()
     }
 
     // --- Rotation des textes de 'hizouk --------------------------------------

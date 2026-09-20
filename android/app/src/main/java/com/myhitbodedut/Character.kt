@@ -50,6 +50,9 @@ object Character {
     val STUDY = R.drawable.char_torah
     val READING = R.drawable.char_reading_seated
 
+    /** Le Tikoun HaKlali : dix psaumes, livre en main. */
+    val TEHILIM = R.drawable.char_tehilim
+
     /**
      * Les deux natures d'entrée de la bibliothèque. Une source se tient
      * devant le livre ; un article est un texte qu'on a écrit.

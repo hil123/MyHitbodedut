@@ -83,6 +83,9 @@ class MainActivity : AppCompatActivity() {
         findViewById<Button>(R.id.tips_button).setOnClickListener {
             startActivity(Intent(this, TipsActivity::class.java))
         }
+        findViewById<Button>(R.id.tikkun_button).setOnClickListener {
+            startActivity(Intent(this, TikkunActivity::class.java))
+        }
         findViewById<Button>(R.id.library_button).setOnClickListener {
             startActivity(Intent(this, LibraryActivity::class.java))
         }
@@ -175,6 +178,19 @@ class MainActivity : AppCompatActivity() {
         renderSettings()
         renderPermissions()
         renderRelance()
+        renderTikkun()
+    }
+
+    /** Ou en est le Tikoun du jour, sans avoir a ouvrir la section. */
+    private fun renderTikkun() {
+        val tikkun = Data.tikkun(this)
+        val dits = Store.tikkunDone(this).size
+        val total = tikkun.psaumes.size
+        findViewById<TextView>(R.id.tikkun_state).text = when (dits) {
+            0 -> getString(R.string.tikkun_progress_none, total, tikkun.versets)
+            total -> getString(R.string.tikkun_progress_all)
+            else -> getString(R.string.tikkun_progress, dits, total)
+        }
     }
 
     /**

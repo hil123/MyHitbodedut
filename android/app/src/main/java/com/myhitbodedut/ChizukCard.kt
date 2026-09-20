@@ -91,6 +91,9 @@ object Data {
     @Volatile
     private var library: Library? = null
 
+    @Volatile
+    private var tikkun: Tikkun? = null
+
     fun chizuk(context: Context): Chizuk =
         chizuk ?: synchronized(this) {
             chizuk ?: ChizukLoader.load(context.applicationContext).also { chizuk = it }
@@ -99,5 +102,10 @@ object Data {
     fun library(context: Context): Library =
         library ?: synchronized(this) {
             library ?: LibraryLoader.load(context.applicationContext).also { library = it }
+        }
+
+    fun tikkun(context: Context): Tikkun =
+        tikkun ?: synchronized(this) {
+            tikkun ?: TikkunLoader.load(context.applicationContext).also { tikkun = it }
         }
 }

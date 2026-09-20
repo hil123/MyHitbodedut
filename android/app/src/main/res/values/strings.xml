@@ -262,4 +262,23 @@
     <string name="moment_relance">Reprendre la route</string>
     <string name="moment_cloture">Pour finir</string>
     <string name="moment_lieu">Le lieu et le moment</string>
+
+    <!-- Section Tikoun HaKlali -->
+    <string name="tikkun_title_he" translatable="false">תיקון הכללי</string>
+    <string name="tikkun_title">Tikoun HaKlali</string>
+    <string name="tikkun_hint">Les dix psaumes de Rabbi Na\'hman, dans l\'ordre : 16, 32, 41, 42, 59, 77, 90, 105, 137, 150.</string>
+    <string name="tikkun_open">Ouvrir le Tikoun</string>
+    <string name="tikkun_psalm_he">תהילים %1$d</string>
+    <string name="tikkun_verses">%1$d versets</string>
+    <string name="tikkun_position">Psaume %1$d sur %2$d · %3$d versets</string>
+    <string name="tikkun_progress_none">%1$d psaumes, %2$d versets</string>
+    <string name="tikkun_progress">%1$d psaumes dits sur %2$d aujourd\'hui</string>
+    <string name="tikkun_progress_all">Dit en entier aujourd\'hui.</string>
+    <string name="tikkun_start">Commencer par le psaume %1$d</string>
+    <string name="tikkun_resume">Reprendre au psaume %1$d</string>
+    <string name="tikkun_next">Psaume suivant</string>
+    <string name="tikkun_mark">Marquer comme dit</string>
+    <string name="tikkun_unmark">Retirer la marque</string>
+    <string name="tikkun_said">dit</string>
+    <string name="tikkun_reset">Repartir de zéro</string>
 </resources>
