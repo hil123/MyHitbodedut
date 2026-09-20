@@ -1,0 +1,24 @@
+package com.myhitbodedut
+
+import java.io.File
+
+/**
+ * Les tests lisent les fichiers livrés, pas une copie : une donnée cassée
+ * dans res/raw fait rougir la compilation, et non l'appareil de l'utilisateur.
+ */
+object DataFiles {
+
+    val chizukJson: String get() = read("chizuk.json")
+
+    val bibliothequeJson: String get() = read("bibliotheque.json")
+
+    val chizuk: Chizuk get() = ChizukLoader.parse(chizukJson)
+
+    val library: Library get() = LibraryLoader.parse(bibliothequeJson)
+
+    private fun read(name: String): String {
+        val file = File("src/main/res/raw/$name")
+        require(file.exists()) { "ressource absente : ${file.absolutePath}" }
+        return file.readText()
+    }
+}

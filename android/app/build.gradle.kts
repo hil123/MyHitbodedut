@@ -108,4 +108,9 @@ dependencies {
     implementation("androidx.recyclerview:recyclerview:1.3.2")
 
     testImplementation("junit:junit:4.13.2")
+    // org.json n'existe qu'en stub dans le jar Android des tests unitaires :
+    // toute méthode y lève « not mocked ». La vraie implémentation, placée
+    // devant ce stub, fait tourner les analyseurs de chizuk.json et de
+    // bibliotheque.json sur la machine virtuelle, sans appareil.
+    testImplementation("org.json:json:20240303")
 }
