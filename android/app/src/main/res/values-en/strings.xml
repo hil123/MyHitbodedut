@@ -176,4 +176,29 @@
     <string name="settings_region">Region</string>
     <string name="region_israel">Israel</string>
     <string name="region_diaspora">Diaspora</string>
+
+    <!-- Tips for Hitbodedut -->
+    <string name="tips_title">Tips for Hitbodedut</string>
+    <string name="tips_hint">Ten markers, to begin and to keep going.</string>
+    <string name="tips_open">Read the tips</string>
+    <string name="tip_1_title">Choose a quiet, separate place</string>
+    <string name="tip_1_body">The first step in hitbodedut is to find a quiet place where you can be alone with yourself and with God. It does not have to be entirely isolated, but it must be somewhere you will not be interrupted. A free room at home, a quiet stretch of beach, a spot out in nature. If you can, choose a natural setting: nature itself can be a source of inner quiet.</string>
+    <string name="tip_2_title">Set a daily or weekly time</string>
+    <string name="tip_2_body">If you are new to this, start short. Give five to fifteen minutes a day, and lengthen it gradually until you reach a full hour. Do not jump straight to a long session. Go step by step, so that it becomes a habit and not a burden. Fix a regular time, so the practice becomes part of your routine rather than something random.</string>
+    <string name="tip_3_title">Begin by speaking</string>
+    <string name="tip_3_body">Start by talking with God. Do not worry if at first you do not know quite what to say. Simply open your heart and begin. It can be asking forgiveness, a plain prayer about what you feel, or even a sense of gratitude. Hitbodedut does not have to be orderly or planned in advance. It is a place to release what is in your heart and to turn towards God.</string>
+    <string name="tip_4_title">Put the devices away</string>
+    <string name="tip_4_body">If you want to feel truly alone with yourself, avoid devices entirely during hitbodedut. Turn the phone off, or leave it in another room. The freer you are of outside distraction, the better you will connect to yourself and to the Creator. Cutting off from the outside world helps you concentrate and settle into the quiet within.</string>
+    <string name="tip_5_title">Start with Tehilim, or your own words</string>
+    <string name="tip_5_body">If you are not sure how to begin, open Tehilim and read a few chapters. The Psalms are prayer already formed, very direct, and they touch the soul. In hitbodedut they can be a spiritual thread leading you straight to God. And if you feel you have no words, you can simply speak with God freely, sharing your thoughts and what you feel.</string>
+    <string name="tip_6_title">Ask yourself inward questions</string>
+    <string name="tip_6_body">During hitbodedut, ask yourself inward questions. What am I feeling right now? What am I going through? How can I feel closer to God? What do I need to improve in my life? This is a time for a real accounting of the soul. Sometimes, in the inner quiet, you come to see your real needs and the right direction for your life.</string>
+    <string name="tip_7_title">Put honesty first</string>
+    <string name="tip_7_body">During hitbodedut, do not try to hide from God what you feel. This is a time when you are allowed to be honest with yourself and with the Creator. If you feel anger, frustration, fear or doubt, this is the place to say it. Honesty is the key to spiritual growth. The more honest you are, the more inner quiet you will find.</string>
+    <string name="tip_8_title">Make peace with yourself</string>
+    <string name="tip_8_body">Hitbodedut can also be a time to make peace with yourself. That means being somewhere you are not judging, not criticising, not angry at yourself. It is a time of reconciliation, where you forgive yourself, ask forgiveness for your mistakes, and resolve to improve the way you walk.</string>
+    <string name="tip_9_title">Leave room for silence, or follow the breath</string>
+    <string name="tip_9_body">Part of hitbodedut can be complete silence, or a moment of attention to the breath. Sit quietly for a while, follow your breathing, rest your attention on the body. That silence lets the inner parts of you surface and come clear.</string>
+    <string name="tip_10_title">End with a deep breath and thanks</string>
+    <string name="tip_10_body">At the end of hitbodedut, finish with a deep breath and bless God for the time you spent together. It is a moment of thanks for the great gift of connection, and for the inner quiet you found. Even if you felt it was hard to find answers, do not worry: this meeting with yourself and with God already brings spiritual abundance into your life.</string>
 </resources>

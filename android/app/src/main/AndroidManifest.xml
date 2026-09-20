@@ -39,6 +39,11 @@
             android:label="@string/journal_title" />
 
         <activity
+            android:name=".TipsActivity"
+            android:exported="false"
+            android:label="@string/tips_title" />
+
+        <activity
             android:name=".MusicActivity"
             android:exported="false"
             android:label="@string/music_title" />

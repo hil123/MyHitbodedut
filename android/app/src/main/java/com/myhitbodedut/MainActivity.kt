@@ -74,6 +74,9 @@ class MainActivity : AppCompatActivity() {
             BuildConfig.VERSION_CODE,
             getString(if (BuildConfig.HAS_GATE) R.string.edition_full else R.string.edition_light)
         )
+        findViewById<Button>(R.id.tips_button).setOnClickListener {
+            startActivity(Intent(this, TipsActivity::class.java))
+        }
         findViewById<Button>(R.id.open_journal).setOnClickListener {
             startActivity(Intent(this, JournalActivity::class.java))
         }
