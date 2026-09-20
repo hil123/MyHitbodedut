@@ -33,6 +33,15 @@ jobs:
           VERSION_CODE: ${{ github.run_number }}
         run: ./gradlew --no-daemon assembleFullRelease assembleLightRelease
 
+      # L'edition de test porte l'ecran de relecture, seul moyen de lever les
+      # relu=false de chizuk.json depuis le telephone. Identifiant suffixe en
+      # .debug : elle s'installe a cote de l'edition normale.
+      - name: Build the test edition
+        working-directory: android
+        env:
+          VERSION_CODE: ${{ github.run_number }}
+        run: ./gradlew --no-daemon assembleFullDebug
+
       - name: Unit tests
         working-directory: android
         env:
@@ -54,7 +63,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: myhitbodedut-apk
-          path: android/app/build/outputs/apk/*/release/*.apk
+          path: android/app/build/outputs/apk/*/*/*.apk
           if-no-files-found: error
 
       # Publie l'APK dans une release au nom fixe « latest », ce qui donne un
@@ -67,11 +76,13 @@ jobs:
         run: |
           cp app/build/outputs/apk/full/release/app-full-release.apk MyHitbodedut.apk
           cp app/build/outputs/apk/light/release/app-light-release.apk MyHitbodedut-Light.apk
+          cp app/build/outputs/apk/full/debug/app-full-debug.apk MyHitbodedut-Relecture.apk
           # Nettoyage unique de l'ancienne etiquette fixe, sans effet ensuite.
           gh release delete latest --yes --cleanup-tag || true
-          gh release create "v1.${{ github.run_number }}" MyHitbodedut.apk MyHitbodedut-Light.apk \
+          gh release create "v1.${{ github.run_number }}" \
+            MyHitbodedut.apk MyHitbodedut-Light.apk MyHitbodedut-Relecture.apk \
             --title "MyHitbodedut 1.${{ github.run_number }}" \
-            --notes "Deux editions signees, construites depuis le commit ${{ github.sha }}. Light n'embarque pas la barriere du matin ni ses permissions." \
+            --notes "Trois editions signees, construites depuis le commit ${{ github.sha }}. Light n'embarque pas la barriere du matin ni ses permissions. Relecture est l'edition de test : elle s'installe a cote des autres et porte l'ecran de relecture des textes." \
             --latest
 
       - name: Upload lint report

@@ -38,6 +38,23 @@ android {
     }
 
     buildTypes {
+        /*
+         * L'édition de test sert à relire les textes sur le téléphone
+         * (écran « Relecture »), à côté de l'édition installée.
+         *
+         * Deux détails l'y autorisent. Le suffixe d'identifiant en fait une
+         * application distincte, donc installable sans désinstaller l'autre.
+         * Et elle est signée avec la même clé stable que la release : sans
+         * cela chaque compilation repartirait d'un trousseau de débogage
+         * régénéré, et aucune version de test ne pourrait remplacer la
+         * précédente.
+         */
+        debug {
+            applicationIdSuffix = ".debug"
+            versionNameSuffix = "-debug"
+            signingConfig = signingConfigs.getByName("release")
+        }
+
         release {
             signingConfig = signingConfigs.getByName("release")
             isMinifyEnabled = false
