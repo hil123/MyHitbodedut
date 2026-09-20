@@ -1,0 +1,735 @@
+{
+  "_meta": {
+    "version": "0.1",
+    "date": "2026-09-20",
+    "regle": "type 'source' : texte intégral affichable (œuvre du domaine public). type 'article' : fiche seulement ; texte_integral reste null tant que autorisation est null (test bloquant).",
+    "editions": {
+      "lm": {
+        "titre": "Likutei Moharan Tinyana — rabenubook.com (via API Sefaria)",
+        "licence": "Public Domain",
+        "nikkoud_ok": true
+      },
+      "lm1": {
+        "titre": "Likutei Moharan — rabenubook.com (via API Sefaria)",
+        "licence": "Public Domain",
+        "nikkoud_ok": true
+      },
+      "sh": {
+        "titre": "Sichot HaRan — rabenubook (via API Sefaria)",
+        "licence": "unknown",
+        "nikkoud_ok": false
+      },
+      "shr": {
+        "titre": "Shivchei HaRan — rabenubook (via API Sefaria)",
+        "licence": "unknown",
+        "nikkoud_ok": false
+      },
+      "cm": {
+        "titre": "Chayei Moharan — OYW / tora.ws (via API Sefaria)",
+        "licence": "Public Domain",
+        "nikkoud_ok": true
+      },
+      "rambam": {
+        "titre": "Mishneh Torah — Torat Emet 370 (via API Sefaria)",
+        "licence": "Public Domain",
+        "nikkoud_ok": true
+      },
+      "tanakh": {
+        "titre": "Tanach with Nikkud — tanach.us (via API Sefaria)",
+        "licence": "Public Domain",
+        "nikkoud_ok": true
+      }
+    }
+  },
+  "sections": [
+    {
+      "id": "sichat-chaverim",
+      "titre": {
+        "he": "שיחת חברים",
+        "fr": "Conversation entre amis",
+        "en": "Friends' conversation"
+      },
+      "sous_sections": [
+        {
+          "id": "hitbodedut-ma-velama",
+          "titre": {
+            "he": "התבודדות מה ולמה",
+            "fr": "Hitbodedout : quoi et pourquoi",
+            "en": "Hitbodedut: what and why"
+          },
+          "entrees": [
+            {
+              "id": "src-lm2-25",
+              "type": "source",
+              "titre_he": "ליקוטי מוהר\"ן תנינא, סימן כה",
+              "ref": "Likoutei Moharan II, 25",
+              "ref_sefaria": "Likutei Moharan, Part II 25",
+              "url": "https://www.sefaria.org/Likutei_Moharan%2C_Part_II.25",
+              "edition": "lm",
+              "paragraphes": [
+                "הַהִתְבּוֹדְדוּת הוּא מַעֲלָה עֶלְיוֹנָה וּגְדוֹלָה מִן הַכֹּל, דְּהַיְנוּ לִקְבֹּעַ לוֹ עַל־כָּל־פָּנִים שָׁעָה אוֹ יוֹתֵר לְהִתְבּוֹדֵד לְבַדּוֹ בְּאֵיזֶה חֶדֶר אוֹ בַּשָּׂדֶה, וּלְפָרֵשׁ שִׂיחָתוֹ בֵּינוֹ לְבֵין קוֹנוֹ בִּטְעָנוֹת וַאֲמַתְלָאוֹת, בְּדִבְרֵי חֵן וְרִצּוּי וּפִיּוּס, לְבַקֵּשׁ וּלְהִתְחַנֵּן מִלְּפָנָיו יִתְבָּרַךְ, שֶׁיְּקָרְבוֹ אֵלָיו לַעֲבוֹדָתוֹ בֶּאֱמֶת.",
+                "וּתְפִלָּה וְשִׂיחָה זוֹ יִהְיֶה בַּלָּשׁוֹן שֶׁמְּדַבְּרִים בּוֹ, דְּהַיְנוּ בִּלְשׁוֹן אַשְׁכְּנַז (בִּמְדִינָתֵנוּ), כִּי בִּלְשׁוֹן־הַקֹּדֶשׁ קָשֶׁה לוֹ לְפָרֵשׁ כָּל שִׂיחָתוֹ, וְגַם אֵין הַלֵּב נִמְשָׁךְ אַחֲרֵי הַדִּבּוּרִים, מֵחֲמַת שֶׁאֵינוֹ מֻרְגָּל כָּל־כָּךְ בְּהַלָּשׁוֹן, כִּי אֵין דַּרְכֵּנוּ לְדַבֵּר בִּלְשׁוֹן־הַקֹּדֶשׁ. אֲבָל בִּלְשׁוֹן אַשְׁכְּנַז, שֶׁמְּסַפְּרִים וּמְדַבְּרִים בּוֹ, קַל וְקָרוֹב יוֹתֵר לְשַׁבֵּר לִבּוֹ, כִּי הַלֵּב נִמְשָׁךְ וְקָרוֹב יוֹתֵר אֶל לְשׁוֹן אַשְׁכְּנַז, מֵחֲמַת שֶׁהוּא מֻרְגָּל בּוֹ.",
+                "וּבִלְשׁוֹן אַשְׁכְּנַז יָכוֹל לְפָרֵשׁ כָּל שִׂיחָתוֹ. וְאֶת כָּל אֲשֶׁר עִם לְבָבוֹ יָשִׂיחַ וִיסַפֵּר לְפָנָיו יִתְבָּרַךְ, הֵן חֲרָטָה וּתְשׁוּבָה עַל הֶעָבָר, וְהֵן בַּקָּשַׁת תַחֲנוּנִים לִזְכּוֹת לְהִתְקָרֵב אֵלָיו יִתְבָּרַךְ מֵהַיּוֹם וְהָלְאָה בֶּאֱמֶת, וְכַיּוֹצֵא בָּזֶה כָּל חַד לְפוּם דַּרְגֵּהּ.",
+                "וְיִזָּהֵר מְאֹד לְהַרְגִּיל עַצְמוֹ לְהַתְמִיד בָּזֶה מִדֵּי יוֹם בְּיוֹם שָׁעָה מְיֻחֶדֶת כַּנַּ\"ל, וּשְׁאָר הַיּוֹם יִהְיֶה בְּשִׂמְחָה כַּנַּ\"ל.",
+                "וְהַנְהָגָה זוֹ הִיא גְּדוֹלָה בְּמַעֲלָה מְאֹד מְאֹד, וְהוּא דֶּרֶךְ וְעֵצָה טוֹבָה מְאֹד לְהִתְקָרֵב אֵלָיו יִתְבָּרַךְ, כִּי זֹאת הִיא עֵצָה כְּלָלִיוּת, שֶׁכּוֹלֵל הַכֹּל.",
+                "כִּי עַל כָּל מַה שֶּׁיֶּחְסַר לוֹ בַּעֲבוֹדַת הַשֵּׁם, אוֹ אִם הוּא רָחוֹק לְגַמְרֵי מִכֹּל וָכֹל מֵעֲבוֹדָתוֹ יִתְבָּרַךְ – עַל הַכֹּל יְפָרֵשׁ שִׂיחָתוֹ וִיבַקֵּשׁ מֵאִתּוֹ יִתְבָּרַךְ כַּנַּ\"ל.",
+                "וַאֲפִלּוּ אִם לִפְעָמִים נִסְתַּתְּמִין דְּבָרָיו, וְאֵינוֹ יָכוֹל לִפְתֹּחַ פִּיו לְדַבֵּר לְפָנָיו יִתְבָּרַךְ כְּלָל, אַף־עַל־פִּי־כֵן זֶה בְּעַצְמוֹ טוֹב מְאֹד, דְּהַיְנוּ הַהֲכָנָה שֶׁהוּא מוּכָן וְעוֹמֵד לְפָנָיו יִתְבָּרַךְ, וְחָפֵץ וּמִשְׁתּוֹקֵק לְדַבֵּר, אַךְ שֶׁאֵינוֹ יָכוֹל, זֶה בְּעַצְמוֹ גַם־כֵּן טוֹב מְאֹד,",
+                "וְגַם יוּכַל לַעֲשׂוֹת לוֹ שִׂיחָה וּתְפִלָּה מִזֶּה בְּעַצְמוֹ. וְעַל זֶה בְּעַצְמוֹ יִצְעֹק וְיִתְחַנֵּן לְפָנָיו יִתְבָּרַךְ, שֶׁנִּתְרַחֵק כָּל־כָּךְ, עַד שֶׁאֵינוֹ יָכוֹל אֲפִלּוּ לְדַבֵּר. וִיבַקֵּשׁ מֵאִתּוֹ יִתְבָּרַךְ רַחֲמִים וְתַחֲנוּנִים, שֶׁיַּחֲמֹל עָלָיו וְיִפְתַּח פִּיו, שֶׁיּוּכַל לְפָרֵשׁ שִׂיחָתוֹ לְפָנָיו.",
+                "וְדַע, שֶׁכַּמָּה וְכַמָּה צַדִּיקִים גְּדוֹלִים מְפֻרְסָמִים סִפְּרוּ, שֶׁלֹּא בָּאוּ לְמַדְרֵגָתָם, רַק עַל־יְדֵי הַנְהָגָה זוֹ. וְהַמַּשְׂכִּיל יָבִין מֵעַצְמוֹ גֹּדֶל מַעֲלַת הַנְהָגָה זוֹ, הָעוֹלָה לְמַעְלָה לְמַעְלָה, וְהוּא דָּבָר הַשָּׁוֶה לְכָל נֶפֶשׁ מִקָּטֹן וְעַד גָּדוֹל, כִּי כֻּלָּם יְכוֹלִים לִנְהֹג הַנְהָגָה זוֹ, וְעַל־יְדֵי זֶה יָבוֹאוּ לְמַעְלָה גְּדוֹלָה. אַשְׁרֵי שֶׁיֹּאחַז בָּזֶה:",
+                "גַּם טוֹב לַעֲשׂוֹת מֵהַתּוֹרָה תְּפִלָּה. דְּהַיְנוּ כְּשֶׁלּוֹמֵד אוֹ שׁוֹמֵעַ אֵיזֶה מַאֲמַר תּוֹרָה מִצַּדִּיק הָאֱמֶת, אֲזַי יַעֲשֶׂה מִזֶּה תְּפִלָּה, דְּהַיְנוּ לְבַקֵּשׁ וּלְהִתְחַנֵּן לְפָנָיו יִתְבָּרַךְ עַל כָּל מַה שֶּׁנֶּאֱמַר שָׁם בְּאוֹתוֹ הַמַּאֲמָר, מָתַי יִזְכֶּה גַּם הוּא לָבוֹא לְכָל זֶה, וְכַמָּה הוּא רָחוֹק מִזֶּה. וִיבַקֵּשׁ מֵאִתּוֹ יִתְבָּרַךְ, שֶׁיְּזַכֵּהוּ לָבוֹא לְכָל הַנֶּאֱמָר שָׁם בְּאוֹתוֹ הַמַּאֲמָר.",
+                "וְהַמַּשְׂכִּיל וְהֶחָפֵץ בֶּאֱמֶת, יוֹלִיכוֹ ה' בְּדֶרֶךּ אֱמֶת וְיָבִין בְּעַצְמוֹ דָּבָר מִתּוֹךְ דָּבָר, אֵיךְ לְהִתְנַהֵג בָּזֶה, בְּאֹפֶן שֶׁיִּהְיוּ דְּבָרָיו דִּבְרֵי חֵן וּטְעָנוֹת נְכוֹנוֹת, לְרַצּוֹתוֹ יִתְבָּרַךְ שֶׁיְּקָרְבֵהוּ לַעֲבוֹדָתוֹ בֶּאֱמֶת.",
+                "וְעִנְיָן הַשִּׂיחָה זוֹ עוֹלָה לְמָקוֹם גָּבוֹהַּ מְאֹד, וּבִפְרָט כְּשֶׁעוֹשֶׂה מִתּוֹרָה תְּפִלָּה, מִזֶּה נַעֲשֶׂה שַׁעֲשׁוּעִים גְּדוֹלִים מְאֹד לְמַעְלָה:"
+              ],
+              "liens_chizuk": [
+                "lm2-25-fondement",
+                "lm2-25-langue",
+                "lm2-25-tout-dire",
+                "lm2-25-joie",
+                "lm2-25-mots-bloques",
+                "lm2-25-pour-tous",
+                "lm2-25-torah-priere"
+              ],
+              "note": "Paragraphes 1 à 9 = section 1 ; paragraphes 10 à 12 = section 2. « בְּדֶרֶךּ » (dagesh final) reproduit tel quel depuis l'édition numérique.",
+              "statut_verif": "verifie_texte",
+              "recoupement": [
+                "azamra.org (trad. Greenbaum)",
+                "article ברסלב סיטי (copie avec coquilles)",
+                "feuille Sefaria 203099"
+              ]
+            },
+            {
+              "id": "src-lm1-52-3",
+              "type": "source",
+              "titre_he": "ליקוטי מוהר\"ן, סימן נב, אות ג (קטעים)",
+              "ref": "Likoutei Moharan I, 52:3",
+              "ref_sefaria": "Likutei Moharan 52:3:2-4",
+              "url": "https://www.sefaria.org/Likutei_Moharan.52.3.2-4",
+              "edition": "lm1",
+              "paragraphes": [
+                "וְאִי אֶפְשָׁר לָבוֹא לִידֵי בִּטּוּל, כִּי־אִם עַל־יְדֵי הִתְבּוֹדְדוּת, כִּי עַל־יְדֵי שֶׁמִּתְבּוֹדֵד וּמְפָרֵשׁ שִׂיחָתוֹ בֵּינוֹ לְבֵין קוֹנוֹ, עַל־יְדֵי־זֶה הוּא זוֹכֶה לְבַטֵּל כָּל הַתַּאֲווֹת וְהַמִּדּוֹת רָעוֹת, עַד שֶׁזּוֹכֶה לְבַטֵּל כָּל גַּשְׁמִיּוּתוֹ, וּלְהִכָּלֵל בְּשָׁרְשׁוֹ.",
+                "אַךְ עִקַּר הַהִתְבּוֹדְדוּת הוּא בַּלַּיְלָה, בְּעֵת שֶׁהָעוֹלָם פָּנוּי מִטִּרְדַּת הָעוֹלָם הַזֶּה. כִּי בַּיּוֹם, עַל־יְדֵי שֶׁרוֹדְפִין הָעוֹלָם אַחַר הָעוֹלָם הַזֶּה, הוּא מְבַטֵּל וּמְבַלְבֵּל אֶת הָאָדָם מִלְּהִתְדַּבֵּק וּלְהִכָּלֵל בְּהַשֵּׁם יִתְבָּרַךְ. וַאֲפִלּוּ אִם הוּא בְּעַצְמוֹ אֵינוֹ טָרוּד, אַף־עַל־פִּי־כֵן מֵאַחַר שֶׁהָעוֹלָם טְרוּדִים אָז וְרוֹדְפִים אָז אַחַר הַבְלֵי הָעוֹלָם הַזֶּה, עַל־יְדֵי־זֶה קָשֶׁה אָז לָבוֹא לִידֵי בִּטּוּל:",
+                "וְגַם צְרִיכִין שֶׁיִּהְיֶה הַהִתְבּוֹדְדוּת בְּמָקוֹם מְיֻחָד, דְּהַיְנוּ חוּץ מֵהָעִיר בְּדֶרֶךְ יְחִידִי, בְּמָקוֹם שֶׁאֵין הוֹלְכִים שָׁם בְּנֵי אָדָם, כִּי בְּמָקוֹם שֶׁהוֹלְכִים שָׁם בְּנֵי אָדָם בַּיּוֹם, הָרוֹדְפִים אַחַר הָעוֹלָם הַזֶּה, אַף־עַל־פִּי שֶׁכָּעֵת אֵינָם הוֹלְכִים שָׁם, הוּא מְבַלְבֵּל גַּם כֵּן הַהִתְבּוֹדְדוּת, וְאֵינוֹ יָכוֹל לְהִתְבַּטֵּל וּלְהִכָּלֵל בּוֹ יִתְבָּרַךְ. עַל־כֵּן צָרִיךְ שֶׁיֵּלֵךְ לְבַדּוֹ בַּלַּיְלָה, בְּדֶרֶךְ יְחִידִי, בְּמָקוֹם שֶׁאֵין שָׁם אָדָם, וְשָׁם יֵלֵךְ וְיִתְבּוֹדֵד, וִיפַנֶּה לִבּוֹ וְדַעְתּוֹ מִכָּל עִסְקֵי עוֹלָם הַזֶּה, וִיבַטֵּל הַכֹּל, עַד שֶׁיִּזְכֶּה לִבְחִינַת בִּטּוּל בֶּאֱמֶת."
+              ],
+              "liens_chizuk": [
+                "lm1-52-nuit"
+              ],
+              "note": "Extrait : segments 3:2 à 3:4. La suite de la section développe le bitoul.",
+              "statut_verif": "verifie_texte",
+              "recoupement": [
+                "azamra.org (trad. Greenbaum)",
+                "breslov.org « Hitbodedut: when and where? »",
+                "article ברסלב סיטי (résumé)"
+              ]
+            },
+            {
+              "id": "src-cm-438",
+              "type": "source",
+              "titre_he": "חיי מוהר\"ן, תל\"ח",
+              "ref": "'Hayé Moharan 438",
+              "ref_sefaria": "Chayei Moharan 438",
+              "url": "https://www.sefaria.org/Chayei_Moharan.438",
+              "edition": "cm",
+              "paragraphes": [
+                "פַּעַם אַחַת הָיָה מְדַבֵּר עִמָּנוּ, וְהָיָה מַרְבֶּה לְדַבֵּר אָז מֵעִנְיַן מַעֲלַת הַהִתְבּוֹדְדוּת, וְהָיָה מַפְלִיג מְאֹד בְּשֶׁבַח מַעֲלַת גְּדֻלַּת הַנְהָגָה זוֹ. וְאָמַר שֶׁאִי אֶפְשָׁר לְצַוּוֹת לַאֲנָשִׁים שֶׁיִּנְהֲגוּ הַנְהָגָה זוֹ כִּי־אִם שָׁעָה אַחַת בַּיּוֹם, כִּי אִי אֶפְשָׁר לְהַכְבִּיד עֲלֵיהֶם יוֹתֵר. אֲבָל בֶּאֱמֶת הָיוּ צְרִיכִים שֶׁיִּהְיֶה לָהֶם כָּל הַיּוֹם הִתְבּוֹדְדוּת. וְדִבֵּר אָז מְאֹד בְּעִנְיָן זֶה, וְכַמָּה שִׂיחוֹת נָאוֹת וְיָפוֹת נִשְׁמַע אָז מִפִּיו הַקָּדוֹשׁ מֵעִנְיַן מַעֲלַת הַהִתְבּוֹדְדוּת הָעוֹלָה עַל הַכֹּל. וְאָמַר, הֲלֹא יְכוֹלִים לִלְחֹשׁ עַל קְנֵי שְׂרֵפָה שֶׁקּוֹרִין בִּיקְס [רוֹבֶה] שֶׁלֹּא תִּהְיֶה מוֹרָה \"מֶען קָאן פַארְשְׁפְּרֶעכְן אַ בִּיקְס זִי זָאל נִיט שִׁיסְן\". כִּי הַדִּבּוּר יֵשׁ לוֹ כֹּחַ גָּדוֹל, וְהָבֵן הֵיטֵב. וְהָיָה מַאֲרִיךְ בְּשִׂיחָה זוֹ כָּל הַיּוֹם, אַשְׁרֵי שֶׁיֹּאחַז בָּזֶה:"
+              ],
+              "liens_chizuk": [
+                "lm2-96-une-heure"
+              ],
+              "note": "Marqueur de paragraphe « (ב) » de l'édition retiré.",
+              "statut_verif": "verifie_texte",
+              "recoupement": [
+                "article ברסלב סיטי (même texte, même référence)"
+              ]
+            },
+            {
+              "id": "src-cm-440",
+              "type": "source",
+              "titre_he": "חיי מוהר\"ן, ת\"מ",
+              "ref": "'Hayé Moharan 440",
+              "ref_sefaria": "Chayei Moharan 440",
+              "url": "https://www.sefaria.org/Chayei_Moharan.440",
+              "edition": "cm",
+              "paragraphes": [
+                "אָמַר אֲפִילוּ כְּשֶׁאֵין יְכוֹלִין לְדַבֵּר בְּהִתְבּוֹדְדוּת רַק תֵּבַת רִבּוֹנוֹ שֶׁל עוֹלָם גַּם־כֵּן טוֹב מְאֹד. אָמַר שֶׁיְּכוֹלִין לְהַכִּיר בְּאַחֵר אִם יֵשׁ לוֹ הִתְבּוֹדְדוּת:"
+              ],
+              "liens_chizuk": [
+                "cm-440-ribono"
+              ],
+              "note": "Marqueur de paragraphe « (ד) » de l'édition retiré.",
+              "statut_verif": "verifie_texte",
+              "recoupement": [
+                "azamra.org (trad. Greenbaum)",
+                "article ברסלב סיטי"
+              ]
+            },
+            {
+              "id": "src-shr-10",
+              "type": "source",
+              "titre_he": "שבחי הר\"ן, סימן י",
+              "ref": "Chiv'hei HaRan 10",
+              "ref_sefaria": "Shivchei HaRan 10",
+              "url": "https://www.sefaria.org/Shivchei_HaRan.10",
+              "edition": "shr",
+              "paragraphes": [
+                "אַךְ עִקַּר עֲבוֹדָתוֹ אֲשֶׁר עַל יָדָהּ זָכָה לְמַה שֶּׁזָּכָה; הָיָה רַק רִבּוּי הַתְּפִלּוֹת וְהַתְּחִנּוֹת וְהַבַּקָּשׁוֹת וְהָרִצּוּיִים וְהַפִּיּוּסִים, שֶׁהָיָה רָגִיל מְאֹד לְהִתְפַּלֵּל וּלְהִתְחַנֵּן לְפָנָיו יִתְבָּרַךְ. וְהָיָה מְרַצֶּה וּמְפַיֵּס אוֹתוֹ יִתְבָּרַךְ בְּכַמָּה מִינֵי תְּחִנּוֹת וּבַקָּשׁוֹת שֶׁיְּזַכֵּהוּ בְּרַחֲמָיו לְקָרְבוֹ לַעֲבוֹדָתוֹ יִתְבָּרַךְ.",
+                "וְעִקַּר מַה שֶּׁהוֹעִיל לוֹ הָיוּ הַתְּפִלּוֹת שֶׁהִתְפַּלֵּל בִּלְשׁוֹן 'אַשְׁכְּנַז', שֶׁהָיָה רָגִיל מְאֹד לְיַחֵד לוֹ אֵיזֶה מָקוֹם שֶׁמָּצָא שֶׁאֵין שָׁם בְּנֵי אָדָם וְהָיָה מְפָרֵשׁ שִׂיחָתוֹ לִפְנֵי ה' יִתְבָּרַךְ בַּלָּשׁוֹן שֶׁמְּדַבְּרִים בּוֹ, (דְּהַיְנוּ בִּלְשׁוֹן אַשְׁכְּנַז).",
+                "וְהָיָה מְרַצֶּה וּמְפַיֵּס אוֹתוֹ יִתְבָּרַךְ וּמְבַקֵּשׁ וּמִתְחַנֵּן לְפָנָיו יִתְבָּרַךְ בְּכַמָּה וְכַמָּה מִינֵי טְעָנוֹת וַאֲמַתְלָאוֹת שֶׁרָאוּי לוֹ יִתְבָּרַךְ שֶׁיְּקָרְבוֹ לַעֲבוֹדָתוֹ, וְהָיָה רָגִיל בָּזֶה מְאֹד מְאֹד וְהָיָה מְבַלֶּה יָמִים וְשָׁנִים עַל זֶה.",
+                "גַּם הָיָה מַטְמִין עַצְמוֹ עַל גַּבֵּי בֵּית אָבִיו, תַּחַת הַגַּג, שֶׁהָיָה שָׁם כְּמוֹ חֶדֶר בִּמְחִצָּה שֶׁל קָנִּים שֶׁמַּחֲזִיקִין שָׁם תֶּבֶן וּמִסְפּוֹא, וְשָׁם הָיָה מַטְמִין עַצְמוֹ וְהָיָה אוֹמֵר תְּהִלִּים וְהָיָה צוֹעֵק בְּלַחַשׁ לה' יִתְבָּרַךְ שֶׁיְּזַכֵּהוּ לְקָרְבוֹ אֵלָיו יִתְבָּרַךְ.",
+                "וְהַכְּלָל: שֶׁכָּל הַמִּינֵי בַּקָּשׁוֹת שֶׁבָּעוֹלָם שֶׁנִּמְצָאִים בְּאֵיזֶה סֵפֶר שֶׁיִּהְיֶה הַמָּצוּי בֵּינֵינוּ הַכֹּל כַּאֲשֶׁר לַכֹּל – לֹא הִנִּיחַ שׁוּם תְּחִנָּה וּבַקָּשָׁה שֶׁלֹּא אֲמָרָהּ כַּמָּה וְכַמָּה פְּעָמִים, הֵן תְּהִלִּים וְסֵפֶר \"שַׁעֲרֵי צִיּוֹן\" וְהַבַּקָּשׁוֹת הַנִּדְפָּסִים בְּהַסִּדּוּרִים הַגְּדוֹלִים וּשְׁאָר מִינֵי בַּקָּשׁוֹת וּתְחִנּוֹת, וַאֲפִלּוּ הַתְּחִנּוֹת הַנִּדְפָּסִים בִּלְשׁוֹן אַשְׁכְּנַז – כֻּלָּם לֹא הִנִּיחַ מִלְּאָמְרָם, וְהָיָה רָגִיל לוֹמַר כָּל הַתְּחִנּוֹת שֶׁאַחַר \"מַעֲמָדוֹת\" הַנִּדְפָּסִים אַחַר כָּל יוֹם וָיוֹם. וְהוּא הָיָה רָגִיל לוֹמַר כָּל הַתְּחִנּוֹת כֻּלָּם שֶׁל כָּל הַיָּמִים, בְּפַעַם אֶחָד.",
+                "גַּם הָיָה רָגִיל לִפְעָמִים לוֹמַר בַּתְּהִלִּים רַק הַפְּסוּקִים הַמְדַבְּרִים מִתְּחִנּוֹת וּבַקָּשׁוֹת וּצְעָקָה לה' יִתְבָּרַךְ, וְהָיָה אוֹמֵר רַק פְּסוּקִים אֵלּוּ וְהַשְּׁאָר לֹא הָיָה אוֹמֵר. וְהָיָה אוֹמֵר כָּל הַפְּסוּקִים הָאֵלּוּ מִכָּל סֵפֶר תְּהִלִּים בְּפַעַם אֶחָד.",
+                "וּמִלְּבַד כָּל זֶה, הָעִקָּר הָיָה, מַה שֶּׁהָיָה מִתְפַּלֵּל מֵעַצְמוֹ, דְּהַיְנוּ מַה שֶּׁהָיָה רָגִיל לְדַבֵּר מִלִּבּוֹ לִפְנֵי ה' יִתְבָּרַךְ (בִּלְשׁוֹן אַשְׁכְּנַז), שֶׁהָיָה מִתְפַּלֵּל וְטוֹעֵן לִפְנֵי ה' יִתְבָּרַךְ בְּכַמָּה וְכַמָּה מִינֵי טְעָנוֹת וּתְחִנּוֹת וּבַקָּשׁוֹת שֶׁאָמַר מִדַּעְתּוֹ וּמִלִּבּוֹ כַּנַּ\"ל שֶׁיְּזַכֵּהוּ ה' יִתְבָּרַךְ לַעֲבוֹדָתוֹ.",
+                "וְזֶהוּ הָעִקָּר מַה שֶּׁהוֹעִיל לוֹ לִזְכּוֹת לְמַה שֶּׁזָּכָה. כָּךְ שָׁמַעְנוּ מִפִּיו הַקָּדוֹשׁ בְּפֵרוּשׁ."
+              ],
+              "liens_chizuk": [
+                "shr-10-langue",
+                "shr-10-grenier"
+              ],
+              "note": null,
+              "statut_verif": "verifie_texte",
+              "recoupement": [
+                "article ברסלב סיטי (même texte ; « ואמלאות » y est fautif)"
+              ],
+              "paragraphes_sans_nikkoud": [
+                "אך עקר עבודתו אשר על ידה זכה למה שזכה; היה רק רבוי התפלות והתחנות והבקשות והרצויים והפיוסים, שהיה רגיל מאד להתפלל ולהתחנן לפניו יתברך. והיה מרצה ומפיס אותו יתברך בכמה מיני תחנות ובקשות שיזכהו ברחמיו לקרבו לעבודתו יתברך.",
+                "ועקר מה שהועיל לו היו התפלות שהתפלל בלשון 'אשכנז', שהיה רגיל מאד ליחד לו איזה מקום שמצא שאין שם בני אדם והיה מפרש שיחתו לפני ה' יתברך בלשון שמדברים בו, (דהינו בלשון אשכנז).",
+                "והיה מרצה ומפיס אותו יתברך ומבקש ומתחנן לפניו יתברך בכמה וכמה מיני טענות ואמתלאות שראוי לו יתברך שיקרבו לעבודתו, והיה רגיל בזה מאד מאד והיה מבלה ימים ושנים על זה.",
+                "גם היה מטמין עצמו על גבי בית אביו, תחת הגג, שהיה שם כמו חדר במחצה של קנים שמחזיקין שם תבן ומספוא, ושם היה מטמין עצמו והיה אומר תהלים והיה צועק בלחש לה' יתברך שיזכהו לקרבו אליו יתברך.",
+                "והכלל: שכל המיני בקשות שבעולם שנמצאים באיזה ספר שיהיה המצוי בינינו הכל כאשר לכל – לא הניח שום תחנה ובקשה שלא אמרה כמה וכמה פעמים, הן תהלים וספר \"שערי ציון\" והבקשות הנדפסים בהסדורים הגדולים ושאר מיני בקשות ותחנות, ואפלו התחנות הנדפסים בלשון אשכנז – כלם לא הניח מלאמרם, והיה רגיל לומר כל התחנות שאחר \"מעמדות\" הנדפסים אחר כל יום ויום. והוא היה רגיל לומר כל התחנות כלם של כל הימים, בפעם אחד.",
+                "גם היה רגיל לפעמים לומר בתהלים רק הפסוקים המדברים מתחנות ובקשות וצעקה לה' יתברך, והיה אומר רק פסוקים אלו והשאר לא היה אומר. והיה אומר כל הפסוקים האלו מכל ספר תהלים בפעם אחד.",
+                "ומלבד כל זה, העקר היה, מה שהיה מתפלל מעצמו, דהינו מה שהיה רגיל לדבר מלבו לפני ה' יתברך (בלשון אשכנז), שהיה מתפלל וטוען לפני ה' יתברך בכמה וכמה מיני טענות ותחנות ובקשות שאמר מדעתו ומלבו כנ\"ל שיזכהו ה' יתברך לעבודתו.",
+                "וזהו העקר מה שהועיל לו לזכות למה שזכה. כך שמענו מפיו הקדוש בפרוש."
+              ]
+            },
+            {
+              "id": "src-shr-11",
+              "type": "source",
+              "titre_he": "שבחי הר\"ן, סימן יא",
+              "ref": "Chiv'hei HaRan 11",
+              "ref_sefaria": "Shivchei HaRan 11",
+              "url": "https://www.sefaria.org/Shivchei_HaRan.11",
+              "edition": "shr",
+              "paragraphes": [
+                "וְכַמָּה פְּעָמִים הָיָה מְדַבֵּר לִפְנֵי ה' יִתְבָּרַךְ דִּבְרֵי תְּחִנּוֹת וּבַקָּשׁוֹת מִלִּבּוֹ, וְנִזְדַּמֵּן לוֹ בְּתוֹךְ דִּבּוּרָיו טְעָנוֹת יָפוֹת וּתְפִלּוֹת נְכוֹנוֹת וּמְסֻדָּרוֹת וְהוּטְבוּ בְּעֵינָיו, וְהָיָה כּוֹתְבָם אֶצְלוֹ לְזִכָּרוֹן לְמַעַן יִהְיֶה רָגִיל לְהִתְפַּלֵּל אוֹתָם גַּם אַחַר־כָּךְ.",
+                "וְכֵן הָיָה רָגִיל בְּעִנְיָן זֶה לְדַבֵּר בֵּינוֹ לְבֵין קוֹנוֹ הַרְבֵּה מְאֹד מְאֹד וְכָל תְּפִלּוֹתָיו הָיוּ; שֶׁיִּזְכֶּה לְהִתְקָרֵב לה' יִתְבָּרַךְ. וְהָיוּ לוֹ טְעָנוֹת גְּדוֹלוֹת לה' יִתְבָּרַךְ עַל זֶה."
+              ],
+              "liens_chizuk": [
+                "shr-11-ecrire"
+              ],
+              "note": null,
+              "statut_verif": "verifie_texte",
+              "recoupement": [
+                "article ברסלב סיטי (même texte)"
+              ],
+              "paragraphes_sans_nikkoud": [
+                "וכמה פעמים היה מדבר לפני ה' יתברך דברי תחנות ובקשות מלבו, ונזדמן לו בתוך דבוריו טענות יפות ותפלות נכונות ומסדרות והוטבו בעיניו, והיה כותבם אצלו לזכרון למען יהיה רגיל להתפלל אותם גם אחר־כך.",
+                "וכן היה רגיל בענין זה לדבר בינו לבין קונו הרבה מאד מאד וכל תפלותיו היו; שיזכה להתקרב לה' יתברך. והיו לו טענות גדולות לה' יתברך על זה."
+              ]
+            },
+            {
+              "id": "src-shr-12",
+              "type": "source",
+              "titre_he": "שבחי הר\"ן, סימן יב",
+              "ref": "Chiv'hei HaRan 12",
+              "ref_sefaria": "Shivchei HaRan 12",
+              "url": "https://www.sefaria.org/Shivchei_HaRan.12",
+              "edition": "shr",
+              "paragraphes": [
+                "וְאַף־עַל־פִּי־כֵן, הָיָה נִדְמֶה לוֹ תָּמִיד שֶׁאֵין מִסְתַּכְּלִין עָלָיו כְּלָל וְאֵין שׁוֹמְעִין לוֹ כְּלָל, רַק אַדְּרַבָּא, נִדְמֶה לוֹ שֶׁמַּרְחִיקִין אוֹתוֹ מֵעֲבוֹדָתוֹ יִתְבָּרַךְ בְּכָל מִינֵי הַרְחָקוֹת וּכְאִלּוּ אֵין רוֹצִין בּוֹ כְּלָל וּכְלָל. כִּי הָיָה רוֹאֶה שֶׁחוֹלְפִין וְעוֹבְרִין כַּמָּה וְכַמָּה יָמִים וְשָׁנִים וַעֲדַיִן הוּא רָחוֹק מֵה' יִתְבָּרַךְ וְלֹא זָכָה עֲדַיִן לְשׁוּם הִתְקָרְבוּת, עַל כֵּן נִדְמָה בְּעֵינָיו שֶׁאֵין שׁוֹמְעִין דְּבָרָיו כְּלָל וְאֵין מִסְתַּכְּלִין עָלָיו כְּלָל, רַק אַדְּרַבָּא – מַרְחִיקִין אוֹתוֹ בְּכָל מִינֵי הִתְרַחֲקוּת מֵעֲבוֹדָתוֹ יִתְבָּרַךְ.",
+                "אַךְ אַף־עַל־פִּי־כֵן הָיָה מְחַזֵּק עַצְמוֹ מְאֹד וְלֹא הִנִּיחַ אֶת מְקוֹמוֹ. וְכַמָּה פְּעָמִים הָיָה, שֶׁהָיָה נוֹפֵל בְּדַעְתּוֹ מֵחֲמַת זֶה שֶׁרָאָה שֶׁהוּא מִתְפַּלֵּל וּמַעְתִּיר וּמַפְצִיר כָּל כָּךְ שֶׁיִּתְקָרֵב לַעֲבוֹדַת־הַשֵּׁם־יִתְבָּרַךְ וְאֵין מִסְתַּכְּלִין עָלָיו כְּלָל.",
+                "וּמֵחֲמַת זֶה נָפַל לִפְעָמִים בְּדַעְתּוֹ וְלֹא הָיָה מְדַבֵּר עוֹד כָּל־כָּךְ בֵּינוֹ לְבֵין קוֹנוֹ אֵיזֶה יָמִים. אַחַר־כָּךְ נִזְכַּר בְּעַצְמוֹ וְהִתְבַּיֵּשׁ בְּעַצְמוֹ עַל שֶׁהִרְהֵר אַחַר מִדּוֹתָיו יִתְבָּרַךְ, כִּי בֶּאֱמֶת בְּוַדַּאי ה' יִתְבָּרַךְ חַנּוּן וְרַחוּם וְכוּ' וּבְוַדַּאי הוּא רוֹצֶה לְקָרְבוֹ וְכוּ'.",
+                "וְחָזַר וְנִתְחַזֵּק בְּדַעְתּוֹ, וְהִתְחִיל שׁוּב לְהַעְתִּיר וּלְדַבֵּר לִפְנֵי ה' יִתְבָּרַךְ כַּנַּ\"ל. וְכֵן הָיָה כַּמָּה פְּעָמִים."
+              ],
+              "liens_chizuk": [
+                "shr-12-rejet"
+              ],
+              "note": null,
+              "statut_verif": "verifie_texte",
+              "recoupement": [
+                "article ברסלב סיטי (même texte, une proposition manquante)"
+              ],
+              "paragraphes_sans_nikkoud": [
+                "ואף־על־פי־כן, היה נדמה לו תמיד שאין מסתכלין עליו כלל ואין שומעין לו כלל, רק אדרבא, נדמה לו שמרחיקין אותו מעבודתו יתברך בכל מיני הרחקות וכאלו אין רוצין בו כלל וכלל. כי היה רואה שחולפין ועוברין כמה וכמה ימים ושנים ועדין הוא רחוק מה' יתברך ולא זכה עדין לשום התקרבות, על כן נדמה בעיניו שאין שומעין דבריו כלל ואין מסתכלין עליו כלל, רק אדרבא – מרחיקין אותו בכל מיני התרחקות מעבודתו יתברך.",
+                "אך אף־על־פי־כן היה מחזק עצמו מאד ולא הניח את מקומו. וכמה פעמים היה, שהיה נופל בדעתו מחמת זה שראה שהוא מתפלל ומעתיר ומפציר כל כך שיתקרב לעבודת־השם־יתברך ואין מסתכלין עליו כלל.",
+                "ומחמת זה נפל לפעמים בדעתו ולא היה מדבר עוד כל־כך בינו לבין קונו איזה ימים. אחר־כך נזכר בעצמו והתביש בעצמו על שהרהר אחר מדותיו יתברך, כי באמת בודאי ה' יתברך חנון ורחום וכו' ובודאי הוא רוצה לקרבו וכו'.",
+                "וחזר ונתחזק בדעתו, והתחיל שוב להעתיר ולדבר לפני ה' יתברך כנ\"ל. וכן היה כמה פעמים."
+              ]
+            },
+            {
+              "id": "src-tehilim",
+              "type": "source",
+              "titre_he": "פסוקים (תהלים נא, קמה, לד)",
+              "ref": "Tehilim 51:19 ; 145:18 ; 34:19",
+              "ref_sefaria": "Psalms 51:19; 145:18; 34:19",
+              "url": "https://www.sefaria.org/Psalms.145.18",
+              "edition": "tanakh",
+              "paragraphes": [
+                "זִבְחֵי אֱלֹקִים רוּחַ נִשְׁבָּרָה לֵב־נִשְׁבָּר וְנִדְכֶּה אֱלֹקִים לֹא תִבְזֶה׃ (תהלים נא, יט)",
+                "קָרוֹב ה' לְכָל־קֹרְאָיו לְכֹל אֲשֶׁר יִקְרָאֻהוּ בֶאֱמֶת׃ (תהלים קמה, יח)",
+                "קָרוֹב ה' לְנִשְׁבְּרֵי־לֵב וְאֶת־דַּכְּאֵי־רוּחַ יוֹשִׁיעַ׃ (תהלים לד, יט)"
+              ],
+              "liens_chizuk": [
+                "tehilim-51-19",
+                "tehilim-145-18",
+                "tehilim-34-19"
+              ],
+              "note": "Noms divins substitués (ה', אלקים). Le passage d'Achèr BaNa'hal cité par l'article imprime « קמד, יח » : erreur, c'est 145:18.",
+              "statut_verif": "verifie_texte",
+              "recoupement": [
+                "tanach.us et MAM (deux éditions indépendantes)",
+                "citation dans la lettre d'Achèr BaNa'hal"
+              ]
+            },
+            {
+              "id": "art-bc-salama-2024",
+              "type": "article",
+              "titre": "התבודדות: איך עושים את זה? ולמה?",
+              "auteur": "נחמן נתן סלמה",
+              "site": "ברסלב סיטי",
+              "date": "18/07/2024",
+              "url": null,
+              "resume_fr": "Présente la hitbodedout comme le cœur de l'enseignement de Rabbi Na'hman : la nuit et le lieu isolé (LM I, 52), la langue maternelle, la parole bloquée transformée en prière (LM II, 25). Rassemble ensuite les sources : LM II, 25, 'Hayé Moharan 438 et 440, Chiv'hei HaRan 10 à 12, et des lettres d'Achèr BaNa'hal.",
+              "droits": "Article moderne protégé. Texte intégral non reproduit. URL non retrouvée par recherche : à compléter.",
+              "autorisation": null,
+              "texte_integral": null,
+              "sources_citees": [
+                "src-lm2-25",
+                "src-lm1-52-3",
+                "src-cm-438",
+                "src-cm-440",
+                "src-shr-10",
+                "src-shr-11",
+                "src-shr-12",
+                "src-tehilim"
+              ],
+              "erreurs_relevees": [
+                "Attribue à « ליקוטי מוהר\"ן א' סימן כה » le conseil de s'isoler dans une pièce ou un champ : c'est Tinyana (II) 25.",
+                "Copie de LM II, 25 : « ויפתח פניו » au lieu de « פיו » ; « יביו » au lieu de « יבין » ; « אשרי ישאחז » au lieu de « שיאחז ».",
+                "Copie de LM II, 25 : la phrase « וְעִנְיָן הַשִּׂיחָה זוֹ עוֹלָה לְמָקוֹם גָּבוֹהַּ מְאֹד » manque.",
+                "Chiv'hei HaRan 10 : « ואמלאות » au lieu de « ואמתלאות ». Chiv'hei HaRan 12 : « ואין שומעין לו כלל » manque.",
+                "Lettre d'Achèr BaNa'hal citée : « (שם קמד, יח) » ; le verset est Tehilim 145:18.",
+                "Coquilles de référence : « סימז » pour « סימן » (deux fois)."
+              ],
+              "serie": null,
+              "ordre": null,
+              "statut_reference": "d'après le texte collé par l'utilisateur ; erreurs vérifiées sur Sefaria"
+            },
+            {
+              "id": "art-abn-1-68",
+              "type": "article",
+              "titre": "אשר בנחל, חלק א', עמ' סח",
+              "auteur": "מוהרא\"ש (רבי אליעזר שלמה שיק)",
+              "site": "cité dans l'article de ברסלב סיטי",
+              "date": null,
+              "url": null,
+              "resume_fr": "Ne pas rester dans la tristesse et prendre sur soi de parler un peu chaque jour à Hachem ; s'appuie sur Tehilim 51:19, 145:18 et 34:19, et rappelle que le Rabbi attribuait son niveau à sa parole simple avec Hachem (Chiv'hei HaRan 10).",
+              "droits": "Lettres de Moharach (אשר בנחל), œuvre moderne protégée. Texte non reproduit. Autorisation requise auprès des ayants droit.",
+              "autorisation": null,
+              "texte_integral": null,
+              "sources_citees": [],
+              "erreurs_relevees": [],
+              "serie": null,
+              "ordre": null,
+              "statut_reference": "référence citée par l'article, non vérifiée sur l'original"
+            },
+            {
+              "id": "art-abn-1-87",
+              "type": "article",
+              "titre": "אשר בנחל, חלק א', עמ' פז",
+              "auteur": "מוהרא\"ש (רבי אליעזר שלמה שיק)",
+              "site": "cité dans l'article de ברסלב סיטי",
+              "date": null,
+              "url": null,
+              "resume_fr": "La joie rend la hitbodedout plus facile ; se réjouir des points bons en soi (Azamra, LM I, 282).",
+              "droits": "Lettres de Moharach (אשר בנחל), œuvre moderne protégée. Texte non reproduit. Autorisation requise auprès des ayants droit.",
+              "autorisation": null,
+              "texte_integral": null,
+              "sources_citees": [],
+              "erreurs_relevees": [],
+              "serie": null,
+              "ordre": null,
+              "statut_reference": "référence citée par l'article, non vérifiée sur l'original"
+            },
+            {
+              "id": "art-abn-1-127",
+              "type": "article",
+              "titre": "אשר בנחל, חלק א', עמ' קכז",
+              "auteur": "מוהרא\"ש (רבי אליעזר שלמה שיק)",
+              "site": "cité dans l'article de ברסלב סיטי",
+              "date": null,
+              "url": null,
+              "resume_fr": "La hitbodedout comme porte principale : un lieu sans personne, sa propre langue, et tout demander, matériel et spirituel.",
+              "droits": "Lettres de Moharach (אשר בנחל), œuvre moderne protégée. Texte non reproduit. Autorisation requise auprès des ayants droit.",
+              "autorisation": null,
+              "texte_integral": null,
+              "sources_citees": [],
+              "erreurs_relevees": [],
+              "serie": null,
+              "ordre": null,
+              "statut_reference": "référence citée par l'article, non vérifiée sur l'original"
+            },
+            {
+              "id": "art-abn-17-231",
+              "type": "article",
+              "titre": "אשר בנחל, חלק יז, עמ' רלא",
+              "auteur": "מוהרא\"ש (רבי אליעזר שלמה שיק)",
+              "site": "cité dans l'article de ברסלב סיטי",
+              "date": null,
+              "url": null,
+              "resume_fr": "Parler à Hachem comme à un ami protège de tout ; récit de Rabbi Nathan resté joyeux au milieu de la persécution.",
+              "droits": "Lettres de Moharach (אשר בנחל), œuvre moderne protégée. Texte non reproduit. Autorisation requise auprès des ayants droit.",
+              "autorisation": null,
+              "texte_integral": null,
+              "sources_citees": [],
+              "erreurs_relevees": [],
+              "serie": null,
+              "ordre": null,
+              "statut_reference": "référence citée par l'article, non vérifiée sur l'original"
+            },
+            {
+              "id": "art-abn-84-253",
+              "type": "article",
+              "titre": "אשר בנחל, חלק פד, עמ' רנג",
+              "auteur": "מוהרא\"ש (רבי אליעזר שלמה שיק)",
+              "site": "cité dans l'article de ברסלב סיטי",
+              "date": null,
+              "url": null,
+              "resume_fr": "Distingue la hitbodedout de Rabbi Na'hman, faite de parole et ouverte à tous, de la hitbodedout méditative des anciens ; décrit la pratique comme à la fois la plus facile et la plus difficile.",
+              "droits": "Lettres de Moharach (אשר בנחל), œuvre moderne protégée. Texte non reproduit. Autorisation requise auprès des ayants droit.",
+              "autorisation": null,
+              "texte_integral": null,
+              "sources_citees": [],
+              "erreurs_relevees": [],
+              "serie": null,
+              "ordre": null,
+              "statut_reference": "référence citée par l'article, non vérifiée sur l'original"
+            },
+            {
+              "id": "art-pgisha-01",
+              "type": "article",
+              "titre": "הפגישה: מבוא",
+              "auteur": null,
+              "site": "שער ברסלב (breslev.org)",
+              "date": "כ״ט בתמוז תשע״ט",
+              "url": "https://www.breslev.org/breslev-articles/%d7%94%d7%a4%d7%92%d7%99%d7%a9%d7%94-%d7%9e%d7%91%d7%95%d7%90/",
+              "resume_fr": "Introduction de la série : comment vivre une vraie rencontre avec le Créateur à une époque où tout fonctionne en automatique.",
+              "droits": "© שער ברסלב 2016–2026 (breslev.org). Aucune licence de réutilisation affichée. Autorisation écrite requise : editor@breslev.org.",
+              "autorisation": null,
+              "texte_integral": null,
+              "sources_citees": [],
+              "erreurs_relevees": [],
+              "serie": "הפגישה",
+              "ordre": 1,
+              "statut_reference": "relevé sur le site"
+            },
+            {
+              "id": "art-pgisha-02",
+              "type": "article",
+              "titre": "הפגישה: היכן המטמון",
+              "auteur": null,
+              "site": "שער ברסלב (breslev.org)",
+              "date": "כ״ט בתמוז תשע״ט",
+              "url": "https://www.breslev.org/breslev-articles/%d7%94%d7%99%d7%9b%d7%9f-%d7%94%d7%9e%d7%98%d7%9e%d7%95%d7%9f/",
+              "resume_fr": "À l'époque de l'immédiat, où tout s'obtient d'un bouton, où se trouve le vrai trésor.",
+              "droits": "© שער ברסלב 2016–2026 (breslev.org). Aucune licence de réutilisation affichée. Autorisation écrite requise : editor@breslev.org.",
+              "autorisation": null,
+              "texte_integral": null,
+              "sources_citees": [],
+              "erreurs_relevees": [],
+              "serie": "הפגישה",
+              "ordre": 2,
+              "statut_reference": "relevé sur le site"
+            },
+            {
+              "id": "art-pgisha-03",
+              "type": "article",
+              "titre": "הפגישה: חלום אמיתי",
+              "auteur": null,
+              "site": "שער ברסלב (breslev.org)",
+              "date": "כ״ט בתמוז תשע״ט",
+              "url": "https://www.breslev.org/breslev-articles/%d7%97%d7%9c%d7%95%d7%9d-%d7%90%d7%9e%d7%99%d7%aa%d7%99/",
+              "resume_fr": "« Et à Lui tu t'attacheras » : l'obligation d'un lien étroit et constant avec Hachem.",
+              "droits": "© שער ברסלב 2016–2026 (breslev.org). Aucune licence de réutilisation affichée. Autorisation écrite requise : editor@breslev.org.",
+              "autorisation": null,
+              "texte_integral": null,
+              "sources_citees": [],
+              "erreurs_relevees": [],
+              "serie": "הפגישה",
+              "ordre": 3,
+              "statut_reference": "relevé sur le site"
+            },
+            {
+              "id": "art-pgisha-04",
+              "type": "article",
+              "titre": "הפגישה: קשר אמיתי",
+              "auteur": null,
+              "site": "שער ברסלב (breslev.org)",
+              "date": "כ״ט בתמוז תשע״ט",
+              "url": "https://www.breslev.org/breslev-articles/%d7%94%d7%a4%d7%92%d7%99%d7%a9%d7%94-%d7%a7%d7%a9%d7%a8-%d7%90%d7%9e%d7%99%d7%aa%d7%99/",
+              "resume_fr": "Un vrai lien naît de l'ouverture du cœur ; ce qui relie deux cœurs.",
+              "droits": "© שער ברסלב 2016–2026 (breslev.org). Aucune licence de réutilisation affichée. Autorisation écrite requise : editor@breslev.org.",
+              "autorisation": null,
+              "texte_integral": null,
+              "sources_citees": [],
+              "erreurs_relevees": [],
+              "serie": "הפגישה",
+              "ordre": 4,
+              "statut_reference": "relevé sur le site"
+            },
+            {
+              "id": "art-pgisha-05",
+              "type": "article",
+              "titre": "הפגישה: קשר אמיתי (ב)",
+              "auteur": null,
+              "site": "שער ברסלב (breslev.org)",
+              "date": "ג׳ באב תשע״ט",
+              "url": "https://www.breslev.org/breslev-articles/%d7%a7%d7%a9%d7%a8-%d7%90%d7%9e%d7%99%d7%aa%d7%99-%d7%91/",
+              "resume_fr": "Suite : l'ouverture du cœur et ce qui relie.",
+              "droits": "© שער ברסלב 2016–2026 (breslev.org). Aucune licence de réutilisation affichée. Autorisation écrite requise : editor@breslev.org.",
+              "autorisation": null,
+              "texte_integral": null,
+              "sources_citees": [],
+              "erreurs_relevees": [],
+              "serie": "הפגישה",
+              "ordre": 5,
+              "statut_reference": "relevé sur le site"
+            },
+            {
+              "id": "art-pgisha-06",
+              "type": "article",
+              "titre": "הפגישה: קשר אמיתי (ג)",
+              "auteur": null,
+              "site": "שער ברסלב (breslev.org)",
+              "date": "י״ז באב תשע״ט",
+              "url": "https://www.breslev.org/breslev-articles/%d7%94%d7%a4%d7%92%d7%99%d7%a9%d7%94-%d7%a7%d7%a9%d7%a8-%d7%90%d7%9e%d7%99%d7%aa%d7%99-%d7%92/",
+              "resume_fr": "Suite du même thème.",
+              "droits": "© שער ברסלב 2016–2026 (breslev.org). Aucune licence de réutilisation affichée. Autorisation écrite requise : editor@breslev.org.",
+              "autorisation": null,
+              "texte_integral": null,
+              "sources_citees": [],
+              "erreurs_relevees": [],
+              "serie": "הפגישה",
+              "ordre": 6,
+              "statut_reference": "relevé sur le site"
+            },
+            {
+              "id": "art-pgisha-07",
+              "type": "article",
+              "titre": "הפגישה: קשר אמיתי (ד)",
+              "auteur": null,
+              "site": "שער ברסלב (breslev.org)",
+              "date": "ג׳ באלול תשע״ט",
+              "url": "https://www.breslev.org/breslev-articles/%d7%94%d7%a4%d7%92%d7%99%d7%a9%d7%94-%d7%a7%d7%a9%d7%a8-%d7%90%d7%9e%d7%99%d7%aa%d7%99-%d7%93/",
+              "resume_fr": "La hitbodedout n'est pas seulement épancher son cœur : c'est parler avec Lui comme on parle à un ami.",
+              "droits": "© שער ברסלב 2016–2026 (breslev.org). Aucune licence de réutilisation affichée. Autorisation écrite requise : editor@breslev.org.",
+              "autorisation": null,
+              "texte_integral": null,
+              "sources_citees": [],
+              "erreurs_relevees": [],
+              "serie": "הפגישה",
+              "ordre": 7,
+              "statut_reference": "relevé sur le site"
+            },
+            {
+              "id": "art-pgisha-08",
+              "type": "article",
+              "titre": "הפגישה: קשר אמיתי (ה)",
+              "auteur": null,
+              "site": "שער ברסלב (breslev.org)",
+              "date": "ט׳ באלול תשע״ט",
+              "url": "https://www.breslev.org/breslev-articles/%d7%94%d7%a4%d7%92%d7%99%d7%a9%d7%94-%d7%a7%d7%a9%d7%a8-%d7%90%d7%9e%d7%99%d7%aa%d7%99-%d7%94/",
+              "resume_fr": "Si le Créateur sait tout et a voulu notre situation, pourquoi prier ?",
+              "droits": "© שער ברסלב 2016–2026 (breslev.org). Aucune licence de réutilisation affichée. Autorisation écrite requise : editor@breslev.org.",
+              "autorisation": null,
+              "texte_integral": null,
+              "sources_citees": [],
+              "erreurs_relevees": [],
+              "serie": "הפגישה",
+              "ordre": 8,
+              "statut_reference": "relevé sur le site"
+            },
+            {
+              "id": "art-pgisha-09",
+              "type": "article",
+              "titre": "הפגישה: קשר אמיתי (ו)",
+              "auteur": null,
+              "site": "שער ברסלב (breslev.org)",
+              "date": "ט״ז באלול תשע״ט",
+              "url": "https://www.breslev.org/breslev-articles/%d7%94%d7%a4%d7%92%d7%99%d7%a9%d7%94-%d7%a7%d7%a9%d7%a8-%d7%90%d7%9e%d7%99%d7%aa%d7%99-%d7%95/",
+              "resume_fr": "Faire précéder chaque étape de la vie par une prière, sans attendre le problème.",
+              "droits": "© שער ברסלב 2016–2026 (breslev.org). Aucune licence de réutilisation affichée. Autorisation écrite requise : editor@breslev.org.",
+              "autorisation": null,
+              "texte_integral": null,
+              "sources_citees": [],
+              "erreurs_relevees": [],
+              "serie": "הפגישה",
+              "ordre": 9,
+              "statut_reference": "relevé sur le site"
+            },
+            {
+              "id": "art-pgisha-10",
+              "type": "article",
+              "titre": "הפגישה: המטרה והאמצעי",
+              "auteur": null,
+              "site": "שער ברסלב (breslev.org)",
+              "date": "כ״ח בתשרי תש״פ",
+              "url": "https://www.breslev.org/breslev-articles/%d7%94%d7%9e%d7%98%d7%a8%d7%94-%d7%95%d7%94%d7%90%d7%9e%d7%a6%d7%a2%d7%99/",
+              "resume_fr": "Face à une difficulté, on cherche d'abord à la régler seul ; le but et le moyen.",
+              "droits": "© שער ברסלב 2016–2026 (breslev.org). Aucune licence de réutilisation affichée. Autorisation écrite requise : editor@breslev.org.",
+              "autorisation": null,
+              "texte_integral": null,
+              "sources_citees": [],
+              "erreurs_relevees": [],
+              "serie": "הפגישה",
+              "ordre": 10,
+              "statut_reference": "relevé sur le site"
+            },
+            {
+              "id": "art-pgisha-11",
+              "type": "article",
+              "titre": "הפגישה: קשר אמיתי (ז) – מערכת יחסים תקינה",
+              "auteur": null,
+              "site": "שער ברסלב (breslev.org)",
+              "date": "י״ב במרחשוון תש״פ",
+              "url": "https://www.breslev.org/breslev-articles/%d7%94%d7%a4%d7%92%d7%99%d7%a9%d7%94-%d7%a7%d7%a9%d7%a8-%d7%90%d7%9e%d7%99%d7%aa%d7%99-%d7%96/",
+              "resume_fr": "Une relation saine : le sujet central de la rencontre.",
+              "droits": "© שער ברסלב 2016–2026 (breslev.org). Aucune licence de réutilisation affichée. Autorisation écrite requise : editor@breslev.org.",
+              "autorisation": null,
+              "texte_integral": null,
+              "sources_citees": [],
+              "erreurs_relevees": [],
+              "serie": "הפגישה",
+              "ordre": 11,
+              "statut_reference": "relevé sur le site"
+            },
+            {
+              "id": "art-pgisha-12",
+              "type": "article",
+              "titre": "הפגישה: התבודדות וגדולי ישראל",
+              "auteur": null,
+              "site": "שער ברסלב (breslev.org)",
+              "date": "כ״א במרחשוון תש״פ",
+              "url": "https://www.breslev.org/breslev-articles/%d7%94%d7%a4%d7%92%d7%99%d7%a9%d7%94-%d7%94%d7%94%d7%aa%d7%91%d7%95%d7%93%d7%93%d7%95%d7%aa-%d7%95%d7%92%d7%93%d7%95%d7%9c%d7%99-%d7%99%d7%a9%d7%a8%d7%90%d7%9c-%d7%9b%d7%94-%d7%a2%d7%a9%d7%95/",
+              "resume_fr": "Ce que les grands d'Israël ont écrit sur l'obligation et la valeur de la hitbodedout, de Rabbi Élazar Azikri au 'Hafets 'Haïm.",
+              "droits": "© שער ברסלב 2016–2026 (breslev.org). Aucune licence de réutilisation affichée. Autorisation écrite requise : editor@breslev.org.",
+              "autorisation": null,
+              "texte_integral": null,
+              "sources_citees": [],
+              "erreurs_relevees": [],
+              "serie": "הפגישה",
+              "ordre": 12,
+              "statut_reference": "relevé sur le site"
+            },
+            {
+              "id": "art-pgisha-13",
+              "type": "article",
+              "titre": "הפגישה: מי לוקח על עצמו את האחריות?",
+              "auteur": null,
+              "site": "שער ברסלב (breslev.org)",
+              "date": "ל׳ במרחשוון תש״פ",
+              "url": "https://www.breslev.org/breslev-articles/%d7%94%d7%a4%d7%92%d7%99%d7%a9%d7%94-%d7%9e%d7%99-%d7%9c%d7%95%d7%a7%d7%97-%d7%a2%d7%9c-%d7%a2%d7%a6%d7%9e%d7%95-%d7%90%d7%aa-%d7%94%d7%90%d7%97%d7%a8%d7%99%d7%95%d7%aa/",
+              "resume_fr": "Réponse à l'objection « tant de temps en prières, c'est exagéré », à partir d'une guemara du traité Chabbat.",
+              "droits": "© שער ברסלב 2016–2026 (breslev.org). Aucune licence de réutilisation affichée. Autorisation écrite requise : editor@breslev.org.",
+              "autorisation": null,
+              "texte_integral": null,
+              "sources_citees": [],
+              "erreurs_relevees": [],
+              "serie": "הפגישה",
+              "ordre": 13,
+              "statut_reference": "relevé sur le site"
+            },
+            {
+              "id": "art-pgisha-14",
+              "type": "article",
+              "titre": "הפגישה: אני בן תורה, מה הקשר שלי להתבודדות?!",
+              "auteur": null,
+              "site": "שער ברסלב (breslev.org)",
+              "date": "ה׳ בכסלו תש״פ",
+              "url": "https://www.breslev.org/breslev-articles/%d7%94%d7%a4%d7%92%d7%99%d7%a9%d7%94-%d7%90%d7%a0%d7%99-%d7%91%d7%9f-%d7%aa%d7%95%d7%a8%d7%94-%d7%9e%d7%94-%d7%94%d7%a7%d7%a9%d7%a8-%d7%a9%d7%9c%d7%99-%d7%9c%d7%94%d7%aa%d7%91%d7%95%d7%93%d7%93/",
+              "resume_fr": "Pourquoi celui qui étudie la Torah toute la journée a lui aussi besoin de hitbodedout.",
+              "droits": "© שער ברסלב 2016–2026 (breslev.org). Aucune licence de réutilisation affichée. Autorisation écrite requise : editor@breslev.org.",
+              "autorisation": null,
+              "texte_integral": null,
+              "sources_citees": [],
+              "erreurs_relevees": [],
+              "serie": "הפגישה",
+              "ordre": 14,
+              "statut_reference": "relevé sur le site"
+            },
+            {
+              "id": "art-pgisha-15",
+              "type": "article",
+              "titre": "הפגישה: שמור על קשר, או: מה הקשר בין הלוואות להתבודדות",
+              "auteur": null,
+              "site": "שער ברסלב (breslev.org)",
+              "date": "י״ב בכסלו תש״פ",
+              "url": "https://www.breslev.org/breslev-articles/%d7%94%d7%a4%d7%92%d7%99%d7%a9%d7%94-%d7%a9%d7%9e%d7%95%d7%a8-%d7%a2%d7%9c-%d7%a7%d7%a9%d7%a8-%d7%90%d7%95-%d7%9e%d7%94-%d7%94%d7%a7%d7%a9%d7%a8-%d7%91%d7%99%d7%9f-%d7%94%d7%9c%d7%95%d7%95%d7%90/",
+              "resume_fr": "Le bénéfice immédiat, en plus du progrès spirituel, pour qui tient ce rendez-vous chaque jour.",
+              "droits": "© שער ברסלב 2016–2026 (breslev.org). Aucune licence de réutilisation affichée. Autorisation écrite requise : editor@breslev.org.",
+              "autorisation": null,
+              "texte_integral": null,
+              "sources_citees": [],
+              "erreurs_relevees": [],
+              "serie": "הפגישה",
+              "ordre": 15,
+              "statut_reference": "relevé sur le site"
+            },
+            {
+              "id": "art-pgisha-16",
+              "type": "article",
+              "titre": "הפגישה: מי ביקש ממך לנסות לבד?",
+              "auteur": null,
+              "site": "שער ברסלב (breslev.org)",
+              "date": "י״ז בטבת תש״פ",
+              "url": "https://www.breslev.org/breslev-articles/%d7%94%d7%a4%d7%92%d7%99%d7%a9%d7%94-%d7%9e%d7%99-%d7%91%d7%99%d7%a7%d7%a9-%d7%9e%d7%9e%d7%9a-%d7%9c%d7%a0%d7%a1%d7%95%d7%aa-%d7%9c%d7%91%d7%93/",
+              "resume_fr": "Faire tout son possible, oui ; mais pourquoi ne pas tout porter seul.",
+              "droits": "© שער ברסלב 2016–2026 (breslev.org). Aucune licence de réutilisation affichée. Autorisation écrite requise : editor@breslev.org.",
+              "autorisation": null,
+              "texte_integral": null,
+              "sources_citees": [],
+              "erreurs_relevees": [],
+              "serie": "הפגישה",
+              "ordre": 16,
+              "statut_reference": "relevé sur le site"
+            },
+            {
+              "id": "art-pgisha-17",
+              "type": "article",
+              "titre": "הפגישה: הנשק האמיתי, וגם: האם שומעים אותי?",
+              "auteur": null,
+              "site": "שער ברסלב (breslev.org)",
+              "date": "כ״ג בטבת תש״פ",
+              "url": "https://www.breslev.org/breslev-articles/%d7%94%d7%a4%d7%92%d7%99%d7%a9%d7%94-%d7%94%d7%a0%d7%a9%d7%a7-%d7%94%d7%90%d7%9e%d7%99%d7%aa%d7%99-%d7%95%d7%92%d7%9d-%d7%94%d7%90%d7%9d-%d7%a9%d7%95%d7%9e%d7%a2%d7%99%d7%9d-%d7%90%d7%95%d7%aa/",
+              "resume_fr": "« Tout est entre les mains du Ciel » et la question que beaucoup se posent : suis-je entendu ?",
+              "droits": "© שער ברסלב 2016–2026 (breslev.org). Aucune licence de réutilisation affichée. Autorisation écrite requise : editor@breslev.org.",
+              "autorisation": null,
+              "texte_integral": null,
+              "sources_citees": [],
+              "erreurs_relevees": [],
+              "serie": "הפגישה",
+              "ordre": 17,
+              "statut_reference": "relevé sur le site"
+            },
+            {
+              "id": "art-pgisha-18",
+              "type": "article",
+              "titre": "הפגישה: מדריך מעשי להתבודדות (א)",
+              "auteur": null,
+              "site": "שער ברסלב (breslev.org)",
+              "date": null,
+              "url": "https://www.breslev.org/breslev-articles/%d7%94%d7%a4%d7%92%d7%99%d7%a9%d7%94-%d7%9e%d7%93%d7%a8%d7%99%d7%9a-%d7%9e%d7%a2%d7%a9%d7%99-%d7%9c%d7%94%d7%aa%d7%91%d7%95%d7%93%d7%93%d7%95%d7%aa-%d7%90/",
+              "resume_fr": "Ouvre la troisième partie de la série : guide pratique, comment, où, quand et combien de temps.",
+              "droits": "© שער ברסלב 2016–2026 (breslev.org). Aucune licence de réutilisation affichée. Autorisation écrite requise : editor@breslev.org.",
+              "autorisation": null,
+              "texte_integral": null,
+              "sources_citees": [],
+              "erreurs_relevees": [],
+              "serie": "הפגישה",
+              "ordre": 18,
+              "statut_reference": "relevé sur le site"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
