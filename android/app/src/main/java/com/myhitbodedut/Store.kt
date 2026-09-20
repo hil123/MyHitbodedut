@@ -36,12 +36,18 @@ object Store {
     private const val KEY_SESSION_END = "session_ends_at"
     private const val KEY_SESSION_TARGET = "session_target"
     private const val KEY_SESSION_START = "session_started_at"
+    private const val KEY_MUSIC_ON = "music_enabled"
+    private const val KEY_MUSIC_TRACK = "music_track"
+    private const val KEY_MUSIC_VOLUME = "music_volume"
+    private const val KEY_MUSIC_USER = "music_user_tracks"
+    private const val KEY_MUSIC_NAMES = "music_names"
 
     const val DEFAULT_START = 6 * 60
     const val DEFAULT_END = 11 * 60
     const val DEFAULT_SNOOZE = 15
     const val DEFAULT_TARGET = 60
     const val DEFAULT_REMINDER = 7 * 60
+    const val DEFAULT_VOLUME = 60
 
     private val FORMAT: DateTimeFormatter = DateTimeFormatter.ISO_LOCAL_DATE
 
@@ -285,6 +291,40 @@ object Store {
         return elapsed.coerceAtLeast(0)
     }
 
+    // --- Musique ------------------------------------------------------------
+
+    fun musicEnabled(context: Context): Boolean = prefs(context).getBoolean(KEY_MUSIC_ON, false)
+
+    fun setMusicEnabled(context: Context, enabled: Boolean) {
+        prefs(context).edit().putBoolean(KEY_MUSIC_ON, enabled).apply()
+    }
+
+    fun musicTrackId(context: Context): String? = prefs(context).getString(KEY_MUSIC_TRACK, null)
+
+    fun setMusicTrackId(context: Context, id: String?) {
+        prefs(context).edit().putString(KEY_MUSIC_TRACK, id).apply()
+    }
+
+    fun musicVolume(context: Context): Int = prefs(context).getInt(KEY_MUSIC_VOLUME, DEFAULT_VOLUME)
+
+    fun setMusicVolume(context: Context, percent: Int) {
+        prefs(context).edit().putInt(KEY_MUSIC_VOLUME, percent.coerceIn(0, 100)).apply()
+    }
+
+    fun musicUserTracks(context: Context): String =
+        prefs(context).getString(KEY_MUSIC_USER, "[]") ?: "[]"
+
+    fun setMusicUserTracks(context: Context, json: String) {
+        prefs(context).edit().putString(KEY_MUSIC_USER, json).apply()
+    }
+
+    fun musicNames(context: Context): String =
+        prefs(context).getString(KEY_MUSIC_NAMES, "{}") ?: "{}"
+
+    fun setMusicNames(context: Context, json: String) {
+        prefs(context).edit().putString(KEY_MUSIC_NAMES, json).apply()
+    }
+
     // --- Sauvegarde ---------------------------------------------------------
 
     fun exportJson(context: Context): String {
@@ -310,6 +350,9 @@ object Store {
             .put("pause_shabbat", pauseOnShabbat(context))
             .put("reminder_enabled", reminderEnabled(context))
             .put("reminder_minutes", reminderMinutes(context))
+            .put("music_enabled", musicEnabled(context))
+            .put("music_volume", musicVolume(context))
+            .put("music_track", musicTrackId(context) ?: "")
         root.put("settings", settings)
         root.put("paused_dates", org.json.JSONArray(pausedDates(context).toList()))
         root.put("blocked_apps", org.json.JSONArray(blockedApps(context).toList()))
@@ -353,6 +396,10 @@ object Store {
             setPauseOnShabbat(context, settings.optBoolean("pause_shabbat", pauseOnShabbat(context)))
             setReminderEnabled(context, settings.optBoolean("reminder_enabled", reminderEnabled(context)))
             setReminderMinutes(context, settings.optInt("reminder_minutes", reminderMinutes(context)))
+            setMusicEnabled(context, settings.optBoolean("music_enabled", musicEnabled(context)))
+            setMusicVolume(context, settings.optInt("music_volume", musicVolume(context)))
+            settings.optString("music_track").takeIf { it.isNotBlank() }
+                ?.let { setMusicTrackId(context, it) }
         }
         root.optJSONArray("paused_dates")?.let { array ->
             val dates = pausedDates(context).toMutableSet()

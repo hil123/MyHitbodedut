@@ -23,6 +23,7 @@ class SessionActivity : AppCompatActivity() {
     private lateinit var secondary: Button
     private lateinit var durations: View
     private lateinit var art: ImageView
+    private lateinit var musicLine: TextView
 
     private val tick = object : Runnable {
         override fun run() {
@@ -42,6 +43,7 @@ class SessionActivity : AppCompatActivity() {
         secondary = findViewById(R.id.session_secondary)
         durations = findViewById(R.id.session_durations)
         art = findViewById(R.id.session_character)
+        musicLine = findViewById(R.id.session_music)
 
         intArrayOf(R.id.duration_10, R.id.duration_20, R.id.duration_30, R.id.duration_60)
             .forEach { id ->
@@ -68,6 +70,7 @@ class SessionActivity : AppCompatActivity() {
     }
 
     private fun render() {
+        renderMusicLine()
         if (Store.isSessionRunning(this)) {
             art.setImageResource(Character.during())
             val remaining = (Store.sessionEndsAt(this) - System.currentTimeMillis()).coerceAtLeast(0)
@@ -108,6 +111,12 @@ class SessionActivity : AppCompatActivity() {
             }
             secondary.visibility = View.GONE
         }
+    }
+
+    private fun renderMusicLine() {
+        val track = if (Store.musicEnabled(this)) MusicLibrary.selected(this) else null
+        musicLine.visibility = if (track == null) View.GONE else View.VISIBLE
+        if (track != null) musicLine.text = getString(R.string.session_music_line, track.title)
     }
 
     private fun confirmFinish() {

@@ -56,6 +56,16 @@
             android:textColor="@color/mint"
             android:textSize="15sp" />
 
+        <TextView
+            android:id="@+id/session_music"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:textAlignment="center"
+            android:textColor="@color/mint"
+            android:textSize="13sp"
+            android:visibility="gone" />
+
         <LinearLayout
             android:id="@+id/session_durations"
             android:layout_width="match_parent"

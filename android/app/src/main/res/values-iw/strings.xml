@@ -148,4 +148,28 @@
         <item quantity="two">%1$d התבודדויות, %2$s בסך הכול</item>
         <item quantity="other">%1$d התבודדויות, %2$s בסך הכול</item>
     </plurals>
+
+    <!-- מוזיקה -->
+    <string name="music_title">מוזיקה</string>
+    <string name="settings_music">מוזיקה להתבודדות</string>
+    <string name="music_enable">לנגן בזמן ההתבודדות</string>
+    <string name="music_enable_hint">הניגון מתחיל עם הטיימר ודועך בסיום.</string>
+    <string name="music_volume">עוצמה</string>
+    <string name="music_library">ספרייה</string>
+    <string name="music_library_hint">הקשה לבחירה, לחיצה ארוכה לשינוי שם או הסרה.</string>
+    <string name="music_add">הוספת ניגון מהטלפון</string>
+    <string name="music_add_failed">לא ניתן להוסיף את הקובץ באופן קבוע.</string>
+    <string name="music_play_failed">לא ניתן לנגן את הקובץ.</string>
+    <string name="music_unnamed">ללא שם</string>
+    <string name="music_origin_bundled">מגיע עם האפליקציה</string>
+    <string name="music_origin_device">מהטלפון</string>
+    <string name="music_preview">האזנה</string>
+    <string name="music_rename">שינוי שם</string>
+    <string name="music_remove">הסרה</string>
+    <string name="music_off_short">כבוי</string>
+    <string name="music_off_summary">אין מוזיקה בזמן ההתבודדות.</string>
+    <string name="music_none_summary">אין ניגונים בספרייה.</string>
+    <string name="music_on_summary">%1$s, עוצמה %2$d%%</string>
+    <string name="session_music_line">מוזיקה: %1$s</string>
+    <string name="track_niggoun_1">ניגון 1</string>
 </resources>

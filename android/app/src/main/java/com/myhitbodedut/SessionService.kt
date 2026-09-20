@@ -20,6 +20,7 @@ import android.os.Looper
 class SessionService : Service() {
 
     private val handler = Handler(Looper.getMainLooper())
+    private val music by lazy { MusicPlayer(this) }
 
     private val tick = object : Runnable {
         override fun run() {
@@ -45,6 +46,7 @@ class SessionService : Service() {
             }
         }
         startForegroundNow(remainingMinutes())
+        ensureMusic()
         handler.removeCallbacks(tick)
         handler.post(tick)
         return START_STICKY
@@ -83,7 +85,16 @@ class SessionService : Service() {
         stopSelfAndClear()
     }
 
+    /** Lance le morceau retenu, si la musique est active et rien ne joue déjà. */
+    private fun ensureMusic() {
+        if (!Store.musicEnabled(this) || music.isPlaying) return
+        if (!Store.isSessionRunning(this)) return
+        val track = MusicLibrary.selected(this) ?: return
+        music.start(track, Store.musicVolume(this))
+    }
+
     private fun stopSelfAndClear() {
+        music.stop()
         handler.removeCallbacks(tick)
         stopForeground(STOP_FOREGROUND_REMOVE)
         stopSelf()

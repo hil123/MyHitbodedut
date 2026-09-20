@@ -60,6 +60,9 @@ class MainActivity : AppCompatActivity() {
         findViewById<Button>(R.id.start_session).setOnClickListener {
             startActivity(Intent(this, SessionActivity::class.java))
         }
+        findViewById<Button>(R.id.music_button).setOnClickListener {
+            startActivity(Intent(this, MusicActivity::class.java))
+        }
         findViewById<Button>(R.id.open_journal).setOnClickListener {
             startActivity(Intent(this, JournalActivity::class.java))
         }
@@ -252,6 +255,10 @@ class MainActivity : AppCompatActivity() {
             Store.formatDuration(Store.targetMinutes(this))
         findViewById<Button>(R.id.reminder_time).text =
             Store.formatMinutes(Store.reminderMinutes(this))
+        findViewById<Button>(R.id.music_button).text = when {
+            !Store.musicEnabled(this) -> getString(R.string.music_off_short)
+            else -> MusicLibrary.selected(this)?.title ?: getString(R.string.music_off_short)
+        }
 
         val count = Store.blockedApps(this).size
         val summary = findViewById<TextView>(R.id.apps_summary)

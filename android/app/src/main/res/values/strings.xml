@@ -159,4 +159,28 @@
         <item quantity="one">%1$d séance, %2$s au total</item>
         <item quantity="other">%1$d séances, %2$s au total</item>
     </plurals>
+
+    <!-- Musique -->
+    <string name="music_title">Musique</string>
+    <string name="settings_music">Musique de séance</string>
+    <string name="music_enable">Jouer pendant la séance</string>
+    <string name="music_enable_hint">Le morceau démarre avec le minuteur et s\'arrête en fondu à la fin.</string>
+    <string name="music_volume">Volume</string>
+    <string name="music_library">Bibliothèque</string>
+    <string name="music_library_hint">Touchez pour choisir, appui long pour renommer ou retirer.</string>
+    <string name="music_add">Ajouter un morceau du téléphone</string>
+    <string name="music_add_failed">Ce fichier n\'a pas pu être ajouté durablement.</string>
+    <string name="music_play_failed">Ce morceau n\'a pas pu être lu.</string>
+    <string name="music_unnamed">Sans titre</string>
+    <string name="music_origin_bundled">Livré avec l\'application</string>
+    <string name="music_origin_device">Depuis le téléphone</string>
+    <string name="music_preview">Écouter</string>
+    <string name="music_rename">Renommer</string>
+    <string name="music_remove">Retirer</string>
+    <string name="music_off_short">Désactivée</string>
+    <string name="music_off_summary">Aucune musique pendant les séances.</string>
+    <string name="music_none_summary">Aucun morceau dans la bibliothèque.</string>
+    <string name="music_on_summary">%1$s, volume %2$d %%</string>
+    <string name="session_music_line">Musique : %1$s</string>
+    <string name="track_niggoun_1">Niggoun 1</string>
 </resources>

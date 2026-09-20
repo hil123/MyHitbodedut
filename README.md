@@ -67,6 +67,25 @@ délibéré. L'accessibilité détecterait les changements d'application
 instantanément, mais Google Play en restreint l'usage aux applications
 d'accessibilité, et s'en servir pour autre chose expose à un retrait.
 
+### La musique
+
+Une séance peut se dérouler en musique. La section Musique rassemble la
+bibliothèque : un morceau livré avec l'application, plus ceux que l'on ajoute
+depuis le téléphone. On choisit celui qui accompagnera les séances, on règle le
+volume, et on peut écouter chaque morceau avant de décider. Appui long pour
+renommer, ou retirer un morceau ajouté.
+
+La lecture tourne dans le service de séance, donc elle continue écran éteint.
+L'application demande le focus audio, ce qui fait taire les autres lecteurs, et
+s'arrête en fondu plutôt que de couper net.
+
+Les morceaux ajoutés passent par le sélecteur de fichiers du système, avec une
+permission d'accès persistante : aucune permission de stockage n'est demandée,
+et le fichier reste à sa place.
+
+Le morceau livré pèse 9,3 Mo en 320 kbps, ce qui explique la taille de l'APK.
+Il n'a pas été réencodé, pour ne pas dégrader l'original.
+
 ### Les illustrations
 
 Le personnage vient d'une planche de seize portraits et de quatre rendus pleins.

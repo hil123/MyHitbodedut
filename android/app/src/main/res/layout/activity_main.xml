@@ -249,6 +249,13 @@
 
             <LinearLayout style="@style/SettingRow">
 
+                <TextView style="@style/SettingLabel" android:text="@string/settings_music" />
+
+                <Button android:id="@+id/music_button" style="@style/SettingValue" />
+            </LinearLayout>
+
+            <LinearLayout style="@style/SettingRow">
+
                 <TextView style="@style/SettingLabel" android:text="@string/settings_reminder" />
 
                 <com.google.android.material.materialswitch.MaterialSwitch
