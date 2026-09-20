@@ -172,4 +172,5 @@
     <string name="edition_light">Light edition</string>
     <string name="week_done">done</string>
     <string name="week_todo">to do</string>
+    <string name="gate_permissions_action">Permissions missing, grant them</string>
 </resources>

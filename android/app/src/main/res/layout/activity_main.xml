@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main_scroll"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true">
@@ -218,6 +219,15 @@
                 android:layout_marginTop="4dp"
                 android:textSize="14sp" />
 
+            <!-- Visible seulement quand une autorisation manque : mène à la carte. -->
+            <Button
+                android:id="@+id/gate_fix_permissions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="@string/gate_permissions_action"
+                android:visibility="gone" />
+
             <Button
                 android:id="@+id/preview_gate"
                 style="@style/Widget.Material3.Button.OutlinedButton"
@@ -359,7 +369,7 @@
         </LinearLayout>
 
         <!-- Autorisations -->
-        <LinearLayout style="@style/Card">
+        <LinearLayout android:id="@+id/card_permissions" style="@style/Card">
 
             <TextView style="@style/CardTitle" android:text="@string/section_permissions" />
 

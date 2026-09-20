@@ -177,4 +177,5 @@
     <string name="edition_light">מהדורת Light</string>
     <string name="week_done">בוצע</string>
     <string name="week_todo">לביצוע</string>
+    <string name="gate_permissions_action">חסרות הרשאות, לאשר אותן</string>
 </resources>

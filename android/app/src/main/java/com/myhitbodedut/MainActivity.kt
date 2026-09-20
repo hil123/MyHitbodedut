@@ -11,6 +11,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.ScrollView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -76,6 +77,7 @@ class MainActivity : AppCompatActivity() {
             NoteDialog.show(this, Store.today()) { refresh() }
         }
         findViewById<Button>(R.id.preview_gate).setOnClickListener { previewGate() }
+        findViewById<Button>(R.id.gate_fix_permissions).setOnClickListener { scrollToPermissions() }
         findViewById<Button>(R.id.pick_apps).setOnClickListener {
             startActivity(Intent(this, AppPickerActivity::class.java))
         }
@@ -191,11 +193,24 @@ class MainActivity : AppCompatActivity() {
 
     private fun renderDiagnostic() {
         val state = GateStatus.evaluate(this)
-        findViewById<TextView>(R.id.gate_state_title).apply {
-            setText(GateStatus.titleOf(state))
-            setTextColor(ContextCompat.getColor(this@MainActivity, GateStatus.colorOf(state)))
-        }
+        val missing = state == GateState.MISSING_PERMISSIONS
+
+        val title = findViewById<TextView>(R.id.gate_state_title)
+        title.setText(GateStatus.titleOf(state))
+        title.setTextColor(ContextCompat.getColor(this, GateStatus.colorOf(state)))
+        // Le titre cède la place au bouton : le même message, mais actionnable.
+        title.visibility = if (missing) View.GONE else View.VISIBLE
+
         findViewById<TextView>(R.id.gate_state_detail).text = GateStatus.detailOf(this, state)
+        findViewById<Button>(R.id.gate_fix_permissions).visibility =
+            if (missing) View.VISIBLE else View.GONE
+    }
+
+    /** Amène la carte des autorisations sous les yeux, plutôt que « plus bas ». */
+    private fun scrollToPermissions() {
+        val scroll = findViewById<ScrollView>(R.id.main_scroll)
+        val card = findViewById<View>(R.id.card_permissions)
+        scroll.post { scroll.smoothScrollTo(0, card.top) }
     }
 
     private fun renderWeek() {

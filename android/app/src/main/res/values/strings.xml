@@ -190,4 +190,5 @@
     <string name="week_shabbat_mark" translatable="false">ש</string>
     <string name="week_done">faite</string>
     <string name="week_todo">à faire</string>
+    <string name="gate_permissions_action">Autorisations manquantes, les accorder</string>
 </resources>
