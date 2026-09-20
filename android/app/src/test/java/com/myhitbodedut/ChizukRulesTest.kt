@@ -89,6 +89,35 @@ class ChizukRulesTest {
             }
     }
 
+    /**
+     * Depuis que les textes sont relus, la release en affiche. Ce test garde
+     * ce qui n'etait pas garantissable avant : qu'aucun moment ne se retrouve
+     * muet sur un telephone. Reculer un seul `relu` peut vider un moment, et
+     * rien d'autre ne le signalerait — la carte se masquerait, sans erreur.
+     */
+    @Test
+    fun `chaque moment a de quoi tirer en release`() {
+        Moment.entries.forEach { moment ->
+            val pool = ChizukRules.forMoment(chizuk, moment, debug = false)
+            assertTrue(
+                "aucun texte publiable pour le moment « ${moment.key} » : " +
+                    "la carte resterait masquee sur l'appareil",
+                pool.isNotEmpty(),
+            )
+        }
+    }
+
+    /** Le fichier doit dire lui-meme d'ou vient sa confiance. */
+    @Test
+    fun `le fichier porte la trace de sa verification`() {
+        val meta = org.json.JSONObject(DataFiles.chizukJson).getJSONObject("_meta")
+        assertTrue(
+            "relu=true sans bloc _meta.verification : le fichier ne dit plus " +
+                "sur quoi repose sa publication",
+            meta.has("verification"),
+        )
+    }
+
     @Test
     fun `chaque moment a de quoi tirer en debug`() {
         Moment.entries.forEach { moment ->

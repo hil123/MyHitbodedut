@@ -62,7 +62,15 @@
       "« L'eau use la pierre » : Si'hot HaRan 234.",
       "Paraphrases v0.1 des items hitbodedout remplacées par des extraits réels.",
       "Items généraux v0.1 (Berakhot 10a, Roch Hachana 16a, Avot 2:16…) non repris : hors périmètre, textes réels à établir."
-    ]
+    ],
+    "verification": {
+      "date": "2026-09-20",
+      "hebreu": "Confronte mecaniquement a l'edition Sefaria citee par chaque item (corpus public sefaria-export). 37/37 : 15 identiques au caractere pres, 18 extraits dont les fragments se retrouvent dans l'ordre, 4 citations exactes arretees avant la fin du segment. Aucune divergence textuelle.",
+      "editions": "Les 7 versionTitle et les 7 licences de _meta.editions correspondent au catalogue Sefaria. nikkoud_ok=false porte exactement sur les deux editions dont la licence est declaree unknown.",
+      "references": "37/37 coherentes entre ref et ref_sefaria.",
+      "traductions": "Lues une a une le 20/09/2026 par leur propre auteur : ce n'est donc pas une relecture independante. Une correction appliquee : rambam-tefila-1-3, ou « רגיל » etait lu « avoir l'habitude » en francais alors que l'anglais lisait « fluent » ; le francais perdait l'opposition avec « ערל שפתים » qui suit. Une relecture par un tiers reste souhaitable.",
+      "reserve": "11 items s'arretent avant la fin du segment cite sans porter le « … » que _meta.ellipses annonce. Aucun mot n'y est faux ; c'est la convention qui n'est pas tenue."
+    }
   },
   "items": [
     {
@@ -87,7 +95,7 @@
       "tags": [],
       "duree_lecture_sec": 23,
       "statut_verif": "verifie_texte",
-      "relu": false
+      "relu": true
     },
     {
       "id": "lm2-25-langue",
@@ -112,7 +120,7 @@
       "tags": [],
       "duree_lecture_sec": 20,
       "statut_verif": "verifie_texte",
-      "relu": false
+      "relu": true
     },
     {
       "id": "lm2-25-tout-dire",
@@ -137,7 +145,7 @@
       "tags": [],
       "duree_lecture_sec": 15,
       "statut_verif": "verifie_texte",
-      "relu": false
+      "relu": true
     },
     {
       "id": "lm2-25-mots-bloques",
@@ -161,7 +169,7 @@
       "tags": [],
       "duree_lecture_sec": 24,
       "statut_verif": "verifie_texte",
-      "relu": false
+      "relu": true
     },
     {
       "id": "lm2-25-pour-tous",
@@ -185,7 +193,7 @@
       "tags": [],
       "duree_lecture_sec": 10,
       "statut_verif": "verifie_texte",
-      "relu": false
+      "relu": true
     },
     {
       "id": "lm2-25-joie",
@@ -209,7 +217,7 @@
       "tags": [],
       "duree_lecture_sec": 8,
       "statut_verif": "verifie_texte",
-      "relu": false
+      "relu": true
     },
     {
       "id": "lm2-25-torah-priere",
@@ -235,7 +243,7 @@
       ],
       "duree_lecture_sec": 20,
       "statut_verif": "verifie_texte",
-      "relu": false
+      "relu": true
     },
     {
       "id": "lm2-24-mitsva-joie",
@@ -259,7 +267,7 @@
       "tags": [],
       "duree_lecture_sec": 7,
       "statut_verif": "verifie_texte",
-      "relu": false
+      "relu": true
     },
     {
       "id": "lm2-24-coeur-brise",
@@ -282,7 +290,7 @@
       "tags": [],
       "duree_lecture_sec": 16,
       "statut_verif": "verifie_texte",
-      "relu": false
+      "relu": true
     },
     {
       "id": "lm2-96-une-parole",
@@ -305,7 +313,7 @@
       "tags": [],
       "duree_lecture_sec": 19,
       "statut_verif": "verifie_texte",
-      "relu": false
+      "relu": true
     },
     {
       "id": "lm2-96-une-heure",
@@ -331,7 +339,7 @@
       ],
       "duree_lecture_sec": 15,
       "statut_verif": "verifie_texte",
-      "relu": false
+      "relu": true
     },
     {
       "id": "lm2-97-chemin-neuf",
@@ -354,7 +362,7 @@
       "tags": [],
       "duree_lecture_sec": 17,
       "statut_verif": "verifie_texte",
-      "relu": false
+      "relu": true
     },
     {
       "id": "lm2-99-ami",
@@ -377,7 +385,7 @@
       "tags": [],
       "duree_lecture_sec": 7,
       "statut_verif": "verifie_texte",
-      "relu": false
+      "relu": true
     },
     {
       "id": "lm2-100-tsadikim",
@@ -400,7 +408,7 @@
       "tags": [],
       "duree_lecture_sec": 15,
       "statut_verif": "verifie_texte",
-      "relu": false
+      "relu": true
     },
     {
       "id": "lm2-95-larmes",
@@ -423,7 +431,7 @@
       "tags": [],
       "duree_lecture_sec": 20,
       "statut_verif": "verifie_texte",
-      "relu": false
+      "relu": true
     },
     {
       "id": "lm2-78-desespoir",
@@ -447,7 +455,7 @@
       "tags": [],
       "duree_lecture_sec": 8,
       "statut_verif": "verifie_texte",
-      "relu": false
+      "relu": true
     },
     {
       "id": "lm2-11-champs",
@@ -470,7 +478,7 @@
       "tags": [],
       "duree_lecture_sec": 8,
       "statut_verif": "verifie_texte",
-      "relu": false
+      "relu": true
     },
     {
       "id": "lm1-52-nuit",
@@ -495,7 +503,7 @@
       "tags": [],
       "duree_lecture_sec": 15,
       "statut_verif": "verifie_texte",
-      "relu": false
+      "relu": true
     },
     {
       "id": "sh-7-enfant",
@@ -519,7 +527,7 @@
       "duree_lecture_sec": 16,
       "he_sans_nikkoud": "טוב מאד מי שיכול לשפך שיחו לפני השם יתברך ברחמים ותחנונים כבן המתחטא לפני אביו … ואף אם נדמה להאדם, שלפי מעשיו, אינו כבן לפניו יתברך, עם כל זה הלא השם יתברך קראנו בנים.",
       "statut_verif": "verifie_texte",
-      "relu": false
+      "relu": true
     },
     {
       "id": "sh-16-cri-silencieux",
@@ -543,7 +551,7 @@
       "duree_lecture_sec": 17,
       "he_sans_nikkoud": "דע, שיכולין לצעק בקול דממה דקה בצעקה גדולה מאד ולא ישמע שום אדם כלל, כי אינו מוציא שום קול כלל, רק הצעקה היא בקול דממה דקה, וזה יוכל כל אדם … ויוכל לעמד בין כמה בני אדם ויצעק מאד ושום אדם לא ישמע.",
       "statut_verif": "verifie_texte",
-      "relu": false
+      "relu": true
     },
     {
       "id": "sh-68-perseverer",
@@ -569,7 +577,7 @@
       "duree_lecture_sec": 17,
       "he_sans_nikkoud": "…מי שירגיל עצמו לנהג הנהגה זו בכל יום, על־כל־פנים שעה אחת, בודאי יזכה להתקרב אליו יתברך באמת. ואף אם לפעמים הוא רואה שמקים הנהגה זו ימים ושנים ואף־על־פי־כן עדין לא זכה להתקרבות כראוי, אף־על־פי־כן יחזק עצמו יותר ויותר, כי סוף כל סוף יועיל לו בודאי.",
       "statut_verif": "verifie_texte",
-      "relu": false
+      "relu": true
     },
     {
       "id": "sh-234-eau-pierre",
@@ -593,7 +601,7 @@
       "duree_lecture_sec": 18,
       "he_sans_nikkoud": "אמר: שאפלו אם עוברים ימים ושנים הרבה, ונדמה לו שלא פעל עדין בשיחתו ודבוריו כלום, אף על פי כן אל יפל מזה כלל! כי באמת בודאי עושים הדבורים רשם … כשהמים יורדים על האבן כמה וכמה זמנים רצופים הם עושים נקב בהאבן.",
       "statut_verif": "verifie_texte",
-      "relu": false
+      "relu": true
     },
     {
       "id": "sh-275-sous-le-talit",
@@ -618,7 +626,7 @@
       "duree_lecture_sec": 17,
       "he_sans_nikkoud": "אפלו אם אין זוכין שיהיה לו חדר מיחד, אף על פי כן יכולין להתבודד ולדבר בינו לבין קונו. ואמר רבנו ז\"ל: שתחת הטלית הוא גם כן חדר מיחד … גם יכולין להתבודד ולפרש שיחתו כששוכב על מטתו ומכסה עצמו בהסדין.",
       "statut_verif": "verifie_texte",
-      "relu": false
+      "relu": true
     },
     {
       "id": "cm-437-commencer",
@@ -642,7 +650,7 @@
       "tags": [],
       "duree_lecture_sec": 22,
       "statut_verif": "verifie_texte",
-      "relu": false
+      "relu": true
     },
     {
       "id": "cm-440-ribono",
@@ -667,7 +675,7 @@
       "tags": [],
       "duree_lecture_sec": 9,
       "statut_verif": "verifie_texte",
-      "relu": false
+      "relu": true
     },
     {
       "id": "shr-10-langue",
@@ -692,7 +700,7 @@
       "duree_lecture_sec": 14,
       "he_sans_nikkoud": "ועקר מה שהועיל לו היו התפלות שהתפלל בלשון 'אשכנז', שהיה רגיל מאד ליחד לו איזה מקום שמצא שאין שם בני אדם והיה מפרש שיחתו לפני ה' יתברך בלשון שמדברים בו, (דהינו בלשון אשכנז).",
       "statut_verif": "verifie_texte",
-      "relu": false
+      "relu": true
     },
     {
       "id": "shr-10-grenier",
@@ -716,7 +724,7 @@
       "duree_lecture_sec": 18,
       "he_sans_nikkoud": "גם היה מטמין עצמו על גבי בית אביו, תחת הגג, שהיה שם כמו חדר במחצה של קנים שמחזיקין שם תבן ומספוא, ושם היה מטמין עצמו והיה אומר תהלים והיה צועק בלחש לה' יתברך שיזכהו לקרבו אליו יתברך.",
       "statut_verif": "verifie_texte",
-      "relu": false
+      "relu": true
     },
     {
       "id": "shr-11-ecrire",
@@ -742,7 +750,7 @@
       "duree_lecture_sec": 17,
       "he_sans_nikkoud": "וכמה פעמים היה מדבר לפני ה' יתברך דברי תחנות ובקשות מלבו, ונזדמן לו בתוך דבוריו טענות יפות ותפלות נכונות ומסדרות והוטבו בעיניו, והיה כותבם אצלו לזכרון למען יהיה רגיל להתפלל אותם גם אחר־כך.",
       "statut_verif": "verifie_texte",
-      "relu": false
+      "relu": true
     },
     {
       "id": "shr-12-rejet",
@@ -766,7 +774,7 @@
       "duree_lecture_sec": 27,
       "he_sans_nikkoud": "ואף־על־פי־כן, היה נדמה לו תמיד שאין מסתכלין עליו כלל ואין שומעין לו כלל … אך אף־על־פי־כן היה מחזק עצמו מאד ולא הניח את מקומו … ומחמת זה נפל לפעמים בדעתו ולא היה מדבר עוד כל־כך בינו לבין קונו איזה ימים. אחר־כך נזכר בעצמו והתביש בעצמו על שהרהר אחר מדותיו יתברך … וחזר ונתחזק בדעתו, והתחיל שוב להעתיר ולדבר לפני ה' יתברך כנ\"ל. וכן היה כמה פעמים.",
       "statut_verif": "verifie_texte",
-      "relu": false
+      "relu": true
     },
     {
       "id": "rambam-tefila-1-2",
@@ -792,7 +800,7 @@
       ],
       "duree_lecture_sec": 18,
       "statut_verif": "verifie_texte",
-      "relu": false
+      "relu": true
     },
     {
       "id": "rambam-tefila-1-3",
@@ -805,7 +813,7 @@
       "ref_sefaria": "Mishneh Torah, Prayer and the Priestly Blessing 1:3",
       "url": "https://www.sefaria.org/Mishneh_Torah%2C_Prayer_and_the_Priestly_Blessing.1.3",
       "he": "אִם הָיָה רָגִיל מַרְבֶּה בִּתְחִנָּה וּבַקָּשָׁה וְאִם הָיָה עֲרַל שְׂפָתַיִם מְדַבֵּר כְּפִי יְכָלְתּוֹ וּבְכָל עֵת שֶׁיִּרְצֶה.",
-      "fr": "S'il en a l'habitude, il multiplie supplications et demandes. S'il a la parole difficile, il parle selon ses moyens, et à tout moment qu'il le souhaite.",
+      "fr": "S'il a la parole aisée, il multiplie supplications et demandes ; s'il est « incirconcis des lèvres », c'est-à-dire peu éloquent, il parle selon ses moyens, et à tout moment qu'il le souhaite.",
       "en": "If he is fluent, he multiplies supplication and request; if he is of uncircumcised lips, not eloquent, he speaks as best he can, and whenever he wishes.",
       "yiddish": null,
       "recoupement": [
@@ -816,7 +824,7 @@
       "tags": [],
       "duree_lecture_sec": 8,
       "statut_verif": "verifie_texte",
-      "relu": false
+      "relu": true
     },
     {
       "id": "tehilim-62-9",
@@ -839,7 +847,7 @@
       "tags": [],
       "duree_lecture_sec": 7,
       "statut_verif": "verifie_texte",
-      "relu": false
+      "relu": true
     },
     {
       "id": "tehilim-142-3",
@@ -863,7 +871,7 @@
       "tags": [],
       "duree_lecture_sec": 5,
       "statut_verif": "verifie_texte",
-      "relu": false
+      "relu": true
     },
     {
       "id": "eikha-2-19",
@@ -888,7 +896,7 @@
       ],
       "duree_lecture_sec": 7,
       "statut_verif": "verifie_texte",
-      "relu": false
+      "relu": true
     },
     {
       "id": "tehilim-145-18",
@@ -913,7 +921,7 @@
       "tags": [],
       "duree_lecture_sec": 5,
       "statut_verif": "verifie_texte",
-      "relu": false
+      "relu": true
     },
     {
       "id": "tehilim-51-19",
@@ -937,7 +945,7 @@
       "tags": [],
       "duree_lecture_sec": 6,
       "statut_verif": "verifie_texte",
-      "relu": false
+      "relu": true
     },
     {
       "id": "tehilim-34-19",
@@ -961,7 +969,7 @@
       "tags": [],
       "duree_lecture_sec": 5,
       "statut_verif": "verifie_texte",
-      "relu": false
+      "relu": true
     }
   ]
 }
