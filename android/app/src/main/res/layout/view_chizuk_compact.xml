@@ -18,25 +18,66 @@
     android:paddingHorizontal="16dp"
     android:paddingVertical="14dp">
 
-    <TextView
-        android:id="@+id/chizuk_badge"
-        android:layout_width="wrap_content"
+    <!-- L'illustration et le nom du moment : la carte dit d'abord où l'on est. -->
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:background="@drawable/bg_badge_warning"
-        android:paddingHorizontal="10dp"
-        android:paddingVertical="3dp"
-        android:text="@string/chizuk_badge_to_proofread"
-        android:textColor="@color/warning"
-        android:textSize="11sp"
-        android:visibility="gone" />
+        android:layout_marginBottom="12dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <FrameLayout
+            android:layout_width="44dp"
+            android:layout_height="52dp"
+            android:background="@drawable/bg_stage_soft"
+            android:padding="4dp">
+
+            <ImageView
+                android:id="@+id/chizuk_art"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:contentDescription="@null"
+                android:scaleType="fitCenter" />
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/chizuk_moment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:textColor="@color/brand"
+                android:textSize="13sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/chizuk_badge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/bg_badge_warning"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="3dp"
+                android:text="@string/chizuk_badge_to_proofread"
+                android:textColor="@color/warning"
+                android:textSize="11sp"
+                android:visibility="gone" />
+        </LinearLayout>
+    </LinearLayout>
 
     <TextView
         android:id="@+id/chizuk_he"
         android:layout_width="match_parent"
-        android:layout_height="74dp"
+        android:layout_height="78dp"
         android:autoSizeMaxTextSize="17sp"
-        android:autoSizeMinTextSize="10sp"
+        android:autoSizeMinTextSize="8sp"
         android:autoSizeStepGranularity="1sp"
         android:autoSizeTextType="uniform"
         android:layoutDirection="rtl"
@@ -53,9 +94,9 @@
     <TextView
         android:id="@+id/chizuk_translation"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="62dp"
         android:autoSizeMaxTextSize="14sp"
-        android:autoSizeMinTextSize="9sp"
+        android:autoSizeMinTextSize="8sp"
         android:autoSizeStepGranularity="1sp"
         android:autoSizeTextType="uniform"
         android:lineSpacingExtra="2sp"

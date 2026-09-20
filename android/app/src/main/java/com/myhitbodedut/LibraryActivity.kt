@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -36,6 +37,7 @@ class LibraryActivity : AppCompatActivity() {
         setContentView(R.layout.activity_library)
         findViewById<TextView>(R.id.library_title).setText(R.string.library_title)
         findViewById<TextView>(R.id.library_subtitle).setText(R.string.library_hint)
+        findViewById<ImageView>(R.id.library_art).setImageResource(Character.STUDY)
         findViewById<RecyclerView>(R.id.library_list).apply {
             layoutManager = LinearLayoutManager(this@LibraryActivity)
             adapter = Adapter()

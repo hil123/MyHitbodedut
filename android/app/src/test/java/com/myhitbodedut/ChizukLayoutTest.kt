@@ -54,6 +54,41 @@ class ChizukLayoutTest {
         }
     }
 
+    /**
+     * ChizukCard.bind remplit ces vues sans les chercher deux fois : si l'une
+     * disparaît d'une des deux mises en page, findViewById rend null et la
+     * carte plante au moment de l'afficher, pas à la compilation.
+     */
+    @Test
+    fun `les deux mises en page portent toutes les vues que la carte remplit`() {
+        forEachLayout { name, xml ->
+            listOf(
+                "chizuk_art", "chizuk_moment", "chizuk_badge",
+                "chizuk_he", "chizuk_translation", "chizuk_ref",
+            ).forEach { id ->
+                assertTrue("$name : vue $id absente", xml.contains("""@+id/$id""""))
+            }
+        }
+    }
+
+    @Test
+    fun `l illustration a une taille fixe`() {
+        // Une vignette en wrap_content prendrait la taille de l'image source
+        // et ferait sauter la hauteur de la carte d'un moment à l'autre.
+        forEachLayout { name, xml ->
+            val ancre = xml.indexOf("@+id/chizuk_art")
+            val cadre = xml.substring(xml.lastIndexOf("<FrameLayout", ancre), ancre)
+            assertTrue(
+                "$name : largeur du cadre de l'illustration non fixée en dp",
+                Regex("""android:layout_width="\d+dp"""").containsMatchIn(cadre),
+            )
+            assertTrue(
+                "$name : hauteur du cadre de l'illustration non fixée en dp",
+                Regex("""android:layout_height="\d+dp"""").containsMatchIn(cadre),
+            )
+        }
+    }
+
     @Test
     fun `l hebreu est place au-dessus de la traduction`() {
         forEachLayout { name, xml ->

@@ -28,32 +28,61 @@
             android:paddingTop="24dp"
             android:paddingBottom="20dp">
 
-            <TextView
-                android:id="@+id/entry_kind"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:background="@drawable/bg_badge"
-                android:paddingHorizontal="12dp"
-                android:paddingVertical="3dp"
-                android:textColor="@color/white"
-                android:textSize="11sp" />
-
-            <TextView
-                android:id="@+id/entry_title"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/white"
-                android:textSize="21sp"
-                android:textStyle="bold" />
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/entry_reference"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
-                android:textColor="@color/mint"
-                android:textSize="13sp" />
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/entry_kind"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:background="@drawable/bg_badge"
+                        android:paddingHorizontal="12dp"
+                        android:paddingVertical="3dp"
+                        android:textColor="@color/white"
+                        android:textSize="11sp" />
+
+                    <TextView
+                        android:id="@+id/entry_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/white"
+                        android:textSize="21sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/entry_reference"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:textColor="@color/mint"
+                        android:textSize="13sp" />
+                </LinearLayout>
+
+                <FrameLayout
+                    android:layout_width="72dp"
+                    android:layout_height="88dp"
+                    android:layout_marginStart="14dp"
+                    android:background="@drawable/bg_stage"
+                    android:padding="5dp">
+
+                    <ImageView
+                        android:id="@+id/entry_art"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:contentDescription="@null"
+                        android:scaleType="fitCenter" />
+                </FrameLayout>
+            </LinearLayout>
         </LinearLayout>
 
         <!-- Les paragraphes hébreux d'une source, ajoutés à l'exécution. -->

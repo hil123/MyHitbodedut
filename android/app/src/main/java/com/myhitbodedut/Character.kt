@@ -50,6 +50,35 @@ object Character {
     val STUDY = R.drawable.char_torah
     val READING = R.drawable.char_reading_seated
 
+    /**
+     * Les deux natures d'entrée de la bibliothèque. Une source se tient
+     * devant le livre ; un article est un texte qu'on a écrit.
+     */
+    fun ofLibraryEntry(entry: LibraryEntry): Int = when (entry) {
+        is SourceEntry -> R.drawable.char_torah
+        is ArticleEntry -> R.drawable.char_writing
+    }
+
+    /**
+     * L'illustration d'une carte de 'hizouk, choisie par le moment plutôt
+     * que par le jour : ici l'image dit ce qu'on est en train de vivre, elle
+     * ne doit donc pas tourner comme les autres.
+     */
+    fun ofMoment(moment: Moment): Int = when (moment) {
+        // On se présente, les mains ouvertes.
+        Moment.OUVERTURE -> R.drawable.char_open_arms
+        // Les mots ne viennent pas : assis, en attente.
+        Moment.BLOCAGE -> R.drawable.char_sitting_low
+        // Sur le pas de la porte, le téléphone à la main.
+        Moment.PORTE -> R.drawable.char_pointing
+        // Reprendre la route après une rupture.
+        Moment.RELANCE -> R.drawable.char_walking
+        // La séance s'achève : on remercie.
+        Moment.CLOTURE -> R.drawable.char_praise
+        // Le lieu et le moment : seul, dos tourné, dans les champs.
+        Moment.LIEU -> R.drawable.char_standing_back
+    }
+
     fun greeting(done: Boolean): Int = if (done) ofDay(JOY, 3) else ofDay(GREETING, 0)
 
     fun call(): Int = ofDay(CALL, 1)

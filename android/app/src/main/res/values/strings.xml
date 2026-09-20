@@ -254,4 +254,12 @@
     <string name="proofread_line_en">EN · %1$s</string>
     <string name="proofread_meta">Moments : %1$s\nÉdition : %2$s\nChamp affiché : %3$s\nStatut : %4$s · %5$d s de lecture</string>
     <string name="proofread_open_source">Comparer à la source</string>
+
+    <!-- Nom du moment, en tête de la carte -->
+    <string name="moment_ouverture">Pour commencer</string>
+    <string name="moment_blocage">Quand les mots ne viennent pas</string>
+    <string name="moment_porte">Avant de reprendre le téléphone</string>
+    <string name="moment_relance">Reprendre la route</string>
+    <string name="moment_cloture">Pour finir</string>
+    <string name="moment_lieu">Le lieu et le moment</string>
 </resources>

@@ -2,6 +2,7 @@ package com.myhitbodedut
 
 import android.content.Context
 import android.view.View
+import android.widget.ImageView
 import android.widget.TextView
 import java.util.Locale
 
@@ -24,17 +25,24 @@ object ChizukCard {
         val context = card.context
         val chizuk = Data.chizuk(context)
         val item = ChizukBag.draw(context, moment, chizuk, BuildConfig.DEBUG)
-        bind(card, chizuk, item)
+        bind(card, chizuk, item, moment)
         return item
     }
 
     /** Remplit la carte avec un texte déjà choisi, sans rien tirer. */
-    fun bind(card: View, chizuk: Chizuk, item: ChizukItem?) {
+    fun bind(card: View, chizuk: Chizuk, item: ChizukItem?, moment: Moment) {
         if (item == null) {
             card.visibility = View.GONE
             return
         }
         card.visibility = View.VISIBLE
+
+        // L'illustration et le nom du moment : avant même de lire, on voit
+        // de quoi il s'agit. Ils tiennent du moment, pas du texte tiré, donc
+        // ils ne changent pas d'un tirage à l'autre.
+        card.findViewById<ImageView>(R.id.chizuk_art).setImageResource(Character.ofMoment(moment))
+        card.findViewById<TextView>(R.id.chizuk_moment).setText(moment.labelRes)
+
         card.findViewById<TextView>(R.id.chizuk_he).text = ChizukRules.hebrew(chizuk, item)
 
         val translation = card.findViewById<TextView>(R.id.chizuk_translation)

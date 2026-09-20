@@ -38,6 +38,17 @@ enum class Moment(val key: String) {
     /** Réglages lieu et moment. */
     LIEU("lieu");
 
+    /** Le nom affiché en tête de la carte. */
+    val labelRes: Int
+        get() = when (this) {
+            OUVERTURE -> R.string.moment_ouverture
+            BLOCAGE -> R.string.moment_blocage
+            PORTE -> R.string.moment_porte
+            RELANCE -> R.string.moment_relance
+            CLOTURE -> R.string.moment_cloture
+            LIEU -> R.string.moment_lieu
+        }
+
     companion object {
         fun of(key: String): Moment? = entries.firstOrNull { it.key == key }
     }

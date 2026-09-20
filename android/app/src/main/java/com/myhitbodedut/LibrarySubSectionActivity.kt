@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -31,6 +32,7 @@ class LibrarySubSectionActivity : AppCompatActivity() {
         val traduction = sub.titre.forLanguage(ChizukCard.language(this))
         subtitle.text = traduction
         subtitle.visibility = if (traduction == sub.titre.he) View.GONE else View.VISIBLE
+        findViewById<ImageView>(R.id.library_art).setImageResource(Character.READING)
 
         findViewById<RecyclerView>(R.id.library_list).apply {
             layoutManager = LinearLayoutManager(this@LibrarySubSectionActivity)
@@ -44,6 +46,7 @@ class LibrarySubSectionActivity : AppCompatActivity() {
             val kind: TextView = view.findViewById(R.id.entry_kind)
             val title: TextView = view.findViewById(R.id.entry_title)
             val detail: TextView = view.findViewById(R.id.entry_detail)
+            val art: ImageView = view.findViewById(R.id.entry_art)
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = Holder(
@@ -55,6 +58,7 @@ class LibrarySubSectionActivity : AppCompatActivity() {
 
         override fun onBindViewHolder(holder: Holder, position: Int) {
             val entry = entrees[position]
+            holder.art.setImageResource(Character.ofLibraryEntry(entry))
             when (entry) {
                 is SourceEntry -> {
                     holder.kind.setText(R.string.library_kind_source)
