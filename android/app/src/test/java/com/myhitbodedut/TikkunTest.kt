@@ -155,6 +155,65 @@ class TikkunTest {
         )
     }
 
+    /**
+     * Graphie de siddour, demandee explicitement : pas de maqqef, deux-points
+     * en fin de verset au lieu du sof-pasuk. Une regeneration depuis une
+     * edition massoretique ramenerait l'autre graphie sans rien casser
+     * d'autre, d'ou ce garde-fou.
+     */
+    @Test
+    fun `les psaumes suivent la graphie de siddour`() {
+        val maqqef = '\u05BE'
+        val sofPasuk = '\u05C3'
+        var versets = 0
+        tikkun.psaumes.forEach { p ->
+            p.versets.forEach { v ->
+                versets++
+                assertFalse("${p.ref}:${v.numero} porte un maqqef", v.he.contains(maqqef))
+                assertFalse("${p.ref}:${v.numero} porte un sof-pasuk", v.he.contains(sofPasuk))
+                assertTrue(
+                    "${p.ref}:${v.numero} ne finit pas par « : »",
+                    v.he.trimEnd().endsWith(":"),
+                )
+            }
+        }
+        assertEquals(164, versets)
+    }
+
+    /** Les deux graphies lexicales propres au siddour. */
+    @Test
+    fun `yerushalayim est plene et halleluyah en un mot`() {
+        val ps137 = tikkun.byNumero(137)!!
+        listOf(5, 6, 7).forEach { n ->
+            assertTrue(
+                "137:$n doit lire יְרוּשָׁלַיִם",
+                ps137.versets.first { it.numero == n }.he.contains("יְרוּשָׁלַיִם"),
+            )
+        }
+        listOf(tikkun.byNumero(105)!!.versets.first { it.numero == 45 },
+               tikkun.byNumero(150)!!.versets.first { it.numero == 6 })
+            .forEach {
+                assertTrue("הללויה doit tenir en un mot", it.he.contains("הַלְלוּיָהּ"))
+            }
+    }
+
+    /**
+     * La marque d'arret vit dans son propre champ. Dans la page fournie elle
+     * est ecrite au milieu du verset ; l'y laisser aurait mis « ⏸ הפסק » dans
+     * le texte hebreu lui-meme.
+     */
+    @Test
+    fun `aucune marque de lecture n a fui dans le texte`() {
+        tikkun.psaumes.forEach { p ->
+            p.versets.forEach { v ->
+                assertFalse("${p.ref}:${v.numero} contient le pictogramme d'arret",
+                    v.he.contains("\u23F8"))
+                assertFalse("${p.ref}:${v.numero} contient le mot « הפסק »",
+                    v.he.contains("הפסק"))
+            }
+        }
+    }
+
     /** Le qere est retenu : aucune notation « ketiv [qere] » ne doit subsister. */
     @Test
     fun `aucune notation ketiv-qere ne subsiste`() {
