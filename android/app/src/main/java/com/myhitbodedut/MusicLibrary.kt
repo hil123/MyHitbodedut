@@ -24,7 +24,7 @@ object MusicLibrary {
     private data class Bundled(val id: String, val rawRes: Int, val titleRes: Int)
 
     private val BUNDLED = listOf(
-        Bundled("niggoun_1", R.raw.niggoun_1, R.string.track_niggoun_1)
+        Bundled("hamelech_basade", R.raw.hamelech_basade, R.string.track_hamelech_basade)
     )
 
     fun all(context: Context): List<Track> = BUNDLED.map { b ->

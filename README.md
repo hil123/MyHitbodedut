@@ -83,8 +83,8 @@ Les morceaux ajoutés passent par le sélecteur de fichiers du système, avec un
 permission d'accès persistante : aucune permission de stockage n'est demandée,
 et le fichier reste à sa place.
 
-Le morceau livré pèse 9,3 Mo en 320 kbps, ce qui explique la taille de l'APK.
-Il n'a pas été réencodé, pour ne pas dégrader l'original.
+Le morceau livré, המלך בשדה, pèse 9,3 Mo en 320 kbps, ce qui explique la taille
+de l'APK. Il n'a pas été réencodé, pour ne pas dégrader l'original.
 
 ### Les illustrations
 
@@ -170,6 +170,36 @@ vient bien des permissions, et pas du fichier ni du téléphone.
 Les deux portent un identifiant différent et peuvent coexister sur le même
 téléphone. Leurs données ne sont pas partagées ; l'export JSON permet de passer
 de l'une à l'autre.
+
+### Mettre à jour
+
+Une application installée hors boutique ne se met pas à jour toute seule.
+Android n'a aucun moyen de savoir d'où elle vient ni où chercher la suite.
+
+**Le préalable technique.** Chaque compilation porte désormais un numéro de
+version croissant, tiré du numéro d'exécution de l'intégration continue, et
+chaque version reçoit son étiquette, `v1.12`, `v1.13`, et ainsi de suite. Sans
+ce numéro, aucun outil ne peut voir qu'une version est plus récente que celle
+installée. Le lien `releases/latest/download/MyHitbodedut.apk` continue de
+pointer vers la dernière.
+
+**Automatiser, en pratique.** [Obtainium](https://github.com/ImranR98/Obtainium)
+surveille les pages de publication et installe les nouvelles versions. Il
+interroge la source toutes les six heures par défaut. Pour un dépôt privé, il
+faut lui donner un jeton GitHub à portée restreinte, dans ses réglages, section
+des sources externes.
+
+Marche à suivre : installer Obtainium, ajouter une application, coller
+`https://github.com/hil123/MyHitbodedut`, choisir l'archive voulue, complète ou
+Light, et laisser la vérification automatique active.
+
+**Les autres voies.** Un mécanisme de mise à jour intégré à l'application
+exigerait la permission Internet et celle d'installer des paquets. Ce serait
+renoncer à une propriété que l'application tient aujourd'hui, ne demander aucun
+accès réseau, et aggraver sa ressemblance avec un logiciel de surveillance aux
+yeux de Play Protect. Une publication sur le Play Store donnerait de vraies
+mises à jour automatiques, mais demande un compte développeur et le passage en
+revue.
 
 ### Si l'installation échoue
 

@@ -29,10 +29,14 @@ jobs:
 
       - name: Build both signed editions
         working-directory: android
+        env:
+          VERSION_CODE: ${{ github.run_number }}
         run: ./gradlew --no-daemon assembleFullRelease assembleLightRelease
 
       - name: Lint
         working-directory: android
+        env:
+          VERSION_CODE: ${{ github.run_number }}
         run: ./gradlew --no-daemon lintFullRelease
 
       - name: Show lint findings
@@ -57,9 +61,10 @@ jobs:
         run: |
           cp app/build/outputs/apk/full/release/app-full-release.apk MyHitbodedut.apk
           cp app/build/outputs/apk/light/release/app-light-release.apk MyHitbodedut-Light.apk
+          # Nettoyage unique de l'ancienne etiquette fixe, sans effet ensuite.
           gh release delete latest --yes --cleanup-tag || true
-          gh release create latest MyHitbodedut.apk MyHitbodedut-Light.apk \
-            --title "MyHitbodedut" \
+          gh release create "v1.${{ github.run_number }}" MyHitbodedut.apk MyHitbodedut-Light.apk \
+            --title "MyHitbodedut 1.${{ github.run_number }}" \
             --notes "Deux editions signees, construites depuis le commit ${{ github.sha }}. Light n'embarque pas la barriere du matin ni ses permissions." \
             --latest
 

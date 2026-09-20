@@ -182,5 +182,5 @@
     <string name="music_none_summary">Aucun morceau dans la bibliothèque.</string>
     <string name="music_on_summary">%1$s, volume %2$d %%</string>
     <string name="session_music_line">Musique : %1$s</string>
-    <string name="track_niggoun_1">Niggoun 1</string>
+    <string name="track_hamelech_basade" translatable="false">המלך בשדה</string>
 </resources>

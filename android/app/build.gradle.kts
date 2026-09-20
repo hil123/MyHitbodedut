@@ -11,8 +11,12 @@ android {
         applicationId = "com.myhitbodedut"
         minSdk = 26
         targetSdk = 35
-        versionCode = 1
-        versionName = "1.0"
+        // Sans numéro croissant, ni Android ni un gestionnaire de mises à jour
+        // ne peuvent voir qu'une version est plus récente que l'installée.
+        // L'intégration continue passe le numéro d'exécution.
+        val build = System.getenv("VERSION_CODE")?.toIntOrNull() ?: 0
+        versionCode = 1 + build
+        versionName = "1.$build"
     }
 
     /*

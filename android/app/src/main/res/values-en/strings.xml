@@ -166,5 +166,4 @@
     <string name="music_none_summary">No track in the library.</string>
     <string name="music_on_summary">%1$s, volume %2$d %%</string>
     <string name="session_music_line">Music: %1$s</string>
-    <string name="track_niggoun_1">Niggun 1</string>
 </resources>

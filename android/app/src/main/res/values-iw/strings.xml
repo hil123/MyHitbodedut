@@ -171,5 +171,4 @@
     <string name="music_none_summary">אין ניגונים בספרייה.</string>
     <string name="music_on_summary">%1$s, עוצמה %2$d%%</string>
     <string name="session_music_line">מוזיקה: %1$s</string>
-    <string name="track_niggoun_1">ניגון 1</string>
 </resources>
