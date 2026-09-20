@@ -83,6 +83,9 @@ class MainActivity : AppCompatActivity() {
         findViewById<Button>(R.id.tips_button).setOnClickListener {
             startActivity(Intent(this, TipsActivity::class.java))
         }
+        findViewById<Button>(R.id.library_button).setOnClickListener {
+            startActivity(Intent(this, LibraryActivity::class.java))
+        }
         findViewById<Button>(R.id.open_journal).setOnClickListener {
             startActivity(Intent(this, JournalActivity::class.java))
         }

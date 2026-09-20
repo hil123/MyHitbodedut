@@ -44,6 +44,21 @@
             android:label="@string/tips_title" />
 
         <activity
+            android:name=".LibraryActivity"
+            android:exported="false"
+            android:label="@string/library_title" />
+
+        <activity
+            android:name=".LibrarySubSectionActivity"
+            android:exported="false"
+            android:label="@string/library_title" />
+
+        <activity
+            android:name=".LibraryEntryActivity"
+            android:exported="false"
+            android:label="@string/library_title" />
+
+        <activity
             android:name=".MusicActivity"
             android:exported="false"
             android:label="@string/music_title" />

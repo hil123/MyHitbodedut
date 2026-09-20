@@ -226,4 +226,21 @@
 
     <!-- Point 4 : affichage des textes -->
     <string name="chizuk_stuck">Je n\'arrive pas à parler</string>
+
+    <!-- Point 5 : bibliothèque -->
+    <string name="library_title">Bibliothèque</string>
+    <string name="library_hint">Les sources de la hitbodedout, et ce qui s\'en écrit.</string>
+    <string name="library_entries_count">%1$d entrées</string>
+    <string name="library_kind_source">Source</string>
+    <string name="library_kind_article">Article</string>
+    <string name="library_summary">Résumé</string>
+    <string name="library_note">Note</string>
+    <string name="library_edition">Édition</string>
+    <string name="library_rights">Droits</string>
+    <string name="library_errors">Erreurs relevées</string>
+    <string name="library_full_text">Texte intégral</string>
+    <string name="library_full_text_withheld">Article moderne protégé. Texte intégral non reproduit.</string>
+    <string name="library_open">Ouvrir la bibliothèque</string>
+    <string name="library_read_on_site">Lire sur le site</string>
+    <string name="library_open_sefaria">Ouvrir sur Sefaria</string>
 </resources>

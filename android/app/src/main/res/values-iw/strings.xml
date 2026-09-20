@@ -213,4 +213,21 @@
 
     <!-- Point 4 : affichage des textes -->
     <string name="chizuk_stuck">אני לא מצליח לדבר</string>
+
+    <!-- Point 5 : bibliothèque -->
+    <string name="library_title">ספרייה</string>
+    <string name="library_hint">מקורות ההתבודדות, ומה שנכתב עליה.</string>
+    <string name="library_entries_count">%1$d ערכים</string>
+    <string name="library_kind_source">מקור</string>
+    <string name="library_kind_article">מאמר</string>
+    <string name="library_summary">תקציר</string>
+    <string name="library_note">הערה</string>
+    <string name="library_edition">מהדורה</string>
+    <string name="library_rights">זכויות</string>
+    <string name="library_errors">שגיאות שנמצאו</string>
+    <string name="library_full_text">הטקסט המלא</string>
+    <string name="library_full_text_withheld">מאמר מודרני המוגן בזכויות יוצרים. הטקסט המלא אינו מובא.</string>
+    <string name="library_open">פתיחת הספרייה</string>
+    <string name="library_read_on_site">קריאה באתר</string>
+    <string name="library_open_sefaria">פתיחה בספריא</string>
 </resources>
