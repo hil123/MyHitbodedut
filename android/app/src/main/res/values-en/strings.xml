@@ -170,4 +170,6 @@
     <string name="app_version">Version %1$s (%2$d) · %3$s</string>
     <string name="edition_full">full edition</string>
     <string name="edition_light">Light edition</string>
+    <string name="week_done">done</string>
+    <string name="week_todo">to do</string>
 </resources>

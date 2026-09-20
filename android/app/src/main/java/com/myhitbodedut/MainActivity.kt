@@ -202,23 +202,44 @@ class MainActivity : AppCompatActivity() {
         val strip = findViewById<LinearLayout>(R.id.week_strip)
         strip.removeAllViews()
         val formatter = DateTimeFormatter.ofPattern("EEE", Locale.getDefault())
-        Store.lastWeek(this).forEach { (day, done, exempt) ->
+        Store.currentWeek(this).forEach { day ->
             val cell = layoutInflater.inflate(R.layout.item_day, strip, false)
             val label = cell.findViewById<TextView>(R.id.day_label)
             val mark = cell.findViewById<TextView>(R.id.day_mark)
-            label.text = day.format(formatter)
+            label.text = day.date.format(formatter)
+
+            // Le samedi chômé ne porte pas de point à cocher : il porte sa marque.
+            val restDay = day.shabbat && day.exempt
             mark.text = when {
-                done -> "✓"
-                exempt -> "—"
+                day.done -> "✓"
+                restDay -> getString(R.string.week_shabbat_mark)
+                day.exempt -> "—"
+                day.future -> ""
                 else -> "·"
             }
+            cell.contentDescription = when {
+                day.done -> getString(R.string.week_done)
+                restDay -> getString(R.string.settings_shabbat)
+                day.exempt -> getString(R.string.gate_exempt_title)
+                else -> getString(R.string.week_todo)
+            }
+
             // La case du jour fait est vert foncé : un texte sombre y disparaît.
-            label.setTextColor(ContextCompat.getColor(this, if (done) R.color.white else R.color.muted))
-            mark.setTextColor(ContextCompat.getColor(this, if (done) R.color.white else R.color.ink))
+            label.setTextColor(ContextCompat.getColor(this, if (day.done) R.color.white else R.color.muted))
+            mark.setTextColor(
+                ContextCompat.getColor(
+                    this,
+                    when {
+                        day.done -> R.color.white
+                        restDay -> R.color.brand
+                        else -> R.color.ink
+                    }
+                )
+            )
             cell.setBackgroundResource(
                 when {
-                    done -> R.drawable.bg_day_done
-                    exempt -> R.drawable.bg_day_exempt
+                    day.done -> R.drawable.bg_day_done
+                    day.exempt -> R.drawable.bg_day_exempt
                     else -> R.drawable.bg_day_todo
                 }
             )

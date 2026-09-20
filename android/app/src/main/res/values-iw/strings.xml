@@ -175,4 +175,6 @@
     <string name="app_version">גרסה %1$s (%2$d) · %3$s</string>
     <string name="edition_full">מהדורה מלאה</string>
     <string name="edition_light">מהדורת Light</string>
+    <string name="week_done">בוצע</string>
+    <string name="week_todo">לביצוע</string>
 </resources>

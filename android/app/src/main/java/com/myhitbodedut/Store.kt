@@ -9,6 +9,15 @@ import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 
+/** Une case de la bande hebdomadaire. */
+data class WeekDay(
+    val date: LocalDate,
+    val done: Boolean,
+    val exempt: Boolean,
+    val shabbat: Boolean,
+    val future: Boolean
+)
+
 /** Une journée de pratique : durée effective et note laissée après la séance. */
 data class DayRecord(val date: String, val minutes: Int, val note: String)
 
@@ -178,11 +187,24 @@ object Store {
         return count
     }
 
-    fun lastWeek(context: Context): List<Triple<LocalDate, Boolean, Boolean>> {
+    /**
+     * La semaine en cours, du dimanche au samedi : c'est ainsi que se compte la
+     * semaine juive, et le samedi doit tomber en fin de bande, pas au milieu.
+     */
+    fun currentWeek(context: Context): List<WeekDay> {
         val done = days(context).keys
-        return (6 downTo 0).map { offset ->
-            val day = LocalDate.now().minusDays(offset.toLong())
-            Triple(day, done.contains(day.format(FORMAT)), isExempt(context, day))
+        val today = LocalDate.now()
+        // DayOfWeek va de lundi=1 à dimanche=7 ; le reste modulo 7 ramène au dimanche.
+        val sunday = today.minusDays((today.dayOfWeek.value % 7).toLong())
+        return (0..6).map { offset ->
+            val day = sunday.plusDays(offset.toLong())
+            WeekDay(
+                date = day,
+                done = done.contains(day.format(FORMAT)),
+                exempt = isExempt(context, day),
+                shabbat = day.dayOfWeek == DayOfWeek.SATURDAY,
+                future = day.isAfter(today)
+            )
         }
     }
 

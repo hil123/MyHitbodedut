@@ -187,4 +187,7 @@
     <string name="app_version">Version %1$s (%2$d) · %3$s</string>
     <string name="edition_full">édition complète</string>
     <string name="edition_light">édition Light</string>
+    <string name="week_shabbat_mark" translatable="false">ש</string>
+    <string name="week_done">faite</string>
+    <string name="week_todo">à faire</string>
 </resources>
