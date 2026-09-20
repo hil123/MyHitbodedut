@@ -302,6 +302,17 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="14dp"
                 android:text="@string/library_open" />
+
+            <!-- Point 6 : rendu visible seulement par MainActivity, et
+                 seulement dans une compilation de test. -->
+            <Button
+                android:id="@+id/proofread_button"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/proofread_open"
+                android:visibility="gone" />
         </LinearLayout>
 
         <!-- Diagnostic de la barrière : pourquoi elle agit, ou pourquoi non -->

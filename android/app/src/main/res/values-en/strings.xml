@@ -225,4 +225,15 @@
     <string name="library_open">Open the library</string>
     <string name="library_read_on_site">Read on the site</string>
     <string name="library_open_sefaria">Open on Sefaria</string>
+
+    <!-- Point 6 : écran de relecture (compilations de test seulement) -->
+    <string name="proofread_title">Proofreading</string>
+    <string name="proofread_open">Open proofreading</string>
+    <string name="proofread_summary">%1$d of %2$d proofread — chizuk.json v%3$s</string>
+    <string name="proofread_index">%1$d / %2$d</string>
+    <string name="proofread_done">proofread</string>
+    <string name="proofread_line_fr">FR · %1$s</string>
+    <string name="proofread_line_en">EN · %1$s</string>
+    <string name="proofread_meta">Moments: %1$s\nEdition: %2$s\nField shown: %3$s\nStatus: %4$s · %5$d s reading</string>
+    <string name="proofread_open_source">Compare with the source</string>
 </resources>

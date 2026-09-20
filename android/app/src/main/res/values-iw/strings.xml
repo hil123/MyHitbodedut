@@ -230,4 +230,15 @@
     <string name="library_open">פתיחת הספרייה</string>
     <string name="library_read_on_site">קריאה באתר</string>
     <string name="library_open_sefaria">פתיחה בספריא</string>
+
+    <!-- Point 6 : écran de relecture (compilations de test seulement) -->
+    <string name="proofread_title">הגהה</string>
+    <string name="proofread_open">פתיחת ההגהה</string>
+    <string name="proofread_summary">%1$d מתוך %2$d הוגהו — chizuk.json v%3$s</string>
+    <string name="proofread_index">%1$d / %2$d</string>
+    <string name="proofread_done">הוגה</string>
+    <string name="proofread_line_fr">FR · %1$s</string>
+    <string name="proofread_line_en">EN · %1$s</string>
+    <string name="proofread_meta">רגעים: %1$s\nמהדורה: %2$s\nשדה מוצג: %3$s\nסטטוס: %4$s · %5$d שניות קריאה</string>
+    <string name="proofread_open_source">השוואה למקור</string>
 </resources>

@@ -243,4 +243,15 @@
     <string name="library_open">Ouvrir la bibliothèque</string>
     <string name="library_read_on_site">Lire sur le site</string>
     <string name="library_open_sefaria">Ouvrir sur Sefaria</string>
+
+    <!-- Point 6 : écran de relecture (compilations de test seulement) -->
+    <string name="proofread_title">Relecture</string>
+    <string name="proofread_open">Ouvrir la relecture</string>
+    <string name="proofread_summary">%1$d relus sur %2$d — chizuk.json v%3$s</string>
+    <string name="proofread_index">%1$d / %2$d</string>
+    <string name="proofread_done">relu</string>
+    <string name="proofread_line_fr">FR · %1$s</string>
+    <string name="proofread_line_en">EN · %1$s</string>
+    <string name="proofread_meta">Moments : %1$s\nÉdition : %2$s\nChamp affiché : %3$s\nStatut : %4$s · %5$d s de lecture</string>
+    <string name="proofread_open_source">Comparer à la source</string>
 </resources>

@@ -86,6 +86,15 @@ class MainActivity : AppCompatActivity() {
         findViewById<Button>(R.id.library_button).setOnClickListener {
             startActivity(Intent(this, LibraryActivity::class.java))
         }
+
+        // L'écran de relecture n'existe que pour lever les relu=false des
+        // données : il n'a rien à faire dans une version publiée.
+        findViewById<Button>(R.id.proofread_button).apply {
+            visibility = if (BuildConfig.DEBUG) View.VISIBLE else View.GONE
+            setOnClickListener {
+                startActivity(Intent(this@MainActivity, ProofreadActivity::class.java))
+            }
+        }
         findViewById<Button>(R.id.open_journal).setOnClickListener {
             startActivity(Intent(this, JournalActivity::class.java))
         }
