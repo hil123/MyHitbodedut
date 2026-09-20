@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    Mêmes règles pour la sauvegarde dans le nuage et le transfert d'appareil :
+    les réglages suivent, le journal reste. Ce qui n'est pas inclus est écarté.
+-->
 <data-extraction-rules>
     <cloud-backup>
         <include domain="sharedpref" path="myhitbodedut.xml" />

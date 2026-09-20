@@ -29,6 +29,14 @@ object Store {
 
     private const val PREFS = "myhitbodedut"
 
+    /**
+     * Journal et notes vivent dans un fichier séparé, exclu de la sauvegarde
+     * automatique d'Android. La sauvegarde raisonne par fichier et non par
+     * clé : garder les réglages tout en écartant le journal impose la
+     * séparation. L'export JSON manuel reste la voie pour les emporter.
+     */
+    private const val PREFS_JOURNAL = "myhitbodedut-journal"
+
     private const val KEY_DAYS = "days"
     private const val KEY_LEGACY_DONE = "done_dates"
     private const val KEY_APPS = "blocked_apps"
@@ -64,6 +72,9 @@ object Store {
     private fun prefs(context: Context): SharedPreferences =
         context.applicationContext.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
 
+    private fun journalPrefs(context: Context): SharedPreferences =
+        context.applicationContext.getSharedPreferences(PREFS_JOURNAL, Context.MODE_PRIVATE)
+
     fun today(): String = LocalDate.now().format(FORMAT)
 
     fun parse(date: String): LocalDate = LocalDate.parse(date, FORMAT)
@@ -73,7 +84,9 @@ object Store {
     /** Lit la carte des journées, en reprenant l'ancien format s'il existe encore. */
     fun days(context: Context): Map<String, DayRecord> {
         val result = linkedMapOf<String, DayRecord>()
-        val raw = prefs(context).getString(KEY_DAYS, null)
+        // Fichier du journal d'abord, puis reprise de l'ancien emplacement.
+        val raw = journalPrefs(context).getString(KEY_DAYS, null)
+            ?: prefs(context).getString(KEY_DAYS, null)
         if (raw != null) {
             runCatching {
                 val root = JSONObject(raw)
@@ -103,10 +116,9 @@ object Store {
                 JSONObject().put("minutes", record.minutes).put("note", record.note)
             )
         }
-        prefs(context).edit()
-            .putString(KEY_DAYS, root.toString())
-            .remove(KEY_LEGACY_DONE)
-            .apply()
+        journalPrefs(context).edit().putString(KEY_DAYS, root.toString()).apply()
+        // L'ancien emplacement, dans le fichier des réglages, est vidé.
+        prefs(context).edit().remove(KEY_DAYS).remove(KEY_LEGACY_DONE).apply()
     }
 
     fun record(context: Context, date: String = today()): DayRecord? = days(context)[date]

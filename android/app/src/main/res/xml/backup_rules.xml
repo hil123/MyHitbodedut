@@ -1,4 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    Seuls les réglages partent dans la sauvegarde automatique d'Android.
+
+    Dès qu'un <include> est présent, tout ce qui n'y figure pas est écarté :
+    le fichier du journal, myhitbodedut-journal.xml, ne remonte donc jamais.
+    Un <exclude> le désignant serait refusé par lint, puisqu'il ne tombe dans
+    aucun chemin inclus.
+
+    Le journal et les notes sont des écrits personnels, et l'écran annonce
+    qu'ils ne quittent pas le téléphone. Ils ne voyagent que par l'export JSON.
+-->
 <full-backup-content>
     <include domain="sharedpref" path="myhitbodedut.xml" />
 </full-backup-content>
