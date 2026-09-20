@@ -39,6 +39,7 @@ object Store {
     private const val KEY_ENABLED = "enabled"
     private const val KEY_TARGET = "target_minutes"
     private const val KEY_PAUSE_SHABBAT = "pause_shabbat"
+    private const val KEY_IN_ISRAEL = "in_israel"
     private const val KEY_PAUSED_DATES = "paused_dates"
     private const val KEY_REMINDER_ON = "reminder_on"
     private const val KEY_REMINDER_MIN = "reminder_minutes"
@@ -142,10 +143,21 @@ object Store {
 
     // --- Jours sans obligation ---------------------------------------------
 
-    fun pauseOnShabbat(context: Context): Boolean = prefs(context).getBoolean(KEY_PAUSE_SHABBAT, true)
+    /** Shabbat et Yom Tov : un seul réglage, la clé d'origine est conservée. */
+    fun shabbatMode(context: Context): Boolean = prefs(context).getBoolean(KEY_PAUSE_SHABBAT, true)
 
-    fun setPauseOnShabbat(context: Context, value: Boolean) {
+    fun setShabbatMode(context: Context, value: Boolean) {
         prefs(context).edit().putBoolean(KEY_PAUSE_SHABBAT, value).apply()
+    }
+
+    /** Israël ou diaspora : décide du deuxième jour de fête. */
+    fun inIsrael(context: Context): Boolean = prefs(context).getBoolean(
+        KEY_IN_ISRAEL,
+        Holidays.defaultInIsrael(java.util.TimeZone.getDefault().id)
+    )
+
+    fun setInIsrael(context: Context, value: Boolean) {
+        prefs(context).edit().putBoolean(KEY_IN_ISRAEL, value).apply()
     }
 
     fun pausedDates(context: Context): Set<String> =
@@ -158,13 +170,17 @@ object Store {
     }
 
     /**
-     * Jour où la pratique n'est pas attendue : Shabbat si l'option est active,
-     * ou une date marquée à la main comme jour de fête.
+     * Jour où la pratique n'est pas attendue : Shabbat ou Yom Tov si l'option
+     * est active, ou une date mise en pause à la main pour un voyage.
      */
     fun isExempt(context: Context, date: LocalDate): Boolean {
         if (pausedDates(context).contains(date.format(FORMAT))) return true
-        return pauseOnShabbat(context) && date.dayOfWeek == DayOfWeek.SATURDAY
+        return shabbatMode(context) && Holidays.isRestDay(date, inIsrael(context))
     }
+
+    /** Veille d'un jour chômé, pour taire le rappel du soir. */
+    fun isEveOfRestDay(context: Context, date: LocalDate): Boolean =
+        shabbatMode(context) && Holidays.isEveOfRestDay(date, inIsrael(context))
 
     // --- Série --------------------------------------------------------------
 
@@ -369,7 +385,8 @@ object Store {
             .put("window_end", windowEnd(context))
             .put("snooze_minutes", snoozeMinutes(context))
             .put("target_minutes", targetMinutes(context))
-            .put("pause_shabbat", pauseOnShabbat(context))
+            .put("pause_shabbat", shabbatMode(context))
+            .put("in_israel", inIsrael(context))
             .put("reminder_enabled", reminderEnabled(context))
             .put("reminder_minutes", reminderMinutes(context))
             .put("music_enabled", musicEnabled(context))
@@ -415,7 +432,8 @@ object Store {
             )
             setSnoozeMinutes(context, settings.optInt("snooze_minutes", snoozeMinutes(context)))
             setTargetMinutes(context, settings.optInt("target_minutes", targetMinutes(context)))
-            setPauseOnShabbat(context, settings.optBoolean("pause_shabbat", pauseOnShabbat(context)))
+            setShabbatMode(context, settings.optBoolean("pause_shabbat", shabbatMode(context)))
+            setInIsrael(context, settings.optBoolean("in_israel", inIsrael(context)))
             setReminderEnabled(context, settings.optBoolean("reminder_enabled", reminderEnabled(context)))
             setReminderMinutes(context, settings.optInt("reminder_minutes", reminderMinutes(context)))
             setMusicEnabled(context, settings.optBoolean("music_enabled", musicEnabled(context)))

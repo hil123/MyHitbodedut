@@ -61,6 +61,10 @@ class MainActivity : AppCompatActivity() {
         findViewById<Button>(R.id.start_session).setOnClickListener {
             startActivity(Intent(this, SessionActivity::class.java))
         }
+        findViewById<Button>(R.id.region_button).setOnClickListener {
+            Store.setInIsrael(this, !Store.inIsrael(this))
+            refresh()
+        }
         findViewById<Button>(R.id.music_button).setOnClickListener {
             startActivity(Intent(this, MusicActivity::class.java))
         }
@@ -279,8 +283,8 @@ class MainActivity : AppCompatActivity() {
             Reminder.reschedule(this)
             refresh()
         }
-        bindSwitch(R.id.shabbat_switch, Store.pauseOnShabbat(this)) { checked ->
-            Store.setPauseOnShabbat(this, checked)
+        bindSwitch(R.id.shabbat_switch, Store.shabbatMode(this)) { checked ->
+            Store.setShabbatMode(this, checked)
             refresh()
         }
         bindSwitch(R.id.exempt_today_switch, Store.pausedDates(this).contains(Store.today())) {
@@ -306,6 +310,9 @@ class MainActivity : AppCompatActivity() {
             Store.formatDuration(Store.targetMinutes(this))
         findViewById<Button>(R.id.reminder_time).text =
             Store.formatMinutes(Store.reminderMinutes(this))
+        findViewById<Button>(R.id.region_button).setText(
+            if (Store.inIsrael(this)) R.string.region_israel else R.string.region_diaspora
+        )
 
         val track = MusicLibrary.selected(this)
         findViewById<TextView>(R.id.music_state).text = when {

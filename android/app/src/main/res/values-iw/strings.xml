@@ -28,7 +28,7 @@
     <string name="gate_done_title">היום אושר</string>
     <string name="gate_done_detail">היום כבר לא ייחסם דבר. החסימה תחזור מחר.</string>
     <string name="gate_exempt_title">יום ללא חובה</string>
-    <string name="gate_exempt_detail">שבת או חג: החסימה בהפסקה והרצף נשמר.</string>
+    <string name="gate_exempt_detail">שבת, יום טוב או הפסקה: החסימה שותקת והרצף נשמר.</string>
     <string name="gate_snoozed_title">נדחה</string>
     <string name="gate_snoozed_detail">ביקשת דחייה. החסימה תחזור בסיומה.</string>
     <string name="gate_window_title">מחוץ לחלון</string>
@@ -53,8 +53,8 @@
     <string name="settings_target">משך ההתבודדות</string>
     <string name="settings_reminder">תזכורת יומית</string>
     <string name="settings_reminder_time">שעת התזכורת</string>
-    <string name="settings_shabbat">הפסקה בשבת</string>
-    <string name="settings_shabbat_hint">בשבת אין חסימה, והרצף לא נשבר.</string>
+    <string name="settings_shabbat">שבת ויום טוב</string>
+    <string name="settings_shabbat_hint">בימים אלה: אין חסימה, אין תזכורת, והרצף נשמר.</string>
     <string name="settings_exempt_today">היום יום חג</string>
     <string name="settings_exempt_today_hint">להפעיל ביום טוב או ביום נסיעה.</string>
     <string name="settings_screen_missing">מסך ההגדרות הזה לא קיים בטלפון.</string>
@@ -178,4 +178,7 @@
     <string name="week_done">בוצע</string>
     <string name="week_todo">לביצוע</string>
     <string name="gate_permissions_action">חסרות הרשאות, לאשר אותן</string>
+    <string name="settings_region">אזור</string>
+    <string name="region_israel">ישראל</string>
+    <string name="region_diaspora">חו״ל</string>
 </resources>

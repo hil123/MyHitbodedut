@@ -28,7 +28,7 @@
     <string name="gate_done_title">Day confirmed</string>
     <string name="gate_done_detail">Nothing will be blocked today. The gate returns tomorrow.</string>
     <string name="gate_exempt_title">Day off</string>
-    <string name="gate_exempt_detail">Shabbat or a festival: the gate pauses and the streak stays intact.</string>
+    <string name="gate_exempt_detail">Shabbat, Yom Tov or a pause: the gate is silent and the streak stays intact.</string>
     <string name="gate_snoozed_title">Snoozed</string>
     <string name="gate_snoozed_detail">You asked for a delay. The gate returns when it ends.</string>
     <string name="gate_window_title">Outside the window</string>
@@ -53,8 +53,8 @@
     <string name="settings_target">Session length</string>
     <string name="settings_reminder">Daily reminder</string>
     <string name="settings_reminder_time">Reminder time</string>
-    <string name="settings_shabbat">Pause on Shabbat</string>
-    <string name="settings_shabbat_hint">No blocking on Saturday, and the streak is not broken.</string>
+    <string name="settings_shabbat">Shabbat and Yom Tov</string>
+    <string name="settings_shabbat_hint">On those days: no blocking, no reminder, and the streak stays intact.</string>
     <string name="settings_exempt_today">Festival day today</string>
     <string name="settings_exempt_today_hint">Turn on for a Yom Tov or a travel day.</string>
     <string name="settings_screen_missing">This settings screen does not exist on this phone.</string>
@@ -173,4 +173,7 @@
     <string name="week_done">done</string>
     <string name="week_todo">to do</string>
     <string name="gate_permissions_action">Permissions missing, grant them</string>
+    <string name="settings_region">Region</string>
+    <string name="region_israel">Israel</string>
+    <string name="region_diaspora">Diaspora</string>
 </resources>

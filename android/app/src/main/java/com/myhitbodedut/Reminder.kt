@@ -52,10 +52,16 @@ object Reminder {
 /** Affiche le rappel, puis reprogramme celui du lendemain. */
 class ReminderReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
-        if (Store.reminderEnabled(context) &&
-            !Store.isDone(context) &&
-            !Store.isExempt(context, LocalDate.now())
-        ) {
+        val now = java.time.LocalTime.now()
+        val allowed = Store.reminderEnabled(context) && ReminderRule.shouldNotify(
+            nowMinutes = now.hour * 60 + now.minute,
+            doneToday = Store.isDone(context),
+            todayIsRestDay = Store.isExempt(context, LocalDate.now()),
+            tomorrowIsRestDay = Store.isEveOfRestDay(context, LocalDate.now()),
+            // Aucune ville n'est réglée : on s'en tient à la limite de midi.
+            sunsetMinutes = null
+        )
+        if (allowed) {
             Notifications.ensureChannels(context)
             val open = PendingIntent.getActivity(
                 context,

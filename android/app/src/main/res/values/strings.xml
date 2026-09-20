@@ -34,7 +34,7 @@
     <string name="gate_done_title">Journée validée</string>
     <string name="gate_done_detail">Plus rien ne sera bloqué aujourd\'hui. La barrière reprendra demain.</string>
     <string name="gate_exempt_title">Jour sans obligation</string>
-    <string name="gate_exempt_detail">Shabbat ou jour de fête : la barrière est en pause et la série reste intacte.</string>
+    <string name="gate_exempt_detail">Shabbat, Yom Tov ou pause : la barrière se tait et la série reste intacte.</string>
     <string name="gate_snoozed_title">Report en cours</string>
     <string name="gate_snoozed_detail">Vous avez demandé un délai. La barrière revient à la fin du report.</string>
     <string name="gate_window_title">Hors de la fenêtre</string>
@@ -61,8 +61,8 @@
     <string name="settings_target">Durée d\'une séance</string>
     <string name="settings_reminder">Rappel quotidien</string>
     <string name="settings_reminder_time">Heure du rappel</string>
-    <string name="settings_shabbat">Pause le Shabbat</string>
-    <string name="settings_shabbat_hint">Le samedi, aucun blocage, et la série n\'est pas cassée.</string>
+    <string name="settings_shabbat">Shabbat et Yom Tov</string>
+    <string name="settings_shabbat_hint">Ces jours-là : pas de blocage, pas de rappel, et la série reste intacte.</string>
     <string name="settings_exempt_today">Jour de fête aujourd\'hui</string>
     <string name="settings_exempt_today_hint">À activer pour un Yom Tov ou un jour de voyage.</string>
     <string name="settings_screen_missing">Cet écran de réglages n\'existe pas sur ce téléphone.</string>
@@ -191,4 +191,7 @@
     <string name="week_done">faite</string>
     <string name="week_todo">à faire</string>
     <string name="gate_permissions_action">Autorisations manquantes, les accorder</string>
+    <string name="settings_region">Région</string>
+    <string name="region_israel">Israël</string>
+    <string name="region_diaspora">Diaspora</string>
 </resources>
