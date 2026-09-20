@@ -223,4 +223,7 @@
     <!-- Point 3 : règle de publication -->
     <string name="chizuk_badge_to_proofread">à relire</string>
     <string name="chizuk_debug_notice">Compilation de test : les textes non relus sont affichés et marqués.</string>
+
+    <!-- Point 4 : affichage des textes -->
+    <string name="chizuk_stuck">Je n\'arrive pas à parler</string>
 </resources>

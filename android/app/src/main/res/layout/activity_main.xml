@@ -114,6 +114,14 @@
                 android:layout_marginTop="14dp"
                 android:orientation="horizontal" />
 
+            <!-- Point 4 : le moment « relance », après une rupture de série. -->
+            <include
+                android:id="@+id/relance_chizuk"
+                layout="@layout/view_chizuk"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp" />
+
             <Button
                 android:id="@+id/start_session"
                 android:layout_width="match_parent"
@@ -421,6 +429,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
             </LinearLayout>
+
+            <!-- Point 4 : le moment « lieu », dans les réglages de lieu et de moment. -->
+            <include
+                android:id="@+id/lieu_chizuk"
+                layout="@layout/view_chizuk"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp" />
         </LinearLayout>
 
         <!-- Autorisations -->

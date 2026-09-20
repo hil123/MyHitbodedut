@@ -66,6 +66,24 @@
             android:textSize="13sp"
             android:visibility="gone" />
 
+        <!-- Point 4 : ouverture au début de la séance, blocage pendant. -->
+        <include
+            android:id="@+id/session_chizuk"
+            layout="@layout/view_chizuk"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp" />
+
+        <Button
+            android:id="@+id/session_stuck"
+            style="@style/Widget.Material3.Button.TextButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:text="@string/chizuk_stuck"
+            android:textColor="@color/mint"
+            android:visibility="gone" />
+
         <LinearLayout
             android:id="@+id/session_durations"
             android:layout_width="match_parent"

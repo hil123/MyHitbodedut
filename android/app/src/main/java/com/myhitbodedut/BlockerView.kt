@@ -57,6 +57,18 @@ class BlockerView(
 
         preview.visibility = if (mode == BlockerMode.PREVIEW) View.VISIBLE else View.GONE
 
+        /*
+         * Point 4 : le moment « porte ». L'écran d'une séance en cours ne
+         * demande rien et n'en reçoit pas ; l'aperçu en montre un, sans quoi
+         * il ne montrerait pas l'écran tel qu'il sera.
+         */
+        val chizuk = findViewById<View>(R.id.blocker_chizuk)
+        if (mode == BlockerMode.SESSION_RUNNING) {
+            chizuk.visibility = View.GONE
+        } else {
+            ChizukCard.show(chizuk, Moment.PORTE)
+        }
+
         when (mode) {
             BlockerMode.PROMPT -> {
                 art.setImageResource(Character.call())

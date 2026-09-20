@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    La carte de 'hizouk.
+
+    Contrainte du point 4 : jamais de défilement. Les deux blocs de texte ont
+    donc une hauteur fixe et un corps automatique (autoSizeTextType) : le texte
+    rétrécit jusqu'à tenir, au lieu de déborder et d'imposer une barre de
+    défilement. Le plus long des 37 textes tient ainsi dans la même carte que
+    le plus court.
+
+    L'hébreu est au-dessus, en direction droite-à-gauche, quelle que soit la
+    langue de l'interface : layoutDirection force le sens de la vue, et
+    textAlignment=viewStart aligne donc à droite en français comme en anglais.
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_card"
+    android:orientation="vertical"
+    android:paddingHorizontal="16dp"
+    android:paddingVertical="14dp">
+
+    <TextView
+        android:id="@+id/chizuk_badge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/bg_badge_warning"
+        android:paddingHorizontal="10dp"
+        android:paddingVertical="3dp"
+        android:text="@string/chizuk_badge_to_proofread"
+        android:textColor="@color/warning"
+        android:textSize="11sp"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/chizuk_he"
+        android:layout_width="match_parent"
+        android:layout_height="122dp"
+        android:autoSizeMaxTextSize="19sp"
+        android:autoSizeMinTextSize="10sp"
+        android:autoSizeStepGranularity="1sp"
+        android:autoSizeTextType="uniform"
+        android:layoutDirection="rtl"
+        android:lineSpacingExtra="2sp"
+        android:textAlignment="viewStart"
+        android:textColor="@color/ink" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginVertical="10dp"
+        android:background="@color/line" />
+
+    <TextView
+        android:id="@+id/chizuk_translation"
+        android:layout_width="match_parent"
+        android:layout_height="98dp"
+        android:autoSizeMaxTextSize="15sp"
+        android:autoSizeMinTextSize="9sp"
+        android:autoSizeStepGranularity="1sp"
+        android:autoSizeTextType="uniform"
+        android:lineSpacingExtra="2sp"
+        android:textColor="@color/muted" />
+
+    <TextView
+        android:id="@+id/chizuk_ref"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textColor="@color/muted"
+        android:textSize="11sp" />
+</LinearLayout>

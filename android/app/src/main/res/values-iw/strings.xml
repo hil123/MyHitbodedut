@@ -210,4 +210,7 @@
     <!-- Point 3 : règle de publication -->
     <string name="chizuk_badge_to_proofread">להגהה</string>
     <string name="chizuk_debug_notice">גרסת בדיקה: טקסטים שטרם הוגהו מוצגים ומסומנים.</string>
+
+    <!-- Point 4 : affichage des textes -->
+    <string name="chizuk_stuck">אני לא מצליח לדבר</string>
 </resources>

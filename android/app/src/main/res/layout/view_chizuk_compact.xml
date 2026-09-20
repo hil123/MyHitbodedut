@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    La même carte que view_chizuk.xml, en plus court.
+
+    L'écran de porte s'ouvre sur quelqu'un qui vient d'attraper son téléphone :
+    il doit tenir d'un regard, sans faire défiler. Les données ne proposent à ce
+    moment que des textes de 15 s de lecture ou moins (voir ChizukRulesTest),
+    des hauteurs plus basses suffisent donc.
+
+    Les identifiants sont les mêmes, ChizukCard remplit les deux sans savoir
+    laquelle il a reçue.
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_card"
+    android:orientation="vertical"
+    android:paddingHorizontal="16dp"
+    android:paddingVertical="14dp">
+
+    <TextView
+        android:id="@+id/chizuk_badge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/bg_badge_warning"
+        android:paddingHorizontal="10dp"
+        android:paddingVertical="3dp"
+        android:text="@string/chizuk_badge_to_proofread"
+        android:textColor="@color/warning"
+        android:textSize="11sp"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/chizuk_he"
+        android:layout_width="match_parent"
+        android:layout_height="74dp"
+        android:autoSizeMaxTextSize="17sp"
+        android:autoSizeMinTextSize="10sp"
+        android:autoSizeStepGranularity="1sp"
+        android:autoSizeTextType="uniform"
+        android:layoutDirection="rtl"
+        android:lineSpacingExtra="2sp"
+        android:textAlignment="viewStart"
+        android:textColor="@color/ink" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginVertical="10dp"
+        android:background="@color/line" />
+
+    <TextView
+        android:id="@+id/chizuk_translation"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:autoSizeMaxTextSize="14sp"
+        android:autoSizeMinTextSize="9sp"
+        android:autoSizeStepGranularity="1sp"
+        android:autoSizeTextType="uniform"
+        android:lineSpacingExtra="2sp"
+        android:textColor="@color/muted" />
+
+    <TextView
+        android:id="@+id/chizuk_ref"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textColor="@color/muted"
+        android:textSize="11sp" />
+</LinearLayout>

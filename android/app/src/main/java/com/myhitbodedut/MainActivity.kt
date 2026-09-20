@@ -25,6 +25,9 @@ import java.util.Locale
 /** Écran principal : état du jour, diagnostic de la barrière, réglages. */
 class MainActivity : AppCompatActivity() {
 
+    /** Le texte de relance a déjà été tiré pour la rupture en cours. */
+    private var relanceTiree = false
+
     private val requestNotifications =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { refresh() }
 
@@ -44,6 +47,9 @@ class MainActivity : AppCompatActivity() {
         Notifications.ensureChannels(this)
         wireActions()
         applyEdition()
+        // Le moment « lieu » accompagne les réglages de lieu et de moment :
+        // il ne change pas d'un aller-retour à l'autre, on le tire une fois.
+        ChizukCard.show(findViewById(R.id.lieu_chizuk), Moment.LIEU)
         if (intent?.getBooleanExtra(EXTRA_ASK_NOTE, false) == true) {
             NoteDialog.show(this, Store.today()) { refresh() }
         }
@@ -156,6 +162,31 @@ class MainActivity : AppCompatActivity() {
         renderSwitches()
         renderSettings()
         renderPermissions()
+        renderRelance()
+    }
+
+    /**
+     * Le moment « relance » : un mot après une rupture de série.
+     *
+     * La carte n'apparaît qu'à quelqu'un qui a déjà pratiqué et dont la série
+     * est retombée à zéro. Elle n'a rien à dire à un premier jour, ni à une
+     * série en cours.
+     */
+    private fun renderRelance() {
+        val card = findViewById<View>(R.id.relance_chizuk)
+        val brisee = Store.streak(this) == 0 && Store.days(this).isNotEmpty()
+        if (!brisee) {
+            card.visibility = View.GONE
+            relanceTiree = false
+            return
+        }
+        // refresh() repasse à chaque retour d'écran et après chaque permission
+        // accordée : on ne retire pas un texte que l'utilisateur est en train
+        // de lire, seulement au premier affichage de la rupture.
+        if (!relanceTiree) {
+            ChizukCard.show(card, Moment.RELANCE)
+            relanceTiree = true
+        }
     }
 
     private fun renderToday() {

@@ -58,6 +58,8 @@ object Store {
     private const val KEY_MUSIC_TRACK = "music_track"
     private const val KEY_MUSIC_VOLUME = "music_volume"
     private const val KEY_MUSIC_USER = "music_user_tracks"
+    private const val KEY_CHIZUK_BAG = "chizuk_bag_"
+    private const val KEY_CHIZUK_LAST = "chizuk_last_"
     private const val KEY_MUSIC_NAMES = "music_names"
 
     const val DEFAULT_START = 6 * 60
@@ -373,6 +375,30 @@ object Store {
 
     fun setMusicNames(context: Context, json: String) {
         prefs(context).edit().putString(KEY_MUSIC_NAMES, json).apply()
+    }
+
+    // --- Rotation des textes de 'hizouk --------------------------------------
+
+    /**
+     * Le sac mélangé d'un moment : les identifiants qui n'ont pas encore
+     * servi dans le cycle en cours. Un identifiant ne contient ni espace ni
+     * saut de ligne, la liste tient donc dans une chaîne.
+     */
+    fun chizukBag(context: Context, moment: Moment): List<String> =
+        prefs(context).getString(KEY_CHIZUK_BAG + moment.key, "")
+            .orEmpty()
+            .split('\n')
+            .filter { it.isNotBlank() }
+
+    /** Le dernier texte sorti pour ce moment, pour ne pas le redonner aussitôt. */
+    fun chizukLast(context: Context, moment: Moment): String? =
+        prefs(context).getString(KEY_CHIZUK_LAST + moment.key, null)?.ifBlank { null }
+
+    fun setChizukBag(context: Context, moment: Moment, bag: List<String>, last: String?) {
+        prefs(context).edit()
+            .putString(KEY_CHIZUK_BAG + moment.key, bag.joinToString("\n"))
+            .putString(KEY_CHIZUK_LAST + moment.key, last)
+            .apply()
     }
 
     // --- Sauvegarde ---------------------------------------------------------
