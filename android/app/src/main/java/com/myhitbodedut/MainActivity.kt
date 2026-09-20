@@ -204,12 +204,17 @@ class MainActivity : AppCompatActivity() {
         val formatter = DateTimeFormatter.ofPattern("EEE", Locale.getDefault())
         Store.lastWeek(this).forEach { (day, done, exempt) ->
             val cell = layoutInflater.inflate(R.layout.item_day, strip, false)
-            cell.findViewById<TextView>(R.id.day_label).text = day.format(formatter)
-            cell.findViewById<TextView>(R.id.day_mark).text = when {
+            val label = cell.findViewById<TextView>(R.id.day_label)
+            val mark = cell.findViewById<TextView>(R.id.day_mark)
+            label.text = day.format(formatter)
+            mark.text = when {
                 done -> "✓"
                 exempt -> "—"
                 else -> "·"
             }
+            // La case du jour fait est vert foncé : un texte sombre y disparaît.
+            label.setTextColor(ContextCompat.getColor(this, if (done) R.color.white else R.color.muted))
+            mark.setTextColor(ContextCompat.getColor(this, if (done) R.color.white else R.color.ink))
             cell.setBackgroundResource(
                 when {
                     done -> R.drawable.bg_day_done

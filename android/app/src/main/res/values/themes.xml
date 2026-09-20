@@ -54,6 +54,18 @@
         <item name="android:textSize">15sp</item>
     </style>
 
+    <!--
+        Variante pour un libellé placé dans une colonne verticale.
+        SettingLabel ne convient pas là : sa largeur nulle le rend invisible et
+        son poids lui fait avaler toute la hauteur disponible.
+    -->
+    <style name="SettingLabelStacked">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/ink</item>
+        <item name="android:textSize">15sp</item>
+    </style>
+
     <style name="SettingValue" parent="Widget.Material3.Button.OutlinedButton">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>

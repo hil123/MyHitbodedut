@@ -53,7 +53,7 @@
 
         <View style="@style/Divider" />
 
-        <TextView style="@style/SettingLabel" android:text="@string/music_volume" />
+        <TextView style="@style/SettingLabelStacked" android:text="@string/music_volume" />
 
         <SeekBar
             android:id="@+id/music_volume"
