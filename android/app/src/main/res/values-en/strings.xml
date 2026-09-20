@@ -258,6 +258,7 @@
     <string name="tikkun_start">Begin with psalm %1$d</string>
     <string name="tikkun_resume">Resume at psalm %1$d</string>
     <string name="tikkun_next">Next psalm</string>
+    <string name="tikkun_paragraphs">%1$d paragraphs</string>
     <string name="tikkun_mark">Mark as said</string>
     <string name="tikkun_unmark">Remove the mark</string>
     <string name="tikkun_said">said</string>

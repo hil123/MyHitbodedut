@@ -277,6 +277,7 @@
     <string name="tikkun_start">Commencer par le psaume %1$d</string>
     <string name="tikkun_resume">Reprendre au psaume %1$d</string>
     <string name="tikkun_next">Psaume suivant</string>
+    <string name="tikkun_paragraphs">%1$d paragraphes</string>
     <string name="tikkun_mark">Marquer comme dit</string>
     <string name="tikkun_unmark">Retirer la marque</string>
     <string name="tikkun_said">dit</string>

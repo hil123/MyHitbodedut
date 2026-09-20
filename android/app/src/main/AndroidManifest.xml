@@ -49,6 +49,11 @@
             android:label="@string/tikkun_title" />
 
         <activity
+            android:name=".LiturgyActivity"
+            android:exported="false"
+            android:label="@string/tikkun_title" />
+
+        <activity
             android:name=".PsalmActivity"
             android:exported="false"
             android:label="@string/tikkun_title" />

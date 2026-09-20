@@ -15,7 +15,18 @@ import androidx.recyclerview.widget.RecyclerView
 /** Les dix psaumes du Tikoun HaKlali, et ou l'on en est aujourd'hui. */
 class TikkunActivity : AppCompatActivity() {
 
+    /**
+     * Une ligne de la liste : une partie liturgique, ou l'un des dix psaumes.
+     * La liste suit l'ordre reel du Tikoun, ce qui se dit avant et apres
+     * compris — sinon rien ne dirait qu'il y a un avant et un apres.
+     */
+    private sealed interface Ligne {
+        data class Bloc(val bloc: LiturgyBlock) : Ligne
+        data class Psaume(val psaume: Psalm, val rang: Int) : Ligne
+    }
+
     private lateinit var tikkun: Tikkun
+    private lateinit var lignes: List<Ligne>
     private lateinit var adapter: Adapter
     private lateinit var progress: TextView
     private lateinit var primary: Button
@@ -26,6 +37,9 @@ class TikkunActivity : AppCompatActivity() {
         setContentView(R.layout.activity_tikkun)
 
         tikkun = Data.tikkun(this)
+        lignes = tikkun.avant.map { Ligne.Bloc(it) } +
+            tikkun.psaumes.mapIndexed { i, p -> Ligne.Psaume(p, i + 1) } +
+            tikkun.apres.map { Ligne.Bloc(it) }
         progress = findViewById(R.id.tikkun_progress)
         primary = findViewById(R.id.tikkun_primary)
         reset = findViewById(R.id.tikkun_reset)
@@ -93,17 +107,49 @@ class TikkunActivity : AppCompatActivity() {
             LayoutInflater.from(parent.context).inflate(R.layout.item_psalm, parent, false)
         )
 
-        override fun getItemCount(): Int = tikkun.psaumes.size
+        override fun getItemCount(): Int = lignes.size
 
         override fun onBindViewHolder(holder: Holder, position: Int) {
-            val psaume = tikkun.psaumes[position]
-            holder.rank.text = (position + 1).toString()
+            when (val ligne = lignes[position]) {
+                is Ligne.Psaume -> bindPsaume(holder, ligne)
+                is Ligne.Bloc -> bindBloc(holder, ligne.bloc)
+            }
+        }
+
+        private fun bindPsaume(holder: Holder, ligne: Ligne.Psaume) {
+            val psaume = ligne.psaume
+            holder.rank.text = ligne.rang.toString()
+            holder.rank.visibility = View.VISIBLE
             holder.title.text = getString(R.string.tikkun_psalm_he, psaume.numero)
             holder.detail.text = getString(R.string.tikkun_verses, psaume.versets.size)
             val dit = psaume.numero in Store.tikkunDone(this@TikkunActivity)
             holder.state.visibility = if (dit) View.VISIBLE else View.GONE
             holder.state.setText(R.string.tikkun_said)
             holder.itemView.setOnClickListener { ouvre(psaume.numero) }
+        }
+
+        /**
+         * Une partie liturgique n'a pas de rang : elle ne se compte pas dans
+         * les dix, et ne se marque pas comme dite.
+         */
+        private fun bindBloc(holder: Holder, bloc: LiturgyBlock) {
+            holder.rank.visibility = View.INVISIBLE
+            holder.title.text = bloc.titre.he
+            val langue = ChizukCard.language(this@TikkunActivity)
+            val traduction = bloc.titre.forLanguage(langue)
+            holder.detail.text =
+                if (traduction == bloc.titre.he) {
+                    getString(R.string.tikkun_paragraphs, bloc.paragraphes.size)
+                } else {
+                    traduction
+                }
+            holder.state.visibility = View.GONE
+            holder.itemView.setOnClickListener {
+                startActivity(
+                    Intent(this@TikkunActivity, LiturgyActivity::class.java)
+                        .putExtra(LiturgyActivity.EXTRA_CLE, bloc.cle)
+                )
+            }
         }
     }
 }

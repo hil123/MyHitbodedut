@@ -66,19 +66,93 @@ class TikkunTest {
      */
     @Test
     fun `aucun nom divin n est ecrit en toutes lettres`() {
-        val interdits = listOf("יהוה", "אלהים", "אֱלֹהִים", "אדני")
+        val interdits = listOf("יהוה", "אלהים", "אלהי", "אדני")
+        fun nu(t: String) = t.replace(Regex("[\\u0591-\\u05C7]"), "")
+
         tikkun.psaumes.forEach { p ->
             p.versets.forEach { v ->
-                val nu = v.he.replace(Regex("[\\u0591-\\u05C7]"), "")
-                interdits.forEach { mot ->
-                    val nuMot = mot.replace(Regex("[\\u0591-\\u05C7]"), "")
-                    assertFalse(
-                        "${p.ref}:${v.numero} contient « $nuMot »",
-                        nu.contains(nuMot),
-                    )
+                interdits.forEach {
+                    assertFalse("${p.ref}:${v.numero} contient « $it »", nu(v.he).contains(it))
                 }
             }
         }
+        // Meme regle dans la liturgie, la kavana exceptee (voir le test dedie).
+        tikkun.blocs.values
+            .filterNot { it.cle == Tikkun.KAVANA }
+            .forEach { bloc ->
+                bloc.paragraphes.forEachIndexed { i, para ->
+                    interdits.forEach {
+                        assertFalse(
+                            "${bloc.cle}[$i] contient « $it »",
+                            nu(para).contains(it),
+                        )
+                    }
+                }
+            }
+    }
+
+    /**
+     * Les quatre parties liturgiques reprises de la page fournie : ce qui se
+     * dit avant, les versets de cloture, la kavana, la priere de Rabbi Nathan.
+     */
+    @Test
+    fun `les parties liturgiques sont chargees`() {
+        listOf(Tikkun.OUVERTURE, Tikkun.CLOTURE, Tikkun.KAVANA, Tikkun.PRIERE)
+            .forEach { cle ->
+                val bloc = tikkun.bloc(cle)
+                assertTrue("bloc « $cle » absent", bloc != null)
+                assertTrue("bloc « $cle » vide", bloc!!.paragraphes.isNotEmpty())
+                assertTrue("bloc « $cle » sans titre", bloc.titre.he.isNotBlank())
+                bloc.paragraphes.forEach {
+                    assertTrue("bloc « $cle » : paragraphe vide", it.isNotBlank())
+                }
+            }
+        assertEquals(1, tikkun.avant.size)
+        assertEquals(3, tikkun.apres.size)
+    }
+
+    /**
+     * La kavana est la seule exception a la substitution des noms divins, et
+     * c'est deliberé : elle enseigne l'epellation des deux Noms et leur
+     * milouy, dont la guematria 485 vaut תהלים. Y changer le ה en ק donnerait
+     * un autre milouy et ferait tomber le compte. Le fichier doit porter cette
+     * justification, sans quoi l'exception passerait pour un oubli.
+     */
+    @Test
+    fun `l exception de la kavana est justifiee dans le fichier`() {
+        val kavana = org.json.JSONObject(DataFiles.tikkunJson)
+            .getJSONObject(Tikkun.KAVANA)
+        assertTrue(
+            "la kavana garde l'ecriture de sa source sans dire pourquoi",
+            kavana.has("note_substitution"),
+        )
+    }
+
+    /** La marque d'arret de Tehilim 32:7, avec sa source. */
+    @Test
+    fun `la marque d arret porte sa source`() {
+        val verset = tikkun.byNumero(32)!!.versets.first { it.numero == 7 }
+        val arret = verset.arret
+        assertTrue("aucune marque d'arret en 32:7", arret != null)
+        assertTrue("la marque ne dit pas d'ou elle vient", arret!!.note.contains("מוהר"))
+        assertTrue(
+            "le mot d'arret doit se trouver dans le verset",
+            verset.he.contains(arret.avant),
+        )
+    }
+
+    /**
+     * Le texte des psaumes ne vient pas de la page fournie mais d'une edition
+     * massoretique. La page porte une coquille confirmee sur trois editions —
+     * 105:20, dagesh manquant — et c'est la forme correcte qui doit etre ici.
+     */
+    @Test
+    fun `le psaume 105 verset 20 porte le dagesh`() {
+        val verset = tikkun.byNumero(105)!!.versets.first { it.numero == 20 }
+        assertTrue(
+            "105:20 doit lire וַיַּתִּירֵהוּ et non וַיַתִּירֵהוּ",
+            verset.he.contains("וַיַּתִּירֵהוּ"),
+        )
     }
 
     /** Le qere est retenu : aucune notation « ketiv [qere] » ne doit subsister. */

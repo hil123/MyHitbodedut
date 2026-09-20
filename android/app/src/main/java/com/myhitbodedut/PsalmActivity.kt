@@ -39,6 +39,9 @@ class PsalmActivity : AppCompatActivity() {
         val conteneur = findViewById<LinearLayout>(R.id.psalm_verses)
         psaume.versets.forEachIndexed { index, verset ->
             conteneur.addView(vue(verset, premier = index == 0))
+            // L'indication d'arret suit le verset qu'elle concerne, avec sa
+            // source : elle n'est pas du texte, elle dit comment le lire.
+            verset.arret?.let { conteneur.addView(vueArret(it)) }
         }
 
         findViewById<Button>(R.id.psalm_next).apply {
@@ -108,6 +111,22 @@ class PsalmActivity : AppCompatActivity() {
             }
         )
         return ligne
+    }
+
+    /** L'indication d'arret, visiblement distincte du verset. */
+    private fun vueArret(arret: Pause): View = TextView(this).apply {
+        layoutParams = LinearLayout.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+        ).apply { topMargin = dp(8) }
+        text = arret.note
+        layoutDirection = View.LAYOUT_DIRECTION_RTL
+        textAlignment = View.TEXT_ALIGNMENT_VIEW_START
+        textSize = 13f
+        setLineSpacing(dp(3).toFloat(), 1f)
+        setPadding(dp(12), dp(9), dp(12), dp(9))
+        setBackgroundResource(R.drawable.bg_badge_warning)
+        setTextColor(ContextCompat.getColor(context, R.color.warning))
     }
 
     private fun dp(value: Int): Int = (value * resources.displayMetrics.density).toInt()
