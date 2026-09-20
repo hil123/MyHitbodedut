@@ -128,13 +128,25 @@ class TikkunTest {
         )
     }
 
-    /** La marque d'arret de Tehilim 32:7, avec sa source. */
+    /**
+     * L'indication d'arret de Tehilim 32:7 : ce qu'elle dit, et d'ou elle
+     * vient. Le pictogramme et le mot « הפסק » de la page fournie ne doivent
+     * plus y figurer — elle se lit comme une parenthese, pas comme une alerte.
+     */
     @Test
-    fun `la marque d arret porte sa source`() {
+    fun `l indication d arret est une parenthese, avec sa source`() {
         val verset = tikkun.byNumero(32)!!.versets.first { it.numero == 7 }
         val arret = verset.arret
-        assertTrue("aucune marque d'arret en 32:7", arret != null)
-        assertTrue("la marque ne dit pas d'ou elle vient", arret!!.note.contains("מוהר"))
+        assertTrue("aucune indication d'arret en 32:7", arret != null)
+        assertTrue(
+            "l'indication ne dit pas d'ou elle vient",
+            arret!!.note.contains("ליקוטי מוהר") && arret.note.contains("רי\"ג"),
+        )
+        assertTrue(
+            "la source doit etre entre parentheses",
+            arret.note.contains("(") && arret.note.contains(")"),
+        )
+        assertFalse("le pictogramme d'arret subsiste", arret.note.contains("\u23F8"))
         assertTrue(
             "le mot d'arret doit se trouver dans le verset",
             verset.he.contains(arret.avant),

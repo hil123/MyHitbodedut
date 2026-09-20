@@ -113,20 +113,26 @@ class PsalmActivity : AppCompatActivity() {
         return ligne
     }
 
-    /** L'indication d'arret, visiblement distincte du verset. */
+    /**
+     * L'indication d'arret. Elle se lit comme une parenthese du texte, pas
+     * comme un avertissement : ni pictogramme, ni cadre, ni couleur d'alerte.
+     * Seule la teinte attenuee la distingue du verset.
+     */
     private fun vueArret(arret: Pause): View = TextView(this).apply {
         layoutParams = LinearLayout.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT,
             ViewGroup.LayoutParams.WRAP_CONTENT,
-        ).apply { topMargin = dp(8) }
+        ).apply {
+            topMargin = dp(6)
+            // Aligne sur le texte du verset, pas sur son numero.
+            marginEnd = dp(22)
+        }
         text = arret.note
         layoutDirection = View.LAYOUT_DIRECTION_RTL
         textAlignment = View.TEXT_ALIGNMENT_VIEW_START
-        textSize = 13f
-        setLineSpacing(dp(3).toFloat(), 1f)
-        setPadding(dp(12), dp(9), dp(12), dp(9))
-        setBackgroundResource(R.drawable.bg_badge_warning)
-        setTextColor(ContextCompat.getColor(context, R.color.warning))
+        textSize = 15f
+        setLineSpacing(dp(4).toFloat(), 1f)
+        setTextColor(ContextCompat.getColor(context, R.color.muted))
     }
 
     private fun dp(value: Int): Int = (value * resources.displayMetrics.density).toInt()
