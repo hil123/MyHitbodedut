@@ -219,4 +219,8 @@
     <string name="tip_9_body">Une part de la hitbodedout peut être un silence complet, ou un moment d\'attention au souffle. Asseyez-vous en silence un moment, suivez votre respiration, posez l\'attention sur le corps. Ce silence laisse remonter et s\'éclaircir ce qui est au-dedans.</string>
     <string name="tip_10_title">Terminez par une respiration profonde et une action de grâce</string>
     <string name="tip_10_body">À la fin de la hitbodedout, terminez par une respiration profonde et bénissez Dieu pour le temps passé avec Lui. C\'est un moment de gratitude pour le grand cadeau de ce lien, et pour le calme intérieur trouvé. Même s\'il vous a semblé difficile de trouver des réponses, ne vous inquiétez pas : cette rencontre avec vous-même et avec Dieu apporte déjà une abondance spirituelle dans votre vie.</string>
+
+    <!-- Point 3 : règle de publication -->
+    <string name="chizuk_badge_to_proofread">à relire</string>
+    <string name="chizuk_debug_notice">Compilation de test : les textes non relus sont affichés et marqués.</string>
 </resources>

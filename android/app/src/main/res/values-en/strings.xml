@@ -201,4 +201,8 @@
     <string name="tip_9_body">Part of hitbodedut can be complete silence, or a moment of attention to the breath. Sit quietly for a while, follow your breathing, rest your attention on the body. That silence lets the inner parts of you surface and come clear.</string>
     <string name="tip_10_title">End with a deep breath and thanks</string>
     <string name="tip_10_body">At the end of hitbodedut, finish with a deep breath and bless God for the time you spent together. It is a moment of thanks for the great gift of connection, and for the inner quiet you found. Even if you felt it was hard to find answers, do not worry: this meeting with yourself and with God already brings spiritual abundance into your life.</string>
+
+    <!-- Point 3 : règle de publication -->
+    <string name="chizuk_badge_to_proofread">to proofread</string>
+    <string name="chizuk_debug_notice">Test build: texts still to proofread are shown and marked.</string>
 </resources>
