@@ -33,6 +33,12 @@ jobs:
           VERSION_CODE: ${{ github.run_number }}
         run: ./gradlew --no-daemon assembleFullRelease assembleLightRelease
 
+      - name: Unit tests
+        working-directory: android
+        env:
+          VERSION_CODE: ${{ github.run_number }}
+        run: ./gradlew --no-daemon testFullDebugUnitTest
+
       - name: Lint
         working-directory: android
         env:
