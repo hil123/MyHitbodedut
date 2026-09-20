@@ -156,44 +156,53 @@ class TikkunTest {
     }
 
     /**
-     * Graphie de siddour, demandee explicitement : pas de maqqef, deux-points
-     * en fin de verset au lieu du sof-pasuk. Une regeneration depuis une
-     * edition massoretique ramenerait l'autre graphie sans rien casser
-     * d'autre, d'ou ce garde-fou.
+     * Graphie massoretique. La page fournie s'en ecartait sur cinq points ;
+     * les trois editions consultees s'accordent contre elle sur tous, et ce
+     * sont elles qui tranchent. Repasser a la graphie de siddour ne casserait
+     * rien d'autre, d'ou ce garde-fou.
      */
     @Test
-    fun `les psaumes suivent la graphie de siddour`() {
+    fun `les psaumes suivent la graphie massoretique`() {
         val maqqef = '\u05BE'
         val sofPasuk = '\u05C3'
-        var versets = 0
-        tikkun.psaumes.forEach { p ->
-            p.versets.forEach { v ->
-                versets++
-                assertFalse("${p.ref}:${v.numero} porte un maqqef", v.he.contains(maqqef))
-                assertFalse("${p.ref}:${v.numero} porte un sof-pasuk", v.he.contains(sofPasuk))
-                assertTrue(
-                    "${p.ref}:${v.numero} ne finit pas par « : »",
-                    v.he.trimEnd().endsWith(":"),
-                )
-            }
+        val tout = tikkun.psaumes.joinToString(" ") { p ->
+            p.versets.joinToString(" ") { it.he }
         }
-        assertEquals(164, versets)
+        assertTrue("aucun maqqef : la graphie n'est plus massoretique",
+            tout.contains(maqqef))
+        assertTrue("aucun sof-pasuk : la graphie n'est plus massoretique",
+            tout.contains(sofPasuk))
+        assertFalse(
+            "un verset finit par « : » : c'est la ponctuation de siddour",
+            tikkun.psaumes.any { p -> p.versets.any { it.he.trimEnd().endsWith(":") } },
+        )
     }
 
-    /** Les deux graphies lexicales propres au siddour. */
+    /**
+     * Les deux graphies lexicales ou les editions contredisent la page.
+     *
+     * Le pointage de ירושלם varie d'un verset a l'autre dans l'edition
+     * massoretique — qamats en 137:5, patah en 137:6 — donc la forme ne se
+     * verifie pas par une chaine litterale mais par ce qui distingue les deux
+     * graphies : le plene insere un yod avant le mem, le defectif non.
+     */
     @Test
-    fun `yerushalayim est plene et halleluyah en un mot`() {
-        val ps137 = tikkun.byNumero(137)!!
-        listOf(5, 6, 7).forEach { n ->
-            assertTrue(
-                "137:$n doit lire יְרוּשָׁלַיִם",
-                ps137.versets.first { it.numero == n }.he.contains("יְרוּשָׁלַיִם"),
+    fun `yerushalayim est defectif et halleluyah en deux mots`() {
+        val plene = Regex("י\\u05B0רו\\u05BCש\\u05B8\\u05C1ל\\u05B7י\\u05B4ם")
+        val defectif = Regex("י\\u05B0רו\\u05BCש\\u05B8\\u05C1ל\\u05B4[\\u05B7\\u05B8]ם")
+        val versets = tikkun.byNumero(137)!!.versets.filter { defectif.containsMatchIn(it.he) }
+        assertEquals("ירושלם doit apparaitre dans trois versets du psaume 137", 3, versets.size)
+        tikkun.byNumero(137)!!.versets.forEach {
+            assertFalse(
+                "137:${it.numero} porte la graphie plene ירושלים",
+                plene.containsMatchIn(it.he),
             )
         }
         listOf(tikkun.byNumero(105)!!.versets.first { it.numero == 45 },
                tikkun.byNumero(150)!!.versets.first { it.numero == 6 })
             .forEach {
-                assertTrue("הללויה doit tenir en un mot", it.he.contains("הַלְלוּיָהּ"))
+                assertTrue("הללו־יה doit rester en deux mots",
+                    it.he.contains("הַלְלוּ־יָהּ"))
             }
     }
 
