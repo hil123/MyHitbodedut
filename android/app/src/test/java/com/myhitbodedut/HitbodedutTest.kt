@@ -14,9 +14,9 @@ import java.io.File
 class HitbodedutTest {
 
     @Test
-    fun `les quatre temps sont distincts et complets`() {
+    fun `les cinq temps sont distincts et complets`() {
         val mouvements = Hitbodedut.MOUVEMENTS
-        assertEquals(4, mouvements.size)
+        assertEquals(5, mouvements.size)
         assertEquals(mouvements.size, mouvements.map { it.cle }.toSet().size)
         assertEquals(mouvements.size, mouvements.map { it.he }.toSet().size)
         assertEquals(mouvements.size, mouvements.map { it.titre }.toSet().size)
@@ -24,45 +24,78 @@ class HitbodedutTest {
         mouvements.forEach {
             assertTrue("« ${it.cle} » n'a pas d'hébreu", it.he.isNotBlank())
             assertTrue("« ${it.cle} » n'a pas d'illustration", it.illustration != 0)
+            assertTrue("« ${it.cle} » n'a pas de source", it.source.isNotBlank())
         }
+        assertEquals(mouvements.size, mouvements.map { it.illustration }.toSet().size)
     }
 
     /**
-     * Les quatre intitules hebreux sont tires du chapitre, mot pour mot,
+     * Les cinq intitules hebreux sont tires de leur source, mot pour mot,
      * points-voyelles compris. Ce test les fige : une reformulation qui
      * garderait la reference sous une phrase inventee passerait sinon
      * inapercue.
      */
     @Test
-    fun `les intitules sont ceux du chapitre`() {
+    fun `les intitules sont ceux de leurs sources`() {
         val attendus = listOf(
             "sihah" to "לְפָרֵשׁ שִׂיחָתוֹ",
             "harata" to "חֲרָטָה וּתְשׁוּבָה עַל הֶעָבָר",
             "bakasha" to "בַּקָּשַׁת תַחֲנוּנִים",
             "torah" to "לַעֲשׂוֹת מֵהַתּוֹרָה תְּפִלָּה",
+            "hodaa" to "נוֹתֵן שֶׁבַח וְהוֹדָיָה",
         )
         assertEquals(attendus.map { it.first }, Hitbodedut.MOUVEMENTS.map { it.cle })
         attendus.forEach { (cle, he) ->
             assertEquals(he, Hitbodedut.MOUVEMENTS.first { it.cle == cle }.he)
         }
-        assertTrue(Hitbodedut.SOURCE.contains("תנינא"))
-        assertTrue(Hitbodedut.SOURCE.contains("כ\"ה"))
+        assertTrue(Hitbodedut.SOURCE_LIKOUTEI.contains("תנינא"))
+        assertTrue(Hitbodedut.SOURCE_LIKOUTEI.contains("כ\"ה"))
+        assertTrue(Hitbodedut.SOURCE_RAMBAM.contains("רמב\"ם"))
+        assertTrue(Hitbodedut.SOURCE_RAMBAM.contains("הלכות תפילה"))
+    }
+
+    /**
+     * L'action de grace n'est pas dans Likoutei Moharan II, 25 : elle ne
+     * doit donc pas s'en reclamer. Les quatre autres en viennent, et
+     * doivent s'en reclamer. C'est la seule facon de ne pas preter au
+     * chapitre une caution qu'il ne donne pas.
+     */
+    @Test
+    fun `chaque temps se reclame de la source dont il vient`() {
+        val parCle = Hitbodedut.MOUVEMENTS.associateBy { it.cle }
+        listOf("sihah", "harata", "bakasha", "torah").forEach {
+            assertEquals("« $it » vient du chapitre", Hitbodedut.SOURCE_LIKOUTEI, parCle.getValue(it).source)
+        }
+        assertEquals(Hitbodedut.SOURCE_RAMBAM, parCle.getValue("hodaa").source)
+    }
+
+    /**
+     * Le Rambam place l'action de grace apres la demande, pas avant :
+     * « וְאַחַר כָּךְ נוֹתֵן שֶׁבַח וְהוֹדָיָה ». L'ordre affiche doit le suivre,
+     * sinon la reference ne tient plus.
+     */
+    @Test
+    fun `l action de grace vient apres la demande`() {
+        val cles = Hitbodedut.MOUVEMENTS.map { it.cle }
+        assertTrue(cles.indexOf("hodaa") > cles.indexOf("bakasha"))
+        assertTrue(Hitbodedut.estDernier(cles.indexOf("hodaa")))
     }
 
     /** On avance, on recule, et on ne sort jamais des quatre. */
     @Test
     fun `le parcours reste dans ses bornes`() {
+        assertEquals(4, Hitbodedut.DERNIER)
         assertEquals(1, Hitbodedut.suivant(0))
-        assertEquals(3, Hitbodedut.suivant(2))
-        assertEquals(3, Hitbodedut.suivant(3))
-        assertEquals(3, Hitbodedut.suivant(99))
+        assertEquals(4, Hitbodedut.suivant(3))
+        assertEquals(4, Hitbodedut.suivant(4))
+        assertEquals(4, Hitbodedut.suivant(99))
         assertEquals(0, Hitbodedut.precedent(1))
         assertEquals(0, Hitbodedut.precedent(0))
         assertEquals(0, Hitbodedut.precedent(-5))
         assertTrue(Hitbodedut.estPremier(0))
         assertFalse(Hitbodedut.estPremier(1))
-        assertTrue(Hitbodedut.estDernier(3))
-        assertFalse(Hitbodedut.estDernier(2))
+        assertTrue(Hitbodedut.estDernier(4))
+        assertFalse(Hitbodedut.estDernier(3))
     }
 
     /** Un indice aberrant rend un temps, jamais une exception. */
@@ -81,6 +114,7 @@ class HitbodedutTest {
             "hitbodedut_harata", "hitbodedut_harata_invite",
             "hitbodedut_bakasha", "hitbodedut_bakasha_invite",
             "hitbodedut_torah", "hitbodedut_torah_invite",
+            "hitbodedut_hodaa", "hitbodedut_hodaa_invite",
         )
         listOf("values", "values-en", "values-iw").forEach { dossier ->
             val xml = File("src/main/res/$dossier/strings.xml").readText()
