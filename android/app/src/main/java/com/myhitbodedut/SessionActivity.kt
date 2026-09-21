@@ -69,6 +69,14 @@ class SessionActivity : AppCompatActivity() {
         // « ouverture » : le mot du début de séance.
         drawOpening()
 
+        // Venu du bouton « Commencer » d'un rappel : la séance part seule,
+        // sinon le rappel n'aurait fait qu'ouvrir un écran de plus.
+        if (intent?.getBooleanExtra(EXTRA_START_NOW, false) == true &&
+            !Store.isSessionRunning(this)
+        ) {
+            SessionService.start(this, Store.targetMinutes(this))
+        }
+
         intArrayOf(R.id.duration_10, R.id.duration_20, R.id.duration_30, R.id.duration_60)
             .forEach { id ->
                 val button = findViewById<Button>(id)
@@ -191,5 +199,10 @@ class SessionActivity : AppCompatActivity() {
 
     private fun askNote() {
         NoteDialog.show(this, Store.today()) { render() }
+    }
+
+    companion object {
+        /** Posé par le bouton « Commencer » d'une notification de rappel. */
+        const val EXTRA_START_NOW = "start_now"
     }
 }

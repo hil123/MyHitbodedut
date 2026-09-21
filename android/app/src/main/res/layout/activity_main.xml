@@ -256,6 +256,61 @@
                 android:text="@string/tips_open" />
         </LinearLayout>
 
+        <!-- Rappels -->
+        <LinearLayout style="@style/Card">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <FrameLayout
+                    android:layout_width="72dp"
+                    android:layout_height="88dp"
+                    android:background="@drawable/bg_stage_soft"
+                    android:padding="5dp">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:contentDescription="@null"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/char_pointing" />
+                </FrameLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="14dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView style="@style/CardTitle" android:text="@string/reminders_title" />
+
+                    <TextView
+                        style="@style/CardHint"
+                        android:layout_marginTop="4dp"
+                        android:text="@string/reminders_hint"
+                        android:textSize="14sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/reminders_state"
+                style="@style/CardHint"
+                android:layout_marginTop="12dp"
+                android:textColor="@color/brand"
+                android:textSize="14sp" />
+
+            <Button
+                android:id="@+id/reminders_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="@string/reminders_open" />
+        </LinearLayout>
+
         <!-- Tikoun HaKlali -->
         <LinearLayout style="@style/Card">
 
@@ -483,23 +538,6 @@
                 <TextView style="@style/SettingLabel" android:text="@string/settings_target" />
 
                 <Button android:id="@+id/target_length" style="@style/SettingValue" />
-            </LinearLayout>
-
-            <LinearLayout style="@style/SettingRow">
-
-                <TextView style="@style/SettingLabel" android:text="@string/settings_reminder" />
-
-                <com.google.android.material.materialswitch.MaterialSwitch
-                    android:id="@+id/reminder_switch"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-            </LinearLayout>
-
-            <LinearLayout style="@style/SettingRow">
-
-                <TextView style="@style/SettingLabel" android:text="@string/settings_reminder_time" />
-
-                <Button android:id="@+id/reminder_time" style="@style/SettingValue" />
             </LinearLayout>
 
             <View style="@style/Divider" />

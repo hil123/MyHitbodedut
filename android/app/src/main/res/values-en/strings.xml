@@ -51,8 +51,6 @@
     <string name="settings_window">Gate window</string>
     <string name="settings_snooze">Snooze length</string>
     <string name="settings_target">Session length</string>
-    <string name="settings_reminder">Daily reminder</string>
-    <string name="settings_reminder_time">Reminder time</string>
     <string name="settings_shabbat">Shabbat and Yom Tov</string>
     <string name="settings_shabbat_hint">On those days: no blocking, no reminder, and the streak stays intact.</string>
     <string name="settings_exempt_today">Festival day today</string>
@@ -265,4 +263,25 @@
     <string name="tikkun_unmark">Remove the mark</string>
     <string name="tikkun_said">said</string>
     <string name="tikkun_reset">Start over</string>
+
+    <!-- Rappels de hitbodedout -->
+    <string name="reminders_title">Reminders</string>
+    <string name="reminders_hint">One or several times a day. Nothing rings on a rest day, or once the session is done.</string>
+    <string name="reminders_open">Set the reminders</string>
+    <string name="reminders_enable">Remind me to do hitbodedut</string>
+    <string name="reminders_enable_hint">A reminder at the times you set, as long as today\'s session is not done.</string>
+    <string name="reminders_hours">Times</string>
+    <string name="reminders_hours_hint">Tap a time to change it. A single reminder is easy to miss.</string>
+    <string name="reminders_add">Add a time</string>
+    <string name="reminders_remove">Remove</string>
+    <string name="reminders_off">Off.</string>
+    <string name="reminders_none">No time set.</string>
+    <string name="reminders_permission_missing">Notifications are denied: the reminder will not appear. Tap here to allow them.</string>
+    <string name="reminder_action_start">Start</string>
+    <string name="reminder_action_later">Later</string>
+
+    <plurals name="reminders_count">
+        <item quantity="one">%1$d time set.</item>
+        <item quantity="other">%1$d times set.</item>
+    </plurals>
 </resources>

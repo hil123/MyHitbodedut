@@ -51,6 +51,8 @@ object Store {
     private const val KEY_PAUSED_DATES = "paused_dates"
     private const val KEY_REMINDER_ON = "reminder_on"
     private const val KEY_REMINDER_MIN = "reminder_minutes"
+    private const val KEY_REMINDER_TIMES = "reminder_times"
+    private const val KEY_REMINDER_SNOOZE = "reminder_snoozed_until"
     private const val KEY_SESSION_END = "session_ends_at"
     private const val KEY_SESSION_TARGET = "session_target"
     private const val KEY_SESSION_START = "session_started_at"
@@ -311,6 +313,45 @@ object Store {
 
     fun setReminderMinutes(context: Context, minutes: Int) {
         prefs(context).edit().putInt(KEY_REMINDER_MIN, minutes).apply()
+    }
+
+    /**
+     * Les heures de rappel de la journee, en minutes depuis minuit, triees.
+     *
+     * Un seul rappel se rate facilement — on est au volant, en reunion, le
+     * telephone est dans une poche. Plusieurs heures donnent plusieurs
+     * chances sans rien changer a la regle : le rappel se tait des que la
+     * seance est faite.
+     *
+     * L'ancien reglage a une seule heure est repris au premier acces, pour
+     * que personne ne perde l'heure qu'il avait choisie.
+     */
+    fun reminderTimes(context: Context): List<Int> {
+        val brut = prefs(context).getString(KEY_REMINDER_TIMES, null)
+        if (brut == null) return listOf(reminderMinutes(context))
+        return normaliseHeures(brut.split(',').mapNotNull { it.trim().toIntOrNull() })
+    }
+
+    fun setReminderTimes(context: Context, heures: List<Int>) {
+        val propres = normaliseHeures(heures)
+        prefs(context).edit()
+            .putString(KEY_REMINDER_TIMES, propres.joinToString(","))
+            // L'ancienne cle reste a jour : l'export et une version
+            // precedente de l'application y lisent encore la premiere heure.
+            .putInt(KEY_REMINDER_MIN, propres.firstOrNull() ?: DEFAULT_REMINDER)
+            .apply()
+    }
+
+    /** Tri, deduplication, et rejet de ce qui ne tombe pas dans la journee. */
+    private fun normaliseHeures(heures: List<Int>): List<Int> =
+        heures.filter { it in 0 until 24 * 60 }.distinct().sorted()
+
+    /** Un rappel reporte, qui doit sonner une fois a cette heure-la. */
+    fun reminderSnoozedUntil(context: Context): Long =
+        prefs(context).getLong(KEY_REMINDER_SNOOZE, 0L)
+
+    fun setReminderSnoozedUntil(context: Context, millis: Long) {
+        prefs(context).edit().putLong(KEY_REMINDER_SNOOZE, millis).apply()
     }
 
     // --- Séance en cours ----------------------------------------------------

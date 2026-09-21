@@ -59,8 +59,6 @@
     <string name="settings_window">Fenêtre de blocage</string>
     <string name="settings_snooze">Durée du report</string>
     <string name="settings_target">Durée d\'une séance</string>
-    <string name="settings_reminder">Rappel quotidien</string>
-    <string name="settings_reminder_time">Heure du rappel</string>
     <string name="settings_shabbat">Shabbat et Yom Tov</string>
     <string name="settings_shabbat_hint">Ces jours-là : pas de blocage, pas de rappel, et la série reste intacte.</string>
     <string name="settings_exempt_today">Jour de fête aujourd\'hui</string>
@@ -284,4 +282,25 @@
     <string name="tikkun_unmark">Retirer la marque</string>
     <string name="tikkun_said">dit</string>
     <string name="tikkun_reset">Repartir de zéro</string>
+
+    <!-- Rappels de hitbodedout -->
+    <string name="reminders_title">Rappels</string>
+    <string name="reminders_hint">Une ou plusieurs heures dans la journée. Rien ne sonne un jour de repos, ni une fois la séance faite.</string>
+    <string name="reminders_open">Régler les rappels</string>
+    <string name="reminders_enable">Me rappeler la hitbodedout</string>
+    <string name="reminders_enable_hint">Un rappel aux heures réglées, tant que la séance du jour n\'est pas faite.</string>
+    <string name="reminders_hours">Heures</string>
+    <string name="reminders_hours_hint">Touchez une heure pour la changer. Un seul rappel se rate facilement.</string>
+    <string name="reminders_add">Ajouter une heure</string>
+    <string name="reminders_remove">Retirer</string>
+    <string name="reminders_off">Désactivés.</string>
+    <string name="reminders_none">Aucune heure réglée.</string>
+    <string name="reminders_permission_missing">Les notifications sont refusées : le rappel ne s\'affichera pas. Touchez ici pour les autoriser.</string>
+    <string name="reminder_action_start">Commencer</string>
+    <string name="reminder_action_later">Plus tard</string>
+
+    <plurals name="reminders_count">
+        <item quantity="one">%1$d heure réglée.</item>
+        <item quantity="other">%1$d heures réglées.</item>
+    </plurals>
 </resources>

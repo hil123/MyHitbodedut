@@ -83,6 +83,9 @@ class MainActivity : AppCompatActivity() {
         findViewById<Button>(R.id.tips_button).setOnClickListener {
             startActivity(Intent(this, TipsActivity::class.java))
         }
+        findViewById<Button>(R.id.reminders_button).setOnClickListener {
+            startActivity(Intent(this, RemindersActivity::class.java))
+        }
         findViewById<Button>(R.id.tikkun_button).setOnClickListener {
             startActivity(Intent(this, TikkunActivity::class.java))
         }
@@ -133,13 +136,6 @@ class MainActivity : AppCompatActivity() {
                 refresh()
             }
         }
-        findViewById<Button>(R.id.reminder_time).setOnClickListener {
-            pickTime(Store.reminderMinutes(this)) {
-                Store.setReminderMinutes(this, it)
-                Reminder.reschedule(this)
-                refresh()
-            }
-        }
         findViewById<Button>(R.id.grant_overlay).setOnClickListener {
             safeStart(Permissions.overlayIntent(this))
         }
@@ -179,6 +175,19 @@ class MainActivity : AppCompatActivity() {
         renderPermissions()
         renderRelance()
         renderTikkun()
+        renderReminders()
+    }
+
+    /** L'état des rappels, lisible sans ouvrir leur écran. */
+    private fun renderReminders() {
+        val heures = Store.reminderTimes(this)
+        findViewById<TextView>(R.id.reminders_state).text = when {
+            !Store.reminderEnabled(this) -> getString(R.string.reminders_off)
+            heures.isEmpty() -> getString(R.string.reminders_none)
+            else -> resources.getQuantityString(
+                R.plurals.reminders_count, heures.size, heures.size
+            )
+        }
     }
 
     /** Ou en est le Tikoun du jour, sans avoir a ouvrir la section. */
@@ -339,12 +348,6 @@ class MainActivity : AppCompatActivity() {
             Store.setMusicEnabled(this, checked)
             refresh()
         }
-        bindSwitch(R.id.reminder_switch, Store.reminderEnabled(this)) { checked ->
-            Store.setReminderEnabled(this, checked)
-            if (checked) askNotifications()
-            Reminder.reschedule(this)
-            refresh()
-        }
         bindSwitch(R.id.shabbat_switch, Store.shabbatMode(this)) { checked ->
             Store.setShabbatMode(this, checked)
             refresh()
@@ -370,8 +373,6 @@ class MainActivity : AppCompatActivity() {
             Store.formatDuration(Store.snoozeMinutes(this))
         findViewById<Button>(R.id.target_length).text =
             Store.formatDuration(Store.targetMinutes(this))
-        findViewById<Button>(R.id.reminder_time).text =
-            Store.formatMinutes(Store.reminderMinutes(this))
         findViewById<Button>(R.id.region_button).setText(
             if (Store.inIsrael(this)) R.string.region_israel else R.string.region_diaspora
         )

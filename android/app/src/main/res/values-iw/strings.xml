@@ -51,8 +51,6 @@
     <string name="settings_window">חלון החסימה</string>
     <string name="settings_snooze">משך הדחייה</string>
     <string name="settings_target">משך ההתבודדות</string>
-    <string name="settings_reminder">תזכורת יומית</string>
-    <string name="settings_reminder_time">שעת התזכורת</string>
     <string name="settings_shabbat">שבת ויום טוב</string>
     <string name="settings_shabbat_hint">בימים אלה: אין חסימה, אין תזכורת, והרצף נשמר.</string>
     <string name="settings_exempt_today">היום יום חג</string>
@@ -270,4 +268,26 @@
     <string name="tikkun_unmark">הסרת הסימון</string>
     <string name="tikkun_said">נאמר</string>
     <string name="tikkun_reset">להתחיל מחדש</string>
+
+    <!-- Rappels de hitbodedout -->
+    <string name="reminders_title">תזכורות</string>
+    <string name="reminders_hint">שעה אחת או כמה ביום. אין תזכורת ביום מנוחה, ולא אחרי שההתבודדות נעשתה.</string>
+    <string name="reminders_open">הגדרת התזכורות</string>
+    <string name="reminders_enable">להזכיר לי להתבודד</string>
+    <string name="reminders_enable_hint">תזכורת בשעות שהוגדרו, כל עוד ההתבודדות של היום לא נעשתה.</string>
+    <string name="reminders_hours">שעות</string>
+    <string name="reminders_hours_hint">יש לגעת בשעה כדי לשנות אותה. תזכורת אחת קל לפספס.</string>
+    <string name="reminders_add">הוספת שעה</string>
+    <string name="reminders_remove">הסרה</string>
+    <string name="reminders_off">כבויות.</string>
+    <string name="reminders_none">לא הוגדרה שעה.</string>
+    <string name="reminders_permission_missing">ההתראות חסומות: התזכורת לא תוצג. יש לגעת כאן כדי לאשר אותן.</string>
+    <string name="reminder_action_start">להתחיל</string>
+    <string name="reminder_action_later">מאוחר יותר</string>
+
+    <plurals name="reminders_count">
+        <item quantity="one">הוגדרה שעה אחת.</item>
+        <item quantity="two">הוגדרו %1$d שעות.</item>
+        <item quantity="other">הוגדרו %1$d שעות.</item>
+    </plurals>
 </resources>

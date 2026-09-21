@@ -44,6 +44,11 @@
             android:label="@string/tips_title" />
 
         <activity
+            android:name=".RemindersActivity"
+            android:exported="false"
+            android:label="@string/reminders_title" />
+
+        <activity
             android:name=".TikkunActivity"
             android:exported="false"
             android:label="@string/tikkun_title" />

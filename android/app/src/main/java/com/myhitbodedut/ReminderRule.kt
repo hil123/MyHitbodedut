@@ -16,6 +16,26 @@ object ReminderRule {
     /** Limite retenue faute de coucher du soleil calculable. */
     const val NO_SUNSET_CUTOFF_MINUTES = 12 * 60
 
+    /**
+     * Dans combien de minutes tombe le prochain rappel ?
+     *
+     * Les heures sont celles de la journee, en minutes depuis minuit. Quand
+     * toutes sont deja passees, on repart sur la premiere du lendemain —
+     * d'ou le retour a travers minuit plutot qu'un simple `first { it > now }`.
+     *
+     * Rend null si aucune heure n'est reglee : il n'y a alors rien a
+     * programmer, et l'appelant doit annuler l'alarme au lieu d'en poser une.
+     */
+    fun minutesUntilNext(nowMinutes: Int, heures: List<Int>): Int? {
+        val propres = heures.filter { it in 0 until MINUTES_PAR_JOUR }.distinct().sorted()
+        if (propres.isEmpty()) return null
+        val suivante = propres.firstOrNull { it > nowMinutes }
+        if (suivante != null) return suivante - nowMinutes
+        return (MINUTES_PAR_JOUR - nowMinutes) + propres.first()
+    }
+
+    const val MINUTES_PAR_JOUR = 24 * 60
+
     fun shouldNotify(
         nowMinutes: Int,
         doneToday: Boolean,
