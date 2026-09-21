@@ -8,6 +8,8 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.ServiceInfo
 import android.graphics.drawable.Icon
+import android.media.Ringtone
+import android.media.RingtoneManager
 import android.os.Build
 import android.os.Handler
 import android.os.IBinder
@@ -21,6 +23,9 @@ class SessionService : Service() {
 
     private val handler = Handler(Looper.getMainLooper())
     private val music by lazy { MusicPlayer(this) }
+
+    /** Le son de fin, gardé pour qu'il ne soit pas ramassé en plein jeu. */
+    private var ringtone: Ringtone? = null
 
     private val tick = object : Runnable {
         override fun run() {
@@ -78,7 +83,25 @@ class SessionService : Service() {
             Store.addSession(this, elapsed)
             notifyCompleted(elapsed)
         }
+        // Décompte masqué : rien n'a prévenu que le temps s'écoulait, il faut
+        // donc que quelque chose dise qu'il est écoulé. Seulement quand la
+        // séance arrive d'elle-même à son terme : celui qui l'arrête lui-même
+        // n'a pas besoin qu'on le lui apprenne.
+        if (!early && Store.hideCountdown(this)) chime()
         stopSelfAndClear()
+    }
+
+    /**
+     * Le son de fin. La sonnerie de notification du téléphone, celle que son
+     * propriétaire a déjà choisie et déjà réglée : rien de plus discret qu'un
+     * son qu'on reconnaît. La référence est gardée le temps qu'il finisse.
+     */
+    private fun chime() {
+        runCatching {
+            val uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
+                ?: return
+            ringtone = RingtoneManager.getRingtone(applicationContext, uri)?.also { it.play() }
+        }
     }
 
     /** Lance le morceau retenu, si la musique est active et rien ne joue déjà. */
@@ -118,12 +141,13 @@ class SessionService : Service() {
      * Ce que la notification annonce pendant la séance : le temps restant
      * quand il y en a un, le temps déjà passé quand la séance est ouverte.
      */
-    private fun runningText(): String =
-        if (Store.isSessionOpen(this)) {
+    private fun runningText(): String = when (Store.sessionCounter(this)) {
+        SessionRule.Compteur.MASQUE -> getString(R.string.session_running_hidden)
+        SessionRule.Compteur.ECOULE ->
             getString(R.string.session_elapsed, Store.formatDuration(Store.sessionElapsedMinutes(this)))
-        } else {
+        SessionRule.Compteur.RESTE ->
             getString(R.string.session_remaining, Store.formatDuration(remainingMinutes()))
-        }
+    }
 
     private fun startForegroundNow() {
         val open = PendingIntent.getActivity(

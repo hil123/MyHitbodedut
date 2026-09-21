@@ -89,3 +89,51 @@ class SessionRuleTest {
         assertTrue(xml.contains("""android:text="@string/session_open""""))
     }
 }
+
+/**
+ * Le compteur masque. Ce qui est promis : rien a l'ecran pendant la
+ * seance. Le piege serait de retirer le chiffre de l'ecran et de le
+ * laisser dans la notification en cours ou sur l'ecran de barrage, ou il
+ * se lit tout aussi bien.
+ */
+class SessionCounterTest {
+
+    @Test
+    fun `masque, le compteur ne dit rien, seance ouverte ou non`() {
+        assertEquals(SessionRule.Compteur.MASQUE, SessionRule.compteur(false, true))
+        assertEquals(SessionRule.Compteur.MASQUE, SessionRule.compteur(true, true))
+    }
+
+    @Test
+    fun `sans masquage, chaque seance dit ce qu elle a`() {
+        assertEquals(SessionRule.Compteur.RESTE, SessionRule.compteur(false, false))
+        assertEquals(SessionRule.Compteur.ECOULE, SessionRule.compteur(true, false))
+    }
+
+    /**
+     * Les trois endroits qui affichent un compteur doivent avoir un texte
+     * pour le cas masque : sans lui, l'un d'eux retomberait sur le chiffre.
+     */
+    @Test
+    fun `les trois endroits ont un libelle pour le compteur masque`() {
+        val cles = listOf(
+            "session_hidden_caption", "session_running_hidden",
+            "blocker_session_hidden_subtitle",
+            "settings_hide_countdown", "settings_hide_countdown_hint"
+        )
+        listOf("values", "values-en", "values-iw").forEach { dossier ->
+            val xml = File("src/main/res/$dossier/strings.xml").readText()
+            cles.forEach {
+                assertTrue("$dossier : « $it » manquant", xml.contains("""name="$it""""))
+            }
+        }
+    }
+
+    /** Le reglage doit etre atteignable : un interrupteur dans l'ecran principal. */
+    @Test
+    fun `le reglage a son interrupteur dans l ecran principal`() {
+        val xml = File("src/main/res/layout/activity_main.xml").readText()
+        assertTrue(xml.contains("""android:id="@+id/hide_countdown_switch""""))
+        assertTrue(xml.contains("@string/settings_hide_countdown"))
+    }
+}

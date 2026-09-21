@@ -125,21 +125,26 @@ class SessionActivity : AppCompatActivity() {
 
         if (running) {
             art.setImageResource(Character.during())
-            // Une séance ouverte n'a rien à décompter : elle compte à l'endroit,
-            // depuis son début.
-            val open = Store.isSessionOpen(this)
-            val millis = if (open) {
-                (System.currentTimeMillis() - Store.sessionStartedAt(this)).coerceAtLeast(0)
-            } else {
-                (Store.sessionEndsAt(this) - System.currentTimeMillis()).coerceAtLeast(0)
+            // Une séance ouverte n'a rien à décompter : elle compte à
+            // l'endroit, depuis son début. Un décompte masqué ne compte pas
+            // du tout.
+            val counter = Store.sessionCounter(this)
+            countdown.visibility =
+                if (counter == SessionRule.Compteur.MASQUE) View.GONE else View.VISIBLE
+            if (counter != SessionRule.Compteur.MASQUE) {
+                val millis = if (counter == SessionRule.Compteur.ECOULE) {
+                    (System.currentTimeMillis() - Store.sessionStartedAt(this)).coerceAtLeast(0)
+                } else {
+                    (Store.sessionEndsAt(this) - System.currentTimeMillis()).coerceAtLeast(0)
+                }
+                countdown.text = String.format(
+                    Locale.US, "%02d:%02d", millis / 60_000L, (millis / 1_000L) % 60
+                )
             }
-            countdown.text = String.format(
-                Locale.US, "%02d:%02d", millis / 60_000L, (millis / 1_000L) % 60
-            )
-            caption.text = if (open) {
-                getString(R.string.session_open_caption)
-            } else {
-                getString(
+            caption.text = when (counter) {
+                SessionRule.Compteur.MASQUE -> getString(R.string.session_hidden_caption)
+                SessionRule.Compteur.ECOULE -> getString(R.string.session_open_caption)
+                SessionRule.Compteur.RESTE -> getString(
                     R.string.session_target,
                     Store.formatDuration(Store.sessionTarget(this))
                 )
@@ -159,6 +164,7 @@ class SessionActivity : AppCompatActivity() {
             art.setImageResource(
                 if (Store.isDone(this)) Character.joy() else Character.call()
             )
+            countdown.visibility = View.VISIBLE
             countdown.text = Store.formatDuration(Store.targetMinutes(this))
             caption.setText(
                 if (Store.isDone(this)) R.string.session_idle_done else R.string.session_idle_caption

@@ -90,20 +90,24 @@ class BlockerView(
             BlockerMode.SESSION_RUNNING -> {
                 art.setImageResource(Character.during())
                 title.setText(R.string.blocker_session_title)
-                // Une séance ouverte n'a pas de reste à annoncer : elle dit
-                // le temps déjà passé.
-                subtitle.text = if (Store.isSessionOpen(context)) {
-                    context.getString(
+                // Une séance ouverte n'a pas de reste à annoncer, et un
+                // décompte masqué n'a rien à annoncer du tout.
+                subtitle.text = when (Store.sessionCounter(context)) {
+                    SessionRule.Compteur.MASQUE ->
+                        context.getString(R.string.blocker_session_hidden_subtitle)
+
+                    SessionRule.Compteur.ECOULE -> context.getString(
                         R.string.blocker_session_open_subtitle,
                         Store.formatDuration(Store.sessionElapsedMinutes(context))
                     )
-                } else {
-                    val minutes = SessionRule.minutesRestantes(
-                        Store.sessionEndsAt(context), System.currentTimeMillis()
-                    )
-                    context.getString(
+
+                    SessionRule.Compteur.RESTE -> context.getString(
                         R.string.blocker_session_subtitle,
-                        Store.formatDuration(minutes)
+                        Store.formatDuration(
+                            SessionRule.minutesRestantes(
+                                Store.sessionEndsAt(context), System.currentTimeMillis()
+                            )
+                        )
                     )
                 }
                 primary.setText(R.string.blocker_back_to_session)

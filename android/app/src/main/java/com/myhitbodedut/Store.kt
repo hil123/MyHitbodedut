@@ -56,6 +56,7 @@ object Store {
     private const val KEY_SESSION_END = "session_ends_at"
     private const val KEY_SESSION_TARGET = "session_target"
     private const val KEY_SESSION_START = "session_started_at"
+    private const val KEY_HIDE_COUNTDOWN = "hide_countdown"
     private const val KEY_MUSIC_ON = "music_enabled"
     private const val KEY_MUSIC_TRACK = "music_track"
     private const val KEY_MUSIC_VOLUME = "music_volume"
@@ -399,6 +400,25 @@ object Store {
             .apply()
         return elapsed.coerceAtLeast(0)
     }
+
+    /**
+     * Masquer le décompte pendant la séance.
+     *
+     * Regarder le temps qui reste est une façon de ne pas être là. L'option
+     * retire le chiffre de partout — écran, notification, barrage — et ne
+     * laisse qu'un son discret à la fin. Elle est éteinte par défaut : c'est
+     * un choix, pas une opinion imposée.
+     */
+    fun hideCountdown(context: Context): Boolean =
+        prefs(context).getBoolean(KEY_HIDE_COUNTDOWN, false)
+
+    fun setHideCountdown(context: Context, hidden: Boolean) {
+        prefs(context).edit().putBoolean(KEY_HIDE_COUNTDOWN, hidden).apply()
+    }
+
+    /** Ce que le compteur doit dire, ici et maintenant. */
+    fun sessionCounter(context: Context): SessionRule.Compteur =
+        SessionRule.compteur(isSessionOpen(context), hideCountdown(context))
 
     // --- Musique ------------------------------------------------------------
 

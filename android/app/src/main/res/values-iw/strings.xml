@@ -98,6 +98,11 @@
     <string name="session_open">בלי זמן קצוב</string>
     <string name="session_open_caption">בלי זמן קצוב: מפסיקים כשמפסיקים.</string>
     <string name="session_elapsed">כבר %1$s</string>
+    <string name="settings_hide_countdown">הסתרת הספירה</string>
+    <string name="settings_hide_countdown_hint">כלום על המסך במהלך ההתבודדות, וצליל שקט בסוף.</string>
+    <string name="session_hidden_caption">הספירה מוסתרת. צליל יודיע לך.</string>
+    <string name="session_running_hidden">הספירה מוסתרת.</string>
+    <string name="blocker_session_hidden_subtitle">התבודדות בעיצומה. הטלפון יכול לחכות.</string>
     <string name="blocker_session_open_subtitle">התבודדות פתוחה, כבר %1$s. הטלפון יכול לחכות.</string>
     <string name="session_done_title">ההתבודדות הסתיימה</string>
     <string name="session_done_text">%1$s של התבודדות. הקש כדי להוסיף הערה.</string>

@@ -348,6 +348,9 @@ class MainActivity : AppCompatActivity() {
             Store.setMusicEnabled(this, checked)
             refresh()
         }
+        bindSwitch(R.id.hide_countdown_switch, Store.hideCountdown(this)) { checked ->
+            Store.setHideCountdown(this, checked)
+        }
         bindSwitch(R.id.shabbat_switch, Store.shabbatMode(this)) { checked ->
             Store.setShabbatMode(this, checked)
             refresh()

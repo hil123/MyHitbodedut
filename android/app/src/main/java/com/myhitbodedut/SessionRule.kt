@@ -15,6 +15,31 @@ object SessionRule {
     /** La duree d'une seance sans duree. */
     const val OUVERTE = 0
 
+    /** Ce que le compteur d'une seance en cours a le droit de dire. */
+    enum class Compteur {
+        /** Le temps restant, pour une seance minutee. */
+        RESTE,
+
+        /** Le temps deja passe, pour une seance ouverte. */
+        ECOULE,
+
+        /** Rien : le compteur est masque jusqu'au signal de fin. */
+        MASQUE,
+    }
+
+    /**
+     * Le choix est fait une fois ici pour les trois endroits qui affichent
+     * un compteur — l'ecran de seance, la notification en cours, l'ecran de
+     * barrage. Le masquage l'emporte sur le reste : promettre « rien a
+     * l'ecran » et laisser le chiffre dans la notification ne serait pas
+     * tenir parole.
+     */
+    fun compteur(ouverte: Boolean, masque: Boolean): Compteur = when {
+        masque -> Compteur.MASQUE
+        ouverte -> Compteur.ECOULE
+        else -> Compteur.RESTE
+    }
+
     fun estOuverte(debutMillis: Long, duree: Int): Boolean =
         debutMillis > 0L && duree == OUVERTE
 
