@@ -58,6 +58,7 @@ object Store {
     private const val KEY_SESSION_START = "session_started_at"
     private const val KEY_HIDE_COUNTDOWN = "hide_countdown"
     private const val KEY_GUIDED = "guided_hitbodedut"
+    private const val KEY_ONBOARDED = "onboarded"
     private const val KEY_MUSIC_ON = "music_enabled"
     private const val KEY_MUSIC_TRACK = "music_track"
     private const val KEY_MUSIC_VOLUME = "music_volume"
@@ -431,6 +432,26 @@ object Store {
     fun setGuidedHitbodedut(context: Context, guided: Boolean) {
         prefs(context).edit().putBoolean(KEY_GUIDED, guided).apply()
     }
+
+    /**
+     * L'accueil du premier lancement a déjà été vu.
+     *
+     * Une installation existante ne doit pas le voir apparaître : la clé
+     * est posée au premier passage par l'écran principal si l'application
+     * a déjà servi, ce que la présence d'un réglage ou d'une journée
+     * suffit à établir.
+     */
+    fun hasOnboarded(context: Context): Boolean =
+        prefs(context).getBoolean(KEY_ONBOARDED, false)
+
+    fun setOnboarded(context: Context, seen: Boolean) {
+        prefs(context).edit().putBoolean(KEY_ONBOARDED, seen).apply()
+    }
+
+    /** L'application a déjà servi : une journée notée, ou un réglage touché. */
+    fun hasHistory(context: Context): Boolean =
+        days(context).isNotEmpty() || prefs(context).contains(KEY_TARGET) ||
+            prefs(context).contains(KEY_REMINDER_TIMES) || prefs(context).contains(KEY_APPS)
 
     /** Ce que le compteur doit dire, ici et maintenant. */
     fun sessionCounter(context: Context): SessionRule.Compteur =

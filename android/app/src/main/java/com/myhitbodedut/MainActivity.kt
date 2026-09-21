@@ -45,6 +45,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         Notifications.ensureChannels(this)
+        showOnboardingOnce()
         wireActions()
         applyEdition()
         // Le moment « lieu » accompagne les réglages de lieu et de moment :
@@ -61,6 +62,20 @@ class MainActivity : AppCompatActivity() {
         refresh()
         // La vignette d'accueil suit ce que l'écran vient de montrer.
         StreakWidget.refresh(this)
+    }
+
+    /**
+     * L'accueil, une seule fois, et jamais pour une installation qui a
+     * déjà servi : expliquer l'application à quelqu'un qui l'utilise
+     * depuis des semaines serait une régression, pas une amélioration.
+     */
+    private fun showOnboardingOnce() {
+        if (Store.hasOnboarded(this)) return
+        if (Store.hasHistory(this)) {
+            Store.setOnboarded(this, true)
+            return
+        }
+        startActivity(Intent(this, OnboardingActivity::class.java))
     }
 
     // --- Actions ------------------------------------------------------------

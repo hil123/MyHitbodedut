@@ -137,6 +137,17 @@
     <string name="hitbodedut_torah_invite">Reprenez un enseignement entendu aujourd’hui, et demandez d’y parvenir vous aussi.</string>
     <string name="hitbodedut_hodaa">L’action de grâce</string>
     <string name="hitbodedut_hodaa_invite">Remerciez pour ce qui vous a été donné, chacun selon ce qu’il peut. C’est par là qu’on s’en va.</string>
+    <string name="onboarding_step">%1$d / %2$d</string>
+    <string name="onboarding_next">Suivant</string>
+    <string name="onboarding_back">Précédent</string>
+    <string name="onboarding_skip">Passer</string>
+    <string name="onboarding_start">Commencer</string>
+    <string name="onboarding_practice">Parler, simplement</string>
+    <string name="onboarding_practice_body">La hitbodedout, c’est se retirer seul un moment chaque jour et parler à Dieu dans sa propre langue, comme on parle à quelqu’un. Pas de formule à réciter, pas de niveau à atteindre.</string>
+    <string name="onboarding_app">Ce que fait cette application</string>
+    <string name="onboarding_app_body">Un minuteur pour la séance, une série qui compte les jours, un journal, le Tikoun HaKlali et une bibliothèque de textes. Elle vous accompagne ; elle ne vous note pas.</string>
+    <string name="onboarding_private">Rien ne sort d’ici</string>
+    <string name="onboarding_private_body">L’application ne demande aucun accès à Internet. Ce que vous écrivez reste sur ce téléphone, et vous seul pouvez l’en sortir, par l’export.</string>
     <string name="blocker_session_open_subtitle">Séance ouverte, depuis %1$s. Le téléphone peut attendre.</string>
     <string name="session_done_title">Séance terminée</string>
     <string name="session_done_text">%1$s de hitbodedout. Touchez pour laisser une note.</string>

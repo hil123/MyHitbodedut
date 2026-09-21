@@ -125,6 +125,17 @@
     <string name="hitbodedut_torah_invite">Take a teaching you heard today, and ask to reach it yourself.</string>
     <string name="hitbodedut_hodaa">Thanksgiving</string>
     <string name="hitbodedut_hodaa_invite">Give thanks for what you have been given, each according to what he can. This is how you take leave.</string>
+    <string name="onboarding_step">%1$d / %2$d</string>
+    <string name="onboarding_next">Next</string>
+    <string name="onboarding_back">Back</string>
+    <string name="onboarding_skip">Skip</string>
+    <string name="onboarding_start">Begin</string>
+    <string name="onboarding_practice">Simply speaking</string>
+    <string name="onboarding_practice_body">Hitbodedut means withdrawing alone for a while each day and speaking to God in your own language, as you would to someone. No formula to recite, no level to reach.</string>
+    <string name="onboarding_app">What this app does</string>
+    <string name="onboarding_app_body">A timer for the session, a streak counting the days, a journal, the Tikkun HaKlali and a library of texts. It keeps you company; it does not grade you.</string>
+    <string name="onboarding_private">Nothing leaves this phone</string>
+    <string name="onboarding_private_body">The app asks for no Internet access at all. What you write stays on this phone, and only you can take it out, through the export.</string>
     <string name="blocker_session_open_subtitle">Open session, %1$s so far. The phone can wait.</string>
     <string name="session_done_title">Session complete</string>
     <string name="session_done_text">%1$s of hitbodedut. Tap to leave a note.</string>

@@ -125,6 +125,17 @@
     <string name="hitbodedut_torah_invite">קחו דבר תורה ששמעתם היום, ובקשו לזכות גם אתם להגיע אליו.</string>
     <string name="hitbodedut_hodaa">הודאה</string>
     <string name="hitbodedut_hodaa_invite">הודו על הטובה שהושפעה לכם, כל אחד לפי כוחו. בזה נפרדים.</string>
+    <string name="onboarding_step">%1$d / %2$d</string>
+    <string name="onboarding_next">הבא</string>
+    <string name="onboarding_back">הקודם</string>
+    <string name="onboarding_skip">דילוג</string>
+    <string name="onboarding_start">להתחיל</string>
+    <string name="onboarding_practice">פשוט לדבר</string>
+    <string name="onboarding_practice_body">התבודדות היא להתייחד לבד זמן־מה בכל יום ולדבר אל ה׳ בשפה שלך, כמו שמדברים אל מישהו. בלי נוסח לדקלם, בלי דרגה להגיע אליה.</string>
+    <string name="onboarding_app">מה האפליקציה עושה</string>
+    <string name="onboarding_app_body">שעון לזמן ההתבודדות, רצף שסופר ימים, יומן, תיקון הכללי וספרייה של טקסטים. היא מלווה אתכם; היא לא נותנת ציונים.</string>
+    <string name="onboarding_private">כלום לא יוצא מכאן</string>
+    <string name="onboarding_private_body">האפליקציה אינה מבקשת שום גישה לאינטרנט. מה שתכתבו נשאר בטלפון הזה, ורק אתם יכולים להוציא אותו, דרך הייצוא.</string>
     <string name="blocker_session_open_subtitle">התבודדות פתוחה, כבר %1$s. הטלפון יכול לחכות.</string>
     <string name="session_done_title">ההתבודדות הסתיימה</string>
     <string name="session_done_text">%1$s של התבודדות. הקש כדי להוסיף הערה.</string>
