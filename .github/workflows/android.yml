@@ -50,6 +50,15 @@ jobs:
           VERSION_CODE: ${{ github.run_number }}
         run: ./gradlew --no-daemon assembleFullDebug
 
+      # R8 est actif en release : la taille est la raison de l'avoir active,
+      # donc elle est affichee a chaque construction.
+      - name: Show APK sizes
+        working-directory: android
+        run: |
+          for f in app/build/outputs/apk/*/*/*.apk; do
+            printf '%8s  %s\n' "$(du -h "$f" | cut -f1)" "$f"
+          done
+
       - name: Unit tests
         working-directory: android
         env:
@@ -85,10 +94,14 @@ jobs:
           cp app/build/outputs/apk/full/release/app-full-release.apk MyHitbodedut.apk
           cp app/build/outputs/apk/light/release/app-light-release.apk MyHitbodedut-Light.apk
           cp app/build/outputs/apk/full/debug/app-full-debug.apk MyHitbodedut-Relecture.apk
+          # Sans cette table, une trace d'execution de la release est
+          # illisible : R8 a renomme les classes.
+          cp app/build/outputs/mapping/fullRelease/mapping.txt mapping-full.txt
           # Nettoyage unique de l'ancienne etiquette fixe, sans effet ensuite.
           gh release delete latest --yes --cleanup-tag || true
           gh release create "v1.${{ github.run_number }}" \
             MyHitbodedut.apk MyHitbodedut-Light.apk MyHitbodedut-Relecture.apk \
+            mapping-full.txt \
             --title "MyHitbodedut 1.${{ github.run_number }}" \
             --notes "Trois editions signees, construites depuis le commit ${{ github.sha }}. Light n'embarque pas la barriere du matin ni ses permissions. Relecture est l'edition de test : elle s'installe a cote des autres et porte l'ecran de relecture des textes." \
             --latest

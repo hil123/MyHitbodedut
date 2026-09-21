@@ -55,9 +55,19 @@ android {
             signingConfig = signingConfigs.getByName("release")
         }
 
+        /*
+         * R8 retire le code et les ressources que rien n'atteint. Le gain
+         * est la taille : le jar de calendrier hebraique est embarque en
+         * entier alors que l'application n'en appelle qu'une classe.
+         *
+         * L'edition de test, elle, reste non minifiee : c'est celle qu'on
+         * installe pour comprendre un probleme, et une trace renommee y
+         * serait un obstacle de plus.
+         */
         release {
             signingConfig = signingConfigs.getByName("release")
-            isMinifyEnabled = false
+            isMinifyEnabled = true
+            isShrinkResources = true
             isDebuggable = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
