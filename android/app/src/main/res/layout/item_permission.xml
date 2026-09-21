@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Une ligne d'autorisation : ce qu'elle est, à quoi elle sert, où elle en
+    est, et de quoi l'accorder. La raison est là parce qu'une autorisation
+    qu'on ne comprend pas est une autorisation qu'on refuse.
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="14dp"
+    android:gravity="center_vertical"
+    android:orientation="horizontal">
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/permission_title"
+            style="@style/SettingLabelStacked" />
+
+        <TextView
+            android:id="@+id/permission_why"
+            style="@style/CardHint" />
+
+        <TextView
+            android:id="@+id/permission_state"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
+            android:textSize="13sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/permission_grant"
+        style="@style/SettingValue"
+        android:layout_marginStart="8dp"
+        android:text="@string/action_grant" />
+</LinearLayout>

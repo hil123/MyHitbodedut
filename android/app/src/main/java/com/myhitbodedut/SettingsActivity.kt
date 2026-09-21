@@ -1,0 +1,371 @@
+package com.myhitbodedut
+
+import android.Manifest
+import android.app.TimePickerDialog
+import android.content.Intent
+import android.net.Uri
+import android.os.Build
+import android.os.Bundle
+import android.view.View
+import android.widget.Button
+import android.widget.LinearLayout
+import android.widget.ScrollView
+import android.widget.TextView
+import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import com.google.android.material.materialswitch.MaterialSwitch
+
+/**
+ * Les réglages, et les autorisations rassemblées.
+ *
+ * Elles étaient dispersées : les notifications se demandaient seules au
+ * moment d'activer la barrière et se rappelaient ailleurs, dans l'écran des
+ * rappels ; les trois autres vivaient tout au bas de l'écran principal, sous
+ * six cartes qui servent tous les jours. On ne cherche une autorisation que
+ * lorsque quelque chose ne marche pas, et c'est justement ce moment-là
+ * qu'il ne faut pas rendre difficile.
+ *
+ * Chaque ligne dit ce que l'autorisation est, à quoi elle sert, où elle en
+ * est, et l'accorde. La raison y est parce qu'une autorisation qu'on ne
+ * comprend pas est une autorisation qu'on refuse.
+ */
+class SettingsActivity : AppCompatActivity() {
+
+    /**
+     * La demande de notification a déjà été présentée. Android cesse
+     * d'afficher la boîte après deux refus : il faut alors passer par
+     * l'écran système, sinon le bouton ne ferait plus rien.
+     */
+    private var notificationsDemandees = false
+
+    private val requestNotifications =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { refresh() }
+
+    private val exportFile =
+        registerForActivityResult(ActivityResultContracts.CreateDocument("application/json")) { uri ->
+            if (uri != null) writeBackup(uri)
+        }
+
+    private val importFile =
+        registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
+            if (uri != null) readBackup(uri)
+        }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_settings)
+        notificationsDemandees = savedInstanceState?.getBoolean(ETAT_DEMANDE, false) ?: false
+        wireActions()
+        applyEdition()
+        // Le moment « lieu » accompagne les réglages de lieu et de moment :
+        // il ne change pas d'un aller-retour à l'autre, on le tire une fois.
+        ChizukCard.show(findViewById(R.id.lieu_chizuk), Moment.LIEU)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        refresh()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putBoolean(ETAT_DEMANDE, notificationsDemandees)
+    }
+
+    // --- Actions ------------------------------------------------------------
+
+    private fun wireActions() {
+        findViewById<TextView>(R.id.app_version).text = getString(
+            R.string.app_version,
+            BuildConfig.VERSION_NAME,
+            BuildConfig.VERSION_CODE,
+            getString(if (BuildConfig.HAS_GATE) R.string.edition_full else R.string.edition_light)
+        )
+        findViewById<Button>(R.id.region_button).setOnClickListener {
+            Store.setInIsrael(this, !Store.inIsrael(this))
+            refresh()
+        }
+        findViewById<Button>(R.id.preview_gate).setOnClickListener { previewGate() }
+        findViewById<Button>(R.id.gate_fix_permissions).setOnClickListener { scrollToPermissions() }
+        findViewById<Button>(R.id.pick_apps).setOnClickListener {
+            startActivity(Intent(this, AppPickerActivity::class.java))
+        }
+        findViewById<Button>(R.id.window_start).setOnClickListener {
+            pickTime(Store.windowStart(this)) {
+                Store.setWindow(this, it, Store.windowEnd(this))
+                refresh()
+            }
+        }
+        findViewById<Button>(R.id.window_end).setOnClickListener {
+            pickTime(Store.windowEnd(this)) {
+                Store.setWindow(this, Store.windowStart(this), it)
+                refresh()
+            }
+        }
+        findViewById<Button>(R.id.snooze_length).setOnClickListener {
+            pickMinutes(R.string.settings_snooze, intArrayOf(5, 10, 15, 30, 60)) {
+                Store.setSnoozeMinutes(this, it)
+                refresh()
+            }
+        }
+        findViewById<Button>(R.id.target_length).setOnClickListener {
+            pickMinutes(R.string.settings_target, intArrayOf(5, 10, 15, 20, 30, 45, 60)) {
+                Store.setTargetMinutes(this, it)
+                refresh()
+            }
+        }
+        findViewById<Button>(R.id.export_data).setOnClickListener {
+            exportFile.launch("myhitbodedut-${Store.today()}.json")
+        }
+        findViewById<Button>(R.id.import_data).setOnClickListener {
+            importFile.launch(arrayOf("application/json", "text/plain", "*/*"))
+        }
+    }
+
+    private fun previewGate() {
+        if (!BuildConfig.HAS_GATE) return
+        if (!Permissions.canDrawOverlays(this)) {
+            Toast.makeText(this, R.string.preview_needs_overlay, Toast.LENGTH_LONG).show()
+            safeStart(Permissions.overlayIntent(this))
+            return
+        }
+        GateService.preview(this)
+        moveTaskToBack(true)
+    }
+
+    // --- Rendu --------------------------------------------------------------
+
+    private fun refresh() {
+        if (BuildConfig.HAS_GATE) renderDiagnostic()
+        renderSwitches()
+        renderValues()
+        renderPermissions()
+    }
+
+    /** Une phrase en tête : ce qui manque, ou que rien ne manque. */
+    private fun renderSummary(manquantes: Int) {
+        findViewById<TextView>(R.id.settings_summary).text = if (manquantes == 0) {
+            getString(R.string.settings_all_granted)
+        } else {
+            resources.getQuantityString(R.plurals.permissions_missing, manquantes, manquantes)
+        }
+    }
+
+    /**
+     * Une ligne par autorisation que cette édition demande. L'édition légère
+     * n'a pas de barrière : les deux autorisations qui la servent ne sont
+     * pas masquées, elles ne sont pas posées du tout.
+     */
+    private fun renderPermissions() {
+        val liste = findViewById<LinearLayout>(R.id.permission_list)
+        liste.removeAllViews()
+        var manquantes = 0
+        PermissionRules.demandees(BuildConfig.HAS_GATE).forEach { autorisation ->
+            val accordee = Permissions.isGranted(this, autorisation)
+            if (!accordee) manquantes++
+            val ligne = layoutInflater.inflate(R.layout.item_permission, liste, false)
+            ligne.findViewById<TextView>(R.id.permission_title).setText(autorisation.titre)
+            ligne.findViewById<TextView>(R.id.permission_why).setText(autorisation.pourquoi)
+            ligne.findViewById<TextView>(R.id.permission_state).apply {
+                setText(if (accordee) R.string.permission_granted else R.string.permission_missing)
+                setTextColor(
+                    ContextCompat.getColor(
+                        this@SettingsActivity,
+                        if (accordee) R.color.brand else R.color.warning
+                    )
+                )
+            }
+            ligne.findViewById<Button>(R.id.permission_grant).apply {
+                isEnabled = !accordee
+                setOnClickListener { demander(autorisation) }
+            }
+            liste.addView(ligne)
+        }
+        renderSummary(manquantes)
+    }
+
+    private fun demander(autorisation: Autorisation) = when (autorisation) {
+        Autorisation.NOTIFICATIONS -> askNotifications()
+        Autorisation.BATTERIE -> safeStart(Permissions.batteryIntent())
+        Autorisation.OVERLAY -> safeStart(Permissions.overlayIntent(this))
+        Autorisation.USAGE -> safeStart(Permissions.usageAccessIntent())
+    }
+
+    private fun renderDiagnostic() {
+        val state = GateStatus.evaluate(this)
+        val missing = state == GateState.MISSING_PERMISSIONS
+
+        val title = findViewById<TextView>(R.id.gate_state_title)
+        title.setText(GateStatus.titleOf(state))
+        title.setTextColor(ContextCompat.getColor(this, GateStatus.colorOf(state)))
+        // Le titre cède la place au bouton : le même message, mais actionnable.
+        title.visibility = if (missing) View.GONE else View.VISIBLE
+
+        findViewById<TextView>(R.id.gate_state_detail).text = GateStatus.detailOf(this, state)
+        findViewById<Button>(R.id.gate_fix_permissions).visibility =
+            if (missing) View.VISIBLE else View.GONE
+    }
+
+    /** Amène la carte des autorisations sous les yeux, plutôt que « plus bas ». */
+    private fun scrollToPermissions() {
+        val scroll = findViewById<ScrollView>(R.id.settings_scroll)
+        val card = findViewById<View>(R.id.card_permissions)
+        scroll.post { scroll.smoothScrollTo(0, card.top) }
+    }
+
+    private fun renderSwitches() {
+        if (BuildConfig.HAS_GATE) bindSwitch(R.id.enable_switch, Store.isEnabled(this)) { checked ->
+            Store.setEnabled(this, checked)
+            if (checked) askNotifications()
+            applyServiceState()
+            refresh()
+        }
+        bindSwitch(R.id.hide_countdown_switch, Store.hideCountdown(this)) { checked ->
+            Store.setHideCountdown(this, checked)
+        }
+        bindSwitch(R.id.guided_switch, Store.guidedHitbodedut(this)) { checked ->
+            Store.setGuidedHitbodedut(this, checked)
+        }
+        bindSwitch(R.id.shabbat_switch, Store.shabbatMode(this)) { checked ->
+            Store.setShabbatMode(this, checked)
+            refresh()
+        }
+        bindSwitch(R.id.exempt_today_switch, Store.pausedDates(this).contains(Store.today())) {
+            Store.togglePausedDate(this, Store.today())
+            refresh()
+        }
+    }
+
+    /** Pose la valeur sans déclencher l'écouteur, puis le réarme. */
+    private fun bindSwitch(id: Int, checked: Boolean, onChange: (Boolean) -> Unit) {
+        val view = findViewById<MaterialSwitch>(id)
+        view.setOnCheckedChangeListener(null)
+        view.isChecked = checked
+        view.setOnCheckedChangeListener { _, value -> onChange(value) }
+    }
+
+    private fun renderValues() {
+        findViewById<Button>(R.id.window_start).text = Store.formatMinutes(Store.windowStart(this))
+        findViewById<Button>(R.id.window_end).text = Store.formatMinutes(Store.windowEnd(this))
+        findViewById<Button>(R.id.snooze_length).text =
+            Store.formatDuration(Store.snoozeMinutes(this))
+        findViewById<Button>(R.id.target_length).text =
+            Store.formatDuration(Store.targetMinutes(this))
+        findViewById<Button>(R.id.region_button).setText(
+            if (Store.inIsrael(this)) R.string.region_israel else R.string.region_diaspora
+        )
+
+        val count = Store.blockedApps(this).size
+        val summary = findViewById<TextView>(R.id.apps_summary)
+        summary.text = if (count == 0) {
+            getString(R.string.apps_none_warning)
+        } else {
+            resources.getQuantityString(R.plurals.apps_selected, count, count)
+        }
+        summary.setTextColor(
+            ContextCompat.getColor(this, if (count == 0) R.color.warning else R.color.muted)
+        )
+    }
+
+    // --- Service, autorisations, sauvegarde ---------------------------------
+
+    private fun applyServiceState() {
+        if (BuildConfig.HAS_GATE) {
+            if (GateStatus.shouldRunService(this)) GateService.start(this) else GateService.stop(this)
+        }
+        Reminder.reschedule(this)
+    }
+
+    /** L'édition légère n'embarque pas la barrière : on retire ce qui la concerne. */
+    private fun applyEdition() {
+        if (BuildConfig.HAS_GATE) return
+        intArrayOf(R.id.card_gate_state, R.id.card_gate_settings)
+            .forEach { findViewById<View>(it).visibility = View.GONE }
+    }
+
+    /**
+     * Demande les notifications. Après deux refus, Android n'affiche plus
+     * rien : le bouton ouvre alors l'écran système, sinon il resterait mort
+     * sans que personne comprenne pourquoi.
+     */
+    private fun askNotifications() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) return
+        if (Permissions.hasNotifications(this)) return
+        val refuseeDefinitivement = notificationsDemandees &&
+            !shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS)
+        if (refuseeDefinitivement) {
+            safeStart(Permissions.notificationSettingsIntent(this))
+            return
+        }
+        notificationsDemandees = true
+        requestNotifications.launch(Manifest.permission.POST_NOTIFICATIONS)
+    }
+
+    private fun writeBackup(uri: Uri) {
+        val ok = runCatching {
+            contentResolver.openOutputStream(uri)?.use { stream ->
+                stream.write(Store.exportJson(this).toByteArray())
+            } ?: error("flux indisponible")
+        }.isSuccess
+        Toast.makeText(
+            this,
+            if (ok) R.string.export_ok else R.string.export_failed,
+            Toast.LENGTH_LONG
+        ).show()
+    }
+
+    private fun readBackup(uri: Uri) {
+        val text = runCatching {
+            contentResolver.openInputStream(uri)?.bufferedReader()?.use { it.readText() }
+        }.getOrNull()
+        if (text == null) {
+            Toast.makeText(this, R.string.import_failed, Toast.LENGTH_LONG).show()
+            return
+        }
+        val imported = Store.importJson(this, text)
+        if (imported == null) {
+            Toast.makeText(this, R.string.import_invalid, Toast.LENGTH_LONG).show()
+            return
+        }
+        Toast.makeText(
+            this,
+            resources.getQuantityString(R.plurals.import_ok, imported, imported),
+            Toast.LENGTH_LONG
+        ).show()
+        applyServiceState()
+        refresh()
+    }
+
+    // --- Sélecteurs ---------------------------------------------------------
+
+    private fun pickTime(currentMinutes: Int, onPicked: (Int) -> Unit) {
+        TimePickerDialog(
+            this,
+            { _, hour, minute -> onPicked(hour * 60 + minute) },
+            (currentMinutes / 60) % 24,
+            currentMinutes % 60,
+            true
+        ).show()
+    }
+
+    private fun pickMinutes(titleId: Int, options: IntArray, onPicked: (Int) -> Unit) {
+        val labels = options.map { Store.formatDuration(it) }.toTypedArray()
+        AlertDialog.Builder(this)
+            .setTitle(titleId)
+            .setItems(labels) { _, which -> onPicked(options[which]) }
+            .show()
+    }
+
+    private fun safeStart(intent: Intent) {
+        runCatching { startActivity(intent) }.onFailure {
+            Toast.makeText(this, R.string.settings_screen_missing, Toast.LENGTH_LONG).show()
+        }
+    }
+
+    private companion object {
+        const val ETAT_DEMANDE = "notifications_demandees"
+    }
+}

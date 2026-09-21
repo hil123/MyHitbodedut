@@ -150,14 +150,18 @@ class HitbodedutTest {
         assertTrue("textAlignment=viewStart manquant", bloc.contains("viewStart"))
     }
 
-    /** La carte doit etre posee dans l'ecran de seance, et le reglage atteignable. */
+    /**
+     * La carte doit etre posee dans l'ecran de seance, et son reglage
+     * atteignable. Le reglage vit dans l'ecran des reglages depuis qu'il
+     * existe ; ce qui compte est qu'il existe quelque part, pas ou.
+     */
     @Test
     fun `la carte et son reglage sont en place`() {
         val seance = File("src/main/res/layout/activity_session.xml").readText()
         assertTrue(seance.contains("""android:id="@+id/session_hitbodedut""""))
         assertTrue(seance.contains("@layout/view_hitbodedut"))
-        val principal = File("src/main/res/layout/activity_main.xml").readText()
-        assertTrue(principal.contains("""android:id="@+id/guided_switch""""))
-        assertTrue(principal.contains("@string/settings_hitbodedut"))
+        val reglages = File("src/main/res/layout/activity_settings.xml").readText()
+        assertTrue(reglages.contains("""android:id="@+id/guided_switch""""))
+        assertTrue(reglages.contains("@string/settings_hitbodedut"))
     }
 }

@@ -13,7 +13,7 @@
     <string name="section_gate_hint">The apps you choose stay closed until the practice is done.</string>
     <string name="section_rhythm">Rhythm</string>
     <string name="section_permissions">Required permissions</string>
-    <string name="section_permissions_hint">Without the first two, the gate cannot work.</string>
+    <string name="section_permissions_hint">What the app asks for, and why.</string>
     <string name="section_data">My data</string>
     <string name="section_data_hint">Everything is stored on this phone only. Export from time to time.</string>
 
@@ -60,6 +60,14 @@
     <string name="permission_overlay">Display over other apps</string>
     <string name="permission_usage">Usage access</string>
     <string name="permission_battery">Unrestricted battery</string>
+    <string name="settings_title">Settings</string>
+    <string name="action_open">Open</string>
+    <string name="settings_all_granted">All permissions granted.</string>
+    <string name="permission_notifications">Notifications</string>
+    <string name="permission_notifications_why">Without them the reminder is scheduled and never appears, and the session shows nothing once the phone is down.</string>
+    <string name="permission_battery_why">Without it, Android may hold the reminder back for hours to save power.</string>
+    <string name="permission_overlay_why">To show the blocker over the app you open in the morning.</string>
+    <string name="permission_usage_why">To know which app has just opened. Nothing is recorded or sent.</string>
     <string name="permission_granted">Granted</string>
     <string name="permission_missing">Missing</string>
     <string name="preview_needs_overlay">Grant display over other apps first.</string>
@@ -323,5 +331,9 @@
     <plurals name="reminders_count">
         <item quantity="one">%1$d time set.</item>
         <item quantity="other">%1$d times set.</item>
+    </plurals>
+    <plurals name="permissions_missing">
+        <item quantity="one">%1$d permission to grant.</item>
+        <item quantity="other">%1$d permissions to grant.</item>
     </plurals>
 </resources>

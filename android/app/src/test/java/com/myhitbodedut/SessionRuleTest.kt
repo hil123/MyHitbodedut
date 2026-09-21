@@ -129,10 +129,10 @@ class SessionCounterTest {
         }
     }
 
-    /** Le reglage doit etre atteignable : un interrupteur dans l'ecran principal. */
+    /** Le reglage doit etre atteignable : un interrupteur dans les reglages. */
     @Test
-    fun `le reglage a son interrupteur dans l ecran principal`() {
-        val xml = File("src/main/res/layout/activity_main.xml").readText()
+    fun `le reglage a son interrupteur dans les reglages`() {
+        val xml = File("src/main/res/layout/activity_settings.xml").readText()
         assertTrue(xml.contains("""android:id="@+id/hide_countdown_switch""""))
         assertTrue(xml.contains("@string/settings_hide_countdown"))
     }

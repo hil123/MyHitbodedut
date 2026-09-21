@@ -18,7 +18,7 @@
     <string name="section_gate_hint">Les applications choisies restent fermées tant que la pratique n\'est pas faite.</string>
     <string name="section_rhythm">Rythme</string>
     <string name="section_permissions">Autorisations nécessaires</string>
-    <string name="section_permissions_hint">Sans les deux premières, le blocage ne peut pas fonctionner.</string>
+    <string name="section_permissions_hint">Ce que l’application demande, et pourquoi.</string>
     <string name="section_data">Mes données</string>
     <string name="section_data_hint">Tout est stocké sur ce téléphone uniquement. Exportez de temps en temps.</string>
 
@@ -69,6 +69,14 @@
     <string name="permission_overlay">Affichage par-dessus les autres applications</string>
     <string name="permission_usage">Accès aux données d\'utilisation</string>
     <string name="permission_battery">Batterie sans restriction</string>
+    <string name="settings_title">Réglages</string>
+    <string name="action_open">Ouvrir</string>
+    <string name="settings_all_granted">Toutes les autorisations sont accordées.</string>
+    <string name="permission_notifications">Notifications</string>
+    <string name="permission_notifications_why">Sans elles, le rappel se programme et n’apparaît jamais, et la séance n’affiche rien quand le téléphone est posé.</string>
+    <string name="permission_battery_why">Sans elle, Android peut retarder le rappel de plusieurs heures pour économiser la batterie.</string>
+    <string name="permission_overlay_why">Pour afficher l’écran de barrage par-dessus l’application que vous ouvrez le matin.</string>
+    <string name="permission_usage_why">Pour savoir quelle application vient de s’ouvrir. Rien n’est enregistré ni envoyé.</string>
     <string name="permission_granted">Accordée</string>
     <string name="permission_missing">Manquante</string>
     <string name="preview_needs_overlay">Accordez d\'abord l\'affichage par-dessus les autres applications.</string>
@@ -342,5 +350,9 @@
     <plurals name="reminders_count">
         <item quantity="one">%1$d heure réglée.</item>
         <item quantity="other">%1$d heures réglées.</item>
+    </plurals>
+    <plurals name="permissions_missing">
+        <item quantity="one">%1$d autorisation à accorder.</item>
+        <item quantity="other">%1$d autorisations à accorder.</item>
     </plurals>
 </resources>

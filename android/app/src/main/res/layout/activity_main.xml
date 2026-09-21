@@ -431,331 +431,34 @@
                 android:visibility="gone" />
         </LinearLayout>
 
-        <!-- Diagnostic de la barrière : pourquoi elle agit, ou pourquoi non -->
-        <LinearLayout android:id="@+id/card_gate_state" style="@style/Card">
-
-            <TextView style="@style/CardTitle" android:text="@string/section_gate_state" />
-
-            <TextView
-                android:id="@+id/gate_state_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/gate_state_detail"
-                style="@style/CardHint"
-                android:layout_marginTop="4dp"
-                android:textSize="14sp" />
-
-            <!-- Visible seulement quand une autorisation manque : mène à la carte. -->
-            <Button
-                android:id="@+id/gate_fix_permissions"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:text="@string/gate_permissions_action"
-                android:visibility="gone" />
-
-            <Button
-                android:id="@+id/preview_gate"
-                style="@style/Widget.Material3.Button.OutlinedButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="14dp"
-                android:text="@string/action_preview_gate" />
-        </LinearLayout>
-
-        <!-- Réglages de la barrière -->
-        <LinearLayout android:id="@+id/card_gate_settings" style="@style/Card">
-
-            <LinearLayout style="@style/SettingRow" android:layout_marginTop="0dp">
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <TextView style="@style/CardTitle" android:text="@string/section_gate" />
-
-                    <TextView style="@style/CardHint" android:text="@string/section_gate_hint" />
-                </LinearLayout>
-
-                <com.google.android.material.materialswitch.MaterialSwitch
-                    android:id="@+id/enable_switch"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-            </LinearLayout>
-
-            <View style="@style/Divider" />
-
-            <LinearLayout style="@style/SettingRow" android:layout_marginTop="0dp">
-
-                <TextView style="@style/SettingLabel" android:text="@string/settings_window" />
-
-                <Button
-                    android:id="@+id/window_start"
-                    style="@style/SettingValue" />
-
-                <Button
-                    android:id="@+id/window_end"
-                    style="@style/SettingValue"
-                    android:layout_marginStart="8dp" />
-            </LinearLayout>
-
-            <LinearLayout style="@style/SettingRow">
-
-                <TextView style="@style/SettingLabel" android:text="@string/settings_snooze" />
-
-                <Button android:id="@+id/snooze_length" style="@style/SettingValue" />
-            </LinearLayout>
-
-            <View style="@style/Divider" />
-
-            <TextView
-                android:id="@+id/apps_summary"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="14sp" />
-
-            <Button
-                android:id="@+id/pick_apps"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text="@string/action_pick_apps" />
-        </LinearLayout>
-
-        <!-- Rythme de la pratique -->
+        <!-- Réglages -->
         <LinearLayout style="@style/Card">
 
-            <TextView style="@style/CardTitle" android:text="@string/section_rhythm" />
-
-            <LinearLayout style="@style/SettingRow">
-
-                <TextView style="@style/SettingLabel" android:text="@string/settings_target" />
-
-                <Button android:id="@+id/target_length" style="@style/SettingValue" />
-            </LinearLayout>
-
-            <View style="@style/Divider" />
-
-            <LinearLayout style="@style/SettingRow" android:layout_marginTop="0dp">
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <TextView style="@style/SettingLabelStacked" android:text="@string/settings_shabbat" />
-
-                    <TextView style="@style/CardHint" android:text="@string/settings_shabbat_hint" />
-                </LinearLayout>
-
-                <com.google.android.material.materialswitch.MaterialSwitch
-                    android:id="@+id/shabbat_switch"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-            </LinearLayout>
-
-            <LinearLayout style="@style/SettingRow">
-
-                <TextView style="@style/SettingLabel" android:text="@string/settings_region" />
-
-                <Button android:id="@+id/region_button" style="@style/SettingValue" />
-            </LinearLayout>
-
-            <LinearLayout style="@style/SettingRow">
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <TextView style="@style/SettingLabelStacked" android:text="@string/settings_hide_countdown" />
-
-                    <TextView style="@style/CardHint" android:text="@string/settings_hide_countdown_hint" />
-                </LinearLayout>
-
-                <com.google.android.material.materialswitch.MaterialSwitch
-                    android:id="@+id/hide_countdown_switch"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-            </LinearLayout>
-
-            <LinearLayout style="@style/SettingRow">
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <TextView style="@style/SettingLabelStacked" android:text="@string/settings_hitbodedut" />
-
-                    <TextView style="@style/CardHint" android:text="@string/settings_hitbodedut_hint" />
-                </LinearLayout>
-
-                <com.google.android.material.materialswitch.MaterialSwitch
-                    android:id="@+id/guided_switch"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-            </LinearLayout>
-
-            <LinearLayout style="@style/SettingRow">
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <TextView style="@style/SettingLabelStacked" android:text="@string/settings_exempt_today" />
-
-                    <TextView style="@style/CardHint" android:text="@string/settings_exempt_today_hint" />
-                </LinearLayout>
-
-                <com.google.android.material.materialswitch.MaterialSwitch
-                    android:id="@+id/exempt_today_switch"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-            </LinearLayout>
-
-            <!-- Point 4 : le moment « lieu », dans les réglages de lieu et de moment. -->
-            <include
-                android:id="@+id/lieu_chizuk"
-                layout="@layout/view_chizuk"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="14dp" />
-        </LinearLayout>
-
-        <!-- Autorisations -->
-        <LinearLayout android:id="@+id/card_permissions" style="@style/Card">
-
-            <TextView style="@style/CardTitle" android:text="@string/section_permissions" />
-
-            <TextView style="@style/CardHint" android:text="@string/section_permissions_hint" />
-
-            <LinearLayout
-                android:id="@+id/row_overlay"
-                style="@style/SettingRow"
-                android:layout_marginTop="14dp">
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <TextView style="@style/SettingLabelStacked" android:text="@string/permission_overlay" />
-
-                    <TextView
-                        android:id="@+id/state_overlay"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="13sp" />
-                </LinearLayout>
-
-                <Button
-                    android:id="@+id/grant_overlay"
-                    style="@style/SettingValue"
-                    android:text="@string/action_grant" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/row_usage"
-                style="@style/SettingRow">
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <TextView style="@style/SettingLabelStacked" android:text="@string/permission_usage" />
-
-                    <TextView
-                        android:id="@+id/state_usage"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="13sp" />
-                </LinearLayout>
-
-                <Button
-                    android:id="@+id/grant_usage"
-                    style="@style/SettingValue"
-                    android:text="@string/action_grant" />
-            </LinearLayout>
-
-            <LinearLayout style="@style/SettingRow">
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <TextView style="@style/SettingLabelStacked" android:text="@string/permission_battery" />
-
-                    <TextView
-                        android:id="@+id/state_battery"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="13sp" />
-                </LinearLayout>
-
-                <Button
-                    android:id="@+id/grant_battery"
-                    style="@style/SettingValue"
-                    android:text="@string/action_grant" />
-            </LinearLayout>
-        </LinearLayout>
-
-        <!-- Sauvegarde -->
-        <LinearLayout style="@style/Card">
-
-            <TextView style="@style/CardTitle" android:text="@string/section_data" />
-
-            <TextView style="@style/CardHint" android:text="@string/section_data_hint" />
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
+                android:gravity="center_vertical"
                 android:orientation="horizontal">
 
-                <Button
-                    android:id="@+id/export_data"
-                    style="@style/Widget.Material3.Button.OutlinedButton"
+                <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="@string/action_export" />
+                    android:orientation="vertical">
+
+                    <TextView style="@style/CardTitle" android:text="@string/settings_title" />
+
+                    <TextView
+                        android:id="@+id/settings_state"
+                        style="@style/CardHint" />
+                </LinearLayout>
 
                 <Button
-                    android:id="@+id/import_data"
-                    style="@style/Widget.Material3.Button.OutlinedButton"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_weight="1"
-                    android:text="@string/action_import" />
+                    android:id="@+id/settings_button"
+                    style="@style/SettingValue"
+                    android:text="@string/action_open" />
             </LinearLayout>
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/app_version"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:textAlignment="center"
-            android:textColor="@color/muted"
-            android:textSize="12sp" />
     </LinearLayout>
 </ScrollView>

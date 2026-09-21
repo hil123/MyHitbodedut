@@ -13,7 +13,7 @@
     <string name="section_gate_hint">האפליקציות שתבחר יישארו סגורות עד שתתבודד.</string>
     <string name="section_rhythm">קצב</string>
     <string name="section_permissions">הרשאות נדרשות</string>
-    <string name="section_permissions_hint">בלי שתי הראשונות החסימה לא תפעל.</string>
+    <string name="section_permissions_hint">מה האפליקציה מבקשת, ולמה.</string>
     <string name="section_data">הנתונים שלי</string>
     <string name="section_data_hint">הכול נשמר בטלפון הזה בלבד. כדאי לייצא מדי פעם.</string>
 
@@ -60,6 +60,14 @@
     <string name="permission_overlay">הצגה מעל אפליקציות אחרות</string>
     <string name="permission_usage">גישה לנתוני שימוש</string>
     <string name="permission_battery">סוללה ללא הגבלה</string>
+    <string name="settings_title">הגדרות</string>
+    <string name="action_open">פתיחה</string>
+    <string name="settings_all_granted">כל ההרשאות ניתנו.</string>
+    <string name="permission_notifications">התראות</string>
+    <string name="permission_notifications_why">בלעדיהן התזכורת נקבעת ולעולם אינה מופיעה, וההתבודדות לא מציגה דבר כשהטלפון מונח.</string>
+    <string name="permission_battery_why">בלעדיה אנדרויד עלול לעכב את התזכורת בשעות, כדי לחסוך בסוללה.</string>
+    <string name="permission_overlay_why">כדי להציג את מסך החסימה מעל האפליקציה שנפתחת בבוקר.</string>
+    <string name="permission_usage_why">כדי לדעת איזו אפליקציה נפתחה זה עתה. שום דבר אינו נשמר ואינו נשלח.</string>
     <string name="permission_granted">אושרה</string>
     <string name="permission_missing">חסרה</string>
     <string name="preview_needs_overlay">קודם אשר הצגה מעל אפליקציות אחרות.</string>
@@ -329,5 +337,10 @@
         <item quantity="one">הוגדרה שעה אחת.</item>
         <item quantity="two">הוגדרו %1$d שעות.</item>
         <item quantity="other">הוגדרו %1$d שעות.</item>
+    </plurals>
+    <plurals name="permissions_missing">
+        <item quantity="one">נותרה הרשאה אחת לאשר.</item>
+        <item quantity="two">נותרו %1$d הרשאות לאשר.</item>
+        <item quantity="other">נותרו %1$d הרשאות לאשר.</item>
     </plurals>
 </resources>
