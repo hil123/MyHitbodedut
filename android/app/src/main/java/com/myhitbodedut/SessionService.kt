@@ -42,6 +42,7 @@ class SessionService : Service() {
         when (intent?.action) {
             ACTION_CANCEL -> {
                 Store.endSession(this)
+                StreakWidget.refresh(this)
                 stopSelfAndClear()
                 return START_NOT_STICKY
             }
@@ -52,6 +53,7 @@ class SessionService : Service() {
         }
         startForegroundNow()
         ensureMusic()
+        StreakWidget.refresh(this)
         handler.removeCallbacks(tick)
         handler.post(tick)
         return START_STICKY
@@ -88,6 +90,7 @@ class SessionService : Service() {
         // séance arrive d'elle-même à son terme : celui qui l'arrête lui-même
         // n'a pas besoin qu'on le lui apprenne.
         if (!early && Store.hideCountdown(this)) chime()
+        StreakWidget.refresh(this)
         stopSelfAndClear()
     }
 

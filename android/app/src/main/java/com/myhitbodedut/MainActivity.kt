@@ -59,6 +59,8 @@ class MainActivity : AppCompatActivity() {
         super.onResume()
         applyServiceState()
         refresh()
+        // La vignette d'accueil suit ce que l'écran vient de montrer.
+        StreakWidget.refresh(this)
     }
 
     // --- Actions ------------------------------------------------------------

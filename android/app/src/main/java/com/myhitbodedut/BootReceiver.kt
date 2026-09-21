@@ -12,5 +12,6 @@ class BootReceiver : BroadcastReceiver() {
             GateService.start(context)
         }
         Reminder.reschedule(context)
+        StreakWidget.refresh(context)
     }
 }

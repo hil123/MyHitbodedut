@@ -103,6 +103,13 @@
     <string name="session_hidden_caption">הספירה מוסתרת. צליל יודיע לך.</string>
     <string name="session_running_hidden">הספירה מוסתרת.</string>
     <string name="blocker_session_hidden_subtitle">התבודדות בעיצומה. הטלפון יכול לחכות.</string>
+    <string name="widget_label">רצף MyHitbodedut</string>
+    <string name="widget_description">הרצף הנוכחי, ולחיצה אחת כדי להתחיל.</string>
+    <string name="widget_done">נעשה היום.</string>
+    <string name="widget_todo">עדיין לא היום.</string>
+    <string name="widget_running">התבודדות בעיצומה.</string>
+    <string name="widget_start">להתחיל</string>
+    <string name="widget_resume">חזרה להתבודדות</string>
     <string name="blocker_session_open_subtitle">התבודדות פתוחה, כבר %1$s. הטלפון יכול לחכות.</string>
     <string name="session_done_title">ההתבודדות הסתיימה</string>
     <string name="session_done_text">%1$s של התבודדות. הקש כדי להוסיף הערה.</string>

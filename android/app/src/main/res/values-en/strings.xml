@@ -103,6 +103,13 @@
     <string name="session_hidden_caption">The countdown is hidden. A sound will tell you.</string>
     <string name="session_running_hidden">The countdown is hidden.</string>
     <string name="blocker_session_hidden_subtitle">Session under way. The phone can wait.</string>
+    <string name="widget_label">MyHitbodedut streak</string>
+    <string name="widget_description">The streak so far, and one tap to begin.</string>
+    <string name="widget_done">Done today.</string>
+    <string name="widget_todo">Not yet today.</string>
+    <string name="widget_running">Session under way.</string>
+    <string name="widget_start">Begin</string>
+    <string name="widget_resume">Back to the session</string>
     <string name="blocker_session_open_subtitle">Open session, %1$s so far. The phone can wait.</string>
     <string name="session_done_title">Session complete</string>
     <string name="session_done_text">%1$s of hitbodedut. Tap to leave a note.</string>

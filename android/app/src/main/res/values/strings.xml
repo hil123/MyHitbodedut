@@ -115,6 +115,13 @@
     <string name="session_hidden_caption">Le décompte est masqué. Un son vous préviendra.</string>
     <string name="session_running_hidden">Le décompte est masqué.</string>
     <string name="blocker_session_hidden_subtitle">Séance en cours. Le téléphone peut attendre.</string>
+    <string name="widget_label">Série MyHitbodedut</string>
+    <string name="widget_description">La série en cours, et de quoi commencer d’un geste.</string>
+    <string name="widget_done">Fait aujourd’hui.</string>
+    <string name="widget_todo">Pas encore aujourd’hui.</string>
+    <string name="widget_running">Séance en cours.</string>
+    <string name="widget_start">Commencer</string>
+    <string name="widget_resume">Revenir à la séance</string>
     <string name="blocker_session_open_subtitle">Séance ouverte, depuis %1$s. Le téléphone peut attendre.</string>
     <string name="session_done_title">Séance terminée</string>
     <string name="session_done_text">%1$s de hitbodedout. Touchez pour laisser une note.</string>
