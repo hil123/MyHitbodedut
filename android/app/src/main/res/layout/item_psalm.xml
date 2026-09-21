@@ -17,7 +17,7 @@
         android:layout_height="34dp"
         android:background="@drawable/bg_tip_number"
         android:gravity="center"
-        android:textColor="@color/brand"
+        android:textColor="@color/on_plate"
         android:textSize="14sp"
         android:textStyle="bold" />
 
@@ -55,7 +55,7 @@
         android:background="@drawable/bg_chip_mint"
         android:paddingHorizontal="10dp"
         android:paddingVertical="3dp"
-        android:textColor="@color/brand"
+        android:textColor="@color/on_plate"
         android:textSize="11sp"
         android:visibility="gone" />
 </LinearLayout>

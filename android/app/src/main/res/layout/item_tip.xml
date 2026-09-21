@@ -20,7 +20,7 @@
             android:layout_height="34dp"
             android:background="@drawable/bg_tip_number"
             android:gravity="center"
-            android:textColor="@color/brand"
+            android:textColor="@color/on_plate"
             android:textSize="15sp"
             android:textStyle="bold" />
 

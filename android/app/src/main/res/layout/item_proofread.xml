@@ -26,7 +26,7 @@
             android:background="@drawable/bg_chip_mint"
             android:paddingHorizontal="10dp"
             android:paddingVertical="2dp"
-            android:textColor="@color/brand"
+            android:textColor="@color/on_plate"
             android:textSize="11sp" />
 
         <TextView

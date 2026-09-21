@@ -1,4 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    Les couleurs du jour. Celles de la nuit sont dans values-night, et ne
+    reprennent que ce qui doit changer.
+
+    Trois jetons ne changent jamais, et c'est voulu :
+
+    « stage_soft » et « mint » servent de plaque sous les illustrations, qui
+    sont dessinées sur fond blanc. Une plaque sombre leur mettrait un halo
+    blanc autour : la plaque reste claire la nuit.
+
+    « on_plate » est l'encre posée sur ces plaques claires. Elle ne peut pas
+    suivre « brand », qui s'éclaircit la nuit pour se lire sur une carte
+    sombre : vert clair sur menthe claire ne se lit plus.
+
+    « white » est l'encre posée sur les fonds vert foncé, qui sont déjà
+    sombres le jour. La renverser la nuit effacerait le décompte de séance.
+-->
 <resources>
     <color name="brand">#16775A</color>
     <color name="brand_dark">#173C32</color>
@@ -10,4 +27,21 @@
     <color name="card">#FFFFFF</color>
     <color name="line">#DCE7DF</color>
     <color name="white">#FFFFFF</color>
+
+    <!-- Encre du bouton principal, qui se renverse la nuit. -->
+    <color name="on_brand">#FFFFFF</color>
+
+    <!-- Encre sur les plaques claires, qui ne se renverse jamais. -->
+    <color name="on_plate">#16775A</color>
+
+    <!-- Plaque claire sous une illustration. Claire de nuit comme de jour. -->
+    <color name="stage_soft">#F1FAF4</color>
+
+    <!-- Les trois états d'une case de la bande hebdomadaire. -->
+    <color name="day_done">#16775A</color>
+    <color name="day_todo">#EDF2EE</color>
+    <color name="day_exempt">#EDE9F7</color>
+
+    <!-- Fond très dilué du badge d'avertissement. -->
+    <color name="warning_wash">#1FC66B2D</color>
 </resources>

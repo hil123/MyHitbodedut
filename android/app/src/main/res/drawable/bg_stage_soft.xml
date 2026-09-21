@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Variante discrète, pour les cartes déjà posées sur fond clair. -->
 <shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
-    <solid android:color="#F1FAF4" />
+    <solid android:color="@color/stage_soft" />
     <corners android:radius="20dp" />
 </shape>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Les couleurs de la nuit. Seul ce qui doit changer est repris : tout le
+    reste vient de values/colors.xml, où les raisons de ne pas bouger sont
+    écrites.
+
+    Le vert de marque s'éclaircit, parce qu'il sert d'encre sur une carte qui
+    devient sombre : #16775A sur #1A2B24 tombe à 2,5:1, illisible. #6CD3A8 y
+    remonte à 8,2:1. Et comme il devient clair, l'encre du bouton principal
+    doit devenir sombre à son tour : d'où on_brand.
+
+    La case du jour fait garde son vert foncé et son texte blanc. Un vert
+    clair, qui ressortirait mieux sur la carte, ne porterait plus de blanc.
+-->
+<resources>
+    <color name="brand">#6CD3A8</color>
+    <color name="warning">#E8A062</color>
+    <color name="ink">#E6EFE9</color>
+    <color name="muted">#9CB0A6</color>
+    <color name="paper">#101A16</color>
+    <color name="card">#1A2B24</color>
+    <color name="line">#2C4239</color>
+
+    <color name="on_brand">#0D1A15</color>
+
+    <color name="day_todo">#22382F</color>
+    <color name="day_exempt">#2E2A40</color>
+
+    <color name="warning_wash">#33E8A062</color>
+</resources>
