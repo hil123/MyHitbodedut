@@ -9,7 +9,7 @@
         android:layout_height="wrap_content"
         android:background="@drawable/bg_hero"
         android:orientation="vertical"
-        android:paddingHorizontal="24dp"
+        android:paddingHorizontal="@dimen/edge"
         android:paddingTop="26dp"
         android:paddingBottom="22dp">
 

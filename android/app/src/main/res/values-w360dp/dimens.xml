@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Largeur disponible >= 360dp. Voir values/dimens.xml pour la regle. -->
+<resources>
+    <dimen name="edge">24dp</dimen>
+    <dimen name="wide_gutter">0dp</dimen>
+</resources>

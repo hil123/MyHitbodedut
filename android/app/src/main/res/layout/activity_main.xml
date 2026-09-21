@@ -3,7 +3,8 @@
     android:id="@+id/main_scroll"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true">
+    android:fillViewport="true"
+    android:paddingHorizontal="@dimen/wide_gutter">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -17,7 +18,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/bg_hero"
             android:orientation="vertical"
-            android:paddingHorizontal="24dp"
+            android:paddingHorizontal="@dimen/edge"
             android:paddingTop="28dp"
             android:paddingBottom="24dp">
 

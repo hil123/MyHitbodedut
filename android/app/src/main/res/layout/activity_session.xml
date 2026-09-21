@@ -11,7 +11,7 @@
         android:gravity="center"
         android:minHeight="400dp"
         android:orientation="vertical"
-        android:paddingHorizontal="26dp"
+        android:paddingHorizontal="@dimen/edge"
         android:paddingVertical="24dp">
 
         <TextView
@@ -101,42 +101,26 @@
 
             <Button
                 android:id="@+id/duration_10"
-                style="@style/Widget.Material3.Button.OutlinedButton"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:tag="10"
-                android:textColor="@color/mint" />
+                style="@style/DurationButton"
+                android:tag="10" />
 
             <Button
                 android:id="@+id/duration_20"
-                style="@style/Widget.Material3.Button.OutlinedButton"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                style="@style/DurationButton"
                 android:layout_marginStart="6dp"
-                android:layout_weight="1"
-                android:tag="20"
-                android:textColor="@color/mint" />
+                android:tag="20" />
 
             <Button
                 android:id="@+id/duration_30"
-                style="@style/Widget.Material3.Button.OutlinedButton"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                style="@style/DurationButton"
                 android:layout_marginStart="6dp"
-                android:layout_weight="1"
-                android:tag="30"
-                android:textColor="@color/mint" />
+                android:tag="30" />
 
             <Button
                 android:id="@+id/duration_60"
-                style="@style/Widget.Material3.Button.OutlinedButton"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                style="@style/DurationButton"
                 android:layout_marginStart="6dp"
-                android:layout_weight="1"
-                android:tag="60"
-                android:textColor="@color/mint" />
+                android:tag="60" />
         </LinearLayout>
 
         <!-- La séance sans durée : on s'arrête quand on s'arrête. -->

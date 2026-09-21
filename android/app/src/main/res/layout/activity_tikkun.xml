@@ -11,7 +11,7 @@
         android:background="@drawable/bg_hero"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:paddingHorizontal="24dp"
+        android:paddingHorizontal="@dimen/edge"
         android:paddingTop="24dp"
         android:paddingBottom="20dp">
 

@@ -72,6 +72,28 @@
         <item name="android:minWidth">88dp</item>
     </style>
 
+    <!--
+        Les quatre boutons de duree, cote a cote.
+
+        Un bouton Material3 reclame 88dp de large, dont 48 de rembourrage.
+        Quatre y tiennent sur un ecran large ; sur 320dp il ne reste que 67dp
+        par bouton, et « 20 min » se faisait couper. Le rembourrage tombe donc
+        a 4dp et le texte a 13sp : il reste 59dp pour une etiquette qui en
+        demande 40.
+    -->
+    <style name="DurationButton" parent="Widget.Material3.Button.OutlinedButton">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:minWidth">0dp</item>
+        <item name="android:paddingHorizontal">4dp</item>
+        <item name="android:insetLeft">0dp</item>
+        <item name="android:insetRight">0dp</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:textColor">@color/mint</item>
+    </style>
+
     <style name="Divider">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">1dp</item>

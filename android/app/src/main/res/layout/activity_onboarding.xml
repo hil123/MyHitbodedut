@@ -1,88 +1,105 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<!--
+    Le défilement n'est pas décoratif. En paysage sur un écran 480×854,
+    la hauteur tombe à 320dp alors que les parties fixes de cet accueil en
+    demandent environ 330 : sans lui, les boutons du bas sortaient du cadre
+    et il n'y avait plus moyen de passer l'accueil.
+
+    fillViewport étire la page quand la place est suffisante, pour que
+    l'illustration occupe le vide au lieu de laisser un blanc en bas. Et
+    l'illustration garde une hauteur minimale : avec le seul poids, elle se
+    réduirait à rien dès que la place manque, au lieu de faire défiler.
+-->
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/paper"
-    android:orientation="vertical"
-    android:paddingHorizontal="26dp"
-    android:paddingVertical="22dp">
-
-    <TextView
-        android:id="@+id/onboarding_step"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/bg_chip_mint"
-        android:paddingHorizontal="12dp"
-        android:paddingVertical="4dp"
-        android:textColor="@color/on_plate"
-        android:textSize="12sp" />
-
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginTop="18dp"
-        android:layout_weight="1"
-        android:background="@drawable/bg_stage"
-        android:padding="14dp">
-
-        <ImageView
-            android:id="@+id/onboarding_art"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:adjustViewBounds="true"
-            android:contentDescription="@null"
-            android:scaleType="fitCenter" />
-    </FrameLayout>
-
-    <TextView
-        android:id="@+id/onboarding_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:textColor="@color/ink"
-        android:textSize="21sp"
-        android:textStyle="bold" />
-
-    <TextView
-        android:id="@+id/onboarding_body"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:lineSpacingExtra="3sp"
-        android:minHeight="96dp"
-        android:textColor="@color/muted"
-        android:textSize="15sp" />
-
-    <Button
-        android:id="@+id/onboarding_next"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:paddingVertical="14dp"
-        android:textSize="16sp" />
+    android:fillViewport="true">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="vertical"
+        android:paddingHorizontal="@dimen/edge"
+        android:paddingVertical="22dp">
 
-        <Button
-            android:id="@+id/onboarding_back"
-            style="@style/Widget.Material3.Button.TextButton"
+        <TextView
+            android:id="@+id/onboarding_step"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/onboarding_back" />
+            android:background="@drawable/bg_chip_mint"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="4dp"
+            android:textColor="@color/on_plate"
+            android:textSize="12sp" />
 
-        <View
-            android:layout_width="0dp"
-            android:layout_height="1dp"
-            android:layout_weight="1" />
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="18dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_stage"
+            android:minHeight="150dp"
+            android:padding="14dp">
+
+            <ImageView
+                android:id="@+id/onboarding_art"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:adjustViewBounds="true"
+                android:contentDescription="@null"
+                android:scaleType="fitCenter" />
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/onboarding_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:textColor="@color/ink"
+            android:textSize="21sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/onboarding_body"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:lineSpacingExtra="3sp"
+            android:textColor="@color/muted"
+            android:textSize="15sp" />
 
         <Button
-            android:id="@+id/onboarding_skip"
-            style="@style/Widget.Material3.Button.TextButton"
-            android:layout_width="wrap_content"
+            android:id="@+id/onboarding_next"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/onboarding_skip" />
+            android:layout_marginTop="16dp"
+            android:paddingVertical="14dp"
+            android:textSize="16sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/onboarding_back"
+                style="@style/Widget.Material3.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/onboarding_back" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1" />
+
+            <Button
+                android:id="@+id/onboarding_skip"
+                style="@style/Widget.Material3.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/onboarding_skip" />
+        </LinearLayout>
     </LinearLayout>
-</LinearLayout>
+</ScrollView>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    L'echelle horizontale des ecrans.
+
+    Deux jetons, declines par LARGEUR DISPONIBLE (« w ») et non par largeur
+    d'appareil (« sw »). La difference compte : sur ChromeOS, en fenetre
+    partagee ou sur un bureau, la fenetre se redimensionne et « sw » ne
+    bouge pas, alors que « w » suit.
+
+    « edge » est la marge que chaque ecran laisse sur ses cotes. La valeur
+    par defaut vise 320dp de large — c'est la plus petite largeur
+    qu'Android connaisse, celle d'un ecran 480x854 en hdpi, et tout doit y
+    tenir. Les 26dp d'avant n'y laissaient que 268dp de contenu.
+
+    « wide_gutter » sert au seul ecran principal, dont les cartes portent
+    deja leur propre marge : il reste nul sur telephone et n'ajoute de
+    l'air que la ou l'ecran devient trop large pour qu'une ligne de texte
+    reste lisible d'un bord a l'autre.
+-->
+<resources>
+    <dimen name="edge">16dp</dimen>
+    <dimen name="wide_gutter">0dp</dimen>
+</resources>
