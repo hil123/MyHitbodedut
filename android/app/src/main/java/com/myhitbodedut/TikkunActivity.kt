@@ -29,7 +29,6 @@ class TikkunActivity : AppCompatActivity() {
     private lateinit var lignes: List<Ligne>
     private lateinit var adapter: Adapter
     private lateinit var progress: TextView
-    private lateinit var primary: Button
     private lateinit var reset: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,7 +40,6 @@ class TikkunActivity : AppCompatActivity() {
             tikkun.psaumes.mapIndexed { i, p -> Ligne.Psaume(p, i + 1) } +
             tikkun.apres.map { Ligne.Bloc(it) }
         progress = findViewById(R.id.tikkun_progress)
-        primary = findViewById(R.id.tikkun_primary)
         reset = findViewById(R.id.tikkun_reset)
         findViewById<ImageView>(R.id.tikkun_art).setImageResource(Character.TEHILIM)
 
@@ -75,18 +73,6 @@ class TikkunActivity : AppCompatActivity() {
             else -> getString(R.string.tikkun_progress, dits.size, total)
         }
 
-        // Le bouton reprend la ou l'on s'est arrete, pas au premier psaume.
-        val suivant = tikkun.psaumes.firstOrNull { it.numero !in dits }
-        if (suivant == null) {
-            primary.visibility = View.GONE
-        } else {
-            primary.visibility = View.VISIBLE
-            primary.text = getString(
-                if (dits.isEmpty()) R.string.tikkun_start else R.string.tikkun_resume,
-                suivant.numero,
-            )
-            primary.setOnClickListener { ouvre(suivant.numero) }
-        }
         reset.visibility = if (dits.isEmpty()) View.GONE else View.VISIBLE
         adapter.notifyDataSetChanged()
     }

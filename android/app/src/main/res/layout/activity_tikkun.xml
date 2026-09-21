@@ -58,28 +58,17 @@
         </FrameLayout>
     </LinearLayout>
 
+    <!-- Le Tikoun se dit d'un trait : c'est l'action, pas une variante.
+         Pour reprendre a un psaume precis, on le touche dans la liste. -->
     <Button
-        android:id="@+id/tikkun_primary"
+        android:id="@+id/tikkun_flow"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp"
         android:layout_marginTop="16dp"
         android:paddingVertical="14dp"
-        android:textSize="16sp" />
-
-    <!-- Le cas normal : tout dire d'affilee, sans rien a toucher entre les
-         psaumes. Le bouton vert au-dessus sert a reprendre ou l'on s'est
-         arrete. -->
-    <Button
-        android:id="@+id/tikkun_flow"
-        style="@style/Widget.Material3.Button.OutlinedButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="16dp"
-        android:layout_marginTop="8dp"
-        android:paddingVertical="13dp"
         android:text="@string/tikkun_flow_open"
-        android:textSize="15sp" />
+        android:textSize="16sp" />
 
     <Button
         android:id="@+id/tikkun_reset"

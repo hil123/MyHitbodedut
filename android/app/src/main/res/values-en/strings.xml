@@ -253,8 +253,6 @@
     <string name="tikkun_progress_none">%1$d psalms, %2$d verses</string>
     <string name="tikkun_progress">%1$d of %2$d psalms said today</string>
     <string name="tikkun_progress_all">Said in full today.</string>
-    <string name="tikkun_start">Begin with psalm %1$d</string>
-    <string name="tikkun_resume">Resume at psalm %1$d</string>
     <string name="tikkun_next">Next psalm</string>
     <string name="tikkun_paragraphs">%1$d paragraphs</string>
     <string name="tikkun_flow_open">Read it all in one flow</string>

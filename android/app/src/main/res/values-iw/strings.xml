@@ -258,8 +258,6 @@
     <string name="tikkun_progress_none">%1$d מזמורים, %2$d פסוקים</string>
     <string name="tikkun_progress">%1$d מתוך %2$d מזמורים נאמרו היום</string>
     <string name="tikkun_progress_all">נאמר במלואו היום.</string>
-    <string name="tikkun_start">להתחיל במזמור %1$d</string>
-    <string name="tikkun_resume">להמשיך ממזמור %1$d</string>
     <string name="tikkun_next">המזמור הבא</string>
     <string name="tikkun_paragraphs">%1$d פסקאות</string>
     <string name="tikkun_flow_open">לומר הכל ברצף</string>
