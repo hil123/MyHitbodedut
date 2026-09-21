@@ -264,6 +264,8 @@
     <string name="tikkun_resume">להמשיך ממזמור %1$d</string>
     <string name="tikkun_next">המזמור הבא</string>
     <string name="tikkun_paragraphs">%1$d פסקאות</string>
+    <string name="tikkun_flow_open">לומר הכל ברצף</string>
+    <string name="tikkun_flow_done">אמרתי את התיקון כולו</string>
     <string name="tikkun_mark">סימון כנאמר</string>
     <string name="tikkun_unmark">הסרת הסימון</string>
     <string name="tikkun_said">נאמר</string>

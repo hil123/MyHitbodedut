@@ -44,6 +44,7 @@ data class Tikkun(
     val version: String,
     val titre: LocalizedText,
     val edition: Edition,
+    val continuite: LocalizedText,
     val psaumes: List<Psalm>,
     val blocs: Map<String, LiturgyBlock>,
 ) {
@@ -77,6 +78,7 @@ object TikkunLoader {
         return Tikkun(
             version = meta.optString("version", ""),
             titre = LocalizedText.parse(meta.optJSONObject("titre")),
+            continuite = LocalizedText.parse(meta.optJSONObject("continuite")),
             edition = Edition(
                 key = ed.optString("cle", ""),
                 titre = ed.optString("titre", ""),

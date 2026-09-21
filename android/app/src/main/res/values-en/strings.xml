@@ -259,6 +259,8 @@
     <string name="tikkun_resume">Resume at psalm %1$d</string>
     <string name="tikkun_next">Next psalm</string>
     <string name="tikkun_paragraphs">%1$d paragraphs</string>
+    <string name="tikkun_flow_open">Read it all in one flow</string>
+    <string name="tikkun_flow_done">I have said the whole Tikkun</string>
     <string name="tikkun_mark">Mark as said</string>
     <string name="tikkun_unmark">Remove the mark</string>
     <string name="tikkun_said">said</string>

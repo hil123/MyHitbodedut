@@ -51,6 +51,10 @@ class TikkunActivity : AppCompatActivity() {
             adapter = this@TikkunActivity.adapter
         }
 
+        findViewById<Button>(R.id.tikkun_flow).setOnClickListener {
+            startActivity(Intent(this, TikkunFlowActivity::class.java))
+        }
+
         reset.setOnClickListener {
             Store.resetTikkun(this)
             render()

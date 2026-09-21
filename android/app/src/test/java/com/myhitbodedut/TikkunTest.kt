@@ -191,6 +191,37 @@ class TikkunTest {
     }
 
     /**
+     * La lecture d'un trait a besoin de sa consigne : c'est elle qui dit
+     * pourquoi cet ecran n'a aucun bouton entre les psaumes.
+     */
+    @Test
+    fun `la consigne de continuite est chargee`() {
+        assertEquals("להמשיך מזה לזה ברצף אחד, ללא הפסק", tikkun.continuite.he)
+        listOf("fr", "en").forEach {
+            assertTrue(
+                "consigne de continuite absente en « $it »",
+                tikkun.continuite.forLanguage(it).isNotBlank(),
+            )
+        }
+    }
+
+    /**
+     * Ce que l'ecran de lecture continue enchaine : l'ouverture, les dix
+     * psaumes, la cloture. La kavana et la priere de Rabbi Nathan restent
+     * hors du trait — elles se disent apres.
+     */
+    @Test
+    fun `le trait couvre l ouverture, les dix psaumes et la cloture`() {
+        assertEquals(1, tikkun.avant.size)
+        assertEquals(Tikkun.OUVERTURE, tikkun.avant.first().cle)
+        assertTrue("la cloture manque", tikkun.bloc(Tikkun.CLOTURE) != null)
+        assertEquals(10, tikkun.psaumes.size)
+        // Presentes, mais pas dans le trait.
+        assertTrue(tikkun.bloc(Tikkun.KAVANA) != null)
+        assertTrue(tikkun.bloc(Tikkun.PRIERE) != null)
+    }
+
+    /**
      * Les deux graphies lexicales ou les editions contredisent la page.
      *
      * Le pointage de ירושלם varie d'un verset a l'autre dans l'edition

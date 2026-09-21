@@ -67,6 +67,20 @@
         android:paddingVertical="14dp"
         android:textSize="16sp" />
 
+    <!-- Le cas normal : tout dire d'affilee, sans rien a toucher entre les
+         psaumes. Le bouton vert au-dessus sert a reprendre ou l'on s'est
+         arrete. -->
+    <Button
+        android:id="@+id/tikkun_flow"
+        style="@style/Widget.Material3.Button.OutlinedButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="8dp"
+        android:paddingVertical="13dp"
+        android:text="@string/tikkun_flow_open"
+        android:textSize="15sp" />
+
     <Button
         android:id="@+id/tikkun_reset"
         style="@style/Widget.Material3.Button.TextButton"
