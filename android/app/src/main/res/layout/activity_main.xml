@@ -595,6 +595,25 @@
                     android:layout_weight="1"
                     android:orientation="vertical">
 
+                    <TextView style="@style/SettingLabelStacked" android:text="@string/settings_hitbodedut" />
+
+                    <TextView style="@style/CardHint" android:text="@string/settings_hitbodedut_hint" />
+                </LinearLayout>
+
+                <com.google.android.material.materialswitch.MaterialSwitch
+                    android:id="@+id/guided_switch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <LinearLayout style="@style/SettingRow">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
                     <TextView style="@style/SettingLabelStacked" android:text="@string/settings_exempt_today" />
 
                     <TextView style="@style/CardHint" android:text="@string/settings_exempt_today_hint" />

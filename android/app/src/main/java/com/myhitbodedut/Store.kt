@@ -57,6 +57,7 @@ object Store {
     private const val KEY_SESSION_TARGET = "session_target"
     private const val KEY_SESSION_START = "session_started_at"
     private const val KEY_HIDE_COUNTDOWN = "hide_countdown"
+    private const val KEY_GUIDED = "guided_hitbodedut"
     private const val KEY_MUSIC_ON = "music_enabled"
     private const val KEY_MUSIC_TRACK = "music_track"
     private const val KEY_MUSIC_VOLUME = "music_volume"
@@ -414,6 +415,21 @@ object Store {
 
     fun setHideCountdown(context: Context, hidden: Boolean) {
         prefs(context).edit().putBoolean(KEY_HIDE_COUNTDOWN, hidden).apply()
+    }
+
+    /**
+     * La hitbodedout guidée : les quatre temps de Likoutei Moharan II, 25
+     * affichés pendant la séance.
+     *
+     * Éteinte par défaut. Celui qui sait quoi dire n'a pas besoin qu'on le
+     * lui souffle, et une séance encadrée sans qu'on l'ait demandé serait
+     * le contraire de ce que le mot veut dire.
+     */
+    fun guidedHitbodedut(context: Context): Boolean =
+        prefs(context).getBoolean(KEY_GUIDED, false)
+
+    fun setGuidedHitbodedut(context: Context, guided: Boolean) {
+        prefs(context).edit().putBoolean(KEY_GUIDED, guided).apply()
     }
 
     /** Ce que le compteur doit dire, ici et maintenant. */

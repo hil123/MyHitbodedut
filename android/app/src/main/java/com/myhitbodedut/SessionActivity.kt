@@ -27,6 +27,14 @@ class SessionActivity : AppCompatActivity() {
     private lateinit var musicLine: TextView
     private lateinit var chizuk: View
     private lateinit var stuck: Button
+    private lateinit var guide: View
+
+    /**
+     * Le temps courant de la hitbodedout guidée. Il appartient à la séance
+     * et repart à zéro avec elle : un guide qui reprendrait là où l'on
+     * s'était arrêté la veille rappellerait une dette.
+     */
+    private var guideStep = 0
 
     /**
      * Le bouton de blocage n'a de sens que s'il a un texte à donner. En
@@ -64,6 +72,7 @@ class SessionActivity : AppCompatActivity() {
         musicLine = findViewById(R.id.session_music)
         chizuk = findViewById(R.id.session_chizuk)
         stuck = findViewById(R.id.session_stuck)
+        guide = findViewById(R.id.session_hitbodedut)
 
         // « Je n'arrive pas à parler » : le moment « blocage ».
         stuck.setOnClickListener { ChizukCard.show(chizuk, Moment.BLOCAGE) }
@@ -83,6 +92,7 @@ class SessionActivity : AppCompatActivity() {
         // touche pas à la durée habituelle, qui reste celle du bouton principal.
         openSession.setOnClickListener {
             SessionService.start(this, SessionRule.OUVERTE)
+            guideStep = 0
             drawOpening()
             render()
         }
@@ -95,6 +105,7 @@ class SessionActivity : AppCompatActivity() {
                 button.setOnClickListener {
                     Store.setTargetMinutes(this, minutes)
                     SessionService.start(this, minutes)
+                    guideStep = 0
                     drawOpening()
                     render()
                 }
@@ -152,6 +163,7 @@ class SessionActivity : AppCompatActivity() {
             durations.visibility = View.GONE
             openSession.visibility = View.GONE
             stuck.visibility = if (hasBlocage) View.VISIBLE else View.GONE
+            renderGuide()
 
             primary.visibility = View.VISIBLE
             primary.setText(R.string.session_finish_now)
@@ -172,6 +184,7 @@ class SessionActivity : AppCompatActivity() {
             durations.visibility = View.VISIBLE
             openSession.visibility = View.VISIBLE
             stuck.visibility = View.GONE
+            HitbodedutCard.hide(guide)
 
             primary.visibility = View.VISIBLE
             primary.text = getString(
@@ -180,10 +193,27 @@ class SessionActivity : AppCompatActivity() {
             )
             primary.setOnClickListener {
                 SessionService.start(this, Store.targetMinutes(this))
+                guideStep = 0
                 drawOpening()
                 render()
             }
             secondary.visibility = View.GONE
+        }
+    }
+
+    /**
+     * La hitbodedout guidée, quand elle est demandée. Le pas courant ne
+     * change que sur les boutons de la carte : render() repasse chaque
+     * seconde et avancerait tout seul.
+     */
+    private fun renderGuide() {
+        if (!Store.guidedHitbodedut(this)) {
+            HitbodedutCard.hide(guide)
+            return
+        }
+        HitbodedutCard.bind(guide, guideStep) { step ->
+            guideStep = step
+            renderGuide()
         }
     }
 

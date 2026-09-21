@@ -74,6 +74,14 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="18dp" />
 
+        <!-- La hitbodedout guidée, quand elle est demandée. -->
+        <include
+            android:id="@+id/session_hitbodedut"
+            layout="@layout/view_hitbodedut"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp" />
+
         <Button
             android:id="@+id/session_stuck"
             style="@style/Widget.Material3.Button.TextButton"
