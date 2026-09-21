@@ -45,7 +45,7 @@ class SessionService : Service() {
                 return START_NOT_STICKY
             }
         }
-        startForegroundNow(remainingMinutes())
+        startForegroundNow()
         ensureMusic()
         handler.removeCallbacks(tick)
         handler.post(tick)
@@ -65,16 +65,12 @@ class SessionService : Service() {
             finishSession(early = false)
             return false
         }
-        startForegroundNow(remainingMinutes())
+        startForegroundNow()
         return true
     }
 
-    private fun remainingMinutes(): Int {
-        val remaining = Store.sessionEndsAt(this) - System.currentTimeMillis()
-        if (remaining <= 0) return 0
-        // Arrondi au supérieur : afficher « 1 min » jusqu'à la toute fin.
-        return ((remaining + 59_999L) / 60_000L).toInt()
-    }
+    private fun remainingMinutes(): Int =
+        SessionRule.minutesRestantes(Store.sessionEndsAt(this), System.currentTimeMillis())
 
     private fun finishSession(early: Boolean) {
         val elapsed = Store.endSession(this)
@@ -118,7 +114,18 @@ class SessionService : Service() {
         manager.notify(Notifications.ID_COMPLETED, notification)
     }
 
-    private fun startForegroundNow(remaining: Int) {
+    /**
+     * Ce que la notification annonce pendant la séance : le temps restant
+     * quand il y en a un, le temps déjà passé quand la séance est ouverte.
+     */
+    private fun runningText(): String =
+        if (Store.isSessionOpen(this)) {
+            getString(R.string.session_elapsed, Store.formatDuration(Store.sessionElapsedMinutes(this)))
+        } else {
+            getString(R.string.session_remaining, Store.formatDuration(remainingMinutes()))
+        }
+
+    private fun startForegroundNow() {
         val open = PendingIntent.getActivity(
             this,
             0,
@@ -133,7 +140,7 @@ class SessionService : Service() {
         )
         val notification = Notification.Builder(this, Notifications.CHANNEL_SESSION)
             .setContentTitle(getString(R.string.session_running_title))
-            .setContentText(getString(R.string.session_remaining, Store.formatDuration(remaining)))
+            .setContentText(runningText())
             .setSmallIcon(R.drawable.ic_notification)
             .setContentIntent(open)
             .setOngoing(true)

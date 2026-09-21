@@ -131,6 +131,16 @@
                 android:textColor="@color/mint" />
         </LinearLayout>
 
+        <!-- La séance sans durée : on s'arrête quand on s'arrête. -->
+        <Button
+            android:id="@+id/session_open"
+            style="@style/Widget.Material3.Button.TextButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:text="@string/session_open"
+            android:textColor="@color/mint" />
+
         <Button
             android:id="@+id/session_primary"
             android:layout_width="match_parent"

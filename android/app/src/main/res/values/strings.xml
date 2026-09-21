@@ -107,6 +107,10 @@
     <string name="session_cancel_message">Rien ne sera enregistré et la journée restera à faire.</string>
     <string name="session_running_title">Séance en cours</string>
     <string name="session_remaining">Il reste %1$s</string>
+    <string name="session_open">Sans durée</string>
+    <string name="session_open_caption">Sans durée : vous arrêtez quand vous arrêtez.</string>
+    <string name="session_elapsed">Depuis %1$s</string>
+    <string name="blocker_session_open_subtitle">Séance ouverte, depuis %1$s. Le téléphone peut attendre.</string>
     <string name="session_done_title">Séance terminée</string>
     <string name="session_done_text">%1$s de hitbodedout. Touchez pour laisser une note.</string>
 

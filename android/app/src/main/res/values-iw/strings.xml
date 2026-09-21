@@ -95,6 +95,10 @@
     <string name="session_cancel_message">דבר לא יישמר והיום יישאר פתוח.</string>
     <string name="session_running_title">התבודדות בעיצומה</string>
     <string name="session_remaining">נותרו %1$s</string>
+    <string name="session_open">בלי זמן קצוב</string>
+    <string name="session_open_caption">בלי זמן קצוב: מפסיקים כשמפסיקים.</string>
+    <string name="session_elapsed">כבר %1$s</string>
+    <string name="blocker_session_open_subtitle">התבודדות פתוחה, כבר %1$s. הטלפון יכול לחכות.</string>
     <string name="session_done_title">ההתבודדות הסתיימה</string>
     <string name="session_done_text">%1$s של התבודדות. הקש כדי להוסיף הערה.</string>
 

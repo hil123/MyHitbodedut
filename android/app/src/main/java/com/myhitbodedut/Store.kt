@@ -362,14 +362,28 @@ object Store {
 
     fun sessionTarget(context: Context): Int = prefs(context).getInt(KEY_SESSION_TARGET, 0)
 
-    fun isSessionRunning(context: Context): Boolean = sessionEndsAt(context) > System.currentTimeMillis()
+    fun isSessionRunning(context: Context): Boolean = SessionRule.enCours(
+        sessionStartedAt(context),
+        sessionEndsAt(context),
+        sessionTarget(context),
+        System.currentTimeMillis()
+    )
 
+    /** Une séance sans durée, que seul le geste de l'arrêter termine. */
+    fun isSessionOpen(context: Context): Boolean =
+        SessionRule.estOuverte(sessionStartedAt(context), sessionTarget(context))
+
+    fun sessionElapsedMinutes(context: Context): Int =
+        SessionRule.minutesEcoulees(sessionStartedAt(context), System.currentTimeMillis())
+
+    /** Une durée nulle ouvre la séance : rien n'est inscrit comme fin. */
     fun beginSession(context: Context, minutes: Int) {
         val now = System.currentTimeMillis()
+        val ouverte = minutes <= SessionRule.OUVERTE
         prefs(context).edit()
             .putLong(KEY_SESSION_START, now)
-            .putLong(KEY_SESSION_END, now + minutes * 60_000L)
-            .putInt(KEY_SESSION_TARGET, minutes)
+            .putLong(KEY_SESSION_END, if (ouverte) 0L else now + minutes * 60_000L)
+            .putInt(KEY_SESSION_TARGET, if (ouverte) SessionRule.OUVERTE else minutes)
             .apply()
     }
 

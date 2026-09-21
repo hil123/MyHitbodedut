@@ -90,12 +90,22 @@ class BlockerView(
             BlockerMode.SESSION_RUNNING -> {
                 art.setImageResource(Character.during())
                 title.setText(R.string.blocker_session_title)
-                val remaining = Store.sessionEndsAt(context) - System.currentTimeMillis()
-                val minutes = ((remaining.coerceAtLeast(0) + 59_999L) / 60_000L).toInt()
-                subtitle.text = context.getString(
-                    R.string.blocker_session_subtitle,
-                    Store.formatDuration(minutes)
-                )
+                // Une séance ouverte n'a pas de reste à annoncer : elle dit
+                // le temps déjà passé.
+                subtitle.text = if (Store.isSessionOpen(context)) {
+                    context.getString(
+                        R.string.blocker_session_open_subtitle,
+                        Store.formatDuration(Store.sessionElapsedMinutes(context))
+                    )
+                } else {
+                    val minutes = SessionRule.minutesRestantes(
+                        Store.sessionEndsAt(context), System.currentTimeMillis()
+                    )
+                    context.getString(
+                        R.string.blocker_session_subtitle,
+                        Store.formatDuration(minutes)
+                    )
+                }
                 primary.setText(R.string.blocker_back_to_session)
                 primary.setOnClickListener { onStartSession() }
                 secondary.visibility = View.GONE

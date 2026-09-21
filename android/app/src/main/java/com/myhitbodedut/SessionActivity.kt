@@ -22,6 +22,7 @@ class SessionActivity : AppCompatActivity() {
     private lateinit var primary: Button
     private lateinit var secondary: Button
     private lateinit var durations: View
+    private lateinit var openSession: Button
     private lateinit var art: ImageView
     private lateinit var musicLine: TextView
     private lateinit var chizuk: View
@@ -58,6 +59,7 @@ class SessionActivity : AppCompatActivity() {
         primary = findViewById(R.id.session_primary)
         secondary = findViewById(R.id.session_secondary)
         durations = findViewById(R.id.session_durations)
+        openSession = findViewById(R.id.session_open)
         art = findViewById(R.id.session_character)
         musicLine = findViewById(R.id.session_music)
         chizuk = findViewById(R.id.session_chizuk)
@@ -75,6 +77,14 @@ class SessionActivity : AppCompatActivity() {
             !Store.isSessionRunning(this)
         ) {
             SessionService.start(this, Store.targetMinutes(this))
+        }
+
+        // « Sans durée » : la séance court jusqu'à ce qu'on l'arrête. Elle ne
+        // touche pas à la durée habituelle, qui reste celle du bouton principal.
+        openSession.setOnClickListener {
+            SessionService.start(this, SessionRule.OUVERTE)
+            drawOpening()
+            render()
         }
 
         intArrayOf(R.id.duration_10, R.id.duration_20, R.id.duration_30, R.id.duration_60)
@@ -115,15 +125,27 @@ class SessionActivity : AppCompatActivity() {
 
         if (running) {
             art.setImageResource(Character.during())
-            val remaining = (Store.sessionEndsAt(this) - System.currentTimeMillis()).coerceAtLeast(0)
-            val minutes = remaining / 60_000L
-            val seconds = (remaining / 1_000L) % 60
-            countdown.text = String.format(Locale.US, "%02d:%02d", minutes, seconds)
-            caption.text = getString(
-                R.string.session_target,
-                Store.formatDuration(Store.sessionTarget(this))
+            // Une séance ouverte n'a rien à décompter : elle compte à l'endroit,
+            // depuis son début.
+            val open = Store.isSessionOpen(this)
+            val millis = if (open) {
+                (System.currentTimeMillis() - Store.sessionStartedAt(this)).coerceAtLeast(0)
+            } else {
+                (Store.sessionEndsAt(this) - System.currentTimeMillis()).coerceAtLeast(0)
+            }
+            countdown.text = String.format(
+                Locale.US, "%02d:%02d", millis / 60_000L, (millis / 1_000L) % 60
             )
+            caption.text = if (open) {
+                getString(R.string.session_open_caption)
+            } else {
+                getString(
+                    R.string.session_target,
+                    Store.formatDuration(Store.sessionTarget(this))
+                )
+            }
             durations.visibility = View.GONE
+            openSession.visibility = View.GONE
             stuck.visibility = if (hasBlocage) View.VISIBLE else View.GONE
 
             primary.visibility = View.VISIBLE
@@ -142,6 +164,7 @@ class SessionActivity : AppCompatActivity() {
                 if (Store.isDone(this)) R.string.session_idle_done else R.string.session_idle_caption
             )
             durations.visibility = View.VISIBLE
+            openSession.visibility = View.VISIBLE
             stuck.visibility = View.GONE
 
             primary.visibility = View.VISIBLE
