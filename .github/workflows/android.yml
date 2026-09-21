@@ -27,6 +27,14 @@ jobs:
       - name: Ensure Android platform 35
         run: yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "platforms;android-35" "build-tools;35.0.0" || true
 
+      # Les illustrations ont ete taillees dans des planches qui en
+      # contenaient plusieurs. Deux avaient garde un bout du voisin, et
+      # personne ne l'a vu avant de regarder l'application sur un telephone.
+      - name: Check the illustrations
+        run: |
+          python3 -m pip install --quiet pillow numpy scipy
+          python3 tools/verifie_illustrations.py
+
       - name: Build both signed editions
         working-directory: android
         env:
