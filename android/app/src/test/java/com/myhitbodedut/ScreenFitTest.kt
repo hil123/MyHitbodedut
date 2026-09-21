@@ -133,6 +133,79 @@ class ScreenFitTest {
         )
     }
 
+    /**
+     * Les hauteurs fixes se declinent aussi. En paysage sur un 480x854 il
+     * ne reste que 320dp de haut : une illustration de 190dp en mangeait
+     * 60 %. Le palier par defaut doit donc viser l'ecran COURT, et
+     * values-h480dp donner les valeurs confortables — l'inverse serait une
+     * regression invisible sur les petits ecrans.
+     */
+    @Test
+    fun `les hauteurs fixes visent l ecran court par defaut`() {
+        val tailles = listOf("art_height", "art_height_small",
+                             "chizuk_he_height", "chizuk_body_height")
+        tailles.forEach { nom ->
+            val court = dimen("values", nom)
+            val normal = dimen("values-h480dp", nom)
+            assertTrue("« $nom » manque dans values/", court != null)
+            assertTrue("« $nom » manque dans values-h480dp/", normal != null)
+            assertTrue(
+                "« $nom » : le défaut ($court) doit être le plus petit, " +
+                    "c'est lui qui s'applique en paysage",
+                court!! < normal!!,
+            )
+        }
+        // Et la plus grande doit tenir dans les 320dp d'un paysage.
+        assertTrue(
+            "l'illustration par défaut doit laisser de la place au reste",
+            dimen("values", "art_height")!! <= PLAFOND / 2,
+        )
+    }
+
+    /**
+     * Sur un ordinateur la fenetre est recreee a chaque redimensionnement.
+     * Un ecran qui garde un etat en memoire doit l'inscrire, sinon il
+     * revient au depart chaque fois qu'on tire un coin de la fenetre.
+     */
+    @Test
+    fun `les ecrans a memoire conservent leur etat`() {
+        val aMemoire = listOf("SessionActivity", "MainActivity", "OnboardingActivity")
+        aMemoire.forEach { nom ->
+            val code = File("src/main/java/com/myhitbodedut/$nom.kt").readText()
+            assertTrue(
+                "$nom garde un état en mémoire sans le sauvegarder : " +
+                    "une rotation ou un redimensionnement le perdrait",
+                code.contains("override fun onSaveInstanceState"),
+            )
+            assertTrue(
+                "$nom sauvegarde son état mais ne le relit pas",
+                code.contains("savedInstanceState?."),
+            )
+        }
+    }
+
+    /**
+     * Sans cette declaration, Android tient l'ecran tactile pour requis et
+     * Google Play retire l'application des Chromebooks qui n'en ont pas.
+     */
+    @Test
+    fun `l ecran tactile n est pas exige`() {
+        val manifeste = File("src/main/AndroidManifest.xml").readText()
+        assertTrue(
+            "il manque <uses-feature android.hardware.touchscreen required=false>",
+            Regex("""android:name="android\.hardware\.touchscreen"\s+android:required="false"""")
+                .containsMatchIn(manifeste),
+        )
+        assertTrue(
+            "la fenêtre doit être redimensionnable pour l'écran partagé et le bureau",
+            manifeste.contains("""android:resizeableActivity="true""""),
+        )
+        assertTrue(
+            "l'écran d'accueil doit annoncer une taille de fenêtre au lancement",
+            manifeste.contains("<layout") && manifeste.contains("android:minWidth="),
+        )
+    }
+
     /** Sans palier « w », le redimensionnement d'une fenetre ne changerait rien. */
     @Test
     fun `les paliers reagissent a la largeur de la fenetre`() {

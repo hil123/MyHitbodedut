@@ -45,6 +45,9 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         Notifications.ensureChannels(this)
+        // Une rotation ou un redimensionnement de fenêtre recrée l'écran :
+        // sans cela, le texte de relance serait retiré à chaque fois.
+        relanceTiree = savedInstanceState?.getBoolean(ETAT_RELANCE, false) ?: false
         showOnboardingOnce()
         wireActions()
         applyEdition()
@@ -54,6 +57,11 @@ class MainActivity : AppCompatActivity() {
         if (intent?.getBooleanExtra(EXTRA_ASK_NOTE, false) == true) {
             NoteDialog.show(this, Store.today()) { refresh() }
         }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putBoolean(ETAT_RELANCE, relanceTiree)
     }
 
     override fun onResume() {
@@ -528,5 +536,8 @@ class MainActivity : AppCompatActivity() {
 
     companion object {
         const val EXTRA_ASK_NOTE = "ask_note"
+
+        /** Survit à une rotation ou au redimensionnement d'une fenêtre. */
+        private const val ETAT_RELANCE = "relance_tiree"
     }
 }

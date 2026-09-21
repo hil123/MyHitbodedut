@@ -20,4 +20,20 @@
 <resources>
     <dimen name="edge">16dp</dimen>
     <dimen name="wide_gutter">0dp</dimen>
+
+    <!--
+        Les hauteurs fixes, elles, se declinent par hauteur disponible (« h »).
+        Le defaut vise l'ecran COURT : en paysage sur un 480x854, il ne reste
+        que 320dp de haut, et une illustration de 190dp en mangeait 60 %.
+        values-h480dp rend les valeurs confortables des qu'il y a la place.
+
+        Elles restent FIXES dans chaque palier, et c'est voulu : les deux
+        blocs de la carte de 'hizouk reduisent leur corps jusqu'a tenir
+        (autoSizeTextType) au lieu de deborder. Une hauteur libre y
+        ramenerait le defilement que le point 4 interdit.
+    -->
+    <dimen name="art_height">130dp</dimen>
+    <dimen name="art_height_small">88dp</dimen>
+    <dimen name="chizuk_he_height">108dp</dimen>
+    <dimen name="chizuk_body_height">84dp</dimen>
 </resources>

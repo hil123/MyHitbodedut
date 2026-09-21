@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Hauteur disponible >= 480dp : la place est la. Voir values/dimens.xml. -->
+<resources>
+    <dimen name="art_height">190dp</dimen>
+    <dimen name="art_height_small">112dp</dimen>
+    <dimen name="chizuk_he_height">150dp</dimen>
+    <dimen name="chizuk_body_height">116dp</dimen>
+</resources>

@@ -74,6 +74,15 @@ class SessionActivity : AppCompatActivity() {
         stuck = findViewById(R.id.session_stuck)
         guide = findViewById(R.id.session_hitbodedut)
 
+        // Une rotation, un passage en écran partagé ou le redimensionnement
+        // d'une fenêtre recréent l'écran. Sans cela, le guide repartirait au
+        // premier temps et le mot de clôture serait tiré une seconde fois.
+        savedInstanceState?.let {
+            guideStep = it.getInt(ETAT_GUIDE, 0)
+            wasRunning = it.getBoolean(ETAT_EN_COURS, false)
+            cancelling = it.getBoolean(ETAT_ABANDON, false)
+        }
+
         // « Je n'arrive pas à parler » : le moment « blocage ».
         stuck.setOnClickListener { ChizukCard.show(chizuk, Moment.BLOCAGE) }
 
@@ -116,6 +125,13 @@ class SessionActivity : AppCompatActivity() {
         super.onResume()
         handler.removeCallbacks(tick)
         handler.post(tick)
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putInt(ETAT_GUIDE, guideStep)
+        outState.putBoolean(ETAT_EN_COURS, wasRunning)
+        outState.putBoolean(ETAT_ABANDON, cancelling)
     }
 
     override fun onPause() {
@@ -263,5 +279,9 @@ class SessionActivity : AppCompatActivity() {
     companion object {
         /** Posé par le bouton « Commencer » d'une notification de rappel. */
         const val EXTRA_START_NOW = "start_now"
+
+        private const val ETAT_GUIDE = "guide_step"
+        private const val ETAT_EN_COURS = "was_running"
+        private const val ETAT_ABANDON = "cancelling"
     }
 }

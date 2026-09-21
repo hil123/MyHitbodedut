@@ -25,6 +25,36 @@ class ChizukLayoutTest {
         }
     }
 
+    /**
+     * Une hauteur fixe, en nombre ou en reference. La reference vaut mieux :
+     * elle se decline par hauteur d'ecran, et 150dp en dur mangeaient la
+     * moitie d'un paysage de 320dp. Mais elle doit resoudre partout, sinon
+     * elle est pire que le nombre.
+     */
+    private fun hauteurFixe(bloc: String): String? {
+        Regex("""android:layout_height="(\d+)dp"""").find(bloc)
+            ?.let { return it.groupValues[1] + "dp" }
+        val nom = Regex("""android:layout_height="@dimen/([a-z0-9_]+)"""")
+            .find(bloc)?.groupValues?.get(1) ?: return null
+        val paliers = File("src/main/res").listFiles { f ->
+            f.isDirectory && f.name.startsWith("values")
+        }!!.filter { File(it, "dimens.xml").exists() }
+        val valeurs = paliers.mapNotNull { dossier ->
+            Regex("""<dimen name="$nom">([\d.]+)dp</dimen>""")
+                .find(File(dossier, "dimens.xml").readText())?.groupValues?.get(1)
+                ?.let { dossier.name to it }
+        }
+        assertTrue(
+            "« $nom » n'est défini dans aucun palier de dimens.xml",
+            valeurs.isNotEmpty(),
+        )
+        assertTrue(
+            "« $nom » doit être défini dans values/ : c'est le palier de repli",
+            valeurs.any { it.first == "values" },
+        )
+        return valeurs.first().second + "dp"
+    }
+
     @Test
     fun `les deux blocs de texte ont une hauteur fixe et un corps automatique`() {
         forEachLayout { name, xml ->
@@ -34,10 +64,9 @@ class ChizukLayoutTest {
                     "$name / $id : pas de corps automatique",
                     bloc.contains("""android:autoSizeTextType="uniform""""),
                 )
-                val hauteur = Regex("""android:layout_height="(\d+)dp"""").find(bloc)
                 assertTrue(
-                    "$name / $id : la hauteur doit être fixée en dp, sinon le texte déborde",
-                    hauteur != null,
+                    "$name / $id : la hauteur doit être fixée, sinon le texte déborde",
+                    hauteurFixe(bloc) != null,
                 )
             }
         }

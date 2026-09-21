@@ -79,7 +79,7 @@
 
                 <FrameLayout
                     android:layout_width="96dp"
-                    android:layout_height="112dp"
+                    android:layout_height="@dimen/art_height_small"
                     android:background="@drawable/bg_stage_soft"
                     android:padding="6dp">
 

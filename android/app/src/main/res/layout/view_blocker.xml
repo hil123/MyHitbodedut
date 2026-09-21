@@ -36,7 +36,7 @@
             <ImageView
                 android:id="@+id/blocker_character"
                 android:layout_width="match_parent"
-                android:layout_height="150dp"
+                android:layout_height="@dimen/art_height"
                 android:adjustViewBounds="true"
                 android:contentDescription="@null"
                 android:scaleType="fitCenter" />

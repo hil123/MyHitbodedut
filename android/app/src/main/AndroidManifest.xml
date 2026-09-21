@@ -8,6 +8,21 @@
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
+    <!--
+        Sans cette ligne, Android considere l'ecran tactile comme requis et
+        Google Play retire l'application des Chromebooks qui n'en ont pas.
+        Rien ici ne demande un doigt : tout se fait aussi a la souris et au
+        clavier.
+    -->
+    <uses-feature
+        android:name="android.hardware.touchscreen"
+        android:required="false" />
+
+    <!--
+        resizeableActivity : c'est deja le defaut, mais il decide de l'ecran
+        partage, de la fenetre libre et du bureau — il est donc ecrit plutot
+        que subi.
+    -->
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -15,6 +30,7 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher"
+        android:resizeableActivity="true"
         android:supportsRtl="true"
         android:theme="@style/Theme.MyHitbodedut">
 
@@ -25,6 +41,19 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
+            <!--
+                La fenetre au lancement sur un bureau ou en fenetre libre.
+                Sans cela, l'application s'ouvre a la taille que le systeme
+                juge bonne, souvent tres large, et chaque ligne de texte
+                traverse l'ecran. Le minimum reprend le plancher d'Android.
+            -->
+            <layout
+                android:defaultHeight="760dp"
+                android:defaultWidth="420dp"
+                android:gravity="center"
+                android:minHeight="320dp"
+                android:minWidth="320dp" />
         </activity>
 
         <activity
