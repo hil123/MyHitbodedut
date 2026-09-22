@@ -128,6 +128,62 @@ des 6 214 ouvrages hébreux du corpus. Ce n'est pas « je n'ai pas
 trouvé » : c'est un balayage complet. Ni confirmés ni infirmés, et ils le
 resteront tant qu'on n'aura pas le texte.
 
+## Audit exhaustif — 22/09, après « vérifie toutes les références »
+
+Les deux premiers passages n'avaient traité que les renvois signalés. Cette
+fois la liste est close : **chaque** renvoi du guide, y compris ceux du
+tableau final et les deux formules liturgiques, a été ouvert.
+
+| Renvoi | État | Détail |
+|---|---|---|
+| סנהדרין מ"ד ע"ב | **exact** | « לעולם יקדים אדם תפילה לצרה » |
+| ברכות ל"ג ע"ב | **exact** | l'édition porte une virgule : « הכל בידי שמים**,** חוץ מיראת שמים » |
+| בראשית כ"ד, ס"ג | **exact** | « ויצא יצחק לשוח בשדה » |
+| תהלים קמ"ה, י"ח | **exact** | « קרוב ה' לכל קוראיו לכל אשר יקראוהו באמת » |
+| דברים י', כ' | **exact** | « ובו תדבק » — la formule revient aussi en 11:22, 13:5, 30:20 |
+| מסילת ישרים ג' | **exact** | « שיהיה מדקדק ושוקל דרכיו דבר יום ביומו » |
+| מסילת ישרים י"ט | **corrigé** | le chapitre existe, mais il prie pour la délivrance et le peuple, pas pour la conversation personnelle |
+| שמות ל"ג, י"א | **corrigé** | « כאשר ידבר איש אל־רעהו », et non « כדבר » |
+| ליקוטי מוהר"ן א', ב' | **exact** | et dit bien **משיח**, pas « איש הישראלי » |
+| ראשית חכמה, שער הקדושה | **corrigé** | פרק ו' et non י"ב ; le ch. 12 parle aussi de retrait, le renvoi était décalé, pas inventé |
+| ספר החרדים | **partiel** | ouvrage et contenu confirmés, de רבי אלעזר אזכרי ; le numéro פרק ע"ג n'est pas vérifiable dans cette édition |
+| « ותן בלבנו בינה » | **exact, précisé** | *Ahava Rabba* — mais en noussa'h **Édot haMizra'h** et Sefard ; l'ashkénaze dit « ותן בלבנו להבין » |
+| « ויחד לבבנו ליראה ולאהבה » | **corrigé** | les trois rites disent **לאהבה וליראה** ; aucun ne dit l'inverse |
+| קיצור ליקוטי מוהר"ן | **hors de portée** | absent des 6 214 ouvrages |
+| חפץ חיים, ליקוטי אמרים פרק י' | **hors de portée** | absent des 6 214 ouvrages |
+| השתפכות הנפש | **hors de portée** | absent des 6 214 ouvrages |
+| רבינו בחיי, האר"י, החיד"א, בעל התניא, רבי אלימלך, רבי אהרן מקרלין, הרמב"ם, הרמב"ן, חובות הלבבות, רבינו יונה | **rien à vérifier** | ce sont des noms cités sans renvoi précis |
+
+**Bilan : 9 exacts, 4 corrigés, 1 partiel, 3 hors de portée.** Les quatre
+corrections et la précision sont portées dans le guide, chacune dans son
+encadré.
+
+### Les deux formules liturgiques — ce que la vérification a appris
+
+Elles étaient jusqu'ici notées « usuelles, non vérifiées faute de texte de
+référence ». Le corpus contient en fait trois siddourim ; les trois ont été
+ouverts.
+
+« וְתֵן בְּלִבֵּנוּ בִּינָה » : 3 occurrences en Édot haMizra'h, 2 en Sefard,
+**0 en ashkénaze**, qui lit « וְתֵן בְּלִבֵּנוּ לְהָבִין ». La formule du guide est
+donc juste, et séfarade. Cela dit quelque chose du public visé.
+
+« וְיַחֵד לְבָבֵנוּ » : les trois rites lisent **לְאַהֲבָה וּלְיִרְאָה**, l'amour avant
+la crainte. La forme du guide, verbes inversés, n'apparaît dans aucun des
+trois — 0 occurrence sur 3 siddourim. Ordre rétabli.
+
+## La question de droits est close
+
+Le propriétaire déclare le 22/09 être l'auteur du guide (« C'est mon
+texte »). Ce qui bloquait son insertion dans l'APK n'existe plus.
+
+**Ce que cela ne change pas** : les 24 fiches d'articles de
+`bibliotheque.json` restent attribuées à breslev.org, avec
+`autorisation: null`. Que le guide soit du propriétaire ne rend pas ces
+fiches-là libres — ce sont deux choses distinctes, et le test bloquant
+qui les garde fermées reste en place. Il ne bougera que sur une réponse
+qui porte sur elles.
+
 ## Ce qui reste hors de portée
 
 **קיצור ליקוטי מוהר"ן**, **חפץ חיים — ליקוטי אמרים פרק י'** et

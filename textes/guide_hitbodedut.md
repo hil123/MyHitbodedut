@@ -2,15 +2,18 @@
     Texte fourni le 22/09/2026 par le propriétaire de l'application,
     conservé ici mot pour mot, tel qu'il a été transmis.
 
-    IL N'EST PAS DANS L'APPLICATION, et ce n'est pas un oubli : voir la
-    question de droits posée dans FEUILLE_DE_ROUTE.md, proposition 10. Ce
-    dépôt est privé ; l'APK, lui, est distribué.
+    DROITS TRANCHÉS le 22/09 : le propriétaire de l'application déclare en
+    être l'auteur (« C'est mon texte »). La question qui bloquait son
+    insertion — posée dans FEUILLE_DE_ROUTE.md, proposition 10 — ne se pose
+    donc plus. Ce qui reste avant insertion n'est plus juridique mais
+    éditorial : quatre renvois ne sont toujours pas vérifiables faute de
+    texte de référence (voir guide_hitbodedut.verification.md).
 
-    TROIS CORRECTIONS y ont été portées le 22/09, chacune signalée sur
-    place par un encadré plutôt que faite en silence : un texte qu'on vous
-    a transmis ne se réécrit pas sans le dire. La version d'origine reste
-    dans l'historique git ; le détail est dans
-    guide_hitbodedut.verification.md.
+    QUATRE CORRECTIONS ET UNE PRÉCISION y ont été portées le 22/09,
+    chacune signalée sur place par un encadré plutôt que faite en
+    silence : un texte qu'on vous a transmis ne se réécrit pas sans le
+    dire. La version d'origine reste dans l'historique git ; le détail est
+    dans guide_hitbodedut.verification.md.
 -->
 
 # MyHitbodedut — המדריך המקיף להתבודדות
@@ -245,9 +248,23 @@ MyHitbodedut נותנת מקום לעצירה הזאת.
 
 המאמר שואל למעשה : אם יראת שמים תלויה בבחירה שלי, למה להתפלל עליה?
 
-**התשובה** — צריך להתפלל גם על הרוחניות. לדוגמה "ותן בלבנו בינה..." ו"ויחד
-לבבנו ליראה ולאהבה את שמך". כלומר, האדם עושה את שלו — ובמקביל מבקש מהקב"ה
-עזרה בעבודת ה'.
+**התשובה** — צריך להתפלל גם על הרוחניות. לדוגמה "וְתֵן בְּלִבֵּנוּ בִּינָה..." ו"וְיַחֵד
+לְבָבֵנוּ **לְאַהֲבָה וּלְיִרְאָה** אֶת שְׁמֶךָ". כלומר, האדם עושה את שלו — ובמקביל מבקש
+מהקב"ה עזרה בעבודת ה'.
+
+> **Correction du 22/09** — les deux formules viennent bien de la
+> bénédiction *Ahava Rabba*, avant le Chéma du matin, et elles sont
+> désormais vérifiées, ce qu'elles n'étaient pas au premier passage.
+>
+> « וְתֵן בְּלִבֵּנוּ בִּינָה » est exact — mais en **noussa'h Édot haMizra'h** (et
+> Sefard). Le rite ashkénaze dit « וְתֵן בְּלִבֵּנוּ לְהָבִין » : la formule citée y
+> est absente. Le guide suit donc le rite séfarade, ce qu'il vaut la
+> peine de savoir.
+>
+> « וְיַחֵד לְבָבֵנוּ » portait en revanche les deux verbes **inversés**. Les
+> trois rites vérifiés — ashkénaze, Sefard, Édot haMizra'h — disent tous
+> **לְאַהֲבָה וּלְיִרְאָה**, l'amour avant la crainte, et aucun ne dit l'inverse.
+> L'ordre est rétabli.
 
 ### "האם שומעים אותי?"
 

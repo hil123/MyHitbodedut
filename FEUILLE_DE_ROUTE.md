@@ -116,17 +116,25 @@ Restent donc, pour 2 : adapter la structure guidée au sujet choisi.
   intégral** et aucune autorisation. Un test bloquant l'empêche. La
   pensée du jour devra venir des sources libres, pas de ceux-là.
 - **Texte reçu le 22/09**, conservé mot pour mot dans
-  `textes/guide_hitbodedut.md`. Il **n'est pas dans l'application**, et
-  voici pourquoi : ses quatorze parties se superposent une à une aux
+  `textes/guide_hitbodedut.md`. **Droits tranchés le 22/09** : le
+  propriétaire déclare en être l'auteur (« C'est mon texte »). Le
+  paragraphe qui suit dit pourquoi la question s'était posée ; elle est
+  close. Ses quatorze parties se superposent une à une aux
   articles de la série הפגישה déjà répertoriés — מבוא, היכן המטמון,
   חלום אמיתי, קשר אמיתי (א–ד), התבודדות וגדולי ישראל, אני בן תורה,
   הנשק האמיתי, המדריך המעשי. Ce sont ceux dont la fiche porte
   `autorisation: null` et « autorisation écrite requise ».
 
-  Ce texte est une **synthèse**, pas une reproduction — ce n'est pas la
-  même chose, et il se peut très bien qu'il soit libre de droits. Mais ce
-  dépôt est privé alors que l'APK est distribué : la question doit être
-  tranchée avant, pas après.
+  La superposition seule ne prouvait rien — une synthèse n'est pas une
+  reproduction. C'est bien pourquoi la question se posait plutôt qu'elle
+  ne se concluait, et c'est le propriétaire qui l'a tranchée : le texte
+  est de lui. Rien ne s'oppose plus à son insertion.
+
+  **Ce qui reste avant de l'insérer n'est plus juridique mais
+  éditorial** : quatre renvois ne sont pas vérifiables faute de texte de
+  référence (Kitsour Likoutei Moharan, 'Hafets 'Haïm Likoutei Amarim 10,
+  Hishtapkhout haNefesh, et le numéro de chapitre ע"ג du Sefer Haredim).
+  Le détail est dans `textes/guide_hitbodedut.verification.md`.
 
   **Ce qui est sûr et immédiatement utilisable** : les sources classiques
   que ce texte cite sont du domaine public, et la bibliothèque a
@@ -168,6 +176,45 @@ Restent donc, pour 2 : adapter la structure guidée au sujet choisi.
   seul fichier. C'est la question des notes vocales, toujours ouverte.
 
 ---
+
+## Les prières par sujet — fait le 22/09
+
+Dix sujets demandés, dix prières, ajoutées à la bibliothèque comme entrées
+`source` dans une section `tefilot` : hitbodedout, sim'ha, Ouman,
+kedoucha, zéra chel kayama, parnassa, chmirat habrit, guéoula, zivoug,
+réfoua chelema.
+
+Toutes viennent de **ליקוטי תפילות** de Rabbi Nathan de Breslov (m. 1844).
+Chaque prière annonce en tête la leçon de Likoutei Moharan dont elle
+procède ; **les dix leçons ont été ouvertes et vérifiées** une à une, pas
+crues sur parole.
+
+**Licence** : le texte de Rabbi Nathan est du domaine public. La
+vocalisation, elle, est le travail éditorial d'une édition de 2021 dont
+Sefaria ne déclare pas la licence. La règle déjà en vigueur dans le projet
+pour Si'hot haRan et Chiv'hei haRan s'applique donc : `nikkoud_ok: false`,
+et c'est la forme non vocalisée qui s'affiche. Un test le garde.
+
+**Un choix éditorial à signaler** : plusieurs prières de guérison de
+ce recueil demandent expressément d'être préservé des médecins, et disent
+des médecins qu'ils « tuent des âmes de leurs mains ». Elles n'ont pas été
+retenues. Celle qui l'a été — חלק א, תפילה קל"ו — demande la guérison sans
+rien dire contre le soin. Dans une application que quelqu'un peut ouvrir
+un jour de maladie, cela ne se décide pas au hasard ; si vous voulez le
+texte intégral malgré tout, c'est votre appel, pas le mien.
+
+### Les trois recueils demandés qui manquent
+
+**כוכבי אור**, **les livres du Rav Shalom Arush** et **ceux du Yanuka** ne
+sont dans aucun des 6 214 ouvrages hébreux du corpus — balayage complet,
+ce n'est pas « pas trouvé ». Aucun texte ne peut donc en être tiré ici.
+
+Vous indiquez avoir **reçu leur autorisation**. Elle est notée, et elle
+lève la question des droits pour ces trois-là — mais elle ne fournit pas
+le texte. Pour les ajouter il faut : soit les textes eux-mêmes (copiés,
+photographiés, peu importe), soit une source en ligne que je puisse
+atteindre. Et, pour la trace, de qui vient l'autorisation, quand, et sur
+quoi elle porte — c'est ce qui la rend vérifiable plus tard.
 
 ## Décisions du 22/09
 
