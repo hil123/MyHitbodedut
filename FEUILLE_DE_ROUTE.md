@@ -179,15 +179,27 @@ Restent donc, pour 2 : adapter la structure guidée au sujet choisi.
 
 ## Les prières par sujet — fait le 22/09
 
-Dix sujets demandés, dix prières, ajoutées à la bibliothèque comme entrées
-`source` dans une section `tefilot` : hitbodedout, sim'ha, Ouman,
-kedoucha, zéra chel kayama, parnassa, chmirat habrit, guéoula, zivoug,
-réfoua chelema.
+Dix sujets demandés, **vingt prières — deux par sujet**, ajoutées à la
+bibliothèque comme entrées `source` dans une section `tefilot` :
+hitbodedout, sim'ha, Ouman, kedoucha, zéra chel kayama, parnassa,
+chmirat habrit, guéoula, zivoug, réfoua chelema.
 
-Toutes viennent de **ליקוטי תפילות** de Rabbi Nathan de Breslov (m. 1844).
-Chaque prière annonce en tête la leçon de Likoutei Moharan dont elle
-procède ; **les dix leçons ont été ouvertes et vérifiées** une à une, pas
-crues sur parole.
+Toutes viennent de **ליקוטי תפילות** de Rabbi Nathan de Breslov (m. 1844),
+et de lui seul : Likoutei Etsot avait été proposé, le propriétaire a
+tranché pour rester dans Likoutei Tefilot. Chaque prière annonce en tête
+la leçon de Likoutei Moharan dont elle procède ; **les vingt leçons ont
+été ouvertes et vérifiées** une à une, pas crues sur parole.
+
+**Ce que chaque entrée avoue** — Reb Noson tire de chaque leçon une prière
+très large. La demande peut donc s'y trouver sans que la leçon traite du
+sujet. Plutôt que de le laisser croire, chaque entrée porte un champ
+`lecon_sur_le_sujet` : **12 oui, 2 partiel, 6 non**. Un test tombe si
+toutes les entrées se mettent à dire « oui ».
+
+La mesure elle-même a failli mentir : une première règle, fondée sur la
+seule densité, donnait « oui » à guéoula sur **une seule** occurrence,
+parce que la leçon ne fait que 319 caractères. Seuil relevé à trois
+occurrences.
 
 **Licence** : le texte de Rabbi Nathan est du domaine public. La
 vocalisation, elle, est le travail éditorial d'une édition de 2021 dont

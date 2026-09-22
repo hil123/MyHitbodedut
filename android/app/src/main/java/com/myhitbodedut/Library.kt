@@ -27,6 +27,15 @@ data class SourceEntry(
     val liensChizuk: List<String>,
     val note: String?,
     val statutVerif: String,
+    /** Le sujet demandé auquel cette entrée répond, quand elle en sert un. */
+    val sujet: String?,
+    /**
+     * La leçon annoncée porte-t-elle sur ce sujet — « oui », « partiel »,
+     * « non » ? Reb Noson tire de chaque leçon une prière très large : la
+     * demande peut s'y trouver sans que la leçon traite du sujet. Le dire
+     * vaut mieux que le laisser croire.
+     */
+    val leconSurLeSujet: String?,
 ) : LibraryEntry
 
 /** Article moderne : fiche seulement, sauf autorisation écrite. */
@@ -110,6 +119,8 @@ object LibraryLoader {
         liensChizuk = Json.strings(o.optJSONArray("liens_chizuk")),
         note = Json.nullable(o, "note"),
         statutVerif = o.optString("statut_verif", ""),
+        sujet = Json.nullable(o, "sujet"),
+        leconSurLeSujet = Json.nullable(o, "lecon_sur_le_sujet"),
     )
 
     private fun article(o: JSONObject) = ArticleEntry(

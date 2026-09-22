@@ -29,23 +29,58 @@ class TefilotTest {
             .orEmpty()
 
     @Test
-    fun `les dix sujets demandes sont tous servis`() {
-        assertEquals(
-            "une prière par sujet, ni plus ni moins",
-            sujets.size,
-            tefilot.size,
-        )
+    fun `les dix sujets demandes sont tous servis, deux fois`() {
+        assertEquals("deux prières par sujet", sujets.size * 2, tefilot.size)
         sujets.forEach { sujet ->
-            assertNotNull(
-                "aucune prière pour « $sujet »",
-                tefilot.firstOrNull { it.id == "src-lt-$sujet" },
+            assertEquals(
+                "il faut deux prières pour « $sujet »",
+                2,
+                tefilot.count { it.sujet == sujet },
+            )
+            listOf("src-lt-$sujet", "src-lt-$sujet-2").forEach { id ->
+                assertNotNull("entrée manquante : $id", tefilot.firstOrNull { it.id == id })
+            }
+        }
+    }
+
+    /**
+     * Deux prières sur le même sujet doivent être deux prières différentes.
+     * Sans ce test, dupliquer la première passerait inaperçu.
+     */
+    @Test
+    fun `les deux prieres d un sujet ne sont pas la meme`() {
+        assertEquals(sujets.size * 2, tefilot.size)
+        sujets.forEach { sujet ->
+            val deux = tefilot.filter { it.sujet == sujet }
+            assertEquals("« $sujet » : deux références identiques (${deux[0].ref})",
+                2, deux.map { it.ref }.distinct().size)
+            assertEquals("« $sujet » : deux textes identiques",
+                2, deux.map { it.paragraphes }.distinct().size)
+        }
+    }
+
+    /**
+     * Le constat honnête : la leçon annoncée porte-t-elle sur le sujet ?
+     * Trois réponses seulement, et aucune entrée n'a le droit de se taire.
+     */
+    @Test
+    fun `chaque priere dit si sa lecon porte sur le sujet`() {
+        assertEquals(sujets.size * 2, tefilot.size)
+        tefilot.forEach { t ->
+            assertTrue(
+                "${t.id} : constat manquant ou hors barème (« ${t.leconSurLeSujet} »)",
+                t.leconSurLeSujet in listOf("oui", "partiel", "non"),
             )
         }
+        assertTrue(
+            "aucune entrée ne dit « non » : le constat ne distingue plus rien",
+            tefilot.any { it.leconSurLeSujet == "non" },
+        )
     }
 
     @Test
     fun `aucune priere n est vide ni tronquee`() {
-        assertEquals("rien à vérifier : la sous-section est vide", sujets.size, tefilot.size)
+        assertEquals("rien à vérifier : la sous-section est vide", sujets.size * 2, tefilot.size)
         tefilot.forEach { t ->
             assertTrue("${t.id} : aucun paragraphe", t.paragraphes.isNotEmpty())
             t.paragraphes.forEachIndexed { i, p ->
@@ -58,7 +93,7 @@ class TefilotTest {
 
     @Test
     fun `chaque priere dit d ou elle vient`() {
-        assertEquals("rien à vérifier : la sous-section est vide", sujets.size, tefilot.size)
+        assertEquals("rien à vérifier : la sous-section est vide", sujets.size * 2, tefilot.size)
         tefilot.forEach { t ->
             assertTrue("${t.id} : titre hébreu manquant", t.titreHe.isNotBlank())
             assertTrue(
@@ -83,7 +118,7 @@ class TefilotTest {
             "licence non déclarée : nikkoud_ok ne peut pas valoir vrai",
             edition!!.nikkoudOk,
         )
-        assertEquals("rien à vérifier : la sous-section est vide", sujets.size, tefilot.size)
+        assertEquals("rien à vérifier : la sous-section est vide", sujets.size * 2, tefilot.size)
         tefilot.forEach { t ->
             assertEquals(
                 "${t.id} : il faut autant de paragraphes dans les deux formes",
