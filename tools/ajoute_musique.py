@@ -57,16 +57,25 @@ def cle(titre, pris, prefixe_muet='nigoun_sans_titre_'):
         if re.search(r'yanuka|shlomo_yehuda', s):
             s = 'yanuka_' + re.sub(r'yanuka|the_', '', s).strip('_')
     s = re.sub(r'_+', '_', s).strip('_')[:40].strip('_')
-    if re.fullmatch(r'\d*', s):
-        s = ''   # « 5 », « 2 », « 6 » : ce sont des restes, pas des titres
+    # Un numero de piste en tete du nom d'origine (« 6 Bratslav melodies »)
+    # n'est pas un titre : on le laisse tomber des lors qu'il reste des mots.
+    s = re.sub(r'^\d+_(?=[a-z])', '', s)
+    if not re.search(r'[a-z]', s):
+        s = ''   # « 5 », « 2_4 » : ce sont des restes, pas des titres
     if not s:
         # Pas de titre lisible : on numerote dans le schema du dossier vise,
         # pas dans celui de l'autre. Melanger les deux rend l'inventaire
         # illisible, ce qui est exactement ce qui est arrive une fois.
-        n = 1
-        while ('%s%d' % (prefixe_muet, n)) in pris:
+        # Et on reprend la numerotation la ou elle s'est arretee, a la
+        # largeur deja employee : « niggoun_1 » a cote de « niggoun_16 »
+        # est la meme illisibilite sous une autre forme.
+        vus = [m.group(1) for m in
+               (re.fullmatch(re.escape(prefixe_muet) + r'(\d+)', q) for q in pris) if m]
+        largeur = max((len(v) for v in vus), default=1)
+        n = max((int(v) for v in vus), default=0) + 1
+        while ('%s%0*d' % (prefixe_muet, largeur, n)) in pris:
             n += 1
-        s = '%s%d' % (prefixe_muet, n)
+        s = '%s%0*d' % (prefixe_muet, largeur, n)
     base, i = s, 2
     while s in pris:
         s, i = '%s_%d' % (base, i), i + 1

@@ -6,9 +6,10 @@ dans l'APK et n'en augmentent pas le poids.
 
 ## Pourquoi
 
-L'audio embarqué a atteint **128,2 Mo** pour 30 morceaux, contre 12 Mo pour
-tout le reste de l'application après R8 — un APK d'environ 140 Mo. Le
-garde-fou du test, déjà relevé trois fois (40 → 80 → 110 → 130), est au bout.
+L'audio embarqué a atteint le plafond de **130 Mo** — le chiffre exact est
+au tableau plus bas — contre 12 Mo pour tout le reste de l'application après
+R8. Le garde-fou du test, déjà relevé trois fois (40 → 80 → 110 → 130), est
+au bout.
 
 Depuis, tout nouvel envoi arrive ici automatiquement : `tools/ajoute_musique.py`
 compare le poids embarqué au plafond et range de ce côté-ci dès qu'il est
@@ -46,29 +47,30 @@ remis.
 
 | fichier | poids |
 |---|---|
-| `ani_maamin` | 2.0 Mo |
-| `anim_zemirot` | 2.1 Mo |
-| `breslov_playing_field_sea_waves` | 4.8 Mo |
-| `chabad_shabbos_shneor_lerer` | 4.7 Mo |
-| `chabad_yamim_noraim_shneor_lerer` | 8.6 Mo |
-| `nigun_abaal_shem_tov_for_babies` | 6.7 Mo |
-| `nigunim_for_neshama_shneor_lerer` | 27.8 Mo |
-| `relaxing_chabad_melodies_shneor_lerer` | 7.5 Mo |
-| `tremendous_threat_breslau_piano` | 9.5 Mo |
-| `tzama_with_orchestra` | 2.4 Mo |
-| `tzomo_lecho_s_lerer` | 2.4 Mo |
-| `vehi_sheamda_piano_shneor_lerer` | 2.0 Mo |
-| `vehi_sheamda_s_lerer` | 2.1 Mo |
-| `yosef_karduner` | 6.6 Mo |
-| `niggoun_01` … `niggoun_16` *(sans titre)* | 88.6 Mo |
+| `ani_maamin` | 2,0 Mo |
+| `anim_zemirot` | 2,1 Mo |
+| `bratslav_melodies_piano` | 3,3 Mo |
+| `breslov_playing_field_sea_waves` | 4,8 Mo |
+| `chabad_shabbos_shneor_lerer` | 4,7 Mo |
+| `chabad_yamim_noraim_shneor_lerer` | 8,6 Mo |
+| `nigun_abaal_shem_tov_for_babies` | 6,7 Mo |
+| `nigunim_for_neshama_shneor_lerer` | 27,8 Mo |
+| `relaxing_chabad_melodies_shneor_lerer` | 7,5 Mo |
+| `tremendous_threat_breslau_piano` | 9,5 Mo |
+| `tzama_with_orchestra` | 2,4 Mo |
+| `tzomo_lecho_s_lerer` | 2,4 Mo |
+| `vehi_sheamda_piano_shneor_lerer` | 2,0 Mo |
+| `vehi_sheamda_s_lerer` | 2,1 Mo |
+| `yosef_karduner` | 6,6 Mo |
+| `niggoun_01` … `niggoun_21` *(sans titre)* | 101,0 Mo |
 
-**30 morceaux, 177.6 Mo.** L'APK est à 129.5 Mo d'audio sur 31 morceaux.
+**36 morceaux, 193,3 Mo.** L'APK est à 129,5 Mo d'audio sur 31 morceaux.
 
 > Cet inventaire est régénéré depuis les fichiers, pas tenu à la main.
 
 ## Titres
 
-Ceux qui portent un nom l'ont gardé. Les six `niggoun_NN` n'en ont aucun :
+Ceux qui portent un nom l'ont gardé. Les 21 `niggoun_NN` n'en ont aucun :
 leurs noms de fichiers étaient entièrement en hébreu et le transfert les a
 remplacés par des underscores, et les tags ID3 sont vides. D'où la
 numérotation — on ne devine pas un titre. Les vrais noms sont les bienvenus.

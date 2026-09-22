@@ -104,8 +104,12 @@ class MusicFilesTest {
         val mo = octets / 1_048_576.0
         assertTrue(
             "audio embarqué : %.1f Mo. Seuil relevé trois fois ".format(mo) +
-                "(40 → 80 → 110 → 130). Le correctif est de télécharger les " +
-                "morceaux à la demande, pas de relever une quatrième fois.",
+                "(40 → 80 → 110 → 130). Le correctif est de n'embarquer qu'une " +
+                "sélection et de laisser le reste dans musique/, que " +
+                "MusicActivity sait déjà ouvrir depuis le téléphone — pas de " +
+                "relever une quatrième fois, et surtout pas de télécharger à " +
+                "la demande : l'application ne déclare aucune permission " +
+                "INTERNET, et c'est une propriété revendiquée.",
             mo < 130.0,
         )
     }
@@ -119,4 +123,50 @@ class MusicFilesTest {
             assertTrue("${f.name} ne commence ni par ID3 ni par une trame MPEG", ok)
         }
     }
+
+    /**
+     * Le dossier `musique/` — les morceaux gardés hors de l'APK — pèse
+     * maintenant plus lourd que ce qui est embarqué, et rien ne le regardait.
+     * `tools/ajoute_musique.py` contrôle à l'écriture ; ce test contrôle ce
+     * qui est dans le dépôt, ce qui n'est pas la même chose : un fichier
+     * déposé à la main échappe au premier et pas au second.
+     */
+    @Test
+    fun `le dossier musique ne double ni ne contredit ce qui est embarque`() {
+        val hors = File("../../musique").listFiles { f -> f.name.endsWith(".mp3") }.orEmpty()
+        assertTrue("dossier musique/ vide ou introuvable", hors.isNotEmpty())
+
+        val embarques = raw.listFiles { f -> f.name.endsWith(".mp3") }.orEmpty()
+            .associateBy { empreinte(it) }
+        val vues = HashMap<String, String>()
+        hors.forEach { f ->
+            val tete = f.inputStream().use { it.readNBytes(3) }
+            assertTrue(
+                "${f.name} ne commence ni par ID3 ni par une trame MPEG",
+                tete.contentEquals("ID3".toByteArray()) ||
+                    (tete.size >= 2 && tete[0] == 0xFF.toByte() && (tete[1].toInt() and 0xE0) == 0xE0),
+            )
+            val h = empreinte(f)
+            assertTrue(
+                "${f.name} est déjà embarqué sous le nom ${embarques[h]?.name} : " +
+                    "le même enregistrement livré deux fois",
+                !embarques.containsKey(h),
+            )
+            assertEquals(
+                "mêmes octets sous deux noms dans musique/ : ${f.name} = ${vues[h]}",
+                null,
+                vues.put(h, f.name),
+            )
+            assertTrue(
+                "${f.name} est dans musique/ mais déclaré dans MusicLibrary : " +
+                    "il serait joué sans être dans l'APK",
+                !code.contains("R.raw.${f.name.removeSuffix(".mp3")}"),
+            )
+        }
+    }
+
+    private fun empreinte(f: File): String =
+        MessageDigest.getInstance("SHA-256").digest(f.readBytes()).joinToString("") {
+            "%02x".format(it)
+        }
 }

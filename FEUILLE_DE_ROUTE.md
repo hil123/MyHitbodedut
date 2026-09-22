@@ -288,13 +288,20 @@ marche. Il suffit de :
 L'APK retombe à une vingtaine de Mo. Aucune permission nouvelle, aucun
 hébergement, aucune question de droits supplémentaire, et rien à construire.
 
-**Tant que ce choix n'est pas fait, chaque envoi rapproche du seuil.** À
-128,2 Mo sur 130, le prochain lot le franchira.
+**Le seuil a été franchi.** L'APK est à 129,5 Mo sur 130 pour 31 morceaux ;
+depuis, tout nouvel envoi va dans `musique/`, versionné mais hors de
+l'application — 36 morceaux, 193,3 Mo à ce jour. Le plafond n'a pas été
+relevé une quatrième fois et ne le sera pas sans décision explicite. Le
+choix de la sélection reste entier, et il ne presse plus : rien ne se perd
+et l'APK ne grossit plus.
 
-**Sept morceaux sont sans titre** : leurs noms de fichiers étaient
+**Beaucoup de morceaux sont sans titre** : leurs noms de fichiers étaient
 entièrement en hébreu, remplacés par des underscores au transfert, et les
-tags ID3 sont vides. Ils s'appellent « Niggoun — titre à préciser (1/2/3) »
-plutôt qu'un titre inventé. Un quatrième, d'Ishay Ribo, est dans le même cas.
+tags ID3 sont vides. Ils portent « Niggoun — titre à préciser » dans
+l'application et `niggoun_NN` dans `musique/`, plutôt qu'un titre inventé.
+Le compte exact est tenu par `tools/inventaire_musique.py`, qui régénère
+`musique/README.md` depuis les fichiers — un chiffre écrit à la main dérive,
+et celui-là avait déjà dérivé (« six » sous un tableau qui en listait seize).
 
 **Reste utile, si vous l'avez** : de qui vient chaque autorisation, quand, et
 sur quoi elle porte. C'est ce qui la rend vérifiable dans deux ans.
