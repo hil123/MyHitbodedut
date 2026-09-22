@@ -145,7 +145,7 @@ class ChizukRulesTest {
     private fun gabarit(statut: String, relu: Boolean) = ChizukItem(
         id = "t", moments = listOf(Moment.OUVERTURE), theme = null, edition = "lm",
         ref = "ref", refSefaria = null, url = null, he = "he", heSansNikkoud = null,
-        fr = "fr", en = "en", es = "es", note = null, dureeLectureSec = 5,
+        fr = "fr", en = "en", note = null, dureeLectureSec = 5,
         statutVerif = statut, relu = relu,
     )
 }

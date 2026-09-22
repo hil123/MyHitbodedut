@@ -288,38 +288,32 @@ marche. Il suffit de :
 L'APK retombe à une vingtaine de Mo. Aucune permission nouvelle, aucun
 hébergement, aucune question de droits supplémentaire, et rien à construire.
 
-**Espagnol (22/09) — l'interface, pas encore les textes.** Vérification
-demandée sur quatre langues. L'interface française, anglaise et hébraïque
-était à 100 % : mêmes 320 clés, aucun texte écrit en dur dans les cinquante
-layouts ni dans les cinquante fichiers Kotlin, marqueurs de format
-concordants. L'espagnol était à zéro, et le code ne savait pas exprimer une
-quatrième langue : `LocalizedText.forLanguage` finissait par `else -> he` et
-`ChizukCard.translationOf` par `else -> item.fr`, si bien qu'un téléphone
-espagnol aurait affiché un mélange d'hébreu et de français sans que rien ne
-le signale. Les deux règles nomment désormais chaque langue.
+**Espagnol : écrit le 22/09, retiré le 22/09, sur décision du
+propriétaire.** L'interface (327 textes), les titres de bibliothèque et les
+37 textes de 'hizouk avaient été traduits ; tout est retiré. Il ne reste
+que trois langues : français, anglais, hébreu. La traduction est dans
+l'historique (`values-es/`, commits `4330398` et `0275d17`) si elle doit
+resservir ; rien n'a été perdu, seulement décroché.
 
-`values-es/` porte les 327 textes. Les titres de la bibliothèque sont en
-espagnol.
+**Ce que ce détour a laissé et qu'on garde**, parce que cela ne dépendait
+pas de l'espagnol :
 
-**Les 37 textes de 'hizouk sont traduits** (8 521 caractères), sur demande
-du propriétaire, **sans marque « non relu »**. J'avais proposé de les
-marquer ainsi ; c'était une mauvaise idée et il a eu raison de la refuser.
-`relu: false` ne signale pas « à vérifier » : `ChizukRules.isPublishable`
-**retire l'item de l'édition release**. Marquer l'espagnol non relu aurait
-supprimé les 37 cartes de l'application, pour les lecteurs français et
-hébreux compris. Le champ `relu` porte sur l'item entier, pas sur une
-langue ; il n'a pas été touché.
+- `TraductionTest` vérifie les trois langues d'un coup — même jeu de clés,
+  aucune chaîne vide, marqueurs de format concordants, aucun texte écrit en
+  dur dans les cinquante layouts ni dans les cinquante fichiers Kotlin.
+  C'était vérifié écran par écran, jamais sur l'ensemble.
+- Un test garde la trace du piège trouvé : `LocalizedText.forLanguage` et
+  `ChizukCard.translationOf` finissent tous deux par un `else`. Poser un
+  `values-xx/` sans nommer la langue dans ces deux règles donnerait une
+  bibliothèque en hébreu et des textes en français, **sans rien qui le
+  signale**. Le test échoue désormais dès qu'un dossier de langue apparaît
+  sans sa règle — vérifié en posant un `values-pt/`.
 
-Un test comptait les textes espagnols absents et devait tomber le jour où
-ils existeraient. Il est tombé : remplacé par « chaque texte a ses trois
-traductions », plus deux gardes — aucune ligne espagnole n'est une copie du
-français ou de l'anglais, et chacune a une longueur plausible (rapport à
-l'anglais entre 0,83 et 1,32, médiane 1,02 : pas de ligne tronquée).
-
-**Ce qui manque encore** : les 24 résumés d'articles, absents de
-l'espagnol, **et aussi de l'anglais et de l'hébreu**, où ils retombent sur
-le français. L'écran de relecture ne montre que FR et EN : les textes
-espagnols ne peuvent pas y être comparés à la source.
+**Ce que la vérification avait établi et qui reste vrai** : l'interface
+française, anglaise et hébraïque est complète — 320 clés identiques,
+aucun texte en dur, marqueurs concordants. Les 24 résumés d'articles
+restent en français seul : l'anglais et l'hébreu y retombent sur le
+français. C'est le seul manque de traduction connu.
 
 **Renommer depuis l'application (22/09).** La fonction existait déjà et le
 propriétaire l'a demandée : elle n'était atteignable que par appui long,

@@ -8,17 +8,20 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 
 /**
- * Les quatre langues : français, anglais, espagnol, hébreu.
+ * Les trois langues : français, anglais, hébreu.
  *
- * La parité était vérifiée écran par écran, jamais sur l'ensemble — et
- * l'espagnol a été ajouté longtemps après les trois autres. Ce qui se vérifie
- * ici n'est pas « le fichier existe » mais « aucun texte ne peut échapper à
- * la traduction » : ni une clé oubliée dans une langue, ni une chaîne écrite
- * en dur dans un layout, ni une langue servie par un `else`.
+ * La parité était vérifiée écran par écran, jamais sur l'ensemble. Ce qui se
+ * vérifie ici n'est pas « le fichier existe » mais « aucun texte ne peut
+ * échapper à la traduction » : ni une clé oubliée dans une langue, ni une
+ * chaîne écrite en dur dans un layout ou dans le code.
+ *
+ * Ce test est né d'un ajout d'espagnol, écrit le 22/09 puis retiré le même
+ * jour sur décision du propriétaire. Ce qu'il vérifie ne dépendait pas de
+ * cette langue-là : il a été ramené à trois, pas supprimé.
  */
 class TraductionTest {
 
-    private val LANGUES = listOf("values", "values-en", "values-es", "values-iw")
+    private val LANGUES = listOf("values", "values-en", "values-iw")
 
     private class Textes(val simples: Map<String, String>, val pluriels: Map<String, String>)
 
@@ -156,26 +159,33 @@ class TraductionTest {
     }
 
     @Test
-    fun `aucune langue de l interface n est servie par un else`() {
-        // Le defaut precedent servait l'hebreu a toute langue non nommee, et
-        // le francais pour les textes de 'hizouk : un telephone espagnol
-        // affichait un melange, sans que rien ne le signale.
+    fun `une langue ajoutee sans etre nommee serait servie en hebreu`() {
+        // Ce qu'on a appris en ajoutant puis retirant l'espagnol : les deux
+        // regles finissent par un `else`, et une quatrieme langue posee dans
+        // values-xx/ sans etre nommee ici verrait la bibliotheque en hebreu
+        // et les textes en francais, sans que rien ne le signale. Le test
+        // garde la trace de ce qu'il faudra toucher ce jour-la.
         val json = File("src/main/java/com/myhitbodedut/Json.kt").readText()
         val carte = File("src/main/java/com/myhitbodedut/ChizukCard.kt").readText()
-        listOf("fr", "en", "es").forEach { langue ->
+        val posees = File("src/main/res").listFiles()!!
+            .mapNotNull { Regex("""values-([a-z]{2})$""").find(it.name)?.groupValues?.get(1) }
+            .filter { it != "iw" }
+        posees.forEach { langue ->
             assertTrue(
-                "Json.LocalizedText ne nomme pas « $langue »",
+                "values-$langue/ existe mais Json.LocalizedText ne nomme pas « $langue »",
                 json.contains("\"$langue\" ->"),
             )
             assertTrue(
-                "ChizukCard.translationOf ne nomme pas « $langue »",
-                carte.contains("\"$langue\" ->"),
+                "values-$langue/ existe mais ChizukCard.translationOf ne nomme pas « $langue », " +
+                    "ses textes seraient servis en français",
+                carte.contains("\"$langue\" ->") || langue == "fr",
             )
         }
+        assertTrue("aucun dossier de langue trouvé : la lecture est cassée", posees.contains("en"))
     }
 
     @Test
-    fun `les titres de la bibliotheque existent dans les quatre langues`() {
+    fun `les titres de la bibliotheque existent dans les trois langues`() {
         val json = JSONObject(File("src/main/res/raw/bibliotheque.json").readText())
         val sections = json.getJSONArray("sections")
         var vus = 0
@@ -187,7 +197,7 @@ class TraductionTest {
             }
             aVerifier.forEach { noeud ->
                 val titre = noeud.getJSONObject("titre")
-                listOf("he", "fr", "en", "es").forEach { langue ->
+                listOf("he", "fr", "en").forEach { langue ->
                     assertTrue(
                         "${noeud.getString("id")} n'a pas de titre en « $langue »",
                         titre.optString(langue).isNotBlank(),
