@@ -544,6 +544,31 @@ arrivent, la vraie réponse sera de les télécharger à la demande plutôt
 que de les livrer. Un test garde le seuil à 80 Mo pour forcer cette
 décision plutôt que de la laisser glisser.
 
+**Les cheveux du personnage, refaits en peot (22/09).** Signalé sur une
+capture d'écran d'accueil (`char_walking`) puis répété sur une deuxième
+(`char_open_arms`) : la longue mèche unique ne convient pas, il faut des
+peot. Le propriétaire a fourni une nouvelle planche de 16 portraits et
+quatre rendus isolés, tous redessinés avec des peot tressées. Les 20 poses
+nommées par `tools/decoupe_planche.py` en ont été retirées, plus
+`char_open_arms` — sans rendu dédié dans cet envoi, mais de même pose et de
+dimensions de découpe quasi identiques à `char_arms_raised` (623×900 contre
+626×900) : il s'agit très probablement du même rendu source, exporté deux
+fois sous deux noms. Il reçoit donc le même correctif.
+
+`char_walking` portait un défaut que l'outil ne peut pas détecter seul, et
+que son propre commentaire documente depuis l'incident précédent avec
+`char_torah` : une paire de chaussures du personnage de la cellule
+au-dessus (`char_praise`) reste visible, flottant au-dessus de sa tête. Ce
+n'est pas un fragment détaché — l'ombre portée sous ces chaussures descend
+juste assez sombre pour rester connectée, dans la détection de fond par
+connexité, à la tête du marcheur en dessous : pour l'algorithme, c'est une
+seule forme. Corrigé en blanchissant la bande contaminée de la cellule
+source avant la détection de fond, à la main, pour cette seule image.
+
+`tools/verifie_illustrations.py` confirme les 21 fichiers propres : aucun
+bord qui tranche, aucun fragment de voisin visible. `ic_launcher_face.webp`,
+hors de ce pipeline, n'a pas été touché.
+
 ## Décisions du 22/09
 
 | | |
