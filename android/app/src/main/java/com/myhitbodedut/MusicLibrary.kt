@@ -24,7 +24,17 @@ object MusicLibrary {
     private data class Bundled(val id: String, val rawRes: Int, val titleRes: Int)
 
     private val BUNDLED = listOf(
-        Bundled("hamelech_basade", R.raw.hamelech_basade, R.string.track_hamelech_basade)
+        Bundled("hamelech_basade", R.raw.hamelech_basade, R.string.track_hamelech_basade),
+        Bundled("yanuka_the_truth_will_rise", R.raw.yanuka_the_truth_will_rise, R.string.track_yanuka_the_truth_will_rise),
+        Bundled("yanuka_listening_to_the_heart", R.raw.yanuka_listening_to_the_heart, R.string.track_yanuka_listening_to_the_heart),
+        Bundled("yanuka_the_king_will_return", R.raw.yanuka_the_king_will_return, R.string.track_yanuka_the_king_will_return),
+        Bundled("yanuka_a_part_of_me", R.raw.yanuka_a_part_of_me, R.string.track_yanuka_a_part_of_me),
+        Bundled("yanuka_harping_his_praise", R.raw.yanuka_harping_his_praise, R.string.track_yanuka_harping_his_praise),
+        Bundled("yanuka_yearning", R.raw.yanuka_yearning, R.string.track_yanuka_yearning),
+        Bundled("yanuka_anticipation", R.raw.yanuka_anticipation, R.string.track_yanuka_anticipation),
+        Bundled("yanuka_shlomo_yehuda", R.raw.yanuka_shlomo_yehuda, R.string.track_yanuka_shlomo_yehuda),
+        Bundled("yanuka_shlomo_yehuda_2", R.raw.yanuka_shlomo_yehuda_2, R.string.track_yanuka_shlomo_yehuda_2),
+        Bundled("yanuka_nigoun_3", R.raw.yanuka_nigoun_3, R.string.track_yanuka_nigoun_3),
     )
 
     fun all(context: Context): List<Track> = BUNDLED.map { b ->

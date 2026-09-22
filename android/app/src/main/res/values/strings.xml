@@ -231,6 +231,19 @@
     <string name="music_on_summary">%1$s, volume %2$d %%</string>
     <string name="session_music_line">Musique : %1$s</string>
     <string name="track_hamelech_basade" translatable="false">המלך בשדה</string>
+    <string name="track_yanuka_the_truth_will_rise" translatable="false">The Truth Will Rise — The Yanuka\'s Melodies</string>
+    <string name="track_yanuka_listening_to_the_heart" translatable="false">Listening to the Heart — HaYanuka Melodies</string>
+    <string name="track_yanuka_the_king_will_return" translatable="false">The King Will Return — The Yanuka\'s Melodies</string>
+    <string name="track_yanuka_a_part_of_me" translatable="false">A Part of Me — The Yanuka\'s Melodies</string>
+    <string name="track_yanuka_harping_his_praise" translatable="false">Harping His Praise — The Yanuka\'s Melodies</string>
+    <string name="track_yanuka_yearning" translatable="false">Yearning — The Yanuka\'s Melodies</string>
+    <!-- Niggounim du Yanuka. Les titres hébreux des fichiers ont été perdus au
+         transfert (remplacés par des underscores) et les tags ID3 sont vides :
+         on nomme avec ce qui est vérifiable, à corriger dès qu'on aura les noms. -->
+    <string name="track_yanuka_anticipation" translatable="false">Anticipation — The Yanuka\'s Melodies</string>
+    <string name="track_yanuka_shlomo_yehuda" translatable="false">The Yanuka — Rabbi Shlomo Yehuda</string>
+    <string name="track_yanuka_shlomo_yehuda_2" translatable="false">The Yanuka — Rabbi Shlomo Yehuda (2)</string>
+    <string name="track_yanuka_nigoun_3" translatable="false">ניגון — הינוקא (3)</string>
     <string name="music_open_library">Ouvrir la bibliothèque</string>
     <string name="app_version">Version %1$s (%2$d) · %3$s</string>
     <string name="edition_full">édition complète</string>

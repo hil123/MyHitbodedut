@@ -238,12 +238,39 @@ déjà ; le taire à l'écran serait le cacher.
 sont dans aucun des 6 214 ouvrages hébreux du corpus — balayage complet,
 ce n'est pas « pas trouvé ». Aucun texte ne peut donc en être tiré ici.
 
-Vous indiquez avoir **reçu leur autorisation**. Elle est notée, et elle
-lève la question des droits pour ces trois-là — mais elle ne fournit pas
-le texte. Pour les ajouter il faut : soit les textes eux-mêmes (copiés,
-photographiés, peu importe), soit une source en ligne que je puisse
-atteindre. Et, pour la trace, de qui vient l'autorisation, quand, et sur
-quoi elle porte — c'est ce qui la rend vérifiable plus tard.
+**Droits — déclaration du propriétaire, 22/09** : « Tout ce qui est de Rav
+Arush et Yanuka j'ai obtenu les autorisations légales des ayants droit. »
+C'est consigné ici tel quel. Cela vaut pour les niggounim ci-dessous et
+pour les feuillets de prières reçus le même jour, dont le pied de page
+porte pourtant « כל הזכויות שמורות למכון 'ים שלמה' » — la mention imprimée
+et l'autorisation obtenue ne se contredisent pas, mais il vaut mieux que
+les deux soient écrites côte à côte plutôt qu'une seule.
+
+Reste utile pour la trace, si vous l'avez : de qui vient l'autorisation,
+quand, et sur quoi elle porte. C'est ce qui la rend vérifiable dans deux
+ans par quelqu'un qui n'était pas là.
+
+**Kokhvei Or** n'est toujours pas fourni ; il reste hors de portée.
+
+### Les niggounim du Yanuka — dans l'application
+
+Dix morceaux ajoutés aux morceaux jouables pendant la séance, à côté de
+*המלך בשדה*. Sur les seize fichiers envoyés, **six étaient des doublons
+octet pour octet** sous des noms différents : l'empreinte tranche, pas le
+nom, et un test l'interdit désormais pour de bon.
+
+Les titres hébreux ont été perdus au transfert — remplacés par des
+underscores — et les tags ID3 sont vides. Les morceaux portent donc leur
+titre latin, qui lui a survécu. À corriger dès qu'on aura les noms exacts.
+
+**Le poids est la contrepartie** : 51 Mo d'audio, contre 12 Mo pour tout
+le reste de l'application après R8. L'audio ne se compresse plus, donc
+l'APK passe d'environ 12 Mo à plus de 60. Rien ne casse — la distribution
+se fait par GitHub Releases, pas par le Play Store, qui aurait ses
+limites. Mais c'est un gros téléchargement, et si d'autres morceaux
+arrivent, la vraie réponse sera de les télécharger à la demande plutôt
+que de les livrer. Un test garde le seuil à 80 Mo pour forcer cette
+décision plutôt que de la laisser glisser.
 
 ## Décisions du 22/09
 
