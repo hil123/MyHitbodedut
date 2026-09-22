@@ -241,6 +241,7 @@ qu'elles ne portent pas sur les mêmes ayants droit :
 |---|---|---|
 | « tout ce qui est de Rav Arush et Yanuka, j'ai obtenu les autorisations légales des ayants droit » | le Yanuka | les 10 niggounim |
 | « j'ai aussi ces droits-là » — en réponse à une question posée sur ces cinq titres précisément | Ishay Ribo, Motty Steinmetz, MBD, Shmuel | Nafshi, Ata Zocher, Halev Sheli, un quatrième titre Ribo, Give Me One Prayer |
+| les envois suivants, sous la même déclaration | Shneor Lerer (Chabad Melodies), *Tzama with orchestra* | rangés dans `musique/`, hors APK |
 
 La seconde a été demandée avant d'ajouter quoi que ce soit : ces cinq-là sont
 des enregistrements commerciaux d'artistes sous label, hors du périmètre de la

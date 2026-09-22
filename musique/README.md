@@ -39,8 +39,28 @@ téléchargement depuis un serveur public, qui rendrait ces enregistrements
 accessibles à n'importe qui et non plus aux seules personnes à qui l'APK est
 remis.
 
+## Ce qu'il y a ici
+
+| fichier | poids |
+|---|---|
+| `chabad_shabbos_shneor_lerer` | 4,7 Mo |
+| `chabad_yamim_noraim_shneor_lerer` | 8,6 Mo |
+| `tzama_with_orchestra` | 2,4 Mo |
+| `vehi_sheamda_piano_shneor_lerer` | 2,0 Mo |
+| `niggoun_01` … `niggoun_06` | 25,0 Mo |
+
+**Dix morceaux, 42,7 Mo.**
+
 ## Titres
 
-Les noms de fichiers d'origine étaient entièrement en hébreu et ont été
-remplacés par des underscores au transfert ; les tags ID3 sont vides. D'où la
-numérotation. Les vrais titres sont les bienvenus.
+Ceux qui portent un nom l'ont gardé. Les six `niggoun_NN` n'en ont aucun :
+leurs noms de fichiers étaient entièrement en hébreu et le transfert les a
+remplacés par des underscores, et les tags ID3 sont vides. D'où la
+numérotation — on ne devine pas un titre. Les vrais noms sont les bienvenus.
+
+## Droits
+
+Shneor Lerer s'ajoute aux noms déjà couverts par les déclarations du
+propriétaire (Rav Arush et le Yanuka ; puis Ishay Ribo, Motty Steinmetz, MBD
+et Shmuel). Il est noté ici parce que le registre ne vaut que s'il est tenu à
+jour — voir `FEUILLE_DE_ROUTE.md`.
