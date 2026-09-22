@@ -35,17 +35,20 @@ jobs:
       # Une seconde de silence à la place de chaque morceau. Les noms de
       # fichiers ne bougent pas, donc aucun R.raw ne disparaît et le code
       # compile sans être touché.
+      #
+      # Sans ffmpeg : le runner ne l'a pas, la première tentative est morte
+      # sur « ffmpeg: command not found ». tools/silence_mp3.py écrit les
+      # trames à la main, ce qui se vérifie hors du runner.
       - name: Replace the music with silence
         run: |
           set -e
-          cd android/app/src/main/res/raw
-          avant=$(du -sh . | cut -f1)
-          for f in *.mp3; do
-            ffmpeg -loglevel error -y -f lavfi -i anullsrc=r=44100:cl=mono \
-                   -t 1 -codec:a libmp3lame -b:a 32k "silence.tmp"
-            mv silence.tmp "$f"
+          avant=$(du -sh android/app/src/main/res/raw | cut -f1)
+          python3 tools/silence_mp3.py /tmp/silence.mp3 1
+          for f in android/app/src/main/res/raw/*.mp3; do
+            cp /tmp/silence.mp3 "$f"
           done
-          echo "res/raw : $avant -> $(du -sh . | cut -f1) pour $(ls *.mp3 | wc -l) morceaux"
+          apres=$(du -sh android/app/src/main/res/raw | cut -f1)
+          echo "res/raw : $avant -> $apres pour $(ls android/app/src/main/res/raw/*.mp3 | wc -l) morceaux"
 
       - name: Build the test edition
         working-directory: android
