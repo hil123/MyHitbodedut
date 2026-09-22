@@ -377,7 +377,7 @@ décision plutôt que de la laisser glisser.
 |---|---|
 | **1** | **faite le 22/09** : le prénom, et la carte de départ (durée, sujet, musique, concentration) |
 | **2** | sujet **facultatif** — décidé et construit |
-| **10** | texte reçu le 22/09, **treize renvois vérifiés, trois corrigés**. Conservé dans `textes/`. **Pas dans l'APK tant que la question de droits n'est pas tranchée.** Quatre sources hors de portée sont vérifiées par le propriétaire. |
+| **10** | texte reçu le 22/09, **treize renvois vérifiés, trois corrigés**. Conservé dans `textes/`. **Droits tranchés le 22/09** — le propriétaire en est l'auteur, rien ne s'oppose plus à l'insertion. **Toujours pas dans l'APK**, pour une raison désormais éditoriale et non juridique : quatre renvois restent invérifiables faute de texte de référence. C'est une décision qui revient au propriétaire, pas un blocage technique. |
 | **11** | **partage autorisé** — ce sera le seul endroit où un texte sort de l'appareil |
 | **12** | **feu vert**. Reste que cette partie n'a jamais tourné sur un vrai téléphone : l'habiller avant de l'éprouver serait mettre un costume à ce dont on ignore s'il marche |
 | **15** | **micro autorisé** → `RECORD_AUDIO`, de l'audio à stocker, et un export qui cesse d'être un seul fichier |
