@@ -14,6 +14,10 @@ name: APK d'essai léger
 on:
   workflow_dispatch:
 
+# Sans cela le jeton est en lecture seule et la publication est refusée.
+permissions:
+  contents: write
+
 jobs:
   leger:
     runs-on: ubuntu-latest
@@ -75,4 +79,4 @@ jobs:
           gh release create essai MyHitbodedut-essai.apk \
             --title "Édition d'essai, sans la musique" \
             --notes "Même application que la dernière version, mais les 33 morceaux sont remplacés par une seconde de silence, ce qui ramène l'APK de 125 Mo a une douzaine. Suffixe .debug : elle s'installe a cote de l'edition normale et ne la remplace pas. Construite depuis ${{ github.sha }}." \
-            --latest=false
+            --prerelease
