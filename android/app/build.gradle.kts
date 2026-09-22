@@ -17,6 +17,11 @@ android {
         val build = System.getenv("VERSION_CODE")?.toIntOrNull() ?: 0
         versionCode = 1 + build
         versionName = "1.$build"
+        // Valeur par defaut : seule l'edition d'essai la change, en debug.
+        // Sans ce defaut, une variante qui ne passe pas par ce buildType
+        // (release, light) referencerait un marqueur jamais rempli, et la
+        // fusion du manifeste echouerait.
+        manifestPlaceholders["appLabel"] = "@string/app_name"
     }
 
     /*
@@ -68,6 +73,21 @@ android {
             applicationIdSuffix = if (essaiLeger) ".debug.essai" else ".debug"
             versionNameSuffix = if (essaiLeger) "-essai" else "-debug"
             signingConfig = signingConfigs.getByName("release")
+            // Les deux portaient le meme nom affiche, « MyHitbodedut » : deux
+            // icones identiques sur l'ecran d'accueil, aucun moyen de les
+            // distinguer au premier coup d'œil. Un retour a persiste apres
+            // le correctif d'identifiant precedent, alors que le paquet
+            // etait bien distinct — la confusion se faisait probablement au
+            // moment de choisir laquelle des deux icones rouvrir.
+            //
+            // Un marqueur de manifeste (« placeholder »), pas resValue : un
+            // resValue de meme nom qu'une chaine deja declaree dans
+            // values/strings.xml (app_name l'est) casse la fusion des
+            // ressources pour tout ce qui partage ce type de compilation —
+            // Relecture aussi bien que l'essai. Le marqueur, lui, ne touche
+            // que le texte du manifeste, jamais les ressources.
+            manifestPlaceholders["appLabel"] =
+                if (essaiLeger) "MyHitbodedut (essai)" else "@string/app_name"
         }
 
         /*

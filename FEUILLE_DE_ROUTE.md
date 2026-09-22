@@ -314,6 +314,26 @@ française, anglaise et hébraïque est complète — 320 clés identiques,
 aucun texte en dur, marqueurs concordants. Les 24 résumés d'articles,
 eux, ont été traduits le 22/09 — voir plus bas.
 
+**Deux icônes identiques, une seule ouverte (22/09).** Après le correctif
+d'identifiant, le propriétaire a continué de tester sans voir le bouton de
+langue ni le titre du Tikoun traduit — deux captures d'écran l'ont
+confirmé : thème clair, aucune des corrections du jour. L'identifiant de
+paquet était pourtant bien distinct ; ce qui manquait, c'est que les deux
+applications s'affichaient sous le **même nom**, « MyHitbodedut », sur
+l'écran d'accueil. Rien ne permettait de savoir laquelle des deux icônes
+rouvrir, et l'ancienne Relecture — jamais mise à jour depuis le début du
+problème de versionCode — restait la plus probable par habitude.
+
+Corrigé par un marqueur de manifeste (`appLabel`), pas par `resValue` :
+un `resValue` de même nom qu'une chaîne déjà déclarée dans
+`values/strings.xml` (`app_name` l'est) casse la fusion des ressources
+pour *toute* variante qui partage ce type de compilation — Relecture
+aussi bien que l'essai, donc `android.yml` aussi bien que
+`apk-essai.yml`. Le marqueur, lui, ne touche que le texte du manifeste.
+L'édition d'essai s'appelle désormais **« MyHitbodedut (essai) »** ;
+toutes les autres gardent leur nom. `PackagingTest` en garde la trace,
+vérifiée par sabotage.
+
 **« תיקון הכללי » restait figé en hébreu (22/09), signalé sur le
 téléphone.** Trois layouts pointaient sur `tikkun_title_he`
 (`translatable="false"`) plutôt que sur `tikkun_title` — qui existait

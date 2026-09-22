@@ -22,6 +22,7 @@ class PackagingTest {
 
     private val gradle = File("build.gradle.kts").readText()
     private val workflow = File("../../.github/workflows/apk-essai.yml").readText()
+    private val man = File("src/main/AndroidManifest.xml").readText()
 
     @Test
     fun `l edition d essai porte un identifiant different de relecture`() {
@@ -41,6 +42,27 @@ class PackagingTest {
             "apk-essai.yml ne pose plus ESSAI_LEGER : l'édition redeviendrait " +
                 "celle de Relecture, avec le même risque de versionCode en retard",
             workflow.contains("ESSAI_LEGER: \"true\""),
+        )
+    }
+
+    @Test
+    fun `l edition d essai porte un nom affiche distinct de relecture`() {
+        // Les deux applications sont installables l'une a cote de l'autre,
+        // mais si elles s'appellent toutes deux « MyHitbodedut » a l'ecran
+        // d'accueil, rien ne les distingue : c'est ce qui a fait tester
+        // l'ancienne Relecture, croyant tester la nouvelle edition d'essai.
+        assertTrue(
+            "AndroidManifest.xml n'utilise plus le marqueur de nom affiché",
+            man.contains("""android:label="${'$'}{appLabel}""""),
+        )
+        assertTrue(
+            "build.gradle.kts ne pose plus de valeur par défaut pour appLabel : " +
+                "les éditions release/light casseraient à la fusion du manifeste",
+            gradle.contains("""manifestPlaceholders["appLabel"] = "@string/app_name""""),
+        )
+        assertTrue(
+            "l'édition d'essai ne porte plus de nom affiché distinct",
+            gradle.contains(""""MyHitbodedut (essai)""""),
         )
     }
 }
