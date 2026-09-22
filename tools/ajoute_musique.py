@@ -124,9 +124,12 @@ def main():
     if embarques:
         lignes = ''.join('        Bundled("%s", R.raw.%s, R.string.track_%s),\n' % (c, c, c)
                          for c, _ in embarques)
-        anc = '        Bundled("hamelech_basade", R.raw.hamelech_basade, R.string.track_hamelech_basade),\n'
+        # Un morceau precis ne fait pas une ancre : celui qui servait de
+        # repere (hamelech_basade) est parti dans musique/ au premier echange,
+        # et l'outil serait mort avec lui. On s'accroche a la structure.
+        anc = '    private val BUNDLED = listOf(\n'
         if anc not in kt:
-            sys.exit('ancre introuvable dans MusicLibrary.kt')
+            sys.exit('liste BUNDLED introuvable dans MusicLibrary.kt')
         KT.write_text(kt.replace(anc, anc + lignes, 1))
 
         def echappe(t):
@@ -136,7 +139,9 @@ def main():
         t = ''.join('    <string name="track_%s" translatable="false">%s</string>\n'
                     % (c, echappe(titre or 'Niggoun — titre à préciser'))
                     for c, titre in embarques)
-        anc = '    <string name="track_hamelech_basade" translatable="false">המלך בשדה</string>\n'
+        anc = '    <!-- Morceaux livres. Titres non traduits : ce sont des noms propres. -->\n'
+        if anc not in xml:
+            sys.exit('repere des titres introuvable dans strings.xml')
         XML.write_text(xml.replace(anc, anc + t, 1))
 
     for n, c in doublons:

@@ -30,10 +30,17 @@ def main():
     lignes = ['| fichier | poids |', '|---|---|']
     lignes += ['| `%s` | %s Mo |' % (p.stem, mo(p.stat().st_size)) for p in nommes]
     if muets:
-        etendue = ('`%s`' % muets[0].stem if len(muets) == 1
-                   else '`%s` … `%s`' % (muets[0].stem, muets[-1].stem))
-        lignes.append('| %s *(sans titre)* | %s Mo |'
-                      % (etendue, mo(sum(p.stat().st_size for p in muets))))
+        # « niggoun_09 … niggoun_16 » se lit comme huit fichiers quand il y en
+        # a deux : une etendue ne dit la verite que sur une suite complete.
+        suite = all(int(b.stem.rsplit('_', 1)[1]) - int(a.stem.rsplit('_', 1)[1]) == 1
+                    for a, b in zip(muets, muets[1:]))
+        etendue = ('`%s` … `%s`' % (muets[0].stem, muets[-1].stem)
+                   if suite and len(muets) > 2
+                   else ', '.join('`%s`' % q.stem for q in muets))
+        lignes.append('| %s *(%s)* | %s Mo |'
+                      % (etendue, 'sans titre' if len(muets) == 1
+                         else '%d sans titre' % len(muets),
+                         mo(sum(p.stat().st_size for p in muets))))
 
     embarques = list(RAW.glob('*.mp3'))
     lignes += ['', "**%d morceaux, %s Mo.** L'APK est à %s Mo d'audio sur %d morceaux."
@@ -51,7 +58,7 @@ def main():
     if not compte.search(texte):
         raise SystemExit('phrase de comptage introuvable')
     mots = {1: 'Le seul', 2: 'Les deux', 3: 'Les trois'}
-    texte = compte.sub('%s `niggoun_NN` n’en ont aucun'
+    texte = compte.sub("%s `niggoun_NN` n'en ont aucun"
                        % mots.get(len(muets), 'Les %d' % len(muets)), texte, 1)
 
     MD.write_text(texte)

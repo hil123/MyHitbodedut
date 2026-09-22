@@ -230,40 +230,61 @@
     <string name="music_none_summary">Aucun morceau dans la bibliothèque.</string>
     <string name="music_on_summary">%1$s, volume %2$d %%</string>
     <string name="session_music_line">Musique : %1$s</string>
-    <string name="track_hamelech_basade" translatable="false">המלך בשדה</string>
-    <string name="track_nigoun_sans_titre_12" translatable="false">Niggoun — titre à préciser</string>
-    <string name="track_nigoun_sans_titre_8" translatable="false">Niggoun — titre à préciser (8)</string>
-    <string name="track_nigoun_sans_titre_9" translatable="false">Niggoun — titre à préciser (9)</string>
-    <string name="track_nigoun_sans_titre_10" translatable="false">Niggoun — titre à préciser (10)</string>
-    <string name="track_nigoun_sans_titre_7" translatable="false">Niggoun — titre à préciser (7)</string>
-    <string name="track_nigoun_sans_titre_11" translatable="false">Niggoun — titre à préciser (11)</string>
-    <string name="track_nigoun_sans_titre_4" translatable="false">Niggoun — titre à préciser (4)</string>
-    <string name="track_nigoun_sans_titre_5" translatable="false">Niggoun — titre à préciser (5)</string>
-    <string name="track_nigoun_sans_titre_6" translatable="false">Niggoun — titre à préciser (6)</string>
-    <string name="track_ribo_zusha" translatable="false">Ishay Ribo feat. Zusha</string>
-    <string name="track_nigoun_sans_titre_1" translatable="false">Niggoun — titre à préciser (1)</string>
-    <string name="track_ribo_seder_haavoda" translatable="false">Seder HaAvoda — Ishay Ribo</string>
-    <string name="track_nigoun_sans_titre_3" translatable="false">Niggoun — titre à préciser (3)</string>
-    <string name="track_ribo_ochila" translatable="false">Ochila — Ishay Ribo</string>
-    <string name="track_nigoun_sans_titre_2" translatable="false">Niggoun — titre à préciser (2)</string>
-    <string name="track_ribo_nafshi" translatable="false">Nafshi — Ishay Ribo &amp; Motty Steinmetz</string>
-    <string name="track_shmuel_one_prayer" translatable="false">Give Me One Prayer — Shmuel</string>
-    <string name="track_ribo_ata_zocher" translatable="false">Ata Zocher — Ishay Ribo &amp; MBD</string>
+    <!-- Morceaux livres. Titres non traduits : ce sont des noms propres. -->
+    <string name="track_niggoun_01" translatable="false">Niggoun 01 — titre à préciser</string>
+    <string name="track_niggoun_02" translatable="false">Niggoun 02 — titre à préciser</string>
+    <string name="track_niggoun_03" translatable="false">Niggoun 03 — titre à préciser</string>
+    <string name="track_niggoun_04" translatable="false">Niggoun 04 — titre à préciser</string>
+    <string name="track_niggoun_05" translatable="false">Niggoun 05 — titre à préciser</string>
+    <string name="track_niggoun_06" translatable="false">Niggoun 06 — titre à préciser</string>
+    <string name="track_niggoun_07" translatable="false">Niggoun 07 — titre à préciser</string>
+    <string name="track_niggoun_08" translatable="false">Niggoun 08 — titre à préciser</string>
+    <string name="track_niggoun_10" translatable="false">Niggoun 10 — titre à préciser</string>
+    <string name="track_niggoun_11" translatable="false">Niggoun 11 — titre à préciser</string>
+    <string name="track_niggoun_12" translatable="false">Niggoun 12 — titre à préciser</string>
+    <string name="track_niggoun_13" translatable="false">Niggoun 13 — titre à préciser</string>
+    <string name="track_niggoun_14" translatable="false">Niggoun 14 — titre à préciser</string>
+    <string name="track_niggoun_15" translatable="false">Niggoun 15 — titre à préciser</string>
+    <string name="track_niggoun_17" translatable="false">Niggoun 17 — titre à préciser</string>
+    <string name="track_niggoun_18" translatable="false">Niggoun 18 — titre à préciser</string>
+    <string name="track_niggoun_19" translatable="false">Niggoun 19 — titre à préciser</string>
+    <string name="track_niggoun_20" translatable="false">Niggoun 20 — titre à préciser</string>
+    <string name="track_niggoun_21" translatable="false">Niggoun 21 — titre à préciser</string>
+    <string name="track_niggoun_22" translatable="false">Niggoun 22 — titre à préciser</string>
+    <string name="track_niggoun_23" translatable="false">Niggoun 23 — titre à préciser</string>
+    <string name="track_niggoun_24" translatable="false">Niggoun 24 — titre à préciser</string>
+    <string name="track_niggoun_25" translatable="false">Niggoun 25 — titre à préciser</string>
+    <string name="track_niggoun_26" translatable="false">Niggoun 26 — titre à préciser</string>
+    <string name="track_niggoun_27" translatable="false">Niggoun 27 — titre à préciser</string>
+    <string name="track_niggoun_28" translatable="false">Niggoun 28 — titre à préciser</string>
+    <string name="track_niggoun_29" translatable="false">Niggoun 29 — titre à préciser</string>
+    <string name="track_niggoun_30" translatable="false">Niggoun 30 — titre à préciser</string>
+    <string name="track_niggoun_31" translatable="false">Niggoun 31 — titre à préciser</string>
+    <string name="track_niggoun_32" translatable="false">Niggoun 32 — titre à préciser</string>
+    <string name="track_niggoun_33" translatable="false">Niggoun 33 — titre à préciser</string>
     <string name="track_ribo_sans_titre" translatable="false">Ishay Ribo — titre à préciser</string>
+    <string name="track_yanuka_nigoun_3" translatable="false">ניגון — הינוקא (3)</string>
+
+    <!-- En reserve : ces morceaux sont dans musique/, hors de l'APK.
+         Leurs titres restent ici pour ne pas etre perdus au retour. -->
+    <string name="track_hamelech_basade" translatable="false">המלך בשדה</string>
+    <string name="track_ribo_ata_zocher" translatable="false">Ata Zocher — Ishay Ribo &amp; MBD</string>
     <string name="track_ribo_halev_sheli" translatable="false">Halev Sheli — Ishay Ribo</string>
-    <string name="track_yanuka_the_truth_will_rise" translatable="false">The Truth Will Rise — The Yanuka\'s Melodies</string>
-    <string name="track_yanuka_listening_to_the_heart" translatable="false">Listening to the Heart — HaYanuka Melodies</string>
-    <string name="track_yanuka_the_king_will_return" translatable="false">The King Will Return — The Yanuka\'s Melodies</string>
+    <string name="track_ribo_nafshi" translatable="false">Nafshi — Ishay Ribo &amp; Motty Steinmetz</string>
+    <string name="track_ribo_ochila" translatable="false">Ochila — Ishay Ribo</string>
+    <string name="track_ribo_seder_haavoda" translatable="false">Seder HaAvoda — Ishay Ribo</string>
+    <string name="track_ribo_zusha" translatable="false">Ishay Ribo feat. Zusha</string>
+    <string name="track_shmuel_one_prayer" translatable="false">Give Me One Prayer — Shmuel</string>
     <string name="track_yanuka_a_part_of_me" translatable="false">A Part of Me — The Yanuka\'s Melodies</string>
-    <string name="track_yanuka_harping_his_praise" translatable="false">Harping His Praise — The Yanuka\'s Melodies</string>
-    <string name="track_yanuka_yearning" translatable="false">Yearning — The Yanuka\'s Melodies</string>
-    <!-- Niggounim du Yanuka. Les titres hébreux des fichiers ont été perdus au
-         transfert (remplacés par des underscores) et les tags ID3 sont vides :
-         on nomme avec ce qui est vérifiable, à corriger dès qu'on aura les noms. -->
     <string name="track_yanuka_anticipation" translatable="false">Anticipation — The Yanuka\'s Melodies</string>
+    <string name="track_yanuka_harping_his_praise" translatable="false">Harping His Praise — The Yanuka\'s Melodies</string>
+    <string name="track_yanuka_listening_to_the_heart" translatable="false">Listening to the Heart — HaYanuka Melodies</string>
     <string name="track_yanuka_shlomo_yehuda" translatable="false">The Yanuka — Rabbi Shlomo Yehuda</string>
     <string name="track_yanuka_shlomo_yehuda_2" translatable="false">The Yanuka — Rabbi Shlomo Yehuda (2)</string>
-    <string name="track_yanuka_nigoun_3" translatable="false">ניגון — הינוקא (3)</string>
+    <string name="track_yanuka_the_king_will_return" translatable="false">The King Will Return — The Yanuka\'s Melodies</string>
+    <string name="track_yanuka_the_truth_will_rise" translatable="false">The Truth Will Rise — The Yanuka\'s Melodies</string>
+    <string name="track_yanuka_yearning" translatable="false">Yearning — The Yanuka\'s Melodies</string>
+    <!-- fin des morceaux -->
     <string name="music_open_library">Ouvrir la bibliothèque</string>
     <string name="app_version">Version %1$s (%2$d) · %3$s</string>
     <string name="edition_full">édition complète</string>

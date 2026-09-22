@@ -288,7 +288,18 @@ marche. Il suffit de :
 L'APK retombe à une vingtaine de Mo. Aucune permission nouvelle, aucun
 hébergement, aucune question de droits supplémentaire, et rien à construire.
 
-**Le seuil a été franchi.** L'APK est à 129,5 Mo sur 130 pour 31 morceaux ;
+**Échange du 22/09, demandé par le propriétaire : les sans-titre entrent,
+les morceaux nommés sortent.** On ne nomme que ce qu'on entend, et
+trente-cinq morceaux attendaient un titre. L'APK en porte maintenant
+**trente-trois**, à 123,1 Mo, sous le même plafond ; les morceaux déjà
+nommés sont dans `musique/` (34, 199,7 Mo) et leurs titres sont conservés
+dans un bloc de réserve de `values/strings.xml`, d'où ils reviendront tels
+quels. `tools/echange_musique.py` fait l'aller comme le retour.
+`niggoun_09` et `niggoun_16`, les deux plus lourds, n'ont pas pu entrer :
+l'ensemble des sans-titre pèse 147 Mo. Priorité au nombre de morceaux
+nommables, pas au poids.
+
+**Le seuil avait été franchi avant cet échange.** L'APK était à 129,5 Mo sur 130 pour 31 morceaux ;
 depuis, tout nouvel envoi va dans `musique/`, versionné mais hors de
 l'application — 36 morceaux, 193,3 Mo à ce jour. Le plafond n'a pas été
 relevé une quatrième fois et ne le sera pas sans décision explicite. Le
