@@ -25,6 +25,12 @@ object MusicLibrary {
 
     private val BUNDLED = listOf(
         Bundled("hamelech_basade", R.raw.hamelech_basade, R.string.track_hamelech_basade),
+        Bundled("ribo_zusha", R.raw.ribo_zusha, R.string.track_ribo_zusha),
+        Bundled("nigoun_sans_titre_1", R.raw.nigoun_sans_titre_1, R.string.track_nigoun_sans_titre_1),
+        Bundled("ribo_seder_haavoda", R.raw.ribo_seder_haavoda, R.string.track_ribo_seder_haavoda),
+        Bundled("nigoun_sans_titre_3", R.raw.nigoun_sans_titre_3, R.string.track_nigoun_sans_titre_3),
+        Bundled("ribo_ochila", R.raw.ribo_ochila, R.string.track_ribo_ochila),
+        Bundled("nigoun_sans_titre_2", R.raw.nigoun_sans_titre_2, R.string.track_nigoun_sans_titre_2),
         Bundled("ribo_nafshi", R.raw.ribo_nafshi, R.string.track_ribo_nafshi),
         Bundled("shmuel_one_prayer", R.raw.shmuel_one_prayer, R.string.track_shmuel_one_prayer),
         Bundled("ribo_ata_zocher", R.raw.ribo_ata_zocher, R.string.track_ribo_ata_zocher),

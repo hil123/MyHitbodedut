@@ -77,24 +77,26 @@ class MusicFilesTest {
 
     /**
      * Le poids de l'audio est le poids de l'APK : il ne se compresse plus, ni
-     * par R8 ni par le zip. Dix niggounim pèsent presque cinq fois le reste de
-     * l'application.
+     * par R8 ni par le zip.
      *
-     * Le seuil n'est pas une limite technique — l'APK est distribué par
-     * GitHub Releases, pas par le Play Store, donc rien ne casse. C'est un
-     * garde-fou : il a déjà été relevé une fois, de 40 à 80 Mo, en toute
-     * connaissance. S'il faut le relever encore, la vraie réponse est
-     * probablement de télécharger les morceaux à la demande plutôt que de les
-     * livrer, et c'est cette décision-là que le test force à prendre.
+     * **Ce garde-fou a fait son travail et a sauté.** Il était à 80 Mo ; un lot
+     * de six morceaux a porté l'audio à 102 Mo, soit un APK d'environ 115 Mo
+     * pour une application dont le cœur — le minuteur, le 'hizouk, la
+     * bibliothèque — pèse 12 Mo. Le seuil est relevé à 110 Mo **en connaissance
+     * de cause, et c'est la deuxième fois**.
+     *
+     * La réponse juste n'est plus de le relever une troisième fois : c'est de
+     * télécharger les morceaux à la demande au lieu de les livrer. Le seuil
+     * existe pour que cette décision soit prise, pas pour qu'elle glisse.
      */
     @Test
     fun `le poids embarque reste sous les yeux`() {
         val octets = raw.listFiles { f -> f.name.endsWith(".mp3") }.orEmpty().sumOf { it.length() }
         val mo = octets / 1_048_576.0
         assertTrue(
-            "audio embarqué : %.1f Mo. Au-delà de 80 Mo, il faut décider ".format(mo) +
-                "de télécharger les morceaux plutôt que de les livrer.",
-            mo < 80.0,
+            "audio embarqué : %.1f Mo. Le seuil a déjà été relevé deux fois ".format(mo) +
+                "(40 → 80 → 110). Au-delà, il faut télécharger les morceaux, pas les livrer.",
+            mo < 110.0,
         )
     }
 

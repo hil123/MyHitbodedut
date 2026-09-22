@@ -249,6 +249,23 @@ le projet a tout un test bloquant construit autour de `autorisation: null`
 pour ce genre de question — la contourner par la musique n'aurait pas été
 cohérent.
 
+**Le poids a franchi le point de bascule.** L'audio est passé à **102,6 Mo**
+sur 22 morceaux, contre 12 Mo pour tout le reste de l'application après R8 :
+l'APK approche **115 Mo**. Le garde-fou du test, posé à 40 puis relevé à 80,
+a sauté ; il est relevé à 110 **en le disant**, et c'est la deuxième fois.
+
+**Il ne faut pas le relever une troisième fois.** La réponse est de
+télécharger les morceaux à la demande plutôt que de les livrer : l'APK
+retombe à une douzaine de Mo, et celui qui veut les niggounim les prend.
+C'est un vrai morceau de travail — téléchargement, stockage, reprise,
+comportement hors ligne — et il n'a pas été demandé. Mais c'est la prochaine
+chose à faire du côté musique.
+
+**Trois morceaux sont sans titre** : leurs noms de fichiers étaient
+entièrement en hébreu, remplacés par des underscores au transfert, et les
+tags ID3 sont vides. Ils s'appellent « Niggoun — titre à préciser (1/2/3) »
+plutôt qu'un titre inventé. Un quatrième, d'Ishay Ribo, est dans le même cas.
+
 **Reste utile, si vous l'avez** : de qui vient chaque autorisation, quand, et
 sur quoi elle porte. C'est ce qui la rend vérifiable dans deux ans.
 
