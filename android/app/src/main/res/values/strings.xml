@@ -416,7 +416,7 @@
 
     <!-- Écran Tfilot : dix sujets, deux prières chacun (Likoutei Tefilot). -->
     <string name="tefilot_title">Tfilot</string>
-    <string name="tefilot_hint">Dix sujets, deux prières chacun. Rabbi Nathan de Breslev.</string>
+    <string name="tefilot_hint">Dix sujets, vingt-et-une prières. Rabbi Nathan de Breslev.</string>
     <string name="tefilot_count">%d prières</string>
     <string name="tefilot_warning">La leçon citée porte sur un autre sujet ; la demande est dans la prière.</string>
     <string name="tefila_hitbodedut">Hitbodedout</string>

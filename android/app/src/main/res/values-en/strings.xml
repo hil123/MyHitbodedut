@@ -364,7 +364,7 @@
 
     <!-- Tfilot screen: ten subjects, two prayers each (Likutei Tefilot). -->
     <string name="tefilot_title">Tfilot</string>
-    <string name="tefilot_hint">Ten subjects, two prayers each. Reb Noson of Breslov.</string>
+    <string name="tefilot_hint">Ten subjects, twenty-one prayers. Reb Noson of Breslov.</string>
     <string name="tefilot_count">%d prayers</string>
     <string name="tefilot_warning">The lesson cited is on another subject; the plea is inside the prayer.</string>
     <string name="tefila_hitbodedut">Hitbodedut</string>

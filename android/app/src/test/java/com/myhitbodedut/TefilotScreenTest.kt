@@ -158,6 +158,29 @@ class TefilotScreenTest {
         )
     }
 
+    /**
+     * Le sous-titre annonçait « deux prières chacun » alors que zivoug en a
+     * trois — trouvé en fouillant l'APK livré, pas par un test. Celui-ci
+     * ferme la porte : si le compte change, la chaîne doit suivre.
+     */
+    @Test
+    fun `le sous-titre annonce le bon nombre de prieres`() {
+        val total = TefilotRules.prieres(library).size
+        val mots = mapOf(
+            11 to "onze", 12 to "douze", 20 to "vingt", 21 to "vingt-et-une",
+            22 to "vingt-deux", 23 to "vingt-trois", 30 to "trente",
+        )
+        val attendu = mots[total]
+        assertNotNull("ajouter « $total » au barème de ce test", attendu)
+        val xml = lire("src/main/res/values/strings.xml")
+        val hint = Regex("""<string name="tefilot_hint">([^<]*)</string>""")
+            .find(xml)?.groupValues?.get(1).orEmpty()
+        assertTrue(
+            "le sous-titre dit « $hint » alors qu'il y a $total prières",
+            hint.contains(attendu!!, ignoreCase = true),
+        )
+    }
+
     @Test
     fun `l ecran a ses chaines dans les trois langues`() {
         val cles = SujetTefila.values().map { it.cle }

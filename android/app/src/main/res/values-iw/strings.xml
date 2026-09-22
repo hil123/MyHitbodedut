@@ -371,7 +371,7 @@
 
     <!-- מסך תפילות: עשרה עניינים, שתי תפילות לכל אחד (ליקוטי תפילות). -->
     <string name="tefilot_title">תְּפִלּוֹת</string>
-    <string name="tefilot_hint">עֲשָׂרָה עִנְיָנִים, שְׁתֵּי תְּפִלּוֹת לְכָל אֶחָד. רַבִּי נָתָן מִבְּרֶסְלֶב.</string>
+    <string name="tefilot_hint">עֲשָׂרָה עִנְיָנִים, עֶשְׂרִים וְאַחַת תְּפִלּוֹת. רַבִּי נָתָן מִבְּרֶסְלֶב.</string>
     <string name="tefilot_count">%d תְּפִלּוֹת</string>
     <string name="tefilot_warning">הַתּוֹרָה הַנִּזְכֶּרֶת עוֹסֶקֶת בְּעִנְיָן אַחֵר; הַבַּקָּשָׁה בְּתוֹךְ הַתְּפִלָּה.</string>
     <string name="tefila_hitbodedut">הִתְבּוֹדְדוּת</string>
