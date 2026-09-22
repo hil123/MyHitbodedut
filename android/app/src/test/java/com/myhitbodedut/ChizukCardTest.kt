@@ -29,7 +29,37 @@ class ChizukCardTest {
 
     @Test
     fun `une langue inconnue retombe sur le francais`() {
-        assertEquals(item.fr, ChizukCard.translationOf(item, "es"))
+        // « es » servait d'exemple ici, avant que l'espagnol ne devienne une
+        // langue de l'application. Un test qui illustre une regle par un cas
+        // devenu faux ne protege plus rien : il fallait un inconnu reel.
+        assertEquals(item.fr, ChizukCard.translationOf(item, "de"))
+        assertEquals(item.fr, ChizukCard.translationOf(item, "fr"))
+    }
+
+    @Test
+    fun `l espagnol est servi en espagnol, et en anglais tant qu il manque`() {
+        val avecEspagnol = item.copy(es = "texto")
+        assertEquals("texto", ChizukCard.translationOf(avecEspagnol, "es"))
+        assertEquals(
+            "sans texte espagnol, le repli doit etre declare, pas le francais par defaut",
+            item.en,
+            ChizukCard.translationOf(item.copy(es = ""), "es"),
+        )
+    }
+
+    @Test
+    fun `les textes espagnols ne sont pas encore ecrits, et cela se sait`() {
+        // Ce test ne protege pas un acquis, il tient un compte. L'interface
+        // est traduite en espagnol ; les trente-sept textes de 'hizouk ne le
+        // sont pas. Le jour ou ils le seront, ce test tombera — et c'est
+        // ainsi qu'on saura qu'il faut le remplacer par son contraire.
+        val ecrits = DataFiles.chizuk.items.count { it.es.isNotBlank() }
+        assertEquals(
+            "des textes espagnols existent maintenant : remplacer ce test par " +
+                "« chaque texte a ses trois traductions »",
+            0,
+            ecrits,
+        )
     }
 
     @Test

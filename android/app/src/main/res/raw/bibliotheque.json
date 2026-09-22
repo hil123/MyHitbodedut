@@ -53,7 +53,8 @@
       "titre": {
         "he": "שיחת חברים",
         "fr": "Conversation entre amis",
-        "en": "Friends' conversation"
+        "en": "Friends' conversation",
+        "es": "Conversación entre amigos"
       },
       "sous_sections": [
         {
@@ -61,7 +62,8 @@
           "titre": {
             "he": "התבודדות מה ולמה",
             "fr": "Hitbodedout : quoi et pourquoi",
-            "en": "Hitbodedut: what and why"
+            "en": "Hitbodedut: what and why",
+            "es": "Hitbodedut: qué y por qué"
           },
           "entrees": [
             {
@@ -742,7 +744,8 @@
       "titre": {
         "he": "לִקּוּטֵי תְּפִלּוֹת",
         "fr": "Prières par sujet",
-        "en": "Prayers by subject"
+        "en": "Prayers by subject",
+        "es": "Oraciones por tema"
       },
       "sous_sections": [
         {
@@ -750,7 +753,8 @@
           "titre": {
             "he": "תְּפִלּוֹת לְפִי עִנְיָן",
             "fr": "Dix sujets, vingt-et-une prières",
-            "en": "Ten subjects, twenty-one prayers"
+            "en": "Ten subjects, twenty-one prayers",
+            "es": "Diez temas, veintiuna oraciones"
           },
           "entrees": [
             {

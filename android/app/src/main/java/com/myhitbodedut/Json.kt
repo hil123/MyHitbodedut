@@ -49,11 +49,24 @@ object Json {
  * L'hébreu sert de repli : c'est la langue dans laquelle les sections sont
  * nommées, et le seul champ dont on est sûr qu'il est rempli.
  */
-data class LocalizedText(val he: String, val fr: String, val en: String) {
+data class LocalizedText(
+    val he: String,
+    val fr: String,
+    val en: String,
+    val es: String = "",
+) {
 
+    /**
+     * L'espagnol a ete ajoute apres coup, et le defaut precedent le trahissait
+     * en silence : toute langue autre que fr et en tombait sur l'hebreu, si
+     * bien qu'un telephone espagnol affichait les titres de sections en
+     * hebreu sans que rien ne le signale. Chaque langue est nommee ; l'hebreu
+     * reste le dernier recours parce que c'est le seul champ toujours rempli.
+     */
     fun forLanguage(language: String): String = when (language) {
         "fr" -> fr.ifBlank { he }
         "en" -> en.ifBlank { he }
+        "es" -> es.ifBlank { en.ifBlank { he } }
         else -> he
     }
 
@@ -64,6 +77,7 @@ data class LocalizedText(val he: String, val fr: String, val en: String) {
                 he = o.optString("he", ""),
                 fr = o.optString("fr", ""),
                 en = o.optString("en", ""),
+                es = o.optString("es", ""),
             )
         }
     }

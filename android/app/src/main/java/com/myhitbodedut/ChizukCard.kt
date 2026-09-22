@@ -67,6 +67,13 @@ object ChizukCard {
     fun translationOf(item: ChizukItem, language: String): String = when (language) {
         "he", "iw" -> ""
         "en" -> item.en
+        // L'espagnol des textes n'est pas encore ecrit. Tant qu'il manque,
+        // l'anglais tient lieu de repli — et c'est un repli declare, pas le
+        // francais servi par defaut parce que la regle finissait par « else ».
+        "es" -> item.es.ifBlank { item.en }
+        "fr" -> item.fr
+        // Une langue que l'application ne parle pas : le francais, qui est
+        // celle de values/ et donc celle de l'interface qui l'entoure.
         else -> item.fr
     }
 

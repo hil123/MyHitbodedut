@@ -288,6 +288,28 @@ marche. Il suffit de :
 L'APK retombe à une vingtaine de Mo. Aucune permission nouvelle, aucun
 hébergement, aucune question de droits supplémentaire, et rien à construire.
 
+**Espagnol (22/09) — l'interface, pas encore les textes.** Vérification
+demandée sur quatre langues. L'interface française, anglaise et hébraïque
+était à 100 % : mêmes 320 clés, aucun texte écrit en dur dans les cinquante
+layouts ni dans les cinquante fichiers Kotlin, marqueurs de format
+concordants. L'espagnol était à zéro, et le code ne savait pas exprimer une
+quatrième langue : `LocalizedText.forLanguage` finissait par `else -> he` et
+`ChizukCard.translationOf` par `else -> item.fr`, si bien qu'un téléphone
+espagnol aurait affiché un mélange d'hébreu et de français sans que rien ne
+le signale. Les deux règles nomment désormais chaque langue.
+
+`values-es/` porte les 327 textes. Les titres de la bibliothèque sont en
+espagnol. **Ce qui manque encore et qui est compté par un test** : les 37
+textes de 'hizouk (repli déclaré sur l'anglais), et les 24 résumés
+d'articles — qui manquent aussi à l'anglais et à l'hébreu, où ils retombent
+sur le français. L'application n'est donc **pas** traduite à 100 % : son
+interface l'est, son contenu non.
+
+Traduire les 37 textes est un acte éditorial sur des enseignements de Rabbi
+Na'hman, pas une opération mécanique : les versions française et anglaise
+portent un statut de vérification et passent par l'écran de relecture. Une
+version espagnole devra arriver marquée non relue.
+
 **Renommer depuis l'application (22/09).** La fonction existait déjà et le
 propriétaire l'a demandée : elle n'était atteignable que par appui long,
 sans bouton ni autre indice que la ligne d'aide. Un bouton crayon sur chaque
