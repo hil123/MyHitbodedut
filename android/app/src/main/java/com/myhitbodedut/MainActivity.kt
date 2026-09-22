@@ -66,25 +66,25 @@ class MainActivity : AppCompatActivity() {
         findViewById<Button>(R.id.start_session).setOnClickListener {
             startActivity(Intent(this, SessionActivity::class.java))
         }
-        findViewById<Button>(R.id.music_button).setOnClickListener {
+        findViewById<View>(R.id.music_button).setOnClickListener {
             startActivity(Intent(this, MusicActivity::class.java))
         }
-        findViewById<Button>(R.id.tips_button).setOnClickListener {
+        findViewById<View>(R.id.tips_button).setOnClickListener {
             startActivity(Intent(this, TipsActivity::class.java))
         }
-        findViewById<Button>(R.id.reminders_button).setOnClickListener {
+        findViewById<View>(R.id.reminders_button).setOnClickListener {
             startActivity(Intent(this, RemindersActivity::class.java))
         }
-        findViewById<Button>(R.id.tikkun_button).setOnClickListener {
+        findViewById<View>(R.id.tikkun_button).setOnClickListener {
             startActivity(Intent(this, TikkunActivity::class.java))
         }
-        findViewById<Button>(R.id.library_button).setOnClickListener {
+        findViewById<View>(R.id.library_button).setOnClickListener {
             startActivity(Intent(this, LibraryActivity::class.java))
         }
 
         // L'écran de relecture n'existe que pour lever les relu=false des
         // données : il n'a rien à faire dans une version publiée.
-        findViewById<Button>(R.id.proofread_button).apply {
+        findViewById<View>(R.id.proofread_button).apply {
             visibility = if (BuildConfig.DEBUG) View.VISIBLE else View.GONE
             setOnClickListener {
                 startActivity(Intent(this@MainActivity, ProofreadActivity::class.java))
@@ -96,7 +96,7 @@ class MainActivity : AppCompatActivity() {
         findViewById<Button>(R.id.today_note).setOnClickListener {
             NoteDialog.show(this, Store.today()) { refresh() }
         }
-        findViewById<Button>(R.id.settings_button).setOnClickListener {
+        findViewById<View>(R.id.settings_button).setOnClickListener {
             startActivity(Intent(this, SettingsActivity::class.java))
         }
     }

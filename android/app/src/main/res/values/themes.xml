@@ -94,6 +94,38 @@
         <item name="android:textColor">@color/mint</item>
     </style>
 
+    <!--
+        Une entrée de section sur l'écran principal : un titre, son état, et
+        toute la ligne cliquable. Elle remplace une carte entière par ligne —
+        six cartes prenaient environ 970dp de haut, six lignes en prennent
+        490, soit un écran de moins à faire défiler avant d'atteindre quoi
+        que ce soit.
+    -->
+    <style name="SectionRow">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">?attr/selectableItemBackground</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:minHeight">56dp</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:paddingVertical">10dp</item>
+    </style>
+
+    <style name="SectionChevron">
+        <item name="android:layout_width">22dp</item>
+        <item name="android:layout_height">22dp</item>
+        <item name="android:layout_marginStart">10dp</item>
+        <item name="android:contentDescription">@null</item>
+        <item name="android:src">@drawable/ic_chevron</item>
+    </style>
+
+    <style name="SectionState" parent="CardHint">
+        <item name="android:ellipsize">end</item>
+        <item name="android:maxLines">2</item>
+    </style>
+
     <style name="Divider">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">1dp</item>

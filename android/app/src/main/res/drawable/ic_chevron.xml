@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Le chevron d'une entrée de section. autoMirrored : en hébreu la liste se
+    lit de droite à gauche, et une flèche qui ne se retournerait pas
+    pointerait vers la sortie de l'écran.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="22dp"
+    android:height="22dp"
+    android:autoMirrored="true"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+
+    <path
+        android:pathData="M9,5 l7,7 -7,7"
+        android:strokeColor="@color/brand"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:strokeWidth="2" />
+</vector>

@@ -128,8 +128,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:paddingVertical="14dp"
-                android:textSize="16sp" />
+                android:paddingVertical="17dp"
+                android:textSize="17sp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -156,308 +156,159 @@
             </LinearLayout>
         </LinearLayout>
 
-        <!-- Musique -->
+        <!--
+            Tout le reste, en lignes plutôt qu'en cartes.
+
+            Chacune de ces six entrées était une carte pleine, et il fallait
+            traverser trois écrans avant d'avoir tout vu. Rien n'est retiré :
+            les états que les cartes affichaient — l'heure des rappels, les
+            psaumes déjà dits, le morceau choisi, les autorisations qui
+            manquent — sont toujours là, sur la deuxième ligne de chaque
+            entrée. C'est la place qu'ils prenaient qui change.
+        -->
         <LinearLayout style="@style/Card">
 
+        <LinearLayout
+            android:id="@+id/tikkun_button"
+            style="@style/SectionRow">
+
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
+                android:layout_weight="1"
+                android:orientation="vertical">
 
-                <FrameLayout
-                    android:layout_width="72dp"
-                    android:layout_height="88dp"
-                    android:background="@drawable/bg_stage_soft"
-                    android:padding="5dp">
+                <TextView
+                    style="@style/SettingLabelStacked"
+                    android:text="@string/tikkun_title_he" />
 
-                    <ImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:contentDescription="@null"
-                        android:scaleType="fitCenter"
-                        android:src="@drawable/char_guitar" />
-                </FrameLayout>
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="14dp"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <TextView style="@style/CardTitle" android:text="@string/music_title" />
-
-                    <TextView
-                        android:id="@+id/music_state"
-                        style="@style/CardHint"
-                        android:layout_marginTop="4dp"
-                        android:textSize="14sp" />
-                </LinearLayout>
-
-                <com.google.android.material.materialswitch.MaterialSwitch
-                    android:id="@+id/music_switch_main"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                <TextView
+                    android:id="@+id/tikkun_state"
+                    style="@style/SectionState" />
             </LinearLayout>
 
-            <Button
-                android:id="@+id/music_button"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="14dp"
-                android:text="@string/music_open_library" />
+            <ImageView style="@style/SectionChevron" />
         </LinearLayout>
-
-        <!-- Conseils -->
-        <LinearLayout style="@style/Card">
+        <LinearLayout
+            android:id="@+id/library_button"
+            style="@style/SectionRow">
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
+                android:layout_weight="1"
+                android:orientation="vertical">
 
-                <FrameLayout
-                    android:layout_width="72dp"
-                    android:layout_height="88dp"
-                    android:background="@drawable/bg_stage_soft"
-                    android:padding="5dp">
-
-                    <ImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:contentDescription="@null"
-                        android:scaleType="fitCenter"
-                        android:src="@drawable/char_tehilim" />
-                </FrameLayout>
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="14dp"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <TextView style="@style/CardTitle" android:text="@string/tips_title" />
-
-                    <TextView
-                        style="@style/CardHint"
-                        android:layout_marginTop="4dp"
-                        android:text="@string/tips_hint"
-                        android:textSize="14sp" />
-                </LinearLayout>
+                <TextView
+                    style="@style/SettingLabelStacked"
+                    android:text="@string/library_title" />
             </LinearLayout>
 
-            <Button
-                android:id="@+id/tips_button"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="14dp"
-                android:text="@string/tips_open" />
+            <ImageView style="@style/SectionChevron" />
         </LinearLayout>
-
-        <!-- Rappels -->
-        <LinearLayout style="@style/Card">
+        <LinearLayout
+            android:id="@+id/reminders_button"
+            style="@style/SectionRow">
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
+                android:layout_weight="1"
+                android:orientation="vertical">
 
-                <FrameLayout
-                    android:layout_width="72dp"
-                    android:layout_height="88dp"
-                    android:background="@drawable/bg_stage_soft"
-                    android:padding="5dp">
+                <TextView
+                    style="@style/SettingLabelStacked"
+                    android:text="@string/reminders_title" />
 
-                    <ImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:contentDescription="@null"
-                        android:scaleType="fitCenter"
-                        android:src="@drawable/char_pointing" />
-                </FrameLayout>
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="14dp"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <TextView style="@style/CardTitle" android:text="@string/reminders_title" />
-
-                    <TextView
-                        style="@style/CardHint"
-                        android:layout_marginTop="4dp"
-                        android:text="@string/reminders_hint"
-                        android:textSize="14sp" />
-                </LinearLayout>
+                <TextView
+                    android:id="@+id/reminders_state"
+                    style="@style/SectionState" />
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/reminders_state"
-                style="@style/CardHint"
-                android:layout_marginTop="12dp"
-                android:textColor="@color/brand"
-                android:textSize="14sp" />
-
-            <Button
-                android:id="@+id/reminders_button"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text="@string/reminders_open" />
+            <ImageView style="@style/SectionChevron" />
         </LinearLayout>
-
-        <!-- Tikoun HaKlali -->
-        <LinearLayout style="@style/Card">
+        <LinearLayout
+            android:id="@+id/music_button"
+            style="@style/SectionRow">
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
+                android:layout_weight="1"
+                android:orientation="vertical">
 
-                <FrameLayout
-                    android:layout_width="72dp"
-                    android:layout_height="88dp"
-                    android:background="@drawable/bg_stage_soft"
-                    android:padding="5dp">
+                <TextView
+                    style="@style/SettingLabelStacked"
+                    android:text="@string/music_title" />
 
-                    <ImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:contentDescription="@null"
-                        android:scaleType="fitCenter"
-                        android:src="@drawable/char_tehilim" />
-                </FrameLayout>
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="14dp"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <TextView
-                        style="@style/CardTitle"
-                        android:layoutDirection="rtl"
-                        android:text="@string/tikkun_title_he"
-                        android:textAlignment="viewStart"
-                        android:textSize="19sp" />
-
-                    <TextView
-                        style="@style/CardHint"
-                        android:layout_marginTop="4dp"
-                        android:text="@string/tikkun_hint"
-                        android:textSize="14sp" />
-                </LinearLayout>
+                <TextView
+                    android:id="@+id/music_state"
+                    style="@style/SectionState" />
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/tikkun_state"
-                style="@style/CardHint"
-                android:layout_marginTop="12dp"
-                android:textColor="@color/brand"
-                android:textSize="14sp" />
+            <com.google.android.material.materialswitch.MaterialSwitch
+                android:id="@+id/music_switch_main"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
 
-            <Button
-                android:id="@+id/tikkun_button"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text="@string/tikkun_open" />
+            <ImageView style="@style/SectionChevron" />
         </LinearLayout>
-
-        <!-- Bibliothèque -->
-        <LinearLayout style="@style/Card">
+        <LinearLayout
+            android:id="@+id/tips_button"
+            style="@style/SectionRow">
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
+                android:layout_weight="1"
+                android:orientation="vertical">
 
-                <FrameLayout
-                    android:layout_width="72dp"
-                    android:layout_height="88dp"
-                    android:background="@drawable/bg_stage_soft"
-                    android:padding="5dp">
-
-                    <ImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:contentDescription="@null"
-                        android:scaleType="fitCenter"
-                        android:src="@drawable/char_torah" />
-                </FrameLayout>
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="14dp"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <TextView style="@style/CardTitle" android:text="@string/library_title" />
-
-                    <TextView
-                        style="@style/CardHint"
-                        android:layout_marginTop="4dp"
-                        android:text="@string/library_hint"
-                        android:textSize="14sp" />
-                </LinearLayout>
+                <TextView
+                    style="@style/SettingLabelStacked"
+                    android:text="@string/tips_title" />
             </LinearLayout>
 
-            <Button
-                android:id="@+id/library_button"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="14dp"
-                android:text="@string/library_open" />
-
-            <!-- Point 6 : rendu visible seulement par MainActivity, et
-                 seulement dans une compilation de test. -->
-            <Button
-                android:id="@+id/proofread_button"
-                style="@style/Widget.Material3.Button.OutlinedButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="@string/proofread_open"
-                android:visibility="gone" />
+            <ImageView style="@style/SectionChevron" />
         </LinearLayout>
-
-        <!-- Réglages -->
-        <LinearLayout style="@style/Card">
+        <LinearLayout
+            android:id="@+id/settings_button"
+            style="@style/SectionRow">
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
+                android:layout_weight="1"
+                android:orientation="vertical">
 
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
+                <TextView
+                    style="@style/SettingLabelStacked"
+                    android:text="@string/settings_title" />
 
-                    <TextView style="@style/CardTitle" android:text="@string/settings_title" />
-
-                    <TextView
-                        android:id="@+id/settings_state"
-                        style="@style/CardHint" />
-                </LinearLayout>
-
-                <Button
-                    android:id="@+id/settings_button"
-                    style="@style/SettingValue"
-                    android:text="@string/action_open" />
+                <TextView
+                    android:id="@+id/settings_state"
+                    style="@style/SectionState" />
             </LinearLayout>
+
+            <ImageView style="@style/SectionChevron" />
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/proofread_button"
+            style="@style/SectionRow"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/SettingLabelStacked"
+                    android:text="@string/proofread_open" />
+            </LinearLayout>
+
+            <ImageView style="@style/SectionChevron" />
+        </LinearLayout>
         </LinearLayout>
 
     </LinearLayout>
