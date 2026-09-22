@@ -215,6 +215,23 @@ rien dire contre le soin. Dans une application que quelqu'un peut ouvrir
 un jour de maladie, cela ne se décide pas au hasard ; si vous voulez le
 texte intégral malgré tout, c'est votre appel, pas le mien.
 
+### L'écran Tfilot
+
+Les vingt prières ont leur propre écran, joignable depuis l'accueil comme
+les Réglages. Il ne contient aucun texte : il lit la sous-section
+`tefilot-lt` et ouvre l'entrée choisie dans l'écran de source, celui qui
+applique déjà la règle de vocalisation. Ajouter une prière au fichier
+suffit à la faire paraître, pourvu qu'elle porte son sujet.
+
+L'ordre des dix sujets est celui qui a été demandé, et il est gardé par un
+test : l'hitbodedout ouvre, parce que c'est le sujet de l'application ; le
+conjoint et la guérison ferment, parce que ce sont les deux demandes qu'on
+vient chercher un mauvais jour.
+
+Quand une prière est rangée sous un sujet dont sa leçon ne traite pas — six
+cas sur vingt — l'écran le dit sous la référence. Le fichier l'avouait
+déjà ; le taire à l'écran serait le cacher.
+
 ### Les trois recueils demandés qui manquent
 
 **כוכבי אור**, **les livres du Rav Shalom Arush** et **ceux du Yanuka** ne

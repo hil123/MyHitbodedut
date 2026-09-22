@@ -361,4 +361,20 @@
     <string name="settings_name">First name</string>
     <string name="settings_name_hint">So the home screen can greet you. It never leaves the phone.</string>
     <string name="settings_name_empty">Not set</string>
+
+    <!-- Tfilot screen: ten subjects, two prayers each (Likutei Tefilot). -->
+    <string name="tefilot_title">Tfilot</string>
+    <string name="tefilot_hint">Ten subjects, two prayers each. Reb Noson of Breslov.</string>
+    <string name="tefilot_count">%d prayers</string>
+    <string name="tefilot_warning">The lesson cited is on another subject; the plea is inside the prayer.</string>
+    <string name="tefila_hitbodedut">Hitbodedut</string>
+    <string name="tefila_simcha">Joy</string>
+    <string name="tefila_uman">Uman, Rosh Hashana</string>
+    <string name="tefila_kdusha">Holiness</string>
+    <string name="tefila_zera">To have a child</string>
+    <string name="tefila_parnassa">Livelihood</string>
+    <string name="tefila_brit">Guarding the covenant</string>
+    <string name="tefila_geula">Redemption</string>
+    <string name="tefila_zivug">Finding one’s match</string>
+    <string name="tefila_refua">Healing</string>
 </resources>

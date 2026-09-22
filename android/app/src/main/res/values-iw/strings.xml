@@ -368,4 +368,20 @@
     <string name="settings_name">שם פרטי</string>
     <string name="settings_name_hint">כדי שמסך הבית יפנה אליכם בשמכם. הוא אינו יוצא מהטלפון.</string>
     <string name="settings_name_empty">לא הוזן</string>
+
+    <!-- מסך תפילות: עשרה עניינים, שתי תפילות לכל אחד (ליקוטי תפילות). -->
+    <string name="tefilot_title">תְּפִלּוֹת</string>
+    <string name="tefilot_hint">עֲשָׂרָה עִנְיָנִים, שְׁתֵּי תְּפִלּוֹת לְכָל אֶחָד. רַבִּי נָתָן מִבְּרֶסְלֶב.</string>
+    <string name="tefilot_count">%d תְּפִלּוֹת</string>
+    <string name="tefilot_warning">הַתּוֹרָה הַנִּזְכֶּרֶת עוֹסֶקֶת בְּעִנְיָן אַחֵר; הַבַּקָּשָׁה בְּתוֹךְ הַתְּפִלָּה.</string>
+    <string name="tefila_hitbodedut">הִתְבּוֹדְדוּת</string>
+    <string name="tefila_simcha">שִׂמְחָה</string>
+    <string name="tefila_uman">אוּמַן, רֹאשׁ הַשָּׁנָה</string>
+    <string name="tefila_kdusha">קְדֻשָּׁה</string>
+    <string name="tefila_zera">זֶרַע שֶׁל קַיָּמָא</string>
+    <string name="tefila_parnassa">פַּרְנָסָה</string>
+    <string name="tefila_brit">שְׁמִירַת הַבְּרִית</string>
+    <string name="tefila_geula">גְּאֻלָּה</string>
+    <string name="tefila_zivug">זִוּוּג</string>
+    <string name="tefila_refua">רְפוּאָה שְׁלֵמָה</string>
 </resources>

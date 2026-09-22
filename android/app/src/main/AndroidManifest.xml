@@ -108,6 +108,11 @@
             android:label="@string/tikkun_title" />
 
         <activity
+            android:name=".TefilotActivity"
+            android:exported="false"
+            android:parentActivityName=".MainActivity" />
+
+        <activity
             android:name=".LibraryActivity"
             android:exported="false"
             android:label="@string/library_title" />
