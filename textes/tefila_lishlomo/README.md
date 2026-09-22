@@ -48,14 +48,53 @@ remarque à côté.
 
 | feuillet | pages | sujet | transcrit |
 |---|---|---|---|
-| prayer-01 | 1 | פדיון שבויים | ✅ |
+| prayer-01 | 1 | פדיון שבויים — libération des captifs | ✅ |
 | prayer-02 | 2 | נבואות אחרית הימים — 'Habaqouq 3, guéoula | ⬜ |
-| prayer-03 | 15 | — | ⬜ |
+| prayer-03 | 15 | *(non identifié)* | ⬜ |
 | prayer-04 | 2 | זכות רחל אמנו | ✅ |
 | prayer-05 | — | **non fourni** | — |
 | prayer-06 | 1 | זיווג (לאיש) | ✅ |
 | prayer-07 | 1 | זרע של קיימא (לאיש) | ✅ |
 | prayer-08 | 1 | זרע של קיימא (לאישה) | ✅ |
-| prayer-09 | 2 | — | ⬜ |
-| prayer-10 | 2 | — | ⬜ |
-| *(image collée)* | 1 | זיווג (לאישה) | ⬜ |
+| prayer-09 | 2 | ישועה ושלוות הנפש — l'angoisse | ✅ |
+| prayer-10 | 2 | רפואה שלימה | ⚠️ partiel |
+| *(image collée)* | 1 | זיווג (לאישה) | ⚠️ réserve |
+
+**prayer-10** : le la'hash et les douze versets sont faits ; la note en petits
+caractères et le commentaire intercalé entre les mots des versets ne le sont
+pas. Dit dans le fichier.
+
+**zivug (לאישה)** : transcrite depuis un JPEG de 1290 px, contre 2339 px pour
+les PDF. Moins sûre. Le PDF de cette feuille permettrait de la reprendre au
+même niveau que les autres.
+
+## Cinq erreurs de lecture, toutes attrapées au zoom
+
+Aucune ne se voyait à 200 dpi. C'est l'argument de la méthode.
+
+| feuillet | j'avais lu | l'imprimé dit |
+|---|---|---|
+| prayer-06 | וְתֶן לִי | **וְתֵן לִי** |
+| prayer-06 | מַה טּוֹב | **מַה טוֹב** (sans daguech) |
+| prayer-04 | קוֹדֵא | **קוֹרֵא** |
+| prayer-09 | וְלִדְרוֹצוֹת *(mot inexistant)* | **וְלִרְצוֹת** |
+| prayer-10 | אֶל הַיָּם גּוֹזֵר | **אֶל הַיָּם גְּנוֹסַר** *(le Kinneret)* |
+
+Trois des cinq sont un **ר lu ד**, ou l'inverse : à basse définition les deux
+lettres sont les mêmes. C'est la raison d'être du second passage à 400 dpi.
+
+## Citations vérifiées contre le Tanakh
+
+Quand un feuillet cite l'Écriture, la citation n'est pas transcrite à l'œil :
+elle est comparée mot à mot au corpus. Bilan :
+
+| feuillet | citation | verdict |
+|---|---|---|
+| prayer-07 | Béréchit 21:1-12 | exacte, mais **la référence imprimée est fausse** (כח pour כא) |
+| prayer-08 | Chmouel I 2:1-10 | exacte, référence juste |
+| prayer-04 | Yirmiyahou 31 | texte exact ; **trois versets cités pour une plage de deux** |
+| prayer-09 | Téhilim 2:7, 2:8 | exactes, références justes |
+| prayer-09 | Bamidbar 6:24-26 | exacte, référence juste |
+| prayer-09 | Dévarim 30:19 | exacte, référence juste |
+| prayer-09 | Dévarim 28:28 | exacte, **citée sans référence** |
+| prayer-10 | Yéchayahou 38:9-20 | exacte |
