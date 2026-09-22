@@ -64,11 +64,19 @@ conversation personnelle. Le renvoi n'est pas faux, il est déplacé : ce
 que le guide y cherche se trouve plutôt au chapitre 3, qu'il cite
 d'ailleurs correctement ailleurs.
 
-## Hors de portée d'ici (4 + 1)
+## Hors de portée d'ici (4 + 1) — **pris en charge par le propriétaire**
 
 Absents du corpus `sefaria-export` : **ספר החרדים**, **ראשית חכמה** (שער
 הקדושה פרק י"ב), **חפץ חיים — ליקוטי אמרים פרק י'**, **קיצור ליקוטי
-מוהר"ן**. Ni confirmés ni infirmés.
+מוהר"ן**. Ni confirmés ni infirmés ici.
+
+**Le propriétaire de l'application les vérifie lui-même** (22/09). Tant
+que ce retour n'est pas là, ces quatre renvois restent au même statut que
+les autres non vérifiés : ils n'ont pas été contrôlés, et rien dans ce
+dépôt ne doit laisser croire le contraire.
+
+Le plus utile des quatre est le Kitsour : c'est lui qui décide si la
+phrase sur l'arme est correctement attribuée — voir plus haut.
 
 « ותן בלבנו בינה » et « ויחד לבבנו ליראה ולאהבה את שמך » viennent de la
 bénédiction *Ahava Rabba* du siddour du matin — usuel, non vérifié ici
@@ -78,6 +86,20 @@ La partie ד énumère par ailleurs רבינו בחיי, האר"י, החיד"א,
 רבי אלימלך מליז'נסק, רבי אהרן מקרלין — sans citation précise. Rien à
 vérifier : ce sont des noms, pas des renvois.
 
+## Corrections portées le 22/09
+
+Les trois ont été appliquées dans `guide_hitbodedut.md`, **chacune
+signalée sur place par un encadré** plutôt que faite en silence : un texte
+transmis ne se réécrit pas sans le dire. La version d'origine reste dans
+l'historique git.
+
+1. « כדבר איש אל רעהו » → **כַּאֲשֶׁר יְדַבֵּר אִישׁ אֶל־רֵעֵהוּ** (שמות ל"ג, י"א).
+2. מסילת ישרים **י"ט** → **פרק ג'**, avec la phrase exacte, et ce que le
+   chapitre 19 demande réellement de prier.
+3. L'arme : attribution maintenue à **קיצור ליקוטי מוהר"ן** seul, avec
+   l'original de Likoutei Moharan **I, 2** cité à côté — où le sujet est
+   le Machia'h.
+
 ## Ce que cela change pour l'insertion
 
 Rien n'empêche d'insérer le texte une fois la **question de droits**
@@ -85,12 +107,13 @@ tranchée (voir `FEUILLE_DE_ROUTE.md`, proposition 10). Mais deux
 corrections devraient l'accompagner, et la troisième mérite d'être
 signalée :
 
-1. rétablir « כאשר ידבר איש אל רעהו », ou retirer les guillemets ;
-2. attribuer la phrase sur l'arme à **קיצור ליקוטי מוהר"ן** seulement —
-   jamais à Likoutei Moharan — ou citer l'original, qui parle du
-   Machia'h ;
-3. déplacer le renvoi de מסילת ישרים י"ט vers פרק ג', ou dire ce que le
-   chapitre 19 demande vraiment.
+1. ~~rétablir « כאשר ידבר איש אל רעהו »~~ — **fait** ;
+2. ~~attribuer la phrase sur l'arme au seul Kitsour~~ — **fait**, avec
+   l'original cité à côté ;
+3. ~~déplacer le renvoi de מסילת ישרים י"ט~~ — **fait**.
+
+Reste donc la seule **question de droits**, et le retour du propriétaire
+sur les quatre sources hors de portée.
 
 Les six sources exactes, elles, sont du **domaine public** et peuvent
 entrer dans la bibliothèque comme entrées de type `source`, sans attendre

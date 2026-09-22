@@ -5,6 +5,12 @@
     IL N'EST PAS DANS L'APPLICATION, et ce n'est pas un oubli : voir la
     question de droits posée dans FEUILLE_DE_ROUTE.md, proposition 10. Ce
     dépôt est privé ; l'APK, lui, est distribué.
+
+    TROIS CORRECTIONS y ont été portées le 22/09, chacune signalée sur
+    place par un encadré plutôt que faite en silence : un texte qu'on vous
+    a transmis ne se réécrit pas sans le dire. La version d'origine reste
+    dans l'historique git ; le détail est dans
+    guide_hitbodedut.verification.md.
 -->
 
 # MyHitbodedut — המדריך המקיף להתבודדות
@@ -117,10 +123,23 @@ MyHitbodedut הופכת את האמונה במציאות מופשטת למערכ
 
 ## חלק ז — קשר אמיתי (ד)
 
-הרעיון הוא לדבר "כדבר איש אל רעהו".
+הרעיון הוא לדבר **כַּאֲשֶׁר יְדַבֵּר אִישׁ אֶל־רֵעֵהוּ** (שמות ל"ג, י"א).
 
-המאמר מביא את הרמח"ל במסילת ישרים, פרק י"ט, שמתאר מצב שבו האדם מתחנן לפני
-הקב"ה ומבקש ממנו, מתוך קשר אישי.
+> **Correction du 22/09** — le texte transmis écrivait « כדבר איש אל רעהו ».
+> Le verset dit « כַּאֲשֶׁר יְדַבֵּר אִישׁ אֶל־רֵעֵהוּ » ; la forme abrégée ne se
+> trouve ni dans le verset, ni dans Likoutei Moharan, Likoutei Etsot,
+> Si'hot haRan ou 'Hayé Moharan.
+
+המאמר מביא את הרמח"ל במסילת ישרים. על חשבון הנפש היומי — **פרק ג'** :
+"שֶׁיִּהְיֶה מְדַקְדֵּק וְשׁוֹקֵל דְּרָכָיו דָּבָר יוֹם בְּיוֹמוֹ".
+
+> **Correction du 22/09** — le texte transmis renvoyait ici au **chapitre
+> י"ט** pour « un homme qui supplie devant le Créateur, depuis un lien
+> personnel ». Le chapitre 19 traite bien de prière et de dvékout, mais ce
+> qu'il demande de prier, c'est la délivrance, Jérusalem et sa génération :
+> « וְיִתְפַּלֵּל תָּמִיד עַל גְּאֻלַּת בְּנֵי יִשְׂרָאֵל », « שֶׁיִּתְפַּלֵּל עַל דּוֹרוֹ ». C'est une
+> prière pour autrui, pas une conversation personnelle. Ce que le guide y
+> cherchait est au chapitre 3, qu'il cite correctement en חלק יב.
 
 אבל יש כאן איזון חשוב : מצד אחד לדבר באופן אישי ופשוט, ומצד שני לא לאבד את
 מורא השמים.
@@ -202,8 +221,16 @@ MyHitbodedut נותנת מקום לעצירה הזאת.
 
 ## חלק יג — הנשק האמיתי
 
-המאמר מביא את דברי קיצור ליקוטי מוהר"ן : "עיקר הכלי זיין של איש הישראלי הוא
-התפילה."
+המאמר מביא את דברי **קיצור ליקוטי מוהר"ן** : "עיקר הכלי זיין של איש הישראלי
+הוא התפילה." — et non de Likoutei Moharan, dont le passage parallèle, **I,
+2**, dit : "עִקַּר כְּלֵי זֵינוֹ שֶׁל **מָשִׁיחַ** הוּא הַתְּפִלָּה".
+
+> **Précision du 22/09** — la phrase citée est absente de Likoutei Moharan,
+> de Likoutei Etsot, de Si'hot haRan et de 'Hayé Moharan. Le Kitsour, lui,
+> n'est pas dans le corpus Sefaria consultable : la citation reste
+> plausible pour l'ouvrage qu'elle nomme, et serait fausse attribuée à
+> Likoutei Moharan. Dans l'original, le sujet est le Machia'h, non
+> l'homme d'Israël.
 
 התפילה היא כלי להתמודד עם : יצר הרע, קשיים רוחניים, ניסיונות, מאבקים, קשיים
 בחיים.
@@ -342,12 +369,12 @@ MyHitbodedut נותנת מקום לעצירה הזאת.
 |---|---|
 | רבי נחמן מברסלב | התבודדות ודיבור אישי עם הקב"ה |
 | ליקוטי מוהר"ן | תפילה ככלי מרכזי בעבודת האדם |
-| קיצור ליקוטי מוהר"ן | "עיקר הכלי זיין..." |
+| קיצור ליקוטי מוהר"ן | "עיקר הכלי זיין..." *(absent de ליקוטי מוהר"ן ; l'original I, 2 dit משיח)* |
 | רבי נתן | יישום מעשי של דרך רבינו |
 | ספר החרדים | התייחדות האדם עם בוראו |
 | ראשית חכמה | "קריאת אמת" והתייחדות |
 | מסילת ישרים ג' | חשבון נפש קבוע |
-| מסילת ישרים י"ט | דיבור עם הקב"ה |
+| מסילת ישרים י"ט | תפילה על הגאולה, על ירושלים ועל הדור *(corrigé le 22/09)* |
 | חפץ חיים, ליקוטי אמרים | להרבות בתפילות ובקשות אישיות |
 | סנהדרין מ"ד ע"ב | "לעולם יקדים אדם תפילה לצרה" |
 | ברכות ל"ג ע"ב | "הכל בידי שמים חוץ מיראת שמים" |
