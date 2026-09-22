@@ -299,16 +299,27 @@ espagnol aurait affiché un mélange d'hébreu et de français sans que rien ne
 le signale. Les deux règles nomment désormais chaque langue.
 
 `values-es/` porte les 327 textes. Les titres de la bibliothèque sont en
-espagnol. **Ce qui manque encore et qui est compté par un test** : les 37
-textes de 'hizouk (repli déclaré sur l'anglais), et les 24 résumés
-d'articles — qui manquent aussi à l'anglais et à l'hébreu, où ils retombent
-sur le français. L'application n'est donc **pas** traduite à 100 % : son
-interface l'est, son contenu non.
+espagnol.
 
-Traduire les 37 textes est un acte éditorial sur des enseignements de Rabbi
-Na'hman, pas une opération mécanique : les versions française et anglaise
-portent un statut de vérification et passent par l'écran de relecture. Une
-version espagnole devra arriver marquée non relue.
+**Les 37 textes de 'hizouk sont traduits** (8 521 caractères), sur demande
+du propriétaire, **sans marque « non relu »**. J'avais proposé de les
+marquer ainsi ; c'était une mauvaise idée et il a eu raison de la refuser.
+`relu: false` ne signale pas « à vérifier » : `ChizukRules.isPublishable`
+**retire l'item de l'édition release**. Marquer l'espagnol non relu aurait
+supprimé les 37 cartes de l'application, pour les lecteurs français et
+hébreux compris. Le champ `relu` porte sur l'item entier, pas sur une
+langue ; il n'a pas été touché.
+
+Un test comptait les textes espagnols absents et devait tomber le jour où
+ils existeraient. Il est tombé : remplacé par « chaque texte a ses trois
+traductions », plus deux gardes — aucune ligne espagnole n'est une copie du
+français ou de l'anglais, et chacune a une longueur plausible (rapport à
+l'anglais entre 0,83 et 1,32, médiane 1,02 : pas de ligne tronquée).
+
+**Ce qui manque encore** : les 24 résumés d'articles, absents de
+l'espagnol, **et aussi de l'anglais et de l'hébreu**, où ils retombent sur
+le français. L'écran de relecture ne montre que FR et EN : les textes
+espagnols ne peuvent pas y être comparés à la source.
 
 **Renommer depuis l'application (22/09).** La fonction existait déjà et le
 propriétaire l'a demandée : elle n'était atteignable que par appui long,

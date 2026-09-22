@@ -48,25 +48,42 @@ class ChizukCardTest {
     }
 
     @Test
-    fun `les textes espagnols ne sont pas encore ecrits, et cela se sait`() {
-        // Ce test ne protege pas un acquis, il tient un compte. L'interface
-        // est traduite en espagnol ; les trente-sept textes de 'hizouk ne le
-        // sont pas. Le jour ou ils le seront, ce test tombera — et c'est
-        // ainsi qu'on saura qu'il faut le remplacer par son contraire.
-        val ecrits = DataFiles.chizuk.items.count { it.es.isNotBlank() }
-        assertEquals(
-            "des textes espagnols existent maintenant : remplacer ce test par " +
-                "« chaque texte a ses trois traductions »",
-            0,
-            ecrits,
-        )
+    fun `chaque texte a ses trois traductions`() {
+        // Ce test a remplace celui qui comptait les textes espagnols absents.
+        // Il tombait le jour ou ils seraient ecrits ; ils le sont.
+        DataFiles.chizuk.items.forEach {
+            assertTrue("${it.id} : pas de francais", it.fr.isNotBlank())
+            assertTrue("${it.id} : pas d'anglais", it.en.isNotBlank())
+            assertTrue("${it.id} : pas d'espagnol", it.es.isNotBlank())
+        }
     }
 
     @Test
-    fun `chaque texte a ses deux traductions`() {
+    fun `aucun texte espagnol n est une copie du francais ou de l anglais`() {
+        // Le risque d'une traduction faite en lot n'est pas la faute de
+        // langue, c'est la ligne oubliee et recopiee telle quelle.
         DataFiles.chizuk.items.forEach {
-            assertTrue("${it.id} : pas de français", it.fr.isNotBlank())
-            assertTrue("${it.id} : pas d'anglais", it.en.isNotBlank())
+            assertTrue("${it.id} : l'espagnol recopie le francais", it.es != it.fr)
+            assertTrue("${it.id} : l'espagnol recopie l'anglais", it.es != it.en)
+        }
+    }
+
+    @Test
+    fun `chaque texte espagnol est de longueur plausible`() {
+        // Une traduction espagnole fait grosso modo la longueur de l'anglais.
+        // Un tiers ou le triple signale une ligne tronquee ou dedoublee.
+        DataFiles.chizuk.items.forEach {
+            val rapport = it.es.length.toDouble() / it.en.length
+            assertTrue(
+                "${it.id} : espagnol ${it.es.length} car. contre ${it.en.length} en anglais",
+                rapport in 0.6..1.8,
+            )
+        }
+    }
+
+    @Test
+    fun `chaque texte a sa reference`() {
+        DataFiles.chizuk.items.forEach {
             assertTrue("${it.id} : pas de référence", it.ref.isNotBlank())
         }
     }
