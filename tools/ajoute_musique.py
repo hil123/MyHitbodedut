@@ -46,7 +46,7 @@ def titre_lisible(nom):
     return re.sub(r'\s+', ' ', n).strip(' -')
 
 
-def cle(titre, pris):
+def cle(titre, pris, prefixe_muet='nigoun_sans_titre_'):
     s = re.sub(r'[^a-z0-9]+', '_', titre.lower()).strip('_')
     s = re.sub(r'_?(the_)?(ha)?yanukas?_melodies_?', '_', s).strip('_')
     for motif, prefixe in ((r'ishay_ribo', 'ribo'), (r'motty_steinmetz', 'steinmetz')):
@@ -57,11 +57,16 @@ def cle(titre, pris):
         if re.search(r'yanuka|shlomo_yehuda', s):
             s = 'yanuka_' + re.sub(r'yanuka|the_', '', s).strip('_')
     s = re.sub(r'_+', '_', s).strip('_')[:40].strip('_')
+    if re.fullmatch(r'\d*', s):
+        s = ''   # « 5 », « 2 », « 6 » : ce sont des restes, pas des titres
     if not s:
+        # Pas de titre lisible : on numerote dans le schema du dossier vise,
+        # pas dans celui de l'autre. Melanger les deux rend l'inventaire
+        # illisible, ce qui est exactement ce qui est arrive une fois.
         n = 1
-        while ('nigoun_sans_titre_%d' % n) in pris:
+        while ('%s%d' % (prefixe_muet, n)) in pris:
             n += 1
-        s = 'nigoun_sans_titre_%d' % n
+        s = '%s%d' % (prefixe_muet, n)
     base, i = s, 2
     while s in pris:
         s, i = '%s_%d' % (base, i), i + 1
@@ -102,7 +107,7 @@ def main():
         else:
             # Un morceau ecarte garde son nom lisible comme les autres : le
             # numeroter jetterait le peu de titre qui a survecu au transfert.
-            c = cle(titre, {q.stem for q in HORS.glob('*.mp3')})
+            c = cle(titre, {q.stem for q in HORS.glob('*.mp3')}, 'niggoun_')
             shutil.copy(f, HORS / (c + '.mp3'))
             ecartes.append(c)
         connus[h] = f.name

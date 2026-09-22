@@ -48,18 +48,21 @@ remis.
 |---|---|
 | `ani_maamin` | 2.0 Mo |
 | `anim_zemirot` | 2.1 Mo |
+| `breslov_playing_field_sea_waves` | 4.8 Mo |
 | `chabad_shabbos_shneor_lerer` | 4.7 Mo |
 | `chabad_yamim_noraim_shneor_lerer` | 8.6 Mo |
 | `nigun_abaal_shem_tov_for_babies` | 6.7 Mo |
 | `nigunim_for_neshama_shneor_lerer` | 27.8 Mo |
 | `relaxing_chabad_melodies_shneor_lerer` | 7.5 Mo |
+| `tremendous_threat_breslau_piano` | 9.5 Mo |
 | `tzama_with_orchestra` | 2.4 Mo |
 | `tzomo_lecho_s_lerer` | 2.4 Mo |
 | `vehi_sheamda_piano_shneor_lerer` | 2.0 Mo |
 | `vehi_sheamda_s_lerer` | 2.1 Mo |
-| `niggoun_01` … `niggoun_06` *(sans titre)* | 25.1 Mo |
+| `yosef_karduner` | 6.6 Mo |
+| `niggoun_01` … `niggoun_16` *(sans titre)* | 88.6 Mo |
 
-**17 morceaux, 93.2 Mo.** L'APK, lui, reste à 128,2 Mo : le plafond a tenu.
+**30 morceaux, 177.6 Mo.** L'APK est à 129.5 Mo d'audio sur 31 morceaux.
 
 > Cet inventaire est régénéré depuis les fichiers, pas tenu à la main.
 
