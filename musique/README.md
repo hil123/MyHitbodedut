@@ -9,7 +9,10 @@ dans l'APK et n'en augmentent pas le poids.
 L'audio embarqué a atteint **128,2 Mo** pour 30 morceaux, contre 12 Mo pour
 tout le reste de l'application après R8 — un APK d'environ 140 Mo. Le
 garde-fou du test, déjà relevé trois fois (40 → 80 → 110 → 130), est au bout.
-Ces cinq morceaux l'auraient porté à **147,5 Mo**.
+
+Depuis, tout nouvel envoi arrive ici automatiquement : `tools/ajoute_musique.py`
+compare le poids embarqué au plafond et range de ce côté-ci dès qu'il est
+atteint. Le plafond n'a plus bougé.
 
 Plutôt que de le relever une quatrième fois en silence, les fichiers sont
 gardés ici : rien n'est perdu, l'APK ne bouge pas, et le choix reste ouvert.
@@ -43,13 +46,22 @@ remis.
 
 | fichier | poids |
 |---|---|
-| `chabad_shabbos_shneor_lerer` | 4,7 Mo |
-| `chabad_yamim_noraim_shneor_lerer` | 8,6 Mo |
-| `tzama_with_orchestra` | 2,4 Mo |
-| `vehi_sheamda_piano_shneor_lerer` | 2,0 Mo |
-| `niggoun_01` … `niggoun_06` | 25,0 Mo |
+| `ani_maamin` | 2.0 Mo |
+| `anim_zemirot` | 2.1 Mo |
+| `chabad_shabbos_shneor_lerer` | 4.7 Mo |
+| `chabad_yamim_noraim_shneor_lerer` | 8.6 Mo |
+| `nigun_abaal_shem_tov_for_babies` | 6.7 Mo |
+| `nigunim_for_neshama_shneor_lerer` | 27.8 Mo |
+| `relaxing_chabad_melodies_shneor_lerer` | 7.5 Mo |
+| `tzama_with_orchestra` | 2.4 Mo |
+| `tzomo_lecho_s_lerer` | 2.4 Mo |
+| `vehi_sheamda_piano_shneor_lerer` | 2.0 Mo |
+| `vehi_sheamda_s_lerer` | 2.1 Mo |
+| `niggoun_01` … `niggoun_06` *(sans titre)* | 25.1 Mo |
 
-**Dix morceaux, 42,7 Mo.**
+**17 morceaux, 93.2 Mo.** L'APK, lui, reste à 128,2 Mo : le plafond a tenu.
+
+> Cet inventaire est régénéré depuis les fichiers, pas tenu à la main.
 
 ## Titres
 
