@@ -231,6 +231,9 @@
     <string name="music_on_summary">%1$s, volume %2$d %%</string>
     <string name="session_music_line">Musique : %1$s</string>
     <string name="track_hamelech_basade" translatable="false">המלך בשדה</string>
+    <string name="track_nigoun_sans_titre_4" translatable="false">Niggoun — titre à préciser (4)</string>
+    <string name="track_nigoun_sans_titre_5" translatable="false">Niggoun — titre à préciser (5)</string>
+    <string name="track_nigoun_sans_titre_6" translatable="false">Niggoun — titre à préciser (6)</string>
     <string name="track_ribo_zusha" translatable="false">Ishay Ribo feat. Zusha</string>
     <string name="track_nigoun_sans_titre_1" translatable="false">Niggoun — titre à préciser (1)</string>
     <string name="track_ribo_seder_haavoda" translatable="false">Seder HaAvoda — Ishay Ribo</string>

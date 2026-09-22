@@ -52,21 +52,26 @@ remarque à côté.
 | prayer-02 | 2 | תפילת חבקוק — 'Habaqouq 3, guéoula | ⚠️ versets exacts, commentaire avec réserve |
 | prayer-03 | 15 | **תפילה נוראה לישועת ישראל** — « עקב המצב בארץ הקודש » | ✅ |
 | prayer-04 | 2 | זכות רחל אמנו | ✅ |
-| prayer-05 | — | **non fourni** | — |
+| prayer-05 | 1 | זיווג (לאישה) | ⚠️ réserve de définition |
 | prayer-06 | 1 | זיווג (לאיש) | ✅ |
 | prayer-07 | 1 | זרע של קיימא (לאיש) | ✅ |
 | prayer-08 | 1 | זרע של קיימא (לאישה) | ✅ |
 | prayer-09 | 2 | ישועה ושלוות הנפש — l'angoisse | ✅ |
 | prayer-10 | 2 | רפואה שלימה | ⚠️ partiel |
-| *(image collée)* | 1 | זיווג (לאישה) | ⚠️ réserve |
+
 
 **prayer-10** : le la'hash et les douze versets sont faits ; la note en petits
 caractères et le commentaire intercalé entre les mots des versets ne le sont
 pas. Dit dans le fichier.
 
-**zivug (לאישה)** : transcrite depuis un JPEG de 1290 px, contre 2339 px pour
-les PDF. Moins sûre. Le PDF de cette feuille permettrait de la reprendre au
-même niveau que les autres.
+**prayer-05** n'a jamais manqué : c'est la prière de zivoug féminine, envoyée
+comme image et identifiée par le propriétaire comme « Prière 5 ». **Les neuf
+feuillets sont donc au complet.**
+
+Elle reste la moins sûre de la série : 1290 px de large, contre 2339 px pour
+les PDF et 4959 px pour le livret. Envoyée deux fois, les deux fois **le même
+fichier au bit près** — une seconde copie n'ajoute pas de définition. Seul le
+PDF d'origine permettrait de la reprendre au niveau des autres.
 
 **prayer-02** : seul feuillet à couche texte, donc les *caractères* sont ceux
 du fichier et non une lecture. Mais les boîtes des fragments se chevauchent

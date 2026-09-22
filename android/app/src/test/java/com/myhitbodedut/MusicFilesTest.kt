@@ -85,18 +85,25 @@ class MusicFilesTest {
      * bibliothèque — pèse 12 Mo. Le seuil est relevé à 110 Mo **en connaissance
      * de cause, et c'est la deuxième fois**.
      *
-     * La réponse juste n'est plus de le relever une troisième fois : c'est de
-     * télécharger les morceaux à la demande au lieu de les livrer. Le seuil
-     * existe pour que cette décision soit prise, pas pour qu'elle glisse.
+     * **Et il a été relevé une troisième fois, à 130 Mo, contre mon avis.**
+     * J'avais écrit ici même qu'il ne fallait pas ; le propriétaire a envoyé
+     * trois morceaux de plus et demandé de continuer. C'est son projet et son
+     * appel — mais le désaccord reste écrit, parce qu'un seuil qu'on relève
+     * sans laisser de trace ne sert plus à rien.
+     *
+     * Où cela en est : 111,9 Mo d'audio, APK d'environ 124 Mo. Le seuil
+     * existe pour que la décision soit prise, pas pour qu'elle glisse ; elle
+     * a été prise, en connaissance de cause, trois fois.
      */
     @Test
     fun `le poids embarque reste sous les yeux`() {
         val octets = raw.listFiles { f -> f.name.endsWith(".mp3") }.orEmpty().sumOf { it.length() }
         val mo = octets / 1_048_576.0
         assertTrue(
-            "audio embarqué : %.1f Mo. Le seuil a déjà été relevé deux fois ".format(mo) +
-                "(40 → 80 → 110). Au-delà, il faut télécharger les morceaux, pas les livrer.",
-            mo < 110.0,
+            "audio embarqué : %.1f Mo. Seuil relevé trois fois ".format(mo) +
+                "(40 → 80 → 110 → 130). Le correctif est de télécharger les " +
+                "morceaux à la demande, pas de relever une quatrième fois.",
+            mo < 130.0,
         )
     }
 

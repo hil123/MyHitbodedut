@@ -254,14 +254,20 @@ sur 22 morceaux, contre 12 Mo pour tout le reste de l'application après R8 :
 l'APK approche **115 Mo**. Le garde-fou du test, posé à 40 puis relevé à 80,
 a sauté ; il est relevé à 110 **en le disant**, et c'est la deuxième fois.
 
-**Il ne faut pas le relever une troisième fois.** La réponse est de
-télécharger les morceaux à la demande plutôt que de les livrer : l'APK
-retombe à une douzaine de Mo, et celui qui veut les niggounim les prend.
-C'est un vrai morceau de travail — téléchargement, stockage, reprise,
-comportement hors ligne — et il n'a pas été demandé. Mais c'est la prochaine
-chose à faire du côté musique.
+**Je l'ai relevé une troisième fois quand même, à 130 Mo, contre mon propre
+avis.** Trois morceaux de plus sont arrivés et le propriétaire a demandé de
+continuer ; c'est son projet et son appel. L'audio est à **111,9 Mo** sur
+25 morceaux, l'APK autour de **124 Mo**. Le désaccord est écrit ici et dans
+le test, parce qu'un seuil qu'on relève sans trace ne sert plus à rien.
 
-**Trois morceaux sont sans titre** : leurs noms de fichiers étaient
+**La réponse reste la même, et elle devient urgente** : télécharger les
+morceaux à la demande plutôt que les livrer. L'APK retombe à une douzaine de
+Mo, et celui qui veut les niggounim les prend. C'est un vrai morceau de
+travail — téléchargement, stockage, reprise, comportement hors ligne — non
+demandé à ce jour. C'est la prochaine chose à faire du côté musique, avant
+d'ajouter un morceau de plus.
+
+**Sept morceaux sont sans titre** : leurs noms de fichiers étaient
 entièrement en hébreu, remplacés par des underscores au transfert, et les
 tags ID3 sont vides. Ils s'appellent « Niggoun — titre à préciser (1/2/3) »
 plutôt qu'un titre inventé. Un quatrième, d'Ishay Ribo, est dans le même cas.

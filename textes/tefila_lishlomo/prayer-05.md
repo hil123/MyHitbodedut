@@ -1,10 +1,14 @@
-# תפילה לזיווג (לאישה) — l'image collée dans la conversation
+# prayer-05 — תפילה לזיווג (לאישה)
 
 - **Recueil** : מתוך הספר 'תפילה לשלמה'
 - **Auteur** : מאת הגאון הינוקא רבנו שלמה יהודה בארי שליט"א
 - **Sujet** : zivoug — version **pour une femme**. Pendant exact de `prayer-06` (*לאיש*).
-- **Source** : image JPEG collée dans la conversation, **1290 × 1736** — bien
-  moins définie que les PDF (2339 × 3308 à 400 dpi). Voir la réserve en bas.
+- **C'est le feuillet 5.** Il n'a jamais manqué : le propriétaire l'a envoyé
+  le 22/09 en l'identifiant comme « Prière 5 ». Le trou dans la numérotation
+  (01–04, 06–10) est donc comblé — la série est complète.
+- **Source** : image JPEG, **1290 × 1736**. Envoyée deux fois, et les deux
+  envois sont **octet pour octet identiques** (même empreinte SHA-256) : la
+  seconde n'apporte pas de définition supplémentaire. Voir la réserve en bas.
 
 ---
 
@@ -48,13 +52,17 @@ réels, qui ne sont pas de simples accords :
 ## ⚠️ Réserve sur cette transcription
 
 Elle est **moins sûre que les autres**, et voici pourquoi : elle vient d'une
-image de 1290 px de large, là où les PDF donnent 2339 px à 400 dpi. Or c'est
-précisément à basse définition que ר et ד deviennent indiscernables — l'erreur
-a déjà été commise deux fois dans cette série (`prayer-04`, `prayer-09`).
+image de 1290 px de large, là où les PDF donnent 2339 px à 400 dpi et où le
+livret `prayer-03` monte à 4959 px. Or c'est précisément à basse définition
+que ר et ד deviennent indiscernables — l'erreur a déjà été commise deux fois
+dans cette série (`prayer-04`, `prayer-09`).
+
+Le second envoi ne change rien : c'est le même fichier, au bit près.
 
 Un mot en dépend ici : **וִירֵא אֱלֹהִים**. Je le lis ainsi parce que
 « ירא אלהים » est la formule attendue et que « ידא אלהים » n'existe pas —
-mais c'est un raisonnement, pas une lecture. **Envoyez le PDF de cette
-feuille et je la reprends comme les autres.**
+mais c'est un raisonnement, pas une lecture. **Le PDF de cette feuille — pas
+une nouvelle copie du même JPEG — permettrait de la reprendre au niveau des
+autres.**
 
 Le reste a été relu contre un agrandissement ×2,2 de la zone centrale.
