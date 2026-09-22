@@ -69,7 +69,13 @@
       "editions": "Les 7 versionTitle et les 7 licences de _meta.editions correspondent au catalogue Sefaria. nikkoud_ok=false porte exactement sur les deux editions dont la licence est declaree unknown.",
       "references": "37/37 coherentes entre ref et ref_sefaria.",
       "traductions": "Lues une a une le 20/09/2026 par leur propre auteur : ce n'est donc pas une relecture independante. Une correction appliquee : rambam-tefila-1-3, ou « רגיל » etait lu « avoir l'habitude » en francais alors que l'anglais lisait « fluent » ; le francais perdait l'opposition avec « ערל שפתים » qui suit. Une relecture par un tiers reste souhaitable.",
-      "reserve": "11 items s'arretent avant la fin du segment cite sans porter le « … » que _meta.ellipses annonce. Aucun mot n'y est faux ; c'est la convention qui n'est pas tenue."
+      "reserve": "11 items s'arretent avant la fin du segment cite sans porter le « … » que _meta.ellipses annonce. Aucun mot n'y est faux ; c'est la convention qui n'est pas tenue.",
+      "relecture": {
+        "par": "Claude, auteur des traductions",
+        "independante": false,
+        "date": "2026-09-20",
+        "reserve": "Les traductions ont ete lues une a une par leur propre auteur : ce n'est pas une relecture independante. Une lecture par un tiers reste souhaitable. Detail dans _meta.verification.traductions."
+      }
     }
   },
   "items": [

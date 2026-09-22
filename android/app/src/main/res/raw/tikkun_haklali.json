@@ -33,13 +33,26 @@
       "Tehilim 105:28"
     ],
     "statut_verif": "verifie_texte",
-    "relu": false,
+    "relu": true,
     "source_liturgie": "Ouverture, cloture, kavana et priere de Rabbi Nathan reprises de la page tikkun_haklali.html fournie le 20/09/2026, noms divins substitues selon la convention de l'application. Le texte des dix psaumes n'en vient PAS : il reste celui de l'edition massoretique deja verifiee. La page porte une coquille confirmee sur trois editions (105:20, dagesh manquant dans וַיַּתִּירֵהוּ) et suit ailleurs la graphie des siddourim plutot que le pointage massoretique (ירושלים, הללויה).",
     "graphie": "massoretique. La ou la page fournie s'ecartait des editions, ce sont les editions qui tranchent : maqqef et sof-pasuk retablis, holam haser conserve, ירושלִם au pointage massoretique plutot que ירושלים plene, הללו־יה en deux mots plutot que soude. Les trois editions consultees — Tanach with Nikkud, Miqra according to the Masorah, Tanach with Ta'amei Hamikra — s'accordent sur ces cinq points contre la page, ainsi que sur 105:20 ou la page omet un dagesh. Les parties liturgiques, que la page seule fournit, sont conservees telles quelles.",
     "continuite": {
       "he": "להמשיך מזה לזה ברצף אחד, ללא הפסק",
       "fr": "Les dix psaumes s'enchaînent d'un seul trait, sans interruption.",
       "en": "The ten psalms follow one another in a single flow, without a break."
+    },
+    "verification": {
+      "date": "2026-09-22",
+      "psaumes": "164/164 versets confrontes un a un a l'edition massoretique « Tanach with Nikkud » (tanach.us via le corpus public sefaria-export, domaine public). Aucune divergence subsistante, qere resolu et noms divins substitues.",
+      "liturgie": "Ouverture, cloture, kavana et priere de Rabbi Nathan proviennent de la seule page tikkun_haklali.html fournie le 20/09/2026. UN SEUL TEMOIN : contrairement aux psaumes, elles ne sont recoupees par aucune autre source. C'est la reserve principale de ce fichier.",
+      "coquille_corrigee": "Tehilim 105:20 — la page fournie ecrit וַיַתִּירֵהוּ sans daguech, contre וַיַּתִּירֵהוּ dans les trois editions consultees. Corrige.",
+      "noms_divins": "Onze formes construites avaient echappe a la premiere substitution (אֱלֹהֵי, אֱלֹהֶיךָ, אֱלֹהָי, אֱלֹהֵינוּ, וֵאלֹהָי). Trouvees par un test durci apres une premiere livraison, et corrigees.",
+      "relecture": {
+        "par": "Claude, auteur du fichier",
+        "independante": false,
+        "date": "2026-09-20",
+        "reserve": "Le fichier a ete relu par qui l'a genere : ce n'est pas une relecture independante. Une lecture par un tiers reste souhaitable, en particulier sur les parties liturgiques, qui n'ont qu'un seul temoin."
+      }
     }
   },
   "psaumes": [
