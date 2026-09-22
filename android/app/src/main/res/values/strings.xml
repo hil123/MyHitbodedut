@@ -231,6 +231,11 @@
     <string name="music_on_summary">%1$s, volume %2$d %%</string>
     <string name="session_music_line">Musique : %1$s</string>
     <string name="track_hamelech_basade" translatable="false">המלך בשדה</string>
+    <string name="track_ribo_nafshi" translatable="false">Nafshi — Ishay Ribo &amp; Motty Steinmetz</string>
+    <string name="track_shmuel_one_prayer" translatable="false">Give Me One Prayer — Shmuel</string>
+    <string name="track_ribo_ata_zocher" translatable="false">Ata Zocher — Ishay Ribo &amp; MBD</string>
+    <string name="track_ribo_sans_titre" translatable="false">Ishay Ribo — titre à préciser</string>
+    <string name="track_ribo_halev_sheli" translatable="false">Halev Sheli — Ishay Ribo</string>
     <string name="track_yanuka_the_truth_will_rise" translatable="false">The Truth Will Rise — The Yanuka\'s Melodies</string>
     <string name="track_yanuka_listening_to_the_heart" translatable="false">Listening to the Heart — HaYanuka Melodies</string>
     <string name="track_yanuka_the_king_will_return" translatable="false">The King Will Return — The Yanuka\'s Melodies</string>

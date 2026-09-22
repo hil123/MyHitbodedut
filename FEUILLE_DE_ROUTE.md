@@ -232,6 +232,31 @@ Quand une prière est rangée sous un sujet dont sa leçon ne traite pas — six
 cas sur vingt — l'écran le dit sous la référence. Le fichier l'avouait
 déjà ; le taire à l'écran serait le cacher.
 
+### Musique — qui a autorisé quoi
+
+Deux déclarations distinctes du propriétaire, consignées séparément parce
+qu'elles ne portent pas sur les mêmes ayants droit :
+
+| déclaration du 22/09 | porte sur | morceaux |
+|---|---|---|
+| « tout ce qui est de Rav Arush et Yanuka, j'ai obtenu les autorisations légales des ayants droit » | le Yanuka | les 10 niggounim |
+| « j'ai aussi ces droits-là » — en réponse à une question posée sur ces cinq titres précisément | Ishay Ribo, Motty Steinmetz, MBD, Shmuel | Nafshi, Ata Zocher, Halev Sheli, un quatrième titre Ribo, Give Me One Prayer |
+
+La seconde a été demandée avant d'ajouter quoi que ce soit : ces cinq-là sont
+des enregistrements commerciaux d'artistes sous label, hors du périmètre de la
+première déclaration. Les livrer dans un APK distribué est une rediffusion, et
+le projet a tout un test bloquant construit autour de `autorisation: null`
+pour ce genre de question — la contourner par la musique n'aurait pas été
+cohérent.
+
+**Reste utile, si vous l'avez** : de qui vient chaque autorisation, quand, et
+sur quoi elle porte. C'est ce qui la rend vérifiable dans deux ans.
+
+**Un titre est inconnu** : le quatrième morceau d'Ishay Ribo est arrivé avec
+un nom de fichier entièrement hébreu, remplacé par des underscores au
+transfert, et sans tag ID3. Il s'appelle pour l'instant « Ishay Ribo — titre
+à préciser ».
+
 ### Les trois recueils demandés qui manquent
 
 **כוכבי אור**, **les livres du Rav Shalom Arush** et **ceux du Yanuka** ne
