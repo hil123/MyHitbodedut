@@ -44,9 +44,11 @@ Restent donc, pour 2 : adapter la structure guidée au sujet choisi.
 - **Existe** : le bandeau d'accueil avec l'état du jour, la série, le
   total et la bande de la semaine. L'écran a été dégraissé le 22/09 :
   deux cartes au lieu de sept.
-- **Reste** : le prénom, et une carte de départ qui rassemble durée,
-  thème, musique et mode concentration avant de commencer.
-- **Dépend de** : le thème de séance.
+- **Fait le 22/09** : le prénom — vide par défaut, et l'accueil se tait
+  alors plutôt que de saluer un blanc — et la carte de départ : quatre
+  lignes au-dessus du bouton, durée, sujet, musique, concentration.
+  Aucune n'est obligatoire, chacune se change d'une touche. La ligne de
+  concentration disparaît en édition légère, qui n'a pas de barrière.
 
 ### 2. Hitbodedut guidée par objectif
 
@@ -113,6 +115,27 @@ Restent donc, pour 2 : adapter la structure guidée au sujet choisi.
 - **Attention** : les 18 articles de la série הפגישה n'ont **aucun texte
   intégral** et aucune autorisation. Un test bloquant l'empêche. La
   pensée du jour devra venir des sources libres, pas de ceux-là.
+- **Texte reçu le 22/09**, conservé mot pour mot dans
+  `textes/guide_hitbodedut.md`. Il **n'est pas dans l'application**, et
+  voici pourquoi : ses quatorze parties se superposent une à une aux
+  articles de la série הפגישה déjà répertoriés — מבוא, היכן המטמון,
+  חלום אמיתי, קשר אמיתי (א–ד), התבודדות וגדולי ישראל, אני בן תורה,
+  הנשק האמיתי, המדריך המעשי. Ce sont ceux dont la fiche porte
+  `autorisation: null` et « autorisation écrite requise ».
+
+  Ce texte est une **synthèse**, pas une reproduction — ce n'est pas la
+  même chose, et il se peut très bien qu'il soit libre de droits. Mais ce
+  dépôt est privé alors que l'APK est distribué : la question doit être
+  tranchée avant, pas après.
+
+  **Ce qui est sûr et immédiatement utilisable** : les sources classiques
+  que ce texte cite sont du domaine public, et la bibliothèque a
+  justement un type `source` pour elles — Messilat Yesharim 3 et 19,
+  Sefer Haredim, 'Hafets 'Haïm (Likoutei Amarim 10), Sanhedrin 44b,
+  Berakhot 33b, Bereshit 24:63, Réshit 'Hokhma (Shaar haKedousha 12),
+  Kitsour Likoutei Moharan. Elles peuvent être vérifiées et ajoutées sans
+  attendre. La structure guidée en neuf temps, elle, est de
+  l'application : elle appartient au projet.
 
 ### 11. Chizuk à la demande
 
@@ -150,9 +173,9 @@ Restent donc, pour 2 : adapter la structure guidée au sujet choisi.
 
 | | |
 |---|---|
-| **1** | à finir : le prénom, et une carte de départ qui rassemble durée, sujet, musique et concentration |
+| **1** | **faite le 22/09** : le prénom, et la carte de départ (durée, sujet, musique, concentration) |
 | **2** | sujet **facultatif** — décidé et construit |
-| **10** | **en attente des textes**, qui seront fournis |
+| **10** | texte reçu le 22/09, conservé dans `textes/guide_hitbodedut.md`. **Pas dans l'APK tant que la question de droits ci-dessous n'est pas tranchée.** |
 | **11** | **partage autorisé** — ce sera le seul endroit où un texte sort de l'appareil |
 | **12** | **feu vert**. Reste que cette partie n'a jamais tourné sur un vrai téléphone : l'habiller avant de l'éprouver serait mettre un costume à ce dont on ignore s'il marche |
 | **15** | **micro autorisé** → `RECORD_AUDIO`, de l'audio à stocker, et un export qui cesse d'être un seul fichier |
