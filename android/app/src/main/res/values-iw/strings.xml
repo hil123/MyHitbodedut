@@ -357,4 +357,15 @@
     <string name="theme_difficultes">קשיים</string>
     <string name="theme_croissance">עבודה על המידות</string>
     <string name="theme_autre">משהו אחר</string>
+    <string name="hero_greeting">שלום %1$s</string>
+    <string name="start_duration">משך</string>
+    <string name="start_theme">נושא</string>
+    <string name="start_music">מוזיקה</string>
+    <string name="start_focus">ריכוז</string>
+    <string name="start_music_off">ללא</string>
+    <string name="start_focus_on">פעיל</string>
+    <string name="start_focus_off">כבוי</string>
+    <string name="settings_name">שם פרטי</string>
+    <string name="settings_name_hint">כדי שמסך הבית יפנה אליכם בשמכם. הוא אינו יוצא מהטלפון.</string>
+    <string name="settings_name_empty">לא הוזן</string>
 </resources>

@@ -31,6 +31,15 @@
                 android:letterSpacing="0.12" />
 
             <TextView
+                android:id="@+id/hero_greeting"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:textColor="@color/mint"
+                android:textSize="16sp"
+                android:visibility="gone" />
+
+            <TextView
                 android:id="@+id/status_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -122,6 +131,51 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="14dp" />
+
+            <!--
+                La carte de départ : ce avec quoi on entre dans la séance,
+                rassemblé là où on appuie pour commencer, plutôt que
+                dispersé entre trois écrans. Chaque ligne se change d'une
+                touche, et aucune n'est obligatoire.
+            -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="16dp"
+                android:background="@color/line" />
+
+            <LinearLayout
+                android:id="@+id/start_duration"
+                style="@style/StartRow">
+
+                <TextView style="@style/StartLabel" android:text="@string/start_duration" />
+
+                <TextView android:id="@+id/start_duration_value" style="@style/StartValue" />
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/start_theme"
+                style="@style/StartRow">
+
+                <TextView style="@style/StartLabel" android:text="@string/start_theme" />
+
+                <TextView android:id="@+id/start_theme_value" style="@style/StartValue" />
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/start_music"
+                style="@style/StartRow">
+
+                <TextView style="@style/StartLabel" android:text="@string/start_music" />
+
+                <TextView android:id="@+id/start_music_value" style="@style/StartValue" />
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/start_focus"
+                style="@style/StartRow">
+
+                <TextView style="@style/StartLabel" android:text="@string/start_focus" />
+
+                <TextView android:id="@+id/start_focus_value" style="@style/StartValue" />
+            </LinearLayout>
 
             <Button
                 android:id="@+id/start_session"

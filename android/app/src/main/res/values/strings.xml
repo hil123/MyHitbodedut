@@ -369,4 +369,15 @@
     <string name="theme_difficultes">Difficultés</string>
     <string name="theme_croissance">Travail sur soi</string>
     <string name="theme_autre">Autre chose</string>
+    <string name="hero_greeting">Bonjour %1$s</string>
+    <string name="start_duration">Durée</string>
+    <string name="start_theme">Sujet</string>
+    <string name="start_music">Musique</string>
+    <string name="start_focus">Concentration</string>
+    <string name="start_music_off">aucune</string>
+    <string name="start_focus_on">activée</string>
+    <string name="start_focus_off">désactivée</string>
+    <string name="settings_name">Prénom</string>
+    <string name="settings_name_hint">Pour que l’accueil vous salue. Il ne quitte pas le téléphone.</string>
+    <string name="settings_name_empty">Non renseigné</string>
 </resources>

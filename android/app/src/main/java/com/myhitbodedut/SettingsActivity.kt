@@ -8,6 +8,7 @@ import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
+import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.TextView
@@ -84,6 +85,7 @@ class SettingsActivity : AppCompatActivity() {
             BuildConfig.VERSION_CODE,
             getString(if (BuildConfig.HAS_GATE) R.string.edition_full else R.string.edition_light)
         )
+        findViewById<Button>(R.id.name_button).setOnClickListener { askName() }
         findViewById<Button>(R.id.region_button).setOnClickListener {
             Store.setInIsrael(this, !Store.inIsrael(this))
             refresh()
@@ -123,6 +125,28 @@ class SettingsActivity : AppCompatActivity() {
         findViewById<Button>(R.id.import_data).setOnClickListener {
             importFile.launch(arrayOf("application/json", "text/plain", "*/*"))
         }
+    }
+
+    /**
+     * Le prénom. Vide est une réponse : l'accueil se tait alors plutôt que
+     * de saluer un blanc, et le champ se vide aussi facilement qu'il se
+     * remplit.
+     */
+    private fun askName() {
+        val champ = EditText(this).apply {
+            setText(Store.firstName(this@SettingsActivity))
+            setSingleLine()
+            setSelection(text.length)
+        }
+        AlertDialog.Builder(this)
+            .setTitle(R.string.settings_name)
+            .setView(champ)
+            .setPositiveButton(R.string.action_save) { _, _ ->
+                Store.setFirstName(this, champ.text.toString())
+                refresh()
+            }
+            .setNegativeButton(R.string.action_back, null)
+            .show()
     }
 
     private fun previewGate() {
@@ -257,6 +281,9 @@ class SettingsActivity : AppCompatActivity() {
         findViewById<Button>(R.id.region_button).setText(
             if (Store.inIsrael(this)) R.string.region_israel else R.string.region_diaspora
         )
+        val prenom = Store.firstName(this)
+        findViewById<Button>(R.id.name_button).text =
+            prenom.ifBlank { getString(R.string.settings_name_empty) }
 
         val count = Store.blockedApps(this).size
         val summary = findViewById<TextView>(R.id.apps_summary)

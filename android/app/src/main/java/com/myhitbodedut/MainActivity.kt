@@ -7,6 +7,7 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.google.android.material.materialswitch.MaterialSwitch
@@ -66,6 +67,22 @@ class MainActivity : AppCompatActivity() {
         findViewById<Button>(R.id.start_session).setOnClickListener {
             startActivity(Intent(this, SessionActivity::class.java))
         }
+        findViewById<View>(R.id.start_duration).setOnClickListener {
+            pickDuration()
+        }
+        findViewById<View>(R.id.start_theme).setOnClickListener {
+            pickTheme()
+        }
+        findViewById<View>(R.id.start_music).setOnClickListener {
+            startActivity(Intent(this, MusicActivity::class.java))
+        }
+        findViewById<View>(R.id.start_focus).setOnClickListener {
+            // La barrière du matin. En édition légère elle n'existe pas,
+            // et la ligne est retirée plutôt que rendue inopérante.
+            Store.setEnabled(this, !Store.isEnabled(this))
+            applyServiceState()
+            refresh()
+        }
         findViewById<View>(R.id.music_button).setOnClickListener {
             startActivity(Intent(this, MusicActivity::class.java))
         }
@@ -101,6 +118,36 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * La durée de la prochaine séance. Le même choix que dans les
+     * réglages : c'est la même valeur, atteinte de plus près.
+     */
+    private fun pickDuration() {
+        val options = intArrayOf(5, 10, 15, 20, 30, 45, 60)
+        val libelles = options.map { Store.formatDuration(it) }.toTypedArray()
+        AlertDialog.Builder(this)
+            .setTitle(R.string.settings_target)
+            .setItems(libelles) { _, which ->
+                Store.setTargetMinutes(this, options[which])
+                refresh()
+            }
+            .show()
+    }
+
+    /** Le sujet de la prochaine séance. « Aucun » en tête : il est facultatif. */
+    private fun pickTheme() {
+        val sujets = Theme.values()
+        val libelles = (listOf(getString(R.string.session_theme_none_short)) +
+            sujets.map { getString(it.titre) }).toTypedArray()
+        AlertDialog.Builder(this)
+            .setTitle(R.string.session_theme_title)
+            .setItems(libelles) { _, index ->
+                Store.setSessionTheme(this, if (index == 0) null else sujets[index - 1])
+                refresh()
+            }
+            .show()
+    }
+
     // --- Rendu --------------------------------------------------------------
 
     private fun refresh() {
@@ -112,6 +159,44 @@ class MainActivity : AppCompatActivity() {
         renderTikkun()
         renderReminders()
         renderSettingsEntry()
+        renderStartCard()
+    }
+
+    /**
+     * La carte de départ : ce avec quoi on entre dans la séance. Rien n'y
+     * est obligatoire — la durée a sa valeur habituelle, le sujet peut
+     * rester « aucun », la musique et la concentration peuvent être
+     * éteintes.
+     */
+    private fun renderStartCard() {
+        findViewById<TextView>(R.id.start_duration_value).text =
+            Store.formatDuration(Store.targetMinutes(this))
+
+        val sujet = Store.sessionTheme(this)
+        findViewById<TextView>(R.id.start_theme_value).setText(
+            sujet?.titre ?: R.string.session_theme_none_short
+        )
+
+        val track = if (Store.musicEnabled(this)) MusicLibrary.selected(this) else null
+        findViewById<TextView>(R.id.start_music_value).text =
+            track?.title ?: getString(R.string.start_music_off)
+
+        val focus = findViewById<View>(R.id.start_focus)
+        focus.visibility = if (BuildConfig.HAS_GATE) View.VISIBLE else View.GONE
+        if (BuildConfig.HAS_GATE) {
+            findViewById<TextView>(R.id.start_focus_value).setText(
+                if (Store.isEnabled(this)) R.string.start_focus_on else R.string.start_focus_off
+            )
+        }
+    }
+
+    /** « שלום Avraham » : l'accueil se tait s'il n'a personne à nommer. */
+    private fun renderGreeting() {
+        val prenom = Store.firstName(this)
+        findViewById<TextView>(R.id.hero_greeting).apply {
+            visibility = if (prenom.isBlank()) View.GONE else View.VISIBLE
+            if (prenom.isNotBlank()) text = getString(R.string.hero_greeting, prenom)
+        }
     }
 
     /**
@@ -195,6 +280,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun renderToday() {
+        renderGreeting()
         val record = Store.record(this)
         val done = record != null
         findViewById<ImageView>(R.id.hero_character).setImageResource(Character.greeting(done))

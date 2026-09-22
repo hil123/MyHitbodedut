@@ -82,6 +82,60 @@ class HomeTest {
     }
 
     /**
+     * La carte de depart rassemble ce avec quoi on entre dans la seance.
+     * Chaque ligne doit exister ET etre branchee : une ligne posee que
+     * personne ne remplit reste vide, et une ligne remplie que personne
+     * n'ecoute ne se change pas.
+     */
+    @Test
+    fun `la carte de depart est complete et branchee`() {
+        listOf("start_duration", "start_theme", "start_music", "start_focus").forEach {
+            assertTrue("la ligne « $it » manque", layout.contains("@+id/$it\""))
+            assertTrue("la ligne « $it » n'est pas branchée",
+                Regex("""R\.id\.$it\b""").containsMatchIn(code))
+            assertTrue("la valeur de « $it » n'est pas affichée",
+                layout.contains("@+id/${it}_value\""))
+            // Limite de mot obligatoire : « start_theme_value » se retrouve
+            // dans « start_theme_valueX », et le test laisserait passer un
+            // identifiant renomme.
+            assertTrue("la valeur de « $it » n'est pas remplie",
+                Regex("""R\.id\.${it}_value\b""").containsMatchIn(code))
+        }
+    }
+
+    /**
+     * La barriere n'existe pas en edition legere : la ligne doit etre
+     * retiree, pas laissee inoperante.
+     */
+    @Test
+    fun `la ligne de concentration depend de l edition`() {
+        val bloc = code.substringAfter("private fun renderStartCard")
+            .substringBefore("\n    }")
+        assertTrue(
+            "start_focus doit dépendre de BuildConfig.HAS_GATE",
+            Regex("""start_focus[\s\S]{0,300}?BuildConfig\.HAS_GATE""").containsMatchIn(bloc),
+        )
+    }
+
+    /** Sans prenom, l'accueil se tait plutot que de saluer un blanc. */
+    @Test
+    fun `la salutation se tait sans prenom`() {
+        assertTrue("la salutation manque", layout.contains("@+id/hero_greeting\""))
+        val bloc = code.substringAfter("private fun renderGreeting")
+            .substringBefore("\n    }")
+        assertTrue("le prénom doit être lu", bloc.contains("Store.firstName(this)"))
+        assertTrue(
+            "la salutation doit disparaître quand le prénom est vide",
+            bloc.contains("isBlank()") && bloc.contains("View.GONE"),
+        )
+        assertTrue(
+            "la salutation part masquée",
+            Regex("""hero_greeting"[\s\S]{0,400}?android:visibility="gone"""")
+                .containsMatchIn(layout),
+        )
+    }
+
+    /**
      * En hebreu la liste se lit de droite a gauche : un chevron qui ne se
      * retourne pas pointe vers la sortie de l'ecran.
      */

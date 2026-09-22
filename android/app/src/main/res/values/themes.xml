@@ -113,6 +113,42 @@
         <item name="android:paddingVertical">10dp</item>
     </style>
 
+    <!--
+        Une ligne de la carte de départ : un libellé à gauche, sa valeur à
+        droite, toute la ligne cliquable. Plus serrée qu'une ligne de
+        section — ce sont quatre réglages d'une même séance, pas quatre
+        destinations.
+    -->
+    <style name="StartRow">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">?attr/selectableItemBackground</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:minHeight">40dp</item>
+        <item name="android:orientation">horizontal</item>
+    </style>
+
+    <style name="StartLabel">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/muted</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="StartValue">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:textAlignment">viewEnd</item>
+        <item name="android:textColor">@color/brand</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
     <style name="SectionChevron">
         <item name="android:layout_width">22dp</item>
         <item name="android:layout_height">22dp</item>

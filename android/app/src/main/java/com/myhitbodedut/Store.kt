@@ -73,6 +73,7 @@ object Store {
     private const val KEY_HIDE_COUNTDOWN = "hide_countdown"
     private const val KEY_GUIDED = "guided_hitbodedut"
     private const val KEY_ONBOARDED = "onboarded"
+    private const val KEY_NAME = "first_name"
     private const val KEY_MUSIC_ON = "music_enabled"
     private const val KEY_MUSIC_TRACK = "music_track"
     private const val KEY_MUSIC_VOLUME = "music_volume"
@@ -503,6 +504,20 @@ object Store {
     fun hasHistory(context: Context): Boolean =
         days(context).isNotEmpty() || prefs(context).contains(KEY_TARGET) ||
             prefs(context).contains(KEY_REMINDER_TIMES) || prefs(context).contains(KEY_APPS)
+
+    /**
+     * Le prénom, pour que l'accueil s'adresse à quelqu'un.
+     *
+     * Vide par défaut, et vide est une réponse : l'accueil se tait alors
+     * plutôt que de saluer un blanc. Il ne sort pas de l'appareil, comme
+     * le reste.
+     */
+    fun firstName(context: Context): String =
+        prefs(context).getString(KEY_NAME, "").orEmpty().trim()
+
+    fun setFirstName(context: Context, name: String) {
+        prefs(context).edit().putString(KEY_NAME, name.trim().take(40)).apply()
+    }
 
     /** Ce que le compteur doit dire, ici et maintenant. */
     fun sessionCounter(context: Context): SessionRule.Compteur =
