@@ -196,6 +196,13 @@
 
             <LinearLayout style="@style/SettingRow">
 
+                <TextView style="@style/SettingLabel" android:text="@string/settings_language" />
+
+                <Button android:id="@+id/language_button" style="@style/SettingValue" />
+            </LinearLayout>
+
+            <LinearLayout style="@style/SettingRow">
+
                 <TextView style="@style/SettingLabel" android:text="@string/settings_region" />
 
                 <Button android:id="@+id/region_button" style="@style/SettingValue" />

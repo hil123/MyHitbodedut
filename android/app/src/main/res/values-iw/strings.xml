@@ -18,7 +18,11 @@
     <string name="section_data_hint">הכול נשמר בטלפון הזה בלבד. כדאי לייצא מדי פעם.</string>
 
     <string name="gate_armed_title">החסימה פעילה</string>
-    <string name="gate_armed_detail">%1$d אפליקציות חסומות עד %2$s או עד שתתבודד.</string>
+    <plurals name="gate_armed_detail">
+        <item quantity="one">אפליקציה אחת חסומה עד %2$s או עד שתתבודד.</item>
+        <item quantity="two">%1$d אפליקציות חסומות עד %2$s או עד שתתבודד.</item>
+        <item quantity="other">%1$d אפליקציות חסומות עד %2$s או עד שתתבודד.</item>
+    </plurals>
     <string name="gate_permissions_title">חסרות הרשאות</string>
     <string name="gate_permissions_detail">אשר הצגה מעל אפליקציות אחרות וגישה לנתוני שימוש, למטה.</string>
     <string name="gate_disabled_title">החסימה כבויה</string>
@@ -227,6 +231,7 @@
     <string name="week_done">בוצע</string>
     <string name="week_todo">לביצוע</string>
     <string name="gate_permissions_action">חסרות הרשאות, לאשר אותן</string>
+    <string name="settings_language">שפה</string>
     <string name="settings_region">אזור</string>
     <string name="region_israel">ישראל</string>
     <string name="region_diaspora">חו״ל</string>

@@ -315,6 +315,49 @@ aucun texte en dur, marqueurs concordants. Les 24 résumés d'articles
 restent en français seul : l'anglais et l'hébreu y retombent sur le
 français. C'est le seul manque de traduction connu.
 
+**Choix de la langue, et relecture texte par texte (22/09).**
+
+Un bouton **עברית · English · Français** dans les réglages : l'application
+livrait trois traductions mais suivait la langue du téléphone, sans recours
+— un appareil réglé en anglais ne pouvait pas afficher l'hébreu.
+`AppCompatDelegate.setApplicationLocales` applique le choix ;
+`locales_config.xml` le déclare à Android 13, et le service
+`AppLocalesMetadataHolderService` le fait garder en dessous. **Sans ce
+service, le choix serait oublié à la fermeture, en silence** : un test le
+vérifie, et échoue si `autoStoreLocales` passe à `false`.
+
+**La relecture des 314 textes a trouvé six écarts réels, et l'hébreu est la
+source.** Le commit `480e0fe` le dit : les dix conseils ont été fournis en
+hébreu, le français et l'anglais sont les traductions. Ce sont donc les
+traductions qui avaient dérivé :
+
+1. **Le Nom.** La source dit « השם » dans sept textes ; les traductions
+   écrivaient « Dieu » et « God », alors que les textes de 'hizouk disaient
+   déjà « Hachem » — le même Nom rendu de deux façons dans la même
+   application. Corrigé partout ; « בורא עולם » reste « Créateur », qui est
+   un descriptif et non un nom.
+2. **`tip_2` : un chiffre inventé.** La source dit « הקדישו חמש-עשרה דקות »
+   — quinze minutes. Les traductions disaient « cinq à quinze minutes ».
+3. **`tip_3` : « דיבור פנימי » perdu.** La parole intérieure avait disparu
+   du titre et du corps, dans les deux langues.
+4. **`tip_6` : « חשבון נפש » traduit** en « examen de conscience ».
+5. **`tip_7` : « חוסר ביטחון »** rendu par « doute » au lieu de manque
+   d'assurance.
+6. **`gate_armed_detail` n'était pas un pluriel** : « 1 applications sont
+   bloquées », dans les trois langues. Devenu un `plurals` — l'hébreu y
+   porte aussi le duel.
+
+**Les dix sujets de prière ont retrouvé leurs termes hébreux** : « Parnassa »
+figurait déjà sur l'écran des thèmes tandis que l'écran Tfilot disait
+« Gagner sa vie ». Sim'ha, Kedoucha, Guéoula, Zivoug, Refoua chelema,
+Chmirat habrit, Zéra chel kayama.
+
+**Ce qui a été vérifié et qui est juste** : les 19 chaînes anglaises
+identiques au français le sont légitimement ; les cinq écarts de longueur
+sont de la concision anglaise ; le registre hébreu alterne le singulier
+pour l'interface et le pluriel pour l'enseignement, ce qui est un système
+et non une négligence. Les 24 résumés d'articles restent en français seul.
+
 **Renommer depuis l'application (22/09).** La fonction existait déjà et le
 propriétaire l'a demandée : elle n'était atteignable que par appui long,
 sans bouton ni autre indice que la ligne d'aide. Un bouton crayon sur chaque

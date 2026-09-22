@@ -31,6 +31,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher"
         android:resizeableActivity="true"
+        android:localeConfig="@xml/locales_config"
         android:supportsRtl="true"
         android:theme="@style/Theme.MyHitbodedut">
 
@@ -175,5 +176,19 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/widget_streak_info" />
         </receiver>
+
+        <!--
+            Sous Android 13, c'est le systeme qui retient la langue choisie.
+            En dessous, c'est AppCompat, et il ne le fait que si ce service
+            est declare : sans lui, le choix serait oublie a la fermeture.
+        -->
+        <service
+            android:name="androidx.appcompat.app.AppLocalesMetadataHolderService"
+            android:enabled="false"
+            android:exported="false">
+            <meta-data
+                android:name="autoStoreLocales"
+                android:value="true" />
+        </service>
     </application>
 </manifest>

@@ -24,7 +24,10 @@
 
     <!-- Diagnostic -->
     <string name="gate_armed_title">La barrière veille</string>
-    <string name="gate_armed_detail">%1$d applications sont bloquées jusqu\'à %2$s ou jusqu\'à votre séance.</string>
+    <plurals name="gate_armed_detail">
+        <item quantity="one">%1$d application est bloquée jusqu\'à %2$s ou jusqu\'à votre séance.</item>
+        <item quantity="other">%1$d applications sont bloquées jusqu\'à %2$s ou jusqu\'à votre séance.</item>
+    </plurals>
     <string name="gate_permissions_title">Autorisations manquantes</string>
     <string name="gate_permissions_detail">Accordez l\'affichage par-dessus les autres applications et l\'accès aux données d\'utilisation, plus bas.</string>
     <string name="gate_disabled_title">Blocage désactivé</string>
@@ -151,7 +154,7 @@
     <string name="onboarding_skip">Passer</string>
     <string name="onboarding_start">Commencer</string>
     <string name="onboarding_practice">Parler, simplement</string>
-    <string name="onboarding_practice_body">La hitbodedout, c’est se retirer seul un moment chaque jour et parler à Dieu dans sa propre langue, comme on parle à quelqu’un. Pas de formule à réciter, pas de niveau à atteindre.</string>
+    <string name="onboarding_practice_body">La hitbodedout, c’est se retirer seul un moment chaque jour et parler à Hachem dans sa propre langue, comme on parle à quelqu’un. Pas de formule à réciter, pas de niveau à atteindre.</string>
     <string name="onboarding_app">Ce que fait cette application</string>
     <string name="onboarding_app_body">Un minuteur pour la séance, une série qui compte les jours, un journal, le Tikoun HaKlali et une bibliothèque de textes. Elle vous accompagne ; elle ne vous note pas.</string>
     <string name="onboarding_private">Rien ne sort d’ici</string>
@@ -294,6 +297,7 @@
     <string name="week_done">faite</string>
     <string name="week_todo">à faire</string>
     <string name="gate_permissions_action">Autorisations manquantes, les accorder</string>
+    <string name="settings_language">Langue</string>
     <string name="settings_region">Région</string>
     <string name="region_israel">Israël</string>
     <string name="region_diaspora">Diaspora</string>
@@ -303,25 +307,25 @@
     <string name="tips_hint">Dix repères pour commencer et pour tenir.</string>
     <string name="tips_open">Lire les conseils</string>
     <string name="tip_1_title">Choisissez un lieu calme et à l\'écart</string>
-    <string name="tip_1_body">Le premier pas de la hitbodedout est de trouver un endroit calme, où vous pouvez être seul avec vous-même et avec Dieu. Il n\'a pas besoin d\'être totalement isolé, mais vous ne devez pas y être dérangé. Une pièce libre chez vous, une plage tranquille, un coin de nature. Si vous le pouvez, préférez un cadre naturel : la nature elle-même peut être une source de calme intérieur.</string>
+    <string name="tip_1_body">Le premier pas de la hitbodedout est de trouver un endroit calme, où vous pouvez être seul avec vous-même et avec Hachem. Il n\'a pas besoin d\'être totalement isolé, mais vous ne devez pas y être dérangé. Une pièce libre chez vous, une plage tranquille, un coin de nature. Si vous le pouvez, préférez un cadre naturel : la nature elle-même peut être une source de calme intérieur.</string>
     <string name="tip_2_title">Fixez un temps quotidien ou hebdomadaire</string>
-    <string name="tip_2_body">Si vous débutez, commencez court. Accordez cinq à quinze minutes par jour, puis allongez progressivement jusqu\'à une heure entière. Ne sautez pas d\'emblée à une longue séance. Avancez pas à pas, pour que cela devienne une habitude et non un fardeau. Fixez une heure régulière, afin que la pratique entre dans votre routine au lieu de rester un geste au hasard.</string>
-    <string name="tip_3_title">Commencez par parler</string>
-    <string name="tip_3_body">Commencez par parler avec Dieu. Ne vous inquiétez pas si au début vous ne savez pas quoi dire. Ouvrez simplement le cœur et lancez-vous. Ce peut être une demande de pardon, une prière toute simple sur ce que vous ressentez, ou même de la gratitude. La hitbodedout n\'a pas à être ordonnée ni préparée d\'avance. C\'est un lieu où déposer ce qui est dans votre cœur et vous tourner vers Dieu.</string>
+    <string name="tip_2_body">Si vous débutez, commencez court. Accordez quinze minutes par jour à la hitbodedout, puis allongez progressivement jusqu\'à une heure entière. Ne sautez pas d\'emblée à une longue séance. Avancez pas à pas, pour que cela devienne une habitude et non un fardeau. Fixez une heure régulière, afin que la pratique entre dans votre routine au lieu de rester un geste au hasard.</string>
+    <string name="tip_3_title">Commencez par la parole intérieure</string>
+    <string name="tip_3_body">Commencez la hitbodedout par la parole intérieure, parlez avec Hachem. Ne vous inquiétez pas si au début vous ne savez pas quoi dire. Ouvrez simplement le cœur et lancez-vous. Ce peut être une demande de pardon, une prière toute simple sur ce que vous ressentez, ou même de la gratitude. La hitbodedout n\'a pas à être ordonnée ni préparée d\'avance. C\'est un lieu où déposer ce qui est dans votre cœur et vous tourner vers le lien avec Hachem.</string>
     <string name="tip_4_title">Écartez les appareils</string>
     <string name="tip_4_body">Si vous voulez vraiment être seul avec vous-même, écartez complètement les appareils pendant la hitbodedout. Éteignez le téléphone, ou laissez-le dans une autre pièce. Plus vous êtes libre des distractions extérieures, mieux vous vous reliez à vous-même et au Créateur. Se couper du dehors aide à se concentrer et à rejoindre le calme intérieur.</string>
     <string name="tip_5_title">Commencez par les Tehilim, ou vos propres mots</string>
-    <string name="tip_5_body">Si vous ne savez pas par où commencer, ouvrez les Tehilim et lisez quelques chapitres. Les Psaumes sont une prière déjà formée, très directe, qui touche l\'âme. Dans la hitbodedout, ils peuvent être un fil spirituel qui mène droit à Dieu. Et si les mots vous manquent, vous pouvez simplement parler à Dieu librement, lui confier vos pensées et ce que vous ressentez.</string>
+    <string name="tip_5_body">Si vous ne savez pas par où commencer, ouvrez les Tehilim et lisez quelques chapitres. Les Psaumes sont une prière déjà formée, très directe, qui touche l\'âme. Dans la hitbodedout, ils peuvent être un fil spirituel qui mène droit à Hachem. Et si les mots vous manquent, vous pouvez simplement parler à Hachem librement, lui confier vos pensées et ce que vous ressentez.</string>
     <string name="tip_6_title">Posez-vous des questions intérieures</string>
-    <string name="tip_6_body">Pendant la hitbodedout, posez-vous des questions intérieures. Que suis-je en train de ressentir ? Qu\'est-ce que je traverse ? Comment puis-je me sentir plus proche de Dieu ? Que dois-je améliorer dans ma vie ? C\'est le moment d\'un vrai examen de conscience. Parfois, dans le calme intérieur, on voit ses besoins réels et la bonne direction pour sa vie.</string>
+    <string name="tip_6_body">Pendant la hitbodedout, posez-vous des questions intérieures. Que suis-je en train de ressentir ? Qu\'est-ce que je traverse ? Comment puis-je me sentir plus proche de Hachem ? Que dois-je améliorer dans ma vie ? C\'est le moment d\'un vrai ’hechbon nefech. Parfois, dans le calme intérieur, on voit ses besoins réels et la bonne direction pour sa vie.</string>
     <string name="tip_7_title">Mettez la sincérité au premier rang</string>
-    <string name="tip_7_body">Pendant la hitbodedout, ne cherchez pas à cacher à Dieu ce que vous ressentez. C\'est un temps où il vous est permis d\'être sincère avec vous-même et avec le Créateur. Colère, frustration, peur ou doute : c\'est ici qu\'on le dit. La sincérité est la clé de la croissance spirituelle. Plus vous serez sincère, plus vous trouverez de calme intérieur.</string>
+    <string name="tip_7_body">Pendant la hitbodedout, ne cherchez pas à cacher à Hachem ce que vous ressentez. C\'est un temps où il vous est permis d\'être sincère avec vous-même et avec le Créateur. Colère, frustration, peur ou manque d\'assurance : c\'est ici qu\'on le dit. La sincérité est la clé de la croissance spirituelle. Plus vous serez sincère, plus vous trouverez de calme intérieur.</string>
     <string name="tip_8_title">Réconciliez-vous avec vous-même</string>
     <string name="tip_8_body">La hitbodedout peut aussi être un temps de réconciliation avec soi. C\'est-à-dire un lieu où vous ne vous jugez pas, ne vous critiquez pas, ne vous en voulez pas. Un temps d\'apaisement, où l\'on se pardonne, où l\'on demande pardon pour ses erreurs, et où l\'on décide d\'améliorer sa route.</string>
     <string name="tip_9_title">Laissez place au silence, ou suivez le souffle</string>
     <string name="tip_9_body">Une part de la hitbodedout peut être un silence complet, ou un moment d\'attention au souffle. Asseyez-vous en silence un moment, suivez votre respiration, posez l\'attention sur le corps. Ce silence laisse remonter et s\'éclaircir ce qui est au-dedans.</string>
     <string name="tip_10_title">Terminez par une respiration profonde et une action de grâce</string>
-    <string name="tip_10_body">À la fin de la hitbodedout, terminez par une respiration profonde et bénissez Dieu pour le temps passé avec Lui. C\'est un moment de gratitude pour le grand cadeau de ce lien, et pour le calme intérieur trouvé. Même s\'il vous a semblé difficile de trouver des réponses, ne vous inquiétez pas : cette rencontre avec vous-même et avec Dieu apporte déjà une abondance spirituelle dans votre vie.</string>
+    <string name="tip_10_body">À la fin de la hitbodedout, terminez par une respiration profonde et bénissez Hachem pour le temps passé avec Lui. C\'est un moment de gratitude pour le grand cadeau de ce lien, et pour le calme intérieur trouvé. Même s\'il vous a semblé difficile de trouver des réponses, ne vous inquiétez pas : cette rencontre avec vous-même et avec Hachem apporte déjà une abondance spirituelle dans votre vie.</string>
 
     <!-- Point 3 : règle de publication -->
     <string name="chizuk_badge_to_proofread">à relire</string>
@@ -442,13 +446,13 @@
     <string name="tefilot_count">%d prières</string>
     <string name="tefilot_warning">La leçon citée porte sur un autre sujet ; la demande est dans la prière.</string>
     <string name="tefila_hitbodedut">Hitbodedout</string>
-    <string name="tefila_simcha">Joie</string>
+    <string name="tefila_simcha">Sim’ha</string>
     <string name="tefila_uman">Ouman, Roch Hachana</string>
-    <string name="tefila_kdusha">Sainteté</string>
-    <string name="tefila_zera">Avoir un enfant</string>
-    <string name="tefila_parnassa">Gagner sa vie</string>
-    <string name="tefila_brit">Garde de l’alliance</string>
-    <string name="tefila_geula">Délivrance</string>
-    <string name="tefila_zivug">Trouver son conjoint</string>
-    <string name="tefila_refua">Guérison</string>
+    <string name="tefila_kdusha">Kedoucha</string>
+    <string name="tefila_zera">Zéra chel kayama</string>
+    <string name="tefila_parnassa">Parnassa</string>
+    <string name="tefila_brit">Chmirat habrit</string>
+    <string name="tefila_geula">Guéoula</string>
+    <string name="tefila_zivug">Zivoug</string>
+    <string name="tefila_refua">Refoua chelema</string>
 </resources>

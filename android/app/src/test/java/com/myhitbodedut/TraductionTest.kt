@@ -185,6 +185,55 @@ class TraductionTest {
     }
 
     @Test
+    fun `le nom divin n est pas traduit`() {
+        // Les dix conseils ont été fournis en hébreu : c'est la source, et
+        // elle dit « השם ». Les traductions écrivaient « Dieu » et « God »,
+        // alors que les textes de 'hizouk disaient déjà « Hachem » — le même
+        // nom rendu de deux façons dans la même application.
+        val fr = tout.getValue("values").simples
+        val en = tout.getValue("values-en").simples
+        val he = tout.getValue("values-iw").simples
+        var vus = 0
+        (fr.keys intersect he.keys).forEach { cle ->
+            // « השם המקורי » veut dire « le nom d'origine » : ce n'est pas Lui.
+            val source = he.getValue(cle)
+            if (!Regex("""השם(?! המקורי)|ה׳""").containsMatchIn(source)) return@forEach
+            vus++
+            assertTrue(
+                "$cle : la source dit « השם », le français dit « Dieu »",
+                !Regex("""\bDieu\b""").containsMatchIn(fr.getValue(cle)),
+            )
+            assertTrue(
+                "$cle : la source dit « השם », l'anglais dit « God »",
+                !Regex("""\bGod\b""").containsMatchIn(en.getValue(cle)),
+            )
+        }
+        assertTrue("aucune source hébraïque portant le Nom : la lecture est cassée", vus >= 5)
+    }
+
+    @Test
+    fun `les termes hebreux des sujets de priere ne sont pas traduits`() {
+        // « Parnassa » d'un côté et « Gagner sa vie » de l'autre désignaient
+        // la même chose sur deux écrans de la même application.
+        val attendus = mapOf(
+            "tefila_simcha" to ("Sim’ha" to "Simcha"),
+            "tefila_kdusha" to ("Kedoucha" to "Kedusha"),
+            "tefila_parnassa" to ("Parnassa" to "Parnassa"),
+            "tefila_geula" to ("Guéoula" to "Geula"),
+            "tefila_zivug" to ("Zivoug" to "Zivug"),
+            "tefila_refua" to ("Refoua chelema" to "Refua shlema"),
+            "tefila_brit" to ("Chmirat habrit" to "Shmirat habrit"),
+            "tefila_zera" to ("Zéra chel kayama" to "Zera shel kayama"),
+        )
+        val fr = tout.getValue("values").simples
+        val en = tout.getValue("values-en").simples
+        attendus.forEach { (cle, formes) ->
+            assertEquals("$cle en français", formes.first, fr[cle])
+            assertEquals("$cle en anglais", formes.second, en[cle])
+        }
+    }
+
+    @Test
     fun `les titres de la bibliotheque existent dans les trois langues`() {
         val json = JSONObject(File("src/main/res/raw/bibliotheque.json").readText())
         val sections = json.getJSONArray("sections")

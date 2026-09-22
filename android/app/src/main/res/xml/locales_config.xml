@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Les langues que l'application livre. Android 13 et au-delà s'en sert pour
+    proposer le choix depuis les réglages du système ; en dessous, c'est
+    AppCompat qui garde le choix, grâce au service déclaré au manifeste.
+-->
+<locale-config xmlns:android="http://schemas.android.com/apk/res/android">
+    <locale android:name="fr" />
+    <locale android:name="en" />
+    <locale android:name="iw" />
+</locale-config>

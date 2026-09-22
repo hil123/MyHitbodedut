@@ -16,7 +16,9 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
+import androidx.core.os.LocaleListCompat
 import com.google.android.material.materialswitch.MaterialSwitch
 
 /**
@@ -86,6 +88,7 @@ class SettingsActivity : AppCompatActivity() {
             getString(if (BuildConfig.HAS_GATE) R.string.edition_full else R.string.edition_light)
         )
         findViewById<Button>(R.id.name_button).setOnClickListener { askName() }
+        findViewById<Button>(R.id.language_button).setOnClickListener { askLanguage() }
         findViewById<Button>(R.id.region_button).setOnClickListener {
             Store.setInIsrael(this, !Store.inIsrael(this))
             refresh()
@@ -281,6 +284,12 @@ class SettingsActivity : AppCompatActivity() {
         findViewById<Button>(R.id.region_button).setText(
             if (Store.inIsrael(this)) R.string.region_israel else R.string.region_diaspora
         )
+        // Le nom de chaque langue est ecrit dans cette langue : « עברית » se
+        // lit meme par qui ne lit pas l'hebreu de l'interface qui l'entoure.
+        findViewById<Button>(R.id.language_button).text = Langues.nomDe(
+            AppCompatDelegate.getApplicationLocales().toLanguageTags()
+                .ifBlank { resources.configuration.locales[0].language }
+        )
         val prenom = Store.firstName(this)
         findViewById<Button>(R.id.name_button).text =
             prenom.ifBlank { getString(R.string.settings_name_empty) }
@@ -304,6 +313,28 @@ class SettingsActivity : AppCompatActivity() {
             if (GateStatus.shouldRunService(this)) GateService.start(this) else GateService.stop(this)
         }
         Reminder.reschedule(this)
+    }
+
+    /**
+     * Choisir la langue de l'application, indépendamment de celle du téléphone.
+     *
+     * `setApplicationLocales` recrée l'activité : la liste est donc refermée
+     * avant, et le reste de l'écran se redessine tout seul en revenant.
+     */
+    private fun askLanguage() {
+        val noms = Langues.TOUTES.map { it.nom }.toTypedArray()
+        val courante = Langues.indexDe(AppCompatDelegate.getApplicationLocales().toLanguageTags()
+            .ifBlank { resources.configuration.locales[0].language })
+        AlertDialog.Builder(this)
+            .setTitle(R.string.settings_language)
+            .setSingleChoiceItems(noms, courante) { dialog, choisi ->
+                dialog.dismiss()
+                AppCompatDelegate.setApplicationLocales(
+                    LocaleListCompat.forLanguageTags(Langues.TOUTES[choisi].etiquette)
+                )
+            }
+            .setNegativeButton(R.string.action_back, null)
+            .show()
     }
 
     /** L'édition légère n'embarque pas la barrière : on retire ce qui la concerne. */

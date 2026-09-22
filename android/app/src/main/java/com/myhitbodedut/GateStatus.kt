@@ -51,11 +51,17 @@ object GateStatus {
     }
 
     fun detailOf(context: Context, state: GateState): String = when (state) {
-        GateState.ARMED -> context.getString(
-            R.string.gate_armed_detail,
-            Store.blockedApps(context).size,
-            Store.formatMinutes(Store.windowEnd(context))
-        )
+        // Au singulier, « 1 applications sont bloquees » se lisait dans les
+        // trois langues. L'hebreu porte en plus le duel, que le francais et
+        // l'anglais n'ont pas : c'est le pluriel qui le sait, pas le code.
+        GateState.ARMED -> Store.blockedApps(context).size.let { combien ->
+            context.resources.getQuantityString(
+                R.plurals.gate_armed_detail,
+                combien,
+                combien,
+                Store.formatMinutes(Store.windowEnd(context)),
+            )
+        }
         GateState.MISSING_PERMISSIONS -> context.getString(R.string.gate_permissions_detail)
         GateState.DISABLED -> context.getString(R.string.gate_disabled_detail)
         GateState.NO_APPS_SELECTED -> context.getString(R.string.gate_no_apps_detail)
