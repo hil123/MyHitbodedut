@@ -749,8 +749,8 @@
           "id": "tefilot-lt",
           "titre": {
             "he": "תְּפִלּוֹת לְפִי עִנְיָן",
-            "fr": "Dix sujets, deux prières chacun",
-            "en": "Ten subjects, two prayers each"
+            "fr": "Dix sujets, vingt-et-une prières",
+            "en": "Ten subjects, twenty-one prayers"
           },
           "entrees": [
             {
@@ -1319,6 +1319,37 @@
               "note": "Extrait : paragraphes 54 à 55 de la prière. La leçon annoncée en tête (Likoutei Moharan II, 2, 23976 caractères) a été ouverte et vérifiée.",
               "lecon_sur_le_sujet": "non",
               "lecon_mesure": "1 occurrence du sujet dans 14998 caractères de leçon"
+            },
+            {
+              "id": "src-lt-zivug-3",
+              "type": "source",
+              "sujet": "zivug",
+              "titre_he": "כַּוָּנוֹת אֱלוּל — וְהַזִּוּוּג",
+              "titre_fr": "Zivoug : le secret d’Eloul",
+              "ref": "Likoutei Tefilot II, 44",
+              "ref_he": "לִקּוּטֵי תְּפִלּוֹת, חלק ב, תְּפִלָּה 44",
+              "ref_sefaria": "Likutei Tefilot, Volume II 44",
+              "url": "https://www.sefaria.org/Likutei_Tefilot%2C_Volume_II.44",
+              "edition": "lt",
+              "sur_la_torah": "Likoutei Moharan II, 87",
+              "paragraphes": [
+                "וּבִזְכוּת אַבְרָהָם אָבִינוּ עָלָיו הַשָּׁלוֹם, שֶׁרָמַז הַסּוֹד הַזֶּה שֶׁל כַּוָּנַת אֱלוּל בְּעֵת שֶׁשָּׁלַח אֶת אֱלִיעֶזֶר עַבְדּוֹ לְבַקֵּשׁ הַזִּוּוּג שֶׁל יִצְחָק בְּנוֹ,",
+                "וּבִזְכוּת הַצַּדִּיקִים שֶׁגִּלּוּ הַסּוֹד הַנּוֹרָא הַזֶּה, תָּגֵן עֲלֵיהֶם וְעָלֵינוּ וְעַל זַרְעֵנוּ, וּתְרַחֵם עַל כָּל יִשְׂרָאֵל עַמֶּךָ, וְתָשִׂים שָׁלוֹם בֵּין כָּל יִשְׂרָאֵל וּבִפְרָט בֵּין אִישׁ לְאִשְׁתּוֹ (וּבִפְרָט וְכוּ'),",
+                "וְתַעֲזֹר לְכָל יִשְׂרָאֵל הַצְּרִיכִים לִמְצֹא זִוּוּגָם שֶׁיִּזְכֶּה כָּל אֶחָד לִמְצוֹא זִוּוּגוֹ בֶּאֱמֶת מְהֵרָה, וְתִהְיֶה כִּרְצוֹנוֹ וְלֹא תִהְיֶה מְנַגֶּדֶת כְּנֶגְדּוֹ כְּלָל,",
+                "רַק תַּהֲפוֹךְ רְצוֹנָהּ אֵלָיו בְּשָׁלוֹם וְאַהֲבָה בֶּאֱמֶת, בְּלִי עָרְמָה וּמִרְמָה, וּבְלִי שׁוּם שִׂנְאָה וְשִׁנּוּי רָצוֹן בַּלֵב כְּלָל, וְיִתְנַהֲגוּ בִּקְדֻשָּׁה וּבְטָהֳרָה, וְיֵצְאוּ מֵהֶם דּוֹרוֹת רַבִּים, בָּנִים וּבָנוֹת חָיִּים וְקַיָּמִים, עוֹשֵׂי רְצוֹנְךָ בֶּאֱמֶת, וְיַעַסְקוּ בְּתוֹרָתְךָ וַעֲבוֹדָתְךָ בֶּאֱמֶת כָּל יְמֵיהֶם לְעוֹלָם,",
+                "וִיגַלּוּ וִיפַרְסְמוּ וְיוֹדִיעוּ אֱלָהוּתְךָ וּמֶמְשַׁלְתְּךָ בָּעוֹלָם כְּמוֹ שֶׁכָּתוּב: דּוֹר לְדוֹר יְשַׁבַּח מַעֲשֶׂיךָ וּגְבוּרוֹתֶיךָ יַגִּידוּ:"
+              ],
+              "paragraphes_sans_nikkoud": [
+                "ובזכות אברהם אבינו עליו השלום, שרמז הסוד הזה של כונת אלול בעת ששלח את אליעזר עבדו לבקש הזווג של יצחק בנו,",
+                "ובזכות הצדיקים שגלו הסוד הנורא הזה, תגן עליהם ועלינו ועל זרענו, ותרחם על כל ישראל עמך, ותשים שלום בין כל ישראל ובפרט בין איש לאשתו (ובפרט וכו'),",
+                "ותעזר לכל ישראל הצריכים למצא זווגם שיזכה כל אחד למצוא זווגו באמת מהרה, ותהיה כרצונו ולא תהיה מנגדת כנגדו כלל,",
+                "רק תהפוך רצונה אליו בשלום ואהבה באמת, בלי ערמה ומרמה, ובלי שום שנאה ושנוי רצון בלב כלל, ויתנהגו בקדשה ובטהרה, ויצאו מהם דורות רבים, בנים ובנות חיים וקימים, עושי רצונך באמת, ויעסקו בתורתך ועבודתך באמת כל ימיהם לעולם,",
+                "ויגלו ויפרסמו ויודיעו אלהותך וממשלתך בעולם כמו שכתוב: דור לדור ישבח מעשיך וגבורותיך יגידו:"
+              ],
+              "statut_verif": "verifie_texte",
+              "lecon_sur_le_sujet": "oui",
+              "lecon_mesure": "8 occurrences du sujet dans 2133 caractères de leçon",
+              "note": "Extrait : paragraphes 41 à 45 de la prière — le secret d'Eloul rattaché à Avraham envoyant Éliézer chercher l'épouse d'Its'hak. Ajoutée à la demande du propriétaire, après qu'a été signalé que le paragraphe 44 demande « תְּהַפֵּךְ רְצוֹנָהּ אֵלָיו » — que la volonté de l'épouse se tourne vers lui. Le texte est reproduit tel qu'il est imprimé : on ne réécrit pas une prière pour l'adoucir, on dit ce qu'elle contient."
             },
             {
               "id": "src-lt-refua-2",

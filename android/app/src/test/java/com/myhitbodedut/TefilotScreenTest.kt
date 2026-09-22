@@ -38,13 +38,10 @@ class TefilotScreenTest {
     }
 
     @Test
-    fun `chaque sujet porte ses deux prieres`() {
+    fun `chaque sujet porte au moins deux prieres`() {
         SujetTefila.values().forEach { sujet ->
-            assertEquals(
-                "« ${sujet.cle} » : mauvais nombre de prières",
-                2,
-                TefilotRules.parSujet(library, sujet).size,
-            )
+            val n = TefilotRules.parSujet(library, sujet).size
+            assertTrue("« ${sujet.cle} » : $n prière(s), il en faut au moins deux", n >= 2)
         }
     }
 
@@ -71,19 +68,30 @@ class TefilotScreenTest {
     @Test
     fun `les lignes alternent un titre puis ses prieres`() {
         val lignes = TefilotRules.lignes(library)
-        assertEquals("10 titres + 20 prières", 30, lignes.size)
+        val prieres = TefilotRules.prieres(library)
+        assertEquals(
+            "un titre par sujet, plus chaque prière",
+            SujetTefila.values().size + prieres.size,
+            lignes.size,
+        )
 
         var sujetCourant: SujetTefila? = null
+        var annonce = 0
         var vues = 0
         lignes.forEach { ligne ->
             when (ligne) {
                 is TefilotRules.Ligne.Titre -> {
                     if (sujetCourant != null) {
-                        assertEquals("« ${sujetCourant?.cle} » : compte annoncé faux", 2, vues)
+                        assertEquals("« ${sujetCourant?.cle} » : compte annoncé faux", annonce, vues)
                     }
                     sujetCourant = ligne.sujet
+                    annonce = ligne.nombre
                     vues = 0
-                    assertEquals("titre « ${ligne.sujet.cle} » : nombre annoncé faux", 2, ligne.nombre)
+                    assertEquals(
+                        "titre « ${ligne.sujet.cle} » : nombre annoncé faux",
+                        TefilotRules.parSujet(library, ligne.sujet).size,
+                        ligne.nombre,
+                    )
                 }
                 is TefilotRules.Ligne.Priere -> {
                     assertNotNull("une prière avant tout titre", sujetCourant)
@@ -101,7 +109,7 @@ class TefilotScreenTest {
                 }
             }
         }
-        assertEquals(2, vues)
+        assertEquals("dernier sujet : compte annoncé faux", annonce, vues)
     }
 
     /** Un sujet sans prière ne doit pas produire un titre vide. */

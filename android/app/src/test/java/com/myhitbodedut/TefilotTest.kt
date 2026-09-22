@@ -29,18 +29,22 @@ class TefilotTest {
             .orEmpty()
 
     @Test
-    fun `les dix sujets demandes sont tous servis, deux fois`() {
-        assertEquals("deux prières par sujet", sujets.size * 2, tefilot.size)
+    fun `les dix sujets demandes ont chacun au moins deux prieres`() {
         sujets.forEach { sujet ->
-            assertEquals(
-                "il faut deux prières pour « $sujet »",
-                2,
-                tefilot.count { it.sujet == sujet },
+            assertTrue(
+                "« $sujet » : il faut au moins deux prières, il y en a " +
+                    "${tefilot.count { it.sujet == sujet }}",
+                tefilot.count { it.sujet == sujet } >= 2,
             )
             listOf("src-lt-$sujet", "src-lt-$sujet-2").forEach { id ->
                 assertNotNull("entrée manquante : $id", tefilot.firstOrNull { it.id == id })
             }
         }
+        assertEquals(
+            "des prières traînent hors des dix sujets",
+            tefilot.size,
+            tefilot.count { it.sujet in sujets },
+        )
     }
 
     /**
@@ -48,14 +52,13 @@ class TefilotTest {
      * Sans ce test, dupliquer la première passerait inaperçu.
      */
     @Test
-    fun `les deux prieres d un sujet ne sont pas la meme`() {
-        assertEquals(sujets.size * 2, tefilot.size)
+    fun `les prieres d un meme sujet sont toutes differentes`() {
         sujets.forEach { sujet ->
-            val deux = tefilot.filter { it.sujet == sujet }
-            assertEquals("« $sujet » : deux références identiques (${deux[0].ref})",
-                2, deux.map { it.ref }.distinct().size)
-            assertEquals("« $sujet » : deux textes identiques",
-                2, deux.map { it.paragraphes }.distinct().size)
+            val siennes = tefilot.filter { it.sujet == sujet }
+            assertEquals("« $sujet » : deux prières partagent une référence",
+                siennes.size, siennes.map { it.ref }.distinct().size)
+            assertEquals("« $sujet » : deux prières partagent leur texte",
+                siennes.size, siennes.map { it.paragraphes }.distinct().size)
         }
     }
 
@@ -65,7 +68,7 @@ class TefilotTest {
      */
     @Test
     fun `chaque priere dit si sa lecon porte sur le sujet`() {
-        assertEquals(sujets.size * 2, tefilot.size)
+        assertTrue("rien à vérifier : la sous-section est vide", tefilot.size >= sujets.size * 2)
         tefilot.forEach { t ->
             assertTrue(
                 "${t.id} : constat manquant ou hors barème (« ${t.leconSurLeSujet} »)",
@@ -80,7 +83,7 @@ class TefilotTest {
 
     @Test
     fun `aucune priere n est vide ni tronquee`() {
-        assertEquals("rien à vérifier : la sous-section est vide", sujets.size * 2, tefilot.size)
+        assertTrue("rien à vérifier : la sous-section est vide", tefilot.size >= sujets.size * 2)
         tefilot.forEach { t ->
             assertTrue("${t.id} : aucun paragraphe", t.paragraphes.isNotEmpty())
             t.paragraphes.forEachIndexed { i, p ->
@@ -93,7 +96,7 @@ class TefilotTest {
 
     @Test
     fun `chaque priere dit d ou elle vient`() {
-        assertEquals("rien à vérifier : la sous-section est vide", sujets.size * 2, tefilot.size)
+        assertTrue("rien à vérifier : la sous-section est vide", tefilot.size >= sujets.size * 2)
         tefilot.forEach { t ->
             assertTrue("${t.id} : titre hébreu manquant", t.titreHe.isNotBlank())
             assertTrue(
@@ -118,7 +121,7 @@ class TefilotTest {
             "licence non déclarée : nikkoud_ok ne peut pas valoir vrai",
             edition!!.nikkoudOk,
         )
-        assertEquals("rien à vérifier : la sous-section est vide", sujets.size * 2, tefilot.size)
+        assertTrue("rien à vérifier : la sous-section est vide", tefilot.size >= sujets.size * 2)
         tefilot.forEach { t ->
             assertEquals(
                 "${t.id} : il faut autant de paragraphes dans les deux formes",
