@@ -60,9 +60,19 @@ jobs:
         working-directory: android
         run: du -h app/build/outputs/apk/full/debug/app-full-debug.apk
 
-      - name: Upload it
-        uses: actions/upload-artifact@v4
-        with:
-          name: apk-essai-leger
-          path: android/app/build/outputs/apk/full/debug/app-full-debug.apk
-          if-no-files-found: error
+      # Publié dans une release plutôt qu'en artefact : le téléchargement
+      # d'un artefact redirige vers le stockage Azure, que tout le monde ne
+      # peut pas atteindre — la release, elle, passe par github.com.
+      # Étiquette fixe « essai », remplacée à chaque fois, et jamais marquée
+      # « latest » pour ne pas déplacer la version en cours.
+      - name: Publish it under a fixed tag
+        env:
+          GH_TOKEN: ${{ github.token }}
+        working-directory: android
+        run: |
+          cp app/build/outputs/apk/full/debug/app-full-debug.apk MyHitbodedut-essai.apk
+          gh release delete essai --yes --cleanup-tag || true
+          gh release create essai MyHitbodedut-essai.apk \
+            --title "Édition d'essai, sans la musique" \
+            --notes "Même application que la dernière version, mais les 33 morceaux sont remplacés par une seconde de silence, ce qui ramène l'APK de 125 Mo a une douzaine. Suffixe .debug : elle s'installe a cote de l'edition normale et ne la remplace pas. Construite depuis ${{ github.sha }}." \
+            --latest=false
