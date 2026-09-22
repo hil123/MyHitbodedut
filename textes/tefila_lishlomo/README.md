@@ -49,8 +49,8 @@ remarque à côté.
 | feuillet | pages | sujet | transcrit |
 |---|---|---|---|
 | prayer-01 | 1 | פדיון שבויים — libération des captifs | ✅ |
-| prayer-02 | 2 | נבואות אחרית הימים — 'Habaqouq 3, guéoula | ⬜ |
-| prayer-03 | 15 | *(non identifié)* | ⬜ |
+| prayer-02 | 2 | תפילת חבקוק — 'Habaqouq 3, guéoula | ⚠️ versets exacts, commentaire avec réserve |
+| prayer-03 | 15 | **תפילה נוראה לישועת ישראל** — « עקב המצב בארץ הקודש » | ⬜ |
 | prayer-04 | 2 | זכות רחל אמנו | ✅ |
 | prayer-05 | — | **non fourni** | — |
 | prayer-06 | 1 | זיווג (לאיש) | ✅ |
@@ -67,6 +67,21 @@ pas. Dit dans le fichier.
 **zivug (לאישה)** : transcrite depuis un JPEG de 1290 px, contre 2339 px pour
 les PDF. Moins sûre. Le PDF de cette feuille permettrait de la reprendre au
 même niveau que les autres.
+
+**prayer-02** : seul feuillet à couche texte, donc les *caractères* sont ceux
+du fichier et non une lecture. Mais les boîtes des fragments se chevauchent
+dans le PDF, si bien que l'*ordre* n'est pas récupérable mécaniquement : des
+inversions locales subsistent entre le verset et son commentaire. Les versets
+de 'Habaqouq sont donc donnés à part, exacts, repris du Tanakh.
+
+**prayer-03** : livret de 15 pages du Yanuka — « תפילה נוראה לגילוי מלכות ה'
+ולעורר רחמי שמים לישועת ישראל ולהחיש הגאולה », composé et compilé des livres
+saints (*שחיבר וליקט מהספרים הקדושים*). Une page de couverture, quatorze pages
+de texte vocalisé dense. Rendu à 4959 × 7014, la définition la plus confortable
+de toute la série. Les litanies liturgiques qu'il reprend
+(« אַתָּה דָּגוּל וְשִׁמְךָ דָּגוּל… », « רוֹכֵב עֲרָבוֹת ») ne sont dans aucun
+des trois siddourim du corpus ni dans aucun ma'hzor : pas de vérification
+mécanique possible, tout se lira à l'œil.
 
 ## Cinq erreurs de lecture, toutes attrapées au zoom
 
