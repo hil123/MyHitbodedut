@@ -6,9 +6,15 @@ name: APK d'essai léger
 # musique par du silence. Même application, mêmes écrans, même code — seuls
 # les morceaux sont muets. Elle ne sert pas à écouter mais à éprouver.
 #
-# Elle porte le suffixe .debug, donc elle s'installe À CÔTÉ de l'édition
-# normale et ne la remplace pas : rien de ce qui est déjà sur le téléphone
-# n'est perdu.
+# Identifiant propre (ESSAI_LEGER=true, voir build.gradle.kts) : elle portait
+# le même que Relecture, et Relecture est reconstruite à chaque envoi sur
+# main pendant que celle-ci ne l'est qu'à la demande. Son propre versionCode
+# restait donc presque toujours en retard, et Android refuse d'installer un
+# versionCode plus bas que celui déjà en place — en silence ou avec une
+# erreur qui passe facilement inaperçue. Aucune édition d'essai envoyée
+# avant ce correctif n'a donc pu s'installer par-dessus une Relecture plus
+# récente : le bouton « introuvable » signalé ensuite était celui d'une
+# version qui n'avait jamais changé sur le téléphone.
 #
 # Déclenchement manuel uniquement.
 on:
@@ -58,6 +64,7 @@ jobs:
         working-directory: android
         env:
           VERSION_CODE: ${{ github.run_number }}
+          ESSAI_LEGER: "true"
         run: ./gradlew --no-daemon assembleFullDebug
 
       - name: Show its size
@@ -78,5 +85,5 @@ jobs:
           gh release delete essai --yes --cleanup-tag || true
           gh release create essai MyHitbodedut-essai.apk \
             --title "Édition d'essai, sans la musique" \
-            --notes "Même application que la dernière version, mais les 33 morceaux sont remplacés par une seconde de silence, ce qui ramène l'APK de 125 Mo a une douzaine. Suffixe .debug : elle s'installe a cote de l'edition normale et ne la remplace pas. Construite depuis ${{ github.sha }}." \
+            --notes "Même application que la dernière version, mais les 33 morceaux sont remplacés par une seconde de silence, ce qui ramène l'APK de 125 Mo a une douzaine. Identifiant propre (com.myhitbodedut.debug.essai) : elle s'installe a cote de tout le reste et ne remplace rien. Construite depuis ${{ github.sha }}." \
             --prerelease

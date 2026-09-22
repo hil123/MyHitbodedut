@@ -314,6 +314,33 @@ française, anglaise et hébraïque est complète — 320 clés identiques,
 aucun texte en dur, marqueurs concordants. Les 24 résumés d'articles,
 eux, ont été traduits le 22/09 — voir plus bas.
 
+**Le bouton de langue n'a jamais atteint le téléphone (22/09) — de ma
+faute, pas d'un défaut de l'écran.** Après l'avoir remonté en tête des
+réglages, le propriétaire a dit ne toujours rien voir. Vérification faite
+sur le binaire compilé lui-même (décodage du XML de mise en page avec
+`androguard`, pas seulement une lecture du source) : le bouton **était**
+bien la première ligne de l'écran, dans chaque APK envoyé. Le défaut était
+ailleurs.
+
+**L'édition d'essai n'a jamais pu s'installer.** Elle portait le même
+identifiant que Relecture (`com.myhitbodedut.debug`) — et Relecture est
+reconstruite à **chaque envoi sur `main`**, puisque le flux principal se
+déclenche sur tout push. Son propre compteur de version n'avançait, lui,
+qu'aux déclenchements manuels de l'édition d'essai : à la sixième
+édition d'essai envoyée, son `versionCode` valait 7, contre ~80 déjà en
+place pour Relecture, reconstruite entre-temps par mes propres poussées.
+**Android refuse d'installer un `versionCode` plus bas que celui déjà en
+place**, et le refus ne dit rien qui pointe vers la cause — un bouton
+« introuvable » était en réalité une version qui n'avait jamais changé sur
+le téléphone, ni au premier envoi ni à aucun des suivants.
+
+Corrigé par un identifiant propre à l'édition d'essai
+(`com.myhitbodedut.debug.essai`, drapeau `ESSAI_LEGER`) plutôt que par un
+simple décalage de compteur : les deux flux ne se comparent plus jamais.
+`PackagingTest` garde la trace des deux moitiés du correctif (le drapeau
+dans `build.gradle.kts`, son activation dans le flux), vérifié par
+sabotage.
+
 **Une seule règle d'affichage, et les fiches d'articles traduites (22/09).**
 
 Après un essai sur le téléphone, trois retours : le bouton de langue restait

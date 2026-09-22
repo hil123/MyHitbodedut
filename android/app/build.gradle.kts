@@ -50,8 +50,23 @@ android {
          * précédente.
          */
         debug {
-            applicationIdSuffix = ".debug"
-            versionNameSuffix = "-debug"
+            // essai_leger sert a l'edition de test allegee (musique en
+            // silence, publiee hors des releases numerotees), lancee a la
+            // demande depuis un second flux d'integration continue. Elle
+            // portait le meme identifiant que Relecture, donc le meme
+            // versionCode a comparer ; comme Relecture est reconstruite a
+            // chaque envoi sur main tandis que l'edition d'essai ne l'est
+            // qu'a la demande, son propre compteur restait presque toujours
+            // en retard, et Android refuse d'installer un versionCode plus
+            // bas que celui deja en place (INSTALL_FAILED_VERSION_DOWNGRADE)
+            // — en silence ou avec une erreur qui passe facilement
+            // inapercue. Aucune des editions d'essai envoyees jusqu'ici n'a
+            // donc pu s'installer par-dessus une Relecture plus recente.
+            // Un identifiant distinct l'exempte de cette comparaison, quel
+            // que soit l'ecart entre les deux compteurs.
+            val essaiLeger = System.getenv("ESSAI_LEGER") == "true"
+            applicationIdSuffix = if (essaiLeger) ".debug.essai" else ".debug"
+            versionNameSuffix = if (essaiLeger) "-essai" else "-debug"
             signingConfig = signingConfigs.getByName("release")
         }
 
