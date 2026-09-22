@@ -260,12 +260,35 @@ continuer ; c'est son projet et son appel. L'audio est à **111,9 Mo** sur
 25 morceaux, l'APK autour de **124 Mo**. Le désaccord est écrit ici et dans
 le test, parce qu'un seuil qu'on relève sans trace ne sert plus à rien.
 
-**La réponse reste la même, et elle devient urgente** : télécharger les
-morceaux à la demande plutôt que les livrer. L'APK retombe à une douzaine de
-Mo, et celui qui veut les niggounim les prend. C'est un vrai morceau de
-travail — téléchargement, stockage, reprise, comportement hors ligne — non
-demandé à ce jour. C'est la prochaine chose à faire du côté musique, avant
-d'ajouter un morceau de plus.
+### Correction : le remède que je recommandais ne marche pas
+
+J'ai écrit deux fois qu'il fallait « télécharger les morceaux à la demande ».
+**C'est faux, et pour deux raisons que je n'avais pas vérifiées avant de le
+conseiller.**
+
+1. **L'application ne déclare aucune permission INTERNET**, et le README en
+   fait une propriété revendiquée : « pas d'analytique, pas de réseau ». Pour
+   une application de hitbodedout, ce n'est pas un détail de mise en œuvre,
+   c'est une promesse. Télécharger obligerait à la rompre.
+2. **Il n'y a nulle part où héberger.** Le dépôt est privé — le README dit
+   qu'il faut déjà une connexion GitHub pour récupérer l'APK. Il faudrait donc
+   un hébergement public, et y poser les enregistrements du Yanuka et d'Ishay
+   Ribo les rendrait téléchargeables par n'importe qui. C'est une diffusion
+   plus large que de remettre un APK, et donc une question de droits **autre**
+   que celle qui a été réglée.
+
+**Le vrai remède ne demande rien de neuf.** `MusicActivity` sait déjà ouvrir un
+fichier du téléphone (`OpenDocument` → `addUserTrack`) : la fonction existe et
+marche. Il suffit de :
+
+- livrer une **petite sélection** — trois ou quatre morceaux — dans l'APK ;
+- mettre les autres sur le téléphone, et les ajouter depuis l'écran Musique.
+
+L'APK retombe à une vingtaine de Mo. Aucune permission nouvelle, aucun
+hébergement, aucune question de droits supplémentaire, et rien à construire.
+
+**Tant que ce choix n'est pas fait, chaque envoi rapproche du seuil.** À
+128,2 Mo sur 130, le prochain lot le franchira.
 
 **Sept morceaux sont sans titre** : leurs noms de fichiers étaient
 entièrement en hébreu, remplacés par des underscores au transfert, et les

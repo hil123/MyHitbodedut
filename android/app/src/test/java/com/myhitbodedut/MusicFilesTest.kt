@@ -77,23 +77,26 @@ class MusicFilesTest {
 
     /**
      * Le poids de l'audio est le poids de l'APK : il ne se compresse plus, ni
-     * par R8 ni par le zip.
+     * par R8 ni par le zip. 30 morceaux pèsent dix fois le reste.
      *
-     * **Ce garde-fou a fait son travail et a sauté.** Il était à 80 Mo ; un lot
-     * de six morceaux a porté l'audio à 102 Mo, soit un APK d'environ 115 Mo
-     * pour une application dont le cœur — le minuteur, le 'hizouk, la
-     * bibliothèque — pèse 12 Mo. Le seuil est relevé à 110 Mo **en connaissance
-     * de cause, et c'est la deuxième fois**.
+     * **Correction — le remède que ce commentaire recommandait était faux.**
+     * Il disait « télécharger les morceaux à la demande ». Or l'application
+     * ne déclare **aucune permission INTERNET**, et c'est une propriété
+     * revendiquée dans le README : pas de réseau, pas d'analytique. Le
+     * téléchargement exigerait donc d'ajouter INTERNET, de trouver un
+     * hébergement public — le dépôt est privé, il n'y en a pas — et de rendre
+     * ces enregistrements publiquement téléchargeables, ce qui est un acte de
+     * diffusion plus large que de livrer un APK.
      *
-     * **Et il a été relevé une troisième fois, à 130 Mo, contre mon avis.**
-     * J'avais écrit ici même qu'il ne fallait pas ; le propriétaire a envoyé
-     * trois morceaux de plus et demandé de continuer. C'est son projet et son
-     * appel — mais le désaccord reste écrit, parce qu'un seuil qu'on relève
-     * sans laisser de trace ne sert plus à rien.
+     * **Le vrai remède ne demande rien de neuf** : MusicActivity sait déjà
+     * ouvrir un fichier du téléphone (OpenDocument → addUserTrack). Livrer une
+     * petite sélection et laisser chacun ajouter les siens ramène l'APK à une
+     * vingtaine de Mo, sans permission nouvelle, sans hébergement, sans
+     * question de droits supplémentaire.
      *
-     * Où cela en est : 111,9 Mo d'audio, APK d'environ 124 Mo. Le seuil
-     * existe pour que la décision soit prise, pas pour qu'elle glisse ; elle
-     * a été prise, en connaissance de cause, trois fois.
+     * Le seuil a été relevé trois fois (40 → 80 → 110 → 130), la dernière
+     * contre mon avis. Il reste à 130 : c'est le point où la sélection doit
+     * remplacer l'accumulation.
      */
     @Test
     fun `le poids embarque reste sous les yeux`() {

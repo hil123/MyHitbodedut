@@ -231,6 +231,11 @@
     <string name="music_on_summary">%1$s, volume %2$d %%</string>
     <string name="session_music_line">Musique : %1$s</string>
     <string name="track_hamelech_basade" translatable="false">המלך בשדה</string>
+    <string name="track_nigoun_sans_titre_8" translatable="false">Niggoun — titre à préciser (8)</string>
+    <string name="track_nigoun_sans_titre_9" translatable="false">Niggoun — titre à préciser (9)</string>
+    <string name="track_nigoun_sans_titre_10" translatable="false">Niggoun — titre à préciser (10)</string>
+    <string name="track_nigoun_sans_titre_7" translatable="false">Niggoun — titre à préciser (7)</string>
+    <string name="track_nigoun_sans_titre_11" translatable="false">Niggoun — titre à préciser (11)</string>
     <string name="track_nigoun_sans_titre_4" translatable="false">Niggoun — titre à préciser (4)</string>
     <string name="track_nigoun_sans_titre_5" translatable="false">Niggoun — titre à préciser (5)</string>
     <string name="track_nigoun_sans_titre_6" translatable="false">Niggoun — titre à préciser (6)</string>
