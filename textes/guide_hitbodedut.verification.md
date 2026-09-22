@@ -64,19 +64,78 @@ conversation personnelle. Le renvoi n'est pas faux, il est déplacé : ce
 que le guide y cherche se trouve plutôt au chapitre 3, qu'il cite
 d'ailleurs correctement ailleurs.
 
-## Hors de portée d'ici (4 + 1) — **pris en charge par le propriétaire**
+## Références précisées par le propriétaire (22/09) — trois de plus vérifiées
 
-Absents du corpus `sefaria-export` : **ספר החרדים**, **ראשית חכמה** (שער
-הקדושה פרק י"ב), **חפץ חיים — ליקוטי אמרים פרק י'**, **קיצור ליקוטי
-מוהר"ן**. Ni confirmés ni infirmés ici.
+Le propriétaire a fourni les renvois exacts. Avec eux, **trois des quatre
+sources hors de portée sont sorties de l'ombre**, et la quatrième reste
+introuvable. Un balayage complet du corpus — 6 214 ouvrages hébreux —
+sert de preuve d'absence, pas seulement de recherche infructueuse.
 
-**Le propriétaire de l'application les vérifie lui-même** (22/09). Tant
-que ce retour n'est pas là, ces quatre renvois restent au même statut que
-les autres non vérifiés : ils n'ont pas été contrôlés, et rien dans ce
-dépôt ne doit laisser croire le contraire.
+### ראשית חכמה, שער הקדושה **פרק ו'** — vérifié, et il corrige le texte
 
-Le plus utile des quatre est le Kitsour : c'est lui qui décide si la
-phrase sur l'arme est correctement attribuée — voir plus haut.
+Le guide renvoyait au **פרק י"ב**. Le propriétaire indique le **פרק ו'**,
+et il a raison : ce chapitre nomme explicitement l'התבודדות, deux fois —
+
+> כְּגוֹן הִתְבּוֹדְדוּת הָאָדָם בְּבֵית מִדְרָשׁוֹ אוֹ בְּבֵית הַכְּנֶסֶת
+
+> וּמִכָּל מָקוֹם טוֹב הַהִתְבּוֹדְדוּת עַל יְדֵי קְנִיַּת חָבֵר
+
+— et l'articule à « עִקַּר דְּבֵקוּת הָאָדָם בְּקוֹנוֹ ».
+
+**Nuance, pour être juste avec le texte d'origine** : le chapitre 12 n'est
+pas muet sur le sujet non plus — « יַרְבֶּה כָּל חָסִיד לְהִתְבּוֹדֵד וּלְהִפָּרֵד ».
+Le renvoi du guide n'était donc pas inventé. Mais le chapitre 6 est le
+bon, et « קריאה באמת » ne se trouve dans **aucun** des deux.
+
+### ספר חרדים — ouvrage trouvé, chapitre non vérifiable
+
+Trouvé dans le corpus (`Halakhah/Sifrei Mitzvot/Sefer Charedim`), de
+**רבי אלעזר אזכרי**, comme indiqué. Le contenu est là, et il est fort :
+
+> וּכְשֶׁבּוֹרֵחַ מֵהֶם וּמִתְבּוֹדֵד **בֵּינוֹ לְבֵין קוֹנוֹ** — הִנֵּה הִיא סְפִינָה וְנִמְלָט
+> וְדָבֵק בּוֹ יִתְבָּרַךְ *(מצוות התשובה ד')*
+
+> הַהִתְבּוֹדְדוּת... לְעִתּוֹת רָצוֹן יִפְרֹשׁ עַצְמוֹ בְּמָקוֹם מְיֻחָד שֶׁלֹּא יִרְאוּהוּ בְּנֵי
+> אָדָם *(סוף הספר)*
+
+> הַהִתְבּוֹדְדוּת וְהַפְּרִישׁוּת וְהַדְּבֵקוּת הָיוּ נוֹהֲגִים בָּהּ חֲסִידֵי יִשְׂרָאֵל
+> *(מצוות התשובה ג')*
+
+**Le numéro פרק ע"ג n'est pas vérifiable ici** : cette édition numérote par
+section de mitzvot et non en continu. L'ouvrage et le contenu sont
+confirmés ; la numérotation dépend de l'édition imprimée.
+
+### ליקוטי מוהר"ן — les trois renvois existent
+
+| Renvoi | État |
+|---|---|
+| **חלק א' נ"ב** | Existe. La bibliothèque en porte déjà l'extrait 52:3 (`src-lm1-52-3`) |
+| **חלק ב' כ"ה** | Existe. Déjà dans la bibliothèque (`src-lm2-25`), le chapitre fondateur |
+| **חלק ב' ק"א** | Existe, **et n'est pas encore dans la bibliothèque** — voir ci-dessous |
+
+**LM II, 101** est une trouvaille : il rattache directement le Tikoun
+'Hatsot à l'התבודדות —
+
+> עַל יְדֵי אֲמִירַת תִּקּוּן חֲצוֹת יְכוֹלִין לְפָרֵשׁ שִׂיחָתוֹ אֶת כָּל אֲשֶׁר עִם לְבָבוֹ
+> **כְּמוֹ עַל יְדֵי הִתְבּוֹדְדוּת**
+
+Domaine public (édition `lm`), prêt à entrer comme entrée `source`.
+
+### Introuvables — et l'absence est établie (2)
+
+**חפץ חיים — ליקוטי אמרים פרק י'** et **השתפכות הנפש** ne sont dans aucun
+des 6 214 ouvrages hébreux du corpus. Ce n'est pas « je n'ai pas
+trouvé » : c'est un balayage complet. Ni confirmés ni infirmés, et ils le
+resteront tant qu'on n'aura pas le texte.
+
+## Ce qui reste hors de portée
+
+**קיצור ליקוטי מוהר"ן**, **חפץ חיים — ליקוטי אמרים פרק י'** et
+**השתפכות הנפש** : absents du corpus, balayage complet à l'appui.
+
+Le Kitsour reste le plus important des trois : c'est lui qui décide si la
+phrase sur l'arme — « עיקר הכלי זיין של איש הישראלי » — est correctement
+attribuée, puisque l'original de Likoutei Moharan I, 2 parle du Machia'h.
 
 « ותן בלבנו בינה » et « ויחד לבבנו ליראה ולאהבה את שמך » viennent de la
 bénédiction *Ahava Rabba* du siddour du matin — usuel, non vérifié ici
