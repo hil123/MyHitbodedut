@@ -64,13 +64,10 @@ class LibraryEntryActivity : AppCompatActivity() {
             container.addView(hebrewParagraph(paragraphe, first = index == 0))
         }
 
-        // Rien dans une langue que le mode n'autorise pas : en hébreu,
-        // rien que de l'hébreu ; en anglais, pas de français.
-        RegleLangue.choisit(ChizukCard.language(this), source.notes)
-            ?.let { addFact(R.string.library_note, it) }
-        library.editions[source.edition]?.let {
-            addFact(R.string.library_edition, "${it.titre} — ${it.licence}")
-        }
+        // Ni note ni édition sous le texte : ce sont des détails d'atelier,
+        // pas de lecture. Ils restent dans bibliotheque.json, qui est le
+        // registre de ce qui a été vérifié pour chaque source ; l'attribution
+        // passe par le lien vers Sefaria, juste en dessous.
         linkButton(R.string.library_open_sefaria, source.url)
     }
 

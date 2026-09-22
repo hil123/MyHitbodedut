@@ -57,34 +57,6 @@ class RegleLangueTest {
     }
 
     @Test
-    fun `chaque note de source existe dans les trois langues`() {
-        val json = JSONObject(File("src/main/res/raw/bibliotheque.json").readText())
-        var vues = 0
-        fun marche(n: Any?) {
-            when (n) {
-                is JSONObject -> {
-                    if (n.optString("type") == "source" && n.has("note_fr")
-                        && !n.isNull("note_fr")
-                    ) {
-                        vues++
-                        listOf("note_en", "note_he").forEach { cle ->
-                            assertTrue(
-                                "${n.optString("id")} : $cle manque, la note " +
-                                    "disparaîtrait dans cette langue",
-                                n.optString(cle).isNotBlank(),
-                            )
-                        }
-                    }
-                    n.keys().forEach { marche(n.get(it)) }
-                }
-                is org.json.JSONArray -> (0 until n.length()).forEach { marche(n.get(it)) }
-            }
-        }
-        marche(json)
-        assertTrue("aucune note lue : la lecture est cassée", vues >= 26)
-    }
-
-    @Test
     fun `l ecran de relecture ne montre plus deux traductions a la fois`() {
         val src = File("src/main/java/com/myhitbodedut/ProofreadActivity.kt").readText()
         assertTrue(
@@ -95,12 +67,44 @@ class RegleLangueTest {
     }
 
     @Test
-    fun `la note d une source passe par la regle`() {
+    fun `ni note ni edition ne s affichent sous un texte`() {
+        // Le propriétaire les a vues sur son téléphone et n'en veut pas :
+        // ce sont des détails d'atelier, pas de lecture. Le registre reste
+        // dans bibliotheque.json ; l'attribution passe par le lien Sefaria.
         val src = File("src/main/java/com/myhitbodedut/LibraryEntryActivity.kt").readText()
+        assertTrue("la note est de retour sous le texte", !src.contains("library_note"))
+        assertTrue("l'édition est de retour sous le texte", !src.contains("library_edition"))
         assertTrue(
-            "la note s'affichait sans égard à la langue de l'interface",
-            src.contains("RegleLangue.choisit(ChizukCard.language(this), source.notes)"),
+            "le lien vers Sefaria est la seule attribution qui reste : il doit rester",
+            src.contains("R.string.library_open_sefaria"),
         )
+        listOf("values", "values-en", "values-iw").forEach { dossier ->
+            val textes = File("src/main/res/$dossier/strings.xml").readText()
+            listOf("library_note", "library_edition").forEach { cle ->
+                assertTrue(
+                    "$dossier porte encore la chaîne « $cle », que plus rien n'affiche",
+                    !textes.contains("name=\"$cle\""),
+                )
+            }
+        }
+    }
+
+    @Test
+    fun `le registre des sources reste dans les donnees`() {
+        // Retirer l'affichage n'est pas effacer ce qui a été vérifié.
+        val json = JSONObject(File("src/main/res/raw/bibliotheque.json").readText())
+        var avecNote = 0
+        fun marche(n: Any?) {
+            when (n) {
+                is JSONObject -> {
+                    if (n.optString("type") == "source" && n.optString("note").isNotBlank()) avecNote++
+                    n.keys().forEach { marche(n.get(it)) }
+                }
+                is org.json.JSONArray -> (0 until n.length()).forEach { marche(n.get(it)) }
+            }
+        }
+        marche(json)
+        assertEquals("le registre des notes de sources a été perdu", 26, avecNote)
     }
 
     @Test

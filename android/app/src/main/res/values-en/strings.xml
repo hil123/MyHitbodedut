@@ -269,8 +269,6 @@
     <string name="library_kind_source">Source</string>
     <string name="library_kind_article">Article</string>
     <string name="library_summary">Summary</string>
-    <string name="library_note">Note</string>
-    <string name="library_edition">Edition</string>
     <string name="library_rights">Rights</string>
     <string name="library_errors">Errors noted</string>
     <string name="library_full_text">Full text</string>

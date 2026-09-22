@@ -275,8 +275,6 @@
     <string name="library_kind_source">מקור</string>
     <string name="library_kind_article">מאמר</string>
     <string name="library_summary">תקציר</string>
-    <string name="library_note">הערה</string>
-    <string name="library_edition">מהדורה</string>
     <string name="library_rights">זכויות</string>
     <string name="library_errors">שגיאות שנמצאו</string>
     <string name="library_full_text">הטקסט המלא</string>

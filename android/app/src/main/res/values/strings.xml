@@ -341,8 +341,6 @@
     <string name="library_kind_source">Source</string>
     <string name="library_kind_article">Article</string>
     <string name="library_summary">Résumé</string>
-    <string name="library_note">Note</string>
-    <string name="library_edition">Édition</string>
     <string name="library_rights">Droits</string>
     <string name="library_errors">Erreurs relevées</string>
     <string name="library_full_text">Texte intégral</string>
