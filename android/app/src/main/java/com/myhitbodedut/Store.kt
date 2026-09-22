@@ -18,8 +18,21 @@ data class WeekDay(
     val future: Boolean
 )
 
-/** Une journée de pratique : durée effective et note laissée après la séance. */
-data class DayRecord(val date: String, val minutes: Int, val note: String)
+/**
+ * Une journée de pratique : durée effective, note laissée après la séance,
+ * et les sujets des séances de ce jour-là.
+ *
+ * Les sujets sont une liste et non une valeur : on peut faire deux séances
+ * dans la journée et parler d'autre chose la seconde fois. Elle est vide
+ * pour toute journée d'avant cette version, et pour toute séance dont on
+ * n'a pas voulu dire le sujet — il est facultatif.
+ */
+data class DayRecord(
+    val date: String,
+    val minutes: Int,
+    val note: String,
+    val themes: List<String> = emptyList()
+)
 
 /**
  * Toute la persistance de l'application, dans les préférences locales.
@@ -56,6 +69,7 @@ object Store {
     private const val KEY_SESSION_END = "session_ends_at"
     private const val KEY_SESSION_TARGET = "session_target"
     private const val KEY_SESSION_START = "session_started_at"
+    private const val KEY_SESSION_THEME = "session_theme"
     private const val KEY_HIDE_COUNTDOWN = "hide_countdown"
     private const val KEY_GUIDED = "guided_hitbodedut"
     private const val KEY_ONBOARDED = "onboarded"
@@ -104,7 +118,8 @@ object Store {
                     result[date] = DayRecord(
                         date = date,
                         minutes = entry.optInt("minutes", 0),
-                        note = entry.optString("note", "")
+                        note = entry.optString("note", ""),
+                        themes = readThemes(entry)
                     )
                 }
             }
@@ -120,14 +135,27 @@ object Store {
     private fun writeDays(context: Context, days: Map<String, DayRecord>) {
         val root = JSONObject()
         days.values.forEach { record ->
-            root.put(
-                record.date,
-                JSONObject().put("minutes", record.minutes).put("note", record.note)
-            )
+            root.put(record.date, toJson(record))
         }
         journalPrefs(context).edit().putString(KEY_DAYS, root.toString()).apply()
         // L'ancien emplacement, dans le fichier des réglages, est vidé.
         prefs(context).edit().remove(KEY_DAYS).remove(KEY_LEGACY_DONE).apply()
+    }
+
+    /** Les sujets d'une journée, absents des journaux d'avant cette version. */
+    private fun readThemes(entry: JSONObject): List<String> {
+        val array = entry.optJSONArray("themes") ?: return emptyList()
+        return (0 until array.length()).mapNotNull { array.optString(it).ifBlank { null } }
+    }
+
+    private fun toJson(record: DayRecord): JSONObject {
+        val entry = JSONObject().put("minutes", record.minutes).put("note", record.note)
+        // Une clé absente vaut mieux qu'un tableau vide : le journal des
+        // journées sans sujet reste exactement ce qu'il était.
+        if (record.themes.isNotEmpty()) {
+            entry.put("themes", org.json.JSONArray(record.themes))
+        }
+        return entry
     }
 
     fun record(context: Context, date: String = today()): DayRecord? = days(context)[date]
@@ -135,13 +163,20 @@ object Store {
     fun isDone(context: Context, date: String = today()): Boolean = days(context).containsKey(date)
 
     /** Valide la journée. Les minutes s'ajoutent si plusieurs séances ont lieu. */
-    fun addSession(context: Context, minutes: Int, note: String? = null) {
+    fun addSession(
+        context: Context,
+        minutes: Int,
+        note: String? = null,
+        theme: Theme? = null
+    ) {
         val all = days(context).toMutableMap()
         val existing = all[today()]
         all[today()] = DayRecord(
             date = today(),
             minutes = (existing?.minutes ?: 0) + minutes.coerceAtLeast(0),
-            note = note ?: existing?.note ?: ""
+            note = note ?: existing?.note ?: "",
+            // Le sujet s'ajoute à ceux du jour ; sans sujet, rien n'est ajouté.
+            themes = (existing?.themes ?: emptyList()) + listOfNotNull(theme?.cle)
         )
         writeDays(context, all)
         clearSnooze(context)
@@ -149,7 +184,7 @@ object Store {
 
     fun setNote(context: Context, date: String, note: String) {
         val all = days(context).toMutableMap()
-        val existing = all[date] ?: DayRecord(date, 0, "")
+        val existing = all[date] ?: DayRecord(date, 0, "", emptyList())
         all[date] = existing.copy(note = note)
         writeDays(context, all)
     }
@@ -379,6 +414,22 @@ object Store {
     fun sessionElapsedMinutes(context: Context): Int =
         SessionRule.minutesEcoulees(sessionStartedAt(context), System.currentTimeMillis())
 
+    /**
+     * Le sujet de la séance en cours, ou null — il est facultatif, et
+     * l'absence de valeur est la façon dont « aucun » s'écrit.
+     */
+    fun sessionTheme(context: Context): Theme? =
+        ThemeRules.parse(prefs(context).getString(KEY_SESSION_THEME, null))
+
+    /**
+     * Le sujet choisi pour la prochaine séance, ou pour celle en cours.
+     * Il se change pendant la séance : on découvre parfois en parlant de
+     * quoi on était venu parler.
+     */
+    fun setSessionTheme(context: Context, theme: Theme?) {
+        prefs(context).edit().putString(KEY_SESSION_THEME, theme?.cle).apply()
+    }
+
     /** Une durée nulle ouvre la séance : rien n'est inscrit comme fin. */
     fun beginSession(context: Context, minutes: Int) {
         val now = System.currentTimeMillis()
@@ -559,12 +610,7 @@ object Store {
         root.put("exported_at", java.time.Instant.now().toString())
 
         val daysJson = JSONObject()
-        days(context).values.forEach { record ->
-            daysJson.put(
-                record.date,
-                JSONObject().put("minutes", record.minutes).put("note", record.note)
-            )
-        }
+        days(context).values.forEach { record -> daysJson.put(record.date, toJson(record)) }
         root.put("days", daysJson)
 
         val settings = JSONObject()
@@ -595,15 +641,24 @@ object Store {
         root.optJSONObject("days")?.let { daysJson ->
             for (date in daysJson.keys()) {
                 val entry = daysJson.optJSONObject(date) ?: continue
-                val incoming = DayRecord(date, entry.optInt("minutes", 0), entry.optString("note", ""))
+                val incoming = DayRecord(
+                    date,
+                    entry.optInt("minutes", 0),
+                    entry.optString("note", ""),
+                    readThemes(entry)
+                )
                 val existing = merged[date]
                 merged[date] = when {
                     existing == null -> incoming
-                    // En cas de conflit on garde la séance la plus longue et la note non vide.
+                    // En cas de conflit on garde la séance la plus longue et la
+                    // note non vide. Les sujets, eux, se réunissent : deux
+                    // sauvegardes du même jour ont pu voir deux séances
+                    // différentes, et en perdre une serait perdre le passé.
                     else -> DayRecord(
                         date,
                         maxOf(existing.minutes, incoming.minutes),
-                        existing.note.ifBlank { incoming.note }
+                        existing.note.ifBlank { incoming.note },
+                        (existing.themes + incoming.themes).distinct()
                     )
                 }
                 imported++

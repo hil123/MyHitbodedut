@@ -343,4 +343,18 @@
         <item quantity="two">נותרו %1$d הרשאות לאשר.</item>
         <item quantity="other">נותרו %1$d הרשאות לאשר.</item>
     </plurals>
+    <string name="session_theme_title">על מה תרצו לדבר?</string>
+    <string name="session_theme_none">נושא: ללא (רשות)</string>
+    <string name="session_theme_none_short">ללא</string>
+    <string name="session_theme_chosen">נושא: %1$s</string>
+    <string name="theme_emotions">מה שאני מרגיש</string>
+    <string name="theme_gratitude">הודאה</string>
+    <string name="theme_decisions">בלבול והכרעות</string>
+    <string name="theme_famille">משפחה</string>
+    <string name="theme_zivoug">זיווג</string>
+    <string name="theme_parnassa">פרנסה</string>
+    <string name="theme_avoda">עבודת ה׳</string>
+    <string name="theme_difficultes">קשיים</string>
+    <string name="theme_croissance">עבודה על המידות</string>
+    <string name="theme_autre">משהו אחר</string>
 </resources>

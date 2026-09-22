@@ -22,9 +22,18 @@ chose qui n'existe pas encore : un thème attaché à une séance**
 choix d'objectif, ni le journal enrichi, ni la page de parcours ne
 peuvent exister.
 
-C'est donc par là qu'il faut commencer, et c'est une seule décision :
-quelle liste de thèmes, et le thème est-il obligatoire ou facultatif au
-démarrage d'une séance. Le reste en découle.
+**Décidé le 22/09 : le thème est FACULTATIF.** « Aucun » est la valeur de
+départ et une réponse recevable — on vient souvent sans savoir de quoi on
+va parler, et obliger à choisir ajouterait un obstacle là où il faut en
+retirer.
+
+**Construit le 22/09** : dix sujets, le choix sur l'écran de séance, et
+surtout l'inscription du sujet **avec la journée, dans le journal et dans
+l'export** — même si rien ne l'affiche encore en retour. Une donnée qu'on
+n'enregistre pas est une donnée qu'on n'aura jamais : le jour où « mes
+sujets les plus fréquents » existera, il aura un passé à montrer.
+
+Restent donc, pour 2 : adapter la structure guidée au sujet choisi.
 
 ---
 
@@ -136,6 +145,17 @@ démarrage d'une séance. Le reste en découle.
   seul fichier. C'est la question des notes vocales, toujours ouverte.
 
 ---
+
+## Décisions du 22/09
+
+| | |
+|---|---|
+| **1** | à finir : le prénom, et une carte de départ qui rassemble durée, sujet, musique et concentration |
+| **2** | sujet **facultatif** — décidé et construit |
+| **10** | **en attente des textes**, qui seront fournis |
+| **11** | **partage autorisé** — ce sera le seul endroit où un texte sort de l'appareil |
+| **12** | **feu vert**. Reste que cette partie n'a jamais tourné sur un vrai téléphone : l'habiller avant de l'éprouver serait mettre un costume à ce dont on ignore s'il marche |
+| **15** | **micro autorisé** → `RECORD_AUDIO`, de l'audio à stocker, et un export qui cesse d'être un seul fichier |
 
 ## Ce qui reste vrai quoi qu'on ajoute
 

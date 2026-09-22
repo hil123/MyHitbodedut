@@ -80,9 +80,11 @@ class SessionService : Service() {
         SessionRule.minutesRestantes(Store.sessionEndsAt(this), System.currentTimeMillis())
 
     private fun finishSession(early: Boolean) {
+        // Le sujet se lit AVANT la clôture : endSession efface la séance.
+        val theme = Store.sessionTheme(this)
         val elapsed = Store.endSession(this)
         if (elapsed > 0 || !early) {
-            Store.addSession(this, elapsed)
+            Store.addSession(this, elapsed, theme = theme)
             notifyCompleted(elapsed)
         }
         // Décompte masqué : rien n'a prévenu que le temps s'écoulait, il faut

@@ -336,4 +336,18 @@
         <item quantity="one">%1$d permission to grant.</item>
         <item quantity="other">%1$d permissions to grant.</item>
     </plurals>
+    <string name="session_theme_title">What do you want to talk about?</string>
+    <string name="session_theme_none">Subject: none (optional)</string>
+    <string name="session_theme_none_short">None</string>
+    <string name="session_theme_chosen">Subject: %1$s</string>
+    <string name="theme_emotions">What I am feeling</string>
+    <string name="theme_gratitude">Gratitude</string>
+    <string name="theme_decisions">Confusion, decisions</string>
+    <string name="theme_famille">Family</string>
+    <string name="theme_zivoug">Zivoug</string>
+    <string name="theme_parnassa">Parnassa</string>
+    <string name="theme_avoda">Avodat Hashem</string>
+    <string name="theme_difficultes">Hardship</string>
+    <string name="theme_croissance">Working on myself</string>
+    <string name="theme_autre">Something else</string>
 </resources>

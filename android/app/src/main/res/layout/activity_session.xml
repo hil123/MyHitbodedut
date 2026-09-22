@@ -92,6 +92,19 @@
             android:textColor="@color/mint"
             android:visibility="gone" />
 
+        <!--
+            Le sujet de la séance. Facultatif : « Aucun » est la valeur de
+            départ et une réponse recevable — on vient souvent sans savoir
+            de quoi on va parler.
+        -->
+        <Button
+            android:id="@+id/session_theme"
+            style="@style/Widget.Material3.Button.TextButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:textColor="@color/mint" />
+
         <LinearLayout
             android:id="@+id/session_durations"
             android:layout_width="match_parent"

@@ -27,6 +27,7 @@ class SessionActivity : AppCompatActivity() {
     private lateinit var musicLine: TextView
     private lateinit var chizuk: View
     private lateinit var stuck: Button
+    private lateinit var theme: Button
     private lateinit var guide: View
 
     /**
@@ -73,6 +74,8 @@ class SessionActivity : AppCompatActivity() {
         chizuk = findViewById(R.id.session_chizuk)
         stuck = findViewById(R.id.session_stuck)
         guide = findViewById(R.id.session_hitbodedut)
+        theme = findViewById(R.id.session_theme)
+        theme.setOnClickListener { pickTheme() }
 
         // Une rotation, un passage en écran partagé ou le redimensionnement
         // d'une fenêtre recréent l'écran. Sans cela, le guide repartirait au
@@ -141,6 +144,7 @@ class SessionActivity : AppCompatActivity() {
 
     private fun render() {
         renderMusicLine()
+        renderTheme()
 
         // « cloture » : au passage de « en cours » à « terminée », que la
         // séance se soit achevée d'elle-même ou par le bouton.
@@ -231,6 +235,35 @@ class SessionActivity : AppCompatActivity() {
             guideStep = step
             renderGuide()
         }
+    }
+
+    /**
+     * Le sujet, et son choix. « Aucun » ouvre la liste : c'est la valeur
+     * de depart, et il faut pouvoir y revenir.
+     */
+    private fun renderTheme() {
+        val choisi = Store.sessionTheme(this)
+        theme.text = if (choisi == null) {
+            getString(R.string.session_theme_none)
+        } else {
+            getString(R.string.session_theme_chosen, getString(choisi.titre))
+        }
+    }
+
+    private fun pickTheme() {
+        val sujets = Theme.values()
+        // « Aucun » en tête : c'est la valeur de départ, et le choix le
+        // plus fréquent. L'enfouir sous dix entrées le rendrait difficile
+        // à reprendre.
+        val libelles = (listOf(getString(R.string.session_theme_none_short)) +
+            sujets.map { getString(it.titre) }).toTypedArray()
+        AlertDialog.Builder(this)
+            .setTitle(R.string.session_theme_title)
+            .setItems(libelles) { _, index ->
+                Store.setSessionTheme(this, if (index == 0) null else sujets[index - 1])
+                renderTheme()
+            }
+            .show()
     }
 
     private fun renderMusicLine() {

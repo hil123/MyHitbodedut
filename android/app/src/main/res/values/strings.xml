@@ -355,4 +355,18 @@
         <item quantity="one">%1$d autorisation à accorder.</item>
         <item quantity="other">%1$d autorisations à accorder.</item>
     </plurals>
+    <string name="session_theme_title">Sur quoi voulez-vous parler ?</string>
+    <string name="session_theme_none">Sujet : aucun (facultatif)</string>
+    <string name="session_theme_none_short">Aucun</string>
+    <string name="session_theme_chosen">Sujet : %1$s</string>
+    <string name="theme_emotions">Ce que je ressens</string>
+    <string name="theme_gratitude">Gratitude</string>
+    <string name="theme_decisions">Confusion, décisions</string>
+    <string name="theme_famille">Famille</string>
+    <string name="theme_zivoug">Zivoug</string>
+    <string name="theme_parnassa">Parnassa</string>
+    <string name="theme_avoda">Avodat Hachem</string>
+    <string name="theme_difficultes">Difficultés</string>
+    <string name="theme_croissance">Travail sur soi</string>
+    <string name="theme_autre">Autre chose</string>
 </resources>
