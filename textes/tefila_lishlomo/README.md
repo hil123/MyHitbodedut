@@ -50,7 +50,7 @@ remarque à côté.
 |---|---|---|---|
 | prayer-01 | 1 | פדיון שבויים — libération des captifs | ✅ |
 | prayer-02 | 2 | תפילת חבקוק — 'Habaqouq 3, guéoula | ⚠️ versets exacts, commentaire avec réserve |
-| prayer-03 | 15 | **תפילה נוראה לישועת ישראל** — « עקב המצב בארץ הקודש » | ⬜ |
+| prayer-03 | 15 | **תפילה נוראה לישועת ישראל** — « עקב המצב בארץ הקודש » | ✅ |
 | prayer-04 | 2 | זכות רחל אמנו | ✅ |
 | prayer-05 | — | **non fourni** | — |
 | prayer-06 | 1 | זיווג (לאיש) | ✅ |
@@ -74,14 +74,21 @@ dans le PDF, si bien que l'*ordre* n'est pas récupérable mécaniquement : des
 inversions locales subsistent entre le verset et son commentaire. Les versets
 de 'Habaqouq sont donc donnés à part, exacts, repris du Tanakh.
 
-**prayer-03** : livret de 15 pages du Yanuka — « תפילה נוראה לגילוי מלכות ה'
-ולעורר רחמי שמים לישועת ישראל ולהחיש הגאולה », composé et compilé des livres
-saints (*שחיבר וליקט מהספרים הקדושים*). Une page de couverture, quatorze pages
-de texte vocalisé dense. Rendu à 4959 × 7014, la définition la plus confortable
-de toute la série. Les litanies liturgiques qu'il reprend
+**prayer-03** : les quatorze pages de texte sont transcrites. Rendu à
+4959 × 7014, plus du double de la définition des feuillets où mes cinq erreurs
+précédentes s'étaient glissées — et cette fois les deux passages qui m'ont fait
+douter se sont révélés justes au zoom.
+
+Ses citations, elles, ont pu être vérifiées : **Téhilim 142 en entier et les six
+versets de Yoël sont exacts**, sans une anomalie. Les litanies liturgiques
 (« אַתָּה דָּגוּל וְשִׁמְךָ דָּגוּל… », « רוֹכֵב עֲרָבוֹת ») ne sont dans aucun
-des trois siddourim du corpus ni dans aucun ma'hzor : pas de vérification
-mécanique possible, tout se lira à l'œil.
+des trois siddourim du corpus ni dans aucun ma'hzor : celles-là n'ont pu être
+que lues.
+
+**Ce livret donne une adresse différente des autres feuillets** — celle,
+formelle, de l'institut : ת.ד 32466 ירושלים, 02-376-3737,
+`contact@yamshlomo.co.il`. C'est celle à utiliser pour documenter une
+autorisation.
 
 ## Cinq erreurs de lecture, toutes attrapées au zoom
 
