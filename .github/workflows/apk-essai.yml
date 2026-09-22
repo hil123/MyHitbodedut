@@ -1,0 +1,65 @@
+name: APK d'essai léger
+
+# Le dépôt est privé : un lien de release renvoie 404 à un téléphone qui
+# n'est pas connecté à GitHub. Cette construction produit une édition d'essai
+# assez légère pour être transmise directement, en remplaçant les 123 Mo de
+# musique par du silence. Même application, mêmes écrans, même code — seuls
+# les morceaux sont muets. Elle ne sert pas à écouter mais à éprouver.
+#
+# Elle porte le suffixe .debug, donc elle s'installe À CÔTÉ de l'édition
+# normale et ne la remplace pas : rien de ce qui est déjà sur le téléphone
+# n'est perdu.
+#
+# Déclenchement manuel uniquement.
+on:
+  workflow_dispatch:
+
+jobs:
+  leger:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Ensure Android platform 35
+        run: yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "platforms;android-35" "build-tools;35.0.0" || true
+
+      # Une seconde de silence à la place de chaque morceau. Les noms de
+      # fichiers ne bougent pas, donc aucun R.raw ne disparaît et le code
+      # compile sans être touché.
+      - name: Replace the music with silence
+        run: |
+          set -e
+          cd android/app/src/main/res/raw
+          avant=$(du -sh . | cut -f1)
+          for f in *.mp3; do
+            ffmpeg -loglevel error -y -f lavfi -i anullsrc=r=44100:cl=mono \
+                   -t 1 -codec:a libmp3lame -b:a 32k "silence.tmp"
+            mv silence.tmp "$f"
+          done
+          echo "res/raw : $avant -> $(du -sh . | cut -f1) pour $(ls *.mp3 | wc -l) morceaux"
+
+      - name: Build the test edition
+        working-directory: android
+        env:
+          VERSION_CODE: ${{ github.run_number }}
+        run: ./gradlew --no-daemon assembleFullDebug
+
+      - name: Show its size
+        working-directory: android
+        run: du -h app/build/outputs/apk/full/debug/app-full-debug.apk
+
+      - name: Upload it
+        uses: actions/upload-artifact@v4
+        with:
+          name: apk-essai-leger
+          path: android/app/build/outputs/apk/full/debug/app-full-debug.apk
+          if-no-files-found: error
