@@ -36,9 +36,22 @@ object LibraryRules {
         return source.paragraphesSansNikkoud.ifEmpty { source.paragraphes }
     }
 
-    /** Le résumé dans la langue de l'interface, à défaut celui du fichier. */
+    /**
+     * Le résumé dans la langue de l'interface — et seulement elle. Il
+     * retombait sur le français à défaut ; ce repli affichait du français à
+     * qui lisait en anglais ou en hébreu, sans que rien ne le signale. La
+     * règle est maintenant celle de RegleLangue : pas de repli.
+     */
     fun summary(article: ArticleEntry, language: String): String? =
-        article.resumes[language] ?: article.resumes["fr"] ?: article.resumes.values.firstOrNull()
+        RegleLangue.choisit(language, article.resumes)
+
+    /** Les droits, dans la même langue et selon la même règle que le résumé. */
+    fun rights(article: ArticleEntry, language: String): String? =
+        RegleLangue.choisit(language, article.droits)
+
+    /** Les erreurs relevées, dans la langue de l'interface ; rien si aucune. */
+    fun errors(article: ArticleEntry, language: String): List<String> =
+        article.erreursRelevees[RegleLangue.normalise(language)].orEmpty()
 
     /** Les sources d'abord : ce sont elles qu'on vient lire. */
     fun ordered(entrees: List<LibraryEntry>): List<LibraryEntry> =

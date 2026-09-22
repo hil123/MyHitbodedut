@@ -67,16 +67,58 @@ class LibraryRulesTest {
     }
 
     @Test
-    fun `chaque article a un resume`() {
-        library.entrees.filterIsInstance<ArticleEntry>().forEach {
-            assertNotNull("${it.id} : pas de résumé", LibraryRules.summary(it, "fr"))
+    fun `chaque article a un resume dans les trois langues`() {
+        library.entrees.filterIsInstance<ArticleEntry>().forEach { article ->
+            listOf("fr", "en", "he").forEach { langue ->
+                assertNotNull(
+                    "${article.id} : pas de résumé en $langue",
+                    LibraryRules.summary(article, langue),
+                )
+            }
         }
     }
 
     @Test
-    fun `une langue sans resume retombe sur celui qui existe`() {
+    fun `chaque article a ses droits dans les trois langues`() {
+        library.entrees.filterIsInstance<ArticleEntry>().forEach { article ->
+            listOf("fr", "en", "he").forEach { langue ->
+                assertNotNull(
+                    "${article.id} : pas de droits en $langue",
+                    LibraryRules.rights(article, langue),
+                )
+            }
+        }
+    }
+
+    @Test
+    fun `l article avec des erreurs relevees les porte dans les trois langues`() {
+        val avecErreurs = library.entrees.filterIsInstance<ArticleEntry>()
+            .filter { it.erreursRelevees.values.any { l -> l.isNotEmpty() } }
+        assertTrue("aucun article ne porte d'erreurs relevées : la lecture est cassée", avecErreurs.isNotEmpty())
+        avecErreurs.forEach { article ->
+            val tailleFr = LibraryRules.errors(article, "fr").size
+            assertTrue("${article.id} : liste française vide", tailleFr > 0)
+            listOf("en", "he").forEach { langue ->
+                assertEquals(
+                    "${article.id} : $langue n'a pas le même nombre d'erreurs que le français",
+                    tailleFr,
+                    LibraryRules.errors(article, langue).size,
+                )
+            }
+        }
+    }
+
+    @Test
+    fun `un resume dans une langue absente ne retombe plus sur le francais`() {
+        // La règle : un texte manquant dans la langue en cours n'est pas
+        // remplacé par le français. Vérifié directement sur la règle, pas
+        // sur les données — les données, elles, ont les trois langues.
         val article = gabarit(autorisation = null, texte = null)
-        assertEquals("résumé", LibraryRules.summary(article, "en"))
+        assertNull(
+            "l'anglais retombait sur le résumé français",
+            LibraryRules.summary(article, "en"),
+        )
+        assertEquals("résumé", LibraryRules.summary(article, "fr"))
     }
 
     @Test
@@ -90,7 +132,7 @@ class LibraryRulesTest {
 
     private fun gabarit(autorisation: String?, texte: String?) = ArticleEntry(
         id = "t", titre = "titre", auteur = null, site = null, date = null, url = null,
-        resumes = mapOf("fr" to "résumé"), droits = null, autorisation = autorisation,
-        texteIntegral = texte, sourcesCitees = emptyList(), erreursRelevees = emptyList(),
+        resumes = mapOf("fr" to "résumé"), droits = emptyMap(), autorisation = autorisation,
+        texteIntegral = texte, sourcesCitees = emptyList(), erreursRelevees = emptyMap(),
     )
 }

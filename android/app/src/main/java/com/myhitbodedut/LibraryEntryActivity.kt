@@ -90,30 +90,33 @@ class LibraryEntryActivity : AppCompatActivity() {
 
     private fun bindArticle(article: ArticleEntry) {
         findViewById<TextView>(R.id.entry_kind).setText(R.string.library_kind_article)
+        // Le titre est celui de l'article, en hébreu : c'est son vrai nom, pas
+        // un texte à traduire — comme le titre d'une source.
         findViewById<TextView>(R.id.entry_title).text = article.titre
         findViewById<TextView>(R.id.entry_reference).text =
             listOfNotNull(article.auteur, article.site, article.date).joinToString(" · ")
 
-        LibraryRules.summary(article, ChizukCard.language(this))
-            ?.let { addFact(R.string.library_summary, it) }
+        val langue = ChizukCard.language(this)
+
+        LibraryRules.summary(article, langue)?.let { addFact(R.string.library_summary, it) }
 
         // Le texte intégral n'existe qu'avec une autorisation. Sans elle, on
         // dit pourquoi il manque plutôt que de laisser croire à un oubli.
+        // Rien de tout cela ne retombe sur le français : le repli générique
+        // (déjà traduit) sert quand la langue en cours manque.
         val integral = LibraryRules.fullText(article)
         if (integral != null) {
             addFact(R.string.library_full_text, integral)
         } else {
             addFact(
                 R.string.library_rights,
-                article.droits ?: getString(R.string.library_full_text_withheld),
+                LibraryRules.rights(article, langue) ?: getString(R.string.library_full_text_withheld),
             )
         }
 
-        if (article.erreursRelevees.isNotEmpty()) {
-            addFact(
-                R.string.library_errors,
-                article.erreursRelevees.joinToString("\n") { "• $it" },
-            )
+        val erreurs = LibraryRules.errors(article, langue)
+        if (erreurs.isNotEmpty()) {
+            addFact(R.string.library_errors, erreurs.joinToString("\n") { "• $it" })
         }
         linkButton(R.string.library_read_on_site, article.url)
     }

@@ -45,12 +45,13 @@ data class ArticleEntry(
     val site: String?,
     val date: String?,
     val url: String?,
+    /** Résumé, droits et erreurs relevées sont nommés par langue (_fr, _en, _he). */
     val resumes: Map<String, String>,
-    val droits: String?,
+    val droits: Map<String, String>,
     val autorisation: String?,
     val texteIntegral: String?,
     val sourcesCitees: List<String>,
-    val erreursRelevees: List<String>,
+    val erreursRelevees: Map<String, List<String>>,
 ) : LibraryEntry
 
 data class SubSection(
@@ -128,23 +129,30 @@ object LibraryLoader {
         site = Json.nullable(o, "site"),
         date = Json.nullable(o, "date"),
         url = Json.nullable(o, "url"),
-        resumes = resumes(o),
-        droits = Json.nullable(o, "droits"),
+        resumes = parLangue(o, "resume_"),
+        droits = parLangue(o, "droits_"),
         autorisation = Json.nullable(o, "autorisation"),
         texteIntegral = Json.nullable(o, "texte_integral"),
         sourcesCitees = Json.strings(o.optJSONArray("sources_citees")),
-        erreursRelevees = Json.strings(o.optJSONArray("erreurs_relevees")),
+        erreursRelevees = listesParLangue(o, "erreurs_relevees_"),
     )
 
     /**
-     * Les résumés sont nommés par langue (resume_fr). La v0.1 n'en fournit
-     * qu'en français ; les suivantes peuvent en ajouter sans toucher au code.
+     * Un champ nommé par langue (resume_fr, droits_en…) : le préfixe fixe,
+     * la langue en suffixe. Ajouter une langue n'exige pas de toucher au code.
      */
-    private fun resumes(o: JSONObject): Map<String, String> =
+    private fun parLangue(o: JSONObject, prefixe: String): Map<String, String> =
         o.keys().asSequence()
-            .filter { it.startsWith("resume_") }
-            .mapNotNull { key -> Json.nullable(o, key)?.let { key.removePrefix("resume_") to it } }
+            .filter { it.startsWith(prefixe) }
+            .mapNotNull { key -> Json.nullable(o, key)?.let { key.removePrefix(prefixe) to it } }
             .toMap()
+
+    /** Comme parLangue, mais pour une liste — les erreurs relevées. */
+    private fun listesParLangue(o: JSONObject, prefixe: String): Map<String, List<String>> =
+        o.keys().asSequence()
+            .filter { it.startsWith(prefixe) }
+            .associate { key -> key.removePrefix(prefixe) to Json.strings(o.optJSONArray(key)) }
+            .filterValues { it.isNotEmpty() }
 
     fun load(context: Context): Library =
         parse(Json.readRaw(context, R.raw.bibliotheque))

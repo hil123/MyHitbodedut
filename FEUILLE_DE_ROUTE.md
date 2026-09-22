@@ -311,9 +311,53 @@ pas de l'espagnol :
 
 **Ce que la vérification avait établi et qui reste vrai** : l'interface
 française, anglaise et hébraïque est complète — 320 clés identiques,
-aucun texte en dur, marqueurs concordants. Les 24 résumés d'articles
-restent en français seul : l'anglais et l'hébreu y retombent sur le
-français. C'est le seul manque de traduction connu.
+aucun texte en dur, marqueurs concordants. Les 24 résumés d'articles,
+eux, ont été traduits le 22/09 — voir plus bas.
+
+**Une seule règle d'affichage, et les fiches d'articles traduites (22/09).**
+
+Après un essai sur le téléphone, trois retours : le bouton de langue restait
+introuvable (ligne 201 sur 338, sous la ligne de flottaison — remonté en
+tête des réglages, dans sa propre carte), une note s'affichait en français
+sur un écran en anglais, et l'écran de relecture montrait le français et
+l'anglais côte à côte quelle que soit la langue choisie.
+
+`RegleLangue` tient la règle en un seul endroit : en hébreu rien que
+l'hébreu, en anglais l'hébreu et l'anglais, en français l'hébreu et le
+français — jamais les trois, et **plus aucun repli d'une langue sur une
+autre**. Un texte absent dans la langue en cours n'est plus affiché dans
+une autre langue à sa place ; il n'est pas affiché du tout, ce qui se voit
+et se répare, plutôt que de passer inaperçu.
+
+**Note et Édition, retirées de sous chaque texte** — demandé ensuite,
+séparément : ce sont des détails d'atelier, pas de lecture. Le registre des
+26 notes reste dans `bibliotheque.json` (un test en tient le compte à 26) ;
+l'attribution passe désormais par le seul lien « Ouvrir sur Sefaria ». Trois
+éditions sur huit portent une licence « unknown », mais cela ne concerne
+que leur vocalisation, que l'application ne reprend déjà pas — le texte
+affiché est le texte consonantique du domaine public, rien n'est dû.
+
+**Les 24 fiches d'articles, traduites.** Elles étaient le seul manque
+identifié par la vérification du 22/09, et devenaient invisibles en anglais
+et en hébreu depuis que `RegleLangue` interdit le repli. Résumé, droits et
+erreurs relevées sont maintenant nommés par langue (`resume_fr/en/he`,
+`droits_fr/en/he`, `erreurs_relevees_fr/en/he`) et passent par
+`LibraryRules.summary`, `.rights`, `.errors` :
+
+- **24 résumés**, traduits un par un.
+- **Droits : trois textes seulement couvrent les 24 fiches** (les dix-huit
+  articles הפגישה, les cinq lettres d'Achèr BaNa'hal, et une fiche à part) —
+  traduits une fois chacun et déclinés, plutôt que vingt-quatre fois.
+- **Six erreurs relevées**, sur le seul article qui en porte
+  (`art-bc-salama-2024`) : les citations hébraïques restent telles quelles,
+  seul le commentaire autour change de langue.
+
+Le titre d'un article reste en hébreu dans les trois modes — comme le titre
+d'une source : c'est le vrai nom de l'article, pas un texte à traduire.
+
+`LibraryRulesTest` vérifie les trois langues pour chaque article, et que le
+nombre d'erreurs relevées ne varie pas d'une langue à l'autre. Vérifié par
+sabotage : retirer un `resume_en` fait tomber le test.
 
 **Choix de la langue, et relecture texte par texte (22/09).**
 
@@ -356,7 +400,7 @@ Chmirat habrit, Zéra chel kayama.
 identiques au français le sont légitimement ; les cinq écarts de longueur
 sont de la concision anglaise ; le registre hébreu alterne le singulier
 pour l'interface et le pluriel pour l'enseignement, ce qui est un système
-et non une négligence. Les 24 résumés d'articles restent en français seul.
+et non une négligence.
 
 **Renommer depuis l'application (22/09).** La fonction existait déjà et le
 propriétaire l'a demandée : elle n'était atteignable que par appui long,
