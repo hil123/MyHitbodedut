@@ -163,8 +163,11 @@ class MusicActivity : AppCompatActivity() {
     }
 
     private fun askRename(track: Track) {
+        val custom = MusicLibrary.customName(this, track.id)
         val input = EditText(this).apply {
-            setText(track.title)
+            setText(custom.orEmpty())
+            hint = track.title
+            setSelection(text.length)
             val pad = (16 * resources.displayMetrics.density).toInt()
             setPadding(pad, pad, pad, pad)
         }
@@ -182,6 +185,11 @@ class MusicActivity : AppCompatActivity() {
                         MusicLibrary.removeUserTrack(this@MusicActivity, track.id)
                         reload()
                     }
+                } else if (custom != null) {
+                    setNeutralButton(R.string.music_rename_reset) { _, _ ->
+                        MusicLibrary.rename(this@MusicActivity, track.id, "")
+                        reload()
+                    }
                 }
             }
             .show()
@@ -195,6 +203,7 @@ class MusicActivity : AppCompatActivity() {
             val radio: RadioButton = view.findViewById(R.id.track_radio)
             val title: TextView = view.findViewById(R.id.track_title)
             val origin: TextView = view.findViewById(R.id.track_origin)
+            val rename: ImageButton = view.findViewById(R.id.track_rename)
             val play: ImageButton = view.findViewById(R.id.track_play)
         }
 
@@ -222,6 +231,7 @@ class MusicActivity : AppCompatActivity() {
             }
             holder.radio.setOnClickListener { select() }
             holder.itemView.setOnClickListener { select() }
+            holder.rename.setOnClickListener { askRename(track) }
             holder.itemView.setOnLongClickListener { askRename(track); true }
             holder.play.setOnClickListener { togglePreview(track) }
         }

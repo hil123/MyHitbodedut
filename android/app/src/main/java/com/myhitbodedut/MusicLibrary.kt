@@ -109,6 +109,9 @@ object MusicLibrary {
 
     // --- Renommage ----------------------------------------------------------
 
+    /** Le nom donne par l'utilisateur, ou null s'il porte encore son titre livre. */
+    fun customName(context: Context, id: String): String? = nameOf(context, id)
+
     private fun nameOf(context: Context, id: String): String? {
         val names = runCatching { JSONObject(Store.musicNames(context)) }.getOrNull() ?: return null
         val value = names.optString(id)

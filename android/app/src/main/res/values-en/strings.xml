@@ -199,7 +199,7 @@
     <string name="music_enable_hint">The track starts with the timer and fades out at the end.</string>
     <string name="music_volume">Volume</string>
     <string name="music_library">Library</string>
-    <string name="music_library_hint">Tap to choose, long press to rename or remove.</string>
+    <string name="music_library_hint">Tap to choose, the pencil to rename or remove.</string>
     <string name="music_add">Add a track from the phone</string>
     <string name="music_add_failed">This file could not be added for keeps.</string>
     <string name="music_play_failed">This track could not be played.</string>
@@ -208,6 +208,7 @@
     <string name="music_origin_device">From the phone</string>
     <string name="music_preview">Listen</string>
     <string name="music_rename">Rename</string>
+    <string name="music_rename_reset">Original title</string>
     <string name="music_remove">Remove</string>
     <string name="music_off_short">Off</string>
     <string name="music_off_summary">No music during sessions.</string>

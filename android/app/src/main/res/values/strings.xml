@@ -215,7 +215,7 @@
     <string name="music_enable_hint">Le morceau démarre avec le minuteur et s\'arrête en fondu à la fin.</string>
     <string name="music_volume">Volume</string>
     <string name="music_library">Bibliothèque</string>
-    <string name="music_library_hint">Touchez pour choisir, appui long pour renommer ou retirer.</string>
+    <string name="music_library_hint">Touchez pour choisir, le crayon pour renommer ou retirer.</string>
     <string name="music_add">Ajouter un morceau du téléphone</string>
     <string name="music_add_failed">Ce fichier n\'a pas pu être ajouté durablement.</string>
     <string name="music_play_failed">Ce morceau n\'a pas pu être lu.</string>
@@ -224,6 +224,7 @@
     <string name="music_origin_device">Depuis le téléphone</string>
     <string name="music_preview">Écouter</string>
     <string name="music_rename">Renommer</string>
+    <string name="music_rename_reset">Titre d\'origine</string>
     <string name="music_remove">Retirer</string>
     <string name="music_off_short">Désactivée</string>
     <string name="music_off_summary">Aucune musique pendant les séances.</string>

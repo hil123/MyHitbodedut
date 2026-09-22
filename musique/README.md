@@ -90,6 +90,18 @@ leurs noms de fichiers étaient entièrement en hébreu et le transfert les a
 remplacés par des underscores, et les tags ID3 sont vides. D'où la
 numérotation — on ne devine pas un titre. Les vrais noms sont les bienvenus.
 
+**Depuis le 22/09 on renomme depuis l'application** : écran Musique, le
+crayon sur la ligne du morceau (l'appui long marche aussi). Le renommage
+valait déjà pour les morceaux livrés, mais il n'était accessible que par
+appui long, sans bouton — le propriétaire a demandé la fonction alors
+qu'elle existait, ce qui tranche la question de l'affordance.
+
+**Attention : ces noms restent sur le téléphone.** Ils sont écrits dans les
+préférences de l'application, pas dans le dépôt ; une réinstallation les
+perd, et ils ne remontent pas dans l'APK. Pour qu'un titre devienne celui
+que tout le monde voit, il faut me le dire — il entre alors dans
+`values/strings.xml`.
+
 ## Droits
 
 Shneor Lerer s'ajoute aux noms déjà couverts par les déclarations du

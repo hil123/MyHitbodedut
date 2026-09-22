@@ -204,7 +204,7 @@
     <string name="music_enable_hint">הניגון מתחיל עם הטיימר ודועך בסיום.</string>
     <string name="music_volume">עוצמה</string>
     <string name="music_library">ספרייה</string>
-    <string name="music_library_hint">הקשה לבחירה, לחיצה ארוכה לשינוי שם או הסרה.</string>
+    <string name="music_library_hint">הקשה לבחירה, העיפרון לשינוי שם או להסרה.</string>
     <string name="music_add">הוספת ניגון מהטלפון</string>
     <string name="music_add_failed">לא ניתן להוסיף את הקובץ באופן קבוע.</string>
     <string name="music_play_failed">לא ניתן לנגן את הקובץ.</string>
@@ -213,6 +213,7 @@
     <string name="music_origin_device">מהטלפון</string>
     <string name="music_preview">האזנה</string>
     <string name="music_rename">שינוי שם</string>
+    <string name="music_rename_reset">השם המקורי</string>
     <string name="music_remove">הסרה</string>
     <string name="music_off_short">כבוי</string>
     <string name="music_off_summary">אין מוזיקה בזמן ההתבודדות.</string>

@@ -288,6 +288,15 @@ marche. Il suffit de :
 L'APK retombe à une vingtaine de Mo. Aucune permission nouvelle, aucun
 hébergement, aucune question de droits supplémentaire, et rien à construire.
 
+**Renommer depuis l'application (22/09).** La fonction existait déjà et le
+propriétaire l'a demandée : elle n'était atteignable que par appui long,
+sans bouton ni autre indice que la ligne d'aide. Un bouton crayon sur chaque
+ligne, l'appui long conservé, le champ qui ne recopie plus le titre livré
+(l'effacer d'abord était une corvée, et enregistrer sans rien changer le
+figeait), et un retour au titre d'origine. Ce que cela ne fait pas : ces
+noms vivent dans les préférences du téléphone, pas dans le dépôt. Un titre
+ne devient commun à tous que s'il m'est transmis.
+
 **Échange du 22/09, demandé par le propriétaire : les sans-titre entrent,
 les morceaux nommés sortent.** On ne nomme que ce qu'on entend, et
 trente-cinq morceaux attendaient un titre. L'APK en porte maintenant
