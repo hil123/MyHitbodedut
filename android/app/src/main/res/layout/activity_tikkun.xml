@@ -21,14 +21,13 @@
             android:layout_weight="1"
             android:orientation="vertical">
 
-            <!-- Le titre reste en hebreu : c'est sous ce nom que la pratique
-                 se designe, dans n'importe quelle langue. -->
+            <!-- Le titre suit la langue de l'interface (22/09) : il ne
+                 reste plus vissé à l'hébreu. En hébreu, le sens ambiant de
+                 l'écran suffit à l'aligner correctement. -->
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layoutDirection="rtl"
-                android:text="@string/tikkun_title_he"
-                android:textAlignment="viewStart"
+                android:text="@string/tikkun_title"
                 android:textColor="@color/white"
                 android:textSize="26sp"
                 android:textStyle="bold" />

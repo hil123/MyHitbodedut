@@ -29,12 +29,12 @@
             android:layout_weight="1"
             android:orientation="vertical">
 
+            <!-- Le titre suit la langue de l'interface (22/09), comme sur
+                 l'écran du Tikoun : plus vissé à l'hébreu. -->
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layoutDirection="rtl"
-                android:text="@string/tikkun_title_he"
-                android:textAlignment="viewStart"
+                android:text="@string/tikkun_title"
                 android:textColor="@color/white"
                 android:textSize="24sp"
                 android:textStyle="bold" />

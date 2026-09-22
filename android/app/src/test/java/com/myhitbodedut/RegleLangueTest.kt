@@ -120,4 +120,38 @@ class RegleLangueTest {
             langue < premiereAutreCarte,
         )
     }
+
+    @Test
+    fun `le titre du Tikoun suit la langue de l interface, pas fige en hebreu`() {
+        // Le propriétaire a vu « תיקון הכללי » rester affiché en écran
+        // anglais : trois layouts pointaient sur tikkun_title_he
+        // (translatable="false"), la chaîne traduite tikkun_title existait
+        // déjà dans les trois langues mais n'était référencée nulle part.
+        val ecrans = listOf(
+            "src/main/res/layout/activity_main.xml",
+            "src/main/res/layout/activity_tikkun.xml",
+            "src/main/res/layout/activity_tikkun_flow.xml",
+        )
+        ecrans.forEach { chemin ->
+            val texte = File(chemin).readText()
+            assertTrue(
+                "$chemin pointe encore sur tikkun_title_he, figé en hébreu",
+                !texte.contains("tikkun_title_he"),
+            )
+            assertTrue(
+                "$chemin ne pointe plus sur le titre traduit",
+                texte.contains("@string/tikkun_title\""),
+            )
+        }
+        assertTrue(
+            "tikkun_title_he traîne encore dans les ressources : la chaîne morte devrait disparaître",
+            !File("src/main/res/values/strings.xml").readText().contains("tikkun_title_he"),
+        )
+        listOf("values", "values-en", "values-iw").forEach { dossier ->
+            assertTrue(
+                "$dossier ne porte pas tikkun_title",
+                File("src/main/res/$dossier/strings.xml").readText().contains("name=\"tikkun_title\""),
+            )
+        }
+    }
 }

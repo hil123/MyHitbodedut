@@ -314,6 +314,18 @@ française, anglaise et hébraïque est complète — 320 clés identiques,
 aucun texte en dur, marqueurs concordants. Les 24 résumés d'articles,
 eux, ont été traduits le 22/09 — voir plus bas.
 
+**« תיקון הכללי » restait figé en hébreu (22/09), signalé sur le
+téléphone.** Trois layouts pointaient sur `tikkun_title_he`
+(`translatable="false"`) plutôt que sur `tikkun_title` — qui existait
+pourtant déjà, correctement traduit dans les trois langues, sans que rien
+ne le référence nulle part. Corrigé aux trois endroits
+(`activity_main.xml`, `activity_tikkun.xml`, `activity_tikkun_flow.xml`),
+avec le sens de lecture forcé au RTL retiré de deux d'entre eux : il n'a
+plus lieu d'être puisque le titre suit désormais la langue, et le sens
+ambiant de l'écran suffit à l'aligner correctement en hébreu. La chaîne
+`tikkun_title_he` a disparu des ressources. `RegleLangueTest` en garde la
+trace, vérifiée par sabotage.
+
 **Le bouton de langue n'a jamais atteint le téléphone (22/09) — de ma
 faute, pas d'un défaut de l'écran.** Après l'avoir remonté en tête des
 réglages, le propriétaire a dit ne toujours rien voir. Vérification faite

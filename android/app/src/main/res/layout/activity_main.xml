@@ -234,7 +234,7 @@
 
                 <TextView
                     style="@style/SettingLabelStacked"
-                    android:text="@string/tikkun_title_he" />
+                    android:text="@string/tikkun_title" />
 
                 <TextView
                     android:id="@+id/tikkun_state"

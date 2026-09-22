@@ -369,7 +369,6 @@
     <string name="moment_lieu">Le lieu et le moment</string>
 
     <!-- Section Tikoun HaKlali -->
-    <string name="tikkun_title_he" translatable="false">תיקון הכללי</string>
     <string name="tikkun_title">Tikoun HaKlali</string>
     <string name="tikkun_hint">Les dix psaumes de Rabbi Na\'hman, dans l\'ordre : 16, 32, 41, 42, 59, 77, 90, 105, 137, 150.</string>
     <string name="tikkun_open">Ouvrir le Tikoun</string>
