@@ -48,6 +48,21 @@
         </LinearLayout>
 
         <!-- Diagnostic de la barrière : pourquoi elle agit, ou pourquoi non -->
+        <!--
+            La langue, en tête : le propriétaire a cherché ce bouton et ne
+            l'a pas trouvé. Il était plus bas que l'écran, entre deux
+            réglages. Une fonction qu'on ne trouve pas n'existe pas.
+        -->
+        <LinearLayout style="@style/Card">
+
+            <LinearLayout style="@style/SettingRow" android:layout_marginTop="0dp">
+
+                <TextView style="@style/SettingLabel" android:text="@string/settings_language" />
+
+                <Button android:id="@+id/language_button" style="@style/SettingValue" />
+            </LinearLayout>
+        </LinearLayout>
+
         <LinearLayout android:id="@+id/card_gate_state" style="@style/Card">
 
             <TextView style="@style/CardTitle" android:text="@string/section_gate_state" />
@@ -148,6 +163,7 @@
         <!-- Rythme de la pratique -->
         <LinearLayout style="@style/Card">
 
+
             <TextView style="@style/CardTitle" android:text="@string/section_rhythm" />
 
             <LinearLayout style="@style/SettingRow">
@@ -192,13 +208,6 @@
                     android:id="@+id/shabbat_switch"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
-            </LinearLayout>
-
-            <LinearLayout style="@style/SettingRow">
-
-                <TextView style="@style/SettingLabel" android:text="@string/settings_language" />
-
-                <Button android:id="@+id/language_button" style="@style/SettingValue" />
             </LinearLayout>
 
             <LinearLayout style="@style/SettingRow">

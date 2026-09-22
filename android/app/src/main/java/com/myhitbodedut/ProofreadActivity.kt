@@ -87,8 +87,18 @@ class ProofreadActivity : AppCompatActivity() {
             // Exactement l'hébreu que l'application afficherait, pas l'autre
             // variante : c'est celui-là qu'il s'agit de relire.
             holder.he.text = ChizukRules.hebrew(chizuk, item)
-            holder.fr.text = getString(R.string.proofread_line_fr, item.fr)
-            holder.en.text = getString(R.string.proofread_line_en, item.en)
+            // L'écran montrait le français ET l'anglais côte à côte, quelle
+            // que soit la langue de l'interface. On ne montre plus que celle
+            // en cours, et rien du tout en hébreu — l'hébreu est au-dessus.
+            val langue = ChizukCard.language(this@ProofreadActivity)
+            val traduction = RegleLangue.choisit(langue, mapOf("fr" to item.fr, "en" to item.en))
+            holder.fr.text = when (langue) {
+                "fr" -> getString(R.string.proofread_line_fr, item.fr)
+                "en" -> getString(R.string.proofread_line_en, item.en)
+                else -> ""
+            }
+            holder.fr.visibility = if (traduction.isNullOrBlank()) View.GONE else View.VISIBLE
+            holder.en.visibility = View.GONE
 
             val edition = chizuk.editions[item.edition]
             holder.meta.text = getString(

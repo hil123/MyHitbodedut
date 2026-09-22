@@ -64,7 +64,10 @@ class LibraryEntryActivity : AppCompatActivity() {
             container.addView(hebrewParagraph(paragraphe, first = index == 0))
         }
 
-        source.note?.let { addFact(R.string.library_note, it) }
+        // Rien dans une langue que le mode n'autorise pas : en hébreu,
+        // rien que de l'hébreu ; en anglais, pas de français.
+        RegleLangue.choisit(ChizukCard.language(this), source.notes)
+            ?.let { addFact(R.string.library_note, it) }
         library.editions[source.edition]?.let {
             addFact(R.string.library_edition, "${it.titre} — ${it.licence}")
         }

@@ -43,7 +43,9 @@
         "titre": "Likutei Tefilot — Maleh Vigadish 2021 (via export Sefaria)",
         "licence": "unknown",
         "nikkoud_ok": false,
-        "note": "Texte de Rabbi Nathan de Breslov (m. 1844) : domaine public. La vocalisation est un travail editorial de l'edition 2021, dont Sefaria ne declare pas la licence — on ne la reprend donc pas."
+        "note_fr": "Texte de Rabbi Nathan de Breslov (m. 1844) : domaine public. La vocalisation est un travail editorial de l'edition 2021, dont Sefaria ne declare pas la licence — on ne la reprend donc pas.",
+        "note_en": "Text by Rebbe Noson of Breslov (d. 1844): public domain. The vocalisation is editorial work of the 2021 edition, whose licence Sefaria does not declare — so it is not carried over.",
+        "note_he": "הטקסט של רבי נתן מברסלב (נפטר 1844): נחלת הכלל. הניקוד הוא עבודה עריכתית של מהדורת 2021, שספריא אינה מצהירה על רישיונה — ולכן אינו מועתק."
       }
     }
   },
@@ -95,7 +97,9 @@
                 "lm2-25-pour-tous",
                 "lm2-25-torah-priere"
               ],
-              "note": "Paragraphes 1 à 9 = section 1 ; paragraphes 10 à 12 = section 2. « בְּדֶרֶךּ » (dagesh final) reproduit tel quel depuis l'édition numérique.",
+              "note_fr": "Paragraphes 1 à 9 = section 1 ; paragraphes 10 à 12 = section 2. « בְּדֶרֶךּ » (dagesh final) reproduit tel quel depuis l'édition numérique.",
+              "note_en": "Paragraphs 1 to 9 are section 1; paragraphs 10 to 12 are section 2. « בְּדֶרֶךּ » (final dagesh) reproduced as it stands in the digital edition.",
+              "note_he": "פסקאות 1 עד 9 הן חלק 1; פסקאות 10 עד 12 הן חלק 2. « בְּדֶרֶךּ » (דגש בסוף) הועתק כמות שהוא מן המהדורה הדיגיטלית.",
               "statut_verif": "verifie_texte",
               "recoupement": [
                 "azamra.org (trad. Greenbaum)",
@@ -119,7 +123,9 @@
               "liens_chizuk": [
                 "lm1-52-nuit"
               ],
-              "note": "Extrait : segments 3:2 à 3:4. La suite de la section développe le bitoul.",
+              "note_fr": "Extrait : segments 3:2 à 3:4. La suite de la section développe le bitoul.",
+              "note_en": "Extract: segments 3:2 to 3:4. The rest of the section develops bitul.",
+              "note_he": "קטע: מקטעים ג׳:ב עד ג׳:ד. המשך החלק עוסק בביטול.",
               "statut_verif": "verifie_texte",
               "recoupement": [
                 "azamra.org (trad. Greenbaum)",
@@ -141,7 +147,9 @@
               "liens_chizuk": [
                 "lm2-96-une-heure"
               ],
-              "note": "Marqueur de paragraphe « (ב) » de l'édition retiré.",
+              "note_fr": "Marqueur de paragraphe « (ב) » de l'édition retiré.",
+              "note_en": "The edition's paragraph marker « (ב) » has been removed.",
+              "note_he": "סימן הפסקה « (ב) » שבמהדורה הוסר.",
               "statut_verif": "verifie_texte",
               "recoupement": [
                 "article ברסלב סיטי (même texte, même référence)"
@@ -161,7 +169,9 @@
               "liens_chizuk": [
                 "cm-440-ribono"
               ],
-              "note": "Marqueur de paragraphe « (ד) » de l'édition retiré.",
+              "note_fr": "Marqueur de paragraphe « (ד) » de l'édition retiré.",
+              "note_en": "The edition's paragraph marker « (ד) » has been removed.",
+              "note_he": "סימן הפסקה « (ד) » שבמהדורה הוסר.",
               "statut_verif": "verifie_texte",
               "recoupement": [
                 "azamra.org (trad. Greenbaum)",
@@ -190,7 +200,7 @@
                 "shr-10-langue",
                 "shr-10-grenier"
               ],
-              "note": null,
+              "note_fr": null,
               "statut_verif": "verifie_texte",
               "recoupement": [
                 "article ברסלב סיטי (même texte ; « ואמלאות » y est fautif)"
@@ -221,7 +231,7 @@
               "liens_chizuk": [
                 "shr-11-ecrire"
               ],
-              "note": null,
+              "note_fr": null,
               "statut_verif": "verifie_texte",
               "recoupement": [
                 "article ברסלב סיטי (même texte)"
@@ -248,7 +258,7 @@
               "liens_chizuk": [
                 "shr-12-rejet"
               ],
-              "note": null,
+              "note_fr": null,
               "statut_verif": "verifie_texte",
               "recoupement": [
                 "article ברסלב סיטי (même texte, une proposition manquante)"
@@ -278,7 +288,9 @@
                 "tehilim-145-18",
                 "tehilim-34-19"
               ],
-              "note": "Noms divins substitués (ה', אלקים). Le passage d'Achèr BaNa'hal cité par l'article imprime « קמד, יח » : erreur, c'est 145:18.",
+              "note_fr": "Noms divins substitués (ה', אלקים). Le passage d'Achèr BaNa'hal cité par l'article imprime « קמד, יח » : erreur, c'est 145:18.",
+              "note_en": "Divine names substituted (ה', אלקים). The passage from Asher BaNachal quoted by the article prints « קמד, יח »: that is an error, it is 145:18.",
+              "note_he": "שמות הקודש הוחלפו (ה', אלקים). הקטע מ״אשר בנחל״ המצוטט במאמר מדפיס « קמד, יח »: טעות, זהו קמ״ה:י״ח.",
               "statut_verif": "verifie_texte",
               "recoupement": [
                 "tanach.us et MAM (deux éditions indépendantes)",
@@ -778,7 +790,9 @@
                 "ואזכה בכל פעם לעלות מדרגא לדרגא, להתקרב אליך בכל עת בהתקרבות גדול יותר."
               ],
               "statut_verif": "verifie_texte",
-              "note": "Extrait : paragraphes 2 à 5 de la prière. La leçon annoncée en tête (Likoutei Moharan II, 25) a été ouverte et vérifiée.",
+              "note_fr": "Extrait : paragraphes 2 à 5 de la prière. La leçon annoncée en tête (Likoutei Moharan II, 25) a été ouverte et vérifiée.",
+              "note_en": "Extract: paragraphs 2–5 of the prayer. The lesson named at its head (Likutei Moharan II, 25) was opened and checked.",
+              "note_he": "קטע: פסקאות 2–5 מן התפילה. השיעור הנזכר בראשה (ליקוטי מוהר\"ן תניינא, 25) נפתח ונבדק.",
               "lecon_sur_le_sujet": "oui",
               "lecon_mesure": "5 occurrences du sujet dans 2204 caractères de leçon"
             },
@@ -815,7 +829,9 @@
                 "הלא אתה תשוב תחיינו ועמך ישמחו בך. שבענו בבקר חסדך ונרננה ונשמחה בכל ימינו. שמחנו כימות עניתנו שנות ראינו רעה."
               ],
               "statut_verif": "verifie_texte",
-              "note": "Extrait : paragraphes 1 à 8 de la prière. La leçon annoncée en tête (Likoutei Moharan II, 23) a été ouverte et vérifiée.",
+              "note_fr": "Extrait : paragraphes 1 à 8 de la prière. La leçon annoncée en tête (Likoutei Moharan II, 23) a été ouverte et vérifiée.",
+              "note_en": "Extract: paragraphs 1–8 of the prayer. The lesson named at its head (Likutei Moharan II, 23) was opened and checked.",
+              "note_he": "קטע: פסקאות 1–8 מן התפילה. השיעור הנזכר בראשה (ליקוטי מוהר\"ן תניינא, 23) נפתח ונבדק.",
               "lecon_sur_le_sujet": "oui",
               "lecon_mesure": "43 occurrences du sujet dans 1096 caractères de leçon"
             },
@@ -846,7 +862,9 @@
                 "ותהיה מחשבתנו קדושה וטהורה תמיד, ובפרט בראש השנה הקדוש. אנא רחום, ברחמיך הרבים תרחם עלינו, ותזכנו ותחננו אז לקדשת המחשבה ביותר, ותשמרנו ותצילנו שלא יעלה אז על מחשבתנו שום מחשבה זרה וחיצונה כלל, רק בשמך נגיל כל היום באימה וביראה בקדשה ובטהרה גדולה, במחשבות קדושות וזכות וצחות בתכלית הזכות והבהירות, עד שנזכה בכח התקשרות הצדיקים האמתיים לתקן ולברר כל הברורים בראש השנה, לברר כל ניצוצות הקדשה מעמקי הקלפות, ולהמתיק ולבטל כל הדינים שבעולם מעלינו ומעל כל עמך בית־ישראל,"
               ],
               "statut_verif": "verifie_texte",
-              "note": "Extrait : paragraphes 1 à 5 de la prière. La leçon annoncée en tête (Likoutei Moharan I, 211) a été ouverte et vérifiée.",
+              "note_fr": "Extrait : paragraphes 1 à 5 de la prière. La leçon annoncée en tête (Likoutei Moharan I, 211) a été ouverte et vérifiée.",
+              "note_en": "Extract: paragraphs 1–5 of the prayer. The lesson named at its head (Likutei Moharan I, 211) was opened and checked.",
+              "note_he": "קטע: פסקאות 1–5 מן התפילה. השיעור הנזכר בראשה (ליקוטי מוהר\"ן 211) נפתח ונבדק.",
               "lecon_sur_le_sujet": "oui",
               "lecon_mesure": "7 occurrences du sujet dans 464 caractères de leçon"
             },
@@ -871,7 +889,9 @@
                 "ונזכה לשבר כל תאוות הבהמיות, הן תאות המשגל, הן תאות אכילה, הן כל התאוות, כלם נזכה לשברם ולבטלם לגמרי מעלינו ומעל גבולנו. ותמשיך עלינו קדשה וטהרה ממקור כל הקדשות, ונזכה להתקדש בקדשתך העליונה תמיד, ונשוב אליך באמת, ונזכה לסור מרע לגמרי ולעשות רצונך הטוב תמיד: אבינו מלכנו, רחם עלינו למען שמך, וקדשנו בקדשתך העליונה וטהר לבנו לעבדך באמת,"
               ],
               "statut_verif": "verifie_texte",
-              "note": "Extrait : paragraphes 12 à 13 de la prière. La leçon annoncée en tête (Likoutei Moharan I, 39) a été ouverte et vérifiée.",
+              "note_fr": "Extrait : paragraphes 12 à 13 de la prière. La leçon annoncée en tête (Likoutei Moharan I, 39) a été ouverte et vérifiée.",
+              "note_en": "Extract: paragraphs 12–13 of the prayer. The lesson named at its head (Likutei Moharan I, 39) was opened and checked.",
+              "note_he": "קטע: פסקאות 12–13 מן התפילה. השיעור הנזכר בראשה (ליקוטי מוהר\"ן 39) נפתח ונבדק.",
               "lecon_sur_le_sujet": "partiel",
               "lecon_mesure": "2 occurrences du sujet dans 1442 caractères de leçon"
             },
@@ -898,7 +918,9 @@
                 "רחם עליהם למענך ופקדם לטובה ומלא משאלותם ברחמים, ותעתר להם ותשמע תפלתם ותתן להם הריון חיש קל מהרה, ויזכו להוליד זרע של קימא וישמחו אביהם ואמם בהם, ויזכו לגדלם לתורה ולחפה ולמעשים טובים לארך ימים ושנים טובים:"
               ],
               "statut_verif": "verifie_texte",
-              "note": "Extrait : paragraphes 13 à 15 de la prière. La leçon annoncée en tête (Likoutei Moharan I, 53) a été ouverte et vérifiée.",
+              "note_fr": "Extrait : paragraphes 13 à 15 de la prière. La leçon annoncée en tête (Likoutei Moharan I, 53) a été ouverte et vérifiée.",
+              "note_en": "Extract: paragraphs 13–15 of the prayer. The lesson named at its head (Likutei Moharan I, 53) was opened and checked.",
+              "note_he": "קטע: פסקאות 13–15 מן התפילה. השיעור הנזכר בראשה (ליקוטי מוהר\"ן 53) נפתח ונבדק.",
               "lecon_sur_le_sujet": "oui",
               "lecon_mesure": "13 occurrences du sujet dans 3178 caractères de leçon"
             },
@@ -933,7 +955,9 @@
                 "רבונו של עולם, אנת הוא לעלא מן כל העלות והסבות, ואתה יכול לסבב סבות לטובה ברחמיך הרבים, באפן שיגיע לנו הפרנסה בנקל בלי שום בלבולים ובלי שום טרדות ויגיעות, ובלי שום סבות על פי דרך הטבע,"
               ],
               "statut_verif": "verifie_texte",
-              "note": "Extrait : paragraphes 1 à 7 de la prière. La leçon annoncée en tête (Likoutei Moharan II, 16) a été ouverte et vérifiée.",
+              "note_fr": "Extrait : paragraphes 1 à 7 de la prière. La leçon annoncée en tête (Likoutei Moharan II, 16) a été ouverte et vérifiée.",
+              "note_en": "Extract: paragraphs 1–7 of the prayer. The lesson named at its head (Likutei Moharan II, 16) was opened and checked.",
+              "note_he": "קטע: פסקאות 1–7 מן התפילה. השיעור הנזכר בראשה (ליקוטי מוהר\"ן תניינא, 16) נפתח ונבדק.",
               "lecon_sur_le_sujet": "oui",
               "lecon_mesure": "10 occurrences du sujet dans 3328 caractères de leçon"
             },
@@ -966,7 +990,9 @@
                 "על־כן באתי לשטוח כפי לרחמיך וישועתך, שתעזרני ותושיעני שאזכה מעתה לתקון הברית באמת בשלמות כרצונך הטוב."
               ],
               "statut_verif": "verifie_texte",
-              "note": "Extrait : paragraphes 1 à 6 de la prière. La leçon annoncée en tête (Likoutei Moharan II, 83) a été ouverte et vérifiée.",
+              "note_fr": "Extrait : paragraphes 1 à 6 de la prière. La leçon annoncée en tête (Likoutei Moharan II, 83) a été ouverte et vérifiée.",
+              "note_en": "Extract: paragraphs 1–6 of the prayer. The lesson named at its head (Likutei Moharan II, 83) was opened and checked.",
+              "note_he": "קטע: פסקאות 1–6 מן התפילה. השיעור הנזכר בראשה (ליקוטי מוהר\"ן תניינא, 83) נפתח ונבדק.",
               "lecon_sur_le_sujet": "non",
               "lecon_mesure": "1 occurrence du sujet dans 4787 caractères de leçon"
             },
@@ -997,7 +1023,9 @@
                 "ותמהר ותחיש לגאלינו גאלה שלמה ותביא לנו את משיח צדקנו במהרה בימינו, אמן סלה:"
               ],
               "statut_verif": "verifie_texte",
-              "note": "Extrait : paragraphes 39 à 43 de la prière. La leçon annoncée en tête (Likoutei Moharan I, 250) a été ouverte et vérifiée.",
+              "note_fr": "Extrait : paragraphes 39 à 43 de la prière. La leçon annoncée en tête (Likoutei Moharan I, 250) a été ouverte et vérifiée.",
+              "note_en": "Extract: paragraphs 39–43 of the prayer. The lesson named at its head (Likutei Moharan I, 250) was opened and checked.",
+              "note_he": "קטע: פסקאות 39–43 מן התפילה. השיעור הנזכר בראשה (ליקוטי מוהר\"ן 250) נפתח ונבדק.",
               "lecon_sur_le_sujet": "non",
               "lecon_mesure": "0 occurrence du sujet dans 4185 caractères de leçon"
             },
@@ -1034,7 +1062,9 @@
                 "על־כן עינינו תלויות אליך לבד מלא רחמים יושב ומזוג זווגים, שתחמל על כל עמך ישראל הצריכים למצוא זווגם (ובפרט וכו'), ותשלח לכל אחד מהרה זווגו ההגון לו מן השמים באמת,"
               ],
               "statut_verif": "verifie_texte",
-              "note": "Extrait : paragraphes 1 à 8 de la prière. La leçon annoncée en tête (Likoutei Moharan II, 89) a été ouverte et vérifiée.",
+              "note_fr": "Extrait : paragraphes 1 à 8 de la prière. La leçon annoncée en tête (Likoutei Moharan II, 89) a été ouverte et vérifiée.",
+              "note_en": "Extract: paragraphs 1–8 of the prayer. The lesson named at its head (Likutei Moharan II, 89) was opened and checked.",
+              "note_he": "קטע: פסקאות 1–8 מן התפילה. השיעור הנזכר בראשה (ליקוטי מוהר\"ן תניינא, 89) נפתח ונבדק.",
               "lecon_sur_le_sujet": "oui",
               "lecon_mesure": "4 occurrences du sujet dans 1432 caractères de leçon"
             },
@@ -1067,7 +1097,9 @@
                 "אל נא רפא נא להם למען שמך (ובפרט לחולה פלוני בן פלונית), כי אל מלך רופא נאמן ורחמן אתה. אל חי וקים, מחיה חיים, תן לנו חיים ונחיה ולא נמות, גאלנו ממות פדנו משחת."
               ],
               "statut_verif": "verifie_texte",
-              "note": "Extrait : paragraphes 2 à 7 de la prière. La leçon annoncée en tête (Likoutei Moharan I, 213) a été ouverte et vérifiée.",
+              "note_fr": "Extrait : paragraphes 2 à 7 de la prière. La leçon annoncée en tête (Likoutei Moharan I, 213) a été ouverte et vérifiée.",
+              "note_en": "Extract: paragraphs 2–7 of the prayer. The lesson named at its head (Likutei Moharan I, 213) was opened and checked.",
+              "note_he": "קטע: פסקאות 2–7 מן התפילה. השיעור הנזכר בראשה (ליקוטי מוהר\"ן 213) נפתח ונבדק.",
               "lecon_sur_le_sujet": "non",
               "lecon_mesure": "0 occurrence du sujet dans 1134 caractères de leçon"
             },
@@ -1100,7 +1132,9 @@
                 "ועל־ידי־זה אזכה לפתח את לבי להרבות בתפלה ותחנונים ובשיחה קדושה לפניך מלא רחמים רבים, ולפניך אשפך כל שיחי,"
               ],
               "statut_verif": "verifie_texte",
-              "note": "Extrait : paragraphes 1 à 6 de la prière. La leçon annoncée en tête (Likoutei Moharan II, 11, 1405 caractères) a été ouverte et vérifiée.",
+              "note_fr": "Extrait : paragraphes 1 à 6 de la prière. La leçon annoncée en tête (Likoutei Moharan II, 11, 1405 caractères) a été ouverte et vérifiée.",
+              "note_en": "Extract: paragraphs 1–6 of the prayer. The lesson named at its head (Likutei Moharan II, 11, 1405 characters) was opened and checked.",
+              "note_he": "קטע: פסקאות 1–6 מן התפילה. השיעור הנזכר בראשה (ליקוטי מוהר\"ן תניינא, 11, 1405 תווים) נפתח ונבדק.",
               "lecon_sur_le_sujet": "oui",
               "lecon_mesure": "4 occurrences du sujet dans 834 caractères de leçon"
             },
@@ -1131,7 +1165,9 @@
                 "מרא דעלמא כלא, אדון הנפלאות, אבי אב הרחמן, אשר עז וחדוה במקומך. היה בעזרי והושיעני, שאזכה לאסף ולקבץ כל חלקי השמחה מכל המצות והנקדות טובות שזכיתי ברחמיך מעודי עד היום הזה,"
               ],
               "statut_verif": "verifie_texte",
-              "note": "Extrait : paragraphes 10 à 14 de la prière. La leçon annoncée en tête (Likoutei Moharan I, 178, 3411 caractères) a été ouverte et vérifiée.",
+              "note_fr": "Extrait : paragraphes 10 à 14 de la prière. La leçon annoncée en tête (Likoutei Moharan I, 178, 3411 caractères) a été ouverte et vérifiée.",
+              "note_en": "Extract: paragraphs 10–14 of the prayer. The lesson named at its head (Likutei Moharan I, 178, 3411 characters) was opened and checked.",
+              "note_he": "קטע: פסקאות 10–14 מן התפילה. השיעור הנזכר בראשה (ליקוטי מוהר\"ן 178, 3411 תווים) נפתח ונבדק.",
               "lecon_sur_le_sujet": "oui",
               "lecon_mesure": "39 occurrences du sujet dans 2111 caractères de leçon"
             },
@@ -1164,7 +1200,9 @@
                 "רק נזכה תמיד בכל שנה ושנה, לילך ולבא ולהתאסף אל הקבוץ הקדוש והנורא של עמך ישראל הכשרים, המתאספים ומתקבצים אצל הצדיקים האמתיים בכל ראש־השנה,"
               ],
               "statut_verif": "verifie_texte",
-              "note": "Extrait : paragraphes 42 à 47 de la prière. La leçon annoncée en tête (Likoutei Moharan II, 40, 7152 caractères) a été ouverte et vérifiée.",
+              "note_fr": "Extrait : paragraphes 42 à 47 de la prière. La leçon annoncée en tête (Likoutei Moharan II, 40, 7152 caractères) a été ouverte et vérifiée.",
+              "note_en": "Extract: paragraphs 42–47 of the prayer. The lesson named at its head (Likutei Moharan II, 40, 7152 characters) was opened and checked.",
+              "note_he": "קטע: פסקאות 42–47 מן התפילה. השיעור הנזכר בראשה (ליקוטי מוהר\"ן תניינא, 40, 7152 תווים) נפתח ונבדק.",
               "lecon_sur_le_sujet": "oui",
               "lecon_mesure": "13 occurrences du sujet dans 4349 caractères de leçon"
             },
@@ -1189,7 +1227,9 @@
                 "חוס וחמל עלינו, ופדנו והצילנו ומלטנו מכל מיני טומאות ומכל הדברים המשקצין את הנפש, וקדשנו בכל מיני קדשות. ועזרנו וזכנו לאכילה דקדשה בשלמות באמת כראוי לאיש ישראלי, ונזכה להשלים פגמי המזבח דקדשה, על־ידי אכילתנו בקדשה ובטהרה, עד שיהיה השלחן שלנו מכפר כמזבח. ותזכנו ברחמיך הרבים לאמונה שלמה באמת, ותתן לנו כח ושכל דקדשה להכניע ולבטל כל מיני אמונות כזביות, ולהשיב ולהחזיר את כל התועים באמונות כזביות שישובו כלם לאמונתך הקדושה:"
               ],
               "statut_verif": "verifie_texte",
-              "note": "Extrait : paragraphes 22 à 23 de la prière. La leçon annoncée en tête (Likoutei Moharan I, 17, 37318 caractères) a été ouverte et vérifiée.",
+              "note_fr": "Extrait : paragraphes 22 à 23 de la prière. La leçon annoncée en tête (Likoutei Moharan I, 17, 37318 caractères) a été ouverte et vérifiée.",
+              "note_en": "Extract: paragraphs 22–23 of the prayer. The lesson named at its head (Likutei Moharan I, 17, 37318 characters) was opened and checked.",
+              "note_he": "קטע: פסקאות 22–23 מן התפילה. השיעור הנזכר בראשה (ליקוטי מוהר\"ן 17, 37318 תווים) נפתח ונבדק.",
               "lecon_sur_le_sujet": "partiel",
               "lecon_mesure": "12 occurrences du sujet dans 22649 caractères de leçon"
             },
@@ -1212,7 +1252,9 @@
                 "ונזכה שיהיו דבורינו בקדשה גדולה, עד שיהיה לנו כח לפקד עקרות בדבורינו, ויהיו כלי הדבור סמוכים לכלי ההולדה. ונזכה לפעל על־ידי דבורינו בקדשה הולדות קדושות, ויתרבו עמך ישראל כחול אשר על שפת הים, וככוכבי השמים לרב, ולא יהיה בנו עקר ועקרה, ותפקד לכל חשוכי בנים בזרע של קימא לעבודתך וליראתך. ועל־ידי־זה נזכה שיתגלה יראה שלמה, יראה גדולה בעולם,"
               ],
               "statut_verif": "verifie_texte",
-              "note": "Extrait : paragraphe 84 à 84 de la prière. La leçon annoncée en tête (Likoutei Moharan I, 60, 44424 caractères) a été ouverte et vérifiée.",
+              "note_fr": "Extrait : paragraphe 84 à 84 de la prière. La leçon annoncée en tête (Likoutei Moharan I, 60, 44424 caractères) a été ouverte et vérifiée.",
+              "note_en": "Extract: paragraph 84 of the prayer. The lesson named at its head (Likutei Moharan I, 60, 44424 characters) was opened and checked.",
+              "note_he": "קטע: פסקה 84 מן התפילה. השיעור הנזכר בראשה (ליקוטי מוהר\"ן 60, 44424 תווים) נפתח ונבדק.",
               "lecon_sur_le_sujet": "oui",
               "lecon_mesure": "57 occurrences du sujet dans 27561 caractères de leçon"
             },
@@ -1239,7 +1281,9 @@
                 "ותזכני שאמשיך מזונותי ופרנסתי וכל השפעות טובות מארץ ישראל, שהיא ארץ הקדושה ארץ החיים, ששם שרש כל ההשפעות וכל הברכות:"
               ],
               "statut_verif": "verifie_texte",
-              "note": "Extrait : paragraphes 1 à 3 de la prière. La leçon annoncée en tête (Likoutei Moharan I, 47, 16665 caractères) a été ouverte et vérifiée.",
+              "note_fr": "Extrait : paragraphes 1 à 3 de la prière. La leçon annoncée en tête (Likoutei Moharan I, 47, 16665 caractères) a été ouverte et vérifiée.",
+              "note_en": "Extract: paragraphs 1–3 of the prayer. The lesson named at its head (Likutei Moharan I, 47, 16665 characters) was opened and checked.",
+              "note_he": "קטע: פסקאות 1–3 מן התפילה. השיעור הנזכר בראשה (ליקוטי מוהר\"ן 47, 16665 תווים) נפתח ונבדק.",
               "lecon_sur_le_sujet": "oui",
               "lecon_mesure": "29 occurrences du sujet dans 10374 caractères de leçon"
             },
@@ -1266,7 +1310,9 @@
                 "רבונו של עולם, אתה יודע כמה וכמה הרחקתי השפע מהקדשה על־ידי פגם הברית והמשכתי למקום שהמשכתי רחמנא לצלן, למקומות אשר לא נתן להזכר, ופגמתי כמו שפגמתי אשר אי אפשר לשער, אשר התקון לזה הוא צדקה לעניים הגונים דוקא, שעל־ידי־זה חוזרים וממשיכים השפע אל הקדשה,"
               ],
               "statut_verif": "verifie_texte",
-              "note": "Extrait : paragraphes 1 à 3 de la prière. La leçon annoncée en tête (Likoutei Moharan I, 264, 828 caractères) a été ouverte et vérifiée.",
+              "note_fr": "Extrait : paragraphes 1 à 3 de la prière. La leçon annoncée en tête (Likoutei Moharan I, 264, 828 caractères) a été ouverte et vérifiée.",
+              "note_en": "Extract: paragraphs 1–3 of the prayer. The lesson named at its head (Likutei Moharan I, 264, 828 characters) was opened and checked.",
+              "note_he": "קטע: פסקאות 1–3 מן התפילה. השיעור הנזכר בראשה (ליקוטי מוהר\"ן 264, 828 תווים) נפתח ונבדק.",
               "lecon_sur_le_sujet": "oui",
               "lecon_mesure": "3 occurrences du sujet dans 506 caractères de leçon"
             },
@@ -1291,7 +1337,9 @@
                 "מלא רחמים בעל הישועות, בעל הנחמות, נחמנו נא מכל צרותינו ועזרנו בכל ענינינו וחפצינו, ופרוס עלינו סכת שלומך ותקננו בעצה טובה מלפניך והושיענו מהרה למען שמך,"
               ],
               "statut_verif": "verifie_texte",
-              "note": "Extrait : paragraphes 21 à 22 de la prière. La leçon annoncée en tête (Likoutei Moharan I, 247, 532 caractères) a été ouverte et vérifiée.",
+              "note_fr": "Extrait : paragraphes 21 à 22 de la prière. La leçon annoncée en tête (Likoutei Moharan I, 247, 532 caractères) a été ouverte et vérifiée.",
+              "note_en": "Extract: paragraphs 21–22 of the prayer. The lesson named at its head (Likutei Moharan I, 247, 532 characters) was opened and checked.",
+              "note_he": "קטע: פסקאות 21–22 מן התפילה. השיעור הנזכר בראשה (ליקוטי מוהר\"ן 247, 532 תווים) נפתח ונבדק.",
               "lecon_sur_le_sujet": "non",
               "lecon_mesure": "1 occurrence du sujet dans 319 caractères de leçon"
             },
@@ -1316,7 +1364,9 @@
                 "ותנחנו בדרך האמת תמיד, ונזכה לעשות שדוכים טובים והגונים באמת כרצונך הטוב, כמו שכתוב, ומיהוה אשה משכלת:"
               ],
               "statut_verif": "verifie_texte",
-              "note": "Extrait : paragraphes 54 à 55 de la prière. La leçon annoncée en tête (Likoutei Moharan II, 2, 23976 caractères) a été ouverte et vérifiée.",
+              "note_fr": "Extrait : paragraphes 54 à 55 de la prière. La leçon annoncée en tête (Likoutei Moharan II, 2, 23976 caractères) a été ouverte et vérifiée.",
+              "note_en": "Extract: paragraphs 54–55 of the prayer. The lesson named at its head (Likutei Moharan II, 2, 23976 characters) was opened and checked.",
+              "note_he": "קטע: פסקאות 54–55 מן התפילה. השיעור הנזכר בראשה (ליקוטי מוהר\"ן תניינא, 2, 23976 תווים) נפתח ונבדק.",
               "lecon_sur_le_sujet": "non",
               "lecon_mesure": "1 occurrence du sujet dans 14998 caractères de leçon"
             },
@@ -1349,7 +1399,9 @@
               "statut_verif": "verifie_texte",
               "lecon_sur_le_sujet": "oui",
               "lecon_mesure": "8 occurrences du sujet dans 2133 caractères de leçon",
-              "note": "Extrait : paragraphes 41 à 45 de la prière — le secret d'Eloul rattaché à Avraham envoyant Éliézer chercher l'épouse d'Its'hak. Ajoutée à la demande du propriétaire, après qu'a été signalé que le paragraphe 44 demande « תְּהַפֵּךְ רְצוֹנָהּ אֵלָיו » — que la volonté de l'épouse se tourne vers lui. Le texte est reproduit tel qu'il est imprimé : on ne réécrit pas une prière pour l'adoucir, on dit ce qu'elle contient."
+              "note_fr": "Extrait : paragraphes 41 à 45 de la prière — le secret d'Eloul rattaché à Avraham envoyant Éliézer chercher l'épouse d'Its'hak. Ajoutée à la demande du propriétaire, après qu'a été signalé que le paragraphe 44 demande « תְּהַפֵּךְ רְצוֹנָהּ אֵלָיו » — que la volonté de l'épouse se tourne vers lui. Le texte est reproduit tel qu'il est imprimé : on ne réécrit pas une prière pour l'adoucir, on dit ce qu'elle contient.",
+              "note_en": "Extract: paragraphs 41 to 45 of the prayer — the secret of Elul, tied to Avraham sending Eliezer to find Yitzchak's wife. Added at the owner's request, after it was pointed out that paragraph 44 asks « תְּהַפֵּךְ רְצוֹנָהּ אֵלָיו » — that the wife's will be turned towards him. The text is reproduced as printed: one does not rewrite a prayer to soften it, one says what it contains.",
+              "note_he": "קטע: פסקאות 41 עד 45 מן התפילה — סוד אלול, הקשור לאברהם ששולח את אליעזר למצוא אישה ליצחק. נוספה לבקשת הבעלים, לאחר שהוער כי פסקה 44 מבקשת « תְּהַפֵּךְ רְצוֹנָהּ אֵלָיו » — שרצון האישה יופנה אליו. הטקסט מובא כפי שהוא מודפס: אין מתקנים תפילה כדי לרככה, אומרים את מה שיש בה."
             },
             {
               "id": "src-lt-refua-2",
@@ -1370,7 +1422,9 @@
                 "ותשלח רפואה שלמה לחולי עמך (ובפרט לפלוני בן פלונית וכו'), אל נא רפא נא לו, והעלה ארוכה ומרפא לכל תחלואיהם ולכל מכאוביהם, ותשיבם לאיתניהם בקרוב, ותשלח להם מהרה רפואה שלמה מן השמים, רפואת הנפש ורפואת הגוף, כי אל מלך רופא נאמן ורחמן אתה."
               ],
               "statut_verif": "verifie_texte",
-              "note": "Extrait : paragraphe 27 à 27 de la prière. La leçon annoncée en tête (Likoutei Moharan I, 41, 4933 caractères) a été ouverte et vérifiée.",
+              "note_fr": "Extrait : paragraphe 27 à 27 de la prière. La leçon annoncée en tête (Likoutei Moharan I, 41, 4933 caractères) a été ouverte et vérifiée.",
+              "note_en": "Extract: paragraph 27 of the prayer. The lesson named at its head (Likutei Moharan I, 41, 4933 characters) was opened and checked.",
+              "note_he": "קטע: פסקה 27 מן התפילה. השיעור הנזכר בראשה (ליקוטי מוהר\"ן 41, 4933 תווים) נפתח ונבדק.",
               "lecon_sur_le_sujet": "non",
               "lecon_mesure": "0 occurrence du sujet dans 3114 caractères de leçon"
             }

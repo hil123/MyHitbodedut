@@ -25,7 +25,7 @@ data class SourceEntry(
     val paragraphes: List<String>,
     val paragraphesSansNikkoud: List<String>,
     val liensChizuk: List<String>,
-    val note: String?,
+    val notes: Map<String, String>,
     val statutVerif: String,
     /** Le sujet demandé auquel cette entrée répond, quand elle en sert un. */
     val sujet: String?,
@@ -117,7 +117,7 @@ object LibraryLoader {
         paragraphes = Json.strings(o.optJSONArray("paragraphes")),
         paragraphesSansNikkoud = Json.strings(o.optJSONArray("paragraphes_sans_nikkoud")),
         liensChizuk = Json.strings(o.optJSONArray("liens_chizuk")),
-        note = Json.nullable(o, "note"),
+        notes = notesParLangue(o),
         statutVerif = o.optString("statut_verif", ""),
         sujet = Json.nullable(o, "sujet"),
         leconSurLeSujet = Json.nullable(o, "lecon_sur_le_sujet"),
@@ -137,6 +137,17 @@ object LibraryLoader {
         sourcesCitees = Json.strings(o.optJSONArray("sources_citees")),
         erreursRelevees = Json.strings(o.optJSONArray("erreurs_relevees")),
     )
+
+    /**
+     * Les notes sont nommées par langue, comme les résumés : note_fr,
+     * note_en, note_he. Elles ne l'étaient pas, et une note française
+     * s'affichait telle quelle sur un téléphone en anglais.
+     */
+    private fun notesParLangue(o: JSONObject): Map<String, String> =
+        o.keys().asSequence()
+            .filter { it.startsWith("note_") }
+            .mapNotNull { key -> Json.nullable(o, key)?.let { key.removePrefix("note_") to it } }
+            .toMap()
 
     /**
      * Les résumés sont nommés par langue (resume_fr). La v0.1 n'en fournit
