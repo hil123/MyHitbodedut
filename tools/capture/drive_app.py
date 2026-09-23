@@ -83,7 +83,7 @@ def find(pattern, root):
 
 
 def tap(pattern, scroll=True, required=True):
-    for attempt in range(8 if scroll else 1):
+    for attempt in range(5 if scroll else 1):
         _, root = dump()
         if root is not None:
             n = find(pattern, root)
@@ -121,8 +121,13 @@ def back():
     sh("input keyevent 4"); time.sleep(1.5)
 
 
+def top_activity():
+    return sh("dumpsys activity activities | grep -m1 -E 'topResumedActivity|mResumedActivity'")
+
+
 def home_screen():
-    sh(f"am start -n {PKG}/com.myhitbodedut.MainActivity >/dev/null")
+    # CLEAR_TOP: close whatever screen sits above the home screen.
+    sh(f"am start -W --activity-clear-top -n {PKG}/com.myhitbodedut.MainActivity >/dev/null")
     time.sleep(2.5)
     to_top()
 
@@ -135,72 +140,80 @@ def scroll_shots(name, n=4):
 
 
 def main():
-    mode = os.environ.get("MODE", "full")
-    sh(f"am start -n {PKG}/com.myhitbodedut.MainActivity >/dev/null")
+    sh(f"am start -W -n {PKG}/com.myhitbodedut.MainActivity >/dev/null")
     time.sleep(5)
 
-    if mode == "full":
-        # First launch: onboarding
-        for i in range(1, 4):
-            shot(f"onboarding-{i}")
-            if not tap(r"^(Next|Begin)$", scroll=False):
-                break
-        time.sleep(2)
-        to_top()
-        scroll_shots("home", 6)
+    # First launch: the three onboarding pages, until the home screen shows.
+    page = 0
+    for _ in range(8):
+        if "OnboardingActivity" not in top_activity():
+            break
+        page += 1
+        shot(f"onboarding-{page}")
+        tap(r"^(Next|Begin)$", scroll=False)
+    home_screen()
+    scroll_shots("home", 5)
 
-        # Settings: turn the guided hitbodedut on, look at the gate preview
-        home_screen()
-        tap(r"^Settings$")
-        scroll_shots("settings", 7)
-        to_top()
-        tap(r"^Guided hitbodedut$")
+    # Settings: guided hitbodedut on, then the gate preview
+    home_screen()
+    tap(r"^Settings$")
+    scroll_shots("settings", 6)
+    to_top()
+    if tap(r"^Guided hitbodedut$"):
         shot("settings-guided-on")
-        if tap(r"Preview the gate screen now"):
-            time.sleep(2)
-            shot("gate-preview")
-            tap(r"Close the preview", scroll=False, required=False)
-        back()
+    to_top()
+    if tap(r"Preview the gate screen now"):
+        time.sleep(2)
+        shot("gate-preview")
+        tap(r"Close the preview", scroll=False, required=False)
 
-        # Session
-        home_screen()
-        tap(r"^Start a .* session$")
-        shot("session-idle")
-        tap(r"^Subject", scroll=False, required=False) and (shot("session-subjects"), tap(r"^Gratitude$", scroll=False))
-        tap(r"^10 min", scroll=False) or tap(r"^Start, ", scroll=False)
-        time.sleep(3)
-        shot("session-running")
-        swipe_up(0.4); shot("session-running-scrolled")
-        for step in range(2, 6):
-            if tap(r"^Next$", scroll=False, required=False):
-                shot(f"session-guide-{step}")
-        tap(r"I cannot find the words")
+    # A real session, started from the home screen
+    home_screen()
+    tap(r"^Start a .* session$")
+    shot("session-idle")
+    if tap(r"^Subject", required=False):
+        shot("session-subjects")
+        tap(r"^Gratitude$", scroll=False)
+    tap(r"^10\s*min$")
+    time.sleep(3)
+    to_top()
+    shot("session-running")
+    swipe_up(0.4)
+    shot("session-running-scrolled")
+    to_top()
+    for step in range(2, 6):
+        if tap(r"^Next$", required=False):
+            shot(f"session-guide-{step}")
+    if tap(r"I cannot find the words"):
         shot("session-stuck")
-        to_top()
-        tap(r"^Finish now$")
+    # Let at least a minute elapse, so the finished session records time.
+    time.sleep(45)
+    to_top()
+    shot("session-running-later")
+    if tap(r"^Finish now$"):
         shot("session-finish-dialog")
         tap(r"^Finish now$", scroll=False)
         time.sleep(3)
         shot("session-after")
-        if tap(r"^Write a note$", required=False) or find(r"Session note", dump()[1] or ET.Element("x")) is not None:
-            shot("note-dialog")
-            sh("input text 'Thank%syou.'")
-            shot("note-dialog-typed")
-            tap(r"^Save$", scroll=False)
-        home_screen()
-        scroll_shots("home-done", 3)
-
-        # Journal
-        home_screen()
-        tap(r"^Open the journal$")
+    home_screen()
+    shot("home-done-a")
+    if tap(r"^Write a note$", required=False):
+        shot("note-dialog")
+        sh("input text 'Thank%syou%sfor%stoday.'")
+        time.sleep(1)
+        shot("note-dialog-typed")
+        tap(r"^Save$", scroll=False)
+    home_screen()
+    scroll_shots("home-done", 3)
+    home_screen()
+    if tap(r"^Open the journal$"):
         shot("journal")
-        back()
 
-    # Content sections (both modes)
+    # Content sections
     for label, name, deeper in [
-        (r"^Tikkun HaKlali$", "tikkun", r"16"),
-        (r"^Tfilot$", "tefilot", r"Hitbodedut"),
-        (r"^Library$", "library", None),
+        (r"^Tikkun HaKlali$", "tikkun", r"^16 "),
+        (r"^Tfilot$", "tefilot", r"Likutei Tefilot"),
+        (r"^Library$", "library", r"Hitbodedut: what and why"),
         (r"^Tips for Hitbodedut$", "tips", None),
         (r"^Reminders$", "reminders", None),
         (r"^Music$", "music", None),
@@ -208,32 +221,23 @@ def main():
         home_screen()
         if not tap(label):
             continue
-        scroll_shots(name, 3 if mode == "full" else 1)
-        if deeper and mode == "full":
+        scroll_shots(name, 3)
+        if deeper:
             to_top()
             if tap(deeper, required=False):
                 scroll_shots(f"{name}-detail", 2)
-                back()
-        if name == "library" and mode == "full":
-            to_top()
-            _, root = dump()
-            # open the first clickable list entry below the header
-            nodes = [n for n in root.iter("node") if n.get("clickable") == "true"] if root is not None else []
-            if nodes:
-                x, y = bounds_center(nodes[min(1, len(nodes)-1)].get("bounds"))
-                sh(f"input tap {x} {y}"); time.sleep(2)
-                scroll_shots("library-section", 2)
-                _, root = dump()
-                nodes = [n for n in root.iter("node") if n.get("clickable") == "true"] if root is not None else []
-                if nodes:
-                    x, y = bounds_center(nodes[min(1, len(nodes)-1)].get("bounds"))
-                    sh(f"input tap {x} {y}"); time.sleep(2)
-                    scroll_shots("library-entry", 2)
-        if name == "tikkun" and mode == "full":
+                if name == "library":
+                    to_top()
+                    _, root = dump()
+                    nodes = [n for n in root.iter("node") if n.get("clickable") == "true"] if root is not None else []
+                    if len(nodes) > 1:
+                        x, y = bounds_center(nodes[1].get("bounds"))
+                        sh(f"input tap {x} {y}"); time.sleep(2)
+                        scroll_shots("library-entry", 2)
+        if name == "tikkun":
             home_screen(); tap(label)
             if tap(r"Read it all in one flow", required=False):
                 scroll_shots("tikkun-flow", 2)
-        back()
 
     home_screen()
     shot("home-final")

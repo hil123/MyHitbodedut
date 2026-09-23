@@ -58,9 +58,10 @@ jobs:
           profile: pixel_6
           disable-animations: true
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot
-          script: bash tools/capture/run_capture.sh
+          script: timeout 2400 bash tools/capture/run_capture.sh || true
 
       - name: Send the captures back to the branch
+        if: always()
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
