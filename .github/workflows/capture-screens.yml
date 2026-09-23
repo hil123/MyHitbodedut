@@ -1,0 +1,69 @@
+name: Capture app screens
+
+# Installe l'APK publié (release la plus récente, non modifié) dans un
+# émulateur, le parcourt écran par écran et renvoie les captures sur la
+# branche, pour la vidéo de présentation.
+on:
+  workflow_dispatch:
+  push:
+    branches: [claude/myhitbodedut-promo-video-8ngo1e]
+    paths: [tools/capture/**, .github/workflows/capture-screens.yml]
+
+permissions:
+  contents: write
+
+jobs:
+  capture:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download the released APK
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p apk video-assets/capture
+          gh release download --pattern MyHitbodedut.apk --dir apk
+          gh release view --json tagName,publishedAt,targetCommitish > video-assets/capture/release.json
+          sha256sum apk/MyHitbodedut.apk > video-assets/capture/apk-sha256.txt
+          ls -l apk/MyHitbodedut.apk >> video-assets/capture/apk-sha256.txt
+
+      - name: Static APK inspection
+        run: |
+          BT=$(ls -d $ANDROID_HOME/build-tools/* | sort -V | tail -1)
+          I=video-assets/capture
+          $BT/aapt2 dump badging apk/MyHitbodedut.apk > $I/apk-badging.txt 2>&1 || true
+          $BT/aapt2 dump permissions apk/MyHitbodedut.apk > $I/apk-permissions.txt 2>&1 || true
+          $BT/apksigner verify --print-certs apk/MyHitbodedut.apk > $I/apk-signature.txt 2>&1 || true
+          $BT/aapt2 dump xmltree --file AndroidManifest.xml apk/MyHitbodedut.apk > $I/apk-manifest.txt 2>&1 || true
+          unzip -l apk/MyHitbodedut.apk > $I/apk-listing.txt
+          mkdir -p $I/apk-res && cd $I/apk-res
+          unzip -o -q ../../../apk/MyHitbodedut.apk 'res/*' || true
+          # Keep only images, drop the heavy audio
+          find . -type f ! \( -name '*.png' -o -name '*.webp' \) -delete
+
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
+      - name: Run the app in an emulator
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 34
+          target: google_apis
+          arch: x86_64
+          profile: pixel_6
+          disable-animations: true
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot
+          script: bash tools/capture/run_capture.sh
+
+      - name: Send the captures back to the branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add video-assets/capture
+          git commit -m "Capture real app screens from the released APK [skip ci]" || exit 0
+          git push origin HEAD:${{ github.ref_name }}
