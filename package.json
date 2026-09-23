@@ -1,0 +1,29 @@
+{
+  "name": "myhitbodedut-promo",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Promotional video for the MyHitbodedut Android app, built with Remotion",
+  "scripts": {
+    "studio": "remotion studio",
+    "render": "remotion render MyHitbodedutPromo out/myhitbodedut-promo.mp4",
+    "typecheck": "tsc --noEmit",
+    "render:vertical": "remotion render MyHitbodedutPromoVertical out/myhitbodedut-promo-vertical.mp4",
+    "render:square": "remotion render MyHitbodedutPromoSquare out/myhitbodedut-promo-square.mp4"
+  },
+  "dependencies": {
+    "@fontsource/cormorant-garamond": "5.3.0",
+    "@fontsource/frank-ruhl-libre": "5.3.0",
+    "@fontsource/inter": "5.3.0",
+    "@remotion/cli": "4.0.527",
+    "@remotion/media": "4.0.527",
+    "@remotion/transitions": "4.0.527",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "remotion": "4.0.527"
+  },
+  "devDependencies": {
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "typescript": "5.9.3"
+  }
+}

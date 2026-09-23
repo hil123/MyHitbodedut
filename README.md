@@ -267,3 +267,27 @@ python3 -m http.server 8080
 
 Suivi d'habitudes générique, stockage dans le `localStorage`, Tailwind et Lucide
 chargés depuis un CDN, donc connexion nécessaire au chargement.
+
+## La vidéo de présentation
+
+Une vidéo de 72 secondes, 1920×1080, construite avec Remotion à partir de
+captures réelles de l'APK publié (v1.84). Rendu : `out/myhitbodedut-promo.mp4`.
+
+```bash
+npm install
+npx remotion render MyHitbodedutPromo out/myhitbodedut-promo.mp4
+npm run render:vertical   # 1080×1920
+npm run render:square     # 1080×1080
+npx remotion studio       # aperçu interactif
+```
+
+| Fichier | Rôle |
+| --- | --- |
+| `video-assets/APP_AUDIT.md` | Ce qui a été vérifié dans l'APK en fonctionnement, et ce qui ne l'a pas été |
+| `video-assets/STORYBOARD.md` | Scènes, textes exacts, captures utilisées |
+| `video-assets/capture/` | Les 56 captures de l'émulateur, avec l'arbre d'interface et le journal |
+| `src/data/storyboard.ts` | Textes et minutage ; refuse une fonction absente de `src/data/appAudit.ts` |
+| `.github/workflows/capture-screens.yml` | Refait les captures depuis la dernière release |
+
+La musique est une nappe originale générée par `tools/video/ambient_pad.py` :
+les droits des morceaux de l'application ne sont pas documentés.
