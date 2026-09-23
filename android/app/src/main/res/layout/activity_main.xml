@@ -223,6 +223,27 @@
         <LinearLayout style="@style/Card">
 
         <LinearLayout
+            android:id="@+id/settings_button"
+            style="@style/SectionRow">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/SettingLabelStacked"
+                    android:text="@string/settings_title" />
+
+                <TextView
+                    android:id="@+id/settings_state"
+                    style="@style/SectionState" />
+            </LinearLayout>
+
+            <ImageView style="@style/SectionChevron" />
+        </LinearLayout>
+        <LinearLayout
             android:id="@+id/tikkun_button"
             style="@style/SectionRow">
 
@@ -337,27 +358,6 @@
                 <TextView
                     style="@style/SettingLabelStacked"
                     android:text="@string/tips_title" />
-            </LinearLayout>
-
-            <ImageView style="@style/SectionChevron" />
-        </LinearLayout>
-        <LinearLayout
-            android:id="@+id/settings_button"
-            style="@style/SectionRow">
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
-
-                <TextView
-                    style="@style/SettingLabelStacked"
-                    android:text="@string/settings_title" />
-
-                <TextView
-                    android:id="@+id/settings_state"
-                    style="@style/SectionState" />
             </LinearLayout>
 
             <ImageView style="@style/SectionChevron" />
