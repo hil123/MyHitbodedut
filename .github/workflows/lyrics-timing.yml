@@ -1,0 +1,38 @@
+name: Lyrics timing
+
+# Isole la voix de la musique de la vidéo et date chaque mot chanté, pour
+# que le montage ne coupe jamais une phrase et cale les images sur le texte.
+# Seuls les horaires et l'énergie de la voix reviennent sur la branche.
+on:
+  workflow_dispatch:
+  push:
+    branches: [claude/myhitbodedut-promo-video-8ngo1e]
+    paths: [tools/lyrics/**, .github/workflows/lyrics-timing.yml]
+
+permissions:
+  contents: write
+
+jobs:
+  timing:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install
+        run: |
+          pip install --quiet torch torchaudio --index-url https://download.pytorch.org/whl/cpu
+          pip install --quiet demucs faster-whisper soundfile numpy
+          sudo apt-get install -y -qq ffmpeg > /dev/null
+      - name: Separate and transcribe
+        run: python tools/lyrics/transcribe.py musique/shmuel_one_prayer.mp3 video-assets/lyrics
+      - name: Send the timings back to the branch
+        if: always()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add video-assets/lyrics
+          git commit -m "Time the sung words of the soundtrack [skip ci]" || exit 0
+          git push origin HEAD:${{ github.ref_name }}
