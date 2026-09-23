@@ -1,0 +1,4 @@
+V2 Signer: certificate DN: CN=MyHitbodedut, OU=Personal, O=MyHitbodedut, L=Jerusalem, C=IL
+V2 Signer: certificate SHA-256 digest: ed78705256339dab372866839b8b626a98cd8cc6bc48168dd6c8683473c34dde
+V2 Signer: certificate SHA-1 digest: 92a85bc88198ea092bcecacc4326c271b41d3325
+V2 Signer: certificate MD5 digest: fa293677c68c1509c836eb4e98bd4627

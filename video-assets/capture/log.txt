@@ -1,0 +1,97 @@
+[shot] 01-onboarding-1  (topResumedActivity=ActivityRecord{f408ab1 u0 com.myhitbodedut/.OnboardingActivity t8})
+        texts: 1 / 3 | Simply speaking | Hitbodedut means withdrawing alone for a while each day and speaking to Hashem in your own language, as you would to someone. No formula to recite, no level to reach. | Next | Skip
+[tap] /^(Next|Begin)$/ -> (540,2077) 'Next'
+[shot] 02-onboarding-2  (topResumedActivity=ActivityRecord{f408ab1 u0 com.myhitbodedut/.OnboardingActivity t8})
+        texts: 2 / 3 | What this app does | A timer for the session, a streak counting the days, a journal, the Tikkun HaKlali and a library of texts. It keeps you company; it does not grade you. | Next | Back | Skip
+[tap] /^(Next|Begin)$/ -> (540,2095) 'Next'
+[shot] 03-onboarding-3  (topResumedActivity=ActivityRecord{f408ab1 u0 com.myhitbodedut/.OnboardingActivity t8})
+        texts: 3 / 3 | Nothing leaves this phone | The app asks for no Internet access at all. What you write stays on this phone, and only you can take it out, through the export. | Begin | Back
+[tap] /^(Next|Begin)$/ -> (540,2249) 'Begin'
+[shot] 04-home-a  (topResumedActivity=ActivityRecord{e7c87a0 u0 com.myhitbodedut/.OnboardingActivity t8})
+        texts: 1 / 3 | Simply speaking | Hitbodedut means withdrawing alone for a while each day and speaking to Hashem in your own language, as you would to someone. No formula to recite, no level to reach. | Next | Skip
+[shot] 05-home-b  (topResumedActivity=ActivityRecord{e7c87a0 u0 com.myhitbodedut/.OnboardingActivity t8})
+        texts: 1 / 3 | Simply speaking | Hitbodedut means withdrawing alone for a while each day and speaking to Hashem in your own language, as you would to someone. No formula to recite, no level to reach. | Next | Skip
+[shot] 06-home-c  (topResumedActivity=ActivityRecord{e7c87a0 u0 com.myhitbodedut/.OnboardingActivity t8})
+        texts: 1 / 3 | Simply speaking | Hitbodedut means withdrawing alone for a while each day and speaking to Hashem in your own language, as you would to someone. No formula to recite, no level to reach. | Next | Skip
+[shot] 07-home-d  (topResumedActivity=ActivityRecord{e7c87a0 u0 com.myhitbodedut/.OnboardingActivity t8})
+        texts: 1 / 3 | Simply speaking | Hitbodedut means withdrawing alone for a while each day and speaking to Hashem in your own language, as you would to someone. No formula to recite, no level to reach. | Next | Skip
+[shot] 08-home-e  (topResumedActivity=ActivityRecord{e7c87a0 u0 com.myhitbodedut/.OnboardingActivity t8})
+        texts: 1 / 3 | Simply speaking | Hitbodedut means withdrawing alone for a while each day and speaking to Hashem in your own language, as you would to someone. No formula to recite, no level to reach. | Next | Skip
+[shot] 09-home-f  (topResumedActivity=ActivityRecord{e7c87a0 u0 com.myhitbodedut/.OnboardingActivity t8})
+        texts: 1 / 3 | Simply speaking | Hitbodedut means withdrawing alone for a while each day and speaking to Hashem in your own language, as you would to someone. No formula to recite, no level to reach. | Next | Skip
+[miss] /^Settings$/ not found
+[shot] 10-settings-a  (topResumedActivity=ActivityRecord{e7c87a0 u0 com.myhitbodedut/.OnboardingActivity t8})
+        texts: 1 / 3 | Simply speaking | Hitbodedut means withdrawing alone for a while each day and speaking to Hashem in your own language, as you would to someone. No formula to recite, no level to reach. | Next | Skip
+[shot] 11-settings-b  (topResumedActivity=ActivityRecord{e7c87a0 u0 com.myhitbodedut/.OnboardingActivity t8})
+        texts: 1 / 3 | Simply speaking | Hitbodedut means withdrawing alone for a while each day and speaking to Hashem in your own language, as you would to someone. No formula to recite, no level to reach. | Next | Skip
+[shot] 12-settings-c  (topResumedActivity=ActivityRecord{e7c87a0 u0 com.myhitbodedut/.OnboardingActivity t8})
+        texts: 1 / 3 | Simply speaking | Hitbodedut means withdrawing alone for a while each day and speaking to Hashem in your own language, as you would to someone. No formula to recite, no level to reach. | Next | Skip
+[shot] 13-settings-d  (topResumedActivity=ActivityRecord{e7c87a0 u0 com.myhitbodedut/.OnboardingActivity t8})
+        texts: 1 / 3 | Simply speaking | Hitbodedut means withdrawing alone for a while each day and speaking to Hashem in your own language, as you would to someone. No formula to recite, no level to reach. | Next | Skip
+[shot] 14-settings-e  (topResumedActivity=ActivityRecord{e7c87a0 u0 com.myhitbodedut/.OnboardingActivity t8})
+        texts: 1 / 3 | Simply speaking | Hitbodedut means withdrawing alone for a while each day and speaking to Hashem in your own language, as you would to someone. No formula to recite, no level to reach. | Next | Skip
+[shot] 15-settings-f  (topResumedActivity=ActivityRecord{e7c87a0 u0 com.myhitbodedut/.OnboardingActivity t8})
+        texts: 1 / 3 | Simply speaking | Hitbodedut means withdrawing alone for a while each day and speaking to Hashem in your own language, as you would to someone. No formula to recite, no level to reach. | Next | Skip
+[shot] 16-settings-g  (topResumedActivity=ActivityRecord{e7c87a0 u0 com.myhitbodedut/.OnboardingActivity t8})
+        texts: 1 / 3 | Simply speaking | Hitbodedut means withdrawing alone for a while each day and speaking to Hashem in your own language, as you would to someone. No formula to recite, no level to reach. | Next | Skip
+[miss] /^Guided hitbodedut$/ not found
+[shot] 17-settings-guided-on  (topResumedActivity=ActivityRecord{e7c87a0 u0 com.myhitbodedut/.OnboardingActivity t8})
+        texts: 1 / 3 | Simply speaking | Hitbodedut means withdrawing alone for a while each day and speaking to Hashem in your own language, as you would to someone. No formula to recite, no level to reach. | Next | Skip
+[miss] /Preview the gate screen now/ not found
+[tap] /^Start a .* session$/ -> (540,1628) 'Start a 1 h session'
+[shot] 18-session-idle  (topResumedActivity=ActivityRecord{bc0ab u0 com.myhitbodedut/.SessionActivity t8})
+        texts: HITBODEDUT | 1 h | Pick a length, then put the phone down. | To begin | קָרוֹב ה' לְכָל־קֹרְאָיו לְכֹל אֲשֶׁר יִקְרָאֻהוּ בֶאֱמֶת׃ | The Lord is near to all who call upon Him, to all who call upon Him in truth. | Tehilim 145:18 | Subject: none (optional)
+[tap] /^Subject/ -> (540,2295) 'Subject: none (optional)'
+[shot] 19-session-subjects  (topResumedActivity=ActivityRecord{bc0ab u0 com.myhitbodedut/.SessionActivity t8})
+        texts: What do you want to talk about? | None | What I am feeling | Gratitude | Confusion, decisions | Family | Zivug | Parnassa | Avodat Hashem | Hardship | Working on myself | Something else
+[tap] /^Gratitude$/ -> (540,877) 'Gratitude'
+[miss] /^10 min/ not found
+[miss] /^Start, / not found
+[shot] 20-session-running  (topResumedActivity=ActivityRecord{bc0ab u0 com.myhitbodedut/.SessionActivity t8})
+        texts: HITBODEDUT | 1 h | Pick a length, then put the phone down. | To begin | קָרוֹב ה' לְכָל־קֹרְאָיו לְכֹל אֲשֶׁר יִקְרָאֻהוּ בֶאֱמֶת׃ | The Lord is near to all who call upon Him, to all who call upon Him in truth. | Tehilim 145:18 | Subject: Gratitude
+[shot] 21-session-running-scrolled  (topResumedActivity=ActivityRecord{bc0ab u0 com.myhitbodedut/.SessionActivity t8})
+        texts: 1 h | Pick a length, then put the phone down. | To begin | קָרוֹב ה' לְכָל־קֹרְאָיו לְכֹל אֲשֶׁר יִקְרָאֻהוּ בֶאֱמֶת׃ | The Lord is near to all who call upon Him, to all who call upon Him in truth. | Tehilim 145:18 | Subject: Gratitude | 10 min | 20 min | 30 min | 1 h | No set length | Start, 1 h
+[miss] /I cannot find the words/ not found
+[shot] 22-session-stuck  (topResumedActivity=ActivityRecord{bc0ab u0 com.myhitbodedut/.SessionActivity t8})
+        texts: 1 h | Pick a length, then put the phone down. | To begin | קָרוֹב ה' לְכָל־קֹרְאָיו לְכֹל אֲשֶׁר יִקְרָאֻהוּ בֶאֱמֶת׃ | The Lord is near to all who call upon Him, to all who call upon Him in truth. | Tehilim 145:18 | Subject: Gratitude | 10 min | 20 min | 30 min | 1 h | No set length | Start, 1 h
+[miss] /^Finish now$/ not found
+[shot] 23-session-finish-dialog  (topResumedActivity=ActivityRecord{bc0ab u0 com.myhitbodedut/.SessionActivity t8})
+        texts: 1 h | Pick a length, then put the phone down. | To begin | קָרוֹב ה' לְכָל־קֹרְאָיו לְכֹל אֲשֶׁר יִקְרָאֻהוּ בֶאֱמֶת׃ | The Lord is near to all who call upon Him, to all who call upon Him in truth. | Tehilim 145:18 | Subject: Gratitude | 10 min | 20 min | 30 min | 1 h | No set length | Start, 1 h
+[miss] /^Finish now$/ not found
+[shot] 24-session-after  (topResumedActivity=ActivityRecord{bc0ab u0 com.myhitbodedut/.SessionActivity t8})
+        texts: 1 h | Pick a length, then put the phone down. | To begin | קָרוֹב ה' לְכָל־קֹרְאָיו לְכֹל אֲשֶׁר יִקְרָאֻהוּ בֶאֱמֶת׃ | The Lord is near to all who call upon Him, to all who call upon Him in truth. | Tehilim 145:18 | Subject: Gratitude | 10 min | 20 min | 30 min | 1 h | No set length | Start, 1 h
+[shot] 25-home-done-a  (topResumedActivity=ActivityRecord{bc0ab u0 com.myhitbodedut/.SessionActivity t8})
+        texts: HITBODEDUT | 1 h | Pick a length, then put the phone down. | To begin | קָרוֹב ה' לְכָל־קֹרְאָיו לְכֹל אֲשֶׁר יִקְרָאֻהוּ בֶאֱמֶת׃ | The Lord is near to all who call upon Him, to all who call upon Him in truth. | Tehilim 145:18 | Subject: Gratitude
+[shot] 26-home-done-b  (topResumedActivity=ActivityRecord{bc0ab u0 com.myhitbodedut/.SessionActivity t8})
+        texts: 1 h | Pick a length, then put the phone down. | To begin | קָרוֹב ה' לְכָל־קֹרְאָיו לְכֹל אֲשֶׁר יִקְרָאֻהוּ בֶאֱמֶת׃ | The Lord is near to all who call upon Him, to all who call upon Him in truth. | Tehilim 145:18 | Subject: Gratitude | 10 min | 20 min | 30 min | 1 h | No set length | Start, 1 h
+[shot] 27-home-done-c  (topResumedActivity=ActivityRecord{bc0ab u0 com.myhitbodedut/.SessionActivity t8})
+        texts: 1 h | Pick a length, then put the phone down. | To begin | קָרוֹב ה' לְכָל־קֹרְאָיו לְכֹל אֲשֶׁר יִקְרָאֻהוּ בֶאֱמֶת׃ | The Lord is near to all who call upon Him, to all who call upon Him in truth. | Tehilim 145:18 | Subject: Gratitude | 10 min | 20 min | 30 min | 1 h | No set length | Start, 1 h
+[miss] /^Open the journal$/ not found
+[shot] 28-journal  (topResumedActivity=ActivityRecord{bc0ab u0 com.myhitbodedut/.SessionActivity t8})
+        texts: 1 h | Pick a length, then put the phone down. | To begin | קָרוֹב ה' לְכָל־קֹרְאָיו לְכֹל אֲשֶׁר יִקְרָאֻהוּ בֶאֱמֶת׃ | The Lord is near to all who call upon Him, to all who call upon Him in truth. | Tehilim 145:18 | Subject: Gratitude | 10 min | 20 min | 30 min | 1 h | No set length | Start, 1 h
+[tap] /^Tikkun HaKlali$/ -> (498,2044) 'Tikkun HaKlali'
+[shot] 29-tikkun-a  (topResumedActivity=ActivityRecord{83517cd u0 com.myhitbodedut/.TikkunActivity t8})
+        texts: Tikkun HaKlali | 10 psalms, 164 verses | Read it all in one flow | לפני ההתחלה | Before beginning | 1 | תהילים 16 | 11 verses | 2 | תהילים 32 | 11 verses | 3 | תהילים 41 | 14 verses | 4 | תהילים 42 | 12 verses | 5 | תהילים 59 | 18 verses | 6 | תהילים 77 | 21 verses | 7 | תהילים 90 | 17 verses
+[shot] 30-tikkun-b  (topResumedActivity=ActivityRecord{83517cd u0 com.myhitbodedut/.TikkunActivity t8})
+        texts: Tikkun HaKlali | 10 psalms, 164 verses | Read it all in one flow | 4 | 12 verses | 5 | תהילים 59 | 18 verses | 6 | תהילים 77 | 21 verses | 7 | תהילים 90 | 17 verses | 8 | תהילים 105 | 45 verses | 9 | תהילים 137 | 9 verses | 10 | תהילים 150 | 6 verses | לאחר סיום עשרת המזמורים | After the ten psalms | כוונת המילוי — אֵ"ל אֱלֹהִי"ם | The kavanah of the filling
+[shot] 31-tikkun-c  (topResumedActivity=ActivityRecord{83517cd u0 com.myhitbodedut/.TikkunActivity t8})
+        texts: Tikkun HaKlali | 10 psalms, 164 verses | Read it all in one flow | 6 | תהילים 77 | 21 verses | 7 | תהילים 90 | 17 verses | 8 | תהילים 105 | 45 verses | 9 | תהילים 137 | 9 verses | 10 | תהילים 150 | 6 verses | לאחר סיום עשרת המזמורים | After the ten psalms | כוונת המילוי — אֵ"ל אֱלֹהִי"ם | The kavanah of the filling | תפילה אחרי התיקון הכללי | Prayer after the Tikkun (Reb Noson)
+[tap] /16/ -> (419,305) '10 psalms, 164 verses'
+[shot] 32-tikkun-detail-a  (topResumedActivity=ActivityRecord{83517cd u0 com.myhitbodedut/.TikkunActivity t8})
+        texts: Tikkun HaKlali | 10 psalms, 164 verses | Read it all in one flow | 6 | תהילים 77 | 21 verses | 7 | תהילים 90 | 17 verses | 8 | תהילים 105 | 45 verses | 9 | תהילים 137 | 9 verses | 10 | תהילים 150 | 6 verses | לאחר סיום עשרת המזמורים | After the ten psalms | כוונת המילוי — אֵ"ל אֱלֹהִי"ם | The kavanah of the filling | תפילה אחרי התיקון הכללי | Prayer after the Tikkun (Reb Noson)
+[shot] 33-tikkun-detail-b  (topResumedActivity=ActivityRecord{83517cd u0 com.myhitbodedut/.TikkunActivity t8})
+        texts: Tikkun HaKlali | 10 psalms, 164 verses | Read it all in one flow | 6 | תהילים 77 | 21 verses | 7 | תהילים 90 | 17 verses | 8 | תהילים 105 | 45 verses | 9 | תהילים 137 | 9 verses | 10 | תהילים 150 | 6 verses | לאחר סיום עשרת המזמורים | After the ten psalms | כוונת המילוי — אֵ"ל אֱלֹהִי"ם | The kavanah of the filling | תפילה אחרי התיקון הכללי | Prayer after the Tikkun (Reb Noson)
+[tap] /^Tikkun HaKlali$/ -> (498,2044) 'Tikkun HaKlali'
+[tap] /Read it all in one flow/ -> (540,548) 'Read it all in one flow'
+[shot] 34-tikkun-flow-a  (topResumedActivity=ActivityRecord{31a8581 u0 com.myhitbodedut/.TikkunFlowActivity t8})
+        texts: Tikkun HaKlali | The ten psalms follow one another in a single flow, without a break. | לפני ההתחלה | הריני מקשר עצמי באמירת העשרה מזמורים אלו לכל הצדיקים האמיתיים שבדורנו, ולכל הצדיקים האמיתיים שוכני עפר קדושים אשר בארץ המה, ובפרט לרבינו הקדוש, צדיק יסוד עולם, נחל נובע מקור חכמה, רבינו נחמן בן פֵיגֶא, זכותו יגן עלינו, שגילה תיקון זה. | לְכוּ נְרַנְּנָה לַה' נָרִיעָה לְצוּר יִשְׁעֵנוּ: | נְקַדְּמָה פָנָיו בְּתוֹדָה בִּזְמִרוֹת נָרִיעַ לוֹ: | כִּי אֵל גָּדוֹל ה' וּמֶלֶךְ גָּדוֹל עַל כָּל אֱלֹקִים: | הריני מזמן את פי להודות וּלְהלל וּלְשבח את בוראי. לְשֵם יִחוּד קוּדְשָא בְּרִיךְ הוּא וּשְכִינְתֵּהּ בִּדְחִילוּ וּרְחִימוּ על ידי ההוא טמיר ונעלם בשם כל ישראל. | תהילים 16 | מִכְתָּם לְדָוִד שָׁמְרֵנִי אֵל כִּי־חָסִיתִי בָךְ׃ | אָמַרְתְּ לַה' אֲדֹ-נָי אָתָּה טוֹבָתִי בַּל־עָלֶיךָ׃ | לִקְדוֹשִׁים אֲשֶׁר־בָּאָרֶץ הֵמָּה וְאַדִּירֵי כָּל־חֶפְצִי־בָם׃ | יִרְבּוּ עַצְּבוֹתָם אַחֵר מָהָרוּ בַּל־אַסִּיךְ נִסְכֵּיהֶם מִדָּם וּבַל־אֶשָּׂא אֶת־שְׁמוֹתָם עַל־שְׂפָתָי׃ | ה' מְנָת־חֶלְקִי וְכוֹסִי אַתָּה תּוֹמִיךְ גּוֹרָלִי׃ | I have said the whole Tikkun
+[shot] 35-tikkun-flow-b  (topResumedActivity=ActivityRecord{31a8581 u0 com.myhitbodedut/.TikkunFlowActivity t8})
+        texts: Tikkun HaKlali | The ten psalms follow one another in a single flow, without a break. | הריני מזמן את פי להודות וּלְהלל וּלְשבח את בוראי. לְשֵם יִחוּד קוּדְשָא בְּרִיךְ הוּא וּשְכִינְתֵּהּ בִּדְחִילוּ וּרְחִימוּ על ידי ההוא טמיר ונעלם בשם כל ישראל. | תהילים 16 | מִכְתָּם לְדָוִד שָׁמְרֵנִי אֵל כִּי־חָסִיתִי בָךְ׃ | אָמַרְתְּ לַה' אֲדֹ-נָי אָתָּה טוֹבָתִי בַּל־עָלֶיךָ׃ | לִקְדוֹשִׁים אֲשֶׁר־בָּאָרֶץ הֵמָּה וְאַדִּירֵי כָּל־חֶפְצִי־בָם׃ | יִרְבּוּ עַצְּבוֹתָם אַחֵר מָהָרוּ בַּל־אַסִּיךְ נִסְכֵּיהֶם מִדָּם וּבַל־אֶשָּׂא אֶת־שְׁמוֹתָם עַל־שְׂפָתָי׃ | ה' מְנָת־חֶלְקִי וְכוֹסִי אַתָּה תּוֹמִיךְ גּוֹרָלִי׃ | חֲבָלִים נָפְלוּ־לִי בַּנְּעִמִים אַף־נַחֲלָת שָׁפְרָה עָלָי׃ | אֲבָרֵךְ אֶת־ה' אֲשֶׁר יְעָצָנִי אַף־לֵילוֹת יִסְּרוּנִי כִלְיוֹתָי׃ | שִׁוִּיתִי ה' לְנֶגְדִּי תָמִיד כִּי מִימִינִי בַּל־אֶמּוֹט׃ | לָכֵן שָׂמַח לִבִּי וַיָּגֶל כְּבוֹדִי אַף־בְּשָׂרִי יִשְׁכֹּן לָבֶטַח׃ | כִּי לֹא־תַעֲזֹב נַפְשִׁי לִשְׁאוֹל לֹא־תִתֵּן חֲסִידְךָ לִרְאוֹת שָׁחַת׃ | תּוֹדִיעֵנִי אֹרַח חַיִּים שֹׂבַע שְׂמָחוֹת אֶת־פָּנֶיךָ נְעִמוֹת בִּימִינְךָ נֶצַח׃ | תהילים 32 | לְדָוִד מַשְׂכִּיל אַשְׁרֵי נְשׂוּי־פֶּשַׁע כְּסוּי חֲטָאָה׃ | אַשְׁרֵי אָדָם לֹא יַחְשֹׁב ה' לוֹ עָוֺן וְאֵין בְּרוּחוֹ רְמִיָּה׃ | I have said the whole Tikkun
+[miss] /^Tfilot$/ not found
+[miss] /^Library$/ not found
+[miss] /^Tips for Hitbodedut$/ not found
+[miss] /^Reminders$/ not found
+[miss] /^Music$/ not found
+[shot] 36-home-final  (topResumedActivity=ActivityRecord{cfe0cec u0 com.myhitbodedut/.TikkunActivity t8})
+        texts: Tikkun HaKlali | 10 psalms, 164 verses | Read it all in one flow | 6 | תהילים 77 | 21 verses | 7 | תהילים 90 | 17 verses | 8 | תהילים 105 | 45 verses | 9 | תהילים 137 | 9 verses | 10 | תהילים 150 | 6 verses | לאחר סיום עשרת המזמורים | After the ten psalms | כוונת המילוי — אֵ"ל אֱלֹהִי"ם | The kavanah of the filling | תפילה אחרי התיקון הכללי | Prayer after the Tikkun (Reb Noson)
+[done]
