@@ -17,6 +17,8 @@ export type ShowcaseBeat = {
   highlight?: Highlight;
   /** Which side the phone sits on in landscape. */
   side?: 'left' | 'right';
+  /** Scene-relative frame where the camera starts pushing in (a bar line). */
+  pushAt?: number;
 };
 
 const ease = Easing.bezier(0.45, 0, 0.2, 1);
@@ -34,6 +36,7 @@ export const ScreenShowcase: React.FC<ShowcaseBeat> = ({
   focus,
   highlight,
   side = 'left',
+  pushAt,
 }) => {
   const frame = useCurrentFrame();
   const {fps, durationInFrames: D} = useVideoConfig();
@@ -47,15 +50,18 @@ export const ScreenShowcase: React.FC<ShowcaseBeat> = ({
     extrapolateRight: 'clamp',
     easing: Easing.bezier(0.22, 1, 0.36, 1),
   });
+  // Push on the bar line when the music gives one, else at mid-scene.
+  const p0 = pushAt ?? Math.round(D * 0.42);
+  const p1 = p0 + Math.round(fps * 0.85);
   const zoom = focus
-    ? interpolate(frame, [D * 0.42, D * 0.66], [0, 1], {
+    ? interpolate(frame, [p0, p1], [0, 1], {
         extrapolateLeft: 'clamp',
         extrapolateRight: 'clamp',
         easing: ease,
       })
     : 0;
   const ring = highlight
-    ? interpolate(frame, [D * 0.62, D * 0.72], [0, 1], {
+    ? interpolate(frame, [p1 - fps * 0.15, p1 + fps * 0.2], [0, 1], {
         extrapolateLeft: 'clamp',
         extrapolateRight: 'clamp',
       })

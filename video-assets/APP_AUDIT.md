@@ -268,7 +268,7 @@ These must not appear in the video as factual claims, and do not.
 - **Holiday detection** (Monday shown as "Day off"): consistent with Yom Kippur, not verified.
 - **Performance, battery use, behaviour on manufacturer skins** (Xiaomi, Samsung…): not measured.
 - **Play Store availability**: the app is distributed as a GitHub release; no store listing was verified. The video says only "For Android".
-- **Rights to the music** shipped in the app and in `musique/`: undocumented in the repository. None of it is used in the video.
+- **Rights to the music** shipped in the app and in `musique/`: undocumented in the repository. The soundtrack of the video, "Give Me One Prayer" by Shmuel (identical to `musique/shmuel_one_prayer.mp3`), was supplied by the owner for this use; its licence for publication is not documented here.
 - **Spiritual or psychological outcomes** of the practice: not claims about the app, and not made.
 
 ## Observations worth passing on (not used in the video)

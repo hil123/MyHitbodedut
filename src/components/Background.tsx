@@ -1,6 +1,7 @@
 import {AbsoluteFill, interpolate, random, useCurrentFrame} from 'remotion';
 import {COLORS} from '../data/videoConfig';
 import {useLayout} from '../lib/layout';
+import {energyAt, pulseAt, useFilmTime} from '../lib/timeline';
 
 type Props = {
   /** 0 = pure night, 1 = full warm glow. */
@@ -18,7 +19,7 @@ const PARTICLES = 46;
 
 /** Dark room, one warm light, slow drifting dust. */
 export const Background: React.FC<Props> = ({
-  warmth = 0.6,
+  warmth: baseWarmth = 0.6,
   lightX = 0.5,
   lightY = 0.42,
   particles = true,
@@ -26,6 +27,12 @@ export const Background: React.FC<Props> = ({
 }) => {
   const frame = useCurrentFrame();
   const {width, height, u} = useLayout();
+  const t = useFilmTime()(frame);
+  // The room follows the music: dimmer when it is quiet, a soft swell of
+  // light on each downbeat of the band sections.
+  const energy = energyAt(t);
+  const pulse = pulseAt(t);
+  const warmth = baseWarmth * (0.35 + 0.65 * energy) * (1 + 0.35 * pulse);
   const breathe = 0.92 + 0.08 * Math.sin(frame / 55);
   const drift = Math.sin(frame / 140) * 0.02;
 

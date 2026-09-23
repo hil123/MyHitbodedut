@@ -6,6 +6,7 @@ import {PhoneMockup} from '../components/PhoneMockup';
 import {COLORS} from '../data/videoConfig';
 import {STORY} from '../data/storyboard';
 import {useLayout} from '../lib/layout';
+import {CUES, useAt} from '../lib/timeline';
 
 /** SCENE 03 — Introducing MyHitbodedut: icon and name, then the phone rises. */
 export const AppIntroScene: React.FC = () => {
@@ -14,7 +15,10 @@ export const AppIntroScene: React.FC = () => {
   const {u, orientation, phoneHeight} = useLayout();
   const row = orientation !== 'portrait';
   const s = STORY.appIntro;
-  const handoff = Math.round(D * 0.5);
+  const at = useAt();
+  // The logo lands on the band's first downbeat; the phone rises two bars later.
+  const lift = at(CUES.lift);
+  const handoff = at(CUES.phoneUp) - Math.round(fps * 0.3);
   const logoOut = interpolate(frame, [handoff - fps * 0.5, handoff], [1, 0], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
   const rise = interpolate(frame, [handoff + fps * 0.1, handoff + fps * 1.4], [0, 1], {
     extrapolateLeft: 'clamp',
@@ -26,8 +30,8 @@ export const AppIntroScene: React.FC = () => {
     <AbsoluteFill>
       <Background warmth={0.8} lightY={0.45} />
       <AbsoluteFill style={{alignItems: 'center', justifyContent: 'center', opacity: logoOut, gap: 34 * u}}>
-        <AnimatedText text={s.kicker} delay={fps * 0.2} size={24} font="sans" weight={400} color={COLORS.brandNight} letterSpacing={0.3} uppercase />
-        <LogoReveal delay={fps * 0.4} iconSize={180} wordmarkSize={112} />
+        <AnimatedText text={s.kicker} delay={lift - Math.round(fps * 0.45)} size={24} font="sans" weight={400} color={COLORS.brandNight} letterSpacing={0.3} uppercase />
+        <LogoReveal delay={lift} iconSize={180} wordmarkSize={112} />
       </AbsoluteFill>
       {frame >= handoff && (
         <AbsoluteFill

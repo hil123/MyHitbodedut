@@ -4,6 +4,7 @@ import {Background} from '../components/Background';
 import {COLORS} from '../data/videoConfig';
 import {STORY} from '../data/storyboard';
 import {useLayout} from '../lib/layout';
+import {CUES, useAt} from '../lib/timeline';
 
 /**
  * SCENE 06 — The quiet moment. The app's own illustration on the mint plate
@@ -14,6 +15,8 @@ export const EmotionalScene: React.FC = () => {
   const frame = useCurrentFrame();
   const {u, isLandscape} = useLayout();
   const s = STORY.emotional;
+  const at = useAt();
+  const lines = [CUES.quote, CUES.quote2, CUES.quote3];
   const p = interpolate(frame, [0, fps * 1.4], [0, 1], {
     extrapolateLeft: 'clamp',
     extrapolateRight: 'clamp',
@@ -43,9 +46,9 @@ export const EmotionalScene: React.FC = () => {
   const words = (
     <div style={{display: 'flex', flexDirection: 'column', gap: 20 * u, alignItems: isLandscape ? 'flex-start' : 'center'}}>
       {s.lines.map((l, i) => (
-        <AnimatedText key={l} text={l} delay={fps * (0.8 + i * 1.3)} size={76} weight={300} align={isLandscape ? 'left' : 'center'} />
+        <AnimatedText key={l} text={l} delay={at(lines[i])} size={76} weight={300} align={isLandscape ? 'left' : 'center'} />
       ))}
-      <AnimatedText text={s.attribution} delay={fps * 3.6} size={22} font="sans" weight={400} color={COLORS.muted} letterSpacing={0.16} uppercase align={isLandscape ? 'left' : 'center'} />
+      <AnimatedText text={s.attribution} delay={at(CUES.quoteSource)} size={22} font="sans" weight={400} color={COLORS.muted} letterSpacing={0.16} uppercase align={isLandscape ? 'left' : 'center'} />
     </div>
   );
   return (

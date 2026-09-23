@@ -1,5 +1,7 @@
 import type {ShowcaseBeat} from '../components/ScreenShowcase';
+import {CUES} from '../lib/timeline';
 import {assertVerified, FeatureId} from './appAudit';
+import {VIDEO_CONFIG} from './videoConfig';
 
 /*
  * The film's words and pictures. Mirrors video-assets/STORYBOARD.md.
@@ -37,11 +39,18 @@ export const STORY = {
   },
 };
 
-type Beat = ShowcaseBeat & {feature: FeatureId};
+type Beat = ShowcaseBeat & {
+  feature: FeatureId;
+  /** Music cue (film seconds) on which the phone arrives. */
+  cue: number;
+  /** Music cue on which the camera pushes in; one bar after arrival if omitted. */
+  pushCue?: number;
+};
 
 export const BEATS: Beat[] = [
   {
     feature: 'sessionTimer',
+    cue: CUES.timer,
     screenshot: S(2),
     eyebrow: 'The session',
     line: 'Pick a length. Then put the phone down.',
@@ -52,6 +61,9 @@ export const BEATS: Beat[] = [
   },
   {
     feature: 'stuckCard',
+    cue: CUES.stuck,
+    // The band stops dead as the camera moves onto the card.
+    pushCue: CUES.stop,
     screenshot: S(3),
     eyebrow: 'I cannot find the words',
     line: 'A starting point, when the words don’t come.',
@@ -62,6 +74,7 @@ export const BEATS: Beat[] = [
   },
   {
     feature: 'journal',
+    cue: CUES.journal,
     screenshot: S(4),
     eyebrow: 'Journal',
     line: 'Put a few words to each session.',
@@ -72,6 +85,7 @@ export const BEATS: Beat[] = [
   },
   {
     feature: 'streak',
+    cue: CUES.streak,
     screenshot: S(5),
     eyebrow: 'My practice',
     line: 'Day after day, quietly counted.',
@@ -82,6 +96,7 @@ export const BEATS: Beat[] = [
   },
   {
     feature: 'tikkun',
+    cue: CUES.tikkun,
     screenshot: S(6),
     eyebrow: 'Tikkun HaKlali',
     line: 'The ten psalms, in order.',
@@ -92,6 +107,7 @@ export const BEATS: Beat[] = [
   },
   {
     feature: 'tefilot',
+    cue: CUES.tefilot,
     screenshot: S(7),
     eyebrow: 'Tfilot',
     line: 'The prayers of Reb Noson, by subject.',
@@ -102,6 +118,7 @@ export const BEATS: Beat[] = [
   },
   {
     feature: 'library',
+    cue: CUES.library,
     screenshot: S(8),
     eyebrow: 'Library',
     line: 'The sources of hitbodedut, close at hand.',
@@ -112,6 +129,7 @@ export const BEATS: Beat[] = [
   },
   {
     feature: 'morningGate',
+    cue: CUES.gate,
     screenshot: S(9),
     eyebrow: 'Morning gate · full edition',
     line: 'A pause before the apps you choose.',
@@ -122,6 +140,7 @@ export const BEATS: Beat[] = [
   },
   {
     feature: 'offline',
+    cue: CUES.private,
     screenshot: S(10),
     eyebrow: 'Private',
     line: 'Nothing leaves this phone.',
@@ -135,23 +154,46 @@ export const BEATS: Beat[] = [
 assertVerified(BEATS.map((b) => b.feature));
 
 export const SOUND = {
-  // Original pad synthesized by tools/video/ambient_pad.py (no third-party
-  // rights). Swap for a licensed track here, or set to null for silence.
-  soundtrack: 'audio/ambient-pad.wav' as string | null,
-  volume: 0.55,
+  // "Give Me One Prayer" (Shmuel), cut to the film by tools/video/music_edit.py.
+  // Loudness is already normalised in the file. Set to null for silence.
+  soundtrack: 'audio/music-edit.wav' as string | null,
+  volume: 1,
 };
 
-const sec = (s: number) => Math.round(s * 30);
+type SceneKind = 'intro' | 'hitbodedut' | 'appIntro' | 'emotional' | 'final';
+export type Scene =
+  | {id: string; kind: SceneKind; start: number}
+  | {id: string; kind: 'showcase'; start: number; beat: Beat};
 
-type Scene =
-  | {id: string; frames: number; kind: 'intro' | 'hitbodedut' | 'appIntro' | 'emotional' | 'final'}
-  | {id: string; frames: number; kind: 'showcase'; beat: Beat};
+/*
+ * The film follows the music. Each entry starts at a cue of the song (see
+ * src/data/musicCues.json); the scene before it cross-fades out so that the
+ * middle of the fade sits just before the downbeat.
+ */
+const lead = VIDEO_CONFIG.transitionFrames / 2 / VIDEO_CONFIG.fps;
+const byCue = (b: Beat) => b.cue;
+const beatScene = (b: Beat) => ({id: `beat-${b.feature}`, kind: 'showcase' as const, start: b.cue - lead, beat: b});
+const sorted = [...BEATS].sort((a, b) => byCue(a) - byCue(b));
 
-export const SCENES: Scene[] = [
-  {id: 's01-hook', kind: 'intro', frames: sec(7.5)},
-  {id: 's02-hitbodedut', kind: 'hitbodedut', frames: sec(9)},
-  {id: 's03-app-intro', kind: 'appIntro', frames: sec(7)},
-  ...BEATS.map((beat) => ({id: `s04-${beat.feature}`, kind: 'showcase' as const, frames: sec(5), beat})),
-  {id: 's06-moment', kind: 'emotional', frames: sec(7)},
-  {id: 's07-final', kind: 'final', frames: sec(7.5)},
+const SCENE_LIST: Scene[] = [
+  {id: 's01-hook', kind: 'intro', start: 0},
+  {id: 's02-hitbodedut', kind: 'hitbodedut', start: CUES.voiceIn - 0.9},
+  {id: 's03-app-intro', kind: 'appIntro', start: CUES.lift - 0.7},
+  ...sorted.filter((b) => b.cue < CUES.quote).map(beatScene),
+  {id: 's05-moment', kind: 'emotional', start: CUES.quote - 0.9},
+  ...sorted.filter((b) => b.cue > CUES.quote).map(beatScene),
+  // After the final hit has rung out, the closing tag.
+  {id: 's07-final', kind: 'final', start: CUES.finalHit + 0.45},
 ];
+
+const fps = VIDEO_CONFIG.fps;
+const T = VIDEO_CONFIG.transitionFrames;
+const startFrames = SCENE_LIST.map((s) => Math.round(s.start * fps));
+const endFrame = Math.round(CUES.end * fps);
+
+/** Scenes with their length in frames, including the cross-fade overlap. */
+export const SCENES = SCENE_LIST.map((scene, i) => ({
+  ...scene,
+  startFrame: startFrames[i],
+  frames: (i + 1 < SCENE_LIST.length ? startFrames[i + 1] : endFrame) - startFrames[i] + (i + 1 < SCENE_LIST.length ? T : 0),
+}));
