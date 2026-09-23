@@ -270,7 +270,7 @@ chargés depuis un CDN, donc connexion nécessaire au chargement.
 
 ## La vidéo de présentation
 
-Une vidéo de 76 secondes, 1920×1080, construite avec Remotion à partir de
+Une vidéo de 78 secondes, 1920×1080, construite avec Remotion à partir de
 captures réelles de l'APK publié (v1.84). Rendu : `out/myhitbodedut-promo.mp4`.
 
 ```bash
@@ -290,7 +290,8 @@ npx remotion studio       # aperçu interactif
 | `.github/workflows/capture-screens.yml` | Refait les captures depuis la dernière release |
 
 La musique est « Give Me One Prayer » (Shmuel), montée sur la vidéo par
-`tools/video/music_edit.py` : coupes à la mesure dans les silences du chant,
+`tools/video/music_edit.py` : coupes à la mesure, seulement entre deux phrases
+chantées (horaires de chaque mot dans `video-assets/lyrics/`),
 et fichier de repères `src/data/musicCues.json` sur lequel toute la vidéo se
 cale. Pour refaire le montage :
 

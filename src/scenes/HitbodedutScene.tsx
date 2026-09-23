@@ -6,35 +6,28 @@ import {STORY} from '../data/storyboard';
 import {useLayout} from '../lib/layout';
 import {CUES, useAt} from '../lib/timeline';
 
-/** SCENE 02 — What is Hitbodedut? Title on the voice's entrance, verbs on the beat. */
+/**
+ * SCENE 02 — What is Hitbodedut? The title lands as the song sings
+ * "kum kra betachanunim" (get up, call out in supplication).
+ */
 export const HitbodedutScene: React.FC = () => {
   const {fps} = useVideoConfig();
   const frame = useCurrentFrame();
   const at = useAt();
   const {u} = useLayout();
   const s = STORY.hitbodedut;
-  const split = at(CUES.verb1);
-  const verbs = [CUES.verb1, CUES.verb2, CUES.verb3, CUES.verb4];
-  const title = at(CUES.voiceIn);
+  const title = at(CUES.kumKra);
   const line = interpolate(frame, [title + fps * 0.3, title + fps * 1.5], [0, 1], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
   return (
     <AbsoluteFill>
       <Background warmth={0.85} lightY={0.3} />
       <AbsoluteFill style={{alignItems: 'center', justifyContent: 'center', padding: 90 * u}}>
-        {frame < split ? (
-          <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 26 * u}}>
-            <AnimatedText text={s.hebrew} delay={title - fps * 0.3} exitAt={split - fps * 0.5} size={54} font="hebrew" color={COLORS.warm} dir="rtl" />
-            <AnimatedText text={s.title} delay={title} exitAt={split - fps * 0.5} size={132} weight={300} letterSpacing={0.02} />
-            <div style={{width: 120 * u * line, height: Math.max(1, 1.5 * u), background: COLORS.brandNight, opacity: 0.8}} />
-            <AnimatedText text={s.definition} delay={at(CUES.definition)} exitAt={split - fps * 0.3} size={46} weight={300} italic maxWidth={1100} byWord lineHeight={1.3} />
-          </div>
-        ) : (
-          <div style={{display: 'flex', gap: 60 * u, flexWrap: 'wrap', justifyContent: 'center'}}>
-            {s.verbs.map((b, i) => (
-              <AnimatedText key={b} text={b} delay={at(verbs[i])} size={92} weight={300} />
-            ))}
-          </div>
-        )}
+        <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 26 * u}}>
+          <AnimatedText text={s.hebrew} delay={title - fps * 0.3} size={54} font="hebrew" color={COLORS.warm} dir="rtl" />
+          <AnimatedText text={s.title} delay={title} size={132} weight={300} letterSpacing={0.02} />
+          <div style={{width: 120 * u * line, height: Math.max(1, 1.5 * u), background: COLORS.brandNight, opacity: 0.8}} />
+          <AnimatedText text={s.definition} delay={at(CUES.definition)} size={46} weight={300} italic maxWidth={1100} byWord lineHeight={1.3} />
+        </div>
       </AbsoluteFill>
     </AbsoluteFill>
   );

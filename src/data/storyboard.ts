@@ -20,7 +20,6 @@ export const STORY = {
     hebrew: 'התבודדות',
     title: 'Hitbodedut',
     definition: 'A personal time to speak openly with Hashem, in your own words.',
-    verbs: ['Talk.', 'Ask.', 'Thank.', 'Reflect.'],
   },
   appIntro: {
     kicker: 'Meet',
@@ -84,17 +83,6 @@ export const BEATS: Beat[] = [
     side: 'left',
   },
   {
-    feature: 'streak',
-    cue: CUES.streak,
-    screenshot: S(5),
-    eyebrow: 'My practice',
-    line: 'Day after day, quietly counted.',
-    sub: 'On Shabbat and Yom Tov, the streak stays intact.',
-    focus: {x: 0.5, y: 0.43, scale: 1.5},
-    highlight: {x: 0.07, y: 0.392, w: 0.86, h: 0.072},
-    side: 'right',
-  },
-  {
     feature: 'tikkun',
     cue: CUES.tikkun,
     screenshot: S(6),
@@ -115,17 +103,6 @@ export const BEATS: Beat[] = [
     focus: {x: 0.5, y: 0.36, scale: 1.3},
     highlight: {x: 0.04, y: 0.228, w: 0.92, h: 0.285},
     side: 'right',
-  },
-  {
-    feature: 'library',
-    cue: CUES.library,
-    screenshot: S(8),
-    eyebrow: 'Library',
-    line: 'The sources of hitbodedut, close at hand.',
-    sub: 'Texts on hitbodedut, and prayers gathered by subject.',
-    focus: {x: 0.5, y: 0.34, scale: 1.35},
-    highlight: {x: 0.04, y: 0.305, w: 0.92, h: 0.1},
-    side: 'left',
   },
   {
     feature: 'morningGate',
@@ -177,13 +154,13 @@ const sorted = [...BEATS].sort((a, b) => byCue(a) - byCue(b));
 
 const SCENE_LIST: Scene[] = [
   {id: 's01-hook', kind: 'intro', start: 0},
-  {id: 's02-hitbodedut', kind: 'hitbodedut', start: CUES.voiceIn - 0.9},
+  {id: 's02-hitbodedut', kind: 'hitbodedut', start: CUES.kumKra - 0.9},
   {id: 's03-app-intro', kind: 'appIntro', start: CUES.lift - 0.7},
-  ...sorted.filter((b) => b.cue < CUES.quote).map(beatScene),
-  {id: 's05-moment', kind: 'emotional', start: CUES.quote - 0.9},
-  ...sorted.filter((b) => b.cue > CUES.quote).map(beatScene),
-  // After the final hit has rung out, the closing tag.
-  {id: 's07-final', kind: 'final', start: CUES.finalHit + 0.45},
+  // "Ten li mila achat kena" — give me one honest word.
+  {id: 's04-one-word', kind: 'emotional', start: CUES.quote - 0.6},
+  ...sorted.map(beatScene),
+  // "Az ten li tefila achat tova" — the song's own title line.
+  {id: 's07-final', kind: 'final', start: CUES.finalLogo - 0.9},
 ];
 
 const fps = VIDEO_CONFIG.fps;

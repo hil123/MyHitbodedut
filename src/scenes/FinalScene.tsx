@@ -20,7 +20,7 @@ export const FinalScene: React.FC = () => {
     <AbsoluteFill style={{opacity: out, backgroundColor: COLORS.night}}>
       <Background warmth={0.9} lightY={0.4} />
       <AbsoluteFill style={{alignItems: 'center', justifyContent: 'center', gap: 44 * u}}>
-        <LogoReveal delay={at(CUES.tag)} iconSize={200} wordmarkSize={108} />
+        <LogoReveal delay={at(CUES.finalLogo)} iconSize={200} wordmarkSize={108} />
         <AnimatedText text={s.tagline} delay={at(CUES.tagline)} size={48} weight={300} italic color={COLORS.ink} />
         <AnimatedText text={s.meta} delay={at(CUES.tagMeta)} size={21} font="sans" weight={400} color={COLORS.muted} letterSpacing={0.2} uppercase />
       </AbsoluteFill>

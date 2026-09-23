@@ -21,7 +21,7 @@ export const IntroScene: React.FC = () => {
       <AbsoluteFill style={{alignItems: 'center', justifyContent: 'center', padding: 80 * u}}>
         {frame < second ? (
           <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 18 * u}}>
-            <AnimatedText text={s.lines[0]} delay={at(CUES.hookLine1)} exitAt={second - fps * 0.5} size={62} italic weight={300} color={COLORS.muted} />
+            <AnimatedText text={s.lines[0]} delay={Math.round(fps * 0.35)} exitAt={second - fps * 0.5} size={62} italic weight={300} color={COLORS.muted} />
             <AnimatedText text={s.lines[1]} delay={at(CUES.hookLine2)} exitAt={second - fps * 0.5} size={92} weight={400} byWord />
           </div>
         ) : (

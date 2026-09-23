@@ -1,19 +1,26 @@
-#!/usr/bin/env python3
 """Cut "Give Me One Prayer" (Shmuel) to the promo, and export the cue sheet.
 
-The song is in 6/8 at ~63.3 dotted-quarter bpm. From 48 s on, every section
-sits on one grid, measured from the onset curve folded bar by bar:
+The song is in 6/8 at ~63.3 dotted-quarter bpm. Every section sits on one
+grid, measured from the onset curve folded bar by bar:
 
-    downbeat(n) = 48.007 + n * 1.89599 s        (bar 0 = first full section)
+    downbeat(n) = 48.007 + n * 1.89599 s        (bar 0 = first chorus)
 
-The intro (2.5–47 s) sits on the same grid (bar -24 = first downbeat).
-Splices are only made bar-to-bar between bars whose harmony and timbre match
-(chroma cosine >= 0.86), inside phrase boundaries, and each splice is moved
-to the quietest vocal instant just before the downbeat, so a sung pickup is
-never clipped. The video reads the cue sheet written next to the audio.
+The cut follows the words. video-assets/lyrics/ holds the time of every sung
+word (Whisper large-v3 on the Demucs voice stem) and the voice energy every
+20 ms. The edit keeps whole sung lines, in the song's own order, and only
+splices where the voice is silent on both sides, bar-to-bar between bars
+whose harmony matches:
+
+    intro  ......  "Ben adam, ma lecha nirdam / kum kra betachanunim"   bars -17 → -9
+    chorus 1 ....  "Ten li tefila achat tova" … "Ribono shel olam",
+                   the band's stop, "ma lecha nirdam", "tatzil oti"    bars  -1 → 18
+    verse 2 .....  "Lo barata oti lehithalech kayashen /
+                   ata male ahava, ani rotze gam ken"                  bars  20 → 28.5
+    chorus 2 ....  "Az ten li tefila achat tova /
+                   shetiftach li et kol hasha'arim", then a reverb tail  → 109.3 s
 
 Usage:
-    python3 tools/video/music_edit.py <source.mp3|wav> public/audio/music-edit.wav src/data/musicCues.json
+    python3 tools/video/music_edit.py <song> public/audio/music-edit.wav src/data/musicCues.json
 """
 import json
 import subprocess
@@ -22,6 +29,7 @@ import sys
 import librosa
 import numpy as np
 import soundfile as sf
+from scipy.signal import fftconvolve
 
 SRC, OUT_WAV, OUT_JSON = sys.argv[1:4]
 SR = 44100
@@ -32,58 +40,48 @@ def bar(n: float) -> float:
     return T0 + n * BAR
 
 
-# (source start, source end) in bars, or seconds when given as a float string.
-# Comments give the musical reason for each boundary.
 SEGMENTS = [
-    # Intro: first downbeat to the end of the opening vocal line (gap at 16 s).
-    {"from": 2.20, "to": ("bar", -17)},
-    # One-bar pickup into the first full section, first phrase of it.
-    {"from": ("bar", -1), "to": ("bar", 4)},
-    # Skip one 4-bar chord cycle (bars 4 and 8 open identical cycles).
-    # Through the band's stop at bar 12.5, the one-bar rest, the quiet part.
-    {"from": ("bar", 8), "to": ("bar", 18)},
-    # Two quiet bars out; bar 20 starts the build into the second section.
-    {"from": ("bar", 20), "to": ("bar", 31)},
-    # Bar 31 and bar 51 open the same phrase: jump to the closing cadence.
-    # Keep the final hit (bar 53) and let it ring into the silence.
-    {"from": ("bar", 51), "to": 149.90},
-    # The song's closing tag, from the silence before it to its own decay.
-    {"from": 174.80, "to": 183.20},
+    # Starts in the calm intro once the opening vocalise has faded (15.9 s),
+    # 1 s before "Ben adam". Ends after "kum kra betachanunim" (voice silent).
+    {"from": 15.95, "to": ("bar", -9)},
+    # One-bar pickup, the whole first chorus, the stop, the whispered call,
+    # to bar 18 where the voice has ended ("tatzil oti" ends at 79.6 s).
+    {"from": ("bar", -1), "to": ("bar", 18)},
+    # Verse 2 from the quiet bar before "lo barata oti", then the second
+    # chorus's first two lines, ending after "hasha'arim" (109.2 s), before
+    # the next line (109.5 s).
+    {"from": ("bar", 20), "to": 109.30},
 ]
+TAIL = 3.4  # seconds of reverb after the last word
 
-# Named musical moments, in source seconds, for the video to lock onto.
+# Named moments, in source seconds. Sung-line times come from
+# video-assets/lyrics/transcript.json and the voice energy.
 CUES_SRC = {
-    "hookLine1": bar(-24),
-    "hookLine2": bar(-23),
-    "hookStop": bar(-22),
-    "hookBreathe": bar(-21.5),
-    "hookSpeak": bar(-21),
-    "voiceIn": bar(-20),          # the voice enters: "Hitbodedut"
-    "definition": bar(-19.5),
-    "verb1": bar(-18),
-    "verb2": bar(-17.5),
-    "verb3": bar(-1),             # (after the intro splice)
-    "verb4": bar(-0.5),
-    "lift": bar(0),               # full band: the logo
-    "phoneUp": bar(2),
-    "timer": bar(8),
-    "journal": bar(10),
-    "stuck": bar(12),
+    "benAdam": 16.94,             # "Ben adam, ma lecha nirdam"
+    "hookLine2": bar(-16),
+    "hookStop": bar(-15),
+    "hookBreathe": bar(-14.5),
+    "hookSpeak": bar(-14),
+    "kumKra": bar(-12.5),         # "kum kra betachanunim": Hitbodedut
+    "definition": bar(-11.5),
+    "pickup": bar(-1),
+    "lift": bar(0),               # "Ten li tefila achat tova": the logo
+    "phoneUp": bar(2),            # "shetiftach li et kol hasha'arim"
+    "quote": bar(4),              # "Ten li mila achat kena"
+    "quote2": bar(4.5),
+    "quote3": bar(5),
+    "quoteSource": bar(5.5),
+    "timer": bar(7),              # "ani rotze lihyot talui al chut hase'ara"
+    "stuck": bar(10),             # "tzo'ek bechol kochi, ribono shel olam"
     "stop": bar(12.5),            # the band stops dead
-    "quote": bar(14),
-    "quote2": bar(15),
-    "quote3": bar(16),
-    "quoteSource": bar(17),
-    "tikkun": bar(20),            # the build
-    "tefilot": bar(23),           # second full section
-    "library": bar(25),
-    "gate": bar(27),
-    "streak": bar(29),
-    "private": bar(51),
-    "finalHit": bar(53),
-    "tag": 175.04,                # closing tag downbeat (bar 67)
-    "tagline": 175.04 + BAR,
-    "tagMeta": 175.04 + 2 * BAR,
+    "tikkun": bar(13.5),          # "ma lecha nirdam" (whispered)
+    "journal": bar(15.5),         # "tatzil oti"
+    "gate": bar(20),              # "lo barata oti lehithalech kayashen"
+    "tefilot": bar(23),           # band back in, "ata male ahava"
+    "private": bar(25.5),         # "ani rotze gam ken"
+    "finalLogo": bar(29),         # "az ten li tefila achat tova"
+    "tagline": bar(30),           # "shetiftach li et kol hasha'arim"
+    "tagMeta": bar(31.5),
 }
 
 
@@ -101,17 +99,16 @@ def load(path):
 y = load(SRC)
 mono = y.mean(0)
 
-# Vocal-foreground energy (repetition-based separation) to place splices.
-HOP_FG = 1024  # the similarity matrix is frames², keep it small
-S = np.abs(librosa.stft(mono, n_fft=4096, hop_length=HOP_FG))
-Sf = np.minimum(S, librosa.decompose.nn_filter(
-    S, aggregate=np.median, metric="cosine",
-    width=int(librosa.time_to_frames(2, sr=SR, hop_length=HOP_FG))))
-fg = librosa.util.softmask(S - Sf, 10 * Sf, power=2) * S
-freqs = librosa.fft_frequencies(sr=SR, n_fft=4096)
-fg_env = fg[(freqs > 250) & (freqs < 3500)].sum(0)
+# Voice energy from the Demucs stem (video-assets/lyrics/vocal-energy.json).
+_ve = json.load(open("video-assets/lyrics/vocal-energy.json"))
+VOICE_HOP, VOICE_DB = _ve["hop"], np.array(_ve["db"])
 S2 = np.abs(librosa.stft(mono, n_fft=2048, hop_length=256))
 onset = librosa.onset.onset_strength(S=librosa.amplitude_to_db(S2), sr=SR, hop_length=256)
+
+
+def voice_db(t):
+    i = int(round(t / VOICE_HOP))
+    return float(VOICE_DB[max(0, i - 2): i + 3].max())
 
 
 def env_at(e, t, hop):
@@ -120,15 +117,17 @@ def env_at(e, t, hop):
 
 
 def best_offset(t_out, t_in):
-    """Shift both sides of a splice by the same small amount, to the quietest
-    vocal instant before the downbeat, away from any drum transient."""
+    """Shift both sides of a splice by the same small amount, to where the
+    voice is quietest on both sides, away from any drum transient."""
     best = (1e18, 0.0)
     thr = np.percentile(onset, 90)
     for d in np.arange(-0.40, -0.019, 0.01):
-        cost = env_at(fg_env, t_out + d, HOP_FG) + env_at(fg_env, t_in + d, HOP_FG)
+        cost = 10 ** (voice_db(t_out + d) / 20) + 10 ** (voice_db(t_in + d) / 20)
         if env_at(onset, t_out + d, 256) > thr or env_at(onset, t_in + d, 256) > thr:
             cost *= 4
         best = min(best, (cost, d))
+    if max(voice_db(t_out + best[1]), voice_db(t_in + best[1])) > -40:
+        raise SystemExit(f"splice {t_out:.2f} -> {t_in:.2f} would cut through the voice")
     return best[1]
 
 
@@ -159,10 +158,28 @@ for k, (a, b) in enumerate(segs):
         out_start -= xf
     mapping.append((a, b, out_start))
 
-# Gentle fade on the very first samples and after the tag's decay.
-fi = int(0.03 * SR)
-out[:, :fi] *= np.linspace(0, 1, fi)
-fo = int(1.2 * SR)
+# Fade in from the calm intro.
+fi = int(0.5 * SR)
+out[:, :fi] *= np.sin(np.linspace(0, np.pi / 2, fi)) ** 2
+
+# Ending: the last word rings out in a reverb built from the song's own last
+# second, instead of a hard stop. Dry signal fades over 0.25 s.
+rng = np.random.default_rng(3)
+n_ir = int(TAIL * SR)
+decay = np.exp(-np.arange(n_ir) / SR * 6.9 / 2.6)       # RT60 ≈ 2.6 s
+ir = np.stack([rng.standard_normal(n_ir) * decay, rng.standard_normal(n_ir) * decay])
+ir[:, : int(0.01 * SR)] = 0
+last = out[:, -int(1.0 * SR):]
+wet = np.stack([fftconvolve(last[c], ir[c])[len(last[c]) - int(0.25 * SR):] for c in range(2)])
+wet = wet[:, : int(0.25 * SR) + n_ir]
+wet *= 0.35 * np.abs(last).max() / (np.abs(wet).max() + 1e-9)
+dry_fade = int(0.25 * SR)
+out[:, -dry_fade:] *= np.cos(np.linspace(0, np.pi / 2, dry_fade)) ** 2
+tail = np.zeros((2, wet.shape[1]), dtype=np.float32)
+tail[:, :] = wet
+out = np.concatenate([out, np.zeros((2, wet.shape[1] - dry_fade), dtype=np.float32)], axis=1)
+out[:, -wet.shape[1]:] += tail
+fo = int(1.0 * SR)
 out[:, -fo:] *= np.linspace(1, 0, fo) ** 2
 
 tmp = OUT_WAV + ".raw.wav"
@@ -188,7 +205,7 @@ cues["end"] = round(out.shape[1] / SR, 3)
 cues["bar"] = BAR
 # Downbeats heard in the two full sections, for the light pulse.
 pulses = []
-for n in list(range(0, 13)) + list(range(20, 32)) + [51, 52, 53]:
+for n in list(range(0, 13)) + list(range(23, 33)):
     try:
         pulses.append(round(src2out(bar(n)), 3))
     except ValueError:

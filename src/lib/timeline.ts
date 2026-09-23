@@ -32,12 +32,15 @@ export const useFilmTime = () => {
 export const energyAt = (t: number) => {
   const ramp = (a: number, b: number, x: number) =>
     Math.min(1, Math.max(0, (x - a) / (b - a)));
-  if (t < CUES.lift - 1) return 0.55 + 0.25 * ramp(CUES.voiceIn, CUES.lift, t);
+  // Verse 1, voice and piano: the room is dim and slowly warms.
+  if (t < CUES.lift - 1) return 0.5 + 0.3 * ramp(CUES.benAdam, CUES.lift, t);
+  // First chorus, full band.
   if (t < CUES.stop) return 0.8 + 0.2 * ramp(CUES.lift - 1, CUES.lift, t);
-  if (t < CUES.tikkun) return 1 - 0.55 * ramp(CUES.stop, CUES.stop + 0.6, t);
-  if (t < CUES.tefilot) return 0.45 + 0.5 * ramp(CUES.tikkun, CUES.tefilot, t);
-  if (t < CUES.finalHit + 0.3) return 0.95;
-  return 0.9;
+  // The band stops; the call is whispered; verse 2 starts quietly.
+  if (t < CUES.gate) return 1 - 0.55 * ramp(CUES.stop, CUES.stop + 0.6, t);
+  // The build back into the band.
+  if (t < CUES.tefilot) return 0.45 + 0.5 * ramp(CUES.gate, CUES.tefilot, t);
+  return 0.95;
 };
 
 /** A soft swell on each downbeat of the band sections, 0–1. */
