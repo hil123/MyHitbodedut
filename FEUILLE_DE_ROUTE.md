@@ -569,6 +569,19 @@ source avant la détection de fond, à la main, pour cette seule image.
 bord qui tranche, aucun fragment de voisin visible. `ic_launcher_face.webp`,
 hors de ce pipeline, n'a pas été touché.
 
+**Réglages, invisible sans faire défiler (23/09), confirmé corrigé.** Après
+la correction du nom d'icône et du titre du Tikoun, le propriétaire a
+signalé n'avoir toujours ni le choix de langue ni les autres corrections —
+sur l'APK exact envoyé, redécodé pour vérifier : le bouton de langue et la
+ligne Réglages existaient bel et bien, mais Réglages était le sixième et
+dernier élément de la carte « Tout le reste » sur l'écran d'accueil, après
+Tikoun, Tefilot, Bibliothèque, Rappels et Musique — hors champ sans
+défilement. La même faute que celle déjà réparée pour le bouton de langue
+*à l'intérieur* de Réglages, jamais appliquée à Réglages *lui-même*.
+`settings_button` déplacé en tête de la carte, avant `tikkun_button` ;
+`HomeTest` ne vérifie que la présence des sections, pas leur ordre — vert
+sans changement. **Confirmé fonctionnel par le propriétaire le 23/09.**
+
 ## Décisions du 22/09
 
 | | |
