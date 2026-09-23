@@ -599,3 +599,15 @@ L'application ne déclare **aucune permission Internet**. Rien ne peut en
 sortir, et l'écran d'accueil le promet — un test tient cette phrase au
 manifeste. Toute proposition qui demanderait un serveur, un compte ou une
 synchronisation romprait cela, et devrait être décidée comme telle.
+
+## Mise à jour (23/09, suite)
+
+**Tous les personnages remplacés par version avec peot (23/09).** Le
+propriétaire a fourni une planche de 4×4 avec tous les rôles redessinnés avec
+des sidelocks tressées à la place de la queue longue simple : 16 poses + 4
+rendus seuls (dansant, guitare, bras levés, bras levés avec guitare) + closeup
+tête. Script `decoupe_planche.py` : découpe, détourage fond blanc par
+connexité, export WebP. Tous les 21 fichiers drawable remplacés (20 de la grille
++ `char_open_arms` réutilisé comme avant). Vérification `verifie_illustrations.py`
+confirme : aucune tranche de bord, aucun fragment voisin. Commit 41f2c80, prêt à
+test.
