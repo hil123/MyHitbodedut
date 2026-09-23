@@ -9,6 +9,10 @@ adb shell settings put global window_animation_scale 0
 adb shell settings put global transition_animation_scale 0
 adb shell settings put global animator_duration_scale 0
 adb shell cmd uimode night yes
+# Let a freshly booted emulator settle, or System UI stalls on the first app.
+until adb shell getprop sys.boot_completed | grep -q 1; do sleep 2; done
+sleep 60
+adb shell am broadcast -a android.intent.action.CLOSE_SYSTEM_DIALOGS || true
 adb install -r -g apk/MyHitbodedut.apk
 adb shell cmd locale set-app-locales $PKG --locales en-US || true
 adb shell appops set $PKG SYSTEM_ALERT_WINDOW allow || true

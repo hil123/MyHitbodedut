@@ -30,14 +30,27 @@ def sh(cmd):
 
 
 def dump():
-    for _ in range(3):
+    for _ in range(6):
         sh("uiautomator dump /sdcard/ui.xml >/dev/null 2>&1")
         raw = adb("exec-out", "cat /sdcard/ui.xml")
         if raw.strip().startswith("<?xml"):
             try:
-                return raw, ET.fromstring(raw)
+                root = ET.fromstring(raw)
             except ET.ParseError:
-                pass
+                root = None
+            if root is not None:
+                # A fresh emulator sometimes shows "System UI isn't responding":
+                # answer "Wait" and look again.
+                anr = find(r"isn.t responding", root)
+                if anr is not None:
+                    w = find(r"^Wait$", root)
+                    if w is not None:
+                        x, y = bounds_center(w.get("bounds"))
+                        sh(f"input tap {x} {y}")
+                        log("[anr] dismissed a not-responding dialog")
+                    time.sleep(3)
+                    continue
+                return raw, root
         time.sleep(1)
     return "", None
 
@@ -52,6 +65,7 @@ def texts(root):
 
 
 def shot(name):
+    dump()  # clears a stray not-responding dialog before the capture
     counter[0] += 1
     base = f"{counter[0]:02d}-{name}{SUFFIX}"
     time.sleep(1.5)
