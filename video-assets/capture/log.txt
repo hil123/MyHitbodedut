@@ -1,0 +1,79 @@
+[shot] 01-onboarding-1  (topResumedActivity=ActivityRecord{1c8b514 u0 com.myhitbodedut/.OnboardingActivity t8})
+        texts: System UI isn't responding | Close app | Wait
+[miss] /^(Next|Begin)$/ not found
+[shot] 02-onboarding-2  (topResumedActivity=ActivityRecord{1c8b514 u0 com.myhitbodedut/.OnboardingActivity t8})
+        texts: System UI isn't responding | Close app | Wait
+[miss] /^(Next|Begin)$/ not found
+[shot] 03-onboarding-3  (topResumedActivity=ActivityRecord{1c8b514 u0 com.myhitbodedut/.OnboardingActivity t8})
+        texts: System UI isn't responding | Close app | Wait
+[miss] /^(Next|Begin)$/ not found
+[shot] 04-onboarding-4  (topResumedActivity=ActivityRecord{1c8b514 u0 com.myhitbodedut/.OnboardingActivity t8})
+        texts: System UI isn't responding | Close app | Wait
+[miss] /^(Next|Begin)$/ not found
+[shot] 05-onboarding-5  (topResumedActivity=ActivityRecord{1c8b514 u0 com.myhitbodedut/.OnboardingActivity t8})
+        texts: System UI isn't responding | Close app | Wait
+[miss] /^(Next|Begin)$/ not found
+[shot] 06-onboarding-6  (topResumedActivity=ActivityRecord{1c8b514 u0 com.myhitbodedut/.OnboardingActivity t8})
+        texts: System UI isn't responding | Close app | Wait
+[miss] /^(Next|Begin)$/ not found
+[shot] 07-onboarding-7  (topResumedActivity=ActivityRecord{1c8b514 u0 com.myhitbodedut/.OnboardingActivity t8})
+        texts: System UI isn't responding | Close app | Wait
+[miss] /^(Next|Begin)$/ not found
+[shot] 08-onboarding-8  (topResumedActivity=ActivityRecord{1c8b514 u0 com.myhitbodedut/.OnboardingActivity t8})
+        texts: System UI isn't responding | Close app | Wait
+[miss] /^(Next|Begin)$/ not found
+[shot] 09-home-a  (topResumedActivity=ActivityRecord{122cf8c u0 com.myhitbodedut/.OnboardingActivity t8})
+        texts: System UI isn't responding | Close app | Wait
+[shot] 10-home-b  (topResumedActivity=ActivityRecord{122cf8c u0 com.myhitbodedut/.OnboardingActivity t8})
+        texts: System UI isn't responding | Close app | Wait
+[shot] 11-home-c  (topResumedActivity=ActivityRecord{122cf8c u0 com.myhitbodedut/.OnboardingActivity t8})
+        texts: System UI isn't responding | Close app | Wait
+[shot] 12-home-d  (topResumedActivity=ActivityRecord{122cf8c u0 com.myhitbodedut/.OnboardingActivity t8})
+        texts: System UI isn't responding | Close app | Wait
+[shot] 13-home-e  (topResumedActivity=ActivityRecord{122cf8c u0 com.myhitbodedut/.OnboardingActivity t8})
+        texts: System UI isn't responding | Close app | Wait
+[miss] /^Settings$/ not found
+[shot] 14-settings-a  (topResumedActivity=ActivityRecord{b384e50 u0 com.myhitbodedut/.OnboardingActivity t8})
+        texts: System UI isn't responding | Close app | Wait
+[shot] 15-settings-b  (topResumedActivity=ActivityRecord{b384e50 u0 com.myhitbodedut/.OnboardingActivity t8})
+        texts: System UI isn't responding | Close app | Wait
+[shot] 16-settings-c  (topResumedActivity=ActivityRecord{b384e50 u0 com.myhitbodedut/.OnboardingActivity t8})
+        texts: System UI isn't responding | Close app | Wait
+[shot] 17-settings-d  (topResumedActivity=ActivityRecord{b384e50 u0 com.myhitbodedut/.OnboardingActivity t8})
+        texts: System UI isn't responding | Close app | Wait
+[shot] 18-settings-e  (topResumedActivity=ActivityRecord{b384e50 u0 com.myhitbodedut/.OnboardingActivity t8})
+        texts: System UI isn't responding | Close app | Wait
+[shot] 19-settings-f  (topResumedActivity=ActivityRecord{b384e50 u0 com.myhitbodedut/.OnboardingActivity t8})
+        texts: System UI isn't responding | Close app | Wait
+[miss] /^Guided hitbodedut$/ not found
+[miss] /Preview the gate screen now/ not found
+[miss] /^Start a .* session$/ not found
+[shot] 20-session-idle  (topResumedActivity=ActivityRecord{c767c4c u0 com.myhitbodedut/.OnboardingActivity t8})
+        texts: System UI isn't responding | Close app | Wait
+[miss] /^10\s*min$/ not found
+[shot] 21-session-running  (topResumedActivity=ActivityRecord{c767c4c u0 com.myhitbodedut/.OnboardingActivity t8})
+        texts: System UI isn't responding | Close app | Wait
+[shot] 22-session-running-scrolled  (topResumedActivity=ActivityRecord{c767c4c u0 com.myhitbodedut/.OnboardingActivity t8})
+        texts: System UI isn't responding | Close app | Wait
+[miss] /I cannot find the words/ not found
+[shot] 23-session-running-later  (topResumedActivity=ActivityRecord{c767c4c u0 com.myhitbodedut/.OnboardingActivity t8})
+        texts: System UI isn't responding | Close app | Wait
+[miss] /^Finish now$/ not found
+[shot] 24-home-done-a  (topResumedActivity=ActivityRecord{908bbac u0 com.myhitbodedut/.OnboardingActivity t8})
+        texts: System UI isn't responding | Close app | Wait
+[shot] 25-home-done-a  (topResumedActivity=ActivityRecord{32311a8 u0 com.myhitbodedut/.OnboardingActivity t8})
+        texts: System UI isn't responding | Close app | Wait
+[shot] 26-home-done-b  (topResumedActivity=ActivityRecord{32311a8 u0 com.myhitbodedut/.OnboardingActivity t8})
+        texts: System UI isn't responding | Close app | Wait
+[shot] 27-home-done-c  (topResumedActivity=ActivityRecord{32311a8 u0 com.myhitbodedut/.OnboardingActivity t8})
+        texts: System UI isn't responding | Close app | Wait
+[miss] /^Open the journal$/ not found
+[miss] /^Tikkun HaKlali$/ not found
+[miss] /^Tfilot$/ not found
+[miss] /^Library$/ not found
+[miss] /^Tips for Hitbodedut$/ not found
+[miss] /^Reminders$/ not found
+[miss] /^Music$/ not found
+[shot] 28-home-final  (topResumedActivity=ActivityRecord{c2a4db6 u0 com.myhitbodedut/.OnboardingActivity t8})
+        texts: System UI isn't responding | Close app | Wait
+[done]
