@@ -376,6 +376,7 @@ class MainActivity : AppCompatActivity() {
     private fun renderSwitches() {
         bindSwitch(R.id.music_switch_main, Store.musicEnabled(this)) { checked ->
             Store.setMusicEnabled(this, checked)
+            SessionService.musicChanged(this)
             refresh()
         }
     }

@@ -14,6 +14,7 @@ import android.os.Build
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
+import android.widget.Toast
 
 /**
  * Déroule la séance de hitbodedout en arrière-plan, pour que le téléphone
@@ -49,6 +50,17 @@ class SessionService : Service() {
             ACTION_FINISH -> {
                 finishSession(early = true)
                 return START_NOT_STICKY
+            }
+            ACTION_MUSIC -> {
+                if (!Store.isSessionRunning(this)) {
+                    stopSelf()
+                    return START_NOT_STICKY
+                }
+                if (!Store.musicEnabled(this)) {
+                    music.stop()
+                    return START_STICKY
+                }
+                // Réactivée : le chemin ordinaire ci-dessous relance le morceau.
             }
         }
         startForegroundNow()
@@ -114,7 +126,9 @@ class SessionService : Service() {
         if (!Store.musicEnabled(this) || music.isPlaying) return
         if (!Store.isSessionRunning(this)) return
         val track = MusicLibrary.selected(this) ?: return
-        music.start(track, Store.musicVolume(this))
+        if (!music.start(track, Store.musicVolume(this))) {
+            Toast.makeText(applicationContext, R.string.music_play_failed, Toast.LENGTH_LONG).show()
+        }
     }
 
     private fun stopSelfAndClear() {
@@ -193,6 +207,15 @@ class SessionService : Service() {
         private const val TICK_MS = 5_000L
         const val ACTION_CANCEL = "com.myhitbodedut.CANCEL_SESSION"
         const val ACTION_FINISH = "com.myhitbodedut.FINISH_SESSION"
+        const val ACTION_MUSIC = "com.myhitbodedut.MUSIC_CHANGED"
+
+        /** L'interrupteur de musique a bougé : la séance en cours doit suivre. */
+        fun musicChanged(context: Context) {
+            if (!Store.isSessionRunning(context)) return
+            context.startService(
+                Intent(context, SessionService::class.java).setAction(ACTION_MUSIC)
+            )
+        }
 
         fun start(context: Context, minutes: Int) {
             Store.beginSession(context, minutes)

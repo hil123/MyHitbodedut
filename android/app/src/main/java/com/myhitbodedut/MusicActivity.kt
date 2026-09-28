@@ -52,6 +52,7 @@ class MusicActivity : AppCompatActivity() {
             isChecked = Store.musicEnabled(this@MusicActivity)
             setOnCheckedChangeListener { _, checked ->
                 Store.setMusicEnabled(this@MusicActivity, checked)
+                SessionService.musicChanged(this@MusicActivity)
                 renderSummary()
             }
         }

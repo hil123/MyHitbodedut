@@ -611,3 +611,37 @@ connexité, export WebP. Tous les 21 fichiers drawable remplacés (20 de la gril
 + `char_open_arms` réutilisé comme avant). Vérification `verifie_illustrations.py`
 confirme : aucune tranche de bord, aucun fragment voisin. Commit 41f2c80, prêt à
 test.
+
+**Correctif (28/09) : la note ci-dessus était fausse sur un point.** Le
+commit 41f2c80 a envoyé quatre images isolées (`char_guitar`,
+`char_arms_raised`, `char_arms_raised_guitar`, `char_open_arms`) avec un fond
+noir ou blanc plein, et réduit `char_dancing_joy` de 900 à 369 px. Leur source
+avait déjà une couche alpha, que `convert("RGB")` a aplatie. Le vérificateur ne
+regardait pas le fond, donc il a dit « aucun défaut ». Les cinq sont revenues à
+leur version de v1.86 (détourées, peyot, pas de queue de cheval),
+`decoupe_planche.py` ne les produit plus, et `verifie_illustrations.py` refuse
+maintenant une image qui a moins de 10 % de pixels transparents.
+
+## Mise à jour (28/09)
+
+**Nouvelle planche de 16 poses.** Nouveaux rendus, fournis par le
+propriétaire, proches des précédents. Le livre tenu contre la poitrine porte
+maintenant « תהלים ». Aucune pose ne montre de queue de cheval. La planche
+n'est pas une grille régulière : ses rangées font environ 420, 350, 370 et
+395 px. `decoupe_planche.py` coupe donc au milieu des bandes blanches, au
+lieu de couper au quart exact, ce qui aurait tranché les pieds de la première
+rangée.
+
+**Musique muette (signalée sur v1.86, en anglais, pas l'essai).** Les
+fichiers MP3 et la construction sont sains. Trois défauts se cumulaient :
+- la musique était **désactivée par défaut** (`Store.musicEnabled`), donc une
+  séance restait muette tant qu'on n'avait pas trouvé l'interrupteur. Elle est
+  désormais active par défaut, et un choix explicite reste respecté ;
+- activer l'interrupteur **pendant** une séance ne lançait rien, et le couper
+  n'arrêtait rien. Le service de séance suit maintenant l'interrupteur
+  (`SessionService.musicChanged`) ;
+- un échec de lecture pendant la séance ne produisait aucun message. Il
+  affiche maintenant « Ce morceau n'a pas pu être lu », et `MusicPlayer`
+  journalise la cause.
+À confirmer sur le téléphone : si le message d'échec apparaît, la cause est
+ailleurs, et le journal (`adb logcat -s MusicPlayer`) la donnera.

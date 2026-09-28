@@ -525,7 +525,10 @@ object Store {
 
     // --- Musique ------------------------------------------------------------
 
-    fun musicEnabled(context: Context): Boolean = prefs(context).getBoolean(KEY_MUSIC_ON, false)
+    // Active par défaut : éteinte, une séance restait muette sans que rien ne
+    // dise pourquoi, et « la musique ne marche pas » était le seul constat
+    // possible. Un choix explicite de l'utilisateur, lui, est conservé.
+    fun musicEnabled(context: Context): Boolean = prefs(context).getBoolean(KEY_MUSIC_ON, true)
 
     fun setMusicEnabled(context: Context, enabled: Boolean) {
         prefs(context).edit().putBoolean(KEY_MUSIC_ON, enabled).apply()

@@ -7,6 +7,7 @@ import android.media.AudioManager
 import android.media.MediaPlayer
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 
 /**
  * Lecture d'un morceau pendant la séance. Demande le focus audio, pour que
@@ -37,17 +38,25 @@ class MusicPlayer(private val context: Context) {
                 }
                 prepare()
             }
-        }.getOrNull() ?: return false
+        }.onFailure { Log.w(TAG, "lecture impossible : ${track.id}", it) }
+            .getOrNull() ?: return false
 
         created.isLooping = loop
         player = created
         setVolume(volumePercent)
 
         if (!requestFocus()) {
+            Log.w(TAG, "focus audio refusé : ${track.id}")
             stop(fade = false)
             return false
         }
-        return runCatching { created.start(); true }.getOrDefault(false)
+        return runCatching { created.start(); true }
+            .onFailure { Log.w(TAG, "démarrage impossible : ${track.id}", it) }
+            .getOrDefault(false)
+    }
+
+    private companion object {
+        const val TAG = "MusicPlayer"
     }
 
     fun setVolume(percent: Int) {
