@@ -1,0 +1,64 @@
+name: Web (Safari sur Mac et iPhone simulé)
+
+# Le site dans le vrai Safari d'un Mac, puis dans Safari sur un iPhone
+# simulé par Xcode. Les minutes macOS comptent dix fois sur le quota
+# gratuit d'un dépôt privé : ce flux ne part qu'à la main, ou quand le
+# site change sur la branche de travail.
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [claude/version-web]
+    paths:
+      - 'web/**'
+      - '.github/workflows/web-mac.yml'
+
+permissions:
+  # Écriture : pour la branche des captures seulement.
+  contents: write
+
+jobs:
+  mac:
+    runs-on: macos-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Build
+        working-directory: web
+        run: node build.mjs
+
+      - name: Safari (macOS)
+        run: |
+          sw_vers
+          sudo safaridriver --enable
+          safaridriver -p 4444 &
+          sleep 3
+          node web/test/safari.mjs web/captures
+
+      - name: Safari on a simulated iPhone
+        if: always()
+        run: |
+          node web/tools/serveur.mjs 8080 &
+          sleep 2
+          bash web/test/simulateur.sh "http://127.0.0.1:8080/" web/captures
+
+      # Le quota d'artefacts du compte est plein (voir android.yml) : les
+      # captures partent sur une branche à part, remplacée à chaque fois.
+      - name: Publish screenshots to the captures branch
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          [ -d web/captures ] || exit 0
+          cd web/captures
+          git init -q -b captures
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -q -m "Captures mac du commit ${GITHUB_SHA}"
+          git push -q --force "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" captures:claude/captures-mac

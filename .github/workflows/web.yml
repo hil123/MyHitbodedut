@@ -20,7 +20,8 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  # Écriture : pour la branche des captures seulement.
+  contents: write
 
 jobs:
   web:
@@ -63,15 +64,21 @@ jobs:
           node test/captures.mjs webkit captures
           node test/captures.mjs chromium captures
 
-      - name: Upload screenshots
+      # Le quota d'artefacts du compte est plein (voir android.yml) : les
+      # captures partent sur une branche à part, remplacée à chaque fois.
+      - name: Publish screenshots to the captures branch
         if: always()
-        continue-on-error: true
-        uses: actions/upload-artifact@v4
-        with:
-          name: captures-web
-          path: web/captures/*.png
-          if-no-files-found: ignore
-          retention-days: 7
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          [ -d web/captures ] || exit 0
+          cd web/captures
+          git init -q -b captures
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -q -m "Captures linux du commit ${GITHUB_SHA}"
+          git push -q --force "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" captures:claude/captures-linux
 
       # La mise en ligne pousse le site construit dans un dépôt public qui ne
       # contient que lui, servi par GitHub Pages. Le code Android reste privé.

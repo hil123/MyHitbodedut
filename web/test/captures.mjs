@@ -6,14 +6,13 @@
 //
 // Le site doit être construit (node web/build.mjs).
 
-import { createServer } from 'node:http';
-import { mkdirSync, readFileSync, statSync } from 'node:fs';
+import { mkdirSync } from 'node:fs';
 import { createRequire } from 'node:module';
-import { dirname, extname, join, normalize } from 'node:path';
+import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { demarreServeur } from '../tools/serveur.mjs';
 
 const ICI = dirname(fileURLToPath(import.meta.url));
-const DIST = join(ICI, '..', 'dist');
 const moteur = process.argv[2] || 'chromium';
 const SORTIE = process.argv[3] || join(ICI, '..', 'captures');
 mkdirSync(SORTIE, { recursive: true });
@@ -21,22 +20,7 @@ mkdirSync(SORTIE, { recursive: true });
 const require = createRequire(import.meta.url);
 const pw = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
 
-const TYPES = {
-  '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.css': 'text/css', '.json': 'application/json',
-  '.webp': 'image/webp', '.png': 'image/png', '.svg': 'image/svg+xml', '.mp3': 'audio/mpeg',
-  '.webmanifest': 'application/manifest+json', '.txt': 'text/plain',
-};
-const serveur = createServer((req, res) => {
-  const chemin = decodeURIComponent(new URL(req.url, 'http://x').pathname);
-  let fichier = normalize(join(DIST, chemin));
-  if (!fichier.startsWith(DIST)) { res.writeHead(403).end(); return; }
-  try { if (statSync(fichier).isDirectory()) fichier = join(fichier, 'index.html'); } catch { /* 404 plus bas */ }
-  let corps;
-  try { corps = readFileSync(fichier); } catch { res.writeHead(404).end(); return; }
-  res.writeHead(200, { 'Content-Type': TYPES[extname(fichier)] || 'application/octet-stream' });
-  res.end(corps);
-});
-await new Promise((r) => serveur.listen(0, '127.0.0.1', r));
+const serveur = await demarreServeur();
 const base = `http://127.0.0.1:${serveur.address().port}/`;
 
 const options = moteur === 'chromium' && process.env.CHROMIUM_PATH ? { executablePath: process.env.CHROMIUM_PATH } : {};
