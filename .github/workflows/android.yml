@@ -41,14 +41,9 @@ jobs:
           VERSION_CODE: ${{ github.run_number }}
         run: ./gradlew --no-daemon assembleFullRelease assembleLightRelease
 
-      # L'edition de test porte l'ecran de relecture, seul moyen de lever les
-      # relu=false de chizuk.json depuis le telephone. Identifiant suffixe en
-      # .debug : elle s'installe a cote de l'edition normale.
-      - name: Build the test edition
-        working-directory: android
-        env:
-          VERSION_CODE: ${{ github.run_number }}
-        run: ./gradlew --no-daemon assembleFullDebug
+      # L'edition Relecture (test, identifiant .debug) n'est plus construite
+      # ni publiee : le proprietaire l'a retiree le 28/09. Le type de
+      # construction debug reste, l'edition d'essai (apk-essai.yml) s'en sert.
 
       # R8 est actif en release : la taille est la raison de l'avoir active,
       # donc elle est affichee a chaque construction.
@@ -100,17 +95,16 @@ jobs:
         run: |
           cp app/build/outputs/apk/full/release/app-full-release.apk MyHitbodedut.apk
           cp app/build/outputs/apk/light/release/app-light-release.apk MyHitbodedut-Light.apk
-          cp app/build/outputs/apk/full/debug/app-full-debug.apk MyHitbodedut-Relecture.apk
           # Sans cette table, une trace d'execution de la release est
           # illisible : R8 a renomme les classes.
           cp app/build/outputs/mapping/fullRelease/mapping.txt mapping-full.txt
           # Nettoyage unique de l'ancienne etiquette fixe, sans effet ensuite.
           gh release delete latest --yes --cleanup-tag || true
           gh release create "v1.${{ github.run_number }}" \
-            MyHitbodedut.apk MyHitbodedut-Light.apk MyHitbodedut-Relecture.apk \
+            MyHitbodedut.apk MyHitbodedut-Light.apk \
             mapping-full.txt \
             --title "MyHitbodedut 1.${{ github.run_number }}" \
-            --notes "Trois editions signees, construites depuis le commit ${{ github.sha }}. Light n'embarque pas la barriere du matin ni ses permissions. Relecture est l'edition de test : elle s'installe a cote des autres et porte l'ecran de relecture des textes." \
+            --notes "Deux editions signees, construites depuis le commit ${{ github.sha }}. Light n'embarque pas la barriere du matin ni ses permissions." \
             --latest
 
       - name: Upload lint report

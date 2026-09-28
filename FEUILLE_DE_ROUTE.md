@@ -693,3 +693,18 @@ jour et de nuit, aux seuils de la palette d'origine. Techniquement, les
 `MyHitbodedutApp`). Le widget et l'icône gardent leurs couleurs : ils sont
 dessinés par l'écran d'accueil du téléphone. L'écran de blocage, posé par un
 service, reçoit le thème par `Apparence.contexte`.
+
+**Encouragement après une séance annulée (28/09).** Demande du propriétaire :
+une séance annulée ouvre l'écran du bravo sans danse, avec « ’Hazak ! » ou
+« ’Hizki ! » (« Courage ! » sans choix), sa phrase « Pour tout ce que vous
+avez fait jusqu'ici. La prochaine fois sera meilleure. », et un mot du moment
+« relance » (7 textes relus, dont Likoutei Moharan II, 78 : אֵין שׁוּם יֵאוּשׁ
+בָּעוֹלָם כְּלָל). Likoutei Moharan II, 112 a été proposé, pas ajouté.
+
+**Édition Relecture retirée (28/09).** Demande du propriétaire. Elle n'est
+plus construite ni jointe aux versions : chaque version porte deux fichiers,
+MyHitbodedut et Light. Le type de construction debug reste, parce que
+l'édition d'essai en dépend ; l'écran de relecture n'existe donc plus que
+dans l'édition d'essai. Un texte ajouté plus tard avec relu=false ne
+s'affichera nulle part dans l'édition normale tant qu'on ne l'aura pas relu
+autrement (par exemple dans la conversation, puis relu=true dans le fichier).
