@@ -62,14 +62,30 @@ class OnboardingTest {
         assertTrue(principal.contains("OnboardingActivity::class.java"))
     }
 
-    /** Une installation qui a deja servi ne doit pas voir l'accueil. */
+    /**
+     * La présentation revient une fois à chaque nouvelle version d'elle-même,
+     * installation existante comprise : le choix צדיק / צדקת ne se pose que là.
+     * La v1.96 la cachait à qui avait déjà servi l'application (28/09).
+     */
     @Test
-    fun `une installation existante est marquee sans voir l accueil`() {
+    fun `la presentation est versionnee et montree aux installations existantes`() {
+        assertTrue(Onboarding.VERSION >= 2)
         val principal = File("src/main/java/com/myhitbodedut/MainActivity.kt").readText()
         val bloc = principal.substringAfter("private fun showOnboardingOnce()")
             .substringBefore("\n    }")
-        assertTrue("hasHistory doit être consulté", bloc.contains("Store.hasHistory"))
-        assertTrue("et marquer l'accueil comme vu", bloc.contains("Store.setOnboarded(this, true)"))
+        assertFalse("l'historique ne doit plus la cacher", bloc.contains("hasHistory"))
+        assertTrue(bloc.contains("Store.hasOnboarded(this)"))
+        val store = File("src/main/java/com/myhitbodedut/Store.kt").readText()
+        assertTrue("la version vue doit être comparée", store.contains(">= Onboarding.VERSION"))
+    }
+
+    /** Le bravo et le ’hazak ne reposent plus la question : elle est dans la présentation. */
+    @Test
+    fun `l adresse ne se choisit que dans la presentation et les reglages`() {
+        val gabarit = File("src/main/res/layout/activity_celebration.xml").readText()
+        val code = File("src/main/java/com/myhitbodedut/CelebrationActivity.kt").readText()
+        assertFalse(gabarit.contains("adresse_tsadik"))
+        assertFalse(code.contains("setAdresse"))
     }
 
     @Test

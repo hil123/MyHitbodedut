@@ -52,10 +52,13 @@ class CelebrationActivity : AppCompatActivity() {
         } else {
             chizuk.visibility = View.GONE
         }
-        findViewById<Button>(R.id.celebration_tsadik).setOnClickListener { choisir(Adresse.HOMME) }
-        findViewById<Button>(R.id.celebration_tsadeket).setOnClickListener { choisir(Adresse.FEMME) }
+        // Sans choix enregistré, le titre reste neutre : la question
+        // צדיק / צדקת ne se pose que dans la présentation (demande du 28/09).
+        val adresse = Store.adresse(this)
+        findViewById<TextView>(R.id.celebration_title).setText(
+            if (annulee) Adresse.hazak(adresse) else Adresse.bravo(adresse)
+        )
         findViewById<Button>(R.id.celebration_continue).setOnClickListener { finish() }
-        render()
     }
 
     override fun onStart() {
@@ -67,21 +70,6 @@ class CelebrationActivity : AppCompatActivity() {
         danse?.cancel()
         danse = null
         super.onStop()
-    }
-
-    private fun choisir(adresse: Adresse) {
-        Store.setAdresse(this, adresse)
-        render()
-    }
-
-    /** Sans choix enregistré, le bravo reste neutre et la question est posée ici. */
-    private fun render() {
-        val adresse = Store.adresse(this)
-        findViewById<TextView>(R.id.celebration_title).setText(
-            if (annulee) Adresse.hazak(adresse) else Adresse.bravo(adresse)
-        )
-        findViewById<View>(R.id.celebration_ask).visibility =
-            if (adresse == null) View.VISIBLE else View.GONE
     }
 
     /**

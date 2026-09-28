@@ -54,7 +54,7 @@ class OnboardingActivity : AppCompatActivity() {
      * retour arrière — l'accueil a été vu et ne revient plus.
      */
     override fun finish() {
-        Store.setOnboarded(this, true)
+        Store.setOnboarded(this)
         super.finish()
     }
 

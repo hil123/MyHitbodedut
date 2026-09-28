@@ -62,45 +62,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp" />
 
-        <LinearLayout
-            android:id="@+id/celebration_ask"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="18dp"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="@string/celebration_ask"
-                android:textColor="?attr/mhMuted"
-                android:textSize="14sp" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:gravity="center"
-                android:orientation="horizontal">
-
-                <Button
-                    android:id="@+id/celebration_tsadik"
-                    style="@style/Widget.Material3.Button.OutlinedButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/adresse_tsadik" />
-
-                <Button
-                    android:id="@+id/celebration_tsadeket"
-                    style="@style/Widget.Material3.Button.OutlinedButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="12dp"
-                    android:text="@string/adresse_tsadeket" />
-            </LinearLayout>
-        </LinearLayout>
-
         <Button
             android:id="@+id/celebration_continue"
             android:layout_width="match_parent"

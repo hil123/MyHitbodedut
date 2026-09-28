@@ -72,7 +72,9 @@ object Store {
     private const val KEY_SESSION_THEME = "session_theme"
     private const val KEY_HIDE_COUNTDOWN = "hide_countdown"
     private const val KEY_GUIDED = "guided_hitbodedut"
-    private const val KEY_ONBOARDED = "onboarded"
+    private const val KEY_ONBOARDED = "onboarded_version"
+    /** Le booléen de la v1.96, retiré au premier passage. */
+    private const val KEY_ONBOARDED_ANCIEN = "onboarded"
     private const val KEY_NAME = "first_name"
     private const val KEY_ADRESSE = "adresse"
     private const val KEY_CELEBRATION = "celebration_minutes"
@@ -491,24 +493,23 @@ object Store {
     }
 
     /**
-     * L'accueil du premier lancement a déjà été vu.
+     * La présentation, dans sa version actuelle, a déjà été vue.
      *
-     * Une installation existante ne doit pas le voir apparaître : la clé
-     * est posée au premier passage par l'écran principal si l'application
-     * a déjà servi, ce que la présence d'un réglage ou d'une journée
-     * suffit à établir.
+     * On retient le numéro de version, pas un simple « vu » : quand la
+     * présentation change, elle revient une fois, installation existante
+     * comprise. La v1.96 la cachait à qui avait déjà servi l'application, et
+     * le propriétaire, installant par-dessus, ne l'a jamais vue ; son choix
+     * צדיק / צדקת ne se pose que là (demande du 28/09).
      */
     fun hasOnboarded(context: Context): Boolean =
-        prefs(context).getBoolean(KEY_ONBOARDED, false)
+        prefs(context).getInt(KEY_ONBOARDED, 0) >= Onboarding.VERSION
 
-    fun setOnboarded(context: Context, seen: Boolean) {
-        prefs(context).edit().putBoolean(KEY_ONBOARDED, seen).apply()
+    fun setOnboarded(context: Context) {
+        prefs(context).edit()
+            .putInt(KEY_ONBOARDED, Onboarding.VERSION)
+            .remove(KEY_ONBOARDED_ANCIEN)
+            .apply()
     }
-
-    /** L'application a déjà servi : une journée notée, ou un réglage touché. */
-    fun hasHistory(context: Context): Boolean =
-        days(context).isNotEmpty() || prefs(context).contains(KEY_TARGET) ||
-            prefs(context).contains(KEY_REMINDER_TIMES) || prefs(context).contains(KEY_APPS)
 
     /**
      * Le prénom, pour que l'accueil s'adresse à quelqu'un.

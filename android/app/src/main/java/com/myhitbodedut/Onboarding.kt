@@ -29,6 +29,13 @@ data class OnboardingEcran(
  */
 object Onboarding {
 
+    /**
+     * À augmenter quand la présentation change assez pour être remontrée à
+     * tous. 1 : le booléen de la v1.96 ; 2 : l'adresse n'est plus demandée
+     * qu'ici, et la présentation revient aux installations existantes.
+     */
+    const val VERSION = 2
+
     val ECRANS: List<OnboardingEcran> = listOf(
         OnboardingEcran(
             "pratique",

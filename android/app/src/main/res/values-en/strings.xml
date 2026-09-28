@@ -396,7 +396,6 @@
     <string name="celebration_tsadik">Well done, Tzadik!</string>
     <string name="celebration_tsadeket">Well done, Tzadeket!</string>
     <string name="celebration_neutral">Well done!</string>
-    <string name="celebration_ask">How should the app address you?</string>
     <string name="celebration_continue">Continue</string>
     <string name="settings_adresse">Address me as</string>
     <string name="settings_onboarding">See the introduction again</string>

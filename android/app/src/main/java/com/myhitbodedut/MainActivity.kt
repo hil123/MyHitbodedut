@@ -49,16 +49,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
-     * L'accueil, une seule fois, et jamais pour une installation qui a
-     * déjà servi : expliquer l'application à quelqu'un qui l'utilise
-     * depuis des semaines serait une régression, pas une amélioration.
+     * La présentation, une fois par version d'elle-même, installation
+     * existante comprise : c'est là seulement qu'on choisit צדיק / צדקת.
+     * Elle se passe d'un geste, et on la revoit depuis les réglages.
      */
     private fun showOnboardingOnce() {
         if (Store.hasOnboarded(this)) return
-        if (Store.hasHistory(this)) {
-            Store.setOnboarded(this, true)
-            return
-        }
         startActivity(Intent(this, OnboardingActivity::class.java))
     }
 
