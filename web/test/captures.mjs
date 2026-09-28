@@ -41,6 +41,7 @@ async function capture(nom, { langue, mode = 'clair', fond = 'vert', accent = 'v
   const page = await contexte.newPage();
   page.on('console', (m) => { if (m.type() === 'error') erreurs.push(`${nom} : ${m.text()}`); });
   page.on('pageerror', (e) => erreurs.push(`${nom} : ${e.message}`));
+  page.on('dialog', (d) => { erreurs.push(`${nom} : boîte « ${d.message()} »`); d.dismiss().catch(() => {}); });
   page.on('request', (r) => { if (!r.url().startsWith(base)) erreurs.push(`${nom} : requête hors du site ${r.url()}`); });
   const prefs = JSON.stringify({
     langue_app: langue, apparence_mode: mode, apparence_fond: fond, apparence_accent: accent, first_name: prenom,
@@ -86,7 +87,14 @@ const finDeSeance = async (page) => {
     p.session_ends_at = Date.now() - 1000;
     localStorage.setItem('myhitbodedut', JSON.stringify(p));
   });
-  await page.waitForSelector('.bravo', { timeout: 5000 });
+  await page.waitForSelector('.bravo', { timeout: 5000 }).catch(async (e) => {
+    const etat = await page.evaluate(() => ({
+      hash: location.hash, ecran: document.getElementById('app').dataset.ecran,
+      prefs: localStorage.getItem('myhitbodedut'), maintenant: Date.now(),
+    }));
+    console.error('Bravo absent :', JSON.stringify(etat), '\n', erreurs.join('\n'));
+    throw e;
+  });
 };
 await capture('seance-fr', { langue: 'fr', ecran: 'seance' });
 await capture('seance-en-cours-he', { langue: 'he', ecran: 'seance', actions: (p) => p.click('.duree') });
