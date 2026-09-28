@@ -62,6 +62,14 @@ async function capture(nom, { langue, mode = 'clair', fond = 'vert', accent = 'v
     for (const [k, v] of Object.entries(donnees)) localStorage.setItem(k, v);
     localStorage.setItem('myhitbodedut', prefs);
   }, { donnees: DONNEES, prefs, maintenant: MAINTENANT });
+  if (moteur === 'webkit') {
+    // Comme sur iPhone, où une page ne règle pas le volume : pas de fondu à
+    // la fin de la séance. Sous WebKit Linux, ce fondu fige la page entière
+    // (la lecture passe par GStreamer, que l'iPhone n'utilise pas).
+    await page.addInitScript(() => {
+      Object.defineProperty(HTMLMediaElement.prototype, 'volume', { get: () => 1, set: () => {}, configurable: true });
+    });
+  }
   await page.goto(base + (ecran ? `#${ecran}` : ''));
   await page.waitForSelector('#app > *', { timeout: 8000 }).catch((e) => { console.error(erreurs.join('\n')); throw e; });
   if (onglet) await page.click(`[data-onglet="${onglet}"]`);
