@@ -51,6 +51,50 @@ def cut_out(im):
     out.putalpha(alpha)
     return out, n2, kept
 
+def coupures(profil, n):
+    """Les n-1 frontières entre cases, prises au milieu d'une bande vide.
+
+    Les planches ne sont pas des grilles régulières : sur celle du 28/09 les
+    rangées font environ 420, 350, 370 et 395 px au lieu de 384, et une coupe
+    au quart exact tranchait les pieds de la première rangée.
+    """
+    taille = len(profil)
+    bandes, debut = [], None
+    for i, v in enumerate(profil):
+        if v == 0 and debut is None:
+            debut = i
+        elif v != 0 and debut is not None:
+            bandes.append((debut, i - 1))
+            debut = None
+    if debut is not None:
+        bandes.append((debut, taille - 1))
+    out = []
+    for k in range(1, n):
+        nominal = k * taille // n
+        proches = [b for b in bandes if abs((b[0] + b[1]) // 2 - nominal) < taille // (2 * n)]
+        if proches:
+            b = min(proches, key=lambda b: abs((b[0] + b[1]) // 2 - nominal))
+            out.append((b[0] + b[1]) // 2)
+        else:
+            print(f"  aucune bande vide près de {nominal} : coupe au quart exact")
+            out.append(nominal)
+    return [0] + out + [taille]
+
+def cases(sheet, n=4):
+    """Les n*n cadres de la planche, rangée par rangée."""
+    a = np.asarray(sheet.convert("RGB")).astype(np.int16)
+    plein = a.min(axis=2) < 240
+    H, W = plein.shape
+    boites = [[None] * n for _ in range(n)]
+    # Les rangées se cherchent colonne par colonne : un personnage debout
+    # descend plus bas que son voisin assis.
+    for c in range(n):
+        ys = coupures(plein[:, c * W // n:(c + 1) * W // n].sum(axis=1), n)
+        for r in range(n):
+            xs = coupures(plein[ys[r]:ys[r + 1]].sum(axis=0), n)
+            boites[r][c] = (xs[c], ys[r], xs[c + 1], ys[r + 1])
+    return [b for rangee in boites for b in rangee]
+
 def finish(im, name, max_side):
     box = im.getbbox()
     if box:
@@ -69,22 +113,15 @@ NAMES = [
     "char_praying", "char_dancing", "char_torah", "char_offering",
     "char_sitting_low", "char_reading_seated", "char_standing_back", "char_face",
 ]
-STANDALONE = {
-    "2.webp": "char_dancing_joy", "3.webp": "char_guitar",
-    "4.webp": "char_arms_raised", "5.webp": "char_arms_raised_guitar",
-}
+# char_dancing_joy, char_guitar, char_arms_raised, char_arms_raised_guitar et
+# char_open_arms ne viennent pas de la planche et ne sont plus produits ici.
+# Le 23/09 ce script les a régénérés depuis des sources qui avaient déjà une
+# couche alpha : convert("RGB") l'a aplatie, et quatre sont partis dans l'app
+# avec un fond noir ou blanc plein. Les bonnes versions sont celles de v1.86.
 
 if __name__ == "__main__":
     sheet = Image.open(os.path.join(SRC, "1.webp"))
-    W, H = sheet.size
-    cw, ch = W // 4, H // 4
-    for i, name in enumerate(NAMES):
-        r, c = divmod(i, 4)
-        cell = sheet.crop((c * cw, r * ch, (c + 1) * cw, (r + 1) * ch))
-        cut, total, kept = cut_out(cell)
+    for i, (name, box) in enumerate(zip(NAMES, cases(sheet))):
+        cut, total, kept = cut_out(sheet.crop(box))
         size, weight = finish(cut, name, 640)
         print(f"{i+1:2}. {name:24} {str(size):12} {weight//1024:3} Ko  gardé {kept}/{total}")
-    for src, name in STANDALONE.items():
-        cut, total, kept = cut_out(Image.open(os.path.join(SRC, src)))
-        size, weight = finish(cut, name, 900)
-        print(f"    {name:24} {str(size):12} {weight//1024:3} Ko  gardé {kept}/{total}")

@@ -73,6 +73,8 @@ TOLERANCE = 3
 AIRE_MINIMALE = 150
 LUMINANCE_VISIBLE = 225
 
+PART_TRANSPARENTE_MINIMALE = 0.10
+
 
 def largeurs(alpha, depart, lignes):
     return [int((alpha[y] > 20).sum()) for y in range(depart, depart + lignes)]
@@ -96,6 +98,24 @@ def tranchee(chemin):
     plat = max(mesures) - min(mesures) <= TOLERANCE and mesures[0] >= LARGEUR_MINIMALE
     if plat:
         return f"sommet plat : {mesures} — la tete est rasee par le bord"
+    return None
+
+
+def fond_opaque(chemin):
+    """Rend la raison si le fond n'a pas ete detoure.
+
+    Le 23/09, quatre images isolees sont parties avec un fond noir ou blanc
+    plein : leur source avait deja une couche alpha, que la conversion en RVB
+    a aplatie. Aucune des deux autres verifications ne regarde le fond.
+    Un examen des coins en laissait passer une, dont le bras leve touchait
+    un coin : c'est la part de transparence qui est mesuree. Les images
+    detourees en ont au moins 30 % (le buste de char_face), les fautives
+    0,1 %.
+    """
+    alpha = np.array(Image.open(chemin).convert("RGBA"))[:, :, 3]
+    part = (alpha < 20).mean()
+    if part < PART_TRANSPARENTE_MINIMALE:
+        return f"{part:.1%} de pixels transparents : fond non detoure"
     return None
 
 
@@ -136,6 +156,11 @@ def main():
     fautives = []
     for chemin in fichiers:
         nom = os.path.basename(chemin)
+        raison = fond_opaque(chemin)
+        if raison:
+            fautives.append(nom)
+            print(f"  FOND      {nom:28} {raison}")
+            continue
         raison = tranchee(chemin)
         if raison:
             fautives.append(nom)
@@ -151,8 +176,8 @@ def main():
     if fautives:
         print(f"{len(fautives)} illustration(s) fautive(s) : {', '.join(fautives)}")
         return 1
-    print(f"{len(fichiers)} illustrations : aucune tranchee par un bord, "
-          f"aucun morceau de voisin visible.")
+    print(f"{len(fichiers)} illustrations : toutes detourees, aucune tranchee "
+          f"par un bord, aucun morceau de voisin visible.")
     return 0
 
 
