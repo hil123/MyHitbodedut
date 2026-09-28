@@ -106,7 +106,8 @@ def fond_opaque(chemin):
 
     Le 23/09, quatre images isolees sont parties avec un fond noir ou blanc
     plein : leur source avait deja une couche alpha, que la conversion en RVB
-    a aplatie. Aucune des deux autres verifications ne regarde le fond.
+    a aplatie. La verification du sommet les a refusees, mais sous le nom
+    de « tete rasee », ce qui envoyait chercher au mauvais endroit.
     Un examen des coins en laissait passer une, dont le bras leve touchait
     un coin : c'est la part de transparence qui est mesuree. Les images
     detourees en ont au moins 30 % (le buste de char_face), les fautives

@@ -616,11 +616,14 @@ test.
 commit 41f2c80 a envoyé quatre images isolées (`char_guitar`,
 `char_arms_raised`, `char_arms_raised_guitar`, `char_open_arms`) avec un fond
 noir ou blanc plein, et réduit `char_dancing_joy` de 900 à 369 px. Leur source
-avait déjà une couche alpha, que `convert("RGB")` a aplatie. Le vérificateur ne
-regardait pas le fond, donc il a dit « aucun défaut ». Les cinq sont revenues à
+avait déjà une couche alpha, que `convert("RGB")` a aplatie. Le vérificateur,
+lui, les avait bien signalées en intégration continue (comme « sommet plat »,
+avec `char_standing_back`) : les runs 87 et 88 ont échoué, aucune version n'a été
+publiée, et le téléphone est resté sur v1.86. La note disait l'inverse sans avoir
+regardé la CI. Les cinq sont revenues à
 leur version de v1.86 (détourées, peyot, pas de queue de cheval),
-`decoupe_planche.py` ne les produit plus, et `verifie_illustrations.py` refuse
-maintenant une image qui a moins de 10 % de pixels transparents.
+`decoupe_planche.py` ne les produit plus, et `verifie_illustrations.py` nomme
+maintenant ce défaut pour ce qu'il est : moins de 10 % de pixels transparents.
 
 ## Mise à jour (28/09)
 
