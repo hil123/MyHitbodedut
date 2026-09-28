@@ -1,0 +1,38 @@
+name: Nettoyage des artefacts APK
+
+# Supprime les copies « myhitbodedut-apk » que la CI Android déposait comme
+# artefacts : elles remplissaient le quota de 500 Mo du compte. Les APK
+# eux-mêmes restent dans les versions (releases), qui ne comptent pas dans
+# ce quota. Aucun autre artefact n'est touché.
+#
+# Ne part que sur un push de sa propre branche, ou à la main.
+
+on:
+  push:
+    branches: [claude/nettoyage-artefacts]
+  workflow_dispatch:
+
+permissions:
+  actions: write
+
+jobs:
+  nettoyage:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Delete the APK artifact copies
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh api --paginate "repos/${GITHUB_REPOSITORY}/actions/artifacts?per_page=100" \
+            --jq '.artifacts[] | [.id, .name, .size_in_bytes, .expired, .created_at] | @tsv' > artefacts.tsv
+          echo "Artefacts du dépôt :"
+          awk -F'\t' '{ printf "  %-12s %-24s %8.1f Mo  expiré=%s  %s\n", $1, $2, $3/1e6, $4, $5 }' artefacts.tsv
+          total=0
+          while IFS=$'\t' read -r id nom taille expire cree; do
+            if [ "$nom" = "myhitbodedut-apk" ] && [ "$expire" = "false" ]; then
+              gh api -X DELETE "repos/${GITHUB_REPOSITORY}/actions/artifacts/${id}"
+              total=$((total + taille))
+              echo "Supprimé : ${id} (${cree})"
+            fi
+          done < artefacts.tsv
+          echo "Libéré : $((total / 1000000)) Mo. GitHub recalcule le quota en 6 à 12 heures."
