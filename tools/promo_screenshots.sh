@@ -114,8 +114,35 @@ put_prefs() {  # file name in the app, local file
 put_prefs myhitbodedut.xml /tmp/myhitbodedut.xml
 put_prefs myhitbodedut-journal.xml /tmp/journal.xml
 
+clean_bar() {
+  demo enter
+  demo clock -e hhmm 0642
+  demo battery -e level 100 -e plugged false
+  demo network -e wifi show -e level 4 -e fully true
+  demo network -e mobile show -e datatype none -e level 4 -e fully true
+  demo notifications -e visible false
+}
+
+# Waits (up to 30 s) until the text $1 is on screen: the splash has gone.
+wait_for() {
+  for i in $(seq 1 15); do
+    adb shell rm -f /sdcard/ui.xml
+    adb shell uiautomator dump /sdcard/ui.xml >/dev/null 2>&1
+    adb shell cat /sdcard/ui.xml 2>/dev/null | grep -q "text=\"$1\"" && return 0
+    sleep 2
+  done
+  echo "never showed: $1" >&2
+}
+
+scroll_top() {
+  for i in 1 2 3; do adb shell input swipe 540 700 540 2000 200; done
+  sleep 1
+}
+
 shot() {
   sleep "${2:-3}"
+  clean_bar
+  sleep 1
   adb exec-out screencap -p > "$OUT/$1.png"
   echo "captured $1"
 }
@@ -163,7 +190,8 @@ launch() {
 
 # 1. Home, before today's session.
 launch
-shot 01-home-start 6
+wait_for "Start a 20 min session"
+shot 01-home-start 2
 
 # 2. Reminders (Texts tab, then Reminders).
 tap "Texts" && sleep 2
@@ -178,14 +206,15 @@ adb shell input keyevent KEYCODE_BACK; sleep 1
 tap "Today"; sleep 2
 tap "Start a 20 min session"; sleep 3
 shot 04-session-idle 1
-tap "Start, 20 min" && shot 05-session-running 8
+tap "Start, 20 min" && sleep 4 && scroll_top && shot 05-session-running 2
 
 # 5. The bravo after a session, then home with today done.
 adb shell am force-stop "$PKG"
 put_prefs myhitbodedut.xml /tmp/celebrate.xml
 put_prefs myhitbodedut-journal.xml /tmp/journal_today.xml
 launch
-shot 06-celebration 5
+wait_for "Continue"
+shot 06-celebration 2
 tap "Continue" && shot 07-home-done 4
 
 # A look at what the screen held, for debugging a missed tap.
