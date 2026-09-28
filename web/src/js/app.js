@@ -568,7 +568,11 @@ function arreteTic() {
 // La lecture continue parfois écran verrouillé ; ses événements servent
 // alors d'horloge pour arrêter la musique et clore la séance à son terme.
 lecteur.addEventListener('timeupdate', () => {
-  if (etaitEnCours && !store.isSessionRunning()) cloreSeance({ avantTerme: false });
+  if (etaitEnCours && !store.isSessionRunning()) {
+    cloreSeance({ avantTerme: false });
+    // Sans ce rendu, la séance était close mais l'écran restait sur le décompte.
+    rendre();
+  }
 });
 
 function ecranSeance() {
