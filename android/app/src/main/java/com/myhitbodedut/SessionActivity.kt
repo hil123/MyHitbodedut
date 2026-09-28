@@ -109,19 +109,28 @@ class SessionActivity : AppCompatActivity() {
             render()
         }
 
-        intArrayOf(R.id.duration_10, R.id.duration_20, R.id.duration_30, R.id.duration_60)
-            .forEach { id ->
-                val button = findViewById<Button>(id)
-                val minutes = button.tag.toString().toInt()
-                button.text = Store.formatDuration(this, minutes)
-                button.setOnClickListener {
-                    Store.setTargetMinutes(this, minutes)
-                    SessionService.start(this, minutes)
-                    guideStep = 0
-                    drawOpening()
-                    render()
-                }
-            }
+        intArrayOf(
+            R.id.duration_5, R.id.duration_10, R.id.duration_15,
+            R.id.duration_30, R.id.duration_60, R.id.duration_90
+        ).forEach { id ->
+            val button = findViewById<Button>(id)
+            val minutes = button.tag.toString().toInt()
+            button.text = Store.formatDuration(this, minutes)
+            button.setOnClickListener { commencer(minutes) }
+        }
+        // Un temps choisi, entre 1 et 240 minutes.
+        findViewById<Button>(R.id.session_custom).setOnClickListener {
+            DureeSeance.saisir(this) { commencer(it) }
+        }
+    }
+
+    /** Lance une séance de cette durée, qui devient aussi la durée habituelle. */
+    private fun commencer(minutes: Int) {
+        Store.setTargetMinutes(this, minutes)
+        SessionService.start(this, minutes)
+        guideStep = 0
+        drawOpening()
+        render()
     }
 
     override fun onResume() {
@@ -186,6 +195,7 @@ class SessionActivity : AppCompatActivity() {
             }
             durations.visibility = View.GONE
             openSession.visibility = View.GONE
+            findViewById<View>(R.id.session_custom).visibility = View.GONE
             stuck.visibility = if (hasBlocage) View.VISIBLE else View.GONE
             renderGuide()
 
@@ -207,6 +217,7 @@ class SessionActivity : AppCompatActivity() {
             )
             durations.visibility = View.VISIBLE
             openSession.visibility = View.VISIBLE
+            findViewById<View>(R.id.session_custom).visibility = View.VISIBLE
             stuck.visibility = View.GONE
             HitbodedutCard.hide(guide)
 

@@ -474,4 +474,7 @@
     <string name="duration_minutes">%1$d min</string>
     <string name="duration_hours">%1$d h</string>
     <string name="duration_hours_minutes">%1$d h %2$02d min</string>
+    <string name="duration_custom">Custom duration…</string>
+    <string name="duration_custom_title">Session length, in minutes</string>
+    <string name="duration_custom_hint">1 to 240 minutes</string>
 </resources>

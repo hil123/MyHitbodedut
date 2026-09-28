@@ -31,20 +31,27 @@ class ScreenFitTest {
 
     /**
      * Le cas qui a mordu : quatre boutons de duree cote a cote. Un bouton
-     * Material3 reclame 88dp ; quatre en reclament 370 avec leurs marges,
+     * Material3 reclame 88dp ; quatre en reclamaient 370 avec leurs marges,
      * et il n'y en avait que 268 de disponibles. « 20 min » se faisait
      * couper sur un ecran de 320dp.
+     *
+     * Depuis le 28/09 : six durees (5, 10, 15, 30 min, 1 h, 1 h 30), en
+     * deux rangees de trois. L'etiquette la plus longue, « 1 h 30 min » en
+     * anglais, demande environ 70dp en 13sp.
      */
     @Test
-    fun `les quatre durees tiennent sur un ecran de 320dp`() {
+    fun `les six durees tiennent sur un ecran de 320dp`() {
         val bord = dimen("values", "edge")!!
         val seance = res("layout/activity_session.xml").readText()
-        val boutons = Regex("""android:id="@\+id/duration_\d+"""").findAll(seance).count()
-        assertTrue("il faut quatre boutons de durée", boutons == 4)
+        val bloc = seance.substringAfter("@+id/session_durations").substringBefore("@+id/session_custom")
+        val boutons = Regex("""android:id="@\+id/duration_\d+"""").findAll(bloc).count()
+        assertTrue("il faut six boutons de durée", boutons == 6)
 
+        val rangee = bloc.substringAfter("android:orientation=\"horizontal\"").substringBefore("</LinearLayout>")
+        val parRangee = Regex("""android:id="@\+id/duration_\d+"""").findAll(rangee).count()
+        assertTrue("trois boutons par rangée", parRangee == 3)
         val marges = Regex("""android:layout_marginStart="([\d.]+)dp"""")
-            .findAll(seance.substringAfter("session_durations").substringBefore("</LinearLayout>"))
-            .sumOf { it.groupValues[1].toDouble() }
+            .findAll(rangee).sumOf { it.groupValues[1].toDouble() }
 
         val themes = res("values/themes.xml").readText()
         val style = themes.substringAfter("""<style name="DurationButton"""").substringBefore("</style>")
@@ -56,13 +63,11 @@ class ScreenFitTest {
         )
 
         val disponible = PLANCHER - 2 * bord - marges
-        val parBouton = disponible / boutons
-        val pourLeTexte = parBouton - 2 * remplissage
-        // « 20 min » en 13sp demande environ 40dp.
+        val pourLeTexte = disponible / parRangee - 2 * remplissage
         assertTrue(
             "sur 320dp il ne reste que ${"%.1f".format(pourLeTexte)}dp par étiquette, " +
-                "il en faut 40 pour « 20 min »",
-            pourLeTexte >= 40.0,
+                "il en faut 70 pour « 1 h 30 min »",
+            pourLeTexte >= 70.0,
         )
     }
 

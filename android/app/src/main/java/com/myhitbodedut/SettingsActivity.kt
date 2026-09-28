@@ -123,7 +123,7 @@ class SettingsActivity : AppCompatActivity() {
             }
         }
         findViewById<Button>(R.id.target_length).setOnClickListener {
-            pickMinutes(R.string.settings_target, intArrayOf(5, 10, 15, 20, 30, 45, 60)) {
+            DureeSeance.choisir(this, R.string.settings_target) {
                 Store.setTargetMinutes(this, it)
                 refresh()
             }

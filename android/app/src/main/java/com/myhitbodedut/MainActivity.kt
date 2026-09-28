@@ -174,15 +174,10 @@ class MainActivity : AppCompatActivity() {
      * réglages : c'est la même valeur, atteinte de plus près.
      */
     private fun pickDuration() {
-        val options = intArrayOf(5, 10, 15, 20, 30, 45, 60)
-        val libelles = options.map { Store.formatDuration(this, it) }.toTypedArray()
-        AlertDialog.Builder(this)
-            .setTitle(R.string.settings_target)
-            .setItems(libelles) { _, which ->
-                Store.setTargetMinutes(this, options[which])
-                refresh()
-            }
-            .show()
+        DureeSeance.choisir(this, R.string.settings_target) {
+            Store.setTargetMinutes(this, it)
+            refresh()
+        }
     }
 
     /** Le sujet de la prochaine séance. « Aucun » en tête : il est facultatif. */

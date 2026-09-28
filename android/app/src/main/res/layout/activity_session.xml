@@ -105,36 +105,73 @@
             android:layout_marginTop="14dp"
             android:textColor="?attr/mhMint" />
 
+        <!--
+            Les durées proposées (demande du 28/09) : 5, 10, 15, 30 min,
+            1 h, 1 h 30, en deux rangées de trois, puis la durée réglable.
+        -->
         <LinearLayout
             android:id="@+id/session_durations"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:orientation="horizontal">
+            android:orientation="vertical">
 
-            <Button
-                android:id="@+id/duration_10"
-                style="@style/DurationButton"
-                android:tag="10" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
-            <Button
-                android:id="@+id/duration_20"
-                style="@style/DurationButton"
-                android:layout_marginStart="6dp"
-                android:tag="20" />
+                <Button
+                    android:id="@+id/duration_5"
+                    style="@style/DurationButton"
+                    android:tag="5" />
 
-            <Button
-                android:id="@+id/duration_30"
-                style="@style/DurationButton"
-                android:layout_marginStart="6dp"
-                android:tag="30" />
+                <Button
+                    android:id="@+id/duration_10"
+                    style="@style/DurationButton"
+                    android:layout_marginStart="6dp"
+                    android:tag="10" />
 
-            <Button
-                android:id="@+id/duration_60"
-                style="@style/DurationButton"
-                android:layout_marginStart="6dp"
-                android:tag="60" />
+                <Button
+                    android:id="@+id/duration_15"
+                    style="@style/DurationButton"
+                    android:layout_marginStart="6dp"
+                    android:tag="15" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/duration_30"
+                    style="@style/DurationButton"
+                    android:tag="30" />
+
+                <Button
+                    android:id="@+id/duration_60"
+                    style="@style/DurationButton"
+                    android:layout_marginStart="6dp"
+                    android:tag="60" />
+
+                <Button
+                    android:id="@+id/duration_90"
+                    style="@style/DurationButton"
+                    android:layout_marginStart="6dp"
+                    android:tag="90" />
+            </LinearLayout>
         </LinearLayout>
+
+        <Button
+            android:id="@+id/session_custom"
+            style="@style/Widget.Material3.Button.TextButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:text="@string/duration_custom"
+            android:textColor="?attr/mhMint" />
 
         <!-- La séance sans durée : on s'arrête quand on s'arrête. -->
         <Button
