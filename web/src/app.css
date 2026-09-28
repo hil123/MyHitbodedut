@@ -218,3 +218,65 @@ input[type="range"] { width: 100%; accent-color: var(--brand); }
 .feuille .actions button {
   border: 0; background: none; color: var(--brand); font-weight: 600; padding: 10px 14px; cursor: pointer;
 }
+
+/* --- Séance (activity_session.xml) ------------------------------------------------ */
+.seance { background: var(--brand-dark); color: var(--mint); }
+.seance .barre { color: var(--mint); padding-bottom: 0; }
+.seance .retour { color: var(--mint); }
+.seance .contenu { text-align: center; padding-top: 0; }
+.seance-titre { font-size: 13px; letter-spacing: 0.14em; color: var(--mint); }
+/* La plaque claire sous le personnage : le fond blanc des illustrations s'y fond. */
+.scene { margin-top: 16px; padding: 10px; background: var(--mint); border-radius: 28px; }
+.seance .scene img { display: block; width: 100%; height: 130px; object-fit: contain; }
+@media (min-height: 480px) { .seance .scene img { height: 190px; } }
+.decompte { margin-top: 18px; color: var(--white); font-size: 56px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.legende { margin: 8px 0 0; color: var(--mint); font-size: 15px; }
+.legende.petite { margin-top: 6px; font-size: 13px; }
+.texte-clair {
+  display: block; width: 100%; margin-top: 4px; padding: 12px; border: 0; background: none;
+  color: var(--mint); font-size: 15px; font-weight: 600; cursor: pointer; border-radius: 999px;
+}
+.durees { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-top: 20px; }
+.duree {
+  padding: 10px 4px; border: 1px solid color-mix(in srgb, var(--mint) 45%, transparent); border-radius: 999px;
+  background: none; color: var(--mint); font-size: 13px; font-weight: 600; cursor: pointer; white-space: nowrap;
+}
+.seance .principal { margin-top: 22px; padding: 14px 16px; font-size: 16px; }
+
+/* --- Carte de ’hizouk (view_chizuk.xml) ---------------------------------------------- */
+.chizuk {
+  margin-top: 18px; padding: 16px; text-align: start; color: var(--ink);
+  background: var(--card); border: 1px solid var(--line); border-radius: 20px;
+}
+.chizuk-tete { display: flex; align-items: center; gap: 12px; }
+.chizuk-art { flex: none; width: 64px; height: 64px; border-radius: 16px; background: var(--stage-soft); padding: 4px; }
+.chizuk-art img { width: 100%; height: 100%; object-fit: contain; display: block; }
+.chizuk-moment { margin: 0; color: var(--brand); font-size: 14px; font-weight: 700; }
+.chizuk-he, .chizuk-trad { margin: 12px 0 0; overflow: hidden; line-height: 1.35; }
+.chizuk-he { --corps-max: 19; height: 108px; color: var(--ink); text-align: start; }
+.chizuk-trad { --corps-max: 15; height: 84px; margin-top: 0; color: var(--muted); }
+@media (min-height: 480px) { .chizuk-he { height: 150px; } .chizuk-trad { height: 116px; } }
+.chizuk hr { border: 0; border-top: 1px solid var(--line); margin: 10px 0; }
+.chizuk-ref { margin: 8px 0 0; color: var(--muted); font-size: 11px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.chizuk.compacte .chizuk-he { --corps-max: 17; height: 96px; }
+.chizuk.compacte .chizuk-trad { --corps-max: 14; height: 72px; }
+
+/* --- Bravo (activity_celebration.xml) ----------------------------------------------- */
+.bravo .contenu { display: flex; flex-direction: column; align-items: stretch; min-height: 100%; text-align: center; padding-top: calc(22px + env(safe-area-inset-top)); }
+.bravo .defile { padding-top: 0; }
+.scene.danse { position: relative; flex: 1; min-height: 200px; max-height: 420px; padding: 14px; overflow: hidden; margin-top: 0; }
+.danseur { position: absolute; inset: 32px 14px 14px; transform-origin: 50% 100%; }
+.danseur img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
+.pose-b { opacity: 0; }
+.note { position: absolute; color: var(--on-plate); pointer-events: none; }
+.bravo-titre { margin: 22px 0 0; font-size: 30px; font-weight: 700; color: var(--ink); }
+.bravo-sous-titre { margin: 6px 0 0; font-size: 16px; color: var(--muted); }
+.bravo .principal { margin-top: 22px; padding: 14px 16px; font-size: 16px; }
+
+/* --- Boîtes de dialogue ------------------------------------------------------------ */
+.feuille .message { margin: 0; color: var(--muted); font-size: 15px; }
+.feuille textarea {
+  width: 100%; font: inherit; font-size: 16px; padding: 12px; border-radius: 12px; resize: vertical;
+  border: 1px solid var(--line); background: var(--paper); color: var(--ink);
+}
+.note-art { display: block; width: 100%; height: 120px; object-fit: contain; margin-bottom: 10px; }

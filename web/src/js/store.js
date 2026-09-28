@@ -8,6 +8,7 @@
 // Le stockage est passé en paramètre : les tests donnent le leur.
 
 import { ajouteJours, estJourChome, isoLocal, israelParDefaut, jourSemaine } from './calendrier.js';
+import { SessionRule } from './seance.js';
 
 export const DEFAULT_START = 6 * 60;
 export const DEFAULT_END = 11 * 60;
@@ -133,11 +134,77 @@ export function creeStore(stockage, { maintenant = () => new Date(), fuseau } = 
     setTargetMinutes: (m) => set('target_minutes', m),
     sessionTheme: () => get('session_theme', null),
     setSessionTheme: (cle) => set('session_theme', cle),
-    /** SessionRule.enCours : une séance ouverte (durée 0) court jusqu'à ce qu'on la close. */
-    isSessionRunning: () => {
-      const debut = get('session_started_at', 0);
-      const ouverte = debut > 0 && get('session_target', 0) === 0;
-      return ouverte || get('session_ends_at', 0) > maintenant().getTime();
+    sessionStartedAt: () => get('session_started_at', 0),
+    sessionEndsAt: () => get('session_ends_at', 0),
+    sessionTarget: () => get('session_target', 0),
+    isSessionRunning: () => SessionRule.enCours(
+      store.sessionStartedAt(), store.sessionEndsAt(), store.sessionTarget(), maintenant().getTime()),
+    isSessionOpen: () => SessionRule.estOuverte(store.sessionStartedAt(), store.sessionTarget()),
+    /** Une séance minutée dont le terme est passé, pas encore close (le téléphone dormait). */
+    isSessionOver: () => store.sessionStartedAt() > 0 && !store.isSessionRunning(),
+    hideCountdown: () => get('hide_countdown', false),
+    setHideCountdown: (v) => set('hide_countdown', !!v),
+    guidedHitbodedut: () => get('guided_hitbodedut', false),
+    setGuidedHitbodedut: (v) => set('guided_hitbodedut', !!v),
+    sessionCounter: () => SessionRule.compteur(store.isSessionOpen(), store.hideCountdown()),
+
+    /** Une durée nulle ouvre la séance : rien n'est inscrit comme fin. */
+    beginSession(minutes) {
+      const t = maintenant().getTime();
+      const ouverte = minutes <= SessionRule.OUVERTE;
+      set('session_started_at', t);
+      set('session_ends_at', ouverte ? 0 : t + minutes * 60000);
+      set('session_target', ouverte ? SessionRule.OUVERTE : minutes);
+    },
+
+    /**
+     * Termine la séance et rend les minutes à inscrire.
+     *
+     * Android mesure le temps écoulé à la clôture, que son service fait au
+     * terme, à quelques secondes près. Ici, le téléphone a pu dormir bien
+     * après le terme : une séance minutée qui arrive à son terme compte donc
+     * sa durée, pas le temps passé jusqu'au retour dans l'application.
+     */
+    endSession({ avantTerme = false } = {}) {
+      const debut = store.sessionStartedAt();
+      const cible = store.sessionTarget();
+      let minutes = SessionRule.minutesEcoulees(debut, maintenant().getTime());
+      if (!avantTerme && cible > 0) minutes = Math.min(minutes, cible);
+      set('session_started_at', null);
+      set('session_ends_at', null);
+      set('session_target', null);
+      return minutes;
+    },
+
+    /** Valide la journée ; les minutes s'ajoutent, le sujet aussi (Store.addSession). */
+    addSession(minutes, { note = null, theme = null } = {}) {
+      const d = days();
+      const date = today();
+      const existant = d[date];
+      d[date] = {
+        date,
+        minutes: (existant?.minutes ?? 0) + Math.max(0, minutes),
+        note: note ?? existant?.note ?? '',
+        themes: [...(existant?.themes ?? []), ...(theme ? [theme] : [])],
+      };
+      writeDays(d);
+    },
+
+    /** Le bravo attend le prochain écran ouvert. */
+    setPendingCelebration: (m) => set('celebration_minutes', Math.max(0, m)),
+    takePendingCelebration() {
+      const m = get('celebration_minutes', null);
+      if (m === null) return null;
+      set('celebration_minutes', null);
+      return m;
+    },
+
+    // --- Rotation des textes de ’hizouk --------------------------------------------
+    chizukBag: (moment) => String(get(`chizuk_bag_${moment}`, '')).split('\n').filter((s) => s.trim() !== ''),
+    chizukLast: (moment) => get(`chizuk_last_${moment}`, null) || null,
+    setChizukBag(moment, sac, dernier) {
+      set(`chizuk_bag_${moment}`, sac.join('\n'));
+      set(`chizuk_last_${moment}`, dernier);
     },
 
     // --- Personne, langue, apparence ------------------------------------------------

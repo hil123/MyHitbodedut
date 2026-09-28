@@ -1,9 +1,12 @@
-// L'application : l'accueil (MainActivity), la musique (MusicActivity) et
-// un premier écran de réglages. Les écrans suivants arrivent par étapes ;
-// ce qui n'existe pas encore est montré, mais inerte (classe « a-venir »).
+// L'application : l'accueil (MainActivity), la séance (SessionActivity),
+// le bravo (CelebrationActivity), la musique (MusicActivity) et un premier
+// écran de réglages. Les écrans suivants arrivent par étapes ; ce qui
+// n'existe pas encore est montré, mais inerte (classe « a-venir »).
 
 import { chargeTraduction, langueInitiale, LANGUES } from './i18n.js';
-import { DureeSeance, JaugeSemaine } from './regles.js';
+import { DureeSeance, JaugeSemaine, Reference } from './regles.js';
+import { ART_DU_MOMENT, ChizukBag, ChizukRules } from './chizuk.js';
+import { DanseMesure } from './seance.js';
 import { creeStore, memoire } from './store.js';
 
 // --- Stockage ---------------------------------------------------------------
@@ -56,12 +59,18 @@ function duJour(pool, sel) {
   const jourEpoque = Math.round(Date.UTC(a, m - 1, j) / 86400000) + sel * 7;
   return pool[((jourEpoque % pool.length) + pool.length) % pool.length];
 }
+const APPEL = ['char_praise', 'char_pointing', 'char_walking', 'char_tehilim', 'char_thinking', 'char_welcome', 'char_open_arms'];
+const PENDANT = ['char_arms_raised', 'char_praying', 'char_standing_back', 'char_sitting_low'];
 const salutation = (fait) => (fait ? duJour(JOIE, 3) : duJour(ACCUEIL, 0));
+const joie = () => duJour(JOIE, 3);
+const appel = () => duJour(APPEL, 1);
+const pendant = () => duJour(PENDANT, 2);
 
 // --- État de l'application -----------------------------------------------------------
 let tr;
 let morceaux = [];
 let tikkun = null;
+let chizuk = null;
 let onglet = 'aujourdhui';
 const app = document.getElementById('app');
 
@@ -155,17 +164,21 @@ const volumeReglable = (() => {
 const titreMorceau = (m) => tr.t(m.titre);
 const morceauChoisi = () => morceaux.find((m) => m.id === store.musicTrackId()) ?? morceaux[0] ?? null;
 
+function metadonnees(m) {
+  if (!('mediaSession' in navigator)) return;
+  navigator.mediaSession.metadata = new MediaMetadata({
+    title: titreMorceau(m), artist: 'MyHitbodedut',
+    artwork: [{ src: 'icones/icon-512.png', sizes: '512x512', type: 'image/png' }],
+  });
+}
+
 function ecouter(m) {
   if (enEcoute === m.id) { lecteur.pause(); enEcoute = null; rendre(); return; }
   lecteur.src = m.fichier;
+  lecteur.loop = false;
   if (volumeReglable) lecteur.volume = store.musicVolume() / 100;
   enEcoute = m.id;
-  if ('mediaSession' in navigator) {
-    navigator.mediaSession.metadata = new MediaMetadata({
-      title: titreMorceau(m), artist: 'MyHitbodedut',
-      artwork: [{ src: 'icones/icon-512.png', sizes: '512x512', type: 'image/png' }],
-    });
-  }
+  metadonnees(m);
   lecteur.play().catch(() => { enEcoute = null; rendre(); alert(tr.t('music_play_failed')); });
   rendre();
 }
@@ -221,8 +234,7 @@ function panneauAujourdhui() {
       h('div', { class: 'plaque' }, h('img', { src: `img/${salutation(fait)}.webp`, alt: '' }))),
     h('div', { class: 'jauge-legende' }, tr.p('week_gauge', progression.faits, progression.faits, progression.dus)),
 
-    // La séance arrive à l'étape 3.
-    h('button', { class: 'principal a-venir', 'aria-disabled': 'true' }, bouton),
+    h('button', { class: 'principal', onclick: () => ouvrir('seance') }, bouton),
 
     h('div', { class: 'pastilles' },
       pastille(tr.t('start_duration'), tr.duree(store.targetMinutes()), () => choisirDuree((m) => {
@@ -242,8 +254,7 @@ function panneauAujourdhui() {
         h('span', { class: 'marque-jour', 'aria-hidden': 'true' }, marque));
     })),
 
-    // Le journal arrive à l'étape 4.
-    fait ? h('button', { class: 'texte-bouton a-venir', 'aria-disabled': 'true' }, tr.t('action_write_note')) : null);
+    fait ? h('button', { class: 'texte-bouton', onclick: () => ecrireNote(store.today(), rendre) }, tr.t('action_write_note')) : null);
 }
 
 function pastille(libelle, valeur, onclick) {
@@ -308,7 +319,7 @@ function onglets() {
 // --- Rendu : écrans secondaires ---------------------------------------------------------
 function barre(titre) {
   return h('header', { class: 'barre' },
-    h('button', { class: 'retour', 'aria-label': tr.t('action_back'), onclick: () => history.back() }),
+    h('button', { class: 'retour', 'aria-label': tr.t('action_back'), onclick: retour }),
     h('h1', {}, titre));
 }
 
@@ -360,27 +371,383 @@ function ecranReglages() {
         })))));
 }
 
+// --- Boîtes de dialogue ---------------------------------------------------------------
+/** Une confirmation : titre, message, « Retour » et l'action (les AlertDialog de SessionActivity). */
+function confirmer(titre, message, action, onConfirme) {
+  feuille(titre, (f, fermer) => {
+    f.append(h('p', { class: 'message' }, message),
+      h('div', { class: 'actions' },
+        h('button', { onclick: fermer }, tr.t('action_back')),
+        h('button', { onclick: () => { fermer(); onConfirme(); } }, action)));
+  });
+}
+
+/** NoteDialog : une note libre sur la journée, illustration de joie au-dessus. */
+function ecrireNote(date, apres = () => {}) {
+  feuille(tr.t('note_title'), (f, fermer) => {
+    const champ = h('textarea', { rows: 4, placeholder: tr.t('note_hint'), 'aria-label': tr.t('note_title') });
+    champ.value = store.record(date)?.note ?? '';
+    f.append(h('img', { class: 'note-art', src: `img/${joie()}.webp`, alt: '' }), champ,
+      h('div', { class: 'actions' },
+        h('button', { onclick: () => { fermer(); apres(); } }, tr.t('action_later')),
+        h('button', { onclick: () => { store.setNote(date, champ.value.trim()); fermer(); apres(); } }, tr.t('action_save'))));
+  });
+}
+
+// --- La carte de ’hizouk (view_chizuk.xml) -------------------------------------------
+// Le texte tiré pour l'écran de séance, et celui du bravo après une annulation.
+let chizukSeance = null;
+let chizukBravo = null;
+
+function tireChizuk(moment) {
+  if (!chizuk) return null;
+  const item = ChizukBag.tirer(store, chizuk, moment);
+  chizukSeance = item ? { moment, item } : null;
+  return chizukSeance;
+}
+
+function carteChizuk(tire, { compacte = false } = {}) {
+  if (!tire) return null;
+  const { moment, item } = tire;
+  const traduction = ChizukRules.traduction(item, tr.langue);
+  return h('section', { class: `chizuk${compacte ? ' compacte' : ''}` },
+    h('div', { class: 'chizuk-tete' },
+      h('div', { class: 'chizuk-art' }, h('img', { src: `img/${ART_DU_MOMENT[moment]}.webp`, alt: '' })),
+      h('h2', { class: 'chizuk-moment' }, tr.t(`moment_${moment}`))),
+    // L'hébreu, de droite à gauche en toute langue.
+    h('p', { class: 'chizuk-he ajuste', lang: 'he', dir: 'rtl' }, ChizukRules.hebreu(chizuk, item)),
+    traduction ? h('hr', {}) : null,
+    traduction ? h('p', { class: 'chizuk-trad ajuste' }, traduction) : null,
+    h('p', { class: 'chizuk-ref' }, Reference.localise(item.ref, tr.langue)));
+}
+
+/**
+ * Le corps qui se réduit jusqu'à tenir (autoSizeTextType d'Android) : la
+ * carte garde sa hauteur, le texte ne déborde ni ne fait défiler.
+ */
+function ajusteLesTextes() {
+  for (const el of app.querySelectorAll('.ajuste')) {
+    const max = parseFloat(getComputedStyle(el).getPropertyValue('--corps-max')) || 19;
+    let taille = max;
+    el.style.fontSize = `${taille}px`;
+    while (taille > 8 && el.scrollHeight > el.clientHeight + 1) {
+      taille -= 1;
+      el.style.fontSize = `${taille}px`;
+    }
+  }
+}
+
+// --- La séance (SessionActivity, SessionService) ----------------------------------------
+let tic = null;
+let etaitEnCours = false;
+let verrouEcran = null;
+/** Après « Terminer maintenant », la note est proposée au retour du bravo. */
+let noteApresBravo = false;
+/** { minutes } après une séance close, { annulee: true } après un abandon. */
+let bravo = null;
+
+async function gardeEcranAllume() {
+  // FLAG_KEEP_SCREEN_ON d'Android. Refusé ou absent : l'écran s'éteint comme d'habitude.
+  try { verrouEcran = await navigator.wakeLock?.request('screen'); } catch { verrouEcran = null; }
+}
+function relacheEcran() {
+  verrouEcran?.release?.().catch(() => {});
+  verrouEcran = null;
+}
+
+function demarreMusique() {
+  if (!store.musicEnabled()) return;
+  const m = morceauChoisi();
+  if (!m) return;
+  enEcoute = null;
+  lecteur.src = m.fichier;
+  lecteur.loop = true;
+  if (volumeReglable) lecteur.volume = store.musicVolume() / 100;
+  metadonnees(m);
+  lecteur.play().catch(() => alert(tr.t('music_play_failed')));
+}
+
+/** Fondu court à la fin (MusicPlayer.stop) ; sur iPhone, où le volume ne se règle pas, l'arrêt est net. */
+function arreteMusique() {
+  if (lecteur.paused) return;
+  if (!volumeReglable) { lecteur.pause(); return; }
+  const depart = lecteur.volume;
+  let pas = 10;
+  const fondu = setInterval(() => {
+    pas -= 1;
+    lecteur.volume = Math.max(0, (depart * pas) / 10);
+    if (pas <= 0) { clearInterval(fondu); lecteur.pause(); lecteur.volume = depart; }
+  }, 60);
+}
+
+/** Lance une séance ; une durée choisie devient aussi la durée habituelle. */
+function commencer(minutes) {
+  if (minutes > 0) store.setTargetMinutes(minutes);
+  store.beginSession(minutes);
+  etaitEnCours = true;
+  tireChizuk('ouverture');
+  demarreMusique();
+  gardeEcranAllume();
+  // Le décompte s'affiche en haut : l'écran repart du début.
+  delete app.dataset.ecran;
+  rendre();
+}
+
+/**
+ * SessionService.finishSession : le sujet se lit avant la clôture, les
+ * minutes s'inscrivent, le bravo attend. Une séance arrêtée à zéro minute
+ * n'inscrit rien.
+ */
+function cloreSeance({ avantTerme }) {
+  const sujet = store.sessionTheme();
+  const minutes = store.endSession({ avantTerme });
+  const inscrite = minutes > 0 || !avantTerme;
+  if (inscrite) {
+    store.addSession(minutes, { theme: sujet });
+    store.setPendingCelebration(minutes);
+  }
+  etaitEnCours = false;
+  arreteMusique();
+  relacheEcran();
+  // Le mot de clôture, sur l'écran de séance (moment « cloture »).
+  tireChizuk('cloture');
+  return inscrite;
+}
+
+/** « Terminer maintenant » : la note est proposée après le bravo, ou tout de suite s'il n'y en a pas. */
+function terminerMaintenant() {
+  if (cloreSeance({ avantTerme: true })) noteApresBravo = true;
+  else setTimeout(() => ecrireNote(store.today(), rendre), 50);
+  rendre();
+}
+
+function annulerSeance() {
+  store.endSession({ avantTerme: true });
+  etaitEnCours = false;
+  arreteMusique();
+  relacheEcran();
+  chizukBravo = chizuk ? ChizukBag.tirer(store, chizuk, 'relance') : null;
+  bravo = { annulee: true };
+  history.pushState({ interne: true }, '', '#bravo');
+  rendre();
+}
+
+const deuxChiffres = (n) => String(n).padStart(2, '0');
+
+function compteur() {
+  const mode = store.sessionCounter();
+  const t = Date.now();
+  if (mode === 'masque') return { texte: '', legende: tr.t('session_hidden_caption') };
+  const ms = mode === 'ecoule'
+    ? Math.max(0, t - store.sessionStartedAt())
+    : Math.max(0, store.sessionEndsAt() - t);
+  return {
+    texte: `${deuxChiffres(Math.floor(ms / 60000))}:${deuxChiffres(Math.floor(ms / 1000) % 60)}`,
+    legende: mode === 'ecoule' ? tr.t('session_open_caption') : tr.t('session_target', tr.duree(store.sessionTarget())),
+  };
+}
+
+/** Chaque seconde : le décompte, et la fin quand elle arrive, écran allumé ou au retour. */
+function demarreTic() {
+  if (tic) return;
+  tic = setInterval(() => {
+    if (etaitEnCours && !store.isSessionRunning()) {
+      cloreSeance({ avantTerme: false });
+      rendre();
+      return;
+    }
+    const el = app.querySelector('.decompte');
+    if (el && store.isSessionRunning()) el.textContent = compteur().texte;
+  }, 1000);
+}
+function arreteTic() {
+  clearInterval(tic);
+  tic = null;
+}
+
+// La lecture continue parfois écran verrouillé ; ses événements servent
+// alors d'horloge pour arrêter la musique et clore la séance à son terme.
+lecteur.addEventListener('timeupdate', () => {
+  if (etaitEnCours && !store.isSessionRunning()) cloreSeance({ avantTerme: false });
+});
+
+function ecranSeance() {
+  const enCours = store.isSessionRunning();
+  etaitEnCours = enCours;
+  const fait = store.isDone();
+  const sujet = store.sessionTheme();
+  const morceau = store.musicEnabled() ? morceauChoisi() : null;
+  const aBlocage = chizuk && ChizukRules.pourMoment(chizuk, 'blocage').length > 0;
+  const c = enCours ? compteur() : null;
+
+  const corps = [
+    h('div', { class: 'seance-titre' }, tr.t('session_screen_title')),
+    h('div', { class: 'scene' }, h('img', { src: `img/${enCours ? pendant() : fait ? joie() : appel()}.webp`, alt: '' })),
+    enCours
+      ? (c.texte ? h('div', { class: 'decompte', role: 'timer' }, c.texte) : null)
+      : h('div', { class: 'decompte' }, tr.duree(store.targetMinutes())),
+    h('p', { class: 'legende' }, enCours ? c.legende : tr.t(fait ? 'session_idle_done' : 'session_idle_caption')),
+    morceau ? h('p', { class: 'legende petite' }, tr.t('session_music_line', titreMorceau(morceau))) : null,
+    carteChizuk(chizukSeance),
+    enCours && aBlocage ? h('button', { class: 'texte-clair', onclick: () => { tireChizuk('blocage'); rendre(); } }, tr.t('chizuk_stuck')) : null,
+    h('button', { class: 'texte-clair', onclick: choisirSujet },
+      sujet ? tr.t('session_theme_chosen', tr.t(`theme_${sujet}`)) : tr.t('session_theme_none')),
+  ];
+
+  if (enCours) {
+    corps.push(
+      h('button', {
+        class: 'principal', onclick: () => confirmer(tr.t('session_finish_title'), tr.t('session_finish_message'),
+          tr.t('session_finish_now'), terminerMaintenant),
+      }, tr.t('session_finish_now')),
+      h('button', {
+        class: 'texte-clair', onclick: () => confirmer(tr.t('session_cancel_title'), tr.t('session_cancel_message'),
+          tr.t('session_cancel'), annulerSeance),
+      }, tr.t('session_cancel')));
+  } else {
+    // Les durées proposées, en deux rangées de trois, puis la durée réglable et la séance sans durée.
+    corps.push(
+      h('div', { class: 'durees' }, DureeSeance.PROPOSEES.map((m) =>
+        h('button', { class: 'duree', onclick: () => commencer(m) }, tr.duree(m)))),
+      h('button', { class: 'texte-clair', onclick: () => saisirDuree(commencer) }, tr.t('duration_custom')),
+      h('button', { class: 'texte-clair', onclick: () => commencer(0) }, tr.t('session_open')),
+      h('button', { class: 'principal', onclick: () => commencer(store.targetMinutes()) },
+        tr.t('session_start', tr.duree(store.targetMinutes()))));
+  }
+
+  return h('div', { class: 'ecran seance' },
+    h('header', { class: 'barre' },
+      h('button', { class: 'retour', 'aria-label': tr.t('action_back'), onclick: retour })),
+    h('div', { class: 'defile' }, h('div', { class: 'contenu' }, corps)));
+}
+
+// --- Le bravo (CelebrationActivity) -------------------------------------------------
+let danseEnCours = null;
+
+function ecranBravo() {
+  const annulee = !!bravo.annulee;
+  const adresse = store.adresse();
+  const titre = annulee
+    ? tr.t(adresse === 'm' ? 'annulation_hazak' : adresse === 'f' ? 'annulation_hizki' : 'annulation_neutral')
+    : tr.t(adresse === 'm' ? 'celebration_tsadik' : adresse === 'f' ? 'celebration_tsadeket' : 'celebration_neutral');
+  const sousTitre = annulee ? tr.t('annulation_subtitle')
+    : bravo.minutes > 0 ? tr.p('celebration_minutes', bravo.minutes) : null;
+  const continuer = () => {
+    bravo = null;
+    chizukBravo = null;
+    retour();
+    if (noteApresBravo) {
+      noteApresBravo = false;
+      setTimeout(() => ecrireNote(store.today(), rendre), 50);
+    }
+  };
+  return h('div', { class: 'ecran bravo' },
+    h('div', { class: 'defile' }, h('div', { class: 'contenu' },
+      h('div', { class: 'scene danse' },
+        h('div', { class: 'danseur' },
+          h('img', { class: 'pose-a', src: `img/${annulee ? 'char_walking' : 'char_dancing'}.webp`, alt: '' }),
+          annulee ? null : h('img', { class: 'pose-b', src: 'img/char_dancing_joy.webp', alt: '' }))),
+      h('h1', { class: 'bravo-titre' }, titre),
+      sousTitre ? h('p', { class: 'bravo-sous-titre' }, sousTitre) : null,
+      annulee && chizukBravo ? carteChizuk({ moment: 'relance', item: chizukBravo }, { compacte: true }) : null,
+      h('button', { class: 'principal', onclick: continuer }, tr.t('celebration_continue')))));
+}
+
+/**
+ * La danse du hassid : à chaque temps il saute, retombe en pliant les
+ * genoux, et change de jambe ; des notes montent de la scène. Rien si le
+ * téléphone demande moins d'animations.
+ */
+function danse() {
+  arreteDanse();
+  if (bravo?.annulee || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const scene = app.querySelector('.scene.danse');
+  const danseur = app.querySelector('.danseur');
+  const poseA = app.querySelector('.pose-a');
+  const poseB = app.querySelector('.pose-b');
+  if (!scene || !danseur || !poseB) return;
+  const debut = performance.now();
+  const periode = 2 * DanseMesure.TEMPS_MS;
+  const image = (t) => {
+    const p = DanseMesure.pas(((t - debut) % periode) / periode);
+    danseur.style.transform = `translateY(${-16 * p.hauteur}px) scale(${1 + 0.04 * p.flexion}, ${1 - 0.05 * p.flexion}) rotate(${6 * p.balance}deg)`;
+    poseA.style.opacity = String(1 - p.poseB);
+    poseB.style.opacity = String(p.poseB);
+    danseEnCours.image = requestAnimationFrame(image);
+  };
+  const SIGNES = ['♪', '♫', '♪', '✦'];
+  const note = () => {
+    const l = scene.clientWidth;
+    const hauteur = scene.clientHeight;
+    if (!l) return;
+    const n = h('span', { class: 'note', 'aria-hidden': 'true' }, SIGNES[Math.floor(Math.random() * SIGNES.length)]);
+    n.style.fontSize = `${18 + Math.floor(Math.random() * 8)}px`;
+    n.style.left = `${l * ((Math.random() < 0.5 ? 0.18 : 0.72) + Math.random() * 0.1)}px`;
+    n.style.top = `${hauteur * 0.55}px`;
+    scene.append(n);
+    const anim = n.animate([
+      { transform: 'translate(0, 0) rotate(0deg)', opacity: 1 },
+      { transform: `translate(${(Math.random() - 0.5) * 30}px, ${-hauteur * 0.45}px) rotate(${(Math.random() - 0.5) * 40}deg)`, opacity: 0 },
+    ], { duration: 1700, easing: 'cubic-bezier(0, 0, 0.2, 1)' });
+    anim.onfinish = () => n.remove();
+  };
+  danseEnCours = { image: requestAnimationFrame(image), notes: setInterval(note, DanseMesure.TEMPS_MS + 180) };
+  note();
+}
+function arreteDanse() {
+  if (!danseEnCours) return;
+  cancelAnimationFrame(danseEnCours.image);
+  clearInterval(danseEnCours.notes);
+  danseEnCours = null;
+}
+
 // --- Navigation --------------------------------------------------------------------------
 // Chaque écran secondaire est une entrée d'historique : le bouton retour
 // et le geste de retour ramènent à l'accueil, sur l'onglet quitté.
 function ecranCourant() {
   const e = location.hash.slice(1);
-  return ['musique', 'reglages'].includes(e) ? e : 'accueil';
+  return ['musique', 'reglages', 'seance', 'bravo'].includes(e) ? e : 'accueil';
 }
 function ouvrir(ecran) {
-  if (ecranCourant() !== ecran) history.pushState(null, '', `#${ecran}`);
+  // L'entrée sur l'écran de séance tire le mot d'ouverture (SessionActivity.onCreate).
+  if (ecran === 'seance' && ecranCourant() !== 'seance') tireChizuk('ouverture');
+  if (ecranCourant() !== ecran) history.pushState({ interne: true }, '', `#${ecran}`);
   rendre();
+}
+
+/**
+ * Le retour. Ouverte directement sur un écran secondaire (application
+ * relancée), la page n'a pas d'historique où revenir : on rentre à l'accueil.
+ */
+function retour() {
+  if (history.state?.interne) history.back();
+  else { history.replaceState(null, '', location.pathname); rendre(); }
 }
 window.addEventListener('popstate', () => rendre());
 
 function rendre() {
+  // Une séance arrivée à son terme pendant que le téléphone dormait.
+  if (store.isSessionOver()) cloreSeance({ avantTerme: false });
+  // Le bravo d'une séance close attend le prochain écran ouvert.
+  if (['accueil', 'seance'].includes(ecranCourant())) {
+    const minutes = store.takePendingCelebration();
+    if (minutes !== null) {
+      bravo = { minutes };
+      history.pushState({ interne: true }, '', '#bravo');
+    }
+  }
+  if (ecranCourant() === 'bravo' && !bravo) history.replaceState(null, '', location.pathname);
   // La position de défilement survit à un nouveau rendu du même écran.
   const avant = app.querySelector('.defile')?.scrollTop ?? 0;
   const ecran = ecranCourant();
+  if (ecran !== 'seance') arreteTic();
+  if (ecran !== 'bravo') arreteDanse();
   const memeEcran = app.dataset.ecran === `${ecran}/${onglet}`;
   app.replaceChildren();
   if (ecran === 'musique') app.append(ecranMusique());
   else if (ecran === 'reglages') app.append(ecranReglages());
+  else if (ecran === 'seance') app.append(ecranSeance());
+  else if (ecran === 'bravo') app.append(ecranBravo());
   else {
     app.append(h('div', { class: 'ecran' },
       h('div', { class: 'defile' }, onglet === 'textes' ? panneauTextes() : panneauAujourdhui()),
@@ -388,21 +755,33 @@ function rendre() {
   }
   app.dataset.ecran = `${ecran}/${onglet}`;
   if (memeEcran) app.querySelector('.defile').scrollTop = avant;
+  ajusteLesTextes();
+  if (ecran === 'seance') demarreTic();
+  if (ecran === 'bravo') danse();
 }
 
 // --- Démarrage ---------------------------------------------------------------------------
 async function demarrer() {
   tr = await chargeTraduction(langueInitiale(store.langueApp(), navigator.languages));
   appliqueApparence();
-  const [m, t] = await Promise.all([
+  const [m, t, c] = await Promise.all([
     fetch('data/musique.json').then((r) => r.json()),
     fetch('data/tikkun_haklali.json').then((r) => r.json()),
+    fetch('data/chizuk.json').then((r) => r.json()),
   ]);
   morceaux = m;
   tikkun = t;
+  chizuk = c;
+  // Rouvert sur l'écran de séance : son mot d'ouverture.
+  if (ecranCourant() === 'seance') tireChizuk('ouverture');
   rendre();
-  // Revenir à l'application un autre jour redessine l'accueil du jour.
-  document.addEventListener('visibilitychange', () => { if (!document.hidden) rendre(); });
+  // Revenir à l'application redessine l'écran : un autre jour, une séance
+  // arrivée à son terme, le décompte qui a continué pendant le sommeil.
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) return;
+    if (store.isSessionRunning()) gardeEcranAllume();
+    rendre();
+  });
 }
 
 if ('serviceWorker' in navigator) {

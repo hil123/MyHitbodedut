@@ -33,7 +33,7 @@ const DONNEES = {
 };
 const MAINTENANT = new Date('2026-09-29T09:00:00').getTime();
 
-async function capture(nom, { langue, mode = 'clair', fond = 'vert', accent = 'vert', prenom = '', ecran = '', onglet = null }) {
+async function capture(nom, { langue, mode = 'clair', fond = 'vert', accent = 'vert', prenom = '', ecran = '', onglet = null, adresse = null, actions = null }) {
   const contexte = await navigateur.newContext({
     viewport: { width: 390, height: 844 }, deviceScaleFactor: 2, colorScheme: mode === 'sombre' ? 'dark' : 'light',
     serviceWorkers: 'block',
@@ -44,6 +44,7 @@ async function capture(nom, { langue, mode = 'clair', fond = 'vert', accent = 'v
   page.on('request', (r) => { if (!r.url().startsWith(base)) erreurs.push(`${nom} : requête hors du site ${r.url()}`); });
   const prefs = JSON.stringify({
     langue_app: langue, apparence_mode: mode, apparence_fond: fond, apparence_accent: accent, first_name: prenom,
+    ...(adresse ? { adresse } : {}),
   });
   await page.addInitScript(({ donnees, prefs, maintenant }) => {
     // L'horloge figée : la même semaine à chaque capture.
@@ -59,6 +60,7 @@ async function capture(nom, { langue, mode = 'clair', fond = 'vert', accent = 'v
   await page.goto(base + (ecran ? `#${ecran}` : ''));
   await page.waitForSelector('#app > *', { timeout: 8000 }).catch((e) => { console.error(erreurs.join('\n')); throw e; });
   if (onglet) await page.click(`[data-onglet="${onglet}"]`);
+  if (actions) await actions(page);
   await page.waitForTimeout(900);
   await page.screenshot({ path: join(SORTIE, `${moteur}-${nom}.png`) });
   // Aucun débordement horizontal, en aucune langue.
@@ -74,6 +76,46 @@ await capture('accueil-fr-sable-violet', { langue: 'fr', fond: 'sable', accent: 
 await capture('textes-he', { langue: 'he', onglet: 'textes' });
 await capture('musique-fr', { langue: 'fr', ecran: 'musique' });
 await capture('reglages-en', { langue: 'en', ecran: 'reglages' });
+
+// La séance : avant, pendant, le bravo, l'abandon.
+const finDeSeance = async (page) => {
+  // Cinq minutes passent d'un coup : le décompte doit clore la séance seul.
+  await page.evaluate(() => {
+    const p = JSON.parse(localStorage.getItem('myhitbodedut'));
+    p.session_started_at -= 5 * 60000 + 1000;
+    p.session_ends_at = Date.now() - 1000;
+    localStorage.setItem('myhitbodedut', JSON.stringify(p));
+  });
+  await page.waitForSelector('.bravo', { timeout: 5000 });
+};
+await capture('seance-fr', { langue: 'fr', ecran: 'seance' });
+await capture('seance-en-cours-he', { langue: 'he', ecran: 'seance', actions: (p) => p.click('.duree') });
+await capture('seance-en-cours-en-sombre', { langue: 'en', mode: 'sombre', ecran: 'seance', actions: (p) => p.click('.duree') });
+await capture('bravo-fr', {
+  langue: 'fr', ecran: 'seance', adresse: 'm',
+  actions: async (p) => { await p.click('.duree'); await finDeSeance(p); },
+});
+await capture('hazak-he', {
+  langue: 'he', ecran: 'seance', adresse: 'm',
+  actions: async (p) => {
+    await p.click('.duree');
+    await p.click('.seance .principal + .texte-clair');
+    await p.click('.feuille .actions button:last-child');
+    await p.waitForSelector('.bravo');
+  },
+});
+// Le journal a reçu la séance, et l'accueil la montre.
+await capture('accueil-apres-seance-fr', {
+  langue: 'fr', ecran: 'seance',
+  actions: async (p) => {
+    await p.click('.duree');
+    await finDeSeance(p);
+    await p.click('.bravo .principal');
+    await p.click('.retour');
+    const jour = await p.evaluate(() => JSON.parse(localStorage.getItem('myhitbodedut-journal')).days['2026-09-29']);
+    if (!jour || jour.minutes !== 5) erreurs.push(`séance non inscrite : ${JSON.stringify(jour)}`);
+  },
+});
 
 // Le calendrier hébraïque du navigateur lui-même : sous WebKit, c'est celui
 // de Safari. Les mêmes jours que HolidaysTest.kt.
