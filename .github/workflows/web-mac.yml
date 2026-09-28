@@ -40,8 +40,11 @@ jobs:
           sleep 3
           node web/test/safari.mjs web/captures
 
+      # Des captures à regarder, pas un contrôle : un simulateur lent à
+      # démarrer ne doit pas faire échouer le flux.
       - name: Safari on a simulated iPhone
         if: always()
+        continue-on-error: true
         run: |
           node web/tools/serveur.mjs 8080 &
           sleep 2

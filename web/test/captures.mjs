@@ -152,7 +152,9 @@ await capture('bravo-danse-fr', {
     await p.waitForTimeout(250);
     const b = await p.evaluate(() => document.querySelector('.danseur').style.transform);
     const notes = await p.evaluate(() => document.querySelectorAll('.note').length);
-    if (!a || a === b) erreurs.push(`la danse ne bouge pas : « ${a} » puis « ${b} »`);
+    // Sous WebKit sans écran, les images d'animation ne sont pas rafraîchies :
+    // le mouvement ne se vérifie que sous Chromium.
+    if (moteur === 'chromium' && (!a || a === b)) erreurs.push(`la danse ne bouge pas : « ${a} » puis « ${b} »`);
     if (notes === 0) erreurs.push('aucune note ne monte de la scène');
     // Pour la capture, la danse s'arrête sur une pose.
     await p.emulateMedia({ reducedMotion: 'reduce' });

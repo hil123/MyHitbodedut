@@ -28,7 +28,8 @@ xcrun simctl boot "$UDID" || true
 xcrun simctl bootstatus "$UDID" -b
 
 capture() {
-  xcrun simctl openurl "$UDID" "$1"
+  # Le simulateur tout juste démarré refuse parfois la première ouverture.
+  xcrun simctl openurl "$UDID" "$1" || { sleep 10; xcrun simctl openurl "$UDID" "$1"; }
   sleep "${3:-12}"
   xcrun simctl io "$UDID" screenshot "$SORTIE/iphone-$2.png"
   echo "Capture : iphone-$2.png ($1)" | tee -a "$SORTIE/iphone-rapport.txt"
