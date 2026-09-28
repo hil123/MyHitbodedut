@@ -1,17 +1,20 @@
 package com.myhitbodedut
 
-import android.animation.AnimatorSet
-import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.View
-import android.view.animation.AccelerateDecelerateInterpolator
+import android.view.animation.DecelerateInterpolator
+import android.view.animation.LinearInterpolator
 import android.widget.Button
+import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import kotlin.random.Random
 
 /**
  * La fin d'une séance : le hassid danse, et l'application dit bravo.
@@ -27,7 +30,9 @@ import androidx.appcompat.app.AppCompatActivity
  */
 class CelebrationActivity : AppCompatActivity() {
 
-    private var danse: AnimatorSet? = null
+    private var danse: ValueAnimator? = null
+
+    private val notes = Handler(Looper.getMainLooper())
 
     private val annulee: Boolean by lazy { intent.getBooleanExtra(EXTRA_ANNULEE, false) }
 
@@ -69,42 +74,90 @@ class CelebrationActivity : AppCompatActivity() {
     override fun onStop() {
         danse?.cancel()
         danse = null
+        notes.removeCallbacksAndMessages(null)
         super.onStop()
     }
 
     /**
-     * Un balancement autour des pieds et un petit saut. Rien si les
-     * animations sont coupées dans le téléphone : c'est souvent un choix
-     * d'accessibilité, pas un oubli.
+     * Une danse de hassid, pas une image qui tremble : à chaque temps il
+     * saute, retombe en pliant un peu les genoux, et change de jambe — les
+     * deux poses superposées se relaient au moment où il touche le sol. Le
+     * corps se balance d'un côté puis de l'autre sur deux temps, et des
+     * notes montent de la scène.
+     *
+     * Rien si les animations sont coupées dans le téléphone : c'est souvent
+     * un choix d'accessibilité, pas un oubli. La pose fixe reste alors.
      */
     private fun danser() {
         if (annulee || !ValueAnimator.areAnimatorsEnabled()) return
-        val art = findViewById<ImageView>(R.id.celebration_art)
-        art.post {
-            art.pivotX = art.width / 2f
-            art.pivotY = art.height.toFloat()
-        }
-        val saut = 14f * resources.displayMetrics.density
-        val balance = ObjectAnimator.ofFloat(art, View.ROTATION, -7f, 7f).apply {
-            duration = 520L
+        val danseur = findViewById<View>(R.id.celebration_dancer)
+        val poseA = findViewById<View>(R.id.celebration_art)
+        val poseB = findViewById<View>(R.id.celebration_art_b)
+        val saut = 16f * resources.displayMetrics.density
+
+        danse = ValueAnimator.ofFloat(0f, 1f).apply {
+            duration = 2 * DanseMesure.TEMPS_MS
             repeatCount = ValueAnimator.INFINITE
-            repeatMode = ValueAnimator.REVERSE
-            interpolator = AccelerateDecelerateInterpolator()
-        }
-        val rebond = ObjectAnimator.ofFloat(art, View.TRANSLATION_Y, 0f, -saut).apply {
-            duration = 260L
-            repeatCount = ValueAnimator.INFINITE
-            repeatMode = ValueAnimator.REVERSE
-        }
-        danse = AnimatorSet().apply {
-            playTogether(balance, rebond)
+            interpolator = LinearInterpolator()
+            addUpdateListener {
+                val t = it.animatedValue as Float
+                val pas = DanseMesure.pas(t)
+                danseur.pivotX = danseur.width / 2f
+                danseur.pivotY = danseur.height.toFloat()
+                danseur.translationY = -saut * pas.hauteur
+                danseur.scaleX = 1f + 0.04f * pas.flexion
+                danseur.scaleY = 1f - 0.05f * pas.flexion
+                danseur.rotation = 6f * pas.balance
+                poseA.alpha = 1f - pas.poseB
+                poseB.alpha = pas.poseB
+            }
             start()
         }
+        notes.post(object : Runnable {
+            override fun run() {
+                lancerNote()
+                notes.postDelayed(this, DanseMesure.TEMPS_MS + 180L)
+            }
+        })
+    }
+
+    /** Une note ou une étoile qui monte de la scène et s'efface. */
+    private fun lancerNote() {
+        val scene = findViewById<FrameLayout>(R.id.celebration_stage)
+        if (scene.width == 0) return
+        val dp = resources.displayMetrics.density
+        val note = TextView(this).apply {
+            text = SIGNES[Random.nextInt(SIGNES.size)]
+            textSize = 18f + Random.nextInt(8)
+            // La scène est une plaque claire de jour comme de nuit.
+            setTextColor(Apparence.couleur(this@CelebrationActivity, R.color.on_plate))
+        }
+        val cote = if (Random.nextBoolean()) 0.18f else 0.72f
+        scene.addView(
+            note,
+            FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.WRAP_CONTENT,
+                FrameLayout.LayoutParams.WRAP_CONTENT
+            )
+        )
+        note.x = scene.width * (cote + Random.nextFloat() * 0.1f)
+        note.y = scene.height * 0.55f
+        note.animate()
+            .translationYBy(-scene.height * 0.45f)
+            .translationXBy((Random.nextFloat() - 0.5f) * 30f * dp)
+            .rotation((Random.nextFloat() - 0.5f) * 40f)
+            .alpha(0f)
+            .setDuration(1700L)
+            .setInterpolator(DecelerateInterpolator())
+            .withEndAction { scene.removeView(note) }
+            .start()
     }
 
     companion object {
         const val EXTRA_MINUTES = "minutes"
         const val EXTRA_ANNULEE = "annulee"
+
+        private val SIGNES = arrayOf("♪", "♫", "♪", "✦")
 
         /** Après une séance annulée : pas de bravo, un encouragement. */
         fun annulation(activity: Activity) {

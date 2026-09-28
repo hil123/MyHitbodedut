@@ -17,7 +17,14 @@
         android:paddingHorizontal="@dimen/edge"
         android:paddingVertical="22dp">
 
+        <!--
+            La scène. Le danseur porte deux poses superposées, jambe droite
+            puis jambe gauche levée, que la danse alterne à chaque saut ; les
+            notes qui montent sont ajoutées à la scène par le code. La marge
+            du haut laisse la place du saut.
+        -->
         <FrameLayout
+            android:id="@+id/celebration_stage"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
@@ -25,14 +32,29 @@
             android:minHeight="200dp"
             android:padding="14dp">
 
-            <ImageView
-                android:id="@+id/celebration_art"
+            <FrameLayout
+                android:id="@+id/celebration_dancer"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:adjustViewBounds="true"
-                android:contentDescription="@null"
-                android:scaleType="fitCenter"
-                android:src="@drawable/char_dancing" />
+                android:layout_marginTop="18dp">
+
+                <ImageView
+                    android:id="@+id/celebration_art"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:contentDescription="@null"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/char_dancing" />
+
+                <ImageView
+                    android:id="@+id/celebration_art_b"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:alpha="0"
+                    android:contentDescription="@null"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/char_dancing_joy" />
+            </FrameLayout>
         </FrameLayout>
 
         <TextView
