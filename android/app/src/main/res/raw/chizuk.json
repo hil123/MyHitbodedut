@@ -8,7 +8,7 @@
     },
     "traductions": "FR et EN originales (Claude, 20/09/2026). Aucune reprise des traductions protégées (Breslov Research Institute, Greenbaum). relu=false tant que non relues.",
     "noms_divins": "substitués (ה', אלקים, אֲדֹ-נָי) quand la source les écrit en toutes lettres",
-    "nikkoud": "he = texte vocalisé de l'édition ; he_sans_nikkoud fourni quand la licence de l'édition numérique n'est pas déclarée (Sichot HaRan, Shivchei HaRan, Likutei Etzot)",
+    "nikkoud": "he = texte vocalisé de l'édition ; he_sans_nikkoud fourni quand la licence de l'édition numérique n'est pas déclarée (Sichot HaRan, Shivchei HaRan, Likutei Etzot, Likutei Tefilot)",
     "ellipses": "« … » marque une coupe dans le texte source",
     "moments": {
       "ouverture": "début de séance",
@@ -59,6 +59,11 @@
         "titre": "Likutei Etzot — rabenubook.com (via export Sefaria)",
         "licence": "unknown",
         "nikkoud_ok": false
+      },
+      "lt": {
+        "titre": "Likutei Tefilot — Maleh Vigadish 2021 (via export Sefaria)",
+        "licence": "unknown",
+        "nikkoud_ok": false
       }
     },
     "corrections_v01": [
@@ -90,11 +95,12 @@
           "michle-24-16",
           "lm1-261-recommencer",
           "lm1-78-la-parole",
-          "le-hitchazkut-42-cri"
+          "le-hitchazkut-42-cri",
+          "lt2-39-aucun-desespoir"
         ],
         "choix": "Selection du proprietaire le 28/09/2026 (textes sur le desespoir, moment « relance »), a partir de l'hebreu et d'une traduction presentes dans la conversation.",
-        "hebreu": "Chaque fragment decoupe mecaniquement dans l'edition citee (export public Sefaria sur storage.googleapis.com, le 28/09/2026) : 8/8 retrouves au caractere pres, vocalisation comprise.",
-        "recoupement": "Au moins un temoin independant par item (voir le champ recoupement). Likoutei Tefilot II, 39, aussi retenu, n'est pas ajoute : aucun second temoin joignable depuis l'environnement de travail.",
+        "hebreu": "Chaque fragment decoupe mecaniquement dans l'edition citee (export public Sefaria sur storage.googleapis.com, le 28/09/2026) : 9/9 retrouves au caractere pres, vocalisation comprise.",
+        "recoupement": "Au moins un temoin independant par item (voir le champ recoupement). Pour Likoutei Tefilot II, 39, le second temoin est le livre imprime du proprietaire, qui a confirme le texte le 28/09/2026.",
         "traductions": "FR et EN originales (Claude, 28/09/2026), elargies a partir des traductions courtes presentees au proprietaire ; relecture par un tiers souhaitable."
       }
     }
@@ -1184,6 +1190,30 @@
       "tags": [],
       "duree_lecture_sec": 14,
       "he_sans_nikkoud": "… כי גם צעקה משאול תחתיות אינה נאבדת לעולם. ויצעק ויצעק ויצעק ולא יתיאש עצמו מן הצעקה לעולם, רק יצעק ויתחנן לפני השם יתברך תמיד יהיה איך שיהיה",
+      "statut_verif": "verifie_texte",
+      "relu": true
+    },
+    {
+      "id": "lt2-39-aucun-desespoir",
+      "moments": [
+        "relance"
+      ],
+      "theme": "espoir",
+      "edition": "lt",
+      "ref": "Likoutei Tefilot II, 39",
+      "ref_sefaria": "Likutei Tefilot, Volume II 39:72",
+      "url": "https://www.sefaria.org/Likutei_Tefilot%2C_Volume_II.39.72",
+      "he": "וְאֵדַע וְאַאֲמִין בֶּאֱמוּנָה שְׁלֵמָה וַחֲזָקָה תָמִיד, שֶׁאֵין שׁוּם יֵאוּשׁ בָּעוֹלָם כְּלָל, אֵיךְ שֶׁהוּא, אֵיךְ שֶׁהוּא, כִּי רַחֲמֶיךָ לֹא כָלִים לְעוֹלָם.",
+      "fr": "Que je sache et que je croie toujours, d'une foi entière et forte, qu'il n'y a aucun désespoir au monde, quoi qu'il en soit, quoi qu'il en soit, car Ta miséricorde ne s'épuise jamais.",
+      "en": "May I know and believe always, with complete and strong faith, that there is no despair in the world at all, however it may be, however it may be, for Your mercies never end.",
+      "yiddish": null,
+      "recoupement": [
+        "Livre imprimé du propriétaire (Likoutei Tefilot, 2e partie, tefila 39), confirmé par lui le 28/09/2026"
+      ],
+      "note": "Prière de Rabbi Nathan, à la première personne.",
+      "tags": [],
+      "duree_lecture_sec": 10,
+      "he_sans_nikkoud": "ואדע ואאמין באמונה שלמה וחזקה תמיד, שאין שום יאוש בעולם כלל, איך שהוא, איך שהוא, כי רחמיך לא כלים לעולם.",
       "statut_verif": "verifie_texte",
       "relu": true
     }

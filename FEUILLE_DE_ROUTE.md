@@ -709,15 +709,14 @@ dans l'édition d'essai. Un texte ajouté plus tard avec relu=false ne
 s'affichera nulle part dans l'édition normale tant qu'on ne l'aura pas relu
 autrement (par exemple dans la conversation, puis relu=true dans le fichier).
 
-**Huit textes sur le désespoir (28/09).** Choisis par le propriétaire parmi
+**Neuf textes sur le désespoir (28/09).** Choisis par le propriétaire parmi
 22 textes proposés, tous au moment « relance » (après une série rompue, et
 maintenant après une séance annulée) : Si'hot HaRan 3, 'Hayé Moharan 431,
 Likoutei Moharan II 48 et 112, Michlé 24:16, Likoutei Moharan I 261 et 78
 (ce dernier aussi au moment « blocage » : il nomme la hitbodedout), Likoutei
-Etsot Hit'hazkout 42. Hébreu découpé mécaniquement dans l'export public de
-Sefaria, vocalisation comprise ; un second témoin par texte. Likoutei
-Tefilot II, 39, aussi retenu, attend son second témoin : aucun n'était
-joignable depuis l'environnement de travail. Le propriétaire peut le
-confirmer dans son propre livre. Détail dans chizuk.json,
-_meta.verification.ajouts_2026_09_28. Le moment « relance » passe de 7 à 15
+Etsot Hit'hazkout 42, Likoutei Tefilot II 39. Hébreu découpé mécaniquement
+dans l'export public de Sefaria, vocalisation comprise ; un second témoin par
+texte (pour Likoutei Tefilot II 39 : le livre imprimé du propriétaire, qui a
+confirmé le texte). Détail dans chizuk.json,
+_meta.verification.ajouts_2026_09_28. Le moment « relance » passe de 7 à 16
 textes.
