@@ -33,10 +33,14 @@ const DONNEES = {
 };
 const MAINTENANT = new Date('2026-09-29T09:00:00').getTime();
 
-async function capture(nom, { langue, mode = 'clair', fond = 'vert', accent = 'vert', prenom = '', ecran = '', onglet = null, adresse = null, actions = null }) {
+async function capture(nom, { langue, mode = 'clair', fond = 'vert', accent = 'vert', prenom = '', ecran = '', onglet = null, adresse = null, actions = null, calme = false }) {
   const contexte = await navigateur.newContext({
     viewport: { width: 390, height: 844 }, deviceScaleFactor: 2, colorScheme: mode === 'sombre' ? 'dark' : 'light',
     serviceWorkers: 'block',
+    // « calme » : le téléphone demande moins d'animations. La danse du bravo
+    // s'arrête alors, comme sur Android ; sous WebKit, la capture d'un écran
+    // qui danse n'aboutit pas.
+    reducedMotion: calme ? 'reduce' : 'no-preference',
   });
   const page = await contexte.newPage();
   page.on('console', (m) => { if (m.type() === 'error') erreurs.push(`${nom} : ${m.text()}`); });
@@ -63,7 +67,7 @@ async function capture(nom, { langue, mode = 'clair', fond = 'vert', accent = 'v
   if (onglet) await page.click(`[data-onglet="${onglet}"]`);
   if (actions) await actions(page);
   await page.waitForTimeout(900);
-  await page.screenshot({ path: join(SORTIE, `${moteur}-${nom}.png`) });
+  await page.screenshot({ path: join(SORTIE, `${moteur}-${nom}.png`), animations: 'disabled' });
   // Aucun débordement horizontal, en aucune langue.
   const deborde = await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth);
   if (deborde) erreurs.push(`${nom} : la page déborde en largeur`);
@@ -100,11 +104,28 @@ await capture('seance-fr', { langue: 'fr', ecran: 'seance' });
 await capture('seance-en-cours-he', { langue: 'he', ecran: 'seance', actions: (p) => p.click('.duree') });
 await capture('seance-en-cours-en-sombre', { langue: 'en', mode: 'sombre', ecran: 'seance', actions: (p) => p.click('.duree') });
 await capture('bravo-fr', {
-  langue: 'fr', ecran: 'seance', adresse: 'm',
+  langue: 'fr', ecran: 'seance', adresse: 'm', calme: true,
   actions: async (p) => { await p.click('.duree'); await finDeSeance(p); },
 });
+// La danse elle-même : le danseur bouge, et des notes montent.
+await capture('bravo-danse-fr', {
+  langue: 'fr', ecran: 'seance',
+  actions: async (p) => {
+    await p.click('.duree');
+    await finDeSeance(p);
+    const a = await p.evaluate(() => document.querySelector('.danseur').style.transform);
+    await p.waitForTimeout(250);
+    const b = await p.evaluate(() => document.querySelector('.danseur').style.transform);
+    const notes = await p.evaluate(() => document.querySelectorAll('.note').length);
+    if (!a || a === b) erreurs.push(`la danse ne bouge pas : « ${a} » puis « ${b} »`);
+    if (notes === 0) erreurs.push('aucune note ne monte de la scène');
+    // Pour la capture, la danse s'arrête sur une pose.
+    await p.emulateMedia({ reducedMotion: 'reduce' });
+    await p.evaluate(() => window.dispatchEvent(new Event('popstate')));
+  },
+});
 await capture('hazak-he', {
-  langue: 'he', ecran: 'seance', adresse: 'm',
+  langue: 'he', ecran: 'seance', adresse: 'm', calme: true,
   actions: async (p) => {
     await p.click('.duree');
     await p.click('.seance .principal + .texte-clair');
@@ -114,7 +135,7 @@ await capture('hazak-he', {
 });
 // Le journal a reçu la séance, et l'accueil la montre.
 await capture('accueil-apres-seance-fr', {
-  langue: 'fr', ecran: 'seance',
+  langue: 'fr', ecran: 'seance', calme: true,
   actions: async (p) => {
     await p.click('.duree');
     await finDeSeance(p);
