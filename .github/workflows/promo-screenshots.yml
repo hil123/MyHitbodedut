@@ -1,0 +1,76 @@
+# Real screenshots of the app for the promo film.
+#
+# Runs only on this branch (never on main): builds the debug edition, starts
+# an emulator set to a 360 x 780 dp screen in dark mode, fills the app with
+# demo data, opens each screen and commits the captures to promo-screenshots/.
+name: Promo screenshots
+
+on:
+  push:
+    branches: [claude/promo-screenshots]
+    paths-ignore: [promo-screenshots/**]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: promo-screenshots
+  cancel-in-progress: true
+
+jobs:
+  screenshots:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Ensure Android platform 35
+        run: yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "platforms;android-35" "build-tools;35.0.0" || true
+
+      - name: Build the debug edition
+        working-directory: android
+        run: ./gradlew --no-daemon assembleFullDebug
+
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
+      - name: Capture on an emulator
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 34
+          target: google_apis
+          arch: x86_64
+          profile: pixel_6
+          disable-animations: false
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          script: bash tools/promo_screenshots.sh
+
+      - name: Keep the captures as an artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: promo-screenshots
+          path: promo-screenshots/
+          if-no-files-found: warn
+
+      - name: Commit the captures to this branch
+        if: always()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add promo-screenshots || true
+          git commit -m "Promo screenshots from run ${{ github.run_number }}" || exit 0
+          git push
