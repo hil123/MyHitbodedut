@@ -13,6 +13,18 @@ adb wait-for-device
 until [ "$(adb shell getprop sys.boot_completed | tr -d '\r')" = "1" ]; do sleep 2; done
 sleep 5
 
+# A Thursday morning, so the week already holds a few days done. Set first,
+# then let the system settle: a clock jump mid-run froze System UI (run 3).
+adb root >/dev/null 2>&1 || true
+sleep 3
+adb wait-for-device
+adb shell settings put global auto_time 0
+adb shell date 100106422026.00 || true
+adb shell date
+adb shell settings put global hide_error_dialogs 1
+sleep 20
+adb shell am broadcast -a android.intent.action.CLOSE_SYSTEM_DIALOGS >/dev/null || true
+
 # A 360 x 780 dp screen (1080 x 2340 px at 480 dpi), dark, in English.
 adb shell wm size 1080x2340
 adb shell wm density 480
@@ -22,14 +34,7 @@ adb shell cmd uimode night yes
 adb shell settings put global window_animation_scale 0
 adb shell settings put global transition_animation_scale 0
 adb shell settings put global animator_duration_scale 0
-# A Thursday morning, so the week already holds a few days done.
-adb root >/dev/null 2>&1 || true
-sleep 3
-adb wait-for-device
-adb shell settings put global auto_time 0
-adb shell date 100106422026.00 || adb shell su 0 date 100106422026.00 || true
-adb shell date
-sleep 2
+
 
 adb install -r -g "$APK"
 adb shell cmd locale set-app-locales "$PKG" --locales en-US || true
@@ -127,6 +132,14 @@ tap() {
 import re, sys, subprocess, xml.etree.ElementTree as ET
 want = sys.argv[1]
 root = ET.parse("/tmp/ui.xml").getroot()
+def centre(n):
+    x1, y1, x2, y2 = map(int, re.findall(r"\d+", n.get("bounds")))
+    return str((x1 + x2) // 2), str((y1 + y2) // 2)
+# A "not responding" dialog: wait it out, then look again.
+for n in root.iter("node"):
+    if n.get("text") == "Wait" and n.get("package") == "android":
+        subprocess.run(["adb", "shell", "input", "tap", *centre(n)], check=True)
+        sys.exit(1)
 for n in root.iter("node"):
     if n.get("text") == want or n.get("content-desc") == want:
         x1, y1, x2, y2 = map(int, re.findall(r"\d+", n.get("bounds")))
