@@ -54,6 +54,14 @@
             android:textColor="?attr/mhMuted"
             android:textSize="16sp" />
 
+        <!-- Après une séance annulée seulement : un mot du moment « relance ». -->
+        <include
+            android:id="@+id/celebration_chizuk"
+            layout="@layout/view_chizuk_compact"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp" />
+
         <LinearLayout
             android:id="@+id/celebration_ask"
             android:layout_width="match_parent"

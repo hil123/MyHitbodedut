@@ -432,4 +432,9 @@
         <item quantity="two">%d דקות של התבודדות</item>
         <item quantity="other">%d דקות של התבודדות</item>
     </plurals>
+    <!-- Séance annulée : un encouragement au lieu du bravo (28/09). -->
+    <string name="annulation_hazak">חזק!</string>
+    <string name="annulation_hizki">חזקי!</string>
+    <string name="annulation_neutral">לא מוותרים!</string>
+    <string name="annulation_subtitle">על כל מה שעשית עד עכשיו. הפעם הבאה תהיה טובה יותר.</string>
 </resources>

@@ -18,12 +18,18 @@ import androidx.appcompat.app.AppCompatActivity
  *
  * Elle s'ouvre une fois par séance close, où qu'on se trouve quand on
  * revient : sur l'écran de séance si on l'avait gardé ouvert, sur l'accueil
- * si la séance s'est achevée téléphone posé. Une séance abandonnée n'en
- * ouvre pas.
+ * si la séance s'est achevée téléphone posé.
+ *
+ * Une séance annulée ouvre le même écran, sans danse : « ’Hazak », et un mot
+ * de ’hizouk du moment « relance », ceux qui disent de ne jamais désespérer
+ * (Likoutei Moharan II, 78 : אֵין שׁוּם יֵאוּשׁ בָּעוֹלָם כְּלָל). Demande du
+ * propriétaire, 28/09.
  */
 class CelebrationActivity : AppCompatActivity() {
 
     private var danse: AnimatorSet? = null
+
+    private val annulee: Boolean by lazy { intent.getBooleanExtra(EXTRA_ANNULEE, false) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,8 +37,20 @@ class CelebrationActivity : AppCompatActivity() {
 
         val minutes = intent.getIntExtra(EXTRA_MINUTES, 0)
         findViewById<TextView>(R.id.celebration_minutes).apply {
-            visibility = if (minutes > 0) View.VISIBLE else View.GONE
-            text = resources.getQuantityString(R.plurals.celebration_minutes, minutes, minutes)
+            if (annulee) {
+                visibility = View.VISIBLE
+                setText(R.string.annulation_subtitle)
+            } else {
+                visibility = if (minutes > 0) View.VISIBLE else View.GONE
+                text = resources.getQuantityString(R.plurals.celebration_minutes, minutes, minutes)
+            }
+        }
+        val chizuk = findViewById<View>(R.id.celebration_chizuk)
+        if (annulee) {
+            findViewById<ImageView>(R.id.celebration_art).setImageResource(R.drawable.char_walking)
+            if (ChizukCard.show(chizuk, Moment.RELANCE) == null) chizuk.visibility = View.GONE
+        } else {
+            chizuk.visibility = View.GONE
         }
         findViewById<Button>(R.id.celebration_tsadik).setOnClickListener { choisir(Adresse.HOMME) }
         findViewById<Button>(R.id.celebration_tsadeket).setOnClickListener { choisir(Adresse.FEMME) }
@@ -59,7 +77,9 @@ class CelebrationActivity : AppCompatActivity() {
     /** Sans choix enregistré, le bravo reste neutre et la question est posée ici. */
     private fun render() {
         val adresse = Store.adresse(this)
-        findViewById<TextView>(R.id.celebration_title).setText(Adresse.bravo(adresse))
+        findViewById<TextView>(R.id.celebration_title).setText(
+            if (annulee) Adresse.hazak(adresse) else Adresse.bravo(adresse)
+        )
         findViewById<View>(R.id.celebration_ask).visibility =
             if (adresse == null) View.VISIBLE else View.GONE
     }
@@ -70,7 +90,7 @@ class CelebrationActivity : AppCompatActivity() {
      * d'accessibilité, pas un oubli.
      */
     private fun danser() {
-        if (!ValueAnimator.areAnimatorsEnabled()) return
+        if (annulee || !ValueAnimator.areAnimatorsEnabled()) return
         val art = findViewById<ImageView>(R.id.celebration_art)
         art.post {
             art.pivotX = art.width / 2f
@@ -96,6 +116,14 @@ class CelebrationActivity : AppCompatActivity() {
 
     companion object {
         const val EXTRA_MINUTES = "minutes"
+        const val EXTRA_ANNULEE = "annulee"
+
+        /** Après une séance annulée : pas de bravo, un encouragement. */
+        fun annulation(activity: Activity) {
+            activity.startActivity(
+                Intent(activity, CelebrationActivity::class.java).putExtra(EXTRA_ANNULEE, true)
+            )
+        }
 
         /**
          * Ouvre le bravo si une séance vient de se clore. La marque est

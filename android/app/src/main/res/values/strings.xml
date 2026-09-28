@@ -495,4 +495,9 @@
         <item quantity="one">%d minute de hitbodedout</item>
         <item quantity="other">%d minutes de hitbodedout</item>
     </plurals>
+    <!-- Séance annulée : un encouragement au lieu du bravo (28/09). -->
+    <string name="annulation_hazak">’Hazak !</string>
+    <string name="annulation_hizki">’Hizki !</string>
+    <string name="annulation_neutral">Courage !</string>
+    <string name="annulation_subtitle">Pour tout ce que vous avez fait jusqu’ici. La prochaine fois sera meilleure.</string>
 </resources>

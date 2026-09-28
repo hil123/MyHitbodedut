@@ -296,6 +296,7 @@ class SessionActivity : AppCompatActivity() {
                 cancelling = true
                 SessionService.cancel(this)
                 render()
+                CelebrationActivity.annulation(this)
             }
             .setNegativeButton(R.string.action_back, null)
             .show()

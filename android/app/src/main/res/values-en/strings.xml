@@ -423,4 +423,9 @@
         <item quantity="one">%d minute of hitbodedut</item>
         <item quantity="other">%d minutes of hitbodedut</item>
     </plurals>
+    <!-- Séance annulée : un encouragement au lieu du bravo (28/09). -->
+    <string name="annulation_hazak">Chazak!</string>
+    <string name="annulation_hizki">Chizki!</string>
+    <string name="annulation_neutral">Take heart!</string>
+    <string name="annulation_subtitle">For everything you have done so far. Next time will be better.</string>
 </resources>
