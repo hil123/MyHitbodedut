@@ -67,7 +67,15 @@ async function capture(nom, { langue, mode = 'clair', fond = 'vert', accent = 'v
   if (onglet) await page.click(`[data-onglet="${onglet}"]`);
   if (actions) await actions(page);
   await page.waitForTimeout(900);
-  await page.screenshot({ path: join(SORTIE, `${moteur}-${nom}.png`), animations: 'disabled' });
+  await page.screenshot({ path: join(SORTIE, `${moteur}-${nom}.png`), animations: 'disabled', timeout: 15000 })
+    .catch(async (e) => {
+      const etat = await Promise.race([
+        page.evaluate(() => ({ hash: location.hash, ecran: document.getElementById('app').dataset.ecran })),
+        new Promise((r) => setTimeout(() => r('la page ne répond plus'), 3000)),
+      ]);
+      console.error(`Capture impossible (${nom}) :`, JSON.stringify(etat), '\n', erreurs.join('\n'));
+      throw e;
+    });
   // Aucun débordement horizontal, en aucune langue.
   const deborde = await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth);
   if (deborde) erreurs.push(`${nom} : la page déborde en largeur`);

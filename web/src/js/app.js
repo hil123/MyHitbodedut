@@ -164,6 +164,27 @@ const volumeReglable = (() => {
 const titreMorceau = (m) => tr.t(m.titre);
 const morceauChoisi = () => morceaux.find((m) => m.id === store.musicTrackId()) ?? morceaux[0] ?? null;
 
+/**
+ * Un message bref en bas de l'écran (le Toast d'Android), qui ne bloque
+ * rien : une boîte d'alerte interromprait la séance.
+ */
+function signale(texte) {
+  document.querySelector('.toast')?.remove();
+  const t = h('div', { class: 'toast', role: 'status' }, texte);
+  document.body.append(t);
+  setTimeout(() => t.remove(), 3500);
+}
+
+/**
+ * Une lecture qui n'a pas pu partir. Une lecture interrompue par un arrêt
+ * voulu (séance close, autre morceau) n'en est pas une : Safari la signale
+ * pourtant comme un échec (AbortError).
+ */
+function echecLecture(e) {
+  if (e?.name === 'AbortError') return;
+  signale(tr.t('music_play_failed'));
+}
+
 function metadonnees(m) {
   if (!('mediaSession' in navigator)) return;
   navigator.mediaSession.metadata = new MediaMetadata({
@@ -179,7 +200,7 @@ function ecouter(m) {
   if (volumeReglable) lecteur.volume = store.musicVolume() / 100;
   enEcoute = m.id;
   metadonnees(m);
-  lecteur.play().catch(() => { enEcoute = null; rendre(); alert(tr.t('music_play_failed')); });
+  lecteur.play().catch((e) => { enEcoute = null; rendre(); echecLecture(e); });
   rendre();
 }
 
@@ -464,7 +485,7 @@ function demarreMusique() {
   lecteur.loop = true;
   if (volumeReglable) lecteur.volume = store.musicVolume() / 100;
   metadonnees(m);
-  lecteur.play().catch(() => alert(tr.t('music_play_failed')));
+  lecteur.play().catch(echecLecture);
 }
 
 /** Fondu court à la fin (MusicPlayer.stop) ; sur iPhone, où le volume ne se règle pas, l'arrêt est net. */
