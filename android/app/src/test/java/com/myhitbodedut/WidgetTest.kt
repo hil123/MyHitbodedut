@@ -82,7 +82,7 @@ class WidgetTest {
     fun `les gabarits s en tiennent aux vues que RemoteViews accepte`() {
         val permises = setOf(
             "LinearLayout", "FrameLayout", "RelativeLayout", "GridLayout",
-            "TextView", "ImageView", "Button", "ImageButton", "ProgressBar",
+            "TextView", "ImageView", "Button", "ImageButton", "ProgressBar", "Chronometer",
         )
         gabarits.forEach { (nom, gabarit) ->
             val vues = Regex("""<([A-Za-z][A-Za-z0-9.]*)""").findAll(gabarit)
@@ -90,6 +90,23 @@ class WidgetTest {
             vues.forEach {
                 assertTrue("$nom : « $it » n'est pas acceptée par RemoteViews", it in permises)
             }
+        }
+    }
+
+    /**
+     * Pendant la séance (demande du 28/09) : le temps en direct, tenu par
+     * le lanceur, qui obéit au compteur masqué, et un bouton qui termine la
+     * séance par la même action que la notification.
+     */
+    @Test
+    fun `pendant la seance la vignette montre le temps et termine`() {
+        val code = lire("src/main/java/com/myhitbodedut/StreakWidget.kt")
+        assertTrue(code.contains("Store.sessionCounter(context)"))
+        assertTrue("le compteur masqué doit rester masqué", code.contains("SessionRule.Compteur.MASQUE"))
+        assertTrue(code.contains("setChronometerCountDown(R.id.widget_chrono"))
+        assertTrue(code.contains("setAction(SessionService.ACTION_FINISH)"))
+        gabarits.forEach { (nom, xml) ->
+            assertTrue("$nom : pas de compteur", xml.contains("""android:id="@+id/widget_chrono""""))
         }
     }
 

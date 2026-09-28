@@ -22,6 +22,24 @@
             android:textSize="26sp"
             android:textStyle="bold" />
 
+
+        <!-- Pendant la séance : le temps qui reste, ou qui passe pour une séance sans durée. -->
+        <Chronometer
+
+            android:id="@+id/widget_chrono"
+
+            android:layout_width="wrap_content"
+
+            android:layout_height="wrap_content"
+
+            android:textColor="@color/white"
+
+            android:textSize="18sp"
+
+            android:textStyle="bold"
+
+            android:visibility="gone" />
+
         <TextView
             android:id="@+id/widget_mark"
             android:layout_width="wrap_content"

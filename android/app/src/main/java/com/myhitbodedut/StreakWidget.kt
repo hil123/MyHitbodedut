@@ -15,7 +15,9 @@ import android.graphics.Path
 import android.graphics.RectF
 import android.os.Build
 import android.os.Bundle
+import android.os.SystemClock
 import android.util.SizeF
+import android.view.View
 import android.widget.RemoteViews
 import androidx.core.content.ContextCompat
 import java.time.LocalDate
@@ -119,10 +121,13 @@ class StreakWidget : AppWidgetProvider() {
             }
             val views = RemoteViews(context.packageName, gabarit)
             views.setTextViewText(R.id.widget_streak, etat.streak.toString())
-            // Le reste de la vignette ouvre l'application, sans rien décider.
+            compteur(context, views, etat)
+            // Le reste de la vignette ouvre l'application, sans rien décider ;
+            // pendant une séance, l'écran de la séance.
             views.setOnClickPendingIntent(
                 R.id.widget_body,
-                activity(context, 2, Intent(context, MainActivity::class.java))
+                if (etat.running) activity(context, 3, Intent(context, SessionActivity::class.java))
+                else activity(context, 2, Intent(context, MainActivity::class.java))
             )
 
             if (taille == WidgetTaille.PETITE) {
@@ -151,18 +156,28 @@ class StreakWidget : AppWidgetProvider() {
             )
             views.setTextViewText(
                 R.id.widget_start,
-                context.getString(if (etat.running) R.string.widget_resume else R.string.widget_start)
+                context.getString(if (etat.running) R.string.session_finish_now else R.string.widget_start)
             )
-            // Le bouton part droit sur la séance et la lance ; une séance
-            // déjà en cours n'est pas relancée, l'écran s'ouvre simplement.
+            // Hors séance, le bouton part droit sur la séance et la lance.
+            // Pendant la séance, il la termine, comme le bouton de la
+            // notification : le même service, la même action.
             views.setOnClickPendingIntent(
                 R.id.widget_start,
-                activity(
-                    context,
-                    1,
-                    Intent(context, SessionActivity::class.java)
-                        .putExtra(SessionActivity.EXTRA_START_NOW, true)
-                )
+                if (etat.running) {
+                    PendingIntent.getService(
+                        context,
+                        4,
+                        Intent(context, SessionService::class.java).setAction(SessionService.ACTION_FINISH),
+                        PendingIntent.FLAG_IMMUTABLE
+                    )
+                } else {
+                    activity(
+                        context,
+                        1,
+                        Intent(context, SessionActivity::class.java)
+                            .putExtra(SessionActivity.EXTRA_START_NOW, true)
+                    )
+                }
             )
 
             if (taille == WidgetTaille.GRANDE) {
@@ -170,6 +185,33 @@ class StreakWidget : AppWidgetProvider() {
                 texteDuJour(context, views)
             }
             return views
+        }
+
+        /**
+         * Le temps de la séance en direct. Le Chronometer est tenu par le
+         * lanceur lui-même : la vignette n'a pas à se redessiner chaque
+         * seconde, et la batterie n'en paie rien. Il dit ce que dit l'écran
+         * de séance (Store.sessionCounter) : le temps restant, le temps
+         * écoulé pour une séance sans durée, ou rien si on a choisi de
+         * masquer le compteur.
+         */
+        private fun compteur(context: Context, views: RemoteViews, etat: Etat) {
+            val compteur = if (etat.running) Store.sessionCounter(context) else null
+            val montre = compteur != null && compteur != SessionRule.Compteur.MASQUE
+            views.setViewVisibility(R.id.widget_chrono, if (montre) View.VISIBLE else View.GONE)
+            views.setViewVisibility(R.id.widget_streak, if (montre) View.GONE else View.VISIBLE)
+            if (!montre) {
+                views.setChronometer(R.id.widget_chrono, SystemClock.elapsedRealtime(), null, false)
+                return
+            }
+            val maintenant = System.currentTimeMillis()
+            val base = if (compteur == SessionRule.Compteur.RESTE) {
+                SystemClock.elapsedRealtime() + (Store.sessionEndsAt(context) - maintenant)
+            } else {
+                SystemClock.elapsedRealtime() - (maintenant - Store.sessionStartedAt(context))
+            }
+            views.setChronometerCountDown(R.id.widget_chrono, compteur == SessionRule.Compteur.RESTE)
+            views.setChronometer(R.id.widget_chrono, base, null, true)
         }
 
         private val JOURS = intArrayOf(
