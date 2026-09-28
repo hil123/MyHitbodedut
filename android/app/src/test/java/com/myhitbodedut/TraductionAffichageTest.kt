@@ -93,6 +93,9 @@ class TraductionAffichageTest {
     fun `les donnees de la bibliotheque ne portent pas de phrase francaise hors des champs fr`() {
         val biblio = lire("src/main/res/raw/bibliotheque.json")
         assertFalse(biblio.contains("cité dans l'article"))
+        // Publiés sans nommer les auteurs, avec leur accord (28/09).
+        assertFalse("un auteur est nommé", Regex(""""auteur": "[^"]""").containsMatchIn(biblio))
+        listOf("סלמה", "Moharach", "מוהרא").forEach { assertFalse("nom « $it » resté", biblio.contains(it)) }
         assertFalse("date ambiguë jour/mois", Regex(""""date": "\d{2}/\d{2}/\d{4}"""").containsMatchIn(biblio))
     }
 
