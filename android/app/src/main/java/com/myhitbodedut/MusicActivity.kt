@@ -57,6 +57,16 @@ class MusicActivity : AppCompatActivity() {
             }
         }
 
+        findViewById<MaterialSwitch>(R.id.music_shuffle).apply {
+            isChecked = Store.musicShuffle(this@MusicActivity)
+            setOnCheckedChangeListener { _, checked ->
+                Store.setMusicShuffle(this@MusicActivity, checked)
+                SessionService.musicChanged(this@MusicActivity)
+                adapter.notifyItemRangeChanged(0, tracks.size)
+                renderSummary()
+            }
+        }
+
         findViewById<SeekBar>(R.id.music_volume).apply {
             max = 100
             progress = Store.musicVolume(this@MusicActivity)
@@ -97,6 +107,7 @@ class MusicActivity : AppCompatActivity() {
         findViewById<TextView>(R.id.music_summary).text = when {
             !Store.musicEnabled(this) -> getString(R.string.music_off_summary)
             selected == null -> getString(R.string.music_none_summary)
+            Store.musicShuffle(this) -> getString(R.string.music_shuffle_summary, Store.musicVolume(this))
             else -> getString(
                 R.string.music_on_summary,
                 selected.title,
@@ -219,7 +230,9 @@ class MusicActivity : AppCompatActivity() {
             holder.origin.setText(
                 if (track.isBundled) R.string.music_origin_bundled else R.string.music_origin_device
             )
-            holder.radio.isChecked = MusicLibrary.selected(this@MusicActivity)?.id == track.id
+            // En lecture aléatoire, aucun morceau n'est « le » morceau de la séance.
+            holder.radio.isChecked = !Store.musicShuffle(this@MusicActivity) &&
+                MusicLibrary.selected(this@MusicActivity)?.id == track.id
             holder.play.setImageResource(
                 if (previewingId == track.id) android.R.drawable.ic_media_pause
                 else android.R.drawable.ic_media_play
@@ -227,6 +240,11 @@ class MusicActivity : AppCompatActivity() {
 
             val select = {
                 Store.setMusicTrackId(this@MusicActivity, track.id)
+                // Choisir un morceau, c'est quitter la lecture aléatoire.
+                if (Store.musicShuffle(this@MusicActivity)) {
+                    Store.setMusicShuffle(this@MusicActivity, false)
+                    findViewById<MaterialSwitch>(R.id.music_shuffle).isChecked = false
+                }
                 notifyItemRangeChanged(0, tracks.size)
                 renderSummary()
             }

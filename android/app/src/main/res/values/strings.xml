@@ -515,4 +515,8 @@
     <string name="duration_custom">Durée réglable…</string>
     <string name="duration_custom_title">Durée de la séance, en minutes</string>
     <string name="duration_custom_hint">De 1 à 240 minutes</string>
+    <string name="music_shuffle">Lecture aléatoire</string>
+    <string name="music_shuffle_hint">Un morceau au hasard, puis un autre ; aucun ne revient avant que tous aient été joués.</string>
+    <string name="music_shuffle_short">Aléatoire</string>
+    <string name="music_shuffle_summary">Lecture aléatoire, volume %1$d %%</string>
 </resources>

@@ -22,7 +22,16 @@ class MusicPlayer(private val context: Context) {
 
     val isPlaying: Boolean get() = player?.isPlaying == true
 
-    fun start(track: Track, volumePercent: Int, loop: Boolean = true): Boolean {
+    /**
+     * Joue `track`. Avec `onEnd`, le morceau ne boucle pas : la fin appelle
+     * `onEnd`, qui enchaîne le suivant (lecture aléatoire).
+     */
+    fun start(
+        track: Track,
+        volumePercent: Int,
+        loop: Boolean = true,
+        onEnd: (() -> Unit)? = null
+    ): Boolean {
         stop(fade = false)
         // Les attributs audio se posent avant prepare(), sans quoi certains
         // appareils lèvent une exception d'état.
@@ -41,7 +50,10 @@ class MusicPlayer(private val context: Context) {
         }.onFailure { Log.w(TAG, "lecture impossible : ${track.id}", it) }
             .getOrNull() ?: return false
 
-        created.isLooping = loop
+        created.isLooping = loop && onEnd == null
+        if (onEnd != null) {
+            created.setOnCompletionListener { handler.post { if (player === created) onEnd() } }
+        }
         player = created
         setVolume(volumePercent)
 

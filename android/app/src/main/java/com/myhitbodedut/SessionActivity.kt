@@ -282,9 +282,21 @@ class SessionActivity : AppCompatActivity() {
     }
 
     private fun renderMusicLine() {
-        val track = if (Store.musicEnabled(this)) MusicLibrary.selected(this) else null
+        // En lecture aléatoire, le morceau qui joue réellement, pas le morceau choisi.
+        val choisi = if (Store.musicEnabled(this)) MusicLibrary.selected(this) else null
+        val track = if (choisi != null && Store.musicShuffle(this)) {
+            MusicLibrary.byId(this, Store.musicNow(this)) ?: choisi
+        } else {
+            choisi
+        }
         musicLine.visibility = if (track == null) View.GONE else View.VISIBLE
-        if (track != null) musicLine.text = getString(R.string.session_music_line, track.title)
+        if (track != null) {
+            musicLine.text = if (Store.musicShuffle(this) && Store.musicNow(this) == null) {
+                getString(R.string.session_music_line, getString(R.string.music_shuffle_short))
+            } else {
+                getString(R.string.session_music_line, track.title)
+            }
+        }
     }
 
     private fun confirmFinish() {

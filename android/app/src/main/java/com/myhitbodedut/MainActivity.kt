@@ -225,8 +225,11 @@ class MainActivity : AppCompatActivity() {
         )
 
         val track = if (Store.musicEnabled(this)) MusicLibrary.selected(this) else null
-        findViewById<TextView>(R.id.start_music_value).text =
-            track?.title ?: getString(R.string.start_music_off)
+        findViewById<TextView>(R.id.start_music_value).text = when {
+            track == null -> getString(R.string.start_music_off)
+            Store.musicShuffle(this) -> getString(R.string.music_shuffle_short)
+            else -> track.title
+        }
 
         val focus = findViewById<View>(R.id.start_focus)
         focus.visibility = if (BuildConfig.HAS_GATE) View.VISIBLE else View.GONE
@@ -300,6 +303,7 @@ class MainActivity : AppCompatActivity() {
         findViewById<TextView>(R.id.music_state).text = when {
             !Store.musicEnabled(this) -> getString(R.string.music_off_summary)
             track == null -> getString(R.string.music_none_summary)
+            Store.musicShuffle(this) -> getString(R.string.music_shuffle_summary, Store.musicVolume(this))
             else -> getString(R.string.music_on_summary, track.title, Store.musicVolume(this))
         }
     }

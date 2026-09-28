@@ -85,6 +85,8 @@ object Store {
     private const val KEY_MUSIC_ON = "music_enabled"
     private const val KEY_MUSIC_TRACK = "music_track"
     private const val KEY_MUSIC_VOLUME = "music_volume"
+    private const val KEY_MUSIC_SHUFFLE = "music_shuffle"
+    private const val KEY_MUSIC_NOW = "music_now"
     private const val KEY_MUSIC_USER = "music_user_tracks"
     private const val KEY_TIKKUN_DAY = "tikkun_day"
     private const val KEY_TIKKUN_DONE = "tikkun_done"
@@ -602,6 +604,22 @@ object Store {
         prefs(context).edit().putString(KEY_MUSIC_TRACK, id).apply()
     }
 
+    /** Lecture aléatoire : un morceau au hasard, puis un autre (MelangeMusique). */
+    fun musicShuffle(context: Context): Boolean = prefs(context).getBoolean(KEY_MUSIC_SHUFFLE, false)
+
+    fun setMusicShuffle(context: Context, on: Boolean) {
+        prefs(context).edit().putBoolean(KEY_MUSIC_SHUFFLE, on).apply()
+    }
+
+    /** Le morceau qui joue en ce moment, pour que l'écran de séance le nomme. */
+    fun musicNow(context: Context): String? = prefs(context).getString(KEY_MUSIC_NOW, null)
+
+    fun setMusicNow(context: Context, id: String?) {
+        prefs(context).edit().apply {
+            if (id == null) remove(KEY_MUSIC_NOW) else putString(KEY_MUSIC_NOW, id)
+        }.apply()
+    }
+
     fun musicVolume(context: Context): Int = prefs(context).getInt(KEY_MUSIC_VOLUME, DEFAULT_VOLUME)
 
     fun setMusicVolume(context: Context, percent: Int) {
@@ -704,6 +722,7 @@ object Store {
             .put("reminder_minutes", reminderMinutes(context))
             .put("music_enabled", musicEnabled(context))
             .put("music_volume", musicVolume(context))
+            .put("music_shuffle", musicShuffle(context))
             .put("music_track", musicTrackId(context) ?: "")
             .put("adresse", adresse(context)?.cle ?: "")
             .put("apparence_mode", modeApparence(context).cle)
@@ -764,6 +783,7 @@ object Store {
             setReminderMinutes(context, settings.optInt("reminder_minutes", reminderMinutes(context)))
             setMusicEnabled(context, settings.optBoolean("music_enabled", musicEnabled(context)))
             setMusicVolume(context, settings.optInt("music_volume", musicVolume(context)))
+            setMusicShuffle(context, settings.optBoolean("music_shuffle", musicShuffle(context)))
             settings.optString("music_track").takeIf { it.isNotBlank() }
                 ?.let { setMusicTrackId(context, it) }
             Adresse.parse(settings.optString("adresse"))?.let { setAdresse(context, it) }

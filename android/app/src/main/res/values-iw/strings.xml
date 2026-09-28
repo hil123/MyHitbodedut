@@ -487,4 +487,8 @@
     <string name="duration_custom">משך לבחירה…</string>
     <string name="duration_custom_title">משך ההתבודדות, בדקות</string>
     <string name="duration_custom_hint">בין 1 ל־240 דקות</string>
+    <string name="music_shuffle">ניגון אקראי</string>
+    <string name="music_shuffle_hint">ניגון אקראי ואחריו עוד אחד; אף אחד לא חוזר לפני שכולם נוגנו.</string>
+    <string name="music_shuffle_short">אקראי</string>
+    <string name="music_shuffle_summary">אקראי, עוצמה %1$d%%</string>
 </resources>
