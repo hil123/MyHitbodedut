@@ -8,7 +8,7 @@
     },
     "traductions": "FR et EN originales (Claude, 20/09/2026). Aucune reprise des traductions protégées (Breslov Research Institute, Greenbaum). relu=false tant que non relues.",
     "noms_divins": "substitués (ה', אלקים, אֲדֹ-נָי) quand la source les écrit en toutes lettres",
-    "nikkoud": "he = texte vocalisé de l'édition ; he_sans_nikkoud fourni quand la licence de l'édition numérique n'est pas déclarée (Sichot HaRan, Shivchei HaRan)",
+    "nikkoud": "he = texte vocalisé de l'édition ; he_sans_nikkoud fourni quand la licence de l'édition numérique n'est pas déclarée (Sichot HaRan, Shivchei HaRan, Likutei Etzot)",
     "ellipses": "« … » marque une coupe dans le texte source",
     "moments": {
       "ouverture": "début de séance",
@@ -54,6 +54,11 @@
         "titre": "Tanach with Nikkud — tanach.us (via API Sefaria)",
         "licence": "Public Domain",
         "nikkoud_ok": true
+      },
+      "le": {
+        "titre": "Likutei Etzot — rabenubook.com (via export Sefaria)",
+        "licence": "unknown",
+        "nikkoud_ok": false
       }
     },
     "corrections_v01": [
@@ -75,6 +80,22 @@
         "independante": false,
         "date": "2026-09-20",
         "reserve": "Les traductions ont ete lues une a une par leur propre auteur : ce n'est pas une relecture independante. Une lecture par un tiers reste souhaitable. Detail dans _meta.verification.traductions."
+      },
+      "ajouts_2026_09_28": {
+        "items": [
+          "sh-3-ne-pas-desesperer-de-crier",
+          "cm-431-desirer-quand-rien-ne-reussit",
+          "lm2-48-point-bon",
+          "lm2-112-reparer",
+          "michle-24-16",
+          "lm1-261-recommencer",
+          "lm1-78-la-parole",
+          "le-hitchazkut-42-cri"
+        ],
+        "choix": "Selection du proprietaire le 28/09/2026 (textes sur le desespoir, moment « relance »), a partir de l'hebreu et d'une traduction presentes dans la conversation.",
+        "hebreu": "Chaque fragment decoupe mecaniquement dans l'edition citee (export public Sefaria sur storage.googleapis.com, le 28/09/2026) : 8/8 retrouves au caractere pres, vocalisation comprise.",
+        "recoupement": "Au moins un temoin independant par item (voir le champ recoupement). Likoutei Tefilot II, 39, aussi retenu, n'est pas ajoute : aucun second temoin joignable depuis l'environnement de travail.",
+        "traductions": "FR et EN originales (Claude, 28/09/2026), elargies a partir des traductions courtes presentees au proprietaire ; relecture par un tiers souhaitable."
       }
     }
   },
@@ -974,6 +995,195 @@
       "note": null,
       "tags": [],
       "duree_lecture_sec": 5,
+      "statut_verif": "verifie_texte",
+      "relu": true
+    },
+    {
+      "id": "sh-3-ne-pas-desesperer-de-crier",
+      "moments": [
+        "relance"
+      ],
+      "theme": "espoir",
+      "edition": "sh",
+      "ref": "Si'hot HaRan 3",
+      "ref_sefaria": "Sichot HaRan 3:6-7",
+      "url": "https://www.sefaria.org/Sichot_HaRan.3",
+      "he": "וַאֲפִלּוּ כְּשֶׁנּוֹפְלִים מְאֹד ח\"ו, וְכָל אֶחָד נָפַל לְמָקוֹם שֶׁנָּפַל רַחֲמָנָא לִצְלָן, אַף־עַל־פִּי־כֵן אָסוּר לְיָאֵשׁ עַצְמוֹ. כִּי תְּשׁוּבָה גָּבוֹהַּ לְמַעְלָה מִן הַתּוֹרָה, עַל־כֵּן אֵין שׁוּם יֵאוּשׁ בָּעוֹלָם! … וְהָעִקָּר שֶׁהַכֹּל תָּלוּי בּוֹ: שֶׁלֹּא יִהְיֶה מְיָאֵשׁ עַצְמוֹ מִלִּצְעֹק אֶל ה' וּלְהִתְחַנֵּן וּלְהִתְפַּלֵּל אֵלָיו יִתְבָּרַךְ תָּמִיד.",
+      "fr": "Même quand on tombe très bas, chacun là où il est tombé, il est pourtant interdit de désespérer de soi. Car la techouva est plus haute que la Torah : c'est pourquoi il n'y a aucun désespoir au monde ! … L'essentiel, dont tout dépend : ne jamais renoncer à crier vers Hachem, à Le supplier et à Le prier.",
+      "en": "Even when one falls very low, each person wherever he has fallen, it is still forbidden to despair of oneself. For repentance is higher than the Torah; therefore there is no despair in the world at all! … The main thing, on which everything depends: never to give up crying out to God, pleading and praying to Him always.",
+      "yiddish": null,
+      "recoupement": [
+        "he.wikisource.org, « שיחות הר\"ן/ג » (même passage, même numéro)"
+      ],
+      "note": null,
+      "tags": [],
+      "duree_lecture_sec": 20,
+      "he_sans_nikkoud": "ואפלו כשנופלים מאד ח\"ו, וכל אחד נפל למקום שנפל רחמנא לצלן, אף על פי כן אסור ליאש עצמו. כי תשובה גבוה למעלה מן התורה, על כן אין שום יאוש בעולם! … והעקר שהכל תלוי בו: שלא יהיה מיאש עצמו מלצעק אל ה' ולהתחנן ולהתפלל אליו יתברך תמיד.",
+      "statut_verif": "verifie_texte",
+      "relu": true
+    },
+    {
+      "id": "cm-431-desirer-quand-rien-ne-reussit",
+      "moments": [
+        "relance"
+      ],
+      "theme": "perseverance",
+      "edition": "cm",
+      "ref": "'Hayé Moharan 431",
+      "ref_sefaria": "Chayei Moharan 431",
+      "url": "https://www.sefaria.org/Chayei_Moharan.431",
+      "he": "… רַק שֶׁצְּרִיכִין לְהִתְגַּעְגֵּעַ וְלִכְסֹף לְהַשֵּׁם יִתְבָּרַךְ תָּמִיד גַּם בָּעֵת שֶׁאֵין עוֹלֶה בְּיָדוֹ עֲבוֹדַת הַשֵּׁם כָּרָאוּי. וְלִבְלִי לְיַאֵשׁ עַצְמוֹ כְּלָל מִשּׁוּם דָּבָר.",
+      "fr": "… Il faut seulement languir d'Hachem et aspirer à Lui toujours, même quand le service de Dieu ne réussit pas comme il le faudrait, et ne désespérer de soi pour rien au monde.",
+      "en": "… One need only long and yearn for God always, even when one's service of God does not succeed as it should, and never despair of oneself over anything at all.",
+      "yiddish": null,
+      "recoupement": [
+        "breslev.eip.co.il, 'Hayé Moharan « תל – שלא להתעקש על שום דבר » (même passage)"
+      ],
+      "note": "Sefaria numérote ce passage 431 ; l'édition imprimée suivie par breslev.eip le numérote תל (430).",
+      "tags": [],
+      "duree_lecture_sec": 12,
+      "statut_verif": "verifie_texte",
+      "relu": true
+    },
+    {
+      "id": "lm2-48-point-bon",
+      "moments": [
+        "relance"
+      ],
+      "theme": "point_bon",
+      "edition": "lm",
+      "ref": "Likoutei Moharan II, 48",
+      "ref_sefaria": "Likutei Moharan, Part II 48:4:1-2",
+      "url": "https://www.sefaria.org/Likutei_Moharan%2C_Part_II.48.4",
+      "he": "… לְבַקֵּשׁ וּלְחַפֵּשׂ לִמְצֹא בְּעַצְמוֹ אֵיזֶה זְכוּת וְאֵיזֶה נְקֻדָּה טוֹבָה. וּבָזֶה הַמְּעַט טוֹב שֶׁמּוֹצֵא בְּעַצְמוֹ יִשְׂמַח וִיחַזֵּק עַצְמוֹ, וְאַל יַנִּיחַ אֶת מְקוֹמוֹ, אַף אִם נָפַל לְמַה שֶּׁנָּפַל … עַד הֵיכָן אַתָּה צָרִיךְ לְהִתְחַזֵּק וְלִבְלִי לְיָאֵשׁ עַצְמְךָ, חַס וְשָׁלוֹם, אַף אִם יִהְיֶה מַה שֶּׁיִּהְיֶה.",
+      "fr": "… Chercher et chercher encore à trouver en soi un mérite, un point de bien. Et de ce peu de bien qu'on trouve en soi, se réjouir et se renforcer, sans quitter sa place, même si l'on est tombé là où l'on est tombé… Comprends jusqu'où tu dois te renforcer et ne pas désespérer de toi, quoi qu'il arrive.",
+      "en": "… To search and seek to find in oneself some merit, some good point. And with that little good one finds in oneself, to rejoice and strengthen oneself, and not leave one's place, even if one has fallen wherever one has fallen… Understand how far you must strengthen yourself and not despair of yourself, whatever may happen.",
+      "yiddish": null,
+      "recoupement": [
+        "he.wikisource.org, « לקוטי מוהר\"ן תנינא מח »",
+        "rabenubook.com, Likoutei Moharan Tinyana 48"
+      ],
+      "note": null,
+      "tags": [],
+      "duree_lecture_sec": 20,
+      "statut_verif": "verifie_texte",
+      "relu": true
+    },
+    {
+      "id": "lm2-112-reparer",
+      "moments": [
+        "relance"
+      ],
+      "theme": "reparer",
+      "edition": "lm",
+      "ref": "Likoutei Moharan II, 112",
+      "ref_sefaria": "Likutei Moharan, Part II 112:1",
+      "url": "https://www.sefaria.org/Likutei_Moharan%2C_Part_II.112",
+      "he": "לְעִנְיַן הִתְחַזְּקוּת לְבַל יִפֹּל הָאָדָם בְּדַעְתּוֹ מֵחֲמַת רִבּוּי הַפְּגָמִים וְהַקִּלְקוּלִים שֶׁקִּלְקֵל עַל־יְדֵי מַעֲשָׂיו, עָנָה וְאָמַר: אִם אַתָּה מַאֲמִין, שֶׁיְּכוֹלִין לְקַלְקֵל, תַּאֲמִין שֶׁיְּכוֹלִין לְתַקֵּן",
+      "fr": "Sur la manière de se renforcer pour ne pas tomber dans son esprit à cause de tout ce qu'on a abîmé par ses actes, il répondit : si tu crois qu'on peut abîmer, crois qu'on peut réparer.",
+      "en": "On strengthening oneself so as not to lose heart over all the damage one has done through one's deeds, he answered: if you believe that one can damage, believe that one can repair.",
+      "yiddish": null,
+      "recoupement": [
+        "he.wikisource.org, « לקוטי מוהר\"ן תנינא קיב »",
+        "breslev.eip.co.il, Likoutei Moharan II, 112"
+      ],
+      "note": null,
+      "tags": [],
+      "duree_lecture_sec": 10,
+      "statut_verif": "verifie_texte",
+      "relu": true
+    },
+    {
+      "id": "michle-24-16",
+      "moments": [
+        "relance"
+      ],
+      "theme": "se_relever",
+      "edition": "tanakh",
+      "ref": "Michlé 24:16",
+      "ref_sefaria": "Proverbs 24:16",
+      "url": "https://www.sefaria.org/Proverbs.24.16",
+      "he": "כִּי שֶׁבַע יִפּוֹל צַדִּיק וָקָם …",
+      "fr": "Car le juste tombe sept fois et se relève…",
+      "en": "For a righteous man falls seven times and rises…",
+      "yiddish": null,
+      "recoupement": [
+        "tanach.us (codex de Leningrad), texte de l'export Sefaria"
+      ],
+      "note": "Le verset continue sur les méchants ; l'extrait s'arrête à la première moitié.",
+      "tags": [],
+      "duree_lecture_sec": 4,
+      "statut_verif": "verifie_texte",
+      "relu": true
+    },
+    {
+      "id": "lm1-261-recommencer",
+      "moments": [
+        "relance"
+      ],
+      "theme": "recommencer",
+      "edition": "lm1",
+      "ref": "Likoutei Moharan I, 261",
+      "ref_sefaria": "Likutei Moharan 261:1",
+      "url": "https://www.sefaria.org/Likutei_Moharan.261",
+      "he": "כְּשֶׁנּוֹפֵל אָדָם מִמַּדְרֵגָתוֹ, יֵדַע שֶׁמִּן הַשָּׁמַיִם הוּא, כִּי הִתְרַחֲקוּת – תְּחִלַּת הִתְקָרְבוּת, עַל־כֵּן נָפַל, שֶׁיִּתְעוֹרֵר יוֹתֵר לְהִתְקָרֵב לְהַשֵּׁם יִתְבָּרַךְ. וַעֲצָתוֹ – שֶׁיַּתְחִיל מֵחָדָשׁ לִכָּנֵס בַּעֲבוֹדַת הַשֵּׁם, כְּאִלּוּ לֹא הִתְחִיל עֲדַיִן כְּלָל מֵעוֹלָם. וְזֶה כְּלָל גָּדוֹל בַּעֲבוֹדַת הַשֵּׁם, שֶׁצְּרִיכִין מַמָּשׁ בְּכָל יוֹם לְהַתְחִיל מֵחָדָשׁ.",
+      "fr": "Quand on tombe de son niveau, qu'on sache que cela vient du Ciel : l'éloignement est le début du rapprochement. On est tombé pour s'éveiller davantage à se rapprocher d'Hachem. Le conseil : recommencer à entrer dans le service de Dieu comme si l'on n'avait encore jamais commencé. C'est une grande règle du service de Dieu : il faut vraiment, chaque jour, recommencer à neuf.",
+      "en": "When a person falls from his level, let him know that it is from Heaven: distance is the beginning of drawing near. He fell so that he would be stirred to come closer to God. His advice is to begin anew to enter the service of God, as if he had never yet begun at all. This is a great principle in serving God: one must truly begin anew every single day.",
+      "yiddish": null,
+      "recoupement": [
+        "Likoutei Etsot, Hit'hazkout 25 (Rabbi Nathan reprend le passage et cite LM I, 261)"
+      ],
+      "note": null,
+      "tags": [],
+      "duree_lecture_sec": 22,
+      "statut_verif": "verifie_texte",
+      "relu": true
+    },
+    {
+      "id": "lm1-78-la-parole",
+      "moments": [
+        "relance",
+        "blocage"
+      ],
+      "theme": "parole",
+      "edition": "lm1",
+      "ref": "Likoutei Moharan I, 78",
+      "ref_sefaria": "Likutei Moharan 78:8:2",
+      "url": "https://www.sefaria.org/Likutei_Moharan.78.8.2",
+      "he": "… שֶׁאֲפִלּוּ אִם הוּא בַּמָּקוֹם שֶׁהוּא, אִם יִתְחַזֵּק גַּם שָׁם לְדַבֵּר עַל־כָּל־פָּנִים דִּבּוּרִים קְדוֹשִׁים שֶׁל תּוֹרָה וּתְפִלָּה וְהִתְבּוֹדְדוּת, יָכוֹל לְהַזְכִּיר אֶת עַצְמוֹ בְּהַשֵּׁם יִתְבָּרַךְ … כִּי הַדִּבּוּר אֵינוֹ מַנִּיחַ אוֹתוֹ לִשְׁכֹּחַ אֶת הַשֵּׁם יִתְבָּרַךְ.",
+      "fr": "… Même là où il se trouve, s'il se renforce pour dire au moins quelques paroles saintes, de Torah, de prière et de hitbodedout, il peut se rappeler Hachem… car la parole ne le laisse pas oublier Hachem.",
+      "en": "… Even wherever he is, if he strengthens himself to speak at least some holy words of Torah, prayer and hitbodedut, he can remind himself of God… for speech does not let him forget God.",
+      "yiddish": null,
+      "recoupement": [
+        "Likoutei Etsot, Hit'hazkout 21 (résumé du même passage, cite LM I, 78)"
+      ],
+      "note": "Le passage nomme la hitbodedout en toutes lettres.",
+      "tags": [],
+      "duree_lecture_sec": 14,
+      "statut_verif": "verifie_texte",
+      "relu": true
+    },
+    {
+      "id": "le-hitchazkut-42-cri",
+      "moments": [
+        "relance"
+      ],
+      "theme": "cri",
+      "edition": "le",
+      "ref": "Likoutei Etsot, Hit'hazkout 42",
+      "ref_sefaria": "Likkutei Etzot, Strengthening 42",
+      "url": "https://www.sefaria.org/Likkutei_Etzot%2C_Strengthening.42",
+      "he": "… כִּי גַּם צְעָקָה מִשְּׁאוֹל תַּחְתִּיּוֹת אֵינָהּ נֶאֱבֶדֶת לְעוֹלָם. וְיִצְעַק וְיִצְעַק וְיִצְעַק וְלֹא יִתְיָאֵשׁ עַצְמוֹ מִן הַצְּעָקָה לְעוֹלָם, רַק יִצְעַק וְיִתְחַנֵּן לִפְנֵי הַשֵּׁם יִתְבָּרַךְ תָּמִיד יִהְיֶה אֵיךְ שֶׁיִּהְיֶה",
+      "fr": "… Car même un cri du fond du Chéol n'est jamais perdu. Qu'il crie, qu'il crie et qu'il crie encore, et ne renonce jamais à crier ; qu'il crie et supplie Hachem toujours, quoi qu'il arrive.",
+      "en": "… For even a cry from the depths of Sheol is never lost. Let him cry out, and cry out, and cry out, and never give up crying out; let him cry and plead before God always, whatever may be.",
+      "yiddish": null,
+      "recoupement": [
+        "na-nach.net (même formule, attribuée à l'enseignement de Rabbi Nahman)"
+      ],
+      "note": "Formulation de Rabbi Nathan dans Likoutei Etsot, d'après Likoutei Moharan II, 78 ; la phrase sur le cri n'est pas mot pour mot dans Likoutei Moharan.",
+      "tags": [],
+      "duree_lecture_sec": 14,
+      "he_sans_nikkoud": "… כי גם צעקה משאול תחתיות אינה נאבדת לעולם. ויצעק ויצעק ויצעק ולא יתיאש עצמו מן הצעקה לעולם, רק יצעק ויתחנן לפני השם יתברך תמיד יהיה איך שיהיה",
       "statut_verif": "verifie_texte",
       "relu": true
     }
