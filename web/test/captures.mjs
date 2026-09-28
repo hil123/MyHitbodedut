@@ -63,11 +63,30 @@ async function capture(nom, { langue, mode = 'clair', fond = 'vert', accent = 'v
     localStorage.setItem('myhitbodedut', prefs);
   }, { donnees: DONNEES, prefs, maintenant: MAINTENANT });
   if (moteur === 'webkit') {
-    // Comme sur iPhone, où une page ne règle pas le volume : pas de fondu à
-    // la fin de la séance. Sous WebKit Linux, ce fondu fige la page entière
-    // (la lecture passe par GStreamer, que l'iPhone n'utilise pas).
+    // WebKit sous Linux lit l'audio par GStreamer, que ni Safari ni l'iPhone
+    // n'emploient, et la page s'y fige par moments à l'arrêt d'un morceau.
+    // Le son est donc remplacé ici par une doublure qui émet les mêmes
+    // événements qu'une lecture (play, timeupdate, pause). Le chargement réel
+    // d'un morceau est vérifié dans Safari sur Mac (web-mac.yml) ; la lecture
+    // elle-même, sur l'iPhone. Le volume est en lecture seule, comme sur iPhone.
     await page.addInitScript(() => {
-      Object.defineProperty(HTMLMediaElement.prototype, 'volume', { get: () => 1, set: () => {}, configurable: true });
+      const proto = HTMLMediaElement.prototype;
+      Object.defineProperty(proto, 'volume', { get: () => 1, set: () => {}, configurable: true });
+      Object.defineProperty(proto, 'paused', { get() { return this.__joue !== true; }, configurable: true });
+      proto.play = function play() {
+        this.__joue = true;
+        clearInterval(this.__horloge);
+        this.__horloge = setInterval(() => this.dispatchEvent(new Event('timeupdate')), 250);
+        this.dispatchEvent(new Event('play'));
+        return Promise.resolve();
+      };
+      proto.pause = function pause() {
+        if (this.__joue !== true) return;
+        this.__joue = false;
+        clearInterval(this.__horloge);
+        this.dispatchEvent(new Event('pause'));
+      };
+      proto.load = function load() {};
     });
   }
   await page.goto(base + (ecran ? `#${ecran}` : ''));
