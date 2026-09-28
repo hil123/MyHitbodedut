@@ -71,19 +71,11 @@ jobs:
         working-directory: android
         run: cat app/build/reports/lint-results-debug.txt || echo "aucun rapport texte"
 
-      # Copie de commodite : la livraison passe par la release ci-dessous.
-      # Le 28/09 le quota de stockage des artefacts etait plein (3 APK de
-      # ~130 Mo par construction, gardes 90 jours) ; cet envoi echouait et
-      # empechait la release de partir, alors que tout le reste avait reussi.
-      # Il ne bloque donc plus rien, et ne garde ses fichiers que deux jours.
-      - name: Upload APK
-        continue-on-error: true
-        uses: actions/upload-artifact@v4
-        with:
-          name: myhitbodedut-apk
-          path: android/app/build/outputs/apk/*/*/*.apk
-          if-no-files-found: error
-          retention-days: 2
+      # Plus de copie des APK en artefact (retiree le 28/09, demande du
+      # proprietaire) : deux a trois APK d'environ 130 Mo par construction
+      # remplissaient a eux seuls le quota de 500 Mo d'artefacts du compte,
+      # et bloquaient les autres flux. La livraison passe par la release
+      # ci-dessous, qui ne compte pas dans ce quota.
 
       # Publie l'APK dans une release au nom fixe « latest », ce qui donne un
       # lien de téléchargement direct et stable, au lieu du zip d'artefact.
