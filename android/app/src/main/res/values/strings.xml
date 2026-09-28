@@ -424,6 +424,14 @@
     <string name="theme_croissance">Travail sur soi</string>
     <string name="theme_autre">Autre chose</string>
     <string name="hero_greeting">Bonjour %1$s</string>
+    <string name="nav_today">Aujourd’hui</string>
+    <string name="nav_texts">Textes</string>
+    <string name="nav_journal">Journal</string>
+    <string name="section_around">Autour de la séance</string>
+    <plurals name="week_gauge">
+        <item quantity="one">%1$d jour sur %2$d cette semaine</item>
+        <item quantity="other">%1$d jours sur %2$d cette semaine</item>
+    </plurals>
     <string name="start_duration">Durée</string>
     <string name="start_theme">Sujet</string>
     <string name="start_music">Musique</string>

@@ -36,4 +36,7 @@
     <dimen name="art_height_small">88dp</dimen>
     <dimen name="chizuk_he_height">108dp</dimen>
     <dimen name="chizuk_body_height">84dp</dimen>
+
+    <!-- La jauge de l'accueil et le hassid en son creux. -->
+    <dimen name="gauge_size">236dp</dimen>
 </resources>

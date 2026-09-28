@@ -360,6 +360,15 @@
     <string name="theme_croissance">עבודה על המידות</string>
     <string name="theme_autre">משהו אחר</string>
     <string name="hero_greeting">שלום %1$s</string>
+    <string name="nav_today">היום</string>
+    <string name="nav_texts">טקסטים</string>
+    <string name="nav_journal">יומן</string>
+    <string name="section_around">סביב ההתבודדות</string>
+    <plurals name="week_gauge">
+        <item quantity="one">%1$d יום מתוך %2$d השבוע</item>
+        <item quantity="two">%1$d ימים מתוך %2$d השבוע</item>
+        <item quantity="other">%1$d ימים מתוך %2$d השבוע</item>
+    </plurals>
     <string name="start_duration">משך</string>
     <string name="start_theme">נושא</string>
     <string name="start_music">מוזיקה</string>

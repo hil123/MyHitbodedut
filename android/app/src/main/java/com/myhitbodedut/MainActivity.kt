@@ -1,14 +1,17 @@
 package com.myhitbodedut
 
 import android.content.Intent
+import android.graphics.Typeface
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.materialswitch.MaterialSwitch
 import java.time.format.DateTimeFormatter
 import java.util.Locale
@@ -28,6 +31,7 @@ class MainActivity : AppCompatActivity() {
         relanceTiree = savedInstanceState?.getBoolean(ETAT_RELANCE, false) ?: false
         showOnboardingOnce()
         wireActions()
+        wireTabs(savedInstanceState?.getInt(ETAT_ONGLET, R.id.nav_today) ?: R.id.nav_today)
         if (intent?.getBooleanExtra(EXTRA_ASK_NOTE, false) == true) {
             NoteDialog.show(this, Store.today()) { refresh() }
         }
@@ -36,6 +40,52 @@ class MainActivity : AppCompatActivity() {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putBoolean(ETAT_RELANCE, relanceTiree)
+        outState.putInt(ETAT_ONGLET, findViewById<BottomNavigationView>(R.id.bottom_nav).selectedItemId)
+    }
+
+    // --- Onglets ------------------------------------------------------------
+
+    /** Revenir d'« Textes » ramène à « Aujourd'hui » avant de quitter l'application. */
+    private val retourAujourdhui = object : OnBackPressedCallback(false) {
+        override fun handleOnBackPressed() {
+            findViewById<BottomNavigationView>(R.id.bottom_nav).selectedItemId = R.id.nav_today
+        }
+    }
+
+    /**
+     * Aujourd'hui et Textes changent de panneau sur place. Journal et
+     * Réglages ouvrent leurs écrans sans devenir l'onglet actif : au retour,
+     * on retrouve le panneau qu'on avait quitté.
+     */
+    private fun wireTabs(onglet: Int) {
+        onBackPressedDispatcher.addCallback(this, retourAujourdhui)
+        val nav = findViewById<BottomNavigationView>(R.id.bottom_nav)
+        nav.setOnItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.nav_today, R.id.nav_texts -> {
+                    montrerPanneau(item.itemId)
+                    true
+                }
+                R.id.nav_journal -> {
+                    startActivity(Intent(this, JournalActivity::class.java))
+                    false
+                }
+                R.id.nav_settings -> {
+                    startActivity(Intent(this, SettingsActivity::class.java))
+                    false
+                }
+                else -> false
+            }
+        }
+        nav.selectedItemId = onglet
+        montrerPanneau(onglet)
+    }
+
+    private fun montrerPanneau(onglet: Int) {
+        val textes = onglet == R.id.nav_texts
+        findViewById<View>(R.id.main_scroll).visibility = if (textes) View.GONE else View.VISIBLE
+        findViewById<View>(R.id.texts_scroll).visibility = if (textes) View.VISIBLE else View.GONE
+        retourAujourdhui.isEnabled = textes
     }
 
     override fun onResume() {
@@ -107,9 +157,8 @@ class MainActivity : AppCompatActivity() {
                 startActivity(Intent(this@MainActivity, ProofreadActivity::class.java))
             }
         }
-        findViewById<Button>(R.id.open_journal).setOnClickListener {
-            startActivity(Intent(this, JournalActivity::class.java))
-        }
+        // La plaque ronde coupe l'illustration à son bord, au creux de la jauge.
+        findViewById<View>(R.id.hero_plate).clipToOutline = true
         findViewById<Button>(R.id.today_note).setOnClickListener {
             NoteDialog.show(this, Store.today()) { refresh() }
         }
@@ -153,6 +202,7 @@ class MainActivity : AppCompatActivity() {
     private fun refresh() {
         renderToday()
         renderWeek()
+        renderGauge()
         renderSwitches()
         renderMusic()
         renderRelance()
@@ -190,13 +240,31 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    /** « שלום Avraham » : l'accueil se tait s'il n'a personne à nommer. */
+    /**
+     * « שלום Avraham » : l'accueil se tait s'il n'a personne à nommer, et
+     * l'état du jour prend alors la place du titre.
+     */
     private fun renderGreeting() {
         val prenom = Store.firstName(this)
         findViewById<TextView>(R.id.hero_greeting).apply {
             visibility = if (prenom.isBlank()) View.GONE else View.VISIBLE
             if (prenom.isNotBlank()) text = getString(R.string.hero_greeting, prenom)
         }
+        findViewById<TextView>(R.id.status_title).apply {
+            val titre = prenom.isBlank()
+            textSize = if (titre) 24f else 15f
+            setTypeface(null, if (titre) Typeface.BOLD else Typeface.NORMAL)
+            setTextColor(Apparence.couleur(this@MainActivity, if (titre) R.color.ink else R.color.muted))
+        }
+    }
+
+    /** La jauge : les jours faits de la semaine, sur ceux qui sont dus. */
+    private fun renderGauge() {
+        val semaine = JaugeSemaine.progression(Store.currentWeek(this))
+        findViewById<JaugeView>(R.id.week_gauge).montrer(semaine.fraction)
+        findViewById<TextView>(R.id.week_gauge_label).text = resources.getQuantityString(
+            R.plurals.week_gauge, semaine.faits, semaine.faits, semaine.dus
+        )
     }
 
     /**
@@ -218,6 +286,14 @@ class MainActivity : AppCompatActivity() {
                     if (manquantes == 0) R.color.muted else R.color.warning
                 )
             )
+        }
+        // Le même manque, visible depuis n'importe quel onglet.
+        findViewById<BottomNavigationView>(R.id.bottom_nav).apply {
+            if (manquantes == 0) {
+                removeBadge(R.id.nav_settings)
+            } else {
+                getOrCreateBadge(R.id.nav_settings).number = manquantes
+            }
         }
     }
 
@@ -402,5 +478,8 @@ class MainActivity : AppCompatActivity() {
 
         /** Survit à une rotation ou au redimensionnement d'une fenêtre. */
         private const val ETAT_RELANCE = "relance_tiree"
+
+        /** L'onglet affiché, pour qu'une rotation ne ramène pas à « Aujourd'hui ». */
+        private const val ETAT_ONGLET = "onglet"
     }
 }

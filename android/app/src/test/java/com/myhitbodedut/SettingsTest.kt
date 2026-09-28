@@ -23,7 +23,13 @@ class SettingsTest {
             .findAll(xml).map { it.groupValues[1] }.toSet()
         val inclus = Regex("""layout="@layout/([a-z0-9_]+)"""")
             .findAll(xml).flatMap { idsDe(it.groupValues[1]).asSequence() }.toSet()
-        return propres + inclus
+        // Les entrées d'un menu posé sur une vue (les onglets de l'accueil).
+        val menus = Regex("""app:menu="@menu/([a-z0-9_]+)"""").findAll(xml).flatMap { menu ->
+            Regex("""android:id="@\+id/([a-z0-9_]+)"""")
+                .findAll(lire("src/main/res/menu/${menu.groupValues[1]}.xml"))
+                .map { it.groupValues[1] }
+        }.toSet()
+        return propres + inclus + menus
     }
 
     /**

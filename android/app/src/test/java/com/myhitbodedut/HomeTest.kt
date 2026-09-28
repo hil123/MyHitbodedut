@@ -136,6 +136,25 @@ class HomeTest {
     }
 
     /**
+     * L'accueil A + D (28/09) : le hassid au creux de la jauge de la
+     * semaine, et quatre onglets. Journal et Reglages ouvrent leurs ecrans ;
+     * Aujourd'hui et Textes changent de panneau.
+     */
+    @Test
+    fun `la jauge entoure le hassid et les onglets menent partout`() {
+        val jauge = layout.substringAfter("@+id/week_gauge\"")
+        assertTrue("le hassid doit être dans la jauge", jauge.substringBefore("week_gauge_label").contains("@+id/hero_character\""))
+        assertTrue(code.contains("JaugeSemaine.progression(Store.currentWeek(this))"))
+        val menu = File("src/main/res/menu/nav_main.xml").readText()
+        listOf("nav_today", "nav_texts", "nav_journal", "nav_settings").forEach {
+            assertTrue("onglet « $it » absent", menu.contains("@+id/$it\""))
+            assertTrue("onglet « $it » non branché", Regex("""R\.id\.$it\b""").containsMatchIn(code))
+        }
+        assertTrue(code.contains("JournalActivity::class.java"))
+        assertTrue("l'onglet doit survivre à une rotation", code.contains("ETAT_ONGLET"))
+    }
+
+    /**
      * En hebreu la liste se lit de droite a gauche : un chevron qui ne se
      * retourne pas pointe vers la sortie de l'ecran.
      */

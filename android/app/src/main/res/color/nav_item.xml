@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Icône et libellé d'un onglet : la couleur réglable quand il est actif. -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:color="?attr/mhBrand" android:state_checked="true" />
+    <item android:color="?attr/mhMuted" />
+</selector>

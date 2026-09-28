@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- La plaque ronde du hassid, au creux de la jauge. Claire de jour comme de
+     nuit : les illustrations sont dessinées pour un fond clair. -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="oval">
+    <solid android:color="?attr/mhStageSoft" />
+</shape>
