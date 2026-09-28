@@ -66,7 +66,7 @@ class LibrarySubSectionActivity : AppCompatActivity() {
                     holder.title.text = entry.titreHe
                     holder.title.layoutDirection = View.LAYOUT_DIRECTION_RTL
                     holder.title.textAlignment = View.TEXT_ALIGNMENT_VIEW_START
-                    holder.detail.text = entry.ref
+                    holder.detail.text = Reference.localise(holder.itemView.context, entry.ref)
                 }
 
                 is ArticleEntry -> {

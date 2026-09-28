@@ -78,7 +78,7 @@ class BlockerView(
                 subtitle.setText(R.string.blocker_subtitle)
                 primary.text = context.getString(
                     R.string.blocker_start,
-                    Store.formatDuration(Store.targetMinutes(context))
+                    Store.formatDuration(context, Store.targetMinutes(context))
                 )
                 primary.setOnClickListener { onStartSession() }
                 secondary.visibility = View.VISIBLE
@@ -100,12 +100,12 @@ class BlockerView(
 
                     SessionRule.Compteur.ECOULE -> context.getString(
                         R.string.blocker_session_open_subtitle,
-                        Store.formatDuration(Store.sessionElapsedMinutes(context))
+                        Store.formatDuration(context, Store.sessionElapsedMinutes(context))
                     )
 
                     SessionRule.Compteur.RESTE -> context.getString(
                         R.string.blocker_session_subtitle,
-                        Store.formatDuration(
+                        Store.formatDuration(context, 
                             SessionRule.minutesRestantes(
                                 Store.sessionEndsAt(context), System.currentTimeMillis()
                             )

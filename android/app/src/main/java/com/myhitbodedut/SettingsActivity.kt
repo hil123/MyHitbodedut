@@ -284,9 +284,9 @@ class SettingsActivity : AppCompatActivity() {
         findViewById<Button>(R.id.window_start).text = Store.formatMinutes(Store.windowStart(this))
         findViewById<Button>(R.id.window_end).text = Store.formatMinutes(Store.windowEnd(this))
         findViewById<Button>(R.id.snooze_length).text =
-            Store.formatDuration(Store.snoozeMinutes(this))
+            Store.formatDuration(this, Store.snoozeMinutes(this))
         findViewById<Button>(R.id.target_length).text =
-            Store.formatDuration(Store.targetMinutes(this))
+            Store.formatDuration(this, Store.targetMinutes(this))
         findViewById<Button>(R.id.region_button).setText(
             if (Store.inIsrael(this)) R.string.region_israel else R.string.region_diaspora
         )
@@ -341,6 +341,7 @@ class SettingsActivity : AppCompatActivity() {
             .setTitle(R.string.settings_language)
             .setSingleChoiceItems(noms, courante) { dialog, choisi ->
                 dialog.dismiss()
+                Store.setLangueApp(this, Langues.TOUTES[choisi].etiquette)
                 AppCompatDelegate.setApplicationLocales(
                     LocaleListCompat.forLanguageTags(Langues.TOUTES[choisi].etiquette)
                 )
@@ -477,7 +478,7 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     private fun pickMinutes(titleId: Int, options: IntArray, onPicked: (Int) -> Unit) {
-        val labels = options.map { Store.formatDuration(it) }.toTypedArray()
+        val labels = options.map { Store.formatDuration(this, it) }.toTypedArray()
         AlertDialog.Builder(this)
             .setTitle(titleId)
             .setItems(labels) { _, which -> onPicked(options[which]) }

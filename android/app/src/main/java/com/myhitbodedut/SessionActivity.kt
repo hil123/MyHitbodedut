@@ -113,7 +113,7 @@ class SessionActivity : AppCompatActivity() {
             .forEach { id ->
                 val button = findViewById<Button>(id)
                 val minutes = button.tag.toString().toInt()
-                button.text = Store.formatDuration(minutes)
+                button.text = Store.formatDuration(this, minutes)
                 button.setOnClickListener {
                     Store.setTargetMinutes(this, minutes)
                     SessionService.start(this, minutes)
@@ -181,7 +181,7 @@ class SessionActivity : AppCompatActivity() {
                 SessionRule.Compteur.ECOULE -> getString(R.string.session_open_caption)
                 SessionRule.Compteur.RESTE -> getString(
                     R.string.session_target,
-                    Store.formatDuration(Store.sessionTarget(this))
+                    Store.formatDuration(this, Store.sessionTarget(this))
                 )
             }
             durations.visibility = View.GONE
@@ -201,7 +201,7 @@ class SessionActivity : AppCompatActivity() {
                 if (Store.isDone(this)) Character.joy() else Character.call()
             )
             countdown.visibility = View.VISIBLE
-            countdown.text = Store.formatDuration(Store.targetMinutes(this))
+            countdown.text = Store.formatDuration(this, Store.targetMinutes(this))
             caption.setText(
                 if (Store.isDone(this)) R.string.session_idle_done else R.string.session_idle_caption
             )
@@ -213,7 +213,7 @@ class SessionActivity : AppCompatActivity() {
             primary.visibility = View.VISIBLE
             primary.text = getString(
                 R.string.session_start,
-                Store.formatDuration(Store.targetMinutes(this))
+                Store.formatDuration(this, Store.targetMinutes(this))
             )
             primary.setOnClickListener {
                 SessionService.start(this, Store.targetMinutes(this))

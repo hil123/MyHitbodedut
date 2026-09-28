@@ -22,6 +22,11 @@ import android.widget.Toast
  */
 class SessionService : Service() {
 
+    /** La langue choisie dans l'application, même avant Android 13 (LangueApp). */
+    override fun attachBaseContext(base: Context) {
+        super.attachBaseContext(LangueApp.envelopper(base))
+    }
+
     private val handler = Handler(Looper.getMainLooper())
     private val music by lazy { MusicPlayer(this) }
 
@@ -128,7 +133,7 @@ class SessionService : Service() {
         if (!Store.isSessionRunning(this)) return
         val track = MusicLibrary.selected(this) ?: return
         if (!music.start(track, Store.musicVolume(this))) {
-            Toast.makeText(applicationContext, R.string.music_play_failed, Toast.LENGTH_LONG).show()
+            Toast.makeText(this, R.string.music_play_failed, Toast.LENGTH_LONG).show()
         }
     }
 
@@ -148,7 +153,7 @@ class SessionService : Service() {
         )
         val notification = Notification.Builder(this, Notifications.CHANNEL_REMINDER)
             .setContentTitle(getString(R.string.session_done_title))
-            .setContentText(getString(R.string.session_done_text, Store.formatDuration(minutes)))
+            .setContentText(getString(R.string.session_done_text, Store.formatDuration(this, minutes)))
             .setSmallIcon(R.drawable.ic_notification)
             .setContentIntent(open)
             .setAutoCancel(true)
@@ -164,9 +169,9 @@ class SessionService : Service() {
     private fun runningText(): String = when (Store.sessionCounter(this)) {
         SessionRule.Compteur.MASQUE -> getString(R.string.session_running_hidden)
         SessionRule.Compteur.ECOULE ->
-            getString(R.string.session_elapsed, Store.formatDuration(Store.sessionElapsedMinutes(this)))
+            getString(R.string.session_elapsed, Store.formatDuration(this, Store.sessionElapsedMinutes(this)))
         SessionRule.Compteur.RESTE ->
-            getString(R.string.session_remaining, Store.formatDuration(remainingMinutes()))
+            getString(R.string.session_remaining, Store.formatDuration(this, remainingMinutes()))
     }
 
     private fun startForegroundNow() {

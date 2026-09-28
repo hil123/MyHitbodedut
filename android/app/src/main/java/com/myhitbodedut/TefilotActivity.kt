@@ -71,9 +71,9 @@ class TefilotActivity : AppCompatActivity() {
             view.findViewById<TextView>(R.id.entry_title).text = entree.titreHe
             view.findViewById<TextView>(R.id.entry_detail).text =
                 if (TefilotRules.prevenir(entree)) {
-                    entree.ref + "\n" + getString(R.string.tefilot_warning)
+                    Reference.localise(view.context, entree.ref) + "\n" + getString(R.string.tefilot_warning)
                 } else {
-                    entree.ref
+                    Reference.localise(view.context, entree.ref)
                 }
             view.findViewById<ImageView>(R.id.entry_art)
                 .setImageResource(Character.ofLibraryEntry(entree))

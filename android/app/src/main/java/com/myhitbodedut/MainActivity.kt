@@ -26,6 +26,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         Notifications.ensureChannels(this)
+        // Recopie la langue choisie pour les services réveillés seuls (LangueApp).
+        LangueApp.retenir(this)
         // Une rotation ou un redimensionnement de fenêtre recrée l'écran :
         // sans cela, le texte de relance serait retiré à chaque fois.
         relanceTiree = savedInstanceState?.getBoolean(ETAT_RELANCE, false) ?: false
@@ -173,7 +175,7 @@ class MainActivity : AppCompatActivity() {
      */
     private fun pickDuration() {
         val options = intArrayOf(5, 10, 15, 20, 30, 45, 60)
-        val libelles = options.map { Store.formatDuration(it) }.toTypedArray()
+        val libelles = options.map { Store.formatDuration(this, it) }.toTypedArray()
         AlertDialog.Builder(this)
             .setTitle(R.string.settings_target)
             .setItems(libelles) { _, which ->
@@ -220,7 +222,7 @@ class MainActivity : AppCompatActivity() {
      */
     private fun renderStartCard() {
         findViewById<TextView>(R.id.start_duration_value).text =
-            Store.formatDuration(Store.targetMinutes(this))
+            Store.formatDuration(this, Store.targetMinutes(this))
 
         val sujet = Store.sessionTheme(this)
         findViewById<TextView>(R.id.start_theme_value).setText(
@@ -372,14 +374,14 @@ class MainActivity : AppCompatActivity() {
 
         val total = Store.totalMinutes(this)
         findViewById<TextView>(R.id.status_total).text =
-            getString(R.string.status_total, Store.formatDuration(total))
+            getString(R.string.status_total, Store.formatDuration(this, total))
 
         val minutesToday = record?.minutes ?: 0
         val detail = findViewById<TextView>(R.id.today_detail)
         detail.visibility = if (done) View.VISIBLE else View.GONE
         if (done) {
             detail.text = if (minutesToday > 0) {
-                getString(R.string.today_minutes, Store.formatDuration(minutesToday))
+                getString(R.string.today_minutes, Store.formatDuration(this, minutesToday))
             } else {
                 getString(R.string.today_declared)
             }
@@ -391,7 +393,7 @@ class MainActivity : AppCompatActivity() {
             done -> getString(R.string.action_another_session)
             else -> getString(
                 R.string.action_start_session,
-                Store.formatDuration(Store.targetMinutes(this))
+                Store.formatDuration(this, Store.targetMinutes(this))
             )
         }
     }

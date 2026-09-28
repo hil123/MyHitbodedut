@@ -45,7 +45,7 @@ class JournalActivity : AppCompatActivity() {
             R.plurals.journal_summary,
             rows.size,
             rows.size,
-            Store.formatDuration(total)
+            Store.formatDuration(this, total)
         )
     }
 
@@ -69,7 +69,7 @@ class JournalActivity : AppCompatActivity() {
             holder.date.text = Store.parse(row.date).format(formatter)
                 .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
             holder.duration.text = if (row.minutes > 0) {
-                Store.formatDuration(row.minutes)
+                Store.formatDuration(holder.itemView.context, row.minutes)
             } else {
                 getString(R.string.today_declared)
             }

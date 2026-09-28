@@ -55,7 +55,7 @@ class LibraryEntryActivity : AppCompatActivity() {
         title.layoutDirection = View.LAYOUT_DIRECTION_RTL
         title.textAlignment = View.TEXT_ALIGNMENT_VIEW_START
 
-        findViewById<TextView>(R.id.entry_reference).text = source.ref
+        findViewById<TextView>(R.id.entry_reference).text = Reference.localise(this, source.ref)
 
         val container = findViewById<LinearLayout>(R.id.entry_paragraphs)
         container.visibility = View.VISIBLE

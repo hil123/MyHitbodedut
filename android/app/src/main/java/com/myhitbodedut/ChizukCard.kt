@@ -51,7 +51,7 @@ object ChizukCard {
         // En hébreu, la traduction répéterait le texte du dessus.
         translation.visibility = if (text.isBlank()) View.GONE else View.VISIBLE
 
-        card.findViewById<TextView>(R.id.chizuk_ref).text = item.ref
+        card.findViewById<TextView>(R.id.chizuk_ref).text = Reference.localise(card.context, item.ref)
         card.findViewById<TextView>(R.id.chizuk_badge).visibility =
             if (ChizukRules.needsProofreading(item)) View.VISIBLE else View.GONE
     }

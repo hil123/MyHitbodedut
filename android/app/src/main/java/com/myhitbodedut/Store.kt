@@ -81,6 +81,7 @@ object Store {
     private const val KEY_MODE = "apparence_mode"
     private const val KEY_FOND = "apparence_fond"
     private const val KEY_ACCENT = "apparence_accent"
+    private const val KEY_LANGUE_APP = "langue_app"
     private const val KEY_MUSIC_ON = "music_enabled"
     private const val KEY_MUSIC_TRACK = "music_track"
     private const val KEY_MUSIC_VOLUME = "music_volume"
@@ -535,6 +536,14 @@ object Store {
         }.apply()
     }
 
+    /** Copie du choix de langue d'AppCompat, pour les services (LangueApp). */
+    fun langueApp(context: Context): String =
+        prefs(context).getString(KEY_LANGUE_APP, "").orEmpty()
+
+    fun setLangueApp(context: Context, etiquettes: String) {
+        prefs(context).edit().putString(KEY_LANGUE_APP, etiquettes).apply()
+    }
+
     // --- Apparence -----------------------------------------------------------
 
     fun modeApparence(context: Context): Apparence.Mode =
@@ -784,9 +793,14 @@ object Store {
     fun formatMinutes(minutes: Int): String =
         String.format(Locale.US, "%02d:%02d", (minutes / 60) % 24, minutes % 60)
 
-    fun formatDuration(minutes: Int): String = when {
-        minutes < 60 -> "$minutes min"
-        minutes % 60 == 0 -> "${minutes / 60} h"
-        else -> "${minutes / 60} h ${minutes % 60}"
+    /**
+     * « 20 min », « 1 h 30 » : les unités viennent des chaînes, pour suivre
+     * la langue de l'interface. Écrites en dur, elles restaient françaises en
+     * anglais et en hébreu (audit des traductions, 28/09).
+     */
+    fun formatDuration(context: Context, minutes: Int): String = when {
+        minutes < 60 -> context.getString(R.string.duration_minutes, minutes)
+        minutes % 60 == 0 -> context.getString(R.string.duration_hours, minutes / 60)
+        else -> context.getString(R.string.duration_hours_minutes, minutes / 60, minutes % 60)
     }
 }

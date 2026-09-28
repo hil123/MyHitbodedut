@@ -1,5 +1,11 @@
 package com.myhitbodedut
 
+import android.content.Context
+import android.content.res.Configuration
+import android.os.Build
+import android.os.LocaleList
+import androidx.appcompat.app.AppCompatDelegate
+
 /**
  * Quelles langues un écran a le droit d'afficher.
  *
@@ -44,5 +50,35 @@ object RegleLangue {
     fun normalise(etiquette: String?): String {
         val brute = etiquette.orEmpty().substringBefore('-').substringBefore('_').lowercase()
         return if (brute == "iw") "he" else brute
+    }
+}
+
+/**
+ * La langue choisie dans l'application, appliquée aussi hors des écrans.
+ *
+ * Avant Android 13, AppCompat n'applique ce choix qu'à ses activités : les
+ * services, les receveurs et la vignette gardaient la langue du téléphone.
+ * Un téléphone en français avec l'application en anglais montrait donc
+ * l'écran de blocage, les notifications et la vignette en français (audit
+ * des traductions, 28/09). Depuis Android 13 le système s'en charge seul.
+ *
+ * AppCompat ne relit son choix enregistré qu'à l'ouverture d'une activité :
+ * un service réveillé seul le trouverait vide. D'où la copie dans Store.
+ */
+object LangueApp {
+
+    fun envelopper(base: Context): Context {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) return base
+        val etiquettes = AppCompatDelegate.getApplicationLocales().toLanguageTags()
+            .ifBlank { Store.langueApp(base) }
+        if (etiquettes.isBlank()) return base
+        val config = Configuration(base.resources.configuration)
+        config.setLocales(LocaleList.forLanguageTags(etiquettes))
+        return base.createConfigurationContext(config)
+    }
+
+    /** Recopie le choix d'AppCompat, lisible dans une activité. */
+    fun retenir(context: Context) {
+        Store.setLangueApp(context, AppCompatDelegate.getApplicationLocales().toLanguageTags())
     }
 }

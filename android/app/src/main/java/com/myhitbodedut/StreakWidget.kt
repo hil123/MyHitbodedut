@@ -23,7 +23,8 @@ class StreakWidget : AppWidgetProvider() {
         manager: AppWidgetManager,
         appWidgetIds: IntArray
     ) {
-        appWidgetIds.forEach { draw(context, manager, it) }
+        val traduit = LangueApp.envelopper(context)
+        appWidgetIds.forEach { draw(traduit, manager, it) }
     }
 
     companion object {
@@ -39,7 +40,8 @@ class StreakWidget : AppWidgetProvider() {
                 val ids = manager.getAppWidgetIds(
                     ComponentName(context.applicationContext, StreakWidget::class.java)
                 )
-                ids.forEach { draw(context, manager, it) }
+                val traduit = LangueApp.envelopper(context)
+                ids.forEach { draw(traduit, manager, it) }
             }
         }
 

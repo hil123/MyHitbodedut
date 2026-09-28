@@ -82,7 +82,9 @@ object Reminder {
 /** Affiche le rappel, ou exécute ce qu'on a touché dessus. */
 class ReminderReceiver : BroadcastReceiver() {
 
-    override fun onReceive(context: Context, intent: Intent) {
+    override fun onReceive(brut: Context, intent: Intent) {
+        // La notification dans la langue de l'application (LangueApp).
+        val context = LangueApp.envelopper(brut)
         val manager =
             context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
@@ -126,7 +128,7 @@ class ReminderReceiver : BroadcastReceiver() {
 
     private fun build(context: Context): Notification {
         Notifications.ensureChannels(context)
-        val duree = Store.formatDuration(Store.targetMinutes(context))
+        val duree = Store.formatDuration(context, Store.targetMinutes(context))
 
         val ouvrir = PendingIntent.getActivity(
             context, 0,

@@ -233,38 +233,38 @@
     <string name="music_on_summary">%1$s, volume %2$d %%</string>
     <string name="session_music_line">Musique : %1$s</string>
     <!-- Morceaux livres. Titres non traduits : ce sont des noms propres. -->
-    <string name="track_niggoun_01" translatable="false">Niggoun 01 — titre à préciser</string>
-    <string name="track_niggoun_02" translatable="false">Niggoun 02 — titre à préciser</string>
-    <string name="track_niggoun_03" translatable="false">Niggoun 03 — titre à préciser</string>
-    <string name="track_niggoun_04" translatable="false">Niggoun 04 — titre à préciser</string>
-    <string name="track_niggoun_05" translatable="false">Niggoun 05 — titre à préciser</string>
-    <string name="track_niggoun_06" translatable="false">Niggoun 06 — titre à préciser</string>
-    <string name="track_niggoun_07" translatable="false">Niggoun 07 — titre à préciser</string>
-    <string name="track_niggoun_08" translatable="false">Niggoun 08 — titre à préciser</string>
-    <string name="track_niggoun_10" translatable="false">Niggoun 10 — titre à préciser</string>
-    <string name="track_niggoun_11" translatable="false">Niggoun 11 — titre à préciser</string>
-    <string name="track_niggoun_12" translatable="false">Niggoun 12 — titre à préciser</string>
-    <string name="track_niggoun_13" translatable="false">Niggoun 13 — titre à préciser</string>
-    <string name="track_niggoun_14" translatable="false">Niggoun 14 — titre à préciser</string>
-    <string name="track_niggoun_15" translatable="false">Niggoun 15 — titre à préciser</string>
-    <string name="track_niggoun_17" translatable="false">Niggoun 17 — titre à préciser</string>
-    <string name="track_niggoun_18" translatable="false">Niggoun 18 — titre à préciser</string>
-    <string name="track_niggoun_19" translatable="false">Niggoun 19 — titre à préciser</string>
-    <string name="track_niggoun_20" translatable="false">Niggoun 20 — titre à préciser</string>
-    <string name="track_niggoun_21" translatable="false">Niggoun 21 — titre à préciser</string>
-    <string name="track_niggoun_22" translatable="false">Niggoun 22 — titre à préciser</string>
-    <string name="track_niggoun_23" translatable="false">Niggoun 23 — titre à préciser</string>
-    <string name="track_niggoun_24" translatable="false">Niggoun 24 — titre à préciser</string>
-    <string name="track_niggoun_25" translatable="false">Niggoun 25 — titre à préciser</string>
-    <string name="track_niggoun_26" translatable="false">Niggoun 26 — titre à préciser</string>
-    <string name="track_niggoun_27" translatable="false">Niggoun 27 — titre à préciser</string>
-    <string name="track_niggoun_28" translatable="false">Niggoun 28 — titre à préciser</string>
-    <string name="track_niggoun_29" translatable="false">Niggoun 29 — titre à préciser</string>
-    <string name="track_niggoun_30" translatable="false">Niggoun 30 — titre à préciser</string>
-    <string name="track_niggoun_31" translatable="false">Niggoun 31 — titre à préciser</string>
-    <string name="track_niggoun_32" translatable="false">Niggoun 32 — titre à préciser</string>
-    <string name="track_niggoun_33" translatable="false">Niggoun 33 — titre à préciser</string>
-    <string name="track_ribo_sans_titre" translatable="false">Ishay Ribo — titre à préciser</string>
+    <string name="track_niggoun_01">Niggoun 01</string>
+    <string name="track_niggoun_02">Niggoun 02</string>
+    <string name="track_niggoun_03">Niggoun 03</string>
+    <string name="track_niggoun_04">Niggoun 04</string>
+    <string name="track_niggoun_05">Niggoun 05</string>
+    <string name="track_niggoun_06">Niggoun 06</string>
+    <string name="track_niggoun_07">Niggoun 07</string>
+    <string name="track_niggoun_08">Niggoun 08</string>
+    <string name="track_niggoun_10">Niggoun 10</string>
+    <string name="track_niggoun_11">Niggoun 11</string>
+    <string name="track_niggoun_12">Niggoun 12</string>
+    <string name="track_niggoun_13">Niggoun 13</string>
+    <string name="track_niggoun_14">Niggoun 14</string>
+    <string name="track_niggoun_15">Niggoun 15</string>
+    <string name="track_niggoun_17">Niggoun 17</string>
+    <string name="track_niggoun_18">Niggoun 18</string>
+    <string name="track_niggoun_19">Niggoun 19</string>
+    <string name="track_niggoun_20">Niggoun 20</string>
+    <string name="track_niggoun_21">Niggoun 21</string>
+    <string name="track_niggoun_22">Niggoun 22</string>
+    <string name="track_niggoun_23">Niggoun 23</string>
+    <string name="track_niggoun_24">Niggoun 24</string>
+    <string name="track_niggoun_25">Niggoun 25</string>
+    <string name="track_niggoun_26">Niggoun 26</string>
+    <string name="track_niggoun_27">Niggoun 27</string>
+    <string name="track_niggoun_28">Niggoun 28</string>
+    <string name="track_niggoun_29">Niggoun 29</string>
+    <string name="track_niggoun_30">Niggoun 30</string>
+    <string name="track_niggoun_31">Niggoun 31</string>
+    <string name="track_niggoun_32">Niggoun 32</string>
+    <string name="track_niggoun_33">Niggoun 33</string>
+    <string name="track_ribo_sans_titre">Ishay Ribo — sans titre</string>
     <string name="track_yanuka_nigoun_3" translatable="false">ניגון — הינוקא (3)</string>
 
     <!-- En reserve : ces morceaux sont dans musique/, hors de l'APK.
@@ -507,4 +507,9 @@
     <string name="annulation_hizki">’Hizki !</string>
     <string name="annulation_neutral">Courage !</string>
     <string name="annulation_subtitle">Pour tout ce que vous avez fait jusqu’ici. La prochaine fois sera meilleure.</string>
+
+    <!-- Les durées, dans la langue de l’interface (Store.formatDuration). -->
+    <string name="duration_minutes">%1$d min</string>
+    <string name="duration_hours">%1$d h</string>
+    <string name="duration_hours_minutes">%1$d h %2$02d</string>
 </resources>

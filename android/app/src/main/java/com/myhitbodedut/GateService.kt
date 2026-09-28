@@ -22,6 +22,11 @@ import android.view.WindowManager
  */
 class GateService : Service() {
 
+    /** La langue choisie dans l'application, même avant Android 13 (LangueApp). */
+    override fun attachBaseContext(base: Context) {
+        super.attachBaseContext(LangueApp.envelopper(base))
+    }
+
     private val handler = Handler(Looper.getMainLooper())
     private lateinit var windowManager: WindowManager
     private var overlay: BlockerView? = null
