@@ -11,7 +11,7 @@
         android:id="@+id/tefila_sujet"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@color/ink"
+        android:textColor="?attr/mhInk"
         android:textSize="19sp"
         android:textStyle="bold" />
 
@@ -20,6 +20,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="2dp"
-        android:textColor="@color/muted"
+        android:textColor="?attr/mhMuted"
         android:textSize="13sp" />
 </LinearLayout>

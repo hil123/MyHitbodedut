@@ -7,7 +7,6 @@ import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 
 /**
  * Une partie du Tikoun qui n'est pas un psaume : ce qui se dit avant, les
@@ -63,7 +62,7 @@ class LiturgyActivity : AppCompatActivity() {
                 if (centre) View.TEXT_ALIGNMENT_CENTER else View.TEXT_ALIGNMENT_VIEW_START
             textSize = if (centre) 20f else 18f
             setLineSpacing(dp(6).toFloat(), 1f)
-            setTextColor(ContextCompat.getColor(context, R.color.ink))
+            setTextColor(Apparence.couleur(context, R.color.ink))
         }
 
     private fun dp(value: Int): Int = (value * resources.displayMetrics.density).toInt()

@@ -12,14 +12,14 @@
         android:id="@+id/day_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/muted"
+        android:textColor="?attr/mhMuted"
         android:textSize="11sp" />
 
     <TextView
         android:id="@+id/day_mark"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/ink"
+        android:textColor="?attr/mhInk"
         android:textSize="16sp"
         android:textStyle="bold" />
 </LinearLayout>

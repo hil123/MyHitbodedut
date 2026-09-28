@@ -8,7 +8,6 @@ import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 
 /** Un psaume du Tikoun, verset par verset. */
 class PsalmActivity : AppCompatActivity() {
@@ -92,7 +91,7 @@ class PsalmActivity : AppCompatActivity() {
             TextView(this).apply {
                 text = verset.numero.toString()
                 textSize = 12f
-                setTextColor(ContextCompat.getColor(context, R.color.brand))
+                setTextColor(Apparence.couleur(context, R.color.brand))
                 layoutParams = LinearLayout.LayoutParams(dp(22), ViewGroup.LayoutParams.WRAP_CONTENT)
                     .apply { topMargin = dp(5) }
             }
@@ -104,7 +103,7 @@ class PsalmActivity : AppCompatActivity() {
                 textDirection = View.TEXT_DIRECTION_RTL
                 textAlignment = View.TEXT_ALIGNMENT_VIEW_START
                 setLineSpacing(dp(6).toFloat(), 1f)
-                setTextColor(ContextCompat.getColor(context, R.color.ink))
+                setTextColor(Apparence.couleur(context, R.color.ink))
                 layoutParams = LinearLayout.LayoutParams(
                     0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f
                 )
@@ -132,7 +131,7 @@ class PsalmActivity : AppCompatActivity() {
         textAlignment = View.TEXT_ALIGNMENT_VIEW_START
         textSize = 15f
         setLineSpacing(dp(4).toFloat(), 1f)
-        setTextColor(ContextCompat.getColor(context, R.color.muted))
+        setTextColor(Apparence.couleur(context, R.color.muted))
     }
 
     private fun dp(value: Int): Int = (value * resources.displayMetrics.density).toInt()

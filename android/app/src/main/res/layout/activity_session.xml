@@ -2,7 +2,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/brand_dark"
+    android:background="?attr/mhBrandDark"
     android:fillViewport="true">
 
     <LinearLayout
@@ -19,7 +19,7 @@
             android:layout_height="wrap_content"
             android:letterSpacing="0.14"
             android:text="@string/session_screen_title"
-            android:textColor="@color/mint"
+            android:textColor="?attr/mhMint"
             android:textSize="13sp" />
 
         <FrameLayout
@@ -53,7 +53,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:textAlignment="center"
-            android:textColor="@color/mint"
+            android:textColor="?attr/mhMint"
             android:textSize="15sp" />
 
         <TextView
@@ -62,7 +62,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"
             android:textAlignment="center"
-            android:textColor="@color/mint"
+            android:textColor="?attr/mhMint"
             android:textSize="13sp"
             android:visibility="gone" />
 
@@ -89,7 +89,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
             android:text="@string/chizuk_stuck"
-            android:textColor="@color/mint"
+            android:textColor="?attr/mhMint"
             android:visibility="gone" />
 
         <!--
@@ -103,7 +103,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="14dp"
-            android:textColor="@color/mint" />
+            android:textColor="?attr/mhMint" />
 
         <LinearLayout
             android:id="@+id/session_durations"
@@ -144,7 +144,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
             android:text="@string/session_open"
-            android:textColor="@color/mint" />
+            android:textColor="?attr/mhMint" />
 
         <Button
             android:id="@+id/session_primary"
@@ -160,6 +160,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:textColor="@color/mint" />
+            android:textColor="?attr/mhMint" />
     </LinearLayout>
 </ScrollView>

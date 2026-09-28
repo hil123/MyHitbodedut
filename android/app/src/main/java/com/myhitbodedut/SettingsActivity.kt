@@ -17,7 +17,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.core.content.ContextCompat
 import androidx.core.os.LocaleListCompat
 import com.google.android.material.materialswitch.MaterialSwitch
 
@@ -89,6 +88,13 @@ class SettingsActivity : AppCompatActivity() {
         )
         findViewById<Button>(R.id.name_button).setOnClickListener { askName() }
         findViewById<Button>(R.id.language_button).setOnClickListener { askLanguage() }
+        findViewById<Button>(R.id.adresse_button).setOnClickListener { askAdresse() }
+        findViewById<Button>(R.id.onboarding_again).setOnClickListener {
+            startActivity(Intent(this, OnboardingActivity::class.java))
+        }
+        findViewById<Button>(R.id.mode_button).setOnClickListener { askMode() }
+        findViewById<Button>(R.id.fond_button).setOnClickListener { askFond() }
+        findViewById<Button>(R.id.accent_button).setOnClickListener { askAccent() }
         findViewById<Button>(R.id.region_button).setOnClickListener {
             Store.setInIsrael(this, !Store.inIsrael(this))
             refresh()
@@ -199,7 +205,7 @@ class SettingsActivity : AppCompatActivity() {
             ligne.findViewById<TextView>(R.id.permission_state).apply {
                 setText(if (accordee) R.string.permission_granted else R.string.permission_missing)
                 setTextColor(
-                    ContextCompat.getColor(
+                    Apparence.couleur(
                         this@SettingsActivity,
                         if (accordee) R.color.brand else R.color.warning
                     )
@@ -227,7 +233,7 @@ class SettingsActivity : AppCompatActivity() {
 
         val title = findViewById<TextView>(R.id.gate_state_title)
         title.setText(GateStatus.titleOf(state))
-        title.setTextColor(ContextCompat.getColor(this, GateStatus.colorOf(state)))
+        title.setTextColor(Apparence.couleur(this, GateStatus.colorOf(state)))
         // Le titre cède la place au bouton : le même message, mais actionnable.
         title.visibility = if (missing) View.GONE else View.VISIBLE
 
@@ -290,6 +296,12 @@ class SettingsActivity : AppCompatActivity() {
             AppCompatDelegate.getApplicationLocales().toLanguageTags()
                 .ifBlank { resources.configuration.locales[0].language }
         )
+        findViewById<Button>(R.id.adresse_button).setText(
+            Store.adresse(this)?.nom ?: R.string.adresse_none
+        )
+        findViewById<Button>(R.id.mode_button).setText(Store.modeApparence(this).nom)
+        findViewById<Button>(R.id.fond_button).setText(Store.fond(this).nom)
+        findViewById<Button>(R.id.accent_button).setText(Store.accent(this).nom)
         val prenom = Store.firstName(this)
         findViewById<Button>(R.id.name_button).text =
             prenom.ifBlank { getString(R.string.settings_name_empty) }
@@ -302,7 +314,7 @@ class SettingsActivity : AppCompatActivity() {
             resources.getQuantityString(R.plurals.apps_selected, count, count)
         }
         summary.setTextColor(
-            ContextCompat.getColor(this, if (count == 0) R.color.warning else R.color.muted)
+            Apparence.couleur(this, if (count == 0) R.color.warning else R.color.muted)
         )
     }
 
@@ -332,6 +344,61 @@ class SettingsActivity : AppCompatActivity() {
                 AppCompatDelegate.setApplicationLocales(
                     LocaleListCompat.forLanguageTags(Langues.TOUTES[choisi].etiquette)
                 )
+            }
+            .setNegativeButton(R.string.action_back, null)
+            .show()
+    }
+
+    /** צדיק, צדקת, ou pas de choix : le bravo reste alors neutre. */
+    private fun askAdresse() {
+        val choix = listOf<Adresse?>(Adresse.HOMME, Adresse.FEMME, null)
+        val noms = choix.map { getString(it?.nom ?: R.string.adresse_none) }.toTypedArray()
+        AlertDialog.Builder(this)
+            .setTitle(R.string.settings_adresse)
+            .setSingleChoiceItems(noms, choix.indexOf(Store.adresse(this))) { dialog, choisi ->
+                dialog.dismiss()
+                Store.setAdresse(this, choix[choisi])
+                refresh()
+            }
+            .setNegativeButton(R.string.action_back, null)
+            .show()
+    }
+
+    /** AppCompat recrée lui-même les écrans ouverts quand le mode change. */
+    private fun askMode() {
+        val modes = Apparence.Mode.values()
+        choisirParmi(R.string.settings_mode, modes.map { it.nom }, modes.indexOf(Store.modeApparence(this))) {
+            Store.setModeApparence(this, modes[it])
+            Apparence.appliquerMode(this)
+        }
+    }
+
+    /**
+     * Le fond et les boutons se posent à la création d'un écran : celui-ci
+     * se recrée tout de suite, les autres en reprenant la main.
+     */
+    private fun askFond() {
+        val fonds = Apparence.Fond.values()
+        choisirParmi(R.string.settings_fond, fonds.map { it.nom }, fonds.indexOf(Store.fond(this))) {
+            Store.setFond(this, fonds[it])
+            recreate()
+        }
+    }
+
+    private fun askAccent() {
+        val accents = Apparence.Accent.values()
+        choisirParmi(R.string.settings_accent, accents.map { it.nom }, accents.indexOf(Store.accent(this))) {
+            Store.setAccent(this, accents[it])
+            recreate()
+        }
+    }
+
+    private fun choisirParmi(titre: Int, noms: List<Int>, coche: Int, onPicked: (Int) -> Unit) {
+        AlertDialog.Builder(this)
+            .setTitle(titre)
+            .setSingleChoiceItems(noms.map { getString(it) }.toTypedArray(), coche) { dialog, choisi ->
+                dialog.dismiss()
+                if (choisi != coche) onPicked(choisi)
             }
             .setNegativeButton(R.string.action_back, null)
             .show()

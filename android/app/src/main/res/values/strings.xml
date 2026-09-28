@@ -155,8 +155,6 @@
     <string name="onboarding_start">Commencer</string>
     <string name="onboarding_practice">Parler, simplement</string>
     <string name="onboarding_practice_body">La hitbodedout, c’est se retirer seul un moment chaque jour et parler à Hachem dans sa propre langue, comme on parle à quelqu’un. Pas de formule à réciter, pas de niveau à atteindre.</string>
-    <string name="onboarding_app">Ce que fait cette application</string>
-    <string name="onboarding_app_body">Un minuteur pour la séance, une série qui compte les jours, un journal, le Tikoun HaKlali et une bibliothèque de textes. Elle vous accompagne ; elle ne vous note pas.</string>
     <string name="onboarding_private">Rien ne sort d’ici</string>
     <string name="onboarding_private_body">L’application ne demande aucun accès à Internet. Ce que vous écrivez reste sur ce téléphone, et vous seul pouvez l’en sortir, par l’export.</string>
     <string name="blocker_session_open_subtitle">Séance ouverte, depuis %1$s. Le téléphone peut attendre.</string>
@@ -452,4 +450,49 @@
     <string name="tefila_geula">Guéoula</string>
     <string name="tefila_zivug">Zivoug</string>
     <string name="tefila_refua">Refoua chelema</string>
+
+    <!-- Présentation détaillée, bravo de fin de séance, apparence (28/09). -->
+    <string name="onboarding_session">La séance</string>
+    <string name="onboarding_session_body">Choisissez une durée, ou une séance sans durée, et un sujet si vous voulez. Un nigoun peut vous accompagner. Un mot de ’hizouk ouvre et clôt la séance, et si les mots ne viennent pas, un bouton est là pour vous aider.</string>
+    <string name="onboarding_days">Jour après jour</string>
+    <string name="onboarding_days_body">La série compte les jours de pratique d’affilée, et la semaine se lit d’un coup d’œil. Après chaque séance, une note peut rejoindre votre journal. Des rappels vous font signe à l’heure que vous choisissez.</string>
+    <string name="onboarding_texts">Des textes pour prier</string>
+    <string name="onboarding_texts_body">Le Tikoun HaKlali, les Tfilot classées par sujet, une bibliothèque et des conseils pour la hitbodedout, à ouvrir quand vous voulez.</string>
+    <string name="onboarding_yours">À votre façon</string>
+    <string name="onboarding_yours_body">Dans les réglages : la langue (français, anglais ou hébreu), les couleurs de l’écran, votre prénom et la durée habituelle d’une séance. La musique a sa propre section.</string>
+    <string name="onboarding_adresse">Comment vous appeler ?</string>
+    <string name="onboarding_adresse_body">À la fin de chaque séance, l’application vous félicite. Choisissez le mot qui vous convient ; vous pourrez le changer dans les réglages.</string>
+    <string name="adresse_tsadik">Tsadik</string>
+    <string name="adresse_tsadeket">Tsadeket</string>
+    <string name="adresse_none">Pas choisi</string>
+    <string name="celebration_tsadik">Bravo, Tsadik !</string>
+    <string name="celebration_tsadeket">Bravo, Tsadeket !</string>
+    <string name="celebration_neutral">Bravo !</string>
+    <string name="celebration_ask">Comment voulez-vous que l’application vous appelle ?</string>
+    <string name="celebration_continue">Continuer</string>
+    <string name="settings_adresse">Vous appeler</string>
+    <string name="settings_onboarding">Revoir la présentation</string>
+    <string name="section_appearance">Apparence</string>
+    <string name="section_appearance_hint">Les couleurs de l’écran. Chaque combinaison reste lisible, de jour comme de nuit.</string>
+    <string name="settings_mode">Clair ou sombre</string>
+    <string name="mode_auto">Comme le téléphone</string>
+    <string name="mode_clair">Clair</string>
+    <string name="mode_sombre">Sombre</string>
+    <string name="settings_fond">Couleur du fond</string>
+    <string name="fond_vert">Vert pâle</string>
+    <string name="fond_blanc">Blanc</string>
+    <string name="fond_sable">Sable</string>
+    <string name="fond_bleu">Bleu pâle</string>
+    <string name="fond_rose">Rose pâle</string>
+    <string name="settings_accent">Couleur des boutons</string>
+    <string name="accent_vert">Vert</string>
+    <string name="accent_bleu">Bleu</string>
+    <string name="accent_violet">Violet</string>
+    <string name="accent_bordeaux">Bordeaux</string>
+    <string name="accent_ambre">Ambre</string>
+    <string name="accent_turquoise">Turquoise</string>
+    <plurals name="celebration_minutes">
+        <item quantity="one">%d minute de hitbodedout</item>
+        <item quantity="other">%d minutes de hitbodedout</item>
+    </plurals>
 </resources>

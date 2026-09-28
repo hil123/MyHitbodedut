@@ -20,7 +20,7 @@
             android:layout_height="34dp"
             android:background="@drawable/bg_tip_number"
             android:gravity="center"
-            android:textColor="@color/on_plate"
+            android:textColor="?attr/mhOnPlate"
             android:textSize="15sp"
             android:textStyle="bold" />
 
@@ -30,7 +30,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
             android:layout_weight="1"
-            android:textColor="@color/ink"
+            android:textColor="?attr/mhInk"
             android:textSize="17sp"
             android:textStyle="bold" />
 
@@ -56,6 +56,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
         android:lineSpacingExtra="3sp"
-        android:textColor="@color/muted"
+        android:textColor="?attr/mhMuted"
         android:textSize="15sp" />
 </LinearLayout>

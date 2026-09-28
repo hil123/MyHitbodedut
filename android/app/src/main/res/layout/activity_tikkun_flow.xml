@@ -10,7 +10,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/paper"
+    android:background="?attr/mhPaper"
     android:orientation="vertical">
 
     <LinearLayout
@@ -46,7 +46,7 @@
                 android:layout_marginTop="4dp"
                 android:layoutDirection="rtl"
                 android:textAlignment="viewStart"
-                android:textColor="@color/mint"
+                android:textColor="?attr/mhMint"
                 android:textSize="14sp" />
         </LinearLayout>
 

@@ -34,7 +34,9 @@ class BlockerView(
 ) : FrameLayout(context) {
 
     init {
-        LayoutInflater.from(context).inflate(R.layout.view_blocker, this, true)
+        // Le service qui pose cet écran n'a pas le thème de l'application : sans
+        // lui, les couleurs réglables (?attr/mh…) ne se résoudraient pas.
+        LayoutInflater.from(Apparence.contexte(context)).inflate(R.layout.view_blocker, this, true)
         isClickable = true
         isFocusable = true
         isFocusableInTouchMode = true

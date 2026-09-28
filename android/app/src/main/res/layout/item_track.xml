@@ -30,14 +30,14 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="1"
-            android:textColor="@color/ink"
+            android:textColor="?attr/mhInk"
             android:textSize="16sp" />
 
         <TextView
             android:id="@+id/track_origin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/muted"
+            android:textColor="?attr/mhMuted"
             android:textSize="12sp" />
     </LinearLayout>
 

@@ -2,7 +2,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/brand_dark"
+    android:background="?attr/mhBrandDark"
     android:fillViewport="true">
 
     <LinearLayout
@@ -58,7 +58,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:textAlignment="center"
-            android:textColor="@color/mint"
+            android:textColor="?attr/mhMint"
             android:textSize="15sp" />
 
         <TextView
@@ -67,7 +67,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="14dp"
             android:textAlignment="center"
-            android:textColor="@color/mint"
+            android:textColor="?attr/mhMint"
             android:textSize="14sp" />
 
         <!-- Point 4 : le moment « porte ». -->
@@ -93,7 +93,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:paddingVertical="12dp"
-            android:textColor="@color/mint"
+            android:textColor="?attr/mhMint"
             android:textSize="15sp" />
 
         <Button
@@ -102,7 +102,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:textColor="@color/mint"
+            android:textColor="?attr/mhMint"
             android:textSize="14sp" />
     </LinearLayout>
 </ScrollView>

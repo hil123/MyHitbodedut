@@ -662,3 +662,34 @@ quota de stockage des artefacts plein. La release, qui dépend de cette étape,
 n'est pas partie. L'envoi de l'artefact ne bloque plus, et ne garde ses
 fichiers que deux jours. Les anciens artefacts (90 jours par défaut) se
 suppriment dans Settings → Actions du dépôt, si le quota gêne encore.
+
+## Mise à jour (28/09, suite) : présentation, bravo, couleurs
+
+Trois demandes du propriétaire.
+
+**Présentation au premier lancement.** Elle existait (3 écrans) mais ne
+décrivait les fonctions qu'en une phrase. Elle en compte maintenant 7 : la
+hitbodedout, la séance, jour après jour, les textes, les réglages, « comment
+vous appeler » (צדיק / צדקת), et la promesse que rien ne sort du téléphone,
+toujours en dernier. Une installation qui a déjà servi ne la voit pas
+d'elle-même (règle inchangée) ; les réglages ont un bouton « Revoir la
+présentation ».
+
+**Bravo de fin de séance.** Quand une séance se clôt (pas quand on
+l'abandonne), le hassid danse (`char_dancing`, balancement et petit saut,
+rien si les animations sont coupées dans le téléphone) avec « Bravo,
+Tsadik ! » ou « Bravo, Tsadeket ! ». Sans choix enregistré, le bravo reste
+neutre et l'écran pose la question. Il s'ouvre sur l'écran de séance si on
+l'avait gardé ouvert, sinon au retour sur l'accueil. Le choix se change dans
+les réglages et part dans l'export.
+
+**Couleurs.** Carte « Apparence » dans les réglages : clair / sombre / comme
+le téléphone, 5 fonds, 6 couleurs de boutons. Des palettes et non un
+nuancier libre : `PaletteTest` vérifie les contrastes des 30 combinaisons, de
+jour et de nuit, aux seuils de la palette d'origine. Techniquement, les
+écrans pointent désormais sur des attributs de thème (`?attr/mhBrand`…,
+`values/attrs.xml`) au lieu de `@color/…`, et la palette choisie les recouvre
+à la création de chaque écran (`Apparence.installer`, appelé par
+`MyHitbodedutApp`). Le widget et l'icône gardent leurs couleurs : ils sont
+dessinés par l'écran d'accueil du téléphone. L'écran de blocage, posé par un
+service, reçoit le thème par `Apparence.contexte`.

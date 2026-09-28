@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Les couleurs que l'on peut choisir dans les réglages (« Apparence »).
+
+    Un écran ne pointe plus sur @color/brand mais sur ?attr/mhBrand : une
+    ressource ne change pas une fois l'application lancée, un attribut de
+    thème, si. Le thème de base les remplit avec les couleurs d'origine
+    (values/colors.xml et values-night/colors.xml) ; une palette choisie les
+    recouvre (values/palettes.xml, values-night/palettes.xml).
+
+    Le widget et l'icône du lanceur gardent @color : ils sont dessinés par
+    l'écran d'accueil du téléphone, qui ne connaît pas le thème de l'app.
+    L'écran de blocage, posé par un service, reçoit ce thème par
+    Apparence.contexte().
+-->
+<resources>
+    <attr name="mhBrand" format="color" />
+    <attr name="mhBrandDark" format="color" />
+    <attr name="mhMint" format="color" />
+    <attr name="mhOnBrand" format="color" />
+    <attr name="mhOnPlate" format="color" />
+    <attr name="mhStageSoft" format="color" />
+    <attr name="mhDayDone" format="color" />
+    <attr name="mhPaper" format="color" />
+    <attr name="mhCard" format="color" />
+    <attr name="mhLine" format="color" />
+    <attr name="mhInk" format="color" />
+    <attr name="mhMuted" format="color" />
+    <attr name="mhDayTodo" format="color" />
+</resources>

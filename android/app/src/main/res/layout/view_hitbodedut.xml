@@ -48,7 +48,7 @@
                 android:background="@drawable/bg_chip_mint"
                 android:paddingHorizontal="10dp"
                 android:paddingVertical="3dp"
-                android:textColor="@color/on_plate"
+                android:textColor="?attr/mhOnPlate"
                 android:textSize="11sp" />
 
             <TextView
@@ -58,7 +58,7 @@
                 android:layout_marginTop="6dp"
                 android:layoutDirection="rtl"
                 android:textAlignment="viewStart"
-                android:textColor="@color/ink"
+                android:textColor="?attr/mhInk"
                 android:textSize="17sp"
                 android:textStyle="bold" />
         </LinearLayout>
@@ -69,7 +69,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
-        android:textColor="@color/brand"
+        android:textColor="?attr/mhBrand"
         android:textSize="15sp"
         android:textStyle="bold" />
 
@@ -79,7 +79,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
         android:lineSpacingExtra="2sp"
-        android:textColor="@color/muted"
+        android:textColor="?attr/mhMuted"
         android:textSize="14sp" />
 
     <TextView
@@ -89,7 +89,7 @@
         android:layout_marginTop="8dp"
         android:layoutDirection="rtl"
         android:textAlignment="viewStart"
-        android:textColor="@color/muted"
+        android:textColor="?attr/mhMuted"
         android:textSize="11sp" />
 
     <LinearLayout
@@ -104,7 +104,7 @@
             android:layout_height="wrap_content"
             android:paddingVertical="8dp"
             android:text="@string/hitbodedut_previous"
-            android:textColor="@color/brand"
+            android:textColor="?attr/mhBrand"
             android:textSize="14sp" />
 
         <View
@@ -118,7 +118,7 @@
             android:layout_height="wrap_content"
             android:paddingVertical="8dp"
             android:text="@string/hitbodedut_next"
-            android:textColor="@color/brand"
+            android:textColor="?attr/mhBrand"
             android:textSize="14sp"
             android:textStyle="bold" />
     </LinearLayout>

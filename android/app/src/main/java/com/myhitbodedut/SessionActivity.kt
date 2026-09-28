@@ -153,6 +153,10 @@ class SessionActivity : AppCompatActivity() {
             if (cancelling) cancelling = false else ChizukCard.show(chizuk, Moment.CLOTURE)
         }
         wasRunning = running
+        // Chaque seconde, et pas au seul passage à « terminée » : c'est le
+        // service qui clôt la séance, et il peut le faire quelques secondes
+        // après que le décompte a touché zéro ici.
+        if (!running) CelebrationActivity.showIfPending(this)
 
         if (running) {
             art.setImageResource(Character.during())

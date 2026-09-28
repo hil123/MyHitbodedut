@@ -10,9 +10,9 @@ import java.io.File
 class OnboardingTest {
 
     @Test
-    fun `les trois ecrans sont distincts et complets`() {
+    fun `les ecrans sont distincts et complets`() {
         val ecrans = Onboarding.ECRANS
-        assertEquals(3, ecrans.size)
+        assertEquals(7, ecrans.size)
         assertEquals(ecrans.size, ecrans.map { it.cle }.toSet().size)
         assertEquals(ecrans.size, ecrans.map { it.titre }.toSet().size)
         assertEquals(ecrans.size, ecrans.map { it.corps }.toSet().size)
@@ -21,14 +21,15 @@ class OnboardingTest {
 
     @Test
     fun `le parcours reste dans ses bornes`() {
+        val dernier = Onboarding.DERNIER
         assertEquals(1, Onboarding.suivant(0))
-        assertEquals(2, Onboarding.suivant(2))
-        assertEquals(2, Onboarding.suivant(50))
+        assertEquals(dernier, Onboarding.suivant(dernier))
+        assertEquals(dernier, Onboarding.suivant(50))
         assertEquals(0, Onboarding.precedent(0))
         assertEquals(0, Onboarding.precedent(-3))
         assertTrue(Onboarding.estPremier(0))
-        assertTrue(Onboarding.estDernier(2))
-        assertFalse(Onboarding.estDernier(1))
+        assertTrue(Onboarding.estDernier(dernier))
+        assertFalse(Onboarding.estDernier(dernier - 1))
         assertEquals(Onboarding.ECRANS.first(), Onboarding.ecran(-1))
         assertEquals(Onboarding.ECRANS.last(), Onboarding.ecran(9))
     }
@@ -77,7 +78,7 @@ class OnboardingTest {
         val code = File("src/main/java/com/myhitbodedut/OnboardingActivity.kt").readText()
         val attendues = Regex("""R\.id\.(onboarding_[a-z_]+)""").findAll(code)
             .map { it.groupValues[1] }.toSet()
-        assertEquals(7, attendues.size)
+        assertEquals(10, attendues.size)
         attendues.forEach {
             assertTrue("« $it » manque dans activity_onboarding.xml",
                 gabarit.contains("""android:id="@+id/$it""""))
@@ -89,7 +90,12 @@ class OnboardingTest {
         val cles = listOf(
             "onboarding_step", "onboarding_next", "onboarding_back", "onboarding_skip",
             "onboarding_start", "onboarding_practice", "onboarding_practice_body",
-            "onboarding_app", "onboarding_app_body",
+            "onboarding_session", "onboarding_session_body",
+            "onboarding_days", "onboarding_days_body",
+            "onboarding_texts", "onboarding_texts_body",
+            "onboarding_yours", "onboarding_yours_body",
+            "onboarding_adresse", "onboarding_adresse_body",
+            "adresse_tsadik", "adresse_tsadeket",
             "onboarding_private", "onboarding_private_body",
         )
         listOf("values", "values-en", "values-iw").forEach { dossier ->
@@ -98,5 +104,18 @@ class OnboardingTest {
                 assertTrue("$dossier : « $it » manquant", xml.contains("""name="$it""""))
             }
         }
+    }
+
+    /**
+     * La question צדיק / צדקת est posée une fois, et jamais en dernier : le
+     * dernier écran porte la promesse que rien ne sort du téléphone, c'est
+     * elle qu'on doit lire avant de commencer.
+     */
+    @Test
+    fun `un seul ecran demande comment s adresser a vous`() {
+        val avecChoix = Onboarding.ECRANS.filter { it.choixAdresse }
+        assertEquals(1, avecChoix.size)
+        assertEquals("prive", Onboarding.ECRANS.last().cle)
+        assertFalse(Onboarding.ECRANS.last().choixAdresse)
     }
 }

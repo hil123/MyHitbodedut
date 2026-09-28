@@ -24,6 +24,7 @@
         que subi.
     -->
     <application
+        android:name=".MyHitbodedutApp"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -64,6 +65,10 @@
 
         <activity
             android:name=".OnboardingActivity"
+            android:exported="false"
+            android:label="@string/app_name" />
+        <activity
+            android:name=".CelebrationActivity"
             android:exported="false"
             android:label="@string/app_name" />
 

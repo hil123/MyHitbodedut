@@ -97,6 +97,7 @@ class SessionService : Service() {
         val elapsed = Store.endSession(this)
         if (elapsed > 0 || !early) {
             Store.addSession(this, elapsed, theme = theme)
+            Store.setPendingCelebration(this, elapsed)
             notifyCompleted(elapsed)
         }
         // Décompte masqué : rien n'a prévenu que le temps s'écoulait, il faut

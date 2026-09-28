@@ -49,6 +49,18 @@ class DarkModeTest {
         e.getAttributeNS(ANDROID, nom).takeIf { it.isNotBlank() }
 
     /**
+     * Le nom de la couleur, qu'elle soit écrite « @color/on_plate » ou, depuis
+     * que les couleurs se choisissent, « ?attr/mhOnPlate ».
+     */
+    private fun jeton(valeur: String): String =
+        if (valeur.startsWith("?attr/mh")) {
+            valeur.removePrefix("?attr/mh")
+                .replace(Regex("([a-z])([A-Z])"), "$1_$2").lowercase()
+        } else {
+            valeur.removePrefix("@color/")
+        }
+
+    /**
      * Le test qui compte. Aucune encre posee sur une plaque restee claire
      * ne doit changer de valeur la nuit.
      */
@@ -62,7 +74,7 @@ class DarkModeTest {
                 vues(fichier).forEach { vue ->
                     val fond = attribut(vue, "background") ?: return@forEach
                     if (fond !in plaques) return@forEach
-                    val encre = attribut(vue, "textColor")?.removePrefix("@color/")
+                    val encre = attribut(vue, "textColor")?.let { jeton(it) }
                         ?: return@forEach
                     if (encre in basculent) {
                         val id = attribut(vue, "id")?.removePrefix("@+id/") ?: "?"

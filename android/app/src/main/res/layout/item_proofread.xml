@@ -26,7 +26,7 @@
             android:background="@drawable/bg_chip_mint"
             android:paddingHorizontal="10dp"
             android:paddingVertical="2dp"
-            android:textColor="@color/on_plate"
+            android:textColor="?attr/mhOnPlate"
             android:textSize="11sp" />
 
         <TextView
@@ -46,7 +46,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:textColor="@color/muted"
+        android:textColor="?attr/mhMuted"
         android:textSize="11sp"
         android:typeface="monospace" />
 
@@ -55,7 +55,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="2dp"
-        android:textColor="@color/ink"
+        android:textColor="?attr/mhInk"
         android:textSize="14sp"
         android:textStyle="bold" />
 
@@ -67,7 +67,7 @@
         android:layoutDirection="rtl"
         android:lineSpacingExtra="4sp"
         android:textAlignment="viewStart"
-        android:textColor="@color/ink"
+        android:textColor="?attr/mhInk"
         android:textSize="18sp" />
 
     <TextView
@@ -76,7 +76,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
         android:lineSpacingExtra="2sp"
-        android:textColor="@color/muted"
+        android:textColor="?attr/mhMuted"
         android:textSize="14sp" />
 
     <TextView
@@ -85,7 +85,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:lineSpacingExtra="2sp"
-        android:textColor="@color/muted"
+        android:textColor="?attr/mhMuted"
         android:textSize="14sp" />
 
     <TextView
@@ -93,7 +93,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:textColor="@color/muted"
+        android:textColor="?attr/mhMuted"
         android:textSize="11sp" />
 
     <Button

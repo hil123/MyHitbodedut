@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/paper"
+    android:background="?attr/mhPaper"
     android:orientation="vertical">
 
     <LinearLayout
@@ -34,7 +34,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
-                android:textColor="@color/mint"
+                android:textColor="?attr/mhMint"
                 android:textSize="14sp" />
         </LinearLayout>
 
@@ -89,7 +89,7 @@
         android:layout_marginHorizontal="24dp"
         android:layout_marginTop="18dp"
         android:text="@string/reminders_hours"
-        android:textColor="@color/ink"
+        android:textColor="?attr/mhInk"
         android:textSize="17sp"
         android:textStyle="bold" />
 
@@ -99,7 +99,7 @@
         android:layout_marginHorizontal="24dp"
         android:layout_marginTop="2dp"
         android:text="@string/reminders_hours_hint"
-        android:textColor="@color/muted"
+        android:textColor="?attr/mhMuted"
         android:textSize="13sp" />
 
     <androidx.recyclerview.widget.RecyclerView

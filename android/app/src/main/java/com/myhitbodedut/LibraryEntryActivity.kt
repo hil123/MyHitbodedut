@@ -11,7 +11,6 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 
 /**
  * Une entrée en entier.
@@ -83,7 +82,7 @@ class LibraryEntryActivity : AppCompatActivity() {
             textAlignment = View.TEXT_ALIGNMENT_VIEW_START
             textSize = 17f
             setLineSpacing(dp(4).toFloat(), 1f)
-            setTextColor(ContextCompat.getColor(context, R.color.ink))
+            setTextColor(Apparence.couleur(context, R.color.ink))
         }
 
     // --- Article --------------------------------------------------------------
@@ -131,7 +130,7 @@ class LibraryEntryActivity : AppCompatActivity() {
             TextView(this).apply {
                 text = getString(labelRes)
                 textSize = 12f
-                setTextColor(ContextCompat.getColor(context, R.color.brand))
+                setTextColor(Apparence.couleur(context, R.color.brand))
             }
         )
         facts.addView(
@@ -143,7 +142,7 @@ class LibraryEntryActivity : AppCompatActivity() {
                 this.text = value
                 textSize = 15f
                 setLineSpacing(dp(3).toFloat(), 1f)
-                setTextColor(ContextCompat.getColor(context, R.color.ink))
+                setTextColor(Apparence.couleur(context, R.color.ink))
             }
         )
     }
@@ -154,7 +153,7 @@ class LibraryEntryActivity : AppCompatActivity() {
                 topMargin = dp(14)
                 bottomMargin = dp(14)
             }
-        setBackgroundColor(ContextCompat.getColor(context, R.color.line))
+        setBackgroundColor(Apparence.couleur(context, R.color.line))
     }
 
     /** Le bouton de sortie vers le web, s'il y a une adresse à ouvrir. */

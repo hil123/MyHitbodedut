@@ -8,21 +8,24 @@ data class OnboardingEcran(
     val cle: String,
     @StringRes val titre: Int,
     @StringRes val corps: Int,
-    @DrawableRes val illustration: Int
+    @DrawableRes val illustration: Int,
+    /** L'écran porte les deux boutons צדיק / צדקת. */
+    val choixAdresse: Boolean = false
 )
 
 /**
- * Les trois écrans du premier lancement.
+ * Les écrans du premier lancement : ce qu'est la hitbodedout, puis ce que
+ * fait l'application, une fonction par écran, et enfin sa promesse.
  *
  * Une application de pratique religieuse qui s'ouvre sur un tableau de
  * bord muet demande à celui qui l'installe de deviner ce qu'on attend de
- * lui. Trois écrans suffisent, et le troisième est le seul que personne
- * d'autre ne peut dire à sa place : cette application n'a aucun accès à
- * Internet, et ce qu'on y écrit ne quitte pas le téléphone. Un test tient
- * cette phrase au manifeste — si la permission INTERNET y apparaissait un
- * jour, l'écran deviendrait un mensonge, et le test tombe avant.
+ * lui. Le dernier écran est le seul que personne d'autre ne peut dire à sa
+ * place : cette application n'a aucun accès à Internet, et ce qu'on y écrit
+ * ne quitte pas le téléphone. Un test tient cette phrase au manifeste — si
+ * la permission INTERNET y apparaissait un jour, l'écran deviendrait un
+ * mensonge, et le test tombe avant.
  *
- * On peut passer, et on ne les revoit plus.
+ * On peut passer, et on ne les revoit plus, sauf depuis les réglages.
  */
 object Onboarding {
 
@@ -34,10 +37,35 @@ object Onboarding {
             R.drawable.char_open_arms
         ),
         OnboardingEcran(
-            "app",
-            R.string.onboarding_app,
-            R.string.onboarding_app_body,
-            R.drawable.char_walking
+            "seance",
+            R.string.onboarding_session,
+            R.string.onboarding_session_body,
+            R.drawable.char_praying
+        ),
+        OnboardingEcran(
+            "jours",
+            R.string.onboarding_days,
+            R.string.onboarding_days_body,
+            R.drawable.char_writing
+        ),
+        OnboardingEcran(
+            "textes",
+            R.string.onboarding_texts,
+            R.string.onboarding_texts_body,
+            R.drawable.char_tehilim
+        ),
+        OnboardingEcran(
+            "reglages",
+            R.string.onboarding_yours,
+            R.string.onboarding_yours_body,
+            R.drawable.char_pointing
+        ),
+        OnboardingEcran(
+            "adresse",
+            R.string.onboarding_adresse,
+            R.string.onboarding_adresse_body,
+            R.drawable.char_dancing,
+            choixAdresse = true
         ),
         OnboardingEcran(
             "prive",

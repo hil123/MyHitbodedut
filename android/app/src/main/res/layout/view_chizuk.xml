@@ -55,7 +55,7 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="2"
-                android:textColor="@color/brand"
+                android:textColor="?attr/mhBrand"
                 android:textSize="14sp"
                 android:textStyle="bold" />
 
@@ -85,13 +85,13 @@
         android:layoutDirection="rtl"
         android:lineSpacingExtra="2sp"
         android:textAlignment="viewStart"
-        android:textColor="@color/ink" />
+        android:textColor="?attr/mhInk" />
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginVertical="10dp"
-        android:background="@color/line" />
+        android:background="?attr/mhLine" />
 
     <TextView
         android:id="@+id/chizuk_translation"
@@ -102,7 +102,7 @@
         android:autoSizeStepGranularity="1sp"
         android:autoSizeTextType="uniform"
         android:lineSpacingExtra="2sp"
-        android:textColor="@color/muted" />
+        android:textColor="?attr/mhMuted" />
 
     <TextView
         android:id="@+id/chizuk_ref"
@@ -111,6 +111,6 @@
         android:layout_marginTop="8dp"
         android:ellipsize="end"
         android:maxLines="1"
-        android:textColor="@color/muted"
+        android:textColor="?attr/mhMuted"
         android:textSize="11sp" />
 </LinearLayout>

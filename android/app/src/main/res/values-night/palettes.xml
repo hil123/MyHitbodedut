@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Les palettes de l'écran « Apparence », version nuit. Mêmes noms que dans
+    values/palettes.xml ; seules changent les couleurs qui basculent aussi
+    dans values-night/colors.xml. Les raisons sont écrites là-bas.
+-->
+<resources>
+    <style name="Accent.Bleu" parent="">
+        <item name="mhBrand">#8AB8F0</item>
+        <item name="mhBrandDark">#16304F</item>
+        <item name="mhMint">#DDEBFA</item>
+        <item name="mhOnBrand">#0B1830</item>
+        <item name="mhOnPlate">#1D5FA8</item>
+        <item name="mhStageSoft">#F1F6FD</item>
+        <item name="mhDayDone">#1D5FA8</item>
+        <item name="colorPrimary">#8AB8F0</item>
+        <item name="colorOnPrimary">#0B1830</item>
+        <item name="colorSecondary">#16304F</item>
+        <item name="colorPrimaryContainer">#DDEBFA</item>
+        <item name="colorOnPrimaryContainer">#16304F</item>
+        <item name="android:statusBarColor">#16304F</item>
+    </style>
+    <style name="Accent.Violet" parent="">
+        <item name="mhBrand">#C3A6EC</item>
+        <item name="mhBrandDark">#33224D</item>
+        <item name="mhMint">#ECE3F7</item>
+        <item name="mhOnBrand">#1A1030</item>
+        <item name="mhOnPlate">#6A3FA0</item>
+        <item name="mhStageSoft">#F7F2FC</item>
+        <item name="mhDayDone">#6A3FA0</item>
+        <item name="colorPrimary">#C3A6EC</item>
+        <item name="colorOnPrimary">#1A1030</item>
+        <item name="colorSecondary">#33224D</item>
+        <item name="colorPrimaryContainer">#ECE3F7</item>
+        <item name="colorOnPrimaryContainer">#33224D</item>
+        <item name="android:statusBarColor">#33224D</item>
+    </style>
+    <style name="Accent.Bordeaux" parent="">
+        <item name="mhBrand">#F09AAA</item>
+        <item name="mhBrandDark">#4A1820</item>
+        <item name="mhMint">#F8E1E5</item>
+        <item name="mhOnBrand">#2A0A10</item>
+        <item name="mhOnPlate">#9B2C3F</item>
+        <item name="mhStageSoft">#FDF3F5</item>
+        <item name="mhDayDone">#9B2C3F</item>
+        <item name="colorPrimary">#F09AAA</item>
+        <item name="colorOnPrimary">#2A0A10</item>
+        <item name="colorSecondary">#4A1820</item>
+        <item name="colorPrimaryContainer">#F8E1E5</item>
+        <item name="colorOnPrimaryContainer">#4A1820</item>
+        <item name="android:statusBarColor">#4A1820</item>
+    </style>
+    <style name="Accent.Ambre" parent="">
+        <item name="mhBrand">#F2C46B</item>
+        <item name="mhBrandDark">#4A3410</item>
+        <item name="mhMint">#FBEFD6</item>
+        <item name="mhOnBrand">#2A1D05</item>
+        <item name="mhOnPlate">#8A5700</item>
+        <item name="mhStageSoft">#FEF9EE</item>
+        <item name="mhDayDone">#8A5700</item>
+        <item name="colorPrimary">#F2C46B</item>
+        <item name="colorOnPrimary">#2A1D05</item>
+        <item name="colorSecondary">#4A3410</item>
+        <item name="colorPrimaryContainer">#FBEFD6</item>
+        <item name="colorOnPrimaryContainer">#4A3410</item>
+        <item name="android:statusBarColor">#4A3410</item>
+    </style>
+    <style name="Accent.Turquoise" parent="">
+        <item name="mhBrand">#6FD6DE</item>
+        <item name="mhBrandDark">#11393D</item>
+        <item name="mhMint">#D9F3F5</item>
+        <item name="mhOnBrand">#062426</item>
+        <item name="mhOnPlate">#0B6E77</item>
+        <item name="mhStageSoft">#F0FAFB</item>
+        <item name="mhDayDone">#0B6E77</item>
+        <item name="colorPrimary">#6FD6DE</item>
+        <item name="colorOnPrimary">#062426</item>
+        <item name="colorSecondary">#11393D</item>
+        <item name="colorPrimaryContainer">#D9F3F5</item>
+        <item name="colorOnPrimaryContainer">#11393D</item>
+        <item name="android:statusBarColor">#11393D</item>
+    </style>
+    <style name="Fond.Blanc" parent="">
+        <item name="mhPaper">#121212</item>
+        <item name="mhCard">#1E1E1E</item>
+        <item name="mhLine">#333333</item>
+        <item name="mhInk">#EDEDED</item>
+        <item name="mhMuted">#A3A3A3</item>
+        <item name="mhDayTodo">#2A2A2A</item>
+        <item name="android:colorBackground">#121212</item>
+        <item name="colorSurface">#1E1E1E</item>
+        <item name="colorSurfaceContainerHigh">#1E1E1E</item>
+        <item name="colorOnSurface">#EDEDED</item>
+        <item name="colorOnSurfaceVariant">#A3A3A3</item>
+        <item name="colorOutline">#333333</item>
+    </style>
+    <style name="Fond.Sable" parent="">
+        <item name="mhPaper">#17130D</item>
+        <item name="mhCard">#241E16</item>
+        <item name="mhLine">#3A3125</item>
+        <item name="mhInk">#EFE7DA</item>
+        <item name="mhMuted">#B3A792</item>
+        <item name="mhDayTodo">#2E271D</item>
+        <item name="android:colorBackground">#17130D</item>
+        <item name="colorSurface">#241E16</item>
+        <item name="colorSurfaceContainerHigh">#241E16</item>
+        <item name="colorOnSurface">#EFE7DA</item>
+        <item name="colorOnSurfaceVariant">#B3A792</item>
+        <item name="colorOutline">#3A3125</item>
+    </style>
+    <style name="Fond.Bleu" parent="">
+        <item name="mhPaper">#0F1621</item>
+        <item name="mhCard">#18222F</item>
+        <item name="mhLine">#2A3647</item>
+        <item name="mhInk">#E4EBF4</item>
+        <item name="mhMuted">#9DABBD</item>
+        <item name="mhDayTodo">#1F2B3B</item>
+        <item name="android:colorBackground">#0F1621</item>
+        <item name="colorSurface">#18222F</item>
+        <item name="colorSurfaceContainerHigh">#18222F</item>
+        <item name="colorOnSurface">#E4EBF4</item>
+        <item name="colorOnSurfaceVariant">#9DABBD</item>
+        <item name="colorOutline">#2A3647</item>
+    </style>
+    <style name="Fond.Rose" parent="">
+        <item name="mhPaper">#1A1113</item>
+        <item name="mhCard">#261A1D</item>
+        <item name="mhLine">#3D2A2F</item>
+        <item name="mhInk">#F2E6E8</item>
+        <item name="mhMuted">#BAA0A6</item>
+        <item name="mhDayTodo">#30222A</item>
+        <item name="android:colorBackground">#1A1113</item>
+        <item name="colorSurface">#261A1D</item>
+        <item name="colorSurfaceContainerHigh">#261A1D</item>
+        <item name="colorOnSurface">#F2E6E8</item>
+        <item name="colorOnSurfaceVariant">#BAA0A6</item>
+        <item name="colorOutline">#3D2A2F</item>
+    </style>
+</resources>

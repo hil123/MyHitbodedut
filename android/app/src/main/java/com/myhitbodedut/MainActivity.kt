@@ -9,7 +9,6 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import com.google.android.material.materialswitch.MaterialSwitch
 import java.time.format.DateTimeFormatter
 import java.util.Locale
@@ -43,6 +42,8 @@ class MainActivity : AppCompatActivity() {
         super.onResume()
         applyServiceState()
         refresh()
+        // La séance s'est close téléphone posé : le bravo attendait ici.
+        CelebrationActivity.showIfPending(this)
         // La vignette d'accueil suit ce que l'écran vient de montrer.
         StreakWidget.refresh(this)
     }
@@ -216,7 +217,7 @@ class MainActivity : AppCompatActivity() {
                 resources.getQuantityString(R.plurals.permissions_missing, manquantes, manquantes)
             }
             setTextColor(
-                ContextCompat.getColor(
+                Apparence.couleur(
                     this@MainActivity,
                     if (manquantes == 0) R.color.muted else R.color.warning
                 )
@@ -350,9 +351,9 @@ class MainActivity : AppCompatActivity() {
             }
 
             // La case du jour fait est vert foncé : un texte sombre y disparaît.
-            label.setTextColor(ContextCompat.getColor(this, if (day.done) R.color.white else R.color.muted))
+            label.setTextColor(Apparence.couleur(this, if (day.done) R.color.white else R.color.muted))
             mark.setTextColor(
-                ContextCompat.getColor(
+                Apparence.couleur(
                     this,
                     when {
                         day.done -> R.color.white

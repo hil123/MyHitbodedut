@@ -143,8 +143,6 @@
     <string name="onboarding_start">Begin</string>
     <string name="onboarding_practice">Simply speaking</string>
     <string name="onboarding_practice_body">Hitbodedut means withdrawing alone for a while each day and speaking to Hashem in your own language, as you would to someone. No formula to recite, no level to reach.</string>
-    <string name="onboarding_app">What this app does</string>
-    <string name="onboarding_app_body">A timer for the session, a streak counting the days, a journal, the Tikkun HaKlali and a library of texts. It keeps you company; it does not grade you.</string>
     <string name="onboarding_private">Nothing leaves this phone</string>
     <string name="onboarding_private_body">The app asks for no Internet access at all. What you write stays on this phone, and only you can take it out, through the export.</string>
     <string name="blocker_session_open_subtitle">Open session, %1$s so far. The phone can wait.</string>
@@ -380,4 +378,49 @@
     <string name="tefila_geula">Geula</string>
     <string name="tefila_zivug">Zivug</string>
     <string name="tefila_refua">Refua shlema</string>
+
+    <!-- Présentation détaillée, bravo de fin de séance, apparence (28/09). -->
+    <string name="onboarding_session">The session</string>
+    <string name="onboarding_session_body">Pick a length, or an open session, and a subject if you like. A niggun can play along. A word of chizuk opens and closes the session, and if the words won’t come, a button is there to help.</string>
+    <string name="onboarding_days">Day after day</string>
+    <string name="onboarding_days_body">The streak counts your days in a row, and the week shows at a glance. After each session, a note can go into your journal. Reminders nudge you at the time you choose.</string>
+    <string name="onboarding_texts">Texts to pray with</string>
+    <string name="onboarding_texts_body">Tikkun HaKlali, Tfilot sorted by subject, a library and tips for hitbodedut, ready whenever you are.</string>
+    <string name="onboarding_yours">Your way</string>
+    <string name="onboarding_yours_body">In Settings: the language (French, English or Hebrew), the screen colors, your first name and your usual session length. Music has its own section.</string>
+    <string name="onboarding_adresse">What should we call you?</string>
+    <string name="onboarding_adresse_body">At the end of each session, the app congratulates you. Pick the word that fits you; you can change it in Settings.</string>
+    <string name="adresse_tsadik">Tzadik</string>
+    <string name="adresse_tsadeket">Tzadeket</string>
+    <string name="adresse_none">Not chosen</string>
+    <string name="celebration_tsadik">Well done, Tzadik!</string>
+    <string name="celebration_tsadeket">Well done, Tzadeket!</string>
+    <string name="celebration_neutral">Well done!</string>
+    <string name="celebration_ask">How should the app address you?</string>
+    <string name="celebration_continue">Continue</string>
+    <string name="settings_adresse">Address me as</string>
+    <string name="settings_onboarding">See the introduction again</string>
+    <string name="section_appearance">Appearance</string>
+    <string name="section_appearance_hint">The screen colors. Every combination stays readable, by day and by night.</string>
+    <string name="settings_mode">Light or dark</string>
+    <string name="mode_auto">Like the phone</string>
+    <string name="mode_clair">Light</string>
+    <string name="mode_sombre">Dark</string>
+    <string name="settings_fond">Background color</string>
+    <string name="fond_vert">Pale green</string>
+    <string name="fond_blanc">White</string>
+    <string name="fond_sable">Sand</string>
+    <string name="fond_bleu">Pale blue</string>
+    <string name="fond_rose">Pale pink</string>
+    <string name="settings_accent">Button color</string>
+    <string name="accent_vert">Green</string>
+    <string name="accent_bleu">Blue</string>
+    <string name="accent_violet">Purple</string>
+    <string name="accent_bordeaux">Burgundy</string>
+    <string name="accent_ambre">Amber</string>
+    <string name="accent_turquoise">Teal</string>
+    <plurals name="celebration_minutes">
+        <item quantity="one">%d minute of hitbodedut</item>
+        <item quantity="other">%d minutes of hitbodedut</item>
+    </plurals>
 </resources>

@@ -6,6 +6,7 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.button.MaterialButton
 
 /**
  * Le premier lancement. Un écran à la fois, et une sortie à tout moment.
@@ -23,6 +24,12 @@ class OnboardingActivity : AppCompatActivity() {
         index = savedInstanceState?.getInt(ETAT_INDEX, 0) ?: 0
 
         findViewById<Button>(R.id.onboarding_skip).setOnClickListener { finish() }
+        findViewById<MaterialButton>(R.id.onboarding_tsadik).setOnClickListener {
+            choisir(Adresse.HOMME)
+        }
+        findViewById<MaterialButton>(R.id.onboarding_tsadeket).setOnClickListener {
+            choisir(Adresse.FEMME)
+        }
         findViewById<Button>(R.id.onboarding_back).setOnClickListener {
             index = Onboarding.precedent(index)
             render()
@@ -51,8 +58,18 @@ class OnboardingActivity : AppCompatActivity() {
         super.finish()
     }
 
+    private fun choisir(adresse: Adresse) {
+        Store.setAdresse(this, adresse)
+        render()
+    }
+
     private fun render() {
         val ecran = Onboarding.ecran(index)
+        findViewById<View>(R.id.onboarding_adresse).visibility =
+            if (ecran.choixAdresse) View.VISIBLE else View.GONE
+        val adresse = Store.adresse(this)
+        findViewById<MaterialButton>(R.id.onboarding_tsadik).isChecked = adresse == Adresse.HOMME
+        findViewById<MaterialButton>(R.id.onboarding_tsadeket).isChecked = adresse == Adresse.FEMME
         findViewById<ImageView>(R.id.onboarding_art).setImageResource(ecran.illustration)
         findViewById<TextView>(R.id.onboarding_title).setText(ecran.titre)
         findViewById<TextView>(R.id.onboarding_body).setText(ecran.corps)

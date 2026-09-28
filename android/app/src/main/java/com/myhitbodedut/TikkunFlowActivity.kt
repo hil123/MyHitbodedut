@@ -7,7 +7,6 @@ import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 
 /**
  * Le Tikoun lu d'un seul trait.
@@ -86,7 +85,7 @@ class TikkunFlowActivity : AppCompatActivity() {
         textAlignment = View.TEXT_ALIGNMENT_VIEW_START
         textSize = 20f
         setTypeface(typeface, android.graphics.Typeface.BOLD)
-        setTextColor(ContextCompat.getColor(context, R.color.brand))
+        setTextColor(Apparence.couleur(context, R.color.brand))
     }
 
     private fun vueVerset(verset: Verse): View = TextView(this).apply {
@@ -96,7 +95,7 @@ class TikkunFlowActivity : AppCompatActivity() {
         textAlignment = View.TEXT_ALIGNMENT_VIEW_START
         textSize = 19f
         setLineSpacing(dp(6).toFloat(), 1f)
-        setTextColor(ContextCompat.getColor(context, R.color.ink))
+        setTextColor(Apparence.couleur(context, R.color.ink))
     }
 
     private fun paragraphe(texte: String): View = TextView(this).apply {
@@ -106,7 +105,7 @@ class TikkunFlowActivity : AppCompatActivity() {
         textAlignment = View.TEXT_ALIGNMENT_VIEW_START
         textSize = 18f
         setLineSpacing(dp(6).toFloat(), 1f)
-        setTextColor(ContextCompat.getColor(context, R.color.ink))
+        setTextColor(Apparence.couleur(context, R.color.ink))
     }
 
     private fun vueArret(arret: Pause): View = TextView(this).apply {
@@ -116,7 +115,7 @@ class TikkunFlowActivity : AppCompatActivity() {
         textAlignment = View.TEXT_ALIGNMENT_VIEW_START
         textSize = 15f
         setLineSpacing(dp(4).toFloat(), 1f)
-        setTextColor(ContextCompat.getColor(context, R.color.muted))
+        setTextColor(Apparence.couleur(context, R.color.muted))
     }
 
     private fun ligneParams() = LinearLayout.LayoutParams(

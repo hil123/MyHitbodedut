@@ -144,8 +144,6 @@
     <string name="onboarding_start">להתחיל</string>
     <string name="onboarding_practice">פשוט לדבר</string>
     <string name="onboarding_practice_body">התבודדות היא להתייחד לבד זמן־מה בכל יום ולדבר אל ה׳ בשפה שלך, כמו שמדברים אל מישהו. בלי נוסח לדקלם, בלי דרגה להגיע אליה.</string>
-    <string name="onboarding_app">מה האפליקציה עושה</string>
-    <string name="onboarding_app_body">שעון לזמן ההתבודדות, רצף שסופר ימים, יומן, תיקון הכללי וספרייה של טקסטים. היא מלווה אתכם; היא לא נותנת ציונים.</string>
     <string name="onboarding_private">כלום לא יוצא מכאן</string>
     <string name="onboarding_private_body">האפליקציה אינה מבקשת שום גישה לאינטרנט. מה שתכתבו נשאר בטלפון הזה, ורק אתם יכולים להוציא אותו, דרך הייצוא.</string>
     <string name="blocker_session_open_subtitle">התבודדות פתוחה, כבר %1$s. הטלפון יכול לחכות.</string>
@@ -388,4 +386,50 @@
     <string name="tefila_geula">גְּאֻלָּה</string>
     <string name="tefila_zivug">זִוּוּג</string>
     <string name="tefila_refua">רְפוּאָה שְׁלֵמָה</string>
+
+    <!-- Présentation détaillée, bravo de fin de séance, apparence (28/09). -->
+    <string name="onboarding_session">ההתבודדות</string>
+    <string name="onboarding_session_body">בוחרים משך, או התבודדות בלי הגבלת זמן, ואם רוצים גם נושא. ניגון יכול ללוות אתכם. מילת חיזוק פותחת וסוגרת את ההתבודדות, ואם המילים לא באות, יש כפתור שעוזר.</string>
+    <string name="onboarding_days">יום אחרי יום</string>
+    <string name="onboarding_days_body">הרצף סופר את הימים ברציפות, והשבוע כולו נראה במבט אחד. אחרי כל התבודדות אפשר להשאיר הערה ביומן. תזכורות מאותתות בשעה שבוחרים.</string>
+    <string name="onboarding_texts">טקסטים לתפילה</string>
+    <string name="onboarding_texts_body">תיקון הכללי, תפילות לפי נושא, ספרייה ועצות להתבודדות, זמינים מתי שרוצים.</string>
+    <string name="onboarding_yours">בדרך שלכם</string>
+    <string name="onboarding_yours_body">בהגדרות: השפה (צרפתית, אנגלית או עברית), צבעי המסך, השם הפרטי ומשך ההתבודדות הרגיל. למוזיקה יש מסך משלה.</string>
+    <string name="onboarding_adresse">איך לפנות אליכם?</string>
+    <string name="onboarding_adresse_body">בסוף כל התבודדות האפליקציה מברכת אתכם. בחרו את המילה שמתאימה לכם; אפשר לשנות אותה בהגדרות.</string>
+    <string name="adresse_tsadik">צדיק</string>
+    <string name="adresse_tsadeket">צדקת</string>
+    <string name="adresse_none">לא נבחר</string>
+    <string name="celebration_tsadik">כל הכבוד, צדיק!</string>
+    <string name="celebration_tsadeket">כל הכבוד, צדקת!</string>
+    <string name="celebration_neutral">כל הכבוד!</string>
+    <string name="celebration_ask">איך האפליקציה תפנה אליכם?</string>
+    <string name="celebration_continue">להמשיך</string>
+    <string name="settings_adresse">איך לפנות אליי</string>
+    <string name="settings_onboarding">להציג שוב את ההסבר</string>
+    <string name="section_appearance">מראה</string>
+    <string name="section_appearance_hint">צבעי המסך. כל שילוב נשאר קריא, ביום ובלילה.</string>
+    <string name="settings_mode">בהיר או כהה</string>
+    <string name="mode_auto">כמו בטלפון</string>
+    <string name="mode_clair">בהיר</string>
+    <string name="mode_sombre">כהה</string>
+    <string name="settings_fond">צבע הרקע</string>
+    <string name="fond_vert">ירוק בהיר</string>
+    <string name="fond_blanc">לבן</string>
+    <string name="fond_sable">חול</string>
+    <string name="fond_bleu">כחול בהיר</string>
+    <string name="fond_rose">ורוד בהיר</string>
+    <string name="settings_accent">צבע הכפתורים</string>
+    <string name="accent_vert">ירוק</string>
+    <string name="accent_bleu">כחול</string>
+    <string name="accent_violet">סגול</string>
+    <string name="accent_bordeaux">בורדו</string>
+    <string name="accent_ambre">ענבר</string>
+    <string name="accent_turquoise">טורקיז</string>
+    <plurals name="celebration_minutes">
+        <item quantity="one">דקה אחת של התבודדות</item>
+        <item quantity="two">%d דקות של התבודדות</item>
+        <item quantity="other">%d דקות של התבודדות</item>
+    </plurals>
 </resources>

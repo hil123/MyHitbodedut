@@ -17,7 +17,7 @@
         android:layout_height="34dp"
         android:background="@drawable/bg_tip_number"
         android:gravity="center"
-        android:textColor="@color/on_plate"
+        android:textColor="?attr/mhOnPlate"
         android:textSize="14sp"
         android:textStyle="bold" />
 
@@ -34,7 +34,7 @@
             android:layout_height="wrap_content"
             android:layoutDirection="rtl"
             android:textAlignment="viewStart"
-            android:textColor="@color/ink"
+            android:textColor="?attr/mhInk"
             android:textSize="18sp"
             android:textStyle="bold" />
 
@@ -43,7 +43,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
-            android:textColor="@color/muted"
+            android:textColor="?attr/mhMuted"
             android:textSize="13sp" />
     </LinearLayout>
 
@@ -55,7 +55,7 @@
         android:background="@drawable/bg_chip_mint"
         android:paddingHorizontal="10dp"
         android:paddingVertical="3dp"
-        android:textColor="@color/on_plate"
+        android:textColor="?attr/mhOnPlate"
         android:textSize="11sp"
         android:visibility="gone" />
 </LinearLayout>

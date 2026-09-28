@@ -13,7 +13,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/paper"
+    android:background="?attr/mhPaper"
     android:fillViewport="true">
 
     <LinearLayout
@@ -30,7 +30,7 @@
             android:background="@drawable/bg_chip_mint"
             android:paddingHorizontal="12dp"
             android:paddingVertical="4dp"
-            android:textColor="@color/on_plate"
+            android:textColor="?attr/mhOnPlate"
             android:textSize="12sp" />
 
         <FrameLayout
@@ -56,7 +56,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:textColor="@color/ink"
+            android:textColor="?attr/mhInk"
             android:textSize="21sp"
             android:textStyle="bold" />
 
@@ -66,8 +66,36 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:lineSpacingExtra="3sp"
-            android:textColor="@color/muted"
+            android:textColor="?attr/mhMuted"
             android:textSize="15sp" />
+
+        <!-- Seulement sur l'écran « comment vous appeler ». Choisir est facultatif. -->
+        <LinearLayout
+            android:id="@+id/onboarding_adresse"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <Button
+                android:id="@+id/onboarding_tsadik"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checkable="true"
+                android:text="@string/adresse_tsadik" />
+
+            <Button
+                android:id="@+id/onboarding_tsadeket"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:checkable="true"
+                android:text="@string/adresse_tsadeket" />
+        </LinearLayout>
 
         <Button
             android:id="@+id/onboarding_next"

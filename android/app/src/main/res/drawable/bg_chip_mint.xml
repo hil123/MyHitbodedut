@@ -2,6 +2,6 @@
 <!-- Pastille de texte. bg_tip_number est un ovale, fait pour un chiffre :
      étiré sur un mot, il donne une ellipse. -->
 <shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
-    <solid android:color="@color/mint" />
+    <solid android:color="?attr/mhMint" />
     <corners android:radius="999dp" />
 </shape>

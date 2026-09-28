@@ -74,6 +74,11 @@ object Store {
     private const val KEY_GUIDED = "guided_hitbodedut"
     private const val KEY_ONBOARDED = "onboarded"
     private const val KEY_NAME = "first_name"
+    private const val KEY_ADRESSE = "adresse"
+    private const val KEY_CELEBRATION = "celebration_minutes"
+    private const val KEY_MODE = "apparence_mode"
+    private const val KEY_FOND = "apparence_fond"
+    private const val KEY_ACCENT = "apparence_accent"
     private const val KEY_MUSIC_ON = "music_enabled"
     private const val KEY_MUSIC_TRACK = "music_track"
     private const val KEY_MUSIC_VOLUME = "music_volume"
@@ -519,6 +524,53 @@ object Store {
         prefs(context).edit().putString(KEY_NAME, name.trim().take(40)).apply()
     }
 
+    /** צדיק ou צדקת ; null tant que rien n'est choisi. */
+    fun adresse(context: Context): Adresse? =
+        Adresse.parse(prefs(context).getString(KEY_ADRESSE, null))
+
+    fun setAdresse(context: Context, adresse: Adresse?) {
+        prefs(context).edit().apply {
+            if (adresse == null) remove(KEY_ADRESSE) else putString(KEY_ADRESSE, adresse.cle)
+        }.apply()
+    }
+
+    // --- Apparence -----------------------------------------------------------
+
+    fun modeApparence(context: Context): Apparence.Mode =
+        Apparence.Mode.parse(prefs(context).getString(KEY_MODE, null))
+
+    fun setModeApparence(context: Context, mode: Apparence.Mode) {
+        prefs(context).edit().putString(KEY_MODE, mode.cle).apply()
+    }
+
+    fun fond(context: Context): Apparence.Fond =
+        Apparence.Fond.parse(prefs(context).getString(KEY_FOND, null))
+
+    fun setFond(context: Context, fond: Apparence.Fond) {
+        prefs(context).edit().putString(KEY_FOND, fond.cle).apply()
+    }
+
+    fun accent(context: Context): Apparence.Accent =
+        Apparence.Accent.parse(prefs(context).getString(KEY_ACCENT, null))
+
+    fun setAccent(context: Context, accent: Apparence.Accent) {
+        prefs(context).edit().putString(KEY_ACCENT, accent.cle).apply()
+    }
+
+    /** Une séance vient de se clore : le bravo attend le prochain écran ouvert. */
+    fun setPendingCelebration(context: Context, minutes: Int) {
+        prefs(context).edit().putInt(KEY_CELEBRATION, minutes.coerceAtLeast(0)).apply()
+    }
+
+    /** Rend les minutes du bravo en attente et le retire, ou null s'il n'y en a pas. */
+    fun takePendingCelebration(context: Context): Int? {
+        val p = prefs(context)
+        if (!p.contains(KEY_CELEBRATION)) return null
+        val minutes = p.getInt(KEY_CELEBRATION, 0)
+        p.edit().remove(KEY_CELEBRATION).apply()
+        return minutes
+    }
+
     /** Ce que le compteur doit dire, ici et maintenant. */
     fun sessionCounter(context: Context): SessionRule.Compteur =
         SessionRule.compteur(isSessionOpen(context), hideCountdown(context))
@@ -643,6 +695,10 @@ object Store {
             .put("music_enabled", musicEnabled(context))
             .put("music_volume", musicVolume(context))
             .put("music_track", musicTrackId(context) ?: "")
+            .put("adresse", adresse(context)?.cle ?: "")
+            .put("apparence_mode", modeApparence(context).cle)
+            .put("apparence_fond", fond(context).cle)
+            .put("apparence_accent", accent(context).cle)
         root.put("settings", settings)
         root.put("paused_dates", org.json.JSONArray(pausedDates(context).toList()))
         root.put("blocked_apps", org.json.JSONArray(blockedApps(context).toList()))
@@ -700,6 +756,14 @@ object Store {
             setMusicVolume(context, settings.optInt("music_volume", musicVolume(context)))
             settings.optString("music_track").takeIf { it.isNotBlank() }
                 ?.let { setMusicTrackId(context, it) }
+            Adresse.parse(settings.optString("adresse"))?.let { setAdresse(context, it) }
+            // Une clé absente garde le choix présent ; parse() seul le ramènerait au vert.
+            settings.optString("apparence_mode").takeIf { it.isNotBlank() }
+                ?.let { setModeApparence(context, Apparence.Mode.parse(it)) }
+            settings.optString("apparence_fond").takeIf { it.isNotBlank() }
+                ?.let { setFond(context, Apparence.Fond.parse(it)) }
+            settings.optString("apparence_accent").takeIf { it.isNotBlank() }
+                ?.let { setAccent(context, Apparence.Accent.parse(it)) }
         }
         root.optJSONArray("paused_dates")?.let { array ->
             val dates = pausedDates(context).toMutableSet()

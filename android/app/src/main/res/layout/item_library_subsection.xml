@@ -42,7 +42,7 @@
                 android:layout_height="wrap_content"
                 android:layoutDirection="rtl"
                 android:textAlignment="viewStart"
-                android:textColor="@color/ink"
+                android:textColor="?attr/mhInk"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
@@ -51,7 +51,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
-                android:textColor="@color/muted"
+                android:textColor="?attr/mhMuted"
                 android:textSize="14sp" />
 
             <TextView
@@ -59,7 +59,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:textColor="@color/brand"
+                android:textColor="?attr/mhBrand"
                 android:textSize="13sp" />
         </LinearLayout>
     </LinearLayout>

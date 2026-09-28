@@ -34,7 +34,7 @@
                 android:layout_height="wrap_content"
                 android:letterSpacing="0.14"
                 android:text="@string/settings_title"
-                android:textColor="@color/mint"
+                android:textColor="?attr/mhMint"
                 android:textSize="13sp" />
 
             <TextView
@@ -60,6 +60,50 @@
                 <TextView style="@style/SettingLabel" android:text="@string/settings_language" />
 
                 <Button android:id="@+id/language_button" style="@style/SettingValue" />
+            </LinearLayout>
+
+            <LinearLayout style="@style/SettingRow">
+
+                <TextView style="@style/SettingLabel" android:text="@string/settings_adresse" />
+
+                <Button android:id="@+id/adresse_button" style="@style/SettingValue" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/onboarding_again"
+                style="@style/Widget.Material3.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:text="@string/settings_onboarding" />
+        </LinearLayout>
+
+        <!-- Les couleurs, juste sous la langue : ce sont les deux réglages qu'on cherche en premier. -->
+        <LinearLayout style="@style/Card">
+
+            <TextView style="@style/CardTitle" android:text="@string/section_appearance" />
+
+            <TextView style="@style/CardHint" android:text="@string/section_appearance_hint" />
+
+            <LinearLayout style="@style/SettingRow">
+
+                <TextView style="@style/SettingLabel" android:text="@string/settings_mode" />
+
+                <Button android:id="@+id/mode_button" style="@style/SettingValue" />
+            </LinearLayout>
+
+            <LinearLayout style="@style/SettingRow">
+
+                <TextView style="@style/SettingLabel" android:text="@string/settings_fond" />
+
+                <Button android:id="@+id/fond_button" style="@style/SettingValue" />
+            </LinearLayout>
+
+            <LinearLayout style="@style/SettingRow">
+
+                <TextView style="@style/SettingLabel" android:text="@string/settings_accent" />
+
+                <Button android:id="@+id/accent_button" style="@style/SettingValue" />
             </LinearLayout>
         </LinearLayout>
 
@@ -340,7 +384,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:textAlignment="center"
-            android:textColor="@color/muted"
+            android:textColor="?attr/mhMuted"
             android:textSize="12sp" />
     </LinearLayout>
 </ScrollView>
