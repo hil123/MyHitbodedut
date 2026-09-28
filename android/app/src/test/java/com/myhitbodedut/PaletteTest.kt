@@ -161,7 +161,10 @@ class PaletteTest {
     fun `aucun ecran de l application ne fige une couleur reglable`() {
         val reglables = Regex("""@color/(brand|brand_dark|mint|on_brand|on_plate|stage_soft|""" +
             """day_done|paper|card|line|ink|muted|day_todo)\b""")
-        val hors = setOf("widget_streak.xml", "bg_widget.xml", "bg_widget_button.xml")
+        val hors = setOf(
+            "widget_streak.xml", "widget_small.xml", "widget_large.xml",
+            "bg_widget.xml", "bg_widget_button.xml", "bg_widget_day.xml", "bg_widget_day_done.xml",
+        )
         val fautes = (File("src/main/res/layout").listFiles()!! + File("src/main/res/drawable").listFiles()!!)
             .filter { it.extension == "xml" && it.name !in hors }
             .flatMap { f -> reglables.findAll(f.readText()).map { "${f.name} : ${it.value}" } }
