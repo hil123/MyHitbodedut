@@ -30,11 +30,23 @@ class TraductionAffichageTest {
     }
 
     @Test
-    fun `en hebreu une reference ne garde aucune lettre latine`() {
+    fun `en hebreu une reference ne garde aucune lettre latine ni aucun chiffre`() {
         refs.forEach { ref ->
             val he = Reference.localise(ref, "iw")
-            assertFalse("« $ref » → « $he »", Regex("[A-Za-z]").containsMatchIn(he))
+            assertFalse("« $ref » → « $he »", Regex("[A-Za-z0-9]").containsMatchIn(he))
         }
+        assertEquals("ליקוטי מוהר״ן תניינא, כ״ה", Reference.localise("Likoutei Moharan II, 25", "he"))
+        assertEquals("משלי כ״ד, ט״ז", Reference.localise("Michlé 24:16", "he"))
+        // En anglais, les chiffres restent.
+        assertEquals("Mishlei 24:16", Reference.localise("Michlé 24:16", "en"))
+    }
+
+    @Test
+    fun `les nombres en lettres hebraiques`() {
+        mapOf(
+            1 to "א׳", 7 to "ז׳", 10 to "י׳", 15 to "ט״ו", 16 to "ט״ז", 25 to "כ״ה",
+            39 to "ל״ט", 100 to "ק׳", 145 to "קמ״ה", 261 to "רס״א", 437 to "תל״ז", 400 to "ת׳",
+        ).forEach { (n, attendu) -> assertEquals("$n", attendu, Reference.lettres(n)) }
     }
 
     @Test

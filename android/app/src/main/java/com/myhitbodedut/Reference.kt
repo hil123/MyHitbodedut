@@ -46,8 +46,42 @@ object Reference {
             }
         }
         // L'espace avant le point-virgule est une typographie française.
-        return texte.replace(" ; ", "; ")
+        texte = texte.replace(" ; ", "; ")
+        // En hébreu, les numéros en lettres (choix du propriétaire, 28/09) :
+        // « משלי 24:16 » devient « משלי כ״ד, ט״ז ».
+        if (cible == "he") {
+            texte = Regex("""(\d+):(\d+)""").replace(texte) {
+                "${lettres(it.groupValues[1].toInt())}, ${lettres(it.groupValues[2].toInt())}"
+            }
+            texte = Regex("""\d+""").replace(texte) { lettres(it.value.toInt()) }
+        }
+        return texte
     }
+
+    /**
+     * Un nombre en lettres hébraïques, de 1 à 999 : כ״ה, תל״ז, ז׳.
+     * 15 et 16 s'écrivent ט״ו et ט״ז, pour ne pas former le Nom.
+     */
+    fun lettres(n: Int): String {
+        if (n <= 0 || n >= 1000) return n.toString()
+        val b = StringBuilder()
+        var reste = n
+        while (reste >= 400) { b.append('ת'); reste -= 400 }
+        if (reste >= 100) { b.append(CENTAINES[reste / 100]); reste %= 100 }
+        when (reste) {
+            15 -> b.append("טו")
+            16 -> b.append("טז")
+            else -> {
+                if (reste >= 10) b.append(DIZAINES[reste / 10])
+                if (reste % 10 > 0) b.append(UNITES[reste % 10])
+            }
+        }
+        return if (b.length == 1) "$b׳" else b.insert(b.length - 1, '״').toString()
+    }
+
+    private const val UNITES = " אבגדהוזחט"
+    private const val DIZAINES = " יכלמנסעפצ"
+    private const val CENTAINES = " קרש"
 
     fun localise(context: Context, ref: String): String =
         localise(ref, ChizukCard.language(context))
