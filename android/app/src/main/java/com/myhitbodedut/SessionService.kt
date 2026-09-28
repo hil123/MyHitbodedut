@@ -29,6 +29,10 @@ class SessionService : Service() {
 
     private val handler = Handler(Looper.getMainLooper())
     private val music by lazy { MusicPlayer(this) }
+    private val melange = MelangeMusique()
+
+    /** Le mode de ce qui joue : null tant que rien n'a été lancé. */
+    private var modeAleatoire: Boolean? = null
 
     /** Le son de fin, gardé pour qu'il ne soit pas ramassé en plein jeu. */
     private var ringtone: Ringtone? = null
@@ -64,6 +68,11 @@ class SessionService : Service() {
                 if (!Store.musicEnabled(this)) {
                     music.stop()
                     return START_STICKY
+                }
+                // Passage à la lecture aléatoire, ou retour au morceau choisi,
+                // pendant la séance : on coupe, le chemin ordinaire relance.
+                if (modeAleatoire != null && modeAleatoire != Store.musicShuffle(this)) {
+                    music.stop(fade = false)
                 }
                 // Réactivée : le chemin ordinaire ci-dessous relance le morceau.
             }
@@ -131,14 +140,40 @@ class SessionService : Service() {
     private fun ensureMusic() {
         if (!Store.musicEnabled(this) || music.isPlaying) return
         if (!Store.isSessionRunning(this)) return
+        modeAleatoire = Store.musicShuffle(this)
+        if (Store.musicShuffle(this)) {
+            jouerAuHasard()
+            return
+        }
         val track = MusicLibrary.selected(this) ?: return
+        Store.setMusicNow(this, track.id)
         if (!music.start(track, Store.musicVolume(this))) {
             Toast.makeText(this, R.string.music_play_failed, Toast.LENGTH_LONG).show()
         }
     }
 
+    /**
+     * Lecture aléatoire : un morceau, puis à sa fin le suivant tiré du même
+     * sac, jusqu'à la fin de la séance. Un morceau illisible (fichier du
+     * téléphone supprimé) est sauté plutôt que de laisser la séance muette.
+     */
+    private fun jouerAuHasard(essais: Int = 3) {
+        val morceaux = MusicLibrary.all(this)
+        val id = melange.suivant(morceaux.map { it.id }) ?: return
+        val track = morceaux.first { it.id == id }
+        Store.setMusicNow(this, track.id)
+        val lance = music.start(track, Store.musicVolume(this), loop = false) {
+            if (Store.isSessionRunning(this) && Store.musicEnabled(this)) jouerAuHasard()
+        }
+        if (!lance) {
+            if (essais > 1) jouerAuHasard(essais - 1)
+            else Toast.makeText(this, R.string.music_play_failed, Toast.LENGTH_LONG).show()
+        }
+    }
+
     private fun stopSelfAndClear() {
         music.stop()
+        Store.setMusicNow(this, null)
         handler.removeCallbacks(tick)
         stopForeground(STOP_FOREGROUND_REMOVE)
         stopSelf()

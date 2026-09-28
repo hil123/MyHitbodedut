@@ -477,4 +477,8 @@
     <string name="duration_custom">Custom duration…</string>
     <string name="duration_custom_title">Session length, in minutes</string>
     <string name="duration_custom_hint">1 to 240 minutes</string>
+    <string name="music_shuffle">Shuffle</string>
+    <string name="music_shuffle_hint">A random track, then another; none comes back until all have played.</string>
+    <string name="music_shuffle_short">Shuffle</string>
+    <string name="music_shuffle_summary">Shuffle, volume %1$d%%</string>
 </resources>

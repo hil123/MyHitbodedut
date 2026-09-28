@@ -1,5 +1,6 @@
 package com.myhitbodedut
 
+import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import java.io.File
@@ -33,20 +34,43 @@ class WidgetTest {
         assertTrue(info.contains("""android:widgetCategory="home_screen""""))
     }
 
-    /** Chaque vue que StreakWidget remplit doit exister dans le gabarit. */
+    private val gabarits = listOf("widget_small", "widget_streak", "widget_large")
+        .associateWith { lire("src/main/res/layout/$it.xml") }
+
+    /**
+     * Chaque vue que StreakWidget remplit doit exister dans un des trois
+     * gabarits, et chaque gabarit dans le code.
+     */
     @Test
-    fun `le gabarit porte toutes les vues que le code remplit`() {
-        val gabarit = lire("src/main/res/layout/widget_streak.xml")
+    fun `les gabarits portent toutes les vues que le code remplit`() {
         val code = lire("src/main/java/com/myhitbodedut/StreakWidget.kt")
-        val attendues = Regex("""R\.id\.(widget_[a-z_]+)""").findAll(code)
+        val attendues = Regex("""R\.id\.(widget_[a-z_0-9]+)""").findAll(code)
             .map { it.groupValues[1] }.toSet()
         assertTrue("le code ne remplit aucune vue", attendues.isNotEmpty())
-        attendues.forEach {
+        attendues.forEach { id ->
             assertTrue(
-                "« $it » manque dans widget_streak.xml",
-                gabarit.contains("""android:id="@+id/$it""""),
+                "« $id » n'est dans aucun gabarit de la vignette",
+                gabarits.values.any { it.contains("""android:id="@+id/$id"""") },
             )
         }
+        gabarits.keys.forEach { assertTrue("$it n'est pas utilisé", code.contains("R.layout.$it")) }
+        // Communes aux trois : le compte, et la vignette entière qui ouvre l'application.
+        gabarits.forEach { (nom, xml) ->
+            listOf("widget_body", "widget_streak").forEach {
+                assertTrue("$nom : « $it » manque", xml.contains("""android:id="@+id/$it""""))
+            }
+        }
+    }
+
+    /** Une case, la taille habituelle, une grande place (demande du 28/09). */
+    @Test
+    fun `la version suit la place donnee`() {
+        assertEquals(WidgetTaille.PETITE, WidgetTaille.pour(70f, 70f))
+        assertEquals(WidgetTaille.MOYENNE, WidgetTaille.pour(250f, 150f))
+        assertEquals(WidgetTaille.GRANDE, WidgetTaille.pour(320f, 300f))
+        assertEquals(WidgetTaille.PETITE, WidgetTaille.pour(0f, 0f))
+        val info = lire("src/main/res/xml/widget_streak_info.xml")
+        assertTrue("la vignette doit pouvoir tenir sur une case", info.contains("""android:minResizeWidth="40dp""""))
     }
 
     /**
@@ -55,16 +79,34 @@ class WidgetTest {
      * laisserait la vignette blanche sur l'ecran d'accueil.
      */
     @Test
-    fun `le gabarit s en tient aux vues que RemoteViews accepte`() {
-        val gabarit = lire("src/main/res/layout/widget_streak.xml")
-        val vues = Regex("""<([A-Za-z][A-Za-z0-9.]*)""").findAll(gabarit)
-            .map { it.groupValues[1] }.filterNot { it == "shape" }.toSet()
+    fun `les gabarits s en tiennent aux vues que RemoteViews accepte`() {
         val permises = setOf(
             "LinearLayout", "FrameLayout", "RelativeLayout", "GridLayout",
-            "TextView", "ImageView", "Button", "ImageButton", "ProgressBar",
+            "TextView", "ImageView", "Button", "ImageButton", "ProgressBar", "Chronometer",
         )
-        vues.forEach {
-            assertTrue("« $it » n'est pas acceptee par RemoteViews", it in permises)
+        gabarits.forEach { (nom, gabarit) ->
+            val vues = Regex("""<([A-Za-z][A-Za-z0-9.]*)""").findAll(gabarit)
+                .map { it.groupValues[1] }.filterNot { it == "shape" }.toSet()
+            vues.forEach {
+                assertTrue("$nom : « $it » n'est pas acceptée par RemoteViews", it in permises)
+            }
+        }
+    }
+
+    /**
+     * Pendant la séance (demande du 28/09) : le temps en direct, tenu par
+     * le lanceur, qui obéit au compteur masqué, et un bouton qui termine la
+     * séance par la même action que la notification.
+     */
+    @Test
+    fun `pendant la seance la vignette montre le temps et termine`() {
+        val code = lire("src/main/java/com/myhitbodedut/StreakWidget.kt")
+        assertTrue(code.contains("Store.sessionCounter(context)"))
+        assertTrue("le compteur masqué doit rester masqué", code.contains("SessionRule.Compteur.MASQUE"))
+        assertTrue(code.contains("setChronometerCountDown(R.id.widget_chrono"))
+        assertTrue(code.contains("setAction(SessionService.ACTION_FINISH)"))
+        gabarits.forEach { (nom, xml) ->
+            assertTrue("$nom : pas de compteur", xml.contains("""android:id="@+id/widget_chrono""""))
         }
     }
 
