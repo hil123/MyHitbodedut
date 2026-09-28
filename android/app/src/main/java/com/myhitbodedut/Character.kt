@@ -32,7 +32,6 @@ object Character {
     private val DURING = intArrayOf(
         R.drawable.char_arms_raised,
         R.drawable.char_praying,
-        R.drawable.char_arms_raised_guitar,
         R.drawable.char_standing_back,
         R.drawable.char_sitting_low
     )

@@ -113,8 +113,10 @@ NAMES = [
     "char_praying", "char_dancing", "char_torah", "char_offering",
     "char_sitting_low", "char_reading_seated", "char_standing_back", "char_face",
 ]
-# char_dancing_joy, char_guitar, char_arms_raised, char_arms_raised_guitar et
-# char_open_arms ne viennent pas de la planche et ne sont plus produits ici.
+# char_dancing_joy, char_guitar, char_arms_raised et char_open_arms ne viennent
+# pas de la planche et ne sont plus produits ici. (char_arms_raised_guitar a été
+# retirée le 28/09 : vue de dos, les cheveux ramassés sur la nuque se lisaient
+# comme une queue de cheval.)
 # Le 23/09 ce script les a régénérés depuis des sources qui avaient déjà une
 # couche alpha : convert("RGB") l'a aplatie, et quatre sont partis dans l'app
 # avec un fond noir ou blanc plein. Les bonnes versions sont celles de v1.86.

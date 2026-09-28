@@ -648,3 +648,17 @@ fichiers MP3 et la construction sont sains. Trois défauts se cumulaient :
   journalise la cause.
 À confirmer sur le téléphone : si le message d'échec apparaît, la cause est
 ailleurs, et le journal (`adb logcat -s MusicPlayer`) la donnera.
+
+**Queue de cheval (28/09).** Dans v1.86, les poses « louange » et « marche »
+montraient encore un chignon à l'arrière de la tête : les peyot avaient été
+ajoutées le 22/09 sans retirer la queue. Elles viennent maintenant de la
+nouvelle planche, sans chignon. `char_arms_raised_guitar` (vue de dos, cheveux
+ramassés en tresse sur la nuque) est retirée : elle ne servait que dans la
+rotation « pendant la séance », qui garde quatre poses.
+
+**Aucune version publiée depuis v1.86, deuxième cause.** Le run 89 a tout
+réussi (construction, tests, lint) mais l'envoi de l'artefact APK a échoué :
+quota de stockage des artefacts plein. La release, qui dépend de cette étape,
+n'est pas partie. L'envoi de l'artefact ne bloque plus, et ne garde ses
+fichiers que deux jours. Les anciens artefacts (90 jours par défaut) se
+suppriment dans Settings → Actions du dépôt, si le quota gêne encore.
