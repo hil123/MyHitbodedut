@@ -1,0 +1,10 @@
+{
+  "name": "myhitbodedut-web",
+  "private": true,
+  "type": "module",
+  "description": "MyHitbodedut pour iPhone : application web installable, construite depuis les ressources Android.",
+  "scripts": {
+    "build": "node build.mjs",
+    "test": "node --test test/*.test.mjs"
+  }
+}

@@ -1,0 +1,100 @@
+name: Web (iPhone)
+
+# La version web installable, construite depuis les ressources Android.
+# Elle ne touche pas à l'application Android ni à ses versions : ce flux a
+# sa propre construction, ses propres tests, et sa propre mise en ligne.
+
+on:
+  push:
+    branches: [main, claude/version-web]
+    paths:
+      - 'web/**'
+      - 'android/app/src/main/res/**'
+      - 'android/app/src/main/java/com/myhitbodedut/MusicLibrary.kt'
+      - '.github/workflows/web.yml'
+  pull_request:
+    paths:
+      - 'web/**'
+      - 'android/app/src/main/res/**'
+      - '.github/workflows/web.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  web:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Unit tests (rules ported from Android)
+        working-directory: web
+        run: node --test test/*.test.mjs
+
+      - name: Build
+        working-directory: web
+        run: node build.mjs
+
+      # Les textes hébreux et leurs traductions ont été vérifiés un par un :
+      # le site doit servir exactement les mêmes octets.
+      - name: Verified texts are served unchanged
+        run: |
+          for f in chizuk.json bibliotheque.json tikkun_haklali.json; do
+            cmp "android/app/src/main/res/raw/$f" "web/dist/data/$f"
+          done
+
+      - name: Install browsers
+        working-directory: web
+        run: |
+          npm install --no-save --no-audit --no-fund playwright@1.56.1
+          npx playwright install --with-deps chromium webkit
+
+      # WebKit est le moteur de Safari : c'est lui qui compte pour l'iPhone.
+      - name: Screenshots and checks (WebKit, Chromium)
+        working-directory: web
+        env:
+          PLAYWRIGHT_MODULE: ${{ github.workspace }}/web/node_modules/playwright
+        run: |
+          node test/captures.mjs webkit captures
+          node test/captures.mjs chromium captures
+
+      - name: Upload screenshots
+        if: always()
+        continue-on-error: true
+        uses: actions/upload-artifact@v4
+        with:
+          name: captures-web
+          path: web/captures/*.png
+          if-no-files-found: ignore
+          retention-days: 7
+
+      # La mise en ligne pousse le site construit dans un dépôt public qui ne
+      # contient que lui, servi par GitHub Pages. Le code Android reste privé.
+      # Sans le jeton WEB_DEPLOY_TOKEN (secret du dépôt), l'étape ne fait rien.
+      - name: Deploy to the public site repository
+        if: github.event_name == 'push'
+        env:
+          TOKEN: ${{ secrets.WEB_DEPLOY_TOKEN }}
+          CIBLE: hil123/myhitbodedut-web
+        run: |
+          if [ -z "$TOKEN" ]; then
+            echo "Pas de secret WEB_DEPLOY_TOKEN : site construit et testé, non mis en ligne."
+            exit 0
+          fi
+          cd web/dist
+          # Pages servirait sinon ses propres règles Jekyll.
+          touch .nojekyll
+          git init -q -b main
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -q -m "Site construit depuis ${GITHUB_SHA} (${GITHUB_REF_NAME})"
+          # Un seul commit, remplacé à chaque fois : ~130 Mo de musique ne
+          # s'empilent pas d'une version à l'autre dans l'historique.
+          git push -q --force "https://x-access-token:${TOKEN}@github.com/${CIBLE}.git" main
+          echo "En ligne : https://hil123.github.io/myhitbodedut-web/ (version $(cat version.txt))"
