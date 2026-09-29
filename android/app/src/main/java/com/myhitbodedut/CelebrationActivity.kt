@@ -63,7 +63,16 @@ class CelebrationActivity : AppCompatActivity() {
         findViewById<TextView>(R.id.celebration_title).setText(
             if (annulee) Adresse.hazak(adresse) else Adresse.bravo(adresse)
         )
-        findViewById<Button>(R.id.celebration_continue).setOnClickListener { finish() }
+        // Après le bravo, la note de la séance, si elle est proposée : dans
+        // cet ordre, et plus l'une sous l'autre (revue du 29/09).
+        val dateNote = intent.getStringExtra(EXTRA_NOTE_DATE)
+        findViewById<Button>(R.id.celebration_continue).setOnClickListener {
+            if (dateNote == null || annulee) {
+                finish()
+            } else {
+                NoteDialog.show(this, dateNote, onSaved = {}, onClosed = { finish() })
+            }
+        }
     }
 
     override fun onStart() {
@@ -156,6 +165,7 @@ class CelebrationActivity : AppCompatActivity() {
     companion object {
         const val EXTRA_MINUTES = "minutes"
         const val EXTRA_ANNULEE = "annulee"
+        const val EXTRA_NOTE_DATE = "note_date"
 
         private val SIGNES = arrayOf("♪", "♫", "♪", "✦")
 
@@ -172,9 +182,11 @@ class CelebrationActivity : AppCompatActivity() {
          * reprennent la main l'un après l'autre ne l'ouvriraient pas deux fois.
          */
         fun showIfPending(activity: Activity) {
-            val minutes = Store.takePendingCelebration(activity) ?: return
+            val celebration = Store.takePendingCelebration(activity) ?: return
             activity.startActivity(
-                Intent(activity, CelebrationActivity::class.java).putExtra(EXTRA_MINUTES, minutes)
+                Intent(activity, CelebrationActivity::class.java)
+                    .putExtra(EXTRA_MINUTES, celebration.minutes)
+                    .putExtra(EXTRA_NOTE_DATE, celebration.dateNote)
             )
         }
     }

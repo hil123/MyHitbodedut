@@ -36,6 +36,34 @@ object ReminderRule {
 
     const val MINUTES_PAR_JOUR = 24 * 60
 
+    /**
+     * L'instant du prochain rappel, dans le fuseau de [maintenant].
+     *
+     * Calcule en heure murale, jour par jour : ajouter des minutes a
+     * l'instant present decalait le rappel d'une heure les jours de
+     * changement d'heure (revue du 29/09). Une heure qui n'existe pas ce
+     * jour-la (2 h 30 au passage a l'heure d'ete) est repoussee d'autant,
+     * comme le fait ZonedDateTime.
+     */
+    fun prochainDeclenchement(
+        maintenant: java.time.ZonedDateTime,
+        heures: List<Int>
+    ): java.time.ZonedDateTime? {
+        val propres = heures.filter { it in 0 until MINUTES_PAR_JOUR }.distinct().sorted()
+        if (propres.isEmpty()) return null
+        val jour = maintenant.toLocalDate()
+        return (0L..1L).asSequence()
+            .flatMap { decalage ->
+                propres.asSequence().map { h ->
+                    java.time.ZonedDateTime.of(
+                        jour.plusDays(decalage).atTime(h / 60, h % 60),
+                        maintenant.zone
+                    )
+                }
+            }
+            .firstOrNull { it.isAfter(maintenant) }
+    }
+
     fun shouldNotify(
         nowMinutes: Int,
         doneToday: Boolean,

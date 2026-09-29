@@ -1,7 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.MyHitbodedut" parent="Theme.Material3.DayNight.NoActionBar">
+    <!--
+        La base du thème, redéfinie dans values-v35 pour Android 15 : les
+        écrans y seraient dessinés sous la barre d'état et la barre de gestes,
+        et la couleur de barre d'état ci-dessous ignorée (revue du 29/09).
+    -->
+    <style name="Base.Theme.MyHitbodedut" parent="Theme.Material3.DayNight.NoActionBar" />
+
+    <style name="Theme.MyHitbodedut" parent="Base.Theme.MyHitbodedut">
         <item name="colorPrimary">@color/brand</item>
         <item name="colorOnPrimary">@color/on_brand</item>
         <item name="colorSecondary">@color/brand_dark</item>

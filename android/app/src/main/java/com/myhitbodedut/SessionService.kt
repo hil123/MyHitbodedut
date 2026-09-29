@@ -14,6 +14,7 @@ import android.os.Build
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
+import android.os.PowerManager
 import android.widget.Toast
 
 /**
@@ -36,6 +37,16 @@ class SessionService : Service() {
 
     /** Le son de fin, gardé pour qu'il ne soit pas ramassé en plein jeu. */
     private var ringtone: Ringtone? = null
+
+    /**
+     * Tient le processeur éveillé jusqu'au terme d'une séance minutée.
+     *
+     * Écran éteint et sans musique, le téléphone s'endort et le décompte
+     * s'arrête avec lui : la fin n'était constatée qu'au réveil, parfois
+     * une heure plus tard, et le son de fin sonnait d'autant (revue du
+     * 29/09). Le verrou porte une échéance : il ne peut pas rester pris.
+     */
+    private var eveil: PowerManager.WakeLock? = null
 
     private val tick = object : Runnable {
         override fun run() {
@@ -78,6 +89,8 @@ class SessionService : Service() {
             }
         }
         startForegroundNow()
+        enMarche = true
+        garderEveille()
         ensureMusic()
         StreakWidget.refresh(this)
         handler.removeCallbacks(tick)
@@ -87,7 +100,27 @@ class SessionService : Service() {
 
     override fun onDestroy() {
         handler.removeCallbacks(tick)
+        relacherEveil()
+        enMarche = false
         super.onDestroy()
+    }
+
+    private fun garderEveille() {
+        val fin = Store.sessionEndsAt(this)
+        if (Store.isSessionOpen(this) || fin <= 0L) return
+        val duree = (fin - System.currentTimeMillis()).coerceAtLeast(0L) + MARGE_EVEIL_MS
+        relacherEveil()
+        eveil = (getSystemService(Context.POWER_SERVICE) as PowerManager)
+            .newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "myhitbodedut:seance")
+            .apply {
+                setReferenceCounted(false)
+                acquire(duree)
+            }
+    }
+
+    private fun relacherEveil() {
+        eveil?.let { if (it.isHeld) runCatching { it.release() } }
+        eveil = null
     }
 
     override fun onBind(intent: Intent?): IBinder? = null
@@ -108,11 +141,10 @@ class SessionService : Service() {
     private fun finishSession(early: Boolean) {
         // Le sujet se lit AVANT la clôture : endSession efface la séance.
         val theme = Store.sessionTheme(this)
-        val elapsed = Store.endSession(this)
-        if (elapsed > 0 || !early) {
-            Store.addSession(this, elapsed, theme = theme)
-            Store.setPendingCelebration(this, elapsed)
-            notifyCompleted(elapsed)
+        val close = Store.endSession(this)
+        if (close.minutes > 0 || !early) {
+            inscrire(this, close, theme = theme)
+            notifyCompleted(close)
         }
         // Décompte masqué : rien n'a prévenu que le temps s'écoulait, il faut
         // donc que quelque chose dise qu'il est écoulé. Seulement quand la
@@ -172,6 +204,7 @@ class SessionService : Service() {
     }
 
     private fun stopSelfAndClear() {
+        relacherEveil()
         music.stop()
         Store.setMusicNow(this, null)
         handler.removeCallbacks(tick)
@@ -179,12 +212,16 @@ class SessionService : Service() {
         stopSelf()
     }
 
-    private fun notifyCompleted(minutes: Int) {
+    private fun notifyCompleted(close: SeanceClose) {
+        val minutes = close.minutes
+        // Code de requête propre et FLAG_UPDATE_CURRENT : les autres
+        // notifications ouvrent aussi l'accueil, et Android rendait la même
+        // intention sans le jour de la note (revue du 29/09).
         val open = PendingIntent.getActivity(
             this,
-            0,
-            Intent(this, MainActivity::class.java).putExtra(MainActivity.EXTRA_ASK_NOTE, true),
-            PendingIntent.FLAG_IMMUTABLE
+            REQUETE_FIN,
+            Intent(this, MainActivity::class.java).putExtra(MainActivity.EXTRA_ASK_NOTE, close.date),
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
         val notification = Notification.Builder(this, Notifications.CHANNEL_REMINDER)
             .setContentTitle(getString(R.string.session_done_title))
@@ -246,6 +283,52 @@ class SessionService : Service() {
 
     companion object {
         private const val TICK_MS = 5_000L
+        private const val MARGE_EVEIL_MS = 2 * 60_000L
+        private const val REQUETE_FIN = 30
+
+        /**
+         * Le service tourne dans ce processus. Un processus tué repart à
+         * faux : une séance encore inscrite n'a alors plus personne pour la
+         * suivre, et reconcilier() la reprend.
+         */
+        @Volatile
+        var enMarche = false
+            private set
+
+        /** Inscrit une séance close : la journée de son début, et le bravo. */
+        fun inscrire(context: Context, close: SeanceClose, theme: Theme?) {
+            Store.addSession(context, close.minutes, theme = theme, date = close.date)
+            Store.setPendingCelebration(context, close.minutes, close.date)
+        }
+
+        /**
+         * Reprend une séance restée inscrite après la mort du service
+         * (application tuée par le système, téléphone redémarré).
+         *
+         * Échue, elle est inscrite pour sa durée, au jour de son début — sans
+         * cela ses minutes étaient perdues et la série cassait. Encore en
+         * cours, le service est relancé, s'il peut l'être d'ici.
+         */
+        fun reconcilier(context: Context) {
+            if (enMarche || !Store.hasSessionRecord(context)) return
+            val maintenant = System.currentTimeMillis()
+            val echue = SessionRule.estEchue(
+                Store.sessionStartedAt(context),
+                Store.sessionEndsAt(context),
+                Store.sessionTarget(context),
+                maintenant
+            )
+            if (echue) {
+                val theme = Store.sessionTheme(context)
+                val close = Store.endSession(context)
+                if (close.minutes > 0) inscrire(context, close, theme)
+                StreakWidget.refresh(context)
+            } else {
+                runCatching {
+                    context.startForegroundService(Intent(context, SessionService::class.java))
+                }
+            }
+        }
         const val ACTION_CANCEL = "com.myhitbodedut.CANCEL_SESSION"
         const val ACTION_FINISH = "com.myhitbodedut.FINISH_SESSION"
         const val ACTION_MUSIC = "com.myhitbodedut.MUSIC_CHANGED"

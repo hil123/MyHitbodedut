@@ -3,6 +3,14 @@
     <string name="status_done">התבודדת היום</string>
     <string name="status_pending">עדיין לא התבודדת היום</string>
     <string name="status_streak_none">הרצף מחכה להתחלה</string>
+    <string name="status_streak_first">עדיין אין רצף</string>
+    <string name="action_done_offline">התבודדתי בלי הטלפון</string>
+    <string name="offline_which_day">באיזה יום?</string>
+    <string name="offline_today">היום</string>
+    <string name="offline_yesterday">אתמול</string>
+    <string name="offline_how_long">כמה זמן?</string>
+    <string name="note_discard">לא לשמור</string>
+    <string name="journal_note_only">הערה בלבד</string>
     <string name="status_total">%1$s בסך הכול</string>
     <string name="today_minutes">היום: %1$s של התבודדות</string>
     <string name="today_declared">אושר בלי טיימר</string>

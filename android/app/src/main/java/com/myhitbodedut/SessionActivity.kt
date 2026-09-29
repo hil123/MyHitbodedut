@@ -1,5 +1,7 @@
 package com.myhitbodedut
 
+import android.app.NotificationManager
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -92,13 +94,10 @@ class SessionActivity : AppCompatActivity() {
         // « ouverture » : le mot du début de séance.
         drawOpening()
 
-        // Venu du bouton « Commencer » d'un rappel : la séance part seule,
-        // sinon le rappel n'aurait fait qu'ouvrir un écran de plus.
-        if (intent?.getBooleanExtra(EXTRA_START_NOW, false) == true &&
-            !Store.isSessionRunning(this)
-        ) {
-            SessionService.start(this, Store.targetMinutes(this))
-        }
+        // Une recréation (rotation, thème, langue) rejoue onCreate avec la
+        // même intention : la demande de départ n'est lue qu'une fois, sinon
+        // une nouvelle séance repartait seule après la fin de la précédente.
+        if (savedInstanceState == null) lireDemande(intent)
 
         // « Sans durée » : la séance court jusqu'à ce qu'on l'arrête. Elle ne
         // touche pas à la durée habituelle, qui reste celle du bouton principal.
@@ -124,6 +123,34 @@ class SessionActivity : AppCompatActivity() {
         }
     }
 
+    /** L'écran est déjà ouvert (singleTop) : la nouvelle demande est lue aussi. */
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        lireDemande(intent)
+        render()
+    }
+
+    /**
+     * Venu du bouton « Commencer » d'un rappel, de l'accueil ou de la
+     * vignette : la séance part seule, sinon le geste n'aurait fait
+     * qu'ouvrir un écran de plus. Les extras sont retirés une fois lus.
+     */
+    private fun lireDemande(intent: Intent?) {
+        intent ?: return
+        if (intent.getBooleanExtra(EXTRA_DEPUIS_RAPPEL, false)) {
+            (getSystemService(NOTIFICATION_SERVICE) as NotificationManager)
+                .cancel(Notifications.ID_REMINDER)
+            Reminder.reschedule(this)
+        }
+        if (intent.getBooleanExtra(EXTRA_START_NOW, false) && !Store.isSessionRunning(this)) {
+            SessionService.start(this, Store.targetMinutes(this))
+            guideStep = 0
+            drawOpening()
+        }
+        intent.removeExtra(EXTRA_START_NOW)
+        intent.removeExtra(EXTRA_DEPUIS_RAPPEL)
+    }
+
     /** Lance une séance de cette durée, qui devient aussi la durée habituelle. */
     private fun commencer(minutes: Int) {
         Store.setTargetMinutes(this, minutes)
@@ -135,6 +162,7 @@ class SessionActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+        SessionService.reconcilier(this)
         handler.removeCallbacks(tick)
         handler.post(tick)
     }
@@ -304,8 +332,9 @@ class SessionActivity : AppCompatActivity() {
             .setTitle(R.string.session_finish_title)
             .setMessage(R.string.session_finish_message)
             .setPositiveButton(R.string.session_finish_now) { _, _ ->
+                // La note est proposée par le bravo, après lui : ouverte ici,
+                // elle se retrouvait sous l'écran du bravo (revue du 29/09).
                 SessionService.finishNow(this)
-                handler.postDelayed({ askNote() }, 400L)
             }
             .setNegativeButton(R.string.action_back, null)
             .show()
@@ -333,13 +362,12 @@ class SessionActivity : AppCompatActivity() {
         ChizukCard.show(chizuk, Moment.OUVERTURE)
     }
 
-    private fun askNote() {
-        NoteDialog.show(this, Store.today()) { render() }
-    }
-
     companion object {
         /** Posé par le bouton « Commencer » d'une notification de rappel. */
         const val EXTRA_START_NOW = "start_now"
+
+        /** Posé par le rappel : l'écran retire la notification. */
+        const val EXTRA_DEPUIS_RAPPEL = "depuis_rappel"
 
         private const val ETAT_GUIDE = "guide_step"
         private const val ETAT_EN_COURS = "was_running"

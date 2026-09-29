@@ -6,9 +6,11 @@ import org.junit.Test
 import java.io.File
 
 /**
- * L'écran annonce que tout reste sur ce téléphone. La sauvegarde automatique
- * d'Android ne doit donc pas emporter le journal ni les notes, tout en gardant
- * les réglages. Elle travaille par fichier, d'où deux fichiers distincts.
+ * L'écran annonce que le journal ne part vers aucun serveur. La sauvegarde
+ * automatique d'Android ne doit donc pas emporter le journal ni les notes,
+ * tout en gardant les réglages. Elle travaille par fichier, d'où deux
+ * fichiers distincts. Le transfert direct vers un nouveau téléphone, lui,
+ * emporte le journal.
  *
  * La garantie ne s'écrit pas avec un <exclude> : dès qu'un <include> existe,
  * tout le reste est écarté, et lint refuse un <exclude> hors des chemins
@@ -36,20 +38,34 @@ class BackupRulesTest {
         }
     }
 
-    @Test
-    fun `le journal n est inclus nulle part`() {
-        files.forEach { file ->
-            assertFalse(
-                "$file ne doit pas inclure le journal",
-                includedPaths(read(file)).any { it.contains("journal") }
+    /** Tout ce qui part vers un serveur : l'ancienne sauvegarde, et le nuage. */
+    private fun versLeNuage(): List<String> =
+        includedPaths(read("backup_rules.xml")) +
+            includedPaths(
+                read("data_extraction_rules.xml")
+                    .substringAfter("<cloud-backup>").substringBefore("</cloud-backup>")
             )
-        }
-    }
 
     @Test
-    fun `le transfert d appareil applique la meme regle`() {
-        val transfer = read("data_extraction_rules.xml").substringAfter("<device-transfer>")
-        assertTrue("le transfert devrait inclure les réglages", transfer.contains(settingsFile))
-        assertFalse("le transfert ne doit pas inclure le journal", transfer.contains(journalFile))
+    fun `le journal ne part jamais dans le nuage`() {
+        assertFalse(
+            "le journal ne doit pas partir vers un serveur",
+            versLeNuage().any { it.contains("journal") }
+        )
+    }
+
+    /**
+     * Le transfert d'un téléphone à l'autre va directement de l'un à
+     * l'autre, sans serveur. Le journal y passe : l'en exclure faisait
+     * perdre tout l'historique à chaque changement de téléphone (revue du
+     * 29/09).
+     */
+    @Test
+    fun `le transfert d appareil emporte reglages et journal`() {
+        val transfer = read("data_extraction_rules.xml")
+            .substringAfter("<device-transfer>").substringBefore("</device-transfer>")
+        val chemins = includedPaths(transfer)
+        assertTrue("le transfert devrait inclure les réglages", chemins.contains(settingsFile))
+        assertTrue("le transfert devrait inclure le journal", chemins.contains(journalFile))
     }
 }

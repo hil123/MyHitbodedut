@@ -31,8 +31,20 @@ data class DayRecord(
     val date: String,
     val minutes: Int,
     val note: String,
-    val themes: List<String> = emptyList()
-)
+    val themes: List<String> = emptyList(),
+    /**
+     * Une note laissée un jour sans hitbodedout. Elle est gardée, mais ne
+     * valide pas la journée : sans cela, enregistrer une note, même vide,
+     * suffisait à faire monter la série (revue du 29/09).
+     */
+    val noteSeule: Boolean = false
+) {
+    /** La journée compte : une hitbodedout y a eu lieu ou a été déclarée. */
+    val faite: Boolean get() = !noteSeule
+}
+
+/** Une hitbodedout close : ce qui s'inscrit, et le jour où elle a commencé. */
+data class SeanceClose(val minutes: Int, val date: String)
 
 /**
  * Toute la persistance de l'application, dans les préférences locales.
@@ -78,6 +90,7 @@ object Store {
     private const val KEY_NAME = "first_name"
     private const val KEY_ADRESSE = "adresse"
     private const val KEY_CELEBRATION = "celebration_minutes"
+    private const val KEY_CELEBRATION_DATE = "celebration_date"
     private const val KEY_MODE = "apparence_mode"
     private const val KEY_FOND = "apparence_fond"
     private const val KEY_ACCENT = "apparence_accent"
@@ -97,7 +110,10 @@ object Store {
     const val DEFAULT_START = 6 * 60
     const val DEFAULT_END = 11 * 60
     const val DEFAULT_SNOOZE = 15
-    const val DEFAULT_TARGET = 60
+    // 15 minutes : c'est ce que le conseil n° 2 recommande pour commencer.
+    // Une heure par défaut accueillait un débutant avec une marche trop
+    // haute (revue du 29/09). Un choix déjà fait est conservé.
+    const val DEFAULT_TARGET = 15
     const val DEFAULT_REMINDER = 7 * 60
     const val DEFAULT_VOLUME = 60
 
@@ -126,11 +142,16 @@ object Store {
                 val root = JSONObject(raw)
                 for (date in root.keys()) {
                     val entry = root.optJSONObject(date) ?: continue
+                    // Une clé mal formée (fichier importé par une version
+                    // d'avant la vérification) ne doit pas faire tomber le
+                    // journal : elle est ignorée.
+                    if (dateValide(date) == null) continue
                     result[date] = DayRecord(
                         date = date,
                         minutes = entry.optInt("minutes", 0),
                         note = entry.optString("note", ""),
-                        themes = readThemes(entry)
+                        themes = readThemes(entry),
+                        noteSeule = entry.optBoolean("note_seule", false)
                     )
                 }
             }
@@ -166,37 +187,66 @@ object Store {
         if (record.themes.isNotEmpty()) {
             entry.put("themes", org.json.JSONArray(record.themes))
         }
+        if (record.noteSeule) entry.put("note_seule", true)
         return entry
     }
 
+    /** La date si la clé est une vraie date ISO (2026-09-29), sinon null. */
+    fun dateValide(cle: String): LocalDate? =
+        runCatching { LocalDate.parse(cle, FORMAT) }.getOrNull()
+            ?.takeIf { it.format(FORMAT) == cle }
+
+    /** Le jour civil d'un instant, dans le fuseau du téléphone. */
+    fun dateOf(millis: Long): String =
+        java.time.Instant.ofEpochMilli(millis).atZone(java.time.ZoneId.systemDefault())
+            .toLocalDate().format(FORMAT)
+
+    /** Les journées qui comptent : faites ou déclarées, pas les notes seules. */
+    fun joursFaits(context: Context): Set<String> =
+        days(context).values.filter { it.faite }.map { it.date }.toSet()
+
     fun record(context: Context, date: String = today()): DayRecord? = days(context)[date]
 
-    fun isDone(context: Context, date: String = today()): Boolean = days(context).containsKey(date)
+    fun isDone(context: Context, date: String = today()): Boolean =
+        days(context)[date]?.faite == true
 
-    /** Valide la journée. Les minutes s'ajoutent si plusieurs séances ont lieu. */
+    /**
+     * Valide la journée. Les minutes s'ajoutent si plusieurs séances ont lieu.
+     *
+     * [date] est le jour où la hitbodedout a commencé : celle de 23 h 40 qui
+     * finit à 0 h 20 compte pour la veille, sinon la veille restait vide et
+     * la série cassait (revue du 29/09).
+     */
     fun addSession(
         context: Context,
         minutes: Int,
         note: String? = null,
-        theme: Theme? = null
+        theme: Theme? = null,
+        date: String = today()
     ) {
         val all = days(context).toMutableMap()
-        val existing = all[today()]
-        all[today()] = DayRecord(
-            date = today(),
+        val existing = all[date]
+        all[date] = DayRecord(
+            date = date,
             minutes = (existing?.minutes ?: 0) + minutes.coerceAtLeast(0),
             note = note ?: existing?.note ?: "",
             // Le sujet s'ajoute à ceux du jour ; sans sujet, rien n'est ajouté.
-            themes = (existing?.themes ?: emptyList()) + listOfNotNull(theme?.cle)
+            themes = (existing?.themes ?: emptyList()) + listOfNotNull(theme?.cle),
+            noteSeule = false
         )
         writeDays(context, all)
         clearSnooze(context)
     }
 
+    /** La note d'un jour. Sur un jour sans hitbodedout, elle ne le valide pas. */
     fun setNote(context: Context, date: String, note: String) {
         val all = days(context).toMutableMap()
-        val existing = all[date] ?: DayRecord(date, 0, "", emptyList())
-        all[date] = existing.copy(note = note)
+        val existing = all[date]
+        when {
+            existing != null -> all[date] = existing.copy(note = note)
+            note.isNotBlank() -> all[date] = DayRecord(date, 0, note, emptyList(), noteSeule = true)
+            else -> return
+        }
         writeDays(context, all)
     }
 
@@ -207,6 +257,9 @@ object Store {
     }
 
     fun totalMinutes(context: Context): Int = days(context).values.sumOf { it.minutes }
+
+    /** Au moins une journée faite, un jour : il y a une série à perdre. */
+    fun aDejaPratique(context: Context): Boolean = days(context).values.any { it.faite }
 
     // --- Jours sans obligation ---------------------------------------------
 
@@ -253,7 +306,7 @@ object Store {
 
     /** Jours consécutifs validés. Les jours exemptés ne comptent pas et ne cassent pas. */
     fun streak(context: Context): Int {
-        val done = days(context).keys
+        val done = joursFaits(context)
         var day = LocalDate.now()
         if (!done.contains(day.format(FORMAT)) && !isExempt(context, day)) day = day.minusDays(1)
         var count = 0
@@ -275,7 +328,7 @@ object Store {
      * semaine juive, et le samedi doit tomber en fin de bande, pas au milieu.
      */
     fun currentWeek(context: Context): List<WeekDay> {
-        val done = days(context).keys
+        val done = joursFaits(context)
         val today = LocalDate.now()
         // DayOfWeek va de lundi=1 à dimanche=7 ; le reste modulo 7 ramène au dimanche.
         val sunday = today.minusDays((today.dayOfWeek.value % 7).toLong())
@@ -452,18 +505,28 @@ object Store {
             .apply()
     }
 
-    /** Termine la séance et renvoie les minutes réellement écoulées. */
-    fun endSession(context: Context): Int {
+    /**
+     * Termine la séance : les minutes à inscrire, et le jour où elle a
+     * commencé. Une séance minutée ne compte jamais plus que sa durée, même
+     * si sa fin n'a été constatée que plus tard (écran éteint, application
+     * tuée) ; voir SessionRule.minutesAInscrire.
+     */
+    fun endSession(context: Context): SeanceClose {
         val started = sessionStartedAt(context)
-        val elapsed = if (started == 0L) 0
-        else ((System.currentTimeMillis() - started) / 60_000L).toInt()
+        val minutes = SessionRule.minutesAInscrire(
+            started, sessionEndsAt(context), System.currentTimeMillis()
+        )
+        val date = if (started > 0L) dateOf(started) else today()
         prefs(context).edit()
             .remove(KEY_SESSION_START)
             .remove(KEY_SESSION_END)
             .remove(KEY_SESSION_TARGET)
             .apply()
-        return elapsed.coerceAtLeast(0)
+        return SeanceClose(minutes, date)
     }
+
+    /** Une séance est inscrite comme commencée, que le service tourne ou non. */
+    fun hasSessionRecord(context: Context): Boolean = sessionStartedAt(context) > 0L
 
     /**
      * Masquer le décompte pendant la séance.
@@ -569,18 +632,33 @@ object Store {
         prefs(context).edit().putString(KEY_ACCENT, accent.cle).apply()
     }
 
-    /** Une séance vient de se clore : le bravo attend le prochain écran ouvert. */
-    fun setPendingCelebration(context: Context, minutes: Int) {
-        prefs(context).edit().putInt(KEY_CELEBRATION, minutes.coerceAtLeast(0)).apply()
+    /** Le bravo en attente, et le jour de la note qu'il proposera ensuite. */
+    data class Celebration(val minutes: Int, val dateNote: String?)
+
+    /**
+     * Une séance vient de se clore : le bravo attend le prochain écran ouvert.
+     * [dateNote] est le jour de la séance ; le bravo propose la note ensuite,
+     * pour qu'elle ne s'ouvre plus sous lui (revue du 29/09).
+     */
+    fun setPendingCelebration(context: Context, minutes: Int, dateNote: String? = null) {
+        prefs(context).edit()
+            .putInt(KEY_CELEBRATION, minutes.coerceAtLeast(0))
+            .apply { if (dateNote == null) remove(KEY_CELEBRATION_DATE) else putString(KEY_CELEBRATION_DATE, dateNote) }
+            .apply()
     }
 
-    /** Rend les minutes du bravo en attente et le retire, ou null s'il n'y en a pas. */
-    fun takePendingCelebration(context: Context): Int? {
+    fun hasPendingCelebration(context: Context): Boolean = prefs(context).contains(KEY_CELEBRATION)
+
+    /** Rend le bravo en attente et le retire, ou null s'il n'y en a pas. */
+    fun takePendingCelebration(context: Context): Celebration? {
         val p = prefs(context)
         if (!p.contains(KEY_CELEBRATION)) return null
-        val minutes = p.getInt(KEY_CELEBRATION, 0)
-        p.edit().remove(KEY_CELEBRATION).apply()
-        return minutes
+        val celebration = Celebration(
+            p.getInt(KEY_CELEBRATION, 0),
+            p.getString(KEY_CELEBRATION_DATE, null)
+        )
+        p.edit().remove(KEY_CELEBRATION).remove(KEY_CELEBRATION_DATE).apply()
+        return celebration
     }
 
     /** Ce que le compteur doit dire, ici et maintenant. */
@@ -720,6 +798,12 @@ object Store {
             .put("in_israel", inIsrael(context))
             .put("reminder_enabled", reminderEnabled(context))
             .put("reminder_minutes", reminderMinutes(context))
+            // Toutes les heures : l'ancienne clé n'en porte qu'une, et une
+            // sauvegarde restaurée perdait les autres (revue du 29/09).
+            .put("reminder_times", org.json.JSONArray(reminderTimes(context)))
+            .put("first_name", firstName(context))
+            .put("hide_countdown", hideCountdown(context))
+            .put("guided_hitbodedut", guidedHitbodedut(context))
             .put("music_enabled", musicEnabled(context))
             .put("music_volume", musicVolume(context))
             .put("music_shuffle", musicShuffle(context))
@@ -742,13 +826,19 @@ object Store {
         val merged = days(context).toMutableMap()
         var imported = 0
         root.optJSONObject("days")?.let { daysJson ->
+            val demain = LocalDate.now().plusDays(1)
             for (date in daysJson.keys()) {
                 val entry = daysJson.optJSONObject(date) ?: continue
+                // Une date mal formée faisait tomber l'écran Journal à chaque
+                // ouverture ; une date à venir n'a rien à faire dans un journal.
+                val jour = dateValide(date) ?: continue
+                if (!jour.isBefore(demain)) continue
                 val incoming = DayRecord(
                     date,
-                    entry.optInt("minutes", 0),
+                    entry.optInt("minutes", 0).coerceIn(0, 24 * 60),
                     entry.optString("note", ""),
-                    readThemes(entry)
+                    readThemes(entry),
+                    entry.optBoolean("note_seule", false)
                 )
                 val existing = merged[date]
                 merged[date] = when {
@@ -761,7 +851,8 @@ object Store {
                         date,
                         maxOf(existing.minutes, incoming.minutes),
                         existing.note.ifBlank { incoming.note },
-                        (existing.themes + incoming.themes).distinct()
+                        (existing.themes + incoming.themes).distinct(),
+                        existing.noteSeule && incoming.noteSeule
                     )
                 }
                 imported++
@@ -770,17 +861,35 @@ object Store {
         writeDays(context, merged)
 
         root.optJSONObject("settings")?.let { settings ->
+            // Chaque valeur est ramenée dans ce que l'écran permet : un
+            // fichier modifié à la main ne doit pas laisser une durée nulle
+            // ou une heure qui n'existe pas.
+            val jour = 0 until 24 * 60
             setWindow(
                 context,
-                settings.optInt("window_start", windowStart(context)),
-                settings.optInt("window_end", windowEnd(context))
+                settings.optInt("window_start", windowStart(context)).takeIf { it in jour } ?: windowStart(context),
+                settings.optInt("window_end", windowEnd(context)).takeIf { it in jour } ?: windowEnd(context)
             )
-            setSnoozeMinutes(context, settings.optInt("snooze_minutes", snoozeMinutes(context)))
-            setTargetMinutes(context, settings.optInt("target_minutes", targetMinutes(context)))
+            setSnoozeMinutes(context, settings.optInt("snooze_minutes", snoozeMinutes(context)).coerceIn(1, 240))
+            setTargetMinutes(
+                context,
+                settings.optInt("target_minutes", targetMinutes(context)).coerceIn(DureeSeance.MIN, DureeSeance.MAX)
+            )
             setShabbatMode(context, settings.optBoolean("pause_shabbat", shabbatMode(context)))
             setInIsrael(context, settings.optBoolean("in_israel", inIsrael(context)))
             setReminderEnabled(context, settings.optBoolean("reminder_enabled", reminderEnabled(context)))
-            setReminderMinutes(context, settings.optInt("reminder_minutes", reminderMinutes(context)))
+            // Les heures de rappel : la liste si le fichier l'a, sinon l'heure
+            // unique des anciennes sauvegardes. Écrite par setReminderTimes,
+            // qu'on n'ignore plus quand une liste existait déjà.
+            val heures = settings.optJSONArray("reminder_times")?.let { a ->
+                (0 until a.length()).mapNotNull { i -> a.optInt(i, -1).takeIf { it in jour } }
+            } ?: settings.optInt("reminder_minutes", -1).takeIf { it in jour }?.let { listOf(it) }
+            if (!heures.isNullOrEmpty()) setReminderTimes(context, heures)
+            if (settings.has("first_name")) setFirstName(context, settings.optString("first_name"))
+            if (settings.has("hide_countdown")) setHideCountdown(context, settings.optBoolean("hide_countdown"))
+            if (settings.has("guided_hitbodedut")) {
+                setGuidedHitbodedut(context, settings.optBoolean("guided_hitbodedut"))
+            }
             setMusicEnabled(context, settings.optBoolean("music_enabled", musicEnabled(context)))
             setMusicVolume(context, settings.optInt("music_volume", musicVolume(context)))
             setMusicShuffle(context, settings.optBoolean("music_shuffle", musicShuffle(context)))
@@ -798,7 +907,7 @@ object Store {
         root.optJSONArray("paused_dates")?.let { array ->
             val dates = pausedDates(context).toMutableSet()
             for (i in 0 until array.length()) dates.add(array.optString(i))
-            prefs(context).edit().putStringSet(KEY_PAUSED_DATES, HashSet(dates.filter { it.isNotBlank() })).apply()
+            prefs(context).edit().putStringSet(KEY_PAUSED_DATES, HashSet(dates.filter { dateValide(it) != null })).apply()
         }
         root.optJSONArray("blocked_apps")?.let { array ->
             val apps = blockedApps(context).toMutableSet()

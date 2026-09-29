@@ -1,7 +1,10 @@
 package com.myhitbodedut
 
 import android.content.Context
+import android.text.StaticLayout
+import android.util.TypedValue
 import android.view.View
+import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import java.util.Locale
@@ -43,17 +46,65 @@ object ChizukCard {
         card.findViewById<ImageView>(R.id.chizuk_art).setImageResource(Character.ofMoment(moment))
         card.findViewById<TextView>(R.id.chizuk_moment).setText(moment.labelRes)
 
-        card.findViewById<TextView>(R.id.chizuk_he).text = ChizukRules.hebrew(chizuk, item)
+        val hebreu = card.findViewById<TextView>(R.id.chizuk_he)
+        hebreu.text = ChizukRules.hebrew(chizuk, item)
+        ajusterHauteur(hebreu)
 
         val translation = card.findViewById<TextView>(R.id.chizuk_translation)
         val text = translationOf(item, language(card.context))
         translation.text = text
+        ajusterHauteur(translation)
         // En hébreu, la traduction répéterait le texte du dessus.
         translation.visibility = if (text.isBlank()) View.GONE else View.VISIBLE
 
         card.findViewById<TextView>(R.id.chizuk_ref).text = Reference.localise(card.context, item.ref)
         card.findViewById<TextView>(R.id.chizuk_badge).visibility =
             if (ChizukRules.needsProofreading(item)) View.VISIBLE else View.GONE
+    }
+
+    /**
+     * La hauteur fixe de la carte, sauf pour un texte qui n'y tient pas.
+     *
+     * Le corps automatique réduit le texte pour qu'il tienne dans la hauteur
+     * prévue. Il descendait jusqu'à 8 points, illisible en hébreu voyellé, et
+     * annulait la taille de texte choisie dans le téléphone (revue du
+     * 29/09). Le minimum est désormais de 12 points ; un texte trop long pour
+     * tenir à cette taille ne rétrécit plus : le bloc s'allonge, sans défiler.
+     */
+    private fun ajusterHauteur(vue: TextView) {
+        val params = vue.layoutParams ?: return
+        val fixe = (vue.getTag(R.id.chizuk_hauteur_fixe) as? Int)
+            ?: params.height.also { vue.setTag(R.id.chizuk_hauteur_fixe, it) }
+        val min = (vue.getTag(R.id.chizuk_corps_min) as? Int)
+            ?: vue.autoSizeMinTextSize.also { vue.setTag(R.id.chizuk_corps_min, it) }
+        val max = (vue.getTag(R.id.chizuk_corps_max) as? Int)
+            ?: vue.autoSizeMaxTextSize.also { vue.setTag(R.id.chizuk_corps_max, it) }
+        if (fixe <= 0 || min <= 0 || max <= 0) return
+
+        // Retour à la mise en page prévue, puis mesure une fois la largeur connue.
+        if (params.height != fixe) {
+            params.height = fixe
+            vue.layoutParams = params
+        }
+        vue.setAutoSizeTextTypeUniformWithConfiguration(min, max, 1, TypedValue.COMPLEX_UNIT_PX)
+        vue.post {
+            val largeur = vue.width - vue.paddingLeft - vue.paddingRight
+            if (largeur <= 0) return@post
+            val paint = android.text.TextPaint(vue.paint).apply { textSize = min.toFloat() }
+            val mesure = StaticLayout.Builder
+                .obtain(vue.text, 0, vue.text.length, paint, largeur)
+                .setLineSpacing(vue.lineSpacingExtra, vue.lineSpacingMultiplier)
+                .setIncludePad(vue.includeFontPadding)
+                .build()
+            val disponible = fixe - vue.paddingTop - vue.paddingBottom
+            if (mesure.height > disponible) {
+                vue.setAutoSizeTextTypeWithDefaults(TextView.AUTO_SIZE_TEXT_TYPE_NONE)
+                vue.setTextSize(TypedValue.COMPLEX_UNIT_PX, min.toFloat())
+                val p = vue.layoutParams
+                p.height = ViewGroup.LayoutParams.WRAP_CONTENT
+                vue.layoutParams = p
+            }
+        }
     }
 
     /**

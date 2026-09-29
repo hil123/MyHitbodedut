@@ -101,7 +101,9 @@ class PaletteTest {
                     exige("$fn $moment, encre sur $it", f.getValue("mhInk"), f.getValue(it), 7.0)
                 }
                 listOf("mhCard", "mhPaper").forEach {
-                    exige("$fn $moment, texte secondaire sur $it", f.getValue("mhMuted"), f.getValue(it), 4.0)
+                    // 4,5 : le seuil AA du texte courant. À 4,0, le gris
+                    // de la palette verte passait à 4,03 (revue du 29/09).
+                    exige("$fn $moment, texte secondaire sur $it", f.getValue("mhMuted"), f.getValue(it), 4.5)
                 }
             }
         }

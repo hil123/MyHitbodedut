@@ -48,12 +48,10 @@ object Reminder {
         if (!Store.reminderEnabled(context)) return
 
         val maintenant = System.currentTimeMillis()
-        val heure = LocalTime.now()
-        val dans = ReminderRule.minutesUntilNext(
-            nowMinutes = heure.hour * 60 + heure.minute,
-            heures = Store.reminderTimes(context),
-        )
-        var quand = dans?.let { maintenant + it * 60_000L }
+        var quand = ReminderRule.prochainDeclenchement(
+            java.time.ZonedDateTime.now(),
+            Store.reminderTimes(context),
+        )?.toInstant()?.toEpochMilli()
 
         // Un report passe devant le prochain rappel réglé s'il tombe avant.
         val reporte = Store.reminderSnoozedUntil(context)
@@ -82,6 +80,11 @@ object Reminder {
 /** Affiche le rappel, ou exécute ce qu'on a touché dessus. */
 class ReminderReceiver : BroadcastReceiver() {
 
+    private companion object {
+        const val REQUETE_OUVRIR = 10
+        const val REQUETE_COMMENCER = 11
+    }
+
     override fun onReceive(brut: Context, intent: Intent) {
         // La notification dans la langue de l'application (LangueApp).
         val context = LangueApp.envelopper(brut)
@@ -96,10 +99,10 @@ class ReminderReceiver : BroadcastReceiver() {
             }
 
             Reminder.ACTION_START -> {
+                // Chemin des notifications posées par une version d'avant le
+                // 29/09. Android 12 bloque l'écran ouvert d'ici ; le bouton
+                // ouvre désormais l'écran de séance directement (build()).
                 manager.cancel(Notifications.ID_REMINDER)
-                // La séance est lancée par l'écran, pas d'ici : démarrer un
-                // service de premier plan depuis un receveur en arrière-plan
-                // est refusé depuis Android 12.
                 context.startActivity(
                     Intent(context, SessionActivity::class.java)
                         .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -131,10 +134,25 @@ class ReminderReceiver : BroadcastReceiver() {
         val duree = Store.formatDuration(context, Store.targetMinutes(context))
 
         val ouvrir = PendingIntent.getActivity(
-            context, 0,
+            context, REQUETE_OUVRIR,
             Intent(context, MainActivity::class.java),
-            PendingIntent.FLAG_IMMUTABLE
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
+        // « Commencer » ouvre l'écran de séance lui-même. Passer par un
+        // receveur qui ouvre ensuite l'écran est interdit depuis Android 12 :
+        // la notification disparaissait et rien ne s'ouvrait (revue du 29/09).
+        // L'écran retire la notification et reprogramme le rappel.
+        val commencer = Notification.Action.Builder(
+            null,
+            context.getString(R.string.reminder_action_start),
+            PendingIntent.getActivity(
+                context, REQUETE_COMMENCER,
+                Intent(context, SessionActivity::class.java)
+                    .putExtra(SessionActivity.EXTRA_START_NOW, true)
+                    .putExtra(SessionActivity.EXTRA_DEPUIS_RAPPEL, true),
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            )
+        ).build()
         fun action(requete: Int, action: String, libelle: Int) = Notification.Action.Builder(
             null,
             context.getString(libelle),
@@ -151,7 +169,7 @@ class ReminderReceiver : BroadcastReceiver() {
             .setSmallIcon(R.drawable.ic_notification)
             .setContentIntent(ouvrir)
             .setAutoCancel(true)
-            .addAction(action(1, Reminder.ACTION_START, R.string.reminder_action_start))
+            .addAction(commencer)
             .addAction(action(2, Reminder.ACTION_SNOOZE, R.string.reminder_action_later))
             .build()
     }

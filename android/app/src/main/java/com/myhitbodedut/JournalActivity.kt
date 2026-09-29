@@ -40,11 +40,13 @@ class JournalActivity : AppCompatActivity() {
         val empty = findViewById<View>(R.id.journal_empty)
         empty.visibility = if (rows.isEmpty()) View.VISIBLE else View.GONE
 
+        // Les journées faites seulement : une note seule n'en est pas une.
+        val faites = rows.count { it.faite }
         val total = Store.totalMinutes(this)
         findViewById<TextView>(R.id.journal_summary).text = resources.getQuantityString(
             R.plurals.journal_summary,
-            rows.size,
-            rows.size,
+            faites,
+            faites,
             Store.formatDuration(this, total)
         )
     }
@@ -66,17 +68,19 @@ class JournalActivity : AppCompatActivity() {
 
         override fun onBindViewHolder(holder: Holder, position: Int) {
             val row = rows[position]
-            holder.date.text = Store.parse(row.date).format(formatter)
+            // Une date illisible s'affiche telle quelle plutôt que de faire
+            // tomber tout l'écran (revue du 29/09).
+            holder.date.text = (Store.dateValide(row.date)?.format(formatter) ?: row.date)
                 .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
-            holder.duration.text = if (row.minutes > 0) {
-                Store.formatDuration(holder.itemView.context, row.minutes)
-            } else {
-                getString(R.string.today_declared)
+            holder.duration.text = when {
+                row.noteSeule -> getString(R.string.journal_note_only)
+                row.minutes > 0 -> Store.formatDuration(holder.itemView.context, row.minutes)
+                else -> getString(R.string.today_declared)
             }
             holder.note.visibility = if (row.note.isBlank()) View.GONE else View.VISIBLE
             holder.note.text = row.note
             holder.itemView.setOnClickListener {
-                NoteDialog.show(this@JournalActivity, row.date) { reload() }
+                NoteDialog.show(this@JournalActivity, row.date, onSaved = { reload() })
             }
         }
     }

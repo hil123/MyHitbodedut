@@ -384,7 +384,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:textAlignment="center"
-            android:textColor="?attr/mhMuted"
+            android:textColor="?attr/mhMint"
             android:textSize="12sp" />
     </LinearLayout>
 </ScrollView>

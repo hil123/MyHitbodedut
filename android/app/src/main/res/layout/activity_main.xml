@@ -216,6 +216,19 @@
                     android:layout_marginTop="6dp"
                     android:text="@string/action_write_note"
                     android:visibility="gone" />
+
+                <!--
+                    Une hitbodedout faite loin du téléphone, comme le conseil
+                    n° 4 y invite : elle compte aussi (revue du 29/09).
+                -->
+                <Button
+                    android:id="@+id/today_offline"
+                    style="@style/Widget.Material3.Button.TextButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:text="@string/action_done_offline"
+                    android:visibility="gone" />
             </LinearLayout>
         </ScrollView>
 

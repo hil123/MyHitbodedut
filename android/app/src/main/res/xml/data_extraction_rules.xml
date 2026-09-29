@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-    Mêmes règles pour la sauvegarde dans le nuage et le transfert d'appareil :
-    les réglages suivent, le journal reste. Ce qui n'est pas inclus est écarté.
+    Dans le nuage, les réglages seuls : le journal et les notes ne quittent
+    pas le téléphone pour un serveur. Ce qui n'est pas inclus est écarté.
+
+    Le transfert d'appareil, lui, va directement de l'ancien téléphone au
+    nouveau, par câble ou en local, sans passer par un serveur. Le journal y
+    est inclus : l'en exclure faisait perdre tout l'historique à chaque
+    changement de téléphone, faute d'avoir pensé à l'export (revue du 29/09).
 -->
 <data-extraction-rules>
     <cloud-backup>
@@ -9,5 +14,6 @@
     </cloud-backup>
     <device-transfer>
         <include domain="sharedpref" path="myhitbodedut.xml" />
+        <include domain="sharedpref" path="myhitbodedut-journal.xml" />
     </device-transfer>
 </data-extraction-rules>

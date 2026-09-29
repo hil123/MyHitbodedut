@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Ce que ChizukCard retient d'un bloc de texte pour le remettre en place. -->
+    <item name="chizuk_hauteur_fixe" type="id" />
+    <item name="chizuk_corps_min" type="id" />
+    <item name="chizuk_corps_max" type="id" />
+</resources>

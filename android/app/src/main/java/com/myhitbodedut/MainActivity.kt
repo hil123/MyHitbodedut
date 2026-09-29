@@ -34,8 +34,15 @@ class MainActivity : AppCompatActivity() {
         showOnboardingOnce()
         wireActions()
         wireTabs(savedInstanceState?.getInt(ETAT_ONGLET, R.id.nav_today) ?: R.id.nav_today)
-        if (intent?.getBooleanExtra(EXTRA_ASK_NOTE, false) == true) {
-            NoteDialog.show(this, Store.today()) { refresh() }
+        // Venu de la notification de fin : la note du jour de la séance, pas
+        // du jour où l'on touche la notification. Si le bravo attend encore,
+        // c'est lui qui la proposera, après. Lue une seule fois : une
+        // rotation ne la rouvre pas.
+        if (savedInstanceState == null) {
+            intent?.getStringExtra(EXTRA_ASK_NOTE)?.let { date ->
+                if (!Store.hasPendingCelebration(this)) NoteDialog.show(this, date, onSaved = { refresh() })
+            }
+            intent?.removeExtra(EXTRA_ASK_NOTE)
         }
     }
 
@@ -92,6 +99,9 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+        // Une séance restée inscrite sans service (application tuée) est
+        // close ou relancée avant d'afficher quoi que ce soit.
+        SessionService.reconcilier(this)
         applyServiceState()
         refresh()
         // La séance s'est close téléphone posé : le bravo attendait ici.
@@ -113,9 +123,16 @@ class MainActivity : AppCompatActivity() {
     // --- Actions ------------------------------------------------------------
 
     private fun wireActions() {
+        // Un seul geste : les puces au-dessus portent déjà la durée, le sujet
+        // et la musique. L'écran de séance redemandait la durée, et il
+        // fallait toucher « Commencer » une seconde fois (revue du 29/09).
         findViewById<Button>(R.id.start_session).setOnClickListener {
-            startActivity(Intent(this, SessionActivity::class.java))
+            startActivity(
+                Intent(this, SessionActivity::class.java)
+                    .putExtra(SessionActivity.EXTRA_START_NOW, !Store.isSessionRunning(this))
+            )
         }
+        findViewById<Button>(R.id.today_offline).setOnClickListener { declarerHorsTelephone() }
         findViewById<View>(R.id.start_duration).setOnClickListener {
             pickDuration()
         }
@@ -162,7 +179,37 @@ class MainActivity : AppCompatActivity() {
         // La plaque ronde coupe l'illustration à son bord, au creux de la jauge.
         findViewById<View>(R.id.hero_plate).clipToOutline = true
         findViewById<Button>(R.id.today_note).setOnClickListener {
-            NoteDialog.show(this, Store.today()) { refresh() }
+            NoteDialog.show(this, Store.today(), onSaved = { refresh() })
+        }
+    }
+
+    /**
+     * Une hitbodedout faite sans le téléphone : aujourd'hui, ou hier si hier
+     * n'est pas encore fait, puis sa durée. Elle est inscrite comme les
+     * autres, et le bravo suit si c'est aujourd'hui.
+     */
+    private fun declarerHorsTelephone() {
+        val hier = java.time.LocalDate.now().minusDays(1)
+        val hierOuvert = !Store.isDone(this, hier.toString()) && !Store.isExempt(this, hier)
+        if (!hierOuvert) {
+            choisirDureeHorsTelephone(Store.today())
+            return
+        }
+        AlertDialog.Builder(this)
+            .setTitle(R.string.offline_which_day)
+            .setItems(arrayOf(getString(R.string.offline_today), getString(R.string.offline_yesterday))) { _, i ->
+                choisirDureeHorsTelephone(if (i == 0) Store.today() else hier.toString())
+            }
+            .show()
+    }
+
+    private fun choisirDureeHorsTelephone(date: String) {
+        DureeSeance.choisir(this, R.string.offline_how_long) { minutes ->
+            Store.addSession(this, minutes, theme = Store.sessionTheme(this), date = date)
+            if (date == Store.today()) Store.setPendingCelebration(this, minutes, date)
+            refresh()
+            StreakWidget.refresh(this)
+            CelebrationActivity.showIfPending(this)
         }
     }
 
@@ -326,7 +373,7 @@ class MainActivity : AppCompatActivity() {
      */
     private fun renderRelance() {
         val card = findViewById<View>(R.id.relance_chizuk)
-        val brisee = Store.streak(this) == 0 && Store.days(this).isNotEmpty()
+        val brisee = Store.streak(this) == 0 && Store.aDejaPratique(this)
         if (!brisee) {
             card.visibility = View.GONE
             relanceTiree = false
@@ -344,16 +391,19 @@ class MainActivity : AppCompatActivity() {
     private fun renderToday() {
         renderGreeting()
         val record = Store.record(this)
-        val done = record != null
+        // Une note seule ne fait pas la journée.
+        val done = record?.faite == true
         findViewById<ImageView>(R.id.hero_character).setImageResource(Character.greeting(done))
         findViewById<TextView>(R.id.status_title)
             .setText(if (done) R.string.status_done else R.string.status_pending)
 
         val streak = Store.streak(this)
-        findViewById<TextView>(R.id.status_streak).text = if (streak > 0) {
-            resources.getQuantityString(R.plurals.status_streak, streak, streak)
-        } else {
-            getString(R.string.status_streak_none)
+        // « Série à relancer » ne se dit qu'à qui en a déjà eu une : le
+        // premier jour, ce serait accueillir quelqu'un par un échec.
+        findViewById<TextView>(R.id.status_streak).text = when {
+            streak > 0 -> resources.getQuantityString(R.plurals.status_streak, streak, streak)
+            Store.aDejaPratique(this) -> getString(R.string.status_streak_none)
+            else -> getString(R.string.status_streak_first)
         }
 
         val total = Store.totalMinutes(this)
@@ -371,6 +421,8 @@ class MainActivity : AppCompatActivity() {
             }
         }
         findViewById<Button>(R.id.today_note).visibility = if (done) View.VISIBLE else View.GONE
+        findViewById<Button>(R.id.today_offline).visibility =
+            if (!done && !Store.isSessionRunning(this)) View.VISIBLE else View.GONE
 
         findViewById<Button>(R.id.start_session).text = when {
             Store.isSessionRunning(this) -> getString(R.string.action_back_to_session)
@@ -460,6 +512,7 @@ class MainActivity : AppCompatActivity() {
     // --- Sélecteurs ---------------------------------------------------------
 
     companion object {
+        /** Le jour de la séance dont la note est proposée (AAAA-MM-JJ). */
         const val EXTRA_ASK_NOTE = "ask_note"
 
         /** Survit à une rotation ou au redimensionnement d'une fenêtre. */

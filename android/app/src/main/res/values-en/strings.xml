@@ -3,6 +3,14 @@
     <string name="status_done">Hitbodedut done today</string>
     <string name="status_pending">Hitbodedut not done yet</string>
     <string name="status_streak_none">Streak to restart</string>
+    <string name="status_streak_first">No streak yet</string>
+    <string name="action_done_offline">Done without the phone</string>
+    <string name="offline_which_day">Which day?</string>
+    <string name="offline_today">Today</string>
+    <string name="offline_yesterday">Yesterday</string>
+    <string name="offline_how_long">How long?</string>
+    <string name="note_discard">Don’t save</string>
+    <string name="journal_note_only">Note only</string>
     <string name="status_total">%1$s in total</string>
     <string name="today_minutes">Today: %1$s of practice</string>
     <string name="today_declared">Confirmed without a timer</string>
