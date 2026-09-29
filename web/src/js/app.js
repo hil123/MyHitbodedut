@@ -154,8 +154,15 @@ let enEcoute = null;
 lecteur.addEventListener('ended', () => { enEcoute = null; rendre(); });
 lecteur.addEventListener('pause', () => { if (!lecteur.ended) { enEcoute = null; rendre(); } });
 
-/** iOS ne laisse pas une page régler le volume : il reste aux boutons du téléphone. */
-const volumeReglable = (() => {
+/**
+ * iOS ne laisse pas une page régler le volume : il reste aux boutons du
+ * téléphone. La propriété accepte pourtant la valeur et la relit sans rien
+ * changer au son (essai sur iPhone, 29/09) : c'est donc l'appareil qu'on
+ * reconnaît. Un iPad récent se présente comme un Mac tactile.
+ */
+const surIOS = /iPad|iPhone|iPod/.test(navigator.userAgent)
+  || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+const volumeReglable = !surIOS && (() => {
   const a = new Audio();
   a.volume = 0.5;
   return a.volume === 0.5;

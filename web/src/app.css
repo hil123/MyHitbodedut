@@ -21,7 +21,13 @@ body {
   -webkit-text-size-adjust: 100%;
   -webkit-tap-highlight-color: transparent;
   overscroll-behavior: none;
+  /* Un appui long ne sélectionne pas le texte (Copier, Rechercher…) : comme
+     sur Android, les textes de l'application se lisent, ils ne se copient pas. */
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
 }
+input, textarea { -webkit-user-select: text; user-select: text; }
 button { font: inherit; color: inherit; }
 
 #app { height: 100%; display: flex; flex-direction: column; }
