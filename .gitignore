@@ -5,3 +5,4 @@ web/captures/
 nokia/dist/
 nokia/app/build/
 nokia/app/outils/
+.attach_pid*
