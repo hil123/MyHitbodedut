@@ -36,18 +36,18 @@ export const RegleLangue = {
 // --- Reference (Reference.kt) -----------------------------------------------
 // Du plus long au plus court : « Likoutei Moharan II » avant « … I ».
 const LIVRES = [
-  ["Likoutei Etsot, Hit'hazkout ", 'Likutei Etzot, Strengthening ', 'ליקוטי עצות, התחזקות '],
-  ['Rambam, Hilkhot Tefila ', 'Rambam, Hilchot Tefillah ', 'רמב״ם, הלכות תפילה '],
+  ["Likoutei Etsot, Hit'hazkout ", 'Likutei Etsot, Strengthening ', 'ליקוטי עצות, התחזקות '],
+  ['Rambam, Hilkhot Tefila ', 'Rambam, Hilkhot Tefillah ', 'רמב״ם, הלכות תפילה '],
   ['Likoutei Moharan II, ', 'Likutei Moharan II, ', 'ליקוטי מוהר״ן תניינא, '],
   ['Likoutei Moharan I, ', 'Likutei Moharan I, ', 'ליקוטי מוהר״ן, '],
   ['Likoutei Tefilot II, ', 'Likutei Tefilot II, ', 'ליקוטי תפילות ב, '],
   ['Likoutei Tefilot I, ', 'Likutei Tefilot I, ', 'ליקוטי תפילות א, '],
-  ["Si'hot HaRan ", 'Sichot HaRan ', 'שיחות הר״ן '],
-  ["'Hayé Moharan ", 'Chayei Moharan ', 'חיי מוהר״ן '],
-  ["Chiv'hei HaRan ", 'Shivchei HaRan ', 'שבחי הר״ן '],
+  ["Si'hot HaRan ", 'Sihot HaRan ', 'שיחות הר״ן '],
+  ["'Hayé Moharan ", 'Hayei Moharan ', 'חיי מוהר״ן '],
+  ["Chiv'hei HaRan ", 'Shivhei HaRan ', 'שבחי הר״ן '],
   ['Tehilim ', 'Tehillim ', 'תהלים '],
   ['Michlé ', 'Mishlei ', 'משלי '],
-  ['Eikha ', 'Eichah ', 'איכה '],
+  ['Eikha ', 'Eikha ', 'איכה '],
 ].map(([fr, en, he]) => ({ fr, en, he }));
 
 const UNITES = ' אבגדהוזחט';

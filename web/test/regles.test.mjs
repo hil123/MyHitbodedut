@@ -81,7 +81,7 @@ test('les nombres en lettres hébraïques', () => {
 });
 
 test('en anglais une référence ne garde aucune graphie française', () => {
-  const francais = /Likoutei|Si'hot|'Hayé|Chiv'hei|Michlé|Etsot|Hilkhot| ; /;
+  const francais = /Likoutei|Si'hot|'Hayé|Chiv'hei|Michlé|Hit'hazkout|\bTefila\b| ; /;
   for (const ref of toutesLesRefs().filter((r) => Reference.connue(r))) {
     assert.doesNotMatch(Reference.localise(ref, 'en'), francais, ref);
   }
