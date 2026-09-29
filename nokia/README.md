@@ -1,33 +1,38 @@
 # MyHitbodedut pour téléphone à touches
 
-Pour le Nokia 3310 de 2017 (2G ou 3G) et les téléphones du même genre : pas d'application à installer, pas d'Internet. Le pack est fait de fichiers que le téléphone sait déjà lire.
+Une vraie application, en un seul fichier : `MyHitbodedut.jar` (environ 21 Ko), en français, sans Internet. Elle s'installe sur les téléphones à touches qui acceptent les applications Java (Java ME : MIDP 2.0, CLDC 1.1), dont le Nokia 3310 3G de 2017.
 
-| Dans l'application | Dans le pack | Sur le téléphone |
-| --- | --- | --- |
-| ’Hizouk, moment par moment | images 240×320, `FR_2` à `FR_7` | Galerie |
-| Tikoun HaKlali | images 240×320, `FR_8` | Galerie |
-| Hitbodedout minutée | mode d'emploi, `FR_1` | Minuteur (compte à rebours) |
-| Rappels | mode d'emploi, `FR_1` | Alarme |
+| Dans l'application Android | Dans MyHitbodedut.jar |
+| --- | --- |
+| Hitbodedout minutée : 5, 10, 15, 30 min, 1 h, 1 h 30, au choix | pareil ; pause à la touche centrale, sonnerie et vibration à la fin |
+| Texte « Pour commencer », « Je n'arrive pas à parler », texte « Pour finir » | pareil |
+| ’Hizouk par moment | les 46 textes publiés, en français |
+| Journal | minutes du jour, série, 7 derniers jours, total |
+| Rappels | un rappel quotidien, si le téléphone l'autorise (PushRegistry) ; sinon, l'alarme du téléphone |
 
-Le journal n'a pas d'équivalent sans application. La musique n'est pas dans le pack : 128 Mo, trop lourd pour le Bluetooth.
+Absents : l'hébreu (un téléphone à touches n'a pas toujours la police), le Tikoun HaKlali (en hébreu seulement), la musique, la bibliothèque.
 
-Le texte est dessiné dans les images : le téléphone n'a pas besoin de savoir afficher l'hébreu vocalisé. Les noms de fichier sont en ASCII et se trient dans l'ordre de lecture, parce qu'un fichier reçu par Bluetooth perd son dossier mais garde son nom.
+## Téléphones
 
-## D'où vient le contenu
+- **Nokia 3310 3G de 2017** (Smart Feature OS) : accepte les applications Java (Wikipédia, et un développeur l'a testé sur Stack Overflow).
+- **Nokia 3310 de 2017 (2G)** : sources contradictoires.
+- **Nokia 3310 3G de 2019** (Series 30+ sur Mocor) : pas d'applications Java.
 
-Rien n'est recopié : `build.mjs` relit les ressources Android (`res/raw/chizuk.json`, `tikkun_haklali.json`, `strings.xml`) et applique les règles de l'application, reprises de `web/src/js` : seul passe un ’hizouk relevé de la source et relu, l'hébreu perd son nikkoud quand la licence de l'édition l'exige, et l'hébreu n'a pas de traduction.
+## Installer
 
-`guide.json` contient le mode d'emploi en trois langues. Il n'est pas encore relu (`_meta.relu`).
+Envoyer `MyHitbodedut.jar` au téléphone par Bluetooth (ou le copier sur la carte microSD), l'ouvrir dans le gestionnaire de fichiers, accepter l'installation (« application non signée » : c'est normal).
+
+## D'où viennent les textes
+
+Rien n'est recopié : `app/genere-textes.mjs` relit `res/raw/chizuk.json` et `values/strings.xml` et applique les règles de l'application (`web/src/js`) : seul passe un ’hizouk relevé de la source et relu, dans sa traduction française. Les caractères sont ramenés à Latin-1 (« œ » devient « oe », « … » devient « ... »).
 
 ## Construire et tester
 
 ```sh
-node nokia/build.mjs                  # les images, dans nokia/dist
-node --test nokia/test/*.test.mjs     # le plan, puis le pack s'il est construit
+nokia/app/build.sh   # nokia/dist/MyHitbodedut.jar
+nokia/app/test.sh    # règles (Java), textes (Node), parcours à l'écran 240×320
 ```
 
-`build.mjs` a besoin de Playwright et de Chromium (`PLAYWRIGHT_MODULE`, `CHROMIUM_PATH` si besoin), et de la commande `zip`. Il produit `MyHitbodedut-Nokia.zip` (les trois langues, le fichier à partager) et un zip par langue (2 à 3 Mo).
+Il faut Node, un JDK 8 (le dernier dont `javac` vise encore Java 1.3, ce qu'exige CLDC) et Java 11 ou plus pour ProGuard, qui fait la pré-vérification sans laquelle le téléphone refuse le fichier. Les API MIDP/CLDC, ProGuard et MicroEmulator sont téléchargés dans `nokia/app/outils`.
 
-## Envoyer par Bluetooth
-
-Depuis un téléphone Android : décompresser le zip, ouvrir le dossier de la langue (FR, EN ou HE), tout sélectionner, Partager › Bluetooth. Le Nokia ne sait pas ouvrir un zip : il reçoit les images une à une.
+Le parcours à l'écran joue l'application dans MicroEmulator, sur un appareil 240×320 (`app/test/appareil240`), touche par touche, et garde une capture de chaque étape dans `nokia/app/build/captures`.
