@@ -12,9 +12,7 @@ import javax.microedition.lcdui.DateField;
 import javax.microedition.lcdui.Display;
 import javax.microedition.lcdui.Displayable;
 import javax.microedition.lcdui.Form;
-import javax.microedition.lcdui.Item;
-import javax.microedition.lcdui.List;
-import javax.microedition.lcdui.StringItem;
+import javax.microedition.lcdui.Graphics;
 import javax.microedition.lcdui.TextBox;
 import javax.microedition.lcdui.TextField;
 import javax.microedition.media.Manager;
@@ -23,9 +21,10 @@ import javax.microedition.midlet.MIDlet;
 /**
  * MyHitbodedut pour téléphone à touches (Java ME, MIDP 2.0) : la
  * hitbodedout minutée, les textes de ’hizouk en français, le journal et
- * un rappel quotidien. Aucune connexion.
+ * un rappel quotidien, dans les couleurs et avec le personnage de
+ * l'application. Aucune connexion.
  */
-public final class MyHitbodedut extends MIDlet implements CommandListener, Minuteur.Fin {
+public final class MyHitbodedut extends MIDlet implements CommandListener, Minuteur.Fin, Menu.Choix {
     static final int[] DUREES = {5, 10, 15, 30, 60, 90};
 
     private Display display;
@@ -34,6 +33,7 @@ public final class MyHitbodedut extends MIDlet implements CommandListener, Minut
 
     private final Command quitter = new Command("Quitter", Command.EXIT, 1);
     private final Command retour = new Command("Retour", Command.BACK, 1);
+    private final Command choisir = new Command("Choisir", Command.OK, 1);
     private final Command commencer = new Command("Commencer", Command.OK, 1);
     private final Command ok = new Command("OK", Command.OK, 1);
     private final Command accueilCmd = new Command("Accueil", Command.OK, 1);
@@ -44,12 +44,15 @@ public final class MyHitbodedut extends MIDlet implements CommandListener, Minut
     private final Command arreter = new Command("Arrêter", Command.STOP, 3);
     private final Command enregistrer = new Command("Enregistrer", Command.OK, 1);
 
-    private List accueil;
-    private List durees;
-    private List moments;
-    private List liste;
+    private Menu accueil;
+    private Menu durees;
+    private Menu moments;
+    private Menu liste;
     private TextBox auChoix;
-    private Form lecture;
+    private Lecture avant;
+    private Lecture lecture;
+    private Lecture fin;
+    private JournalEcran journalEcran;
     private Form reglage;
     private DateField heure;
     private ChoiceGroup actif;
@@ -87,51 +90,94 @@ public final class MyHitbodedut extends MIDlet implements CommandListener, Minut
         if (minuteur != null) minuteur.arrete();
     }
 
+    private void ecoute(Displayable d, Command[] commandes) {
+        for (int i = 0; i < commandes.length; i++) d.addCommand(commandes[i]);
+        d.setCommandListener(this);
+    }
+
     // --- Accueil -------------------------------------------------------------------
     private void construitAccueil() {
-        accueil = new List("MyHitbodedut", List.IMPLICIT);
-        accueil.append("Hitbodedout", null);
-        accueil.append("'Hizouk", null);
-        accueil.append("Journal", null);
-        accueil.append("Rappel", null);
-        accueil.addCommand(quitter);
-        accueil.setCommandListener(this);
+        accueil = new Menu("MyHitbodedut", new String[] {"Hitbodedout", "'Hizouk", "Journal", "Rappel"}, this);
+        accueil.haut = new Menu.Haut() {
+            public int dessine(Graphics g, int y, int w) {
+                return enteteAccueil(g, y, w);
+            }
+        };
+        metAJourAccueil();
+        ecoute(accueil, new Command[] {choisir, quitter});
+    }
+
+    private void metAJourAccueil() {
+        int n = 0;
+        for (int i = 0; i < textes.textes.length; i++) n += textes.textes[i].length;
+        accueil.details = new String[] {
+            "De 5 min à 1 h 30, ou au choix",
+            n + " textes, moment par moment",
+            "Série et 7 derniers jours",
+            journal.rappel >= 0 ? "Chaque jour à " + Regles.heure(journal.rappel) : "Pas de rappel",
+        };
     }
 
     private void montreAccueil() {
-        accueil.setTitle("MyHitbodedut · " + resumeDuJour());
+        metAJourAccueil();
         display.setCurrent(accueil);
+        accueil.repaint();
     }
 
-    private String resumeDuJour() {
-        int m = journal.minutesDu(Journal.aujourdhui());
-        return m > 0 ? "fait : " + duree(m) : "à faire";
-    }
+    /** Le personnage du jour, l'état de la hitbodedout, la série et la semaine. */
+    private int enteteAccueil(Graphics g, int y, int w) {
+        int auj = journal.minutesDu(Journal.aujourdhui());
+        int d = 76;
+        Ecran.plaque(g, auj > 0 ? Ecran.duJour(Ecran.JOIE, 3) : Ecran.duJour(Ecran.ACCUEIL, 0), Ecran.MARGE + d / 2, y, d);
+        int x = Ecran.MARGE + d + 10;
+        g.setFont(Ecran.PETITE);
+        g.setColor(Ecran.MUTED);
+        g.drawString("Hitbodedout du jour", x, y + 2, Graphics.TOP | Graphics.LEFT);
+        g.setFont(Ecran.GRANDE);
+        g.setColor(auj > 0 ? Ecran.BRAND : Ecran.WARNING);
+        g.drawString(auj > 0 ? "Faite : " + Regles.duree(auj) : "À faire", x, y + 2 + Ecran.PETITE.getHeight(), Graphics.TOP | Graphics.LEFT);
+        int s = journal.serie();
+        g.setFont(Ecran.PETITE);
+        g.setColor(Ecran.INK);
+        int ys = y + 4 + Ecran.PETITE.getHeight() + Ecran.GRANDE.getHeight();
+        g.drawString("Série : " + s + (s > 1 ? " jours" : " jour"), x, ys, Graphics.TOP | Graphics.LEFT);
 
-    static String duree(int minutes) {
-        if (minutes < 60) return minutes + " min";
-        int h = minutes / 60;
-        int m = minutes % 60;
-        return h + " h" + (m == 0 ? "" : " " + (m < 10 ? "0" : "") + m);
+        // La semaine : un carré par jour, plein quand la hitbodedout est faite.
+        int c = Math.min(16, (w - x - Ecran.MARGE - 6 * 3) / 7);
+        int yc = ys + Ecran.PETITE.getHeight() + 4;
+        Calendar cal = Calendar.getInstance();
+        for (int k = 0; k < 7; k++) {
+            cal.setTime(new Date(System.currentTimeMillis() - (6 - k) * 86400000L));
+            boolean fait = journal.minutesDu(Journal.jour(cal.getTime())) > 0;
+            int cx = x + k * (c + 3);
+            g.setColor(fait ? Ecran.BRAND : Ecran.DAY_TODO);
+            g.fillRoundRect(cx, yc, c, c, 5, 5);
+            if (k == 6) {
+                g.setColor(Ecran.BRAND);
+                g.drawRoundRect(cx - 1, yc - 1, c + 1, c + 1, 6, 6);
+            }
+            g.setColor(fait ? 0xFFFFFF : Ecran.MUTED);
+            g.drawString(JournalEcran.INITIALES[cal.get(Calendar.DAY_OF_WEEK) - 1], cx + c / 2, yc + (c - Ecran.PETITE.getHeight()) / 2 + 1, Graphics.TOP | Graphics.HCENTER);
+        }
+        return Math.max(d, yc + c - y);
     }
 
     // --- Hitbodedout ---------------------------------------------------------------------
     private void choisitDuree() {
         if (durees == null) {
-            durees = new List("Durée", List.IMPLICIT);
-            for (int i = 0; i < DUREES.length; i++) durees.append(duree(DUREES[i]), null);
-            durees.append("Au choix", null);
-            durees.addCommand(retour);
-            durees.setCommandListener(this);
+            String[] items = new String[DUREES.length + 1];
+            for (int i = 0; i < DUREES.length; i++) items[i] = Regles.duree(DUREES[i]);
+            items[DUREES.length] = "Au choix";
+            durees = new Menu("Durée", items, this);
+            durees.personnage = "praying";
+            ecoute(durees, new Command[] {choisir, retour});
         }
         display.setCurrent(durees);
     }
 
     private void demandeAuChoix() {
         auChoix = new TextBox("Minutes (1 à 180)", "20", 3, TextField.NUMERIC);
-        auChoix.addCommand(ok);
-        auChoix.addCommand(retour);
-        auChoix.setCommandListener(this);
+        ecoute(auChoix, new Command[] {ok, retour});
         display.setCurrent(auChoix);
     }
 
@@ -139,19 +185,21 @@ public final class MyHitbodedut extends MIDlet implements CommandListener, Minut
     private void prepare(int minutes) {
         dureeChoisie = minutes;
         int m = textes.moment("ouverture");
-        Form f = formTexte(m, m < 0 ? -1 : textes.tire(m), "Hitbodedout · " + duree(minutes));
-        f.addCommand(commencer);
-        f.addCommand(retour);
-        f.setCommandListener(this);
-        display.setCurrent(f);
+        int t = m < 0 ? -1 : textes.tire(m);
+        avant = new Lecture("Hitbodedout · " + Regles.duree(minutes), "open_arms", null,
+            t < 0 ? null : textes.textes[m][t], t < 0 ? null : textes.refs[m][t]);
+        avant.action = new Lecture.Action() {
+            public void centre(Lecture l) {
+                lance();
+            }
+        };
+        ecoute(avant, new Command[] {commencer, retour});
+        display.setCurrent(avant);
     }
 
     private void lance() {
         minuteur = new Minuteur(dureeChoisie, this);
-        minuteur.addCommand(pause);
-        minuteur.addCommand(bloque);
-        minuteur.addCommand(arreter);
-        minuteur.setCommandListener(this);
+        ecoute(minuteur, new Command[] {pause, bloque, arreter});
         display.setCurrent(minuteur);
         minuteur.demarre();
     }
@@ -188,13 +236,17 @@ public final class MyHitbodedut extends MIDlet implements CommandListener, Minut
         journal.ecrit();
         if (complete) sonne();
         int m = textes.moment("cloture");
-        String titre = textes.mot("session_done_title");
-        Form f = formTexte(m, m < 0 ? -1 : textes.tire(m), titre);
-        String bilan = minutes > 0 ? duree(minutes) + " de hitbodedout." : "Moins d'une minute : rien n'est noté.";
-        f.insert(0, new StringItem(null, bilan + "\n"));
-        f.addCommand(accueilCmd);
-        f.setCommandListener(this);
-        display.setCurrent(f);
+        int t = m < 0 ? -1 : textes.tire(m);
+        String bilan = minutes > 0 ? "Bravo ! " + Regles.duree(minutes) + " de hitbodedout." : "Moins d'une minute : rien n'est noté.";
+        fin = new Lecture(textes.mot("session_done_title"), minutes > 0 ? Ecran.duJour(Ecran.JOIE, 3) : "sitting_low", bilan,
+            t < 0 ? null : textes.textes[m][t], t < 0 ? null : textes.refs[m][t]);
+        fin.action = new Lecture.Action() {
+            public void centre(Lecture l) {
+                montreAccueil();
+            }
+        };
+        ecoute(fin, new Command[] {accueilCmd});
+        display.setCurrent(fin);
     }
 
     private void sonne() {
@@ -213,73 +265,63 @@ public final class MyHitbodedut extends MIDlet implements CommandListener, Minut
     // --- ’Hizouk ---------------------------------------------------------------------------
     private void montreMoments() {
         if (moments == null) {
-            moments = new List("'Hizouk", List.IMPLICIT);
-            for (int i = 0; i < textes.titres.length; i++) moments.append(textes.titres[i], null);
-            moments.addCommand(retour);
-            moments.setCommandListener(this);
+            int n = textes.titres.length;
+            moments = new Menu("'Hizouk", textes.titres, this);
+            moments.details = new String[n];
+            moments.personnages = new String[n];
+            for (int i = 0; i < n; i++) {
+                int k = textes.textes[i].length;
+                moments.details[i] = k + (k > 1 ? " textes" : " texte");
+                moments.personnages[i] = Ecran.duMoment(textes.cles[i]);
+            }
+            ecoute(moments, new Command[] {choisir, retour});
         }
         display.setCurrent(moments);
     }
 
     private void montreListe(int moment) {
         momentOuvert = moment;
-        liste = new List(textes.titres[moment], List.IMPLICIT);
-        for (int i = 0; i < textes.refs[moment].length; i++) liste.append((i + 1) + ". " + textes.refs[moment][i], null);
-        liste.addCommand(retour);
-        liste.setCommandListener(this);
+        int n = textes.refs[moment].length;
+        liste = new Menu(textes.titres[moment], textes.refs[moment], this);
+        liste.personnage = Ecran.duMoment(textes.cles[moment]);
+        liste.details = new String[n];
+        for (int i = 0; i < n; i++) liste.details[i] = debut(textes.textes[moment][i]);
+        ecoute(liste, new Command[] {choisir, retour});
         display.setCurrent(liste);
+    }
+
+    private static String debut(String texte) {
+        return texte.length() <= 40 ? texte : texte.substring(0, 40);
     }
 
     private void lit(int moment, int texte, Displayable ensuite) {
         momentOuvert = moment;
         texteOuvert = texte;
         apresLecture = ensuite;
-        lecture = formTexte(moment, texte, textes.titres[moment]);
-        lecture.addCommand(retour);
-        if (textes.textes[moment].length > 1) lecture.addCommand(autre);
-        lecture.setCommandListener(this);
+        lecture = new Lecture(textes.titres[moment], Ecran.duMoment(textes.cles[moment]), null,
+            textes.textes[moment][texte], textes.refs[moment][texte]);
+        if (textes.textes[moment].length > 1) {
+            lecture.action = new Lecture.Action() {
+                public void centre(Lecture l) {
+                    texteSuivant();
+                }
+            };
+            ecoute(lecture, new Command[] {retour, autre});
+        } else {
+            ecoute(lecture, new Command[] {retour});
+        }
         display.setCurrent(lecture);
     }
 
-    private Form formTexte(int moment, int texte, String titre) {
-        Form f = new Form(titre);
-        if (moment >= 0 && texte >= 0) {
-            f.append(new StringItem(null, textes.textes[moment][texte]));
-            StringItem ref = new StringItem(null, "\n" + textes.refs[moment][texte]);
-            ref.setLayout(Item.LAYOUT_NEWLINE_BEFORE);
-            f.append(ref);
-        }
-        return f;
+    private void texteSuivant() {
+        lit(momentOuvert, (texteOuvert + 1) % textes.textes[momentOuvert].length, apresLecture);
     }
 
     // --- Journal ------------------------------------------------------------------------
-    private static final String[] JOURS = {"dim.", "lun.", "mar.", "mer.", "jeu.", "ven.", "sam."};
-
     private void montreJournal() {
-        Form f = new Form("Journal");
-        if (journal.joursFaits() == 0) {
-            f.append(textes.mot("journal_empty"));
-        } else {
-            int auj = journal.minutesDu(Journal.aujourdhui());
-            f.append(new StringItem("Aujourd'hui : ", (auj > 0 ? duree(auj) : "pas encore") + "\n"));
-            int s = journal.serie();
-            f.append(new StringItem("Série : ", s + (s > 1 ? " jours d'affilée" : " jour") + "\n"));
-            StringBuffer b = new StringBuffer();
-            Calendar c = Calendar.getInstance();
-            for (int n = 0; n < 7; n++) {
-                c.setTime(new Date(System.currentTimeMillis() - n * 86400000L));
-                int m = journal.minutesDu(Journal.jour(c.getTime()));
-                b.append(JOURS[c.get(Calendar.DAY_OF_WEEK) - 1]).append(' ')
-                    .append(c.get(Calendar.DAY_OF_MONTH)).append('/').append(c.get(Calendar.MONTH) + 1)
-                    .append(" : ").append(m > 0 ? duree(m) : "-").append('\n');
-            }
-            f.append(new StringItem("7 derniers jours\n", b.toString()));
-            int jours = journal.joursFaits();
-            f.append(new StringItem("En tout : ", jours + (jours > 1 ? " jours, " : " jour, ") + duree(journal.totalMinutes())));
-        }
-        f.addCommand(retour);
-        f.setCommandListener(this);
-        display.setCurrent(f);
+        journalEcran = new JournalEcran(journal, textes.mot("journal_empty"));
+        ecoute(journalEcran, new Command[] {retour});
+        display.setCurrent(journalEcran);
     }
 
     // --- Rappel -------------------------------------------------------------------------
@@ -297,9 +339,7 @@ public final class MyHitbodedut extends MIDlet implements CommandListener, Minut
         heure.setDate(c.getTime());
         reglage.append(heure);
         reglage.append("Le téléphone ouvre MyHitbodedut à l'heure choisie. S'il le refuse, règle plutôt son alarme.");
-        reglage.addCommand(enregistrer);
-        reglage.addCommand(retour);
-        reglage.setCommandListener(this);
+        ecoute(reglage, new Command[] {enregistrer, retour});
         display.setCurrent(reglage);
     }
 
@@ -313,29 +353,18 @@ public final class MyHitbodedut extends MIDlet implements CommandListener, Minut
         }
         journal.ecrit();
         String resultat = reprogrammeRappel();
+        metAJourAccueil();
         Alert a = new Alert("Rappel", resultat, null, AlertType.CONFIRMATION);
         a.setTimeout(3000);
         display.setCurrent(a, accueil);
     }
 
-    /** La prochaine heure de rappel, en millisecondes, après maintenant. */
-    static long prochain(int minutesApresMinuit, long maintenant) {
-        Calendar c = Calendar.getInstance();
-        c.setTime(new Date(maintenant));
-        c.set(Calendar.HOUR_OF_DAY, minutesApresMinuit / 60);
-        c.set(Calendar.MINUTE, minutesApresMinuit % 60);
-        c.set(Calendar.SECOND, 0);
-        c.set(Calendar.MILLISECOND, 0);
-        long t = c.getTime().getTime();
-        return t > maintenant ? t : t + 86400000L;
-    }
-
     /** Une alarme ne sonne qu'une fois : on la reprogramme à chaque ouverture. */
     private String reprogrammeRappel() {
         try {
-            long quand = journal.rappel >= 0 ? prochain(journal.rappel, System.currentTimeMillis()) : 0;
+            long quand = journal.rappel >= 0 ? Regles.prochain(journal.rappel, System.currentTimeMillis()) : 0;
             PushRegistry.registerAlarm(getClass().getName(), quand);
-            return journal.rappel >= 0 ? "Rappel chaque jour à " + heureTexte(journal.rappel) + "." : "Rappel désactivé.";
+            return journal.rappel >= 0 ? "Rappel chaque jour à " + Regles.heure(journal.rappel) + "." : "Rappel désactivé.";
         } catch (Throwable t) {
             return "Ce téléphone refuse les rappels d'application. Règle plutôt son alarme (Menu > Extras).";
         }
@@ -349,25 +378,29 @@ public final class MyHitbodedut extends MIDlet implements CommandListener, Minut
         return ecart >= 0 && ecart <= 2;
     }
 
-    static String heureTexte(int m) {
-        return (m / 60) + " h " + (m % 60 < 10 ? "0" : "") + (m % 60);
+
+    // --- Choix dans les menus et commandes ----------------------------------------------------
+    public void choisi(Menu m, int i) {
+        if (m == accueil) {
+            if (i == 0) choisitDuree();
+            else if (i == 1) montreMoments();
+            else if (i == 2) montreJournal();
+            else montreRappel();
+        } else if (m == durees) {
+            if (i < DUREES.length) prepare(DUREES[i]);
+            else demandeAuChoix();
+        } else if (m == moments) {
+            montreListe(i);
+        } else if (m == liste) {
+            lit(momentOuvert, i, liste);
+        }
     }
 
-    // --- Commandes -------------------------------------------------------------------------
     public void commandAction(Command c, Displayable d) {
         if (c == quitter) {
             notifyDestroyed();
-        } else if (d == accueil && c == List.SELECT_COMMAND) {
-            switch (accueil.getSelectedIndex()) {
-                case 0: choisitDuree(); break;
-                case 1: montreMoments(); break;
-                case 2: montreJournal(); break;
-                default: montreRappel(); break;
-            }
-        } else if (d == durees && c == List.SELECT_COMMAND) {
-            int i = durees.getSelectedIndex();
-            if (i < DUREES.length) prepare(DUREES[i]);
-            else demandeAuChoix();
+        } else if (c == choisir && d instanceof Menu) {
+            choisi((Menu) d, ((Menu) d).selection);
         } else if (d == auChoix && c == ok) {
             int m = 0;
             try {
@@ -376,32 +409,23 @@ public final class MyHitbodedut extends MIDlet implements CommandListener, Minut
                 // reste à 0
             }
             if (m >= 1 && m <= 180) prepare(m);
-        } else if (d == auChoix && c == retour) {
-            display.setCurrent(durees);
-        } else if (c == commencer) {
-            lance();
-        } else if (d == minuteur && (c == pause || c == reprendre)) {
-            basculePause();
-        } else if (d == minuteur && c == bloque) {
-            int m = textes.moment("blocage");
-            if (m >= 0) lit(m, textes.tire(m), minuteur);
-        } else if (d == minuteur && c == arreter) {
-            minuteur.arrete();
-        } else if (d == moments && c == List.SELECT_COMMAND) {
-            montreListe(moments.getSelectedIndex());
-        } else if (d == liste && c == List.SELECT_COMMAND) {
-            lit(momentOuvert, liste.getSelectedIndex(), liste);
-        } else if (d == lecture && c == autre) {
-            lit(momentOuvert, (texteOuvert + 1) % textes.textes[momentOuvert].length, apresLecture);
-        } else if (d == lecture && c == retour) {
-            display.setCurrent(apresLecture);
+        } else if (d == auChoix || d == avant) {
+            if (c == commencer) lance();
+            else display.setCurrent(durees);
+        } else if (d == minuteur) {
+            if (c == pause || c == reprendre) basculePause();
+            else if (c == arreter) minuteur.arrete();
+            else if (c == bloque) {
+                int m = textes.moment("blocage");
+                if (m >= 0) lit(m, textes.tire(m), minuteur);
+            }
+        } else if (d == lecture) {
+            if (c == autre) texteSuivant();
+            else display.setCurrent(apresLecture);
+        } else if (d == liste) {
+            display.setCurrent(moments);
         } else if (d == reglage && c == enregistrer) {
             enregistreRappel();
-        } else if (d == liste && c == retour) {
-            display.setCurrent(moments);
-        } else if (c == retour && d != accueil && d != moments) {
-            if (d.getTitle() != null && d.getTitle().startsWith("Hitbodedout ·")) display.setCurrent(durees);
-            else montreAccueil();
         } else {
             montreAccueil();
         }

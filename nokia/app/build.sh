@@ -44,7 +44,7 @@ rm -rf "$TRAVAIL" && mkdir -p "$TRAVAIL/classes" "$TRAVAIL/res" "$DIST"
 
 # 1. Les textes, depuis les ressources Android.
 node "$ICI/genere-textes.mjs" "$TRAVAIL/res/textes.bin"
-cp "$ICI/res/icone.png" "$TRAVAIL/res/"
+cp -R "$ICI/res/." "$TRAVAIL/res/"
 
 # 2. Compilation contre les seules API du téléphone.
 "$JDK8/bin/javac" -nowarn -source 1.3 -target 1.3 -encoding UTF-8 \

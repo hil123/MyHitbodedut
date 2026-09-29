@@ -22,16 +22,16 @@ public final class TestsRegles {
     }
 
     public static void main(String[] args) throws Exception {
-        egal("5 min", MyHitbodedut.duree(5), "5 min");
-        egal("1 h", MyHitbodedut.duree(60), "1 h");
-        egal("1 h 30", MyHitbodedut.duree(90), "1 h 30");
-        egal("2 h 05", MyHitbodedut.duree(125), "2 h 05");
-        egal("20 h 05", MyHitbodedut.heureTexte(20 * 60 + 5), "heure du rappel");
+        egal("5 min", Regles.duree(5), "5 min");
+        egal("1 h", Regles.duree(60), "1 h");
+        egal("1 h 30", Regles.duree(90), "1 h 30");
+        egal("2 h 05", Regles.duree(125), "2 h 05");
+        egal("20 h 05", Regles.heure(20 * 60 + 5), "heure du rappel");
 
-        egal("5:00", Minuteur.horloge(300000), "horloge 5 min");
-        egal("0:01", Minuteur.horloge(1), "une milliseconde se lit 0:01");
-        egal("1:30:00", Minuteur.horloge(90 * 60000L), "horloge 1 h 30");
-        egal("1:00:05", Minuteur.horloge(3605000L), "horloge 1 h 00 min 05");
+        egal("5:00", Regles.horloge(300000), "horloge 5 min");
+        egal("0:01", Regles.horloge(1), "une milliseconde se lit 0:01");
+        egal("1:30:00", Regles.horloge(90 * 60000L), "horloge 1 h 30");
+        egal("1:00:05", Regles.horloge(3605000L), "horloge 1 h 00 min 05");
 
         // Le journal survit à l'écriture et à la relecture.
         Journal j = new Journal();
@@ -59,9 +59,9 @@ public final class TestsRegles {
         c.set(Calendar.MILLISECOND, 0);
         long maintenant = c.getTime().getTime();
         Calendar p = Calendar.getInstance();
-        p.setTime(new Date(MyHitbodedut.prochain(20 * 60, maintenant)));
+        p.setTime(new Date(Regles.prochain(20 * 60, maintenant)));
         egal("29 20:00", p.get(Calendar.DAY_OF_MONTH) + " " + p.get(Calendar.HOUR_OF_DAY) + ":" + p.get(Calendar.MINUTE) + "0", "rappel plus tard le jour même");
-        p.setTime(new Date(MyHitbodedut.prochain(7 * 60, maintenant)));
+        p.setTime(new Date(Regles.prochain(7 * 60, maintenant)));
         egal("30 7:00", p.get(Calendar.DAY_OF_MONTH) + " " + p.get(Calendar.HOUR_OF_DAY) + ":" + p.get(Calendar.MINUTE) + "0", "rappel passé : demain");
 
         if (echecs > 0) {

@@ -1,14 +1,17 @@
 # MyHitbodedut pour téléphone à touches
 
-Une vraie application, en un seul fichier : `MyHitbodedut.jar` (environ 21 Ko), en français, sans Internet. Elle s'installe sur les téléphones à touches qui acceptent les applications Java (Java ME : MIDP 2.0, CLDC 1.1), dont le Nokia 3310 3G de 2017.
+Une vraie application, en un seul fichier : `MyHitbodedut.jar` (environ 107 Ko), en français, sans Internet, dans les couleurs de l'application et avec son personnage. Elle s'installe sur les téléphones à touches qui acceptent les applications Java (Java ME : MIDP 2.0, CLDC 1.1), dont le Nokia 3310 3G de 2017.
 
 | Dans l'application Android | Dans MyHitbodedut.jar |
 | --- | --- |
 | Hitbodedout minutée : 5, 10, 15, 30 min, 1 h, 1 h 30, au choix | pareil ; pause à la touche centrale, sonnerie et vibration à la fin |
 | Texte « Pour commencer », « Je n'arrive pas à parler », texte « Pour finir » | pareil |
 | ’Hizouk par moment | les 46 textes publiés, en français |
-| Journal | minutes du jour, série, 7 derniers jours, total |
+| Accueil | le personnage du jour, « À faire » ou « Faite : 20 min », la série et la semaine en carrés |
+| Journal | minutes du jour, série, 7 derniers jours en barres, total |
 | Rappels | un rappel quotidien, si le téléphone l'autorise (PushRegistry) ; sinon, l'alarme du téléphone |
+
+Les écrans sont dessinés (couleurs de `values/colors.xml`) ; le personnage change avec le moment, comme `Character.kt`. Les illustrations viennent de `drawable-nodpi/char_*.webp`, converties en PNG de 80 px par `app/genere-personnages.mjs` (un téléphone Java ne lit que le PNG) et gardées dans `app/res/p`.
 
 Absents : l'hébreu (un téléphone à touches n'a pas toujours la police), le Tikoun HaKlali (en hébreu seulement), la musique, la bibliothèque.
 

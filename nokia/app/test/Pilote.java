@@ -49,7 +49,7 @@ public class Pilote {
             else if (pas.equals("droite")) touche(KeyEvent.VK_F2, KeyEvent.CHAR_UNDEFINED);
             else if (pas.equals("effacer")) touche(KeyEvent.VK_BACK_SPACE, '\b');
             else throw new IllegalArgumentException(pas);
-            Thread.sleep(400);
+            Thread.sleep(1000);
         }
         System.exit(0);
     }
