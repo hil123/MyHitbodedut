@@ -43,6 +43,7 @@ public final class MyHitbodedut extends MIDlet implements CommandListener, Minut
     private final Command bloque = new Command("Je n'arrive pas à parler", Command.SCREEN, 2);
     private final Command arreter = new Command("Arrêter", Command.STOP, 3);
     private final Command enregistrer = new Command("Enregistrer", Command.OK, 1);
+    private final Command lecturePause = new Command("Lecture/Pause", Command.OK, 1);
 
     private Menu accueil;
     private Menu durees;
@@ -57,6 +58,7 @@ public final class MyHitbodedut extends MIDlet implements CommandListener, Minut
     private DateField heure;
     private ChoiceGroup actif;
     private Minuteur minuteur;
+    private Musique musique;
     private int dureeChoisie;
     private int momentOuvert = -1;
     private int texteOuvert = -1;
@@ -88,6 +90,7 @@ public final class MyHitbodedut extends MIDlet implements CommandListener, Minut
 
     protected void destroyApp(boolean inconditionnel) {
         if (minuteur != null) minuteur.arrete();
+        if (musique != null) musique.arrete();
     }
 
     private void ecoute(Displayable d, Command[] commandes) {
@@ -97,7 +100,7 @@ public final class MyHitbodedut extends MIDlet implements CommandListener, Minut
 
     // --- Accueil -------------------------------------------------------------------
     private void construitAccueil() {
-        accueil = new Menu("MyHitbodedut", new String[] {"Hitbodedout", "'Hizouk", "Journal", "Rappel"}, this);
+        accueil = new Menu("MyHitbodedut", new String[] {"Hitbodedout", "Musique", "'Hizouk", "Journal", "Rappel"}, this);
         accueil.haut = new Menu.Haut() {
             public int dessine(Graphics g, int y, int w) {
                 return enteteAccueil(g, y, w);
@@ -112,6 +115,7 @@ public final class MyHitbodedut extends MIDlet implements CommandListener, Minut
         for (int i = 0; i < textes.textes.length; i++) n += textes.textes[i].length;
         accueil.details = new String[] {
             "De 5 min à 1 h 30, ou au choix",
+            musique != null && musique.joue() ? Musique.TITRE + " : en lecture" : Musique.TITRE + " (essai)",
             n + " textes, moment par moment",
             "Série et 7 derniers jours",
             journal.rappel >= 0 ? "Chaque jour à " + Regles.heure(journal.rappel) : "Pas de rappel",
@@ -317,6 +321,15 @@ public final class MyHitbodedut extends MIDlet implements CommandListener, Minut
         lit(momentOuvert, (texteOuvert + 1) % textes.textes[momentOuvert].length, apresLecture);
     }
 
+    // --- Musique -------------------------------------------------------------------------
+    private void montreMusique() {
+        if (musique == null) {
+            musique = new Musique();
+            ecoute(musique, new Command[] {lecturePause, retour});
+        }
+        display.setCurrent(musique);
+    }
+
     // --- Journal ------------------------------------------------------------------------
     private void montreJournal() {
         journalEcran = new JournalEcran(journal, textes.mot("journal_empty"));
@@ -383,8 +396,9 @@ public final class MyHitbodedut extends MIDlet implements CommandListener, Minut
     public void choisi(Menu m, int i) {
         if (m == accueil) {
             if (i == 0) choisitDuree();
-            else if (i == 1) montreMoments();
-            else if (i == 2) montreJournal();
+            else if (i == 1) montreMusique();
+            else if (i == 2) montreMoments();
+            else if (i == 3) montreJournal();
             else montreRappel();
         } else if (m == durees) {
             if (i < DUREES.length) prepare(DUREES[i]);
@@ -424,6 +438,8 @@ public final class MyHitbodedut extends MIDlet implements CommandListener, Minut
             else display.setCurrent(apresLecture);
         } else if (d == liste) {
             display.setCurrent(moments);
+        } else if (d == musique && c == lecturePause) {
+            musique.bascule();
         } else if (d == reglage && c == enregistrer) {
             enregistreRappel();
         } else {

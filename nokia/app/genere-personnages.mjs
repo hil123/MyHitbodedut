@@ -12,7 +12,7 @@ import { fileURLToPath } from 'node:url';
 
 export const PERSONNAGES = [
   'char_welcome', 'char_dancing_joy', 'char_praying', 'char_thumbs_up', 'char_writing', 'char_pointing',
-  'char_open_arms', 'char_sitting_low', 'char_walking', 'char_praise', 'char_standing_back',
+  'char_open_arms', 'char_sitting_low', 'char_walking', 'char_praise', 'char_standing_back', 'char_guitar',
 ];
 export const TAILLE = 80;
 

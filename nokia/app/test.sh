@@ -30,19 +30,20 @@ if [ -f "$EMU" ] && command -v xvfb-run >/dev/null; then
   P="$ICI/build/pilote"
   mkdir -p "$P"
   "$JDK8/bin/javac" -nowarn -encoding UTF-8 -cp "$EMU" -d "$P" "$ICI/test/Pilote.java"
-  PARCOURS="ok attente:800 capture:01-accueil ok capture:02-durees ok capture:03-pour-commencer ok attente:2500 capture:04-decompte ok capture:05-pause gauche capture:06-menu ok capture:07-bloque gauche capture:08-retour-decompte gauche bas ok capture:09-arret ok capture:10-accueil bas ok capture:11-moments bas capture:12-moment-suivant ok capture:13-liste ok capture:14-texte bas capture:15-texte-defile ok capture:16-autre-texte gauche gauche gauche bas ok capture:17-journal"
+  PARCOURS="ok attente:800 capture:01-accueil ok capture:02-durees ok capture:03-pour-commencer ok attente:2500 capture:04-decompte ok capture:05-pause gauche capture:06-menu ok capture:07-bloque gauche capture:08-retour-decompte gauche bas ok capture:09-arret ok capture:10-accueil bas bas ok capture:11-moments bas capture:12-moment-suivant ok capture:13-liste ok capture:14-texte bas capture:15-texte-defile ok capture:16-autre-texte gauche gauche gauche bas ok capture:17-journal gauche haut haut ok capture:18-musique ok attente:1500 capture:19-musique-lecture"
   (cd "$ICI/test" && timeout 120 xvfb-run -a "$JDK8/bin/java" -Djavax.accessibility.assistive_technologies=" " \
     -cp "$EMU:$P:." Pilote "$RACINE/nokia/dist/MyHitbodedut.jar" "$ICI/build/captures" "$PARCOURS")
   n=$(ls "$ICI/build/captures" | wc -l)
-  [ "$n" -eq 17 ] || { echo "Parcours incomplet : $n captures sur 17" >&2; exit 1; }
+  [ "$n" -eq 19 ] || { echo "Parcours incomplet : $n captures sur 19" >&2; exit 1; }
   # Chaque touche de ces étapes doit changer l'écran : sinon, l'application n'a pas suivi.
   empreinte() { md5sum "$ICI/build/captures/$1.png" | cut -d' ' -f1; }
   for paire in 01-accueil:02-durees 02-durees:03-pour-commencer 03-pour-commencer:04-decompte 04-decompte:05-pause \
       06-menu:07-bloque 08-retour-decompte:09-arret 09-arret:10-accueil 10-accueil:11-moments 11-moments:12-moment-suivant \
-      12-moment-suivant:13-liste 13-liste:14-texte 14-texte:15-texte-defile 15-texte-defile:16-autre-texte 16-autre-texte:17-journal; do
+      12-moment-suivant:13-liste 13-liste:14-texte 14-texte:15-texte-defile 15-texte-defile:16-autre-texte 16-autre-texte:17-journal \
+      17-journal:18-musique 18-musique:19-musique-lecture; do
     [ "$(empreinte "${paire%%:*}")" != "$(empreinte "${paire##*:}")" ] || { echo "Écran inchangé entre ${paire%%:*} et ${paire##*:}" >&2; exit 1; }
   done
-  echo "Parcours à l'écran : 17 captures dans nokia/app/build/captures"
+  echo "Parcours à l'écran : 19 captures dans nokia/app/build/captures"
 else
   echo "MicroEmulator ou xvfb-run absent : parcours à l'écran non joué."
 fi
