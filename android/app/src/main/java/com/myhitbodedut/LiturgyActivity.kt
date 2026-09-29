@@ -10,7 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 
 /**
  * Une partie du Tikoun qui n'est pas un psaume : ce qui se dit avant, les
- * versets de cloture, la kavana, la priere de Rabbi Nathan.
+ * versets de cloture, la kavana, la priere de Rabbi Natan.
  *
  * Meme mise en page que le lecteur de psaume, sans les boutons de
  * progression : ces parties ne se comptent pas dans les dix.

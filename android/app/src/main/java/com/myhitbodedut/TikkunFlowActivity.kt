@@ -19,7 +19,7 @@ import androidx.appcompat.app.AppCompatActivity
  *
  * Tout est construit d'avance dans une seule vue defilante : l'ouverture,
  * les dix psaumes a la suite, les versets de cloture. La kavana et la
- * priere de Rabbi Nathan restent a part, sur l'ecran de la liste : elles
+ * priere de Rabbi Natan restent a part, sur l'ecran de la liste : elles
  * ne font pas partie du trait.
  */
 class TikkunFlowActivity : AppCompatActivity() {

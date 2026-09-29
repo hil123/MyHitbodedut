@@ -184,13 +184,13 @@ bibliothèque comme entrées `source` dans une section `tefilot` :
 hitbodedout, sim'ha, Ouman, kedoucha, zéra chel kayama, parnassa,
 chmirat habrit, guéoula, zivoug, réfoua chelema.
 
-Toutes viennent de **ליקוטי תפילות** de Rabbi Nathan de Breslov (m. 1844),
+Toutes viennent de **ליקוטי תפילות** de Rabbi Natan de Breslev (m. 1844),
 et de lui seul : Likoutei Etsot avait été proposé, le propriétaire a
 tranché pour rester dans Likoutei Tefilot. Chaque prière annonce en tête
 la leçon de Likoutei Moharan dont elle procède ; **les vingt leçons ont
 été ouvertes et vérifiées** une à une, pas crues sur parole.
 
-**Ce que chaque entrée avoue** — Reb Noson tire de chaque leçon une prière
+**Ce que chaque entrée avoue** — Rabbi Natan tire de chaque leçon une prière
 très large. La demande peut donc s'y trouver sans que la leçon traite du
 sujet. Plutôt que de le laisser croire, chaque entrée porte un champ
 `lecon_sur_le_sujet` : **12 oui, 2 partiel, 6 non**. Un test tombe si
@@ -201,7 +201,7 @@ seule densité, donnait « oui » à guéoula sur **une seule** occurrence,
 parce que la leçon ne fait que 319 caractères. Seuil relevé à trois
 occurrences.
 
-**Licence** : le texte de Rabbi Nathan est du domaine public. La
+**Licence** : le texte de Rabbi Natan est du domaine public. La
 vocalisation, elle, est le travail éditorial d'une édition de 2021 dont
 Sefaria ne déclare pas la licence. La règle déjà en vigueur dans le projet
 pour Si'hot haRan et Chiv'hei haRan s'applique donc : `nikkoud_ok: false`,

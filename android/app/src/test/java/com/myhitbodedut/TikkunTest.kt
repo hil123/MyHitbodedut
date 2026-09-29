@@ -93,7 +93,7 @@ class TikkunTest {
 
     /**
      * Les quatre parties liturgiques reprises de la page fournie : ce qui se
-     * dit avant, les versets de cloture, la kavana, la priere de Rabbi Nathan.
+     * dit avant, les versets de cloture, la kavana, la priere de Rabbi Natan.
      */
     @Test
     fun `les parties liturgiques sont chargees`() {
@@ -207,7 +207,7 @@ class TikkunTest {
 
     /**
      * Ce que l'ecran de lecture continue enchaine : l'ouverture, les dix
-     * psaumes, la cloture. La kavana et la priere de Rabbi Nathan restent
+     * psaumes, la cloture. La kavana et la priere de Rabbi Natan restent
      * hors du trait — elles se disent apres.
      */
     @Test

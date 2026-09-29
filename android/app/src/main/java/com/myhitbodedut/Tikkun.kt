@@ -21,7 +21,7 @@ data class Verse(val numero: Int, val he: String, val arret: Pause? = null)
 
 /**
  * Une partie liturgique qui n'est pas un psaume : ce qui se dit avant, ce
- * qui se dit apres, la kavana, la priere de Rabbi Nathan.
+ * qui se dit apres, la kavana, la priere de Rabbi Natan.
  */
 data class LiturgyBlock(
     val cle: String,

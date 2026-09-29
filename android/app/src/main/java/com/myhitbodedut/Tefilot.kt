@@ -66,7 +66,7 @@ object TefilotRules {
      * La leçon annoncée par cette prière porte-t-elle sur le sujet sous lequel
      * on la range ?
      *
-     * Reb Noson tire de chaque leçon une prière très large : la demande de
+     * Rabbi Natan tire de chaque leçon une prière très large : la demande de
      * guérison est dans une prière sur les danses, celle du conjoint dans une
      * prière sur 'Hanoucca. Le fichier le dit ; l'écran le dira aussi, plutôt
      * que de laisser croire que chaque leçon traite du sujet.

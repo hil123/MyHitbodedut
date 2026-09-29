@@ -30,7 +30,7 @@ data class SourceEntry(
     val sujet: String?,
     /**
      * La leçon annoncée porte-t-elle sur ce sujet — « oui », « partiel »,
-     * « non » ? Reb Noson tire de chaque leçon une prière très large : la
+     * « non » ? Rabbi Natan tire de chaque leçon une prière très large : la
      * demande peut s'y trouver sans que la leçon traite du sujet. Le dire
      * vaut mieux que le laisser croire.
      */
