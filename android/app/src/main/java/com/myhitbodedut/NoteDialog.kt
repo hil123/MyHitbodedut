@@ -14,8 +14,9 @@ object NoteDialog {
         val density = activity.resources.displayMetrics.density
         val pad = (16 * density).toInt()
 
+        // Le hassid qui écrit : c'est une note qu'on laisse (demande du 29/09).
         val art = ImageView(activity).apply {
-            setImageResource(Character.joy())
+            setImageResource(R.drawable.char_writing)
             scaleType = ImageView.ScaleType.FIT_CENTER
             layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
