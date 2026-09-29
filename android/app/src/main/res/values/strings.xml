@@ -25,8 +25,8 @@
     <!-- Diagnostic -->
     <string name="gate_armed_title">La barrière veille</string>
     <plurals name="gate_armed_detail">
-        <item quantity="one">%1$d application est bloquée jusqu\'à %2$s ou jusqu\'à votre séance.</item>
-        <item quantity="other">%1$d applications sont bloquées jusqu\'à %2$s ou jusqu\'à votre séance.</item>
+        <item quantity="one">%1$d application est bloquée jusqu\'à %2$s ou jusqu\'à votre hitbodedout.</item>
+        <item quantity="other">%1$d applications sont bloquées jusqu\'à %2$s ou jusqu\'à votre hitbodedout.</item>
     </plurals>
     <string name="gate_permissions_title">Autorisations manquantes</string>
     <string name="gate_permissions_detail">Accordez l\'affichage par-dessus les autres applications et l\'accès aux données d\'utilisation, plus bas.</string>
@@ -44,9 +44,9 @@
     <string name="gate_window_detail">La barrière agit entre %1$s et %2$s. En dehors, rien n\'est bloqué.</string>
 
     <!-- Actions -->
-    <string name="action_start_session">Commencer une séance de %1$s</string>
-    <string name="action_another_session">Faire une séance de plus</string>
-    <string name="action_back_to_session">Revenir à la séance en cours</string>
+    <string name="action_start_session">Commencer une hitbodedout de %1$s</string>
+    <string name="action_another_session">Faire une hitbodedout de plus</string>
+    <string name="action_back_to_session">Revenir à la hitbodedout en cours</string>
     <string name="action_write_note">Écrire une note</string>
     <string name="action_journal">Voir le journal</string>
     <string name="action_preview_gate">Voir l\'écran de blocage maintenant</string>
@@ -61,7 +61,7 @@
     <!-- Réglages -->
     <string name="settings_window">Fenêtre de blocage</string>
     <string name="settings_snooze">Durée du report</string>
-    <string name="settings_target">Durée d\'une séance</string>
+    <string name="settings_target">Durée d\'une hitbodedout</string>
     <string name="settings_shabbat">Shabbat et Yom Tov</string>
     <string name="settings_shabbat_hint">Ces jours-là : pas de blocage, pas de rappel, et la série reste intacte.</string>
     <string name="settings_exempt_today">Jour de fête aujourd\'hui</string>
@@ -76,7 +76,7 @@
     <string name="action_open">Ouvrir</string>
     <string name="settings_all_granted">Toutes les autorisations sont accordées.</string>
     <string name="permission_notifications">Notifications</string>
-    <string name="permission_notifications_why">Sans elles, le rappel se programme et n’apparaît jamais, et la séance n’affiche rien quand le téléphone est posé.</string>
+    <string name="permission_notifications_why">Sans elles, le rappel se programme et n’apparaît jamais, et la hitbodedout n’affiche rien quand le téléphone est posé.</string>
     <string name="permission_battery_why">Sans elle, Android peut retarder le rappel de plusieurs heures pour économiser la batterie.</string>
     <string name="permission_overlay_why">Pour afficher l’écran de barrage par-dessus l’application que vous ouvrez le matin.</string>
     <string name="permission_usage_why">Pour savoir quelle application vient de s’ouvrir. Rien n’est enregistré ni envoyé.</string>
@@ -98,9 +98,9 @@
     <string name="blocker_start">Commencer maintenant, %1$s</string>
     <string name="blocker_already_done">Je l\'ai déjà faite</string>
     <string name="blocker_snooze">Plus tard (%1$d min)</string>
-    <string name="blocker_session_title">Séance en cours</string>
+    <string name="blocker_session_title">Hitbodedout en cours</string>
     <string name="blocker_session_subtitle">Il reste %1$s. Le téléphone peut attendre.</string>
-    <string name="blocker_back_to_session">Revenir à la séance</string>
+    <string name="blocker_back_to_session">Revenir à la hitbodedout</string>
     <string name="blocker_preview_badge">APERÇU, AUCUN EFFET</string>
     <string name="blocker_close_preview">Fermer l\'aperçu</string>
 
@@ -109,30 +109,30 @@
     <string name="session_idle_caption">Choisissez une durée, posez le téléphone.</string>
     <string name="session_idle_done">Déjà validée aujourd\'hui. Vous pouvez recommencer.</string>
     <string name="session_start">Commencer, %1$s</string>
-    <string name="session_target">Séance de %1$s</string>
+    <string name="session_target">Hitbodedout de %1$s</string>
     <string name="session_finish_now">Terminer maintenant</string>
     <string name="session_cancel">Abandonner</string>
-    <string name="session_finish_title">Terminer la séance ?</string>
+    <string name="session_finish_title">Terminer la hitbodedout ?</string>
     <string name="session_finish_message">Le temps déjà écoulé sera enregistré et la journée validée.</string>
-    <string name="session_cancel_title">Abandonner la séance ?</string>
+    <string name="session_cancel_title">Abandonner la hitbodedout ?</string>
     <string name="session_cancel_message">Rien ne sera enregistré et la journée restera à faire.</string>
-    <string name="session_running_title">Séance en cours</string>
+    <string name="session_running_title">Hitbodedout en cours</string>
     <string name="session_remaining">Il reste %1$s</string>
     <string name="session_open">Sans durée</string>
     <string name="session_open_caption">Sans durée : vous arrêtez quand vous arrêtez.</string>
     <string name="session_elapsed">Depuis %1$s</string>
     <string name="settings_hide_countdown">Masquer le décompte</string>
-    <string name="settings_hide_countdown_hint">Rien à l’écran pendant la séance, un son discret à la fin.</string>
+    <string name="settings_hide_countdown_hint">Rien à l’écran pendant la hitbodedout, un son discret à la fin.</string>
     <string name="session_hidden_caption">Le décompte est masqué. Un son vous préviendra.</string>
     <string name="session_running_hidden">Le décompte est masqué.</string>
-    <string name="blocker_session_hidden_subtitle">Séance en cours. Le téléphone peut attendre.</string>
+    <string name="blocker_session_hidden_subtitle">Hitbodedout en cours. Le téléphone peut attendre.</string>
     <string name="widget_label">Série MyHitbodedut</string>
     <string name="widget_description">La série en cours, et de quoi commencer d’un geste.</string>
     <string name="widget_done">Fait aujourd’hui.</string>
     <string name="widget_todo">Pas encore aujourd’hui.</string>
-    <string name="widget_running">Séance en cours.</string>
+    <string name="widget_running">Hitbodedout en cours.</string>
     <string name="widget_start">Commencer</string>
-    <string name="widget_resume">Revenir à la séance</string>
+    <string name="widget_resume">Revenir à la hitbodedout</string>
     <string name="settings_hitbodedut">Hitbodedout guidée</string>
     <string name="settings_hitbodedut_hint">Cinq temps pour savoir par quoi continuer, d’après Likoutei Moharan II, 25 et le Rambam.</string>
     <string name="hitbodedut_step">%1$d / %2$d</string>
@@ -157,25 +157,25 @@
     <string name="onboarding_practice_body">La hitbodedout, c’est se retirer seul un moment chaque jour et parler à Hachem dans sa propre langue, comme on parle à quelqu’un. Pas de formule à réciter, pas de niveau à atteindre.</string>
     <string name="onboarding_private">Rien ne sort d’ici</string>
     <string name="onboarding_private_body">L’application ne demande aucun accès à Internet. Ce que vous écrivez reste sur ce téléphone, et vous seul pouvez l’en sortir, par l’export.</string>
-    <string name="blocker_session_open_subtitle">Séance ouverte, depuis %1$s. Le téléphone peut attendre.</string>
-    <string name="session_done_title">Séance terminée</string>
+    <string name="blocker_session_open_subtitle">Hitbodedout ouverte, depuis %1$s. Le téléphone peut attendre.</string>
+    <string name="session_done_title">Hitbodedout terminée</string>
     <string name="session_done_text">%1$s de hitbodedout. Touchez pour laisser une note.</string>
 
     <!-- Journal et notes -->
     <string name="journal_title">Journal</string>
-    <string name="journal_empty">Aucune séance enregistrée pour l\'instant.</string>
-    <string name="note_title">Note de la séance</string>
+    <string name="journal_empty">Aucune hitbodedout enregistrée pour l\'instant.</string>
+    <string name="note_title">Note de la hitbodedout</string>
     <string name="note_hint">Ce qui est monté, ce qui a été demandé…</string>
 
     <!-- Rappel et notifications -->
     <string name="reminder_title">C\'est l\'heure de la hitbodedout</string>
-    <string name="reminder_text">Une séance de %1$s vous attend.</string>
+    <string name="reminder_text">Une hitbodedout de %1$s vous attend.</string>
     <string name="channel_gate">Barrière du matin</string>
     <string name="channel_gate_description">Notification permanente exigée par Android pendant la surveillance.</string>
-    <string name="channel_session">Séance en cours</string>
-    <string name="channel_session_description">Décompte affiché pendant une séance.</string>
+    <string name="channel_session">Hitbodedout en cours</string>
+    <string name="channel_session_description">Décompte affiché pendant une hitbodedout.</string>
     <string name="channel_reminder">Rappels</string>
-    <string name="channel_reminder_description">Rappel quotidien et fin de séance.</string>
+    <string name="channel_reminder_description">Rappel quotidien et fin de hitbodedout.</string>
 
     <!-- Sauvegarde -->
     <string name="export_ok">Sauvegarde enregistrée.</string>
@@ -205,14 +205,14 @@
     </plurals>
 
     <plurals name="journal_summary">
-        <item quantity="one">%1$d séance, %2$s au total</item>
-        <item quantity="other">%1$d séances, %2$s au total</item>
+        <item quantity="one">%1$d hitbodedout, %2$s au total</item>
+        <item quantity="other">%1$d hitbodedout, %2$s au total</item>
     </plurals>
 
     <!-- Musique -->
     <string name="music_title">Musique</string>
-    <string name="settings_music">Musique de séance</string>
-    <string name="music_enable">Jouer pendant la séance</string>
+    <string name="settings_music">Musique de hitbodedout</string>
+    <string name="music_enable">Jouer pendant la hitbodedout</string>
     <string name="music_enable_hint">Le morceau démarre avec le minuteur et s\'arrête en fondu à la fin.</string>
     <string name="music_volume">Volume</string>
     <string name="music_library">Bibliothèque</string>
@@ -228,7 +228,7 @@
     <string name="music_rename_reset">Titre d\'origine</string>
     <string name="music_remove">Retirer</string>
     <string name="music_off_short">Désactivée</string>
-    <string name="music_off_summary">Aucune musique pendant les séances.</string>
+    <string name="music_off_summary">Aucune musique pendant les hitbodedout.</string>
     <string name="music_none_summary">Aucun morceau dans la bibliothèque.</string>
     <string name="music_on_summary">%1$s, volume %2$d %%</string>
     <string name="session_music_line">Musique : %1$s</string>
@@ -307,7 +307,7 @@
     <string name="tip_1_title">Choisissez un lieu calme et à l\'écart</string>
     <string name="tip_1_body">Le premier pas de la hitbodedout est de trouver un endroit calme, où vous pouvez être seul avec vous-même et avec Hachem. Il n\'a pas besoin d\'être totalement isolé, mais vous ne devez pas y être dérangé. Une pièce libre chez vous, une plage tranquille, un coin de nature. Si vous le pouvez, préférez un cadre naturel : la nature elle-même peut être une source de calme intérieur.</string>
     <string name="tip_2_title">Fixez un temps quotidien ou hebdomadaire</string>
-    <string name="tip_2_body">Si vous débutez, commencez court. Accordez quinze minutes par jour à la hitbodedout, puis allongez progressivement jusqu\'à une heure entière. Ne sautez pas d\'emblée à une longue séance. Avancez pas à pas, pour que cela devienne une habitude et non un fardeau. Fixez une heure régulière, afin que la pratique entre dans votre routine au lieu de rester un geste au hasard.</string>
+    <string name="tip_2_body">Si vous débutez, commencez court. Accordez quinze minutes par jour à la hitbodedout, puis allongez progressivement jusqu\'à une heure entière. Ne sautez pas d\'emblée à une longue hitbodedout. Avancez pas à pas, pour que cela devienne une habitude et non un fardeau. Fixez une heure régulière, afin que la pratique entre dans votre routine au lieu de rester un geste au hasard.</string>
     <string name="tip_3_title">Commencez par la parole intérieure</string>
     <string name="tip_3_body">Commencez la hitbodedout par la parole intérieure, parlez avec Hachem. Ne vous inquiétez pas si au début vous ne savez pas quoi dire. Ouvrez simplement le cœur et lancez-vous. Ce peut être une demande de pardon, une prière toute simple sur ce que vous ressentez, ou même de la gratitude. La hitbodedout n\'a pas à être ordonnée ni préparée d\'avance. C\'est un lieu où déposer ce qui est dans votre cœur et vous tourner vers le lien avec Hachem.</string>
     <string name="tip_4_title">Écartez les appareils</string>
@@ -387,10 +387,10 @@
 
     <!-- Rappels de hitbodedout -->
     <string name="reminders_title">Rappels</string>
-    <string name="reminders_hint">Une ou plusieurs heures dans la journée. Rien ne sonne un jour de repos, ni une fois la séance faite.</string>
+    <string name="reminders_hint">Une ou plusieurs heures dans la journée. Rien ne sonne un jour de repos, ni une fois la hitbodedout faite.</string>
     <string name="reminders_open">Régler les rappels</string>
     <string name="reminders_enable">Me rappeler la hitbodedout</string>
-    <string name="reminders_enable_hint">Un rappel aux heures réglées, tant que la séance du jour n\'est pas faite.</string>
+    <string name="reminders_enable_hint">Un rappel aux heures réglées, tant que la hitbodedout du jour n\'est pas faite.</string>
     <string name="reminders_hours">Heures</string>
     <string name="reminders_hours_hint">Touchez une heure pour la changer. Un seul rappel se rate facilement.</string>
     <string name="reminders_add">Ajouter une heure</string>
@@ -425,9 +425,9 @@
     <string name="theme_autre">Autre chose</string>
     <string name="hero_greeting">Bonjour %1$s</string>
     <string name="nav_today">Aujourd’hui</string>
-    <string name="nav_texts">Textes</string>
+    <string name="nav_texts">Hitbodedout</string>
     <string name="nav_journal">Journal</string>
-    <string name="section_around">Autour de la séance</string>
+    <string name="section_around">Autour de la hitbodedout</string>
     <plurals name="week_gauge">
         <item quantity="one">%1$d jour sur %2$d cette semaine</item>
         <item quantity="other">%1$d jours sur %2$d cette semaine</item>
@@ -460,16 +460,16 @@
     <string name="tefila_refua">Refoua chelema</string>
 
     <!-- Présentation détaillée, bravo de fin de séance, apparence (28/09). -->
-    <string name="onboarding_session">La séance</string>
-    <string name="onboarding_session_body">Choisissez une durée, ou une séance sans durée, et un sujet si vous voulez. Un nigoun peut vous accompagner. Un mot de ’hizouk ouvre et clôt la séance, et si les mots ne viennent pas, un bouton est là pour vous aider.</string>
+    <string name="onboarding_session">La hitbodedout</string>
+    <string name="onboarding_session_body">Choisissez une durée, ou une hitbodedout sans durée, et un sujet si vous voulez. Un nigoun peut vous accompagner. Un mot de ’hizouk ouvre et clôt la hitbodedout, et si les mots ne viennent pas, un bouton est là pour vous aider.</string>
     <string name="onboarding_days">Jour après jour</string>
-    <string name="onboarding_days_body">La série compte les jours de pratique d’affilée, et la semaine se lit d’un coup d’œil. Après chaque séance, une note peut rejoindre votre journal. Des rappels vous font signe à l’heure que vous choisissez.</string>
+    <string name="onboarding_days_body">La série compte les jours de pratique d’affilée, et la semaine se lit d’un coup d’œil. Après chaque hitbodedout, une note peut rejoindre votre journal. Des rappels vous font signe à l’heure que vous choisissez.</string>
     <string name="onboarding_texts">Des textes pour prier</string>
     <string name="onboarding_texts_body">Le Tikoun HaKlali, les Tfilot classées par sujet, une bibliothèque et des conseils pour la hitbodedout, à ouvrir quand vous voulez.</string>
     <string name="onboarding_yours">À votre façon</string>
-    <string name="onboarding_yours_body">Dans les réglages : la langue (français, anglais ou hébreu), les couleurs de l’écran, votre prénom et la durée habituelle d’une séance. La musique a sa propre section.</string>
+    <string name="onboarding_yours_body">Dans les réglages : la langue (français, anglais ou hébreu), les couleurs de l’écran, votre prénom et la durée habituelle d’une hitbodedout. La musique a sa propre section.</string>
     <string name="onboarding_adresse">Comment vous appeler ?</string>
-    <string name="onboarding_adresse_body">À la fin de chaque séance, l’application vous félicite. Choisissez le mot qui vous convient ; vous pourrez le changer dans les réglages.</string>
+    <string name="onboarding_adresse_body">À la fin de chaque hitbodedout, l’application vous félicite. Choisissez le mot qui vous convient ; vous pourrez le changer dans les réglages.</string>
     <string name="adresse_tsadik">Tsadik</string>
     <string name="adresse_tsadeket">Tsadeket</string>
     <string name="adresse_none">Pas choisi</string>
@@ -513,7 +513,7 @@
     <string name="duration_hours">%1$d h</string>
     <string name="duration_hours_minutes">%1$d h %2$02d</string>
     <string name="duration_custom">Durée réglable…</string>
-    <string name="duration_custom_title">Durée de la séance, en minutes</string>
+    <string name="duration_custom_title">Durée de la hitbodedout, en minutes</string>
     <string name="duration_custom_hint">De 1 à 240 minutes</string>
     <string name="music_shuffle">Lecture aléatoire</string>
     <string name="music_shuffle_hint">Un morceau au hasard, puis un autre ; aucun ne revient avant que tous aient été joués.</string>

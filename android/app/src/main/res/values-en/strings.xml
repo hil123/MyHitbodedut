@@ -19,8 +19,8 @@
 
     <string name="gate_armed_title">The gate is watching</string>
     <plurals name="gate_armed_detail">
-        <item quantity="one">%1$d app is blocked until %2$s or until your session.</item>
-        <item quantity="other">%1$d apps are blocked until %2$s or until your session.</item>
+        <item quantity="one">%1$d app is blocked until %2$s or until your hitbodedut.</item>
+        <item quantity="other">%1$d apps are blocked until %2$s or until your hitbodedut.</item>
     </plurals>
     <string name="gate_permissions_title">Permissions missing</string>
     <string name="gate_permissions_detail">Grant display over other apps and usage access, further down.</string>
@@ -37,9 +37,9 @@
     <string name="gate_window_title">Outside the window</string>
     <string name="gate_window_detail">The gate acts between %1$s and %2$s. Outside that, nothing is blocked.</string>
 
-    <string name="action_start_session">Start a %1$s session</string>
-    <string name="action_another_session">Another session</string>
-    <string name="action_back_to_session">Back to the running session</string>
+    <string name="action_start_session">Start a %1$s hitbodedut</string>
+    <string name="action_another_session">Another hitbodedut</string>
+    <string name="action_back_to_session">Back to the running hitbodedut</string>
     <string name="action_write_note">Write a note</string>
     <string name="action_journal">Open the journal</string>
     <string name="action_preview_gate">Preview the gate screen now</string>
@@ -53,7 +53,7 @@
 
     <string name="settings_window">Gate window</string>
     <string name="settings_snooze">Snooze length</string>
-    <string name="settings_target">Session length</string>
+    <string name="settings_target">Hitbodedut length</string>
     <string name="settings_shabbat">Shabbat and Yom Tov</string>
     <string name="settings_shabbat_hint">On those days: no blocking, no reminder, and the streak stays intact.</string>
     <string name="settings_exempt_today">Festival day today</string>
@@ -67,7 +67,7 @@
     <string name="action_open">Open</string>
     <string name="settings_all_granted">All permissions granted.</string>
     <string name="permission_notifications">Notifications</string>
-    <string name="permission_notifications_why">Without them the reminder is scheduled and never appears, and the session shows nothing once the phone is down.</string>
+    <string name="permission_notifications_why">Without them the reminder is scheduled and never appears, and the hitbodedut shows nothing once the phone is down.</string>
     <string name="permission_battery_why">Without it, Android may hold the reminder back for hours to save power.</string>
     <string name="permission_overlay_why">To show the blocker over the app you open in the morning.</string>
     <string name="permission_usage_why">To know which app has just opened. Nothing is recorded or sent.</string>
@@ -87,9 +87,9 @@
     <string name="blocker_start">Start now, %1$s</string>
     <string name="blocker_already_done">I already did it</string>
     <string name="blocker_snooze">Later (%1$d min)</string>
-    <string name="blocker_session_title">Session in progress</string>
+    <string name="blocker_session_title">Hitbodedut in progress</string>
     <string name="blocker_session_subtitle">%1$s left. The phone can wait.</string>
-    <string name="blocker_back_to_session">Back to the session</string>
+    <string name="blocker_back_to_session">Back to the hitbodedut</string>
     <string name="blocker_preview_badge">PREVIEW, NO EFFECT</string>
     <string name="blocker_close_preview">Close the preview</string>
 
@@ -97,30 +97,30 @@
     <string name="session_idle_caption">Pick a length, then put the phone down.</string>
     <string name="session_idle_done">Already confirmed today. You can start again.</string>
     <string name="session_start">Start, %1$s</string>
-    <string name="session_target">%1$s session</string>
+    <string name="session_target">%1$s hitbodedut</string>
     <string name="session_finish_now">Finish now</string>
     <string name="session_cancel">Abandon</string>
-    <string name="session_finish_title">Finish the session?</string>
+    <string name="session_finish_title">Finish the hitbodedut?</string>
     <string name="session_finish_message">The time already elapsed is recorded and the day confirmed.</string>
-    <string name="session_cancel_title">Abandon the session?</string>
+    <string name="session_cancel_title">Abandon the hitbodedut?</string>
     <string name="session_cancel_message">Nothing is recorded and the day stays open.</string>
-    <string name="session_running_title">Session in progress</string>
+    <string name="session_running_title">Hitbodedut in progress</string>
     <string name="session_remaining">%1$s left</string>
     <string name="session_open">No set length</string>
     <string name="session_open_caption">No set length: you stop when you stop.</string>
     <string name="session_elapsed">For %1$s</string>
     <string name="settings_hide_countdown">Hide the countdown</string>
-    <string name="settings_hide_countdown_hint">Nothing on screen during the session, a quiet sound at the end.</string>
+    <string name="settings_hide_countdown_hint">Nothing on screen during the hitbodedut, a quiet sound at the end.</string>
     <string name="session_hidden_caption">The countdown is hidden. A sound will tell you.</string>
     <string name="session_running_hidden">The countdown is hidden.</string>
-    <string name="blocker_session_hidden_subtitle">Session under way. The phone can wait.</string>
+    <string name="blocker_session_hidden_subtitle">Hitbodedut under way. The phone can wait.</string>
     <string name="widget_label">MyHitbodedut streak</string>
     <string name="widget_description">The streak so far, and one tap to begin.</string>
     <string name="widget_done">Done today.</string>
     <string name="widget_todo">Not yet today.</string>
-    <string name="widget_running">Session under way.</string>
+    <string name="widget_running">Hitbodedut under way.</string>
     <string name="widget_start">Begin</string>
-    <string name="widget_resume">Back to the session</string>
+    <string name="widget_resume">Back to the hitbodedut</string>
     <string name="settings_hitbodedut">Guided hitbodedut</string>
     <string name="settings_hitbodedut_hint">Five movements, so you know what comes next — from Likutei Moharan II, 25 and the Rambam.</string>
     <string name="hitbodedut_step">%1$d / %2$d</string>
@@ -145,23 +145,23 @@
     <string name="onboarding_practice_body">Hitbodedut means withdrawing alone for a while each day and speaking to Hashem in your own language, as you would to someone. No formula to recite, no level to reach.</string>
     <string name="onboarding_private">Nothing leaves this phone</string>
     <string name="onboarding_private_body">The app asks for no Internet access at all. What you write stays on this phone, and only you can take it out, through the export.</string>
-    <string name="blocker_session_open_subtitle">Open session, %1$s so far. The phone can wait.</string>
-    <string name="session_done_title">Session complete</string>
+    <string name="blocker_session_open_subtitle">Open hitbodedut, %1$s so far. The phone can wait.</string>
+    <string name="session_done_title">Hitbodedut complete</string>
     <string name="session_done_text">%1$s of hitbodedut. Tap to leave a note.</string>
 
     <string name="journal_title">Journal</string>
-    <string name="journal_empty">No session recorded yet.</string>
-    <string name="note_title">Session note</string>
+    <string name="journal_empty">No hitbodedut recorded yet.</string>
+    <string name="note_title">Hitbodedut note</string>
     <string name="note_hint">What came up, what was asked…</string>
 
     <string name="reminder_title">Time for hitbodedut</string>
-    <string name="reminder_text">A %1$s session is waiting.</string>
+    <string name="reminder_text">A %1$s hitbodedut is waiting.</string>
     <string name="channel_gate">Morning gate</string>
     <string name="channel_gate_description">Ongoing notification Android requires while the gate is watching.</string>
-    <string name="channel_session">Session in progress</string>
-    <string name="channel_session_description">Countdown shown during a session.</string>
+    <string name="channel_session">Hitbodedut in progress</string>
+    <string name="channel_session_description">Countdown shown during a hitbodedut.</string>
     <string name="channel_reminder">Reminders</string>
-    <string name="channel_reminder_description">Daily reminder and end of session.</string>
+    <string name="channel_reminder_description">Daily reminder and end of hitbodedut.</string>
 
     <string name="export_ok">Backup saved.</string>
     <string name="export_failed">Export failed.</string>
@@ -189,14 +189,14 @@
     </plurals>
 
     <plurals name="journal_summary">
-        <item quantity="one">%1$d session, %2$s in total</item>
-        <item quantity="other">%1$d sessions, %2$s in total</item>
+        <item quantity="one">%1$d hitbodedut, %2$s in total</item>
+        <item quantity="other">%1$d hitbodedut, %2$s in total</item>
     </plurals>
 
     <!-- Music -->
     <string name="music_title">Music</string>
-    <string name="settings_music">Session music</string>
-    <string name="music_enable">Play during the session</string>
+    <string name="settings_music">Hitbodedut music</string>
+    <string name="music_enable">Play during the hitbodedut</string>
     <string name="music_enable_hint">The track starts with the timer and fades out at the end.</string>
     <string name="music_volume">Volume</string>
     <string name="music_library">Library</string>
@@ -212,7 +212,7 @@
     <string name="music_rename_reset">Original title</string>
     <string name="music_remove">Remove</string>
     <string name="music_off_short">Off</string>
-    <string name="music_off_summary">No music during sessions.</string>
+    <string name="music_off_summary">No music during hitbodedut.</string>
     <string name="music_none_summary">No track in the library.</string>
     <string name="music_on_summary">%1$s, volume %2$d%%</string>
     <string name="session_music_line">Music: %1$s</string>
@@ -235,7 +235,7 @@
     <string name="tip_1_title">Choose a quiet, separate place</string>
     <string name="tip_1_body">The first step in hitbodedut is to find a quiet place where you can be alone with yourself and with Hashem. It does not have to be entirely isolated, but it must be somewhere you will not be interrupted. A free room at home, a quiet stretch of beach, a spot out in nature. If you can, choose a natural setting: nature itself can be a source of inner quiet.</string>
     <string name="tip_2_title">Set a daily or weekly time</string>
-    <string name="tip_2_body">If you are new to this, start short. Give fifteen minutes a day to hitbodedut, and lengthen it gradually until you reach a full hour. Do not jump straight to a long session. Go step by step, so that it becomes a habit and not a burden. Fix a regular time, so the practice becomes part of your routine rather than something random.</string>
+    <string name="tip_2_body">If you are new to this, start short. Give fifteen minutes a day to hitbodedut, and lengthen it gradually until you reach a full hour. Do not jump straight to a long hitbodedut. Go step by step, so that it becomes a habit and not a burden. Fix a regular time, so the practice becomes part of your routine rather than something random.</string>
     <string name="tip_3_title">Begin with inner speech</string>
     <string name="tip_3_body">Begin the hitbodedut with inner speech, talk with Hashem. Do not worry if at first you do not know quite what to say. Simply open your heart and begin. It can be asking forgiveness, a plain prayer about what you feel, or even a sense of gratitude. Hitbodedut does not have to be orderly or planned in advance. It is a place to release what is in your heart and to turn towards the bond with Hashem.</string>
     <string name="tip_4_title">Put the devices away</string>
@@ -315,10 +315,10 @@
 
     <!-- Rappels de hitbodedout -->
     <string name="reminders_title">Reminders</string>
-    <string name="reminders_hint">One or several times a day. Nothing rings on a rest day, or once the session is done.</string>
+    <string name="reminders_hint">One or several times a day. Nothing rings on a rest day, or once the hitbodedut is done.</string>
     <string name="reminders_open">Set the reminders</string>
     <string name="reminders_enable">Remind me to do hitbodedut</string>
-    <string name="reminders_enable_hint">A reminder at the times you set, as long as today\'s session is not done.</string>
+    <string name="reminders_enable_hint">A reminder at the times you set, as long as today\'s hitbodedut is not done.</string>
     <string name="reminders_hours">Times</string>
     <string name="reminders_hours_hint">Tap a time to change it. A single reminder is easy to miss.</string>
     <string name="reminders_add">Add a time</string>
@@ -353,9 +353,9 @@
     <string name="theme_autre">Something else</string>
     <string name="hero_greeting">Hello %1$s</string>
     <string name="nav_today">Today</string>
-    <string name="nav_texts">Texts</string>
+    <string name="nav_texts">Hitbodedut</string>
     <string name="nav_journal">Journal</string>
-    <string name="section_around">Around the session</string>
+    <string name="section_around">Around the hitbodedut</string>
     <plurals name="week_gauge">
         <item quantity="one">%1$d of %2$d days this week</item>
         <item quantity="other">%1$d of %2$d days this week</item>
@@ -388,16 +388,16 @@
     <string name="tefila_refua">Refua shlema</string>
 
     <!-- Présentation détaillée, bravo de fin de séance, apparence (28/09). -->
-    <string name="onboarding_session">The session</string>
-    <string name="onboarding_session_body">Pick a length, or an open session, and a subject if you like. A niggun can play along. A word of chizuk opens and closes the session, and if the words won’t come, a button is there to help.</string>
+    <string name="onboarding_session">The hitbodedut</string>
+    <string name="onboarding_session_body">Pick a length, or an open hitbodedut, and a subject if you like. A niggun can play along. A word of chizuk opens and closes the hitbodedut, and if the words won’t come, a button is there to help.</string>
     <string name="onboarding_days">Day after day</string>
-    <string name="onboarding_days_body">The streak counts your days in a row, and the week shows at a glance. After each session, a note can go into your journal. Reminders nudge you at the time you choose.</string>
+    <string name="onboarding_days_body">The streak counts your days in a row, and the week shows at a glance. After each hitbodedut, a note can go into your journal. Reminders nudge you at the time you choose.</string>
     <string name="onboarding_texts">Texts to pray with</string>
     <string name="onboarding_texts_body">Tikkun HaKlali, Tfilot sorted by subject, a library and tips for hitbodedut, ready whenever you are.</string>
     <string name="onboarding_yours">Your way</string>
-    <string name="onboarding_yours_body">In Settings: the language (French, English or Hebrew), the screen colors, your first name and your usual session length. Music has its own section.</string>
+    <string name="onboarding_yours_body">In Settings: the language (French, English or Hebrew), the screen colors, your first name and your usual hitbodedut length. Music has its own section.</string>
     <string name="onboarding_adresse">What should we call you?</string>
-    <string name="onboarding_adresse_body">At the end of each session, the app congratulates you. Pick the word that fits you; you can change it in Settings.</string>
+    <string name="onboarding_adresse_body">At the end of each hitbodedut, the app congratulates you. Pick the word that fits you; you can change it in Settings.</string>
     <string name="adresse_tsadik">Tzadik</string>
     <string name="adresse_tsadeket">Tzadeket</string>
     <string name="adresse_none">Not chosen</string>
@@ -475,7 +475,7 @@
     <string name="duration_hours">%1$d h</string>
     <string name="duration_hours_minutes">%1$d h %2$02d min</string>
     <string name="duration_custom">Custom duration…</string>
-    <string name="duration_custom_title">Session length, in minutes</string>
+    <string name="duration_custom_title">Hitbodedut length, in minutes</string>
     <string name="duration_custom_hint">1 to 240 minutes</string>
     <string name="music_shuffle">Shuffle</string>
     <string name="music_shuffle_hint">A random track, then another; none comes back until all have played.</string>

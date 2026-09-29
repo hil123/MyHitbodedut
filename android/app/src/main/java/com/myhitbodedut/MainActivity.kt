@@ -164,9 +164,6 @@ class MainActivity : AppCompatActivity() {
         findViewById<Button>(R.id.today_note).setOnClickListener {
             NoteDialog.show(this, Store.today()) { refresh() }
         }
-        findViewById<View>(R.id.settings_button).setOnClickListener {
-            startActivity(Intent(this, SettingsActivity::class.java))
-        }
     }
 
     /**
@@ -268,26 +265,14 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
-     * Ce que l'entrée « Réglages » annonce. Ce qui manque doit se voir sans
-     * l'ouvrir : sinon personne ne va chercher une autorisation avant que
-     * quelque chose ait déjà cessé de marcher.
+     * Ce que l'onglet « Réglages » annonce : le nombre d'autorisations qui
+     * manquent, en pastille. Ce qui manque doit se voir sans l'ouvrir :
+     * sinon personne ne va chercher une autorisation avant que quelque
+     * chose ait déjà cessé de marcher. (La ligne Réglages de l'onglet
+     * Hitbodedout faisait doublon avec l'onglet ; retirée le 29/09.)
      */
     private fun renderSettingsEntry() {
         val manquantes = Permissions.missing(this).size
-        findViewById<TextView>(R.id.settings_state).apply {
-            text = if (manquantes == 0) {
-                getString(R.string.settings_all_granted)
-            } else {
-                resources.getQuantityString(R.plurals.permissions_missing, manquantes, manquantes)
-            }
-            setTextColor(
-                Apparence.couleur(
-                    this@MainActivity,
-                    if (manquantes == 0) R.color.muted else R.color.warning
-                )
-            )
-        }
-        // Le même manque, visible depuis n'importe quel onglet.
         findViewById<BottomNavigationView>(R.id.bottom_nav).apply {
             if (manquantes == 0) {
                 removeBadge(R.id.nav_settings)

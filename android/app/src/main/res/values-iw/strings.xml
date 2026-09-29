@@ -361,7 +361,7 @@
     <string name="theme_autre">משהו אחר</string>
     <string name="hero_greeting">שלום %1$s</string>
     <string name="nav_today">היום</string>
-    <string name="nav_texts">טקסטים</string>
+    <string name="nav_texts">התבודדות</string>
     <string name="nav_journal">יומן</string>
     <string name="section_around">סביב ההתבודדות</string>
     <plurals name="week_gauge">

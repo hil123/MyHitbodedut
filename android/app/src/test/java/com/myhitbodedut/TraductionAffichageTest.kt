@@ -112,4 +112,19 @@ class TraductionAffichageTest {
         }
         assertTrue(lire("src/main/java/com/myhitbodedut/SettingsActivity.kt").contains("Store.setLangueApp("))
     }
+
+    /**
+     * « Séance » et « session » deviennent « hitbodedout » et « hitbodedut »
+     * dans tout ce qui s'affiche (demande du 29/09). L'hébreu disait déjà
+     * התבודדות.
+     */
+    @Test
+    fun `on ne dit plus seance ni session`() {
+        mapOf("values" to Regex("(?i)\\bséances?\\b"), "values-en" to Regex("(?i)\\bsessions?\\b")).forEach { (d, mot) ->
+            val textes = Regex(""">([^<]*)</(?:string|item)>""").findAll(lire("src/main/res/$d/strings.xml"))
+                .map { it.groupValues[1] }.filter { mot.containsMatchIn(it) }.toList()
+            assertEquals("$d : $textes", emptyList<String>(), textes)
+        }
+        assertTrue(lire("src/main/java/com/myhitbodedut/NoteDialog.kt").contains("R.drawable.char_writing"))
+    }
 }
