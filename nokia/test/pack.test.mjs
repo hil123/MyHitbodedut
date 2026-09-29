@@ -45,7 +45,7 @@ test('le dossier de chaque langue contient exactement les pages du manifeste', {
     assert.deepEqual(readdirSync(join(PACK, langue.toUpperCase())).sort(), attendues, langue);
     assert.ok(existsSync(join(DIST, `MyHitbodedut-Nokia-${langue.toUpperCase()}.zip`)));
   }
-  if (manifeste.musique.length) {
-    assert.deepEqual(readdirSync(join(PACK, 'musique')).sort(), [...manifeste.musique].sort());
-  }
+  // Pas de musique : le pack reste léger pour le Bluetooth.
+  assert.deepEqual(readdirSync(PACK).sort(), LANGUES.map((l) => l.toUpperCase()).sort());
+  assert.ok(existsSync(join(DIST, 'MyHitbodedut-Nokia.zip')));
 });

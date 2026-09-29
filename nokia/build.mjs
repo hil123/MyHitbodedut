@@ -1,19 +1,19 @@
 // Construit le pack pour téléphone à touches (Nokia 3310 de 2017, 2G ou
-// 3G) : des images 240×320 à lire dans la galerie, et la musique de
-// l'application, à copier sur la carte microSD ou à envoyer par Bluetooth.
-// Aucune connexion n'est nécessaire sur le téléphone.
+// 3G) : des images 240×320 à lire dans la galerie, à copier sur la carte
+// microSD ou à envoyer par Bluetooth. Aucune connexion n'est nécessaire sur
+// le téléphone. Pas de musique : 128 Mo, trop lourd pour le Bluetooth.
 //
-//   node nokia/build.mjs [--sans-musique]
+//   node nokia/build.mjs
 //
-// Sortie : nokia/dist/MyHitbodedut/{FR,EN,HE}/*.jpg et musique/*.mp3, plus
-// un zip par langue (images seules) et un zip de la musique.
+// Sortie : nokia/dist/MyHitbodedut/{FR,EN,HE}/*.jpg, un zip qui contient
+// les trois langues (le fichier à partager) et un zip par langue.
 //
 // Le texte est dessiné d'avance : le téléphone n'a pas à savoir afficher
 // l'hébreu ni ses voyelles. Chaque page est découpée par le navigateur
 // (colonnes CSS), donc une ligne n'est jamais coupée en deux.
 
 import { execFileSync } from 'node:child_process';
-import { cpSync, mkdirSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs';
+import { mkdirSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -22,10 +22,8 @@ import { HAUTEUR, LANGUES, LARGEUR, nomDePage, planLangue, sens } from './plan.m
 
 const ICI = dirname(fileURLToPath(import.meta.url));
 const RES = join(ICI, '..', 'android', 'app', 'src', 'main', 'res');
-const JAVA = join(ICI, '..', 'android', 'app', 'src', 'main', 'java', 'com', 'myhitbodedut');
 const DIST = join(ICI, 'dist');
 const PACK = join(DIST, 'MyHitbodedut');
-const avecMusique = !process.argv.includes('--sans-musique');
 
 const lit = (...p) => readFileSync(join(...p), 'utf8');
 const chizuk = JSON.parse(lit(RES, 'raw', 'chizuk.json'));
@@ -137,22 +135,12 @@ for (const langue of LANGUES) {
 }
 await navigateur.close();
 
-// --- La musique --------------------------------------------------------------------
-// L'ordre de MusicLibrary.kt, comme l'application et le site.
-const morceaux = [...lit(JAVA, 'MusicLibrary.kt').matchAll(/Bundled\("([a-z0-9_]+)", R\.raw\.\1, R\.string\.track_[a-z0-9_]+\)/g)]
-  .map(([, id], i) => ({ id, fichier: `${String(i + 1).padStart(2, '0')}_${id}.mp3` }));
-if (morceaux.length === 0) throw new Error('Aucun morceau trouvé dans MusicLibrary.kt');
-manifeste.musique = avecMusique ? morceaux.map((m) => m.fichier) : [];
-if (avecMusique) {
-  mkdirSync(join(PACK, 'musique'), { recursive: true });
-  for (const m of morceaux) cpSync(join(RES, 'raw', `${m.id}.mp3`), join(PACK, 'musique', m.fichier));
-}
 writeFileSync(join(DIST, 'manifeste.json'), `${JSON.stringify(manifeste, null, 1)}\n`);
 
-// --- Les zips : un par langue, et la musique à part ------------------------------------
-const zip = (nom, dossier) => execFileSync('zip', ['-q', '-r', '-X', join(DIST, nom), dossier], { cwd: PACK });
+// --- Les zips : les trois langues ensemble, et chacune à part --------------------------
+const zip = (nom, ...dossiers) => execFileSync('zip', ['-q', '-r', '-X', join(DIST, nom), ...dossiers], { cwd: PACK });
+zip('MyHitbodedut-Nokia.zip', ...LANGUES.map((l) => l.toUpperCase()));
 for (const langue of LANGUES) zip(`MyHitbodedut-Nokia-${langue.toUpperCase()}.zip`, langue.toUpperCase());
-if (avecMusique) zip('MyHitbodedut-Nokia-musique.zip', 'musique');
 
 const mo = (o) => `${(o / 1e6).toFixed(2)} Mo`;
 for (const langue of LANGUES) {
@@ -160,4 +148,4 @@ for (const langue of LANGUES) {
   const z = statSync(join(DIST, `MyHitbodedut-Nokia-${langue.toUpperCase()}.zip`)).size;
   console.log(`${langue.toUpperCase()} : ${manifeste.langues[langue].length} documents, ${n} images, zip ${mo(z)}`);
 }
-if (avecMusique) console.log(`Musique : ${morceaux.length} morceaux, zip ${mo(statSync(join(DIST, 'MyHitbodedut-Nokia-musique.zip')).size)}`);
+console.log(`Tout : zip ${mo(statSync(join(DIST, 'MyHitbodedut-Nokia.zip')).size)}`);

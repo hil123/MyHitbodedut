@@ -1,8 +1,12 @@
 {
   "_meta": {
     "role": "Première image de chaque langue : comment se servir du pack sur un téléphone à touches (Nokia 3310 de 2017, 2G ou 3G).",
-    "verifie": "Minuteur (compte à rebours) et alarme : guide HMD du 3310 3G (Menu › Extras) et revue Gizmodo du 3310 2017. Lecteur MP3 et carte microSD : revues du 3310 2017.",
-    "relu": { "fr": false, "en": false, "he": false }
+    "verifie": "Minuteur (compte à rebours) et alarme : guide HMD du 3310 3G (Menu › Extras) et revue Gizmodo du 3310 2017.",
+    "relu": {
+      "fr": false,
+      "en": false,
+      "he": false
+    }
   },
   "fr": {
     "titre": "Mode d'emploi",
@@ -11,7 +15,6 @@
       "Hitbodedout : ouvre le minuteur (compte à rebours), souvent dans « Extras ». Choisis 5, 10, 15, 30 min, 1 h ou 1 h 30, et parle à Hachem jusqu'à la sonnerie.",
       "Chaque jour : règle une alarme à l'heure de ta hitbodedout.",
       "Textes : ouvre la galerie. FR_2 à FR_7 : ’hizouk, moment par moment. FR_8 : Tikoun HaKlali.",
-      "Musique : les niggounim s'écoutent dans le lecteur de musique.",
       "Partager : envoie ces fichiers par Bluetooth. Leurs noms gardent l'ordre."
     ]
   },
@@ -22,7 +25,6 @@
       "Hitbodedut: open the countdown timer, often under “Extras”. Choose 5, 10, 15, 30 min, 1 h or 1 h 30, and speak to Hashem until it rings.",
       "Every day: set an alarm for the time of your hitbodedut.",
       "Texts: open the gallery. EN_2 to EN_7: chizuk, moment by moment. EN_8: Tikkun HaKlali.",
-      "Music: the niggunim play in the music player.",
       "Share: send these files over Bluetooth. Their names keep the order."
     ]
   },
@@ -33,7 +35,6 @@
       "התבודדות: פתחו את הטיימר (ספירה לאחור) בתפריט הטלפון. בחרו 5, 10, 15 או 30 דקות, שעה או שעה וחצי, ודברו עם ה' עד הצלצול.",
       "בכל יום: כוונו שעון מעורר לשעת ההתבודדות.",
       "טקסטים: פתחו את הגלריה. HE_2 עד HE_7: חיזוק, לפי הרגע. HE_8: תיקון הכללי.",
-      "מוזיקה: את הניגונים שומעים בנגן המוזיקה.",
       "שיתוף: שלחו את הקבצים בבלוטות'. השמות שומרים על הסדר."
     ]
   }
