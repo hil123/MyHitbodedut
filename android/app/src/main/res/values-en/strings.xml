@@ -296,7 +296,7 @@
 
     <!-- Section Tikoun HaKlali -->
     <string name="tikkun_title">Tikkun HaKlali</string>
-    <string name="tikkun_hint">The ten psalms of Rebbe Nachman, in order: 16, 32, 41, 42, 59, 77, 90, 105, 137, 150.</string>
+    <string name="tikkun_hint">The ten psalms of Rabbi Nachman, in order: 16, 32, 41, 42, 59, 77, 90, 105, 137, 150.</string>
     <string name="tikkun_open">Open the Tikkun</string>
     <string name="tikkun_psalm_he">תהילים %1$d</string>
     <string name="tikkun_verses">%1$d verses</string>
@@ -373,7 +373,7 @@
 
     <!-- Tfilot screen: ten subjects, two prayers each (Likutei Tefilot). -->
     <string name="tefilot_title">Tfilot</string>
-    <string name="tefilot_hint">Ten subjects, twenty-one prayers. Reb Noson of Breslov.</string>
+    <string name="tefilot_hint">Ten subjects, twenty-one prayers. Rabbi Natan of Breslov.</string>
     <string name="tefilot_count">%d prayers</string>
     <string name="tefilot_warning">The lesson cited is on another subject; the plea is inside the prayer.</string>
     <string name="tefila_hitbodedut">Hitbodedut</string>
