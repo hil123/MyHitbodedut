@@ -67,9 +67,12 @@ class SettingsTest {
                 !principal.contains("""@+id/$it"""),
             )
         }
+        // Depuis le 29/09, les réglages s'ouvrent par l'onglet du bas ; la
+        // ligne qui faisait doublon dans l'onglet Hitbodedout est retirée.
         assertTrue(
             "l'écran principal doit porter l'entrée vers les réglages",
-            principal.contains("""@+id/settings_button"""),
+            principal.contains("""app:menu="@menu/nav_main"""") &&
+                lire("src/main/res/menu/nav_main.xml").contains("""@+id/nav_settings"""),
         )
     }
 

@@ -25,7 +25,7 @@ class HomeTest {
     @Test
     fun `aucune section n est devenue inatteignable`() {
         listOf("tikkun_button", "library_button", "reminders_button", "music_button",
-               "tips_button", "settings_button", "proofread_button").forEach {
+               "tips_button", "proofread_button").forEach {
             assertTrue("« $it » a disparu de l'écran principal", layout.contains("@+id/$it\""))
             assertTrue("« $it » n'est plus branché", Regex("""R\.id\.$it\b""").containsMatchIn(code))
         }
@@ -37,7 +37,7 @@ class HomeTest {
      */
     @Test
     fun `les etats des sections sont toujours affiches`() {
-        listOf("tikkun_state", "reminders_state", "music_state", "settings_state").forEach {
+        listOf("tikkun_state", "reminders_state", "music_state").forEach {
             assertTrue(
                 "l'état « $it » n'est plus dans la mise en page",
                 layout.contains("@+id/$it\""),
@@ -151,6 +151,10 @@ class HomeTest {
             assertTrue("onglet « $it » non branché", Regex("""R\.id\.$it\b""").containsMatchIn(code))
         }
         assertTrue(code.contains("JournalActivity::class.java"))
+        // Les réglages : l'onglet seul (la ligne en double est retirée le 29/09),
+        // et les autorisations manquantes en pastille sur cet onglet.
+        assertTrue(!layout.contains("@+id/settings_button\""))
+        assertTrue(code.contains("getOrCreateBadge(R.id.nav_settings)"))
         assertTrue("l'onglet doit survivre à une rotation", code.contains("ETAT_ONGLET"))
     }
 
