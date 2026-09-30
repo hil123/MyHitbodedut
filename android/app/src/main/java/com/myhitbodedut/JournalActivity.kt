@@ -53,7 +53,7 @@ class JournalActivity : AppCompatActivity() {
 
     private inner class Adapter : RecyclerView.Adapter<Adapter.Holder>() {
 
-        // Les dates dans la langue de l'application : Locale.getDefault()
+        // Les dates dans la langue de l'application : la langue par défaut de Java
         // gardait celle du téléphone, et un journal en anglais affichait
         // « mardi 29 septembre » sur un téléphone réglé en français.
         private val langue: Locale = resources.configuration.locales[0]
