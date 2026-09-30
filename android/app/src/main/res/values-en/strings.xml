@@ -2,6 +2,8 @@
 <resources>
     <string name="status_done">Hitbodedut done today</string>
     <string name="status_pending">Hitbodedut not done yet</string>
+    <string name="status_running">Hitbodedut in progress</string>
+    <string name="status_rest">No hitbodedut expected today</string>
     <string name="status_streak_none">Streak to restart</string>
     <string name="status_streak_first">No streak yet</string>
     <string name="action_done_offline">Done without the phone</string>
@@ -126,6 +128,7 @@
     <string name="widget_description">The streak so far, and one tap to begin.</string>
     <string name="widget_done">Done today.</string>
     <string name="widget_todo">Not yet today.</string>
+    <string name="widget_rest">Not expected today.</string>
     <string name="widget_running">Hitbodedut under way.</string>
     <string name="widget_start">Begin</string>
     <string name="widget_resume">Back to the hitbodedut</string>

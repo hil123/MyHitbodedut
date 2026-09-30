@@ -251,7 +251,12 @@ function panneauAujourdhui() {
     h('div', { class: 'marque' }, tr.t('app_name')),
     prenom ? h('div', { class: 'salut' }, tr.t(Salutation.cle(new Date().getHours()), prenom)) : null,
     // Sans prénom, l'état du jour prend la place du titre.
-    h('div', { class: prenom ? 'statut' : 'statut titre' }, tr.t(fait ? 'status_done' : 'status_pending')),
+    // Comme Android : en cours, faite, jour sans obligation, ou pas encore faite.
+    h('div', { class: prenom ? 'statut' : 'statut titre' }, tr.t(
+      store.isSessionRunning() ? 'status_running'
+        : fait ? 'status_done'
+          : semaine.filter((j) => !j.future).at(-1)?.exempt ? 'status_rest'
+            : 'status_pending')),
     h('div', { class: 'serie' },
       h('span', {}, serie > 0 ? tr.p('status_streak', serie) : tr.t('status_streak_none')),
       h('span', { class: 'total' }, tr.t('status_total', tr.duree(store.totalMinutes())))),

@@ -6,6 +6,8 @@
     <!-- Bandeau et journée -->
     <string name="status_done">Hitbodedout faite aujourd\'hui</string>
     <string name="status_pending">Hitbodedout pas encore faite</string>
+    <string name="status_running">Hitbodedout en cours</string>
+    <string name="status_rest">Pas de hitbodedout attendue aujourd’hui</string>
     <string name="status_streak_none">Série à relancer</string>
     <string name="status_streak_first">Pas encore de série</string>
     <string name="action_done_offline">Faite sans le téléphone</string>
@@ -100,8 +102,8 @@
     <string name="apps_none_warning">Aucune application choisie : rien ne sera bloqué.</string>
 
     <!-- Écran de garde -->
-    <string name="blocker_question">Tu as fait ta hitbodedout ?</string>
-    <string name="blocker_subtitle">Un moment seul avant le reste de la journée.</string>
+    <string name="blocker_question">Avez-vous fait votre hitbodedout ?</string>
+    <string name="blocker_subtitle">Un moment à l’écart avant le reste de la journée.</string>
     <string name="blocker_streak_none">Première journée de la série.</string>
     <string name="blocker_start">Commencer maintenant, %1$s</string>
     <string name="blocker_already_done">Je l\'ai déjà faite</string>
@@ -138,6 +140,7 @@
     <string name="widget_description">La série en cours, et de quoi commencer d’un geste.</string>
     <string name="widget_done">Fait aujourd’hui.</string>
     <string name="widget_todo">Pas encore aujourd’hui.</string>
+    <string name="widget_rest">Pas attendue aujourd’hui.</string>
     <string name="widget_running">Hitbodedout en cours.</string>
     <string name="widget_start">Commencer</string>
     <string name="widget_resume">Revenir à la hitbodedout</string>
@@ -164,7 +167,7 @@
     <string name="onboarding_practice">Parler, simplement</string>
     <string name="onboarding_practice_body">La hitbodedout, c’est se retirer seul un moment chaque jour et parler à Hachem dans sa propre langue, comme on parle à quelqu’un. Pas de formule à réciter, pas de niveau à atteindre.</string>
     <string name="onboarding_private">Rien ne sort d’ici</string>
-    <string name="onboarding_private_body">L’application ne demande aucun accès à Internet. Ce que vous écrivez reste sur ce téléphone, et vous seul pouvez l’en sortir, par l’export.</string>
+    <string name="onboarding_private_body">L’application ne demande aucun accès à Internet. Ce que vous écrivez reste sur ce téléphone, et n’en sort que si vous l’exportez vous-même.</string>
     <string name="blocker_session_open_subtitle">Hitbodedout ouverte, depuis %1$s. Le téléphone peut attendre.</string>
     <string name="session_done_title">Hitbodedout terminée</string>
     <string name="session_done_text">%1$s de hitbodedout. Touchez pour laisser une note.</string>
@@ -382,7 +385,7 @@
     <string name="tikkun_verses">%1$d versets</string>
     <string name="tikkun_position">Psaume %1$d sur %2$d · %3$d versets</string>
     <string name="tikkun_progress_none">%1$d psaumes, %2$d versets</string>
-    <string name="tikkun_progress">%1$d psaumes dits sur %2$d aujourd\'hui</string>
+    <string name="tikkun_progress">Psaumes dits aujourd’hui : %1$d sur %2$d</string>
     <string name="tikkun_progress_all">Dit en entier aujourd\'hui.</string>
     <string name="tikkun_next">Psaume suivant</string>
     <string name="tikkun_paragraphs">%1$d paragraphes</string>

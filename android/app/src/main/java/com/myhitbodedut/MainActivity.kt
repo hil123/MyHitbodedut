@@ -14,7 +14,6 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.materialswitch.MaterialSwitch
 import java.time.format.DateTimeFormatter
-import java.util.Locale
 
 /** Écran principal : état du jour, diagnostic de la barrière, réglages. */
 class MainActivity : AppCompatActivity() {
@@ -397,8 +396,17 @@ class MainActivity : AppCompatActivity() {
         // Une note seule ne fait pas la journée.
         val done = record?.faite == true
         findViewById<ImageView>(R.id.hero_character).setImageResource(Character.greeting(done))
-        findViewById<TextView>(R.id.status_title)
-            .setText(if (done) R.string.status_done else R.string.status_pending)
+        // L'état dit ce qui est vrai maintenant : une hitbodedout en cours
+        // n'est pas « pas encore faite », et un jour de Shabbat, de fête ou de
+        // pause n'attend rien (revue du 30/09, sur le modèle de la salutation).
+        findViewById<TextView>(R.id.status_title).setText(
+            when {
+                Store.isSessionRunning(this) -> R.string.status_running
+                done -> R.string.status_done
+                Store.isExempt(this, java.time.LocalDate.now()) -> R.string.status_rest
+                else -> R.string.status_pending
+            }
+        )
 
         val streak = Store.streak(this)
         // « Série à relancer » ne se dit qu'à qui en a déjà eu une : le
@@ -440,7 +448,8 @@ class MainActivity : AppCompatActivity() {
     private fun renderWeek() {
         val strip = findViewById<LinearLayout>(R.id.week_strip)
         strip.removeAllViews()
-        val formatter = DateTimeFormatter.ofPattern("EEE", Locale.getDefault())
+        // Les jours dans la langue de l'application, pas celle du téléphone.
+        val formatter = DateTimeFormatter.ofPattern("EEE", resources.configuration.locales[0])
         Store.currentWeek(this).forEach { day ->
             val cell = layoutInflater.inflate(R.layout.item_day, strip, false)
             val label = cell.findViewById<TextView>(R.id.day_label)

@@ -96,6 +96,8 @@ class StreakWidget : AppWidgetProvider() {
             val streak: Int,
             val running: Boolean,
             val done: Boolean,
+            /** Shabbat, Yom Tov ou pause : rien n'est attendu aujourd'hui. */
+            val repos: Boolean,
             val semaine: List<WeekDay>,
             val fraction: Float
         ) {
@@ -106,6 +108,7 @@ class StreakWidget : AppWidgetProvider() {
                         streak = Store.streak(context),
                         running = Store.isSessionRunning(context),
                         done = Store.isDone(context),
+                        repos = Store.isExempt(context, java.time.LocalDate.now()),
                         semaine = semaine,
                         fraction = JaugeSemaine.progression(semaine).fraction
                     )
@@ -150,6 +153,9 @@ class StreakWidget : AppWidgetProvider() {
                     when {
                         etat.running -> R.string.widget_running
                         etat.done -> R.string.widget_done
+                        // « Pas encore aujourd'hui » un jour de Shabbat sonnait
+                        // comme un reproche (revue du 30/09).
+                        etat.repos -> R.string.widget_rest
                         else -> R.string.widget_todo
                     }
                 )

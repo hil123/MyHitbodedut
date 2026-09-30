@@ -2,6 +2,8 @@
 <resources>
     <string name="status_done">התבודדת היום</string>
     <string name="status_pending">עדיין לא התבודדת היום</string>
+    <string name="status_running">התבודדות בעיצומה</string>
+    <string name="status_rest">היום לא נדרשת התבודדות</string>
     <string name="status_streak_none">הרצף מחכה להתחלה</string>
     <string name="status_streak_first">עדיין אין רצף</string>
     <string name="action_done_offline">התבודדתי בלי הטלפון</string>
@@ -18,7 +20,7 @@
     <string name="section_practice">ההתבודדות שלי</string>
     <string name="section_gate_state">מצב החסימה</string>
     <string name="section_gate">חסימת הבוקר</string>
-    <string name="section_gate_hint">האפליקציות שתבחר יישארו סגורות עד שתתבודד.</string>
+    <string name="section_gate_hint">האפליקציות שתבחרו יישארו סגורות עד שתתבודדו.</string>
     <string name="section_rhythm">קצב</string>
     <string name="section_permissions">הרשאות נדרשות</string>
     <string name="section_permissions_hint">מה האפליקציה מבקשת, ולמה.</string>
@@ -34,9 +36,9 @@
     <string name="gate_permissions_title">חסרות הרשאות</string>
     <string name="gate_permissions_detail">אשר הצגה מעל אפליקציות אחרות וגישה לנתוני שימוש, למטה.</string>
     <string name="gate_disabled_title">החסימה כבויה</string>
-    <string name="gate_disabled_detail">הפעל את מתג חסימת הבוקר כדי שתפעל.</string>
+    <string name="gate_disabled_detail">הפעילו את מתג חסימת הבוקר כדי שתפעל.</string>
     <string name="gate_no_apps_title">לא נבחרה אפליקציה</string>
-    <string name="gate_no_apps_detail">אין מה לחסום. בחר לפחות אפליקציה אחת.</string>
+    <string name="gate_no_apps_detail">אין מה לחסום. בחרו לפחות אפליקציה אחת.</string>
     <string name="gate_done_title">היום אושר</string>
     <string name="gate_done_detail">היום כבר לא ייחסם דבר. החסימה תחזור מחר.</string>
     <string name="gate_exempt_title">יום ללא חובה</string>
@@ -103,7 +105,7 @@
     <string name="blocker_close_preview">לסגור את התצוגה</string>
 
     <string name="session_screen_title">התבודדות</string>
-    <string name="session_idle_caption">בחר משך, והנח את הטלפון.</string>
+    <string name="session_idle_caption">בחרו משך, והניחו את הטלפון.</string>
     <string name="session_idle_done">כבר אושר היום. אפשר להתחיל שוב.</string>
     <string name="session_start">להתחיל, %1$s</string>
     <string name="session_target">התבודדות של %1$s</string>
@@ -127,6 +129,7 @@
     <string name="widget_description">הרצף הנוכחי, ולחיצה אחת כדי להתחיל.</string>
     <string name="widget_done">נעשה היום.</string>
     <string name="widget_todo">עדיין לא היום.</string>
+    <string name="widget_rest">לא נדרשת היום.</string>
     <string name="widget_running">התבודדות בעיצומה.</string>
     <string name="widget_start">להתחיל</string>
     <string name="widget_resume">חזרה להתבודדות</string>
@@ -156,7 +159,7 @@
     <string name="onboarding_private_body">האפליקציה אינה מבקשת שום גישה לאינטרנט. מה שתכתבו נשאר בטלפון הזה, ורק אתם יכולים להוציא אותו, דרך הייצוא.</string>
     <string name="blocker_session_open_subtitle">התבודדות פתוחה, כבר %1$s. הטלפון יכול לחכות.</string>
     <string name="session_done_title">ההתבודדות הסתיימה</string>
-    <string name="session_done_text">%1$s של התבודדות. הקש כדי להוסיף הערה.</string>
+    <string name="session_done_text">%1$s של התבודדות. הקישו כדי להוסיף הערה.</string>
 
     <string name="journal_title">יומן</string>
     <string name="journal_empty">עדיין לא נרשמה התבודדות.</string>
@@ -178,32 +181,32 @@
     <string name="import_invalid">הקובץ אינו גיבוי של MyHitbodedut.</string>
 
     <plurals name="status_streak">
-        <item quantity="one">%d יום ברצף</item>
-        <item quantity="two">%d ימים ברצף</item>
+        <item quantity="one">יום אחד ברצף</item>
+        <item quantity="two">יומיים ברצף</item>
         <item quantity="other">%d ימים ברצף</item>
     </plurals>
 
     <plurals name="blocker_streak">
-        <item quantity="one">רצף נוכחי: %d יום</item>
-        <item quantity="two">רצף נוכחי: %d ימים</item>
+        <item quantity="one">רצף נוכחי: יום אחד</item>
+        <item quantity="two">רצף נוכחי: יומיים</item>
         <item quantity="other">רצף נוכחי: %d ימים</item>
     </plurals>
 
     <plurals name="apps_selected">
-        <item quantity="one">אפליקציה %d חסומה</item>
-        <item quantity="two">%d אפליקציות חסומות</item>
+        <item quantity="one">אפליקציה אחת חסומה</item>
+        <item quantity="two">שתי אפליקציות חסומות</item>
         <item quantity="other">%d אפליקציות חסומות</item>
     </plurals>
 
     <plurals name="import_ok">
-        <item quantity="one">יובא %d יום</item>
-        <item quantity="two">יובאו %d ימים</item>
+        <item quantity="one">יובא יום אחד</item>
+        <item quantity="two">יובאו יומיים</item>
         <item quantity="other">יובאו %d ימים</item>
     </plurals>
 
     <plurals name="journal_summary">
-        <item quantity="one">התבודדות %1$d, %2$s בסך הכול</item>
-        <item quantity="two">%1$d התבודדויות, %2$s בסך הכול</item>
+        <item quantity="one">התבודדות אחת, %2$s בסך הכול</item>
+        <item quantity="two">שתי התבודדויות, %2$s בסך הכול</item>
         <item quantity="other">%1$d התבודדויות, %2$s בסך הכול</item>
     </plurals>
 
@@ -257,7 +260,7 @@
     <string name="tip_5_title">התחילו עם ספר תהילים או תפילה אישית</string>
     <string name="tip_5_body">אם אתם לא בטוחים איך להתחיל, אפשר לפתוח בספר תהילים ולקרוא כמה פרקים. תהילים הם תפילה מחוברת, מאוד ישירה ונוגעת בנפש. כשאתם מתבודדים, תהילים יכולים להוות חוט מקשר רוחני שמחבר אתכם ישירות אל השם. אם אתם מרגישים חסרי מילים, אתם יכולים גם פשוט לדבר עם השם באופן חופשי, לשתף אותו במחשבות ובתחושות שלכם.</string>
     <string name="tip_6_title">שאלו את עצמכם שאלות פנימיות</string>
-    <string name="tip_6_body">במהלך ההתבודדות, שאלו את עצמכם שאלות פנימיות: מה אני מרגיש עכשיו? מה עובר עליי? איך אני יכול להרגיש קרוב יותר אל השם? מה אני צריך לשפר בחיי? זהו זמן לחשבון נפש אמיתי. לפעמים, בשקט הפנימי, אתם יכולים להבין את הצרכים האמיתיים שלכם ולהתחיל להבין את הכיוונים הנכונים לחיים שלכם.</string>
+    <string name="tip_6_body">במהלך ההתבודדות, שאלו את עצמכם שאלות פנימיות: מה עובר עליי עכשיו? מה יקרב אותי אל השם? מה צריך לתקן בחיי? זהו זמן לחשבון נפש אמיתי. לפעמים, בשקט הפנימי, אתם יכולים להבין את הצרכים האמיתיים שלכם ולהתחיל להבין את הכיוונים הנכונים לחיים שלכם.</string>
     <string name="tip_7_title">שימו דגש על כנות פנימית</string>
     <string name="tip_7_body">במהלך ההתבודדות, אל תנסו להסתיר מהשם את מה שאתם מרגישים. ההתבודדות היא זמן שבו מותר לכם להיות כנים עם עצמכם ועם בורא עולם. אם אתם מרגישים כעס, תסכול, פחד או חוסר ביטחון, זהו המקום לשתף את תחושותיכם. הכנות היא המפתח להתפתחות רוחנית. ככל שתהיו יותר כנים, כך תחוו יותר שקט פנימי.</string>
     <string name="tip_8_title">הפכו את ההתבודדות לרגע של התפייסות עם עצמכם</string>
@@ -272,7 +275,7 @@
     <string name="chizuk_debug_notice">גרסת בדיקה: טקסטים שטרם הוגהו מוצגים ומסומנים.</string>
 
     <!-- Point 4 : affichage des textes -->
-    <string name="chizuk_stuck">אני לא מצליח לדבר</string>
+    <string name="chizuk_stuck">המילים לא באות לי</string>
 
     <!-- Point 5 : bibliothèque -->
     <string name="library_title">ספרייה</string>
@@ -357,7 +360,7 @@
     <string name="session_theme_none">נושא: ללא (רשות)</string>
     <string name="session_theme_none_short">ללא</string>
     <string name="session_theme_chosen">נושא: %1$s</string>
-    <string name="theme_emotions">מה שאני מרגיש</string>
+    <string name="theme_emotions">הרגשות שלי</string>
     <string name="theme_gratitude">הודאה</string>
     <string name="theme_decisions">בלבול והכרעות</string>
     <string name="theme_famille">משפחה</string>
@@ -376,8 +379,8 @@
     <string name="nav_journal">יומן</string>
     <string name="section_around">סביב ההתבודדות</string>
     <plurals name="week_gauge">
-        <item quantity="one">%1$d יום מתוך %2$d השבוע</item>
-        <item quantity="two">%1$d ימים מתוך %2$d השבוע</item>
+        <item quantity="one">יום אחד מתוך %2$d השבוע</item>
+        <item quantity="two">יומיים מתוך %2$d השבוע</item>
         <item quantity="other">%1$d ימים מתוך %2$d השבוע</item>
     </plurals>
     <string name="start_duration">משך</string>
@@ -448,7 +451,7 @@
     <string name="accent_turquoise">טורקיז</string>
     <plurals name="celebration_minutes">
         <item quantity="one">דקה אחת של התבודדות</item>
-        <item quantity="two">%d דקות של התבודדות</item>
+        <item quantity="two">שתי דקות של התבודדות</item>
         <item quantity="other">%d דקות של התבודדות</item>
     </plurals>
     <!-- Séance annulée : un encouragement au lieu du bravo (28/09). -->

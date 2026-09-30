@@ -53,7 +53,11 @@ class JournalActivity : AppCompatActivity() {
 
     private inner class Adapter : RecyclerView.Adapter<Adapter.Holder>() {
 
-        private val formatter = DateTimeFormatter.ofPattern("EEEE d MMMM yyyy", Locale.getDefault())
+        // Les dates dans la langue de l'application : Locale.getDefault()
+        // gardait celle du téléphone, et un journal en anglais affichait
+        // « mardi 29 septembre » sur un téléphone réglé en français.
+        private val langue: Locale = resources.configuration.locales[0]
+        private val formatter = DateTimeFormatter.ofPattern("EEEE d MMMM yyyy", langue)
 
         inner class Holder(view: View) : RecyclerView.ViewHolder(view) {
             val date: TextView = view.findViewById(R.id.entry_date)
@@ -71,7 +75,7 @@ class JournalActivity : AppCompatActivity() {
             // Une date illisible s'affiche telle quelle plutôt que de faire
             // tomber tout l'écran (revue du 29/09).
             holder.date.text = (Store.dateValide(row.date)?.format(formatter) ?: row.date)
-                .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
+                .replaceFirstChar { if (it.isLowerCase()) it.titlecase(langue) else it.toString() }
             holder.duration.text = when {
                 row.noteSeule -> getString(R.string.journal_note_only)
                 row.minutes > 0 -> Store.formatDuration(holder.itemView.context, row.minutes)
