@@ -292,7 +292,10 @@ class MainActivity : AppCompatActivity() {
         val prenom = Store.firstName(this)
         findViewById<TextView>(R.id.hero_greeting).apply {
             visibility = if (prenom.isBlank()) View.GONE else View.VISIBLE
-            if (prenom.isNotBlank()) text = getString(R.string.hero_greeting, prenom)
+            // Bonjour le matin, bonsoir le soir (Salutation).
+            if (prenom.isNotBlank()) {
+                text = getString(Salutation.chaine(java.time.LocalTime.now().hour), prenom)
+            }
         }
         findViewById<TextView>(R.id.status_title).apply {
             val titre = prenom.isBlank()

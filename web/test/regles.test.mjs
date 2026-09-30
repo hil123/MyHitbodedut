@@ -7,7 +7,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { DureeSeance, JaugeSemaine, Reference, RegleLangue } from '../src/js/regles.js';
+import { DureeSeance, JaugeSemaine, Reference, RegleLangue, Salutation } from '../src/js/regles.js';
 import { estJourChome, israelParDefaut } from '../src/js/calendrier.js';
 import { creeStore, memoire } from '../src/js/store.js';
 import { creeTraduction, formate, langueInitiale } from '../src/js/i18n.js';
@@ -271,4 +271,15 @@ test('un fichier qui n’est pas une sauvegarde est refusé', () => {
   const s = store();
   assert.equal(s.importJson('pas du json'), null);
   assert.equal(s.importJson('{"format":"autre"}'), null);
+});
+
+test('la salutation suit l\'heure : bonjour le jour, bonsoir le soir et la nuit', () => {
+  assert.equal(Salutation.cle(7), 'hero_greeting_morning');
+  assert.equal(Salutation.cle(11), 'hero_greeting_morning');
+  assert.equal(Salutation.cle(12), 'hero_greeting_afternoon');
+  assert.equal(Salutation.cle(17), 'hero_greeting_afternoon');
+  assert.equal(Salutation.cle(18), 'hero_greeting_evening');
+  assert.equal(Salutation.cle(22), 'hero_greeting_evening');
+  assert.equal(Salutation.cle(3), 'hero_greeting_evening');
+  assert.equal(Salutation.cle(5), 'hero_greeting_morning');
 });

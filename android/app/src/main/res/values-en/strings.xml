@@ -360,6 +360,9 @@
     <string name="theme_croissance">Working on myself</string>
     <string name="theme_autre">Something else</string>
     <string name="hero_greeting">Hello %1$s</string>
+    <string name="hero_greeting_morning">Good morning %1$s</string>
+    <string name="hero_greeting_afternoon">Good afternoon %1$s</string>
+    <string name="hero_greeting_evening">Good evening %1$s</string>
     <string name="nav_today">Today</string>
     <string name="nav_texts">Hitbodedut</string>
     <string name="nav_journal">Journal</string>

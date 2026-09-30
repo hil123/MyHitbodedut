@@ -4,7 +4,7 @@
 // n'existe pas encore est montré, mais inerte (classe « a-venir »).
 
 import { chargeTraduction, langueInitiale, LANGUES } from './i18n.js';
-import { DureeSeance, JaugeSemaine, Reference } from './regles.js';
+import { DureeSeance, JaugeSemaine, Reference, Salutation } from './regles.js';
 import { ART_DU_MOMENT, ChizukBag, ChizukRules } from './chizuk.js';
 import { DanseMesure } from './seance.js';
 import { creeStore, memoire } from './store.js';
@@ -249,7 +249,7 @@ function panneauAujourdhui() {
 
   return h('div', { class: 'contenu' },
     h('div', { class: 'marque' }, tr.t('app_name')),
-    prenom ? h('div', { class: 'salut' }, tr.t('hero_greeting', prenom)) : null,
+    prenom ? h('div', { class: 'salut' }, tr.t(Salutation.cle(new Date().getHours()), prenom)) : null,
     // Sans prénom, l'état du jour prend la place du titre.
     h('div', { class: prenom ? 'statut' : 'statut titre' }, tr.t(fait ? 'status_done' : 'status_pending')),
     h('div', { class: 'serie' },

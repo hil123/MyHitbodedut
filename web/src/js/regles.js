@@ -102,6 +102,18 @@ export const Reference = {
 // --- JaugeSemaine (JaugeSemaine.kt) ------------------------------------------
 // Un Chabbat ou un jour de pause n'est pas dû ; une séance faite un jour
 // exempté compte quand même.
+/**
+ * La salutation de l'accueil selon l'heure, comme Salutation.kt : bonjour
+ * le matin et l'après-midi, bonsoir le soir et la nuit (demande du 30/09).
+ */
+export const Salutation = {
+  cle(heure) {
+    if (heure >= 5 && heure < 12) return 'hero_greeting_morning';
+    if (heure >= 12 && heure < 18) return 'hero_greeting_afternoon';
+    return 'hero_greeting_evening';
+  },
+};
+
 export const JaugeSemaine = {
   progression(jours) {
     const faits = jours.filter((j) => j.done).length;

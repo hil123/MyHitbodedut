@@ -432,6 +432,9 @@
     <string name="theme_croissance">Travail sur soi</string>
     <string name="theme_autre">Autre chose</string>
     <string name="hero_greeting">Bonjour %1$s</string>
+    <string name="hero_greeting_morning">Bonjour %1$s</string>
+    <string name="hero_greeting_afternoon">Bonjour %1$s</string>
+    <string name="hero_greeting_evening">Bonsoir %1$s</string>
     <string name="nav_today">Aujourd’hui</string>
     <string name="nav_texts">Hitbodedout</string>
     <string name="nav_journal">Journal</string>

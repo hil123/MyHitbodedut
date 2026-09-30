@@ -368,6 +368,9 @@
     <string name="theme_croissance">עבודה על המידות</string>
     <string name="theme_autre">משהו אחר</string>
     <string name="hero_greeting">שלום %1$s</string>
+    <string name="hero_greeting_morning">בוקר טוב %1$s</string>
+    <string name="hero_greeting_afternoon">צהריים טובים %1$s</string>
+    <string name="hero_greeting_evening">ערב טוב %1$s</string>
     <string name="nav_today">היום</string>
     <string name="nav_texts">התבודדות</string>
     <string name="nav_journal">יומן</string>
