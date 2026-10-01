@@ -518,5 +518,7 @@ class SettingsActivity : AppCompatActivity() {
 
     private companion object {
         const val ETAT_DEMANDE = "notifications_demandees"
+        /** Au-delà, ce n'est pas une sauvegarde de cette application. */
+        const val IMPORT_MAX_OCTETS = 2 * 1024 * 1024
     }
 }
