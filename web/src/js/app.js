@@ -268,7 +268,8 @@ function saluer(e) {
 function panneauAujourdhui() {
   const prenom = store.firstName();
   const record = store.record();
-  const fait = record !== null;
+  // Une note seule ne fait pas la journée.
+  const fait = record?.faite === true;
   const serie = store.streak();
   const semaine = store.currentWeek();
   const progression = JaugeSemaine.progression(semaine);
@@ -569,13 +570,18 @@ function commencer(minutes) {
  * minutes s'inscrivent, le bravo attend. Une séance arrêtée à zéro minute
  * n'inscrit rien.
  */
+// Le jour de la séance qui vient de se clore : la note lui revient, pas au
+// jour où l'on touche « Continuer » (une séance de 23 h 40 finit demain).
+let dateNote = null;
+
 function cloreSeance({ avantTerme }) {
   const sujet = store.sessionTheme();
-  const minutes = store.endSession({ avantTerme });
+  const { minutes, date } = store.endSession({ avantTerme });
   const inscrite = minutes > 0 || !avantTerme;
   if (inscrite) {
-    store.addSession(minutes, { theme: sujet });
+    store.addSession(minutes, { theme: sujet, date });
     store.setPendingCelebration(minutes);
+    dateNote = date;
   }
   etaitEnCours = false;
   arreteMusique();
@@ -588,7 +594,7 @@ function cloreSeance({ avantTerme }) {
 /** « Terminer maintenant » : la note est proposée après le bravo, ou tout de suite s'il n'y en a pas. */
 function terminerMaintenant() {
   if (cloreSeance({ avantTerme: true })) noteApresBravo = true;
-  else setTimeout(() => ecrireNote(store.today(), rendre), 50);
+  else setTimeout(() => ecrireNote(dateNote ?? store.today(), rendre), 50);
   rendre();
 }
 
@@ -713,7 +719,7 @@ function ecranBravo() {
     retour();
     if (noteApresBravo) {
       noteApresBravo = false;
-      setTimeout(() => ecrireNote(store.today(), rendre), 50);
+      setTimeout(() => ecrireNote(dateNote ?? store.today(), rendre), 50);
     }
   };
   return h('div', { class: 'ecran bravo' },

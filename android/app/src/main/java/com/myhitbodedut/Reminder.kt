@@ -117,7 +117,8 @@ class ReminderReceiver : BroadcastReceiver() {
         Store.setReminderSnoozedUntil(context, 0L)
 
         val now = LocalTime.now()
-        val allowed = Store.reminderEnabled(context) && ReminderRule.shouldNotify(
+        // Pas de rappel pendant une hitbodedout : elle est en train de se faire.
+        val allowed = Store.reminderEnabled(context) && !Store.isSessionRunning(context) && ReminderRule.shouldNotify(
             nowMinutes = now.hour * 60 + now.minute,
             doneToday = Store.isDone(context),
             todayIsRestDay = Store.isExempt(context, LocalDate.now()),

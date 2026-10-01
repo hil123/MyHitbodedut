@@ -42,6 +42,7 @@ object NoteDialog {
 
         val initiale = Store.record(activity, date)?.note.orEmpty()
         val input = EditText(activity).apply {
+            filters = arrayOf(android.text.InputFilter.LengthFilter(Store.NOTE_MAX))
             setText(initiale)
             setHint(R.string.note_hint)
             setLines(4)

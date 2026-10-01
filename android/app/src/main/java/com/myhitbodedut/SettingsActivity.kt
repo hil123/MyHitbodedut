@@ -274,6 +274,7 @@ class SettingsActivity : AppCompatActivity() {
         }
         bindSwitch(R.id.exempt_today_switch, Store.pausedDates(this).contains(Store.today())) {
             Store.togglePausedDate(this, Store.today())
+            StreakWidget.refresh(this)
             refresh()
         }
     }
@@ -452,18 +453,34 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     private fun readBackup(uri: Uri) {
-        val text = runCatching {
-            contentResolver.openInputStream(uri)?.bufferedReader()?.use { it.readText() }
+        // Au plus 2 Mo : une sauvegarde réelle pèse quelques dizaines de Ko,
+        // et un fichier énorme restait ensuite relu à chaque ouverture.
+        val octets = runCatching {
+            contentResolver.openInputStream(uri)?.use { flux ->
+                val sortie = java.io.ByteArrayOutputStream()
+                val tampon = ByteArray(64 * 1024)
+                var total = 0
+                while (true) {
+                    val lu = flux.read(tampon)
+                    if (lu < 0) break
+                    total += lu
+                    if (total > IMPORT_MAX_OCTETS) return@use null
+                    sortie.write(tampon, 0, lu)
+                }
+                sortie.toByteArray()
+            }
         }.getOrNull()
-        if (text == null) {
+        if (octets == null) {
             Toast.makeText(this, R.string.import_failed, Toast.LENGTH_LONG).show()
             return
         }
+        val text = String(octets, Charsets.UTF_8)
         val imported = Store.importJson(this, text)
         if (imported == null) {
             Toast.makeText(this, R.string.import_invalid, Toast.LENGTH_LONG).show()
             return
         }
+        StreakWidget.refresh(this)
         Toast.makeText(
             this,
             resources.getQuantityString(R.plurals.import_ok, imported, imported),

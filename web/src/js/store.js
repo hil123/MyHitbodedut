@@ -16,6 +16,18 @@ export const DEFAULT_END = 11 * 60;
 export const DEFAULT_SNOOZE = 15;
 // 15 minutes, comme Android depuis le 29/09 : le conseil n° 2 le recommande.
 export const DEFAULT_TARGET = 15;
+/** Au-delà, une note n'est plus une note (Store.NOTE_MAX). */
+export const NOTE_MAX = 4000;
+/** Une séance ouverte s'arrête de compter là (SessionRule.PLAFOND_OUVERTE). */
+export const PLAFOND_OUVERTE = 240;
+
+/** La date si la clé est une vraie date ISO (2026-09-29), sinon false. */
+export function dateValide(cle) {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(cle)) return false;
+  const [a, m, j] = cle.split('-').map(Number);
+  const d = new Date(Date.UTC(a, m - 1, j));
+  return d.getUTCFullYear() === a && d.getUTCMonth() === m - 1 && d.getUTCDate() === j;
+}
 export const DEFAULT_REMINDER = 7 * 60;
 export const DEFAULT_VOLUME = 60;
 
@@ -55,11 +67,16 @@ export function creeStore(stockage, { maintenant = () => new Date(), fuseau } = 
     const out = {};
     for (const [date, e] of Object.entries(brut)) {
       if (!e || typeof e !== 'object') continue;
+      const noteSeule = e.note_seule === true;
       out[date] = {
         date,
         minutes: Number.isFinite(e.minutes) ? e.minutes : 0,
         note: typeof e.note === 'string' ? e.note : '',
         themes: Array.isArray(e.themes) ? e.themes.filter((t) => typeof t === 'string' && t !== '') : [],
+        // Une note laissée un jour sans hitbodedout : gardée, mais elle ne
+        // valide pas la journée (Store.kt, 29/09).
+        noteSeule,
+        faite: !noteSeule,
       };
     }
     return out;
@@ -68,6 +85,7 @@ export function creeStore(stockage, { maintenant = () => new Date(), fuseau } = 
     const e = { minutes: r.minutes, note: r.note };
     // Une clé absente vaut mieux qu'un tableau vide (Store.toJson).
     if (r.themes.length > 0) e.themes = r.themes;
+    if (r.noteSeule) e.note_seule = true;
     return e;
   };
   const writeDays = (map) => {
@@ -80,12 +98,21 @@ export function creeStore(stockage, { maintenant = () => new Date(), fuseau } = 
     today,
     days,
     record: (date = today()) => days()[date] ?? null,
-    isDone: (date = today()) => date in days(),
+    isDone: (date = today()) => days()[date]?.faite === true,
+    /** Les journées qui comptent : faites ou déclarées, pas les notes seules. */
+    joursFaits: () => new Set(Object.values(days()).filter((r) => r.faite).map((r) => r.date)),
+    aDejaPratique: () => Object.values(days()).some((r) => r.faite),
     totalMinutes: () => Object.values(days()).reduce((s, r) => s + r.minutes, 0),
 
+    /** La note d'un jour. Sur un jour sans hitbodedout, elle ne le valide pas. */
     setNote(date, note) {
       const d = days();
-      d[date] = { ...(d[date] ?? { date, minutes: 0, themes: [] }), note };
+      const existant = d[date];
+      const texte = note.slice(0, NOTE_MAX);
+      if (existant?.noteSeule && texte.trim() === '') delete d[date];
+      else if (existant) d[date] = { ...existant, note: texte };
+      else if (texte.trim() !== '') d[date] = { date, minutes: 0, note: texte, themes: [], noteSeule: true, faite: false };
+      else return;
       writeDays(d);
     },
 
@@ -102,12 +129,12 @@ export function creeStore(stockage, { maintenant = () => new Date(), fuseau } = 
 
     /** Jours consécutifs validés ; les jours exemptés ne comptent pas et ne cassent pas. */
     streak() {
-      const faits = days();
+      const faits = store.joursFaits();
       let jour = today();
-      if (!(jour in faits) && !store.isExempt(jour)) jour = ajouteJours(jour, -1);
+      if (!faits.has(jour) && !store.isExempt(jour)) jour = ajouteJours(jour, -1);
       let compte = 0;
       for (let garde = 0; garde < 3650; garde++) {
-        if (jour in faits) compte++;
+        if (faits.has(jour)) compte++;
         else if (!store.isExempt(jour)) return compte;
         jour = ajouteJours(jour, -1);
       }
@@ -116,14 +143,14 @@ export function creeStore(stockage, { maintenant = () => new Date(), fuseau } = 
 
     /** La semaine en cours, du dimanche au samedi. */
     currentWeek() {
-      const faits = days();
+      const faits = store.joursFaits();
       const auj = today();
       const dimanche = ajouteJours(auj, -jourSemaine(auj));
       return Array.from({ length: 7 }, (_, i) => {
         const date = ajouteJours(dimanche, i);
         return {
           date,
-          done: date in faits,
+          done: faits.has(date),
           exempt: store.isExempt(date),
           shabbat: i === 6,
           future: date > auj,
@@ -179,22 +206,28 @@ export function creeStore(stockage, { maintenant = () => new Date(), fuseau } = 
       const cible = store.sessionTarget();
       let minutes = SessionRule.minutesEcoulees(debut, maintenant().getTime());
       if (!avantTerme && cible > 0) minutes = Math.min(minutes, cible);
+      // Une séance ouverte oubliée en marche ne doit pas inscrire une journée.
+      if (cible <= 0) minutes = Math.min(minutes, PLAFOND_OUVERTE);
+      // Le jour où elle a commencé, jamais dans l'avenir (Store.endSession).
+      const jourDebut = debut > 0 ? isoLocal(new Date(debut)) : today();
+      const date = jourDebut > today() ? today() : jourDebut;
       set('session_started_at', null);
       set('session_ends_at', null);
       set('session_target', null);
-      return minutes;
+      return { minutes, date };
     },
 
     /** Valide la journée ; les minutes s'ajoutent, le sujet aussi (Store.addSession). */
-    addSession(minutes, { note = null, theme = null } = {}) {
+    addSession(minutes, { note = null, theme = null, date = today() } = {}) {
       const d = days();
-      const date = today();
       const existant = d[date];
       d[date] = {
         date,
         minutes: (existant?.minutes ?? 0) + Math.max(0, minutes),
         note: note ?? existant?.note ?? '',
         themes: [...(existant?.themes ?? []), ...(theme ? [theme] : [])],
+        noteSeule: false,
+        faite: true,
       };
       writeDays(d);
     },
@@ -292,21 +325,30 @@ export function creeStore(stockage, { maintenant = () => new Date(), fuseau } = 
       const merged = days();
       let importees = 0;
       const jours = root.days && typeof root.days === 'object' ? root.days : {};
+      const demain = ajouteJours(today(), 1);
       for (const [date, e] of Object.entries(jours)) {
         if (!e || typeof e !== 'object' || Array.isArray(e)) continue;
+        // Une vraie date, pas dans l'avenir (Store.importJson).
+        if (!dateValide(date) || date >= demain) continue;
+        const noteSeule = e.note_seule === true;
         const entrant = {
           date,
-          minutes: Number.isInteger(e.minutes) ? e.minutes : 0,
-          note: typeof e.note === 'string' ? e.note : '',
+          minutes: Number.isInteger(e.minutes) ? Math.min(Math.max(e.minutes, 0), 24 * 60) : 0,
+          note: typeof e.note === 'string' ? e.note.slice(0, NOTE_MAX) : '',
           themes: Array.isArray(e.themes) ? e.themes.filter((t) => typeof t === 'string' && t !== '') : [],
+          noteSeule,
+          faite: !noteSeule,
         };
         const existant = merged[date];
         // En conflit : la séance la plus longue, la note non vide, les sujets réunis.
+        const seule = existant ? existant.noteSeule && entrant.noteSeule : entrant.noteSeule;
         merged[date] = existant ? {
           date,
           minutes: Math.max(existant.minutes, entrant.minutes),
           note: existant.note.trim() !== '' ? existant.note : entrant.note,
           themes: [...new Set([...existant.themes, ...entrant.themes])],
+          noteSeule: seule,
+          faite: !seule,
         } : entrant;
         importees++;
       }
@@ -314,14 +356,17 @@ export function creeStore(stockage, { maintenant = () => new Date(), fuseau } = 
 
       const s = root.settings && typeof root.settings === 'object' ? root.settings : null;
       if (s) {
-        const entier = (cle, pref) => { if (Number.isInteger(s[cle])) set(pref ?? cle, s[cle]); };
+        // Chaque valeur est ramenée dans ce que l'écran permet (Store.importJson).
+        const entier = (cle, pref, min = 0, max = 24 * 60 - 1) => {
+          if (Number.isInteger(s[cle]) && s[cle] >= min && s[cle] <= max) set(pref ?? cle, s[cle]);
+        };
         const bool = (cle, pref) => { if (typeof s[cle] === 'boolean') set(pref ?? cle, s[cle]); };
         const texteNonVide = (cle, pref) => { if (typeof s[cle] === 'string' && s[cle].trim() !== '') set(pref ?? cle, s[cle]); };
-        entier('window_start'); entier('window_end'); entier('snooze_minutes');
-        entier('target_minutes'); entier('daily_goal_minutes');
+        entier('window_start'); entier('window_end'); entier('snooze_minutes', null, 1, 240);
+        entier('target_minutes', null, 1, 240); entier('daily_goal_minutes', null, 0, 240);
         bool('pause_shabbat'); bool('in_israel');
         bool('reminder_enabled', 'reminder_on'); entier('reminder_minutes');
-        bool('music_enabled'); entier('music_volume');
+        bool('music_enabled'); entier('music_volume', null, 0, 100);
         texteNonVide('music_track');
         if (s.adresse === 'm' || s.adresse === 'f') set('adresse', s.adresse);
         if (['auto', 'clair', 'sombre'].includes(s.apparence_mode)) set('apparence_mode', s.apparence_mode);
@@ -330,7 +375,7 @@ export function creeStore(stockage, { maintenant = () => new Date(), fuseau } = 
       }
       if (Array.isArray(root.paused_dates)) {
         const dates = store.pausedDates();
-        root.paused_dates.forEach((d) => { if (typeof d === 'string' && d.trim() !== '') dates.add(d); });
+        root.paused_dates.forEach((d) => { if (typeof d === 'string' && dateValide(d)) dates.add(d); });
         set('paused_dates', [...dates]);
       }
       if (Array.isArray(root.blocked_apps)) {

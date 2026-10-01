@@ -9,7 +9,7 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { Anneaux, DureeSeance, JaugeSemaine, Reference, RegleLangue, Salutation } from '../src/js/regles.js';
 import { estJourChome, israelParDefaut } from '../src/js/calendrier.js';
-import { creeStore, memoire } from '../src/js/store.js';
+import { creeStore, dateValide, memoire } from '../src/js/store.js';
 import { creeTraduction, formate, langueInitiale } from '../src/js/i18n.js';
 import { litChaines, valeurAndroid } from '../tools/chaines.mjs';
 
@@ -250,7 +250,7 @@ test('un fichier de sauvegarde Android se relit, et l’export garde le même fo
   };
   assert.equal(s.importJson(JSON.stringify(android)), 2);
   // Conflit : la séance la plus longue, la note non vide, les sujets réunis.
-  assert.deepEqual(s.record('2026-09-28'), { date: '2026-09-28', minutes: 45, note: 'ici', themes: ['gratitude', 'famille'] });
+  assert.deepEqual(s.record('2026-09-28'), { date: '2026-09-28', minutes: 45, note: 'ici', themes: ['gratitude', 'famille'], noteSeule: false, faite: true });
   assert.equal(s.targetMinutes(), 30);
   assert.equal(s.adresse(), 'f');
   assert.equal(s.fond(), 'sable');
@@ -312,4 +312,69 @@ test('sans objectif rien ne se remplit ; l\'objectif retombe sur la durée', () 
   assert.equal(e.semaine.fraction, 0);
   assert.equal(Anneaux.objectifEffectif(0, 15), 15);
   assert.equal(Anneaux.objectifEffectif(20, 15), 20);
+});
+
+// --- Fiabilité 2 (01/10) : parité avec Store.kt ---------------------------------------
+test('une note seule ne valide pas la journée et survit à un aller-retour', () => {
+  const s = store({});
+  s.setNote(s.today(), 'une pensée');
+  assert.equal(s.isDone(), false);
+  assert.equal(s.streak(), 0);
+  assert.equal(s.record().noteSeule, true);
+  // L'export la marque, et l'import la relit telle quelle.
+  const exporte = JSON.parse(s.exportJson());
+  assert.equal(exporte.days[s.today()].note_seule, true);
+  const t = store({});
+  t.importJson(JSON.stringify(exporte));
+  assert.equal(t.isDone(), false);
+  // Une hitbodedout le même jour la transforme en journée faite, note gardée.
+  s.addSession(10);
+  assert.equal(s.isDone(), true);
+  assert.equal(s.record().note, 'une pensée');
+  // Une note seule effacée disparaît.
+  const u = store({});
+  u.setNote(u.today(), 'x');
+  u.setNote(u.today(), '');
+  assert.equal(u.record(), null);
+});
+
+test('une séance compte pour le jour où elle a commencé', () => {
+  // 23 h 40 à Paris, 20 minutes : finit le lendemain.
+  const horloge = { t: new Date('2026-09-29T21:40:00Z').getTime() };
+  const s = creeStore(memoire(), { maintenant: () => new Date(horloge.t), fuseau: 'Europe/Paris' });
+  s.beginSession(20);
+  horloge.t += 40 * 60000;
+  const close = s.endSession();
+  assert.equal(close.minutes, 20);
+  assert.equal(close.date, '2026-09-29');
+  s.addSession(close.minutes, { date: close.date });
+  assert.equal(s.isDone('2026-09-29'), true);
+  assert.equal(s.isDone('2026-09-30'), false);
+});
+
+test('une séance ouverte oubliée est plafonnée', () => {
+  const horloge = { t: new Date('2026-09-29T10:00:00Z').getTime() };
+  const s = creeStore(memoire(), { maintenant: () => new Date(horloge.t), fuseau: 'Europe/Paris' });
+  s.beginSession(0);
+  horloge.t += 20 * 60 * 60000;
+  assert.equal(s.endSession({ avantTerme: true }).minutes, 240);
+});
+
+test('l\'import rejette les dates fausses ou à venir et borne les valeurs', () => {
+  const s = store({});
+  const n = s.importJson(JSON.stringify({
+    format: 'myhitbodedut', version: 1,
+    days: { '2026-13-45': { minutes: 10 }, 'x': { minutes: 10 }, '2099-01-01': { minutes: 10 }, '2026-09-20': { minutes: -5, note: 'a'.repeat(5000) } },
+    settings: { target_minutes: 0, music_volume: 500, snooze_minutes: 15 },
+    paused_dates: ['2026-02-30', '2026-09-21'],
+  }));
+  assert.equal(n, 1);
+  assert.equal(s.record('2026-09-20').minutes, 0);
+  assert.equal(s.record('2026-09-20').note.length, 4000);
+  assert.equal(s.targetMinutes(), 15);
+  assert.equal(s.musicVolume(), 60);
+  assert.equal(s.isExempt('2026-09-21'), true);
+  assert.equal(s.isExempt('2026-02-30'), false);
+  assert.equal(dateValide('2026-02-30'), false);
+  assert.equal(dateValide('2026-09-29'), true);
 });

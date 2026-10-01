@@ -20,6 +20,12 @@ class JournalActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_journal)
+        // Les notes sont ce qu'il y a de plus intime : ni capture d'écran,
+        // ni aperçu dans les applications récentes (revue du 01/10).
+        window.setFlags(
+            android.view.WindowManager.LayoutParams.FLAG_SECURE,
+            android.view.WindowManager.LayoutParams.FLAG_SECURE
+        )
         adapter = Adapter()
         findViewById<RecyclerView>(R.id.journal_list).apply {
             layoutManager = LinearLayoutManager(this@JournalActivity)

@@ -154,7 +154,7 @@ test('une séance minutée inscrit sa durée, même relue longtemps après son t
   h.avance(3 * 3600 * 1000); // le téléphone a dormi trois heures
   assert.equal(s.isSessionRunning(), false);
   assert.equal(s.isSessionOver(), true);
-  assert.equal(s.endSession(), 20);
+  assert.equal(s.endSession().minutes, 20);
   assert.equal(s.isSessionOver(), false);
 });
 
@@ -163,7 +163,7 @@ test('terminer avant le terme inscrit le temps réellement passé', () => {
   const s = creeStore(memoire(), { maintenant: h.maintenant, fuseau: 'Europe/Paris' });
   s.beginSession(60);
   h.avance(12 * minute + 30000);
-  assert.equal(s.endSession({ avantTerme: true }), 12);
+  assert.equal(s.endSession({ avantTerme: true }).minutes, 12);
 });
 
 test('une séance ouverte court jusqu’à ce qu’on la close', () => {
@@ -174,7 +174,7 @@ test('une séance ouverte court jusqu’à ce qu’on la close', () => {
   assert.equal(s.isSessionRunning(), true);
   assert.equal(s.isSessionOpen(), true);
   assert.equal(s.sessionCounter(), 'ecoule');
-  assert.equal(s.endSession({ avantTerme: true }), 300);
+  assert.equal(s.endSession({ avantTerme: true }).minutes, 240);
 });
 
 test('les séances d’un jour s’additionnent, sujets compris, et le bravo attend une fois', () => {
@@ -182,7 +182,7 @@ test('les séances d’un jour s’additionnent, sujets compris, et le bravo att
   const s = creeStore(memoire(), { maintenant: h.maintenant, fuseau: 'Europe/Paris' });
   s.addSession(10, { theme: 'gratitude' });
   s.addSession(5);
-  assert.deepEqual(s.record(), { date: '2026-09-29', minutes: 15, note: '', themes: ['gratitude'] });
+  assert.deepEqual(s.record(), { date: '2026-09-29', minutes: 15, note: '', themes: ['gratitude'], noteSeule: false, faite: true });
   s.setPendingCelebration(15);
   assert.equal(s.takePendingCelebration(), 15);
   assert.equal(s.takePendingCelebration(), null);

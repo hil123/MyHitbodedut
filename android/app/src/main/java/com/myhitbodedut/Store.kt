@@ -63,6 +63,11 @@ object Store {
     private const val PREFS_JOURNAL = "myhitbodedut-journal"
 
     private const val KEY_DAYS = "days"
+    /** Copie d'un journal illisible, gardée pour qu'il ne soit pas écrasé en silence. */
+    private const val KEY_DAYS_CORROMPU = "days_corrompu"
+
+    /** Au-delà, une note n'est plus une note ; et chaque écriture recopie tout le journal. */
+    const val NOTE_MAX = 4000
     private const val KEY_LEGACY_DONE = "done_dates"
     private const val KEY_APPS = "blocked_apps"
     private const val KEY_START = "window_start"
@@ -155,6 +160,11 @@ object Store {
                         noteSeule = entry.optBoolean("note_seule", false)
                     )
                 }
+            }.onFailure {
+                // Illisible : on en garde une copie avant que la prochaine
+                // écriture ne le remplace par la seule journée du jour.
+                val p = journalPrefs(context)
+                if (!p.contains(KEY_DAYS_CORROMPU)) p.edit().putString(KEY_DAYS_CORROMPU, raw).apply()
             }
         }
         // Reprise des jours validés par les versions précédentes.
@@ -244,8 +254,10 @@ object Store {
         val all = days(context).toMutableMap()
         val existing = all[date]
         when {
-            existing != null -> all[date] = existing.copy(note = note)
-            note.isNotBlank() -> all[date] = DayRecord(date, 0, note, emptyList(), noteSeule = true)
+            // Une note seule qu'on efface : la ligne n'a plus de raison d'être.
+            existing?.noteSeule == true && note.isBlank() -> all.remove(date)
+            existing != null -> all[date] = existing.copy(note = note.take(NOTE_MAX))
+            note.isNotBlank() -> all[date] = DayRecord(date, 0, note.take(NOTE_MAX), emptyList(), noteSeule = true)
             else -> return
         }
         writeDays(context, all)
@@ -272,10 +284,18 @@ object Store {
     }
 
     /** Israël ou diaspora : décide du deuxième jour de fête. */
-    fun inIsrael(context: Context): Boolean = prefs(context).getBoolean(
-        KEY_IN_ISRAEL,
-        Holidays.defaultInIsrael(java.util.TimeZone.getDefault().id)
-    )
+    /**
+     * Israël ou diaspora. Le premier accès fige la valeur déduite du fuseau :
+     * sans cela, un voyage changeait le deuxième jour de fête après coup, et
+     * pouvait casser une série (revue du 01/10).
+     */
+    fun inIsrael(context: Context): Boolean {
+        val p = prefs(context)
+        if (!p.contains(KEY_IN_ISRAEL)) {
+            p.edit().putBoolean(KEY_IN_ISRAEL, Holidays.defaultInIsrael(java.util.TimeZone.getDefault().id)).apply()
+        }
+        return p.getBoolean(KEY_IN_ISRAEL, false)
+    }
 
     fun setInIsrael(context: Context, value: Boolean) {
         prefs(context).edit().putBoolean(KEY_IN_ISRAEL, value).apply()
@@ -536,7 +556,9 @@ object Store {
         val minutes = SessionRule.minutesAInscrire(
             started, sessionEndsAt(context), System.currentTimeMillis()
         )
-        val date = if (started > 0L) dateOf(started) else today()
+        // Jamais dans l'avenir : une horloge reculée après le début ne doit
+        // pas inscrire une journée à venir.
+        val date = if (started > 0L) minOf(dateOf(started), today()) else today()
         prefs(context).edit()
             .remove(KEY_SESSION_START)
             .remove(KEY_SESSION_END)
@@ -857,7 +879,7 @@ object Store {
                 val incoming = DayRecord(
                     date,
                     entry.optInt("minutes", 0).coerceIn(0, 24 * 60),
-                    entry.optString("note", ""),
+                    entry.optString("note", "").take(NOTE_MAX),
                     readThemes(entry),
                     entry.optBoolean("note_seule", false)
                 )

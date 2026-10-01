@@ -30,7 +30,9 @@ class MainActivity : AppCompatActivity() {
         // Une rotation ou un redimensionnement de fenêtre recrée l'écran :
         // sans cela, le texte de relance serait retiré à chaque fois.
         relanceTiree = savedInstanceState?.getBoolean(ETAT_RELANCE, false) ?: false
-        showOnboardingOnce()
+        // Une seule fois par création réelle : une recréation (fenêtre
+        // redimensionnée) pendant la présentation en ouvrait une seconde.
+        if (savedInstanceState == null) showOnboardingOnce()
         wireActions()
         wireTabs(savedInstanceState?.getInt(ETAT_ONGLET, R.id.nav_today) ?: R.id.nav_today)
         // Venu de la notification de fin : la note du jour de la séance, pas
@@ -191,23 +193,34 @@ class MainActivity : AppCompatActivity() {
      * autres, et le bravo suit si c'est aujourd'hui.
      */
     private fun declarerHorsTelephone() {
-        val hier = java.time.LocalDate.now().minusDays(1)
-        val hierOuvert = !Store.isDone(this, hier.toString()) && !Store.isExempt(this, hier)
-        if (!hierOuvert) {
-            choisirDureeHorsTelephone(Store.today())
-            return
+        // Les deux dates sont figées au geste : la fenêtre peut rester
+        // ouverte à cheval sur minuit.
+        val aujourdhui = Store.today()
+        val hier = Store.parse(aujourdhui).minusDays(1).toString()
+        val hierOuvert = hierOuvert()
+        val aujourdhuiOuvert = !Store.isDone(this, aujourdhui)
+        when {
+            aujourdhuiOuvert && hierOuvert -> AlertDialog.Builder(this)
+                .setTitle(R.string.offline_which_day)
+                .setItems(arrayOf(getString(R.string.offline_today), getString(R.string.offline_yesterday))) { _, i ->
+                    choisirDureeHorsTelephone(if (i == 0) aujourdhui else hier)
+                }
+                .show()
+            hierOuvert -> choisirDureeHorsTelephone(hier)
+            else -> choisirDureeHorsTelephone(aujourdhui)
         }
-        AlertDialog.Builder(this)
-            .setTitle(R.string.offline_which_day)
-            .setItems(arrayOf(getString(R.string.offline_today), getString(R.string.offline_yesterday))) { _, i ->
-                choisirDureeHorsTelephone(if (i == 0) Store.today() else hier.toString())
-            }
-            .show()
+    }
+
+    /** Hier n'est ni fait ni exempté : on peut encore l'inscrire. */
+    private fun hierOuvert(): Boolean {
+        val hier = Store.parse(Store.today()).minusDays(1)
+        return !Store.isDone(this, hier.toString()) && !Store.isExempt(this, hier)
     }
 
     private fun choisirDureeHorsTelephone(date: String) {
         DureeSeance.choisir(this, R.string.offline_how_long) { minutes ->
-            Store.addSession(this, minutes, theme = Store.sessionTheme(this), date = date)
+            // Sans sujet : celui des puces est celui de la PROCHAINE séance.
+            Store.addSession(this, minutes, theme = null, date = date)
             if (date == Store.today()) Store.setPendingCelebration(this, minutes, date)
             refresh()
             StreakWidget.refresh(this)
@@ -506,8 +519,9 @@ class MainActivity : AppCompatActivity() {
             }
         }
         findViewById<Button>(R.id.today_note).visibility = if (done) View.VISIBLE else View.GONE
+        // Tant qu'aujourd'hui ou hier peut encore être inscrit.
         findViewById<Button>(R.id.today_offline).visibility =
-            if (!done && !Store.isSessionRunning(this)) View.VISIBLE else View.GONE
+            if ((!done || hierOuvert()) && !Store.isSessionRunning(this)) View.VISIBLE else View.GONE
 
         findViewById<Button>(R.id.start_session).text = when {
             Store.isSessionRunning(this) -> getString(R.string.action_back_to_session)

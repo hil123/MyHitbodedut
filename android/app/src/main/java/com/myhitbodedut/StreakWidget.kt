@@ -72,7 +72,26 @@ class StreakWidget : AppWidgetProvider() {
                 )
                 val traduit = LangueApp.envelopper(context)
                 ids.forEach { draw(traduit, manager, it) }
+                if (ids.isNotEmpty()) programmerMinuit(context, ids)
             }
+        }
+
+        /**
+         * Une mise à jour juste après minuit : sans elle, la vignette
+         * montrait la coche de la veille jusqu'à une heure après (sa période
+         * système est d'une heure, et différée en veille).
+         */
+        private fun programmerMinuit(context: Context, ids: IntArray) {
+            val minuit = java.time.LocalDate.now().plusDays(1).atStartOfDay(java.time.ZoneId.systemDefault())
+                .toInstant().toEpochMilli() + 60_000L
+            val intent = Intent(context, StreakWidget::class.java)
+                .setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE)
+                .putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids)
+            val pending = PendingIntent.getBroadcast(
+                context, 9, intent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            )
+            val alarmes = context.getSystemService(Context.ALARM_SERVICE) as android.app.AlarmManager
+            runCatching { alarmes.set(android.app.AlarmManager.RTC, minuit, pending) }
         }
 
         private fun draw(context: Context, manager: AppWidgetManager, id: Int) {

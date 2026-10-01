@@ -50,8 +50,20 @@ class SessionService : Service() {
 
     private val tick = object : Runnable {
         override fun run() {
-            if (refresh()) handler.postDelayed(this, TICK_MS)
+            if (refresh()) handler.postDelayed(this, delaiTick())
         }
+    }
+
+    /**
+     * Le prochain tour : toutes les 5 s, mais jamais après le terme. Le
+     * décompte à l'écran touchait zéro jusqu'à 5 s avant que le service
+     * clôture ; un « Commencer » dans cet intervalle écrasait la séance
+     * finie (revue du 01/10).
+     */
+    private fun delaiTick(): Long {
+        val fin = Store.sessionEndsAt(this)
+        if (fin <= 0L) return TICK_MS
+        return (fin - System.currentTimeMillis() + 30L).coerceIn(30L, TICK_MS)
     }
 
     override fun onCreate() {
@@ -60,6 +72,13 @@ class SessionService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        // Relancé par Android (START_STICKY) alors que la séance a déjà été
+        // close par reconcilier() : il n'y a rien à suivre. Sans ce garde,
+        // le tour suivant inscrivait une journée fantôme de 0 min.
+        if (intent == null && !Store.hasSessionRecord(this)) {
+            stopSelf()
+            return START_NOT_STICKY
+        }
         when (intent?.action) {
             ACTION_CANCEL -> {
                 Store.endSession(this)
@@ -78,7 +97,10 @@ class SessionService : Service() {
                 }
                 if (!Store.musicEnabled(this)) {
                     music.stop()
-                    return START_STICKY
+                    // Service déjà en marche : rien d'autre à faire. Sinon
+                    // (processus relancé), le chemin ordinaire le remet en
+                    // premier plan.
+                    if (enMarche) return START_STICKY
                 }
                 // Passage à la lecture aléatoire, ou retour au morceau choisi,
                 // pendant la séance : on coupe, le chemin ordinaire relance.
@@ -139,6 +161,11 @@ class SessionService : Service() {
         SessionRule.minutesRestantes(Store.sessionEndsAt(this), System.currentTimeMillis())
 
     private fun finishSession(early: Boolean) {
+        // Rien d'inscrit : rien à clore (séance déjà close ailleurs).
+        if (!Store.hasSessionRecord(this)) {
+            stopSelfAndClear()
+            return
+        }
         // Le sujet se lit AVANT la clôture : endSession efface la séance.
         val theme = Store.sessionTheme(this)
         val close = Store.endSession(this)
@@ -344,8 +371,26 @@ class SessionService : Service() {
         }
 
         fun start(context: Context, minutes: Int) {
+            cloreLaPrecedente(context)
             Store.beginSession(context, minutes)
             context.startForegroundService(Intent(context, SessionService::class.java))
+        }
+
+        /**
+         * Une séance encore inscrite quand une nouvelle part : échue, elle
+         * est inscrite au journal ; sinon ses minutes le sont si elle en a.
+         * Sans cela, beginSession l'écrasait et elle disparaissait sans
+         * journée, sans minutes, sans bravo (revue du 01/10).
+         */
+        private fun cloreLaPrecedente(context: Context) {
+            if (!Store.hasSessionRecord(context)) return
+            val echue = SessionRule.estEchue(
+                Store.sessionStartedAt(context), Store.sessionEndsAt(context),
+                Store.sessionTarget(context), System.currentTimeMillis()
+            )
+            val theme = Store.sessionTheme(context)
+            val close = Store.endSession(context)
+            if (echue || close.minutes > 0) inscrire(context, close, theme)
         }
 
         fun cancel(context: Context) {
