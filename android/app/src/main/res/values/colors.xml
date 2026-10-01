@@ -42,6 +42,13 @@
     <color name="day_todo">#EDF2EE</color>
     <color name="day_exempt">#EDE9F7</color>
 
+    <!-- Les anneaux de l'accueil : le jour prend la couleur de marque,
+         la semaine et la série ont les leurs, fixes de jour et de nuit. -->
+    <color name="ring_week">#2E7DB3</color>
+    <color name="ring_streak">#B8780F</color>
+    <!-- Les mêmes, sur le fond vert foncé de la vignette : plus clairs, et fixes. -->
+    <color name="ring_week_on_dark">#8CCBF2</color>
+    <color name="ring_streak_on_dark">#F0C46A</color>
     <!-- Fond très dilué du badge d'avertissement. -->
     <color name="warning_wash">#1FC66B2D</color>
 </resources>

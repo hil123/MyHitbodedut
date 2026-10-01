@@ -7,7 +7,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { DureeSeance, JaugeSemaine, Reference, RegleLangue, Salutation } from '../src/js/regles.js';
+import { Anneaux, DureeSeance, JaugeSemaine, Reference, RegleLangue, Salutation } from '../src/js/regles.js';
 import { estJourChome, israelParDefaut } from '../src/js/calendrier.js';
 import { creeStore, memoire } from '../src/js/store.js';
 import { creeTraduction, formate, langueInitiale } from '../src/js/i18n.js';
@@ -241,7 +241,7 @@ test('un fichier de sauvegarde Android se relit, et l’export garde le même fo
       '2026-09-20': { minutes: 60, note: 'là' },
     },
     settings: {
-      window_start: 360, window_end: 660, snooze_minutes: 15, target_minutes: 30, pause_shabbat: true,
+      window_start: 360, window_end: 660, snooze_minutes: 15, target_minutes: 30, daily_goal_minutes: 0, pause_shabbat: true,
       in_israel: true, reminder_enabled: true, reminder_minutes: 420, music_enabled: false, music_volume: 40,
       music_track: 'niggoun_05', adresse: 'f', apparence_mode: 'sombre', apparence_fond: 'sable', apparence_accent: 'violet',
     },
@@ -282,4 +282,34 @@ test('la salutation suit l\'heure : bonjour le jour, bonsoir le soir et la nuit'
   assert.equal(Salutation.cle(22), 'hero_greeting_evening');
   assert.equal(Salutation.cle(3), 'hero_greeting_evening');
   assert.equal(Salutation.cle(5), 'hero_greeting_morning');
+});
+
+// --- Anneaux (AnneauxTest.kt) ------------------------------------------------------
+test('les anneaux : le jour en minutes, le second tour au-delà de l\'objectif', () => {
+  const sem = { faits: 4, dus: 6, fraction: 4 / 6 };
+  const e = Anneaux.etat(8, 15, sem, 4);
+  assert.equal(e.jour.fraction, 8 / 15);
+  assert.equal(e.jour.atteint, false);
+  assert.deepEqual([e.semaine.fait, e.semaine.objectif], [4, 6]);
+  const au_dela = Anneaux.etat(23, 15, sem, 4);
+  assert.equal(au_dela.jour.tours, 1);
+  assert.ok(Math.abs(au_dela.jour.reste - 8 / 15) < 1e-9);
+  assert.equal(au_dela.jour.atteint, true);
+});
+
+test('la série vise le premier palier qui l\'atteint', () => {
+  for (const [serie, palier] of [[0, 7], [7, 7], [8, 14], [15, 30], [101, 180], [365, 365], [366, 730]]) {
+    assert.equal(Anneaux.palier(serie), palier, `série ${serie}`);
+  }
+  const e = Anneaux.etat(0, 15, { faits: 0, dus: 0, fraction: 0 }, 7);
+  assert.equal(e.serie.fraction, 1);
+  assert.equal(Anneaux.etat(0, 15, { faits: 0, dus: 0, fraction: 0 }, 8).serie.fraction, 8 / 14);
+});
+
+test('sans objectif rien ne se remplit ; l\'objectif retombe sur la durée', () => {
+  const e = Anneaux.etat(10, 0, { faits: 0, dus: 0, fraction: 0 }, 0);
+  assert.equal(e.jour.fraction, 0);
+  assert.equal(e.semaine.fraction, 0);
+  assert.equal(Anneaux.objectifEffectif(0, 15), 15);
+  assert.equal(Anneaux.objectifEffectif(20, 15), 20);
 });

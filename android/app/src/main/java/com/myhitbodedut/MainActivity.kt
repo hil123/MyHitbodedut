@@ -175,8 +175,11 @@ class MainActivity : AppCompatActivity() {
                 startActivity(Intent(this@MainActivity, ProofreadActivity::class.java))
             }
         }
-        // La plaque ronde coupe l'illustration à son bord, au creux de la jauge.
-        findViewById<View>(R.id.hero_plate).clipToOutline = true
+        // La plaque ronde coupe l'illustration à son bord, au creux des anneaux.
+        findViewById<View>(R.id.hero_plate).apply {
+            clipToOutline = true
+            setOnClickListener { saluer() }
+        }
         findViewById<Button>(R.id.today_note).setOnClickListener {
             NoteDialog.show(this, Store.today(), onSaved = { refresh() })
         }
@@ -304,13 +307,84 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    /** La jauge : les jours faits de la semaine, sur ceux qui sont dus. */
+    /**
+     * Les trois anneaux autour du hassid : le jour (minutes sur l'objectif),
+     * la semaine (jours faits sur jours dus), la série (jours d'affilée sur
+     * le prochain palier). Sous eux, la semaine en toutes lettres, ou le
+     * détail de l'anneau qu'on a touché.
+     */
     private fun renderGauge() {
         val semaine = JaugeSemaine.progression(Store.currentWeek(this))
-        findViewById<JaugeView>(R.id.week_gauge).montrer(semaine.fraction)
-        findViewById<TextView>(R.id.week_gauge_label).text = resources.getQuantityString(
-            R.plurals.week_gauge, semaine.faits, semaine.faits, semaine.dus
+        val etat = Store.anneaux(this)
+        val anneaux = findViewById<AnneauxView>(R.id.week_gauge)
+        anneaux.montrer(etat)
+        anneaux.contentDescription = getString(
+            R.string.rings_description,
+            Store.formatDuration(this, etat.jour.fait), Store.formatDuration(this, etat.jour.objectif),
+            semaine.faits, semaine.dus, etat.serie.fait, etat.serie.objectif
         )
+        anneaux.surChoix = { renderLegende(it) }
+        renderLegende(anneaux.misEnAvant)
+    }
+
+    /** La légende sous les anneaux : la semaine, ou l'anneau mis en avant. */
+    private fun renderLegende(quel: Anneaux.Quel?) {
+        val etat = Store.anneaux(this)
+        val semaine = etat.semaine
+        val legende = findViewById<TextView>(R.id.week_gauge_label)
+        legende.text = when (quel) {
+            Anneaux.Quel.JOUR -> getString(
+                if (etat.jour.atteint) R.string.ring_day_reached else R.string.ring_day_detail,
+                Store.formatDuration(this, etat.jour.fait), Store.formatDuration(this, etat.jour.objectif)
+            )
+            Anneaux.Quel.SERIE -> getString(
+                if (etat.serie.atteint) R.string.ring_streak_reached else R.string.ring_streak_detail,
+                etat.serie.fait, etat.serie.objectif
+            )
+            else -> resources.getQuantityString(R.plurals.week_gauge, semaine.fait, semaine.fait, semaine.objectif)
+        }
+        legende.setTextColor(
+            Apparence.couleur(
+                this,
+                when (quel) {
+                    Anneaux.Quel.JOUR -> R.color.brand
+                    Anneaux.Quel.SEMAINE -> R.color.ring_week
+                    Anneaux.Quel.SERIE -> R.color.ring_streak
+                    null -> R.color.muted
+                }
+            )
+        )
+    }
+
+    /**
+     * Un toucher sur le hassid : il salue d'un petit saut, et les anneaux
+     * se remplissent à nouveau depuis zéro. Rien si les animations sont
+     * coupées dans le téléphone.
+     */
+    private fun saluer() {
+        val anneaux = findViewById<AnneauxView>(R.id.week_gauge)
+        anneaux.montrer(Store.anneaux(this), depuisZero = true)
+        if (!android.animation.ValueAnimator.areAnimatorsEnabled()) return
+        val hassid = findViewById<ImageView>(R.id.hero_character)
+        val saut = 10f * resources.displayMetrics.density
+        hassid.animate().cancel()
+        hassid.pivotX = hassid.width / 2f
+        hassid.pivotY = hassid.height.toFloat()
+        hassid.animate()
+            .translationY(-saut).scaleX(1.04f).scaleY(1.06f).rotation(-3f)
+            .setDuration(220L)
+            .setInterpolator(android.view.animation.DecelerateInterpolator())
+            .withEndAction {
+                hassid.animate()
+                    .translationY(0f).scaleX(1f).scaleY(1f).rotation(3f)
+                    .setDuration(260L)
+                    .setInterpolator(android.view.animation.BounceInterpolator())
+                    .withEndAction {
+                        hassid.animate().rotation(0f).setDuration(160L).start()
+                    }
+                    .start()
+            }
+            .start()
     }
 
     /**

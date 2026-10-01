@@ -93,24 +93,27 @@
                     android:textColor="?attr/mhBrand"
                     android:visibility="gone" />
 
-                <!-- La jauge de la semaine, et le hassid qui accueille en son creux. -->
+                <!-- Les trois anneaux (jour, semaine, série), et le hassid qui accueille en leur creux. -->
                 <FrameLayout
                     android:layout_width="@dimen/gauge_size"
                     android:layout_height="@dimen/gauge_size"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="18dp">
 
-                    <com.myhitbodedut.JaugeView
+                    <com.myhitbodedut.AnneauxView
                         android:id="@+id/week_gauge"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:importantForAccessibility="no" />
+                        android:layout_height="match_parent" />
 
+                    <!-- 34dp : trois anneaux de 8dp, deux écarts de 3dp, et un peu d'air. -->
                     <FrameLayout
                         android:id="@+id/hero_plate"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_margin="18dp"
+                        android:layout_margin="34dp"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:contentDescription="@string/rings_character_hint"
                         android:background="@drawable/bg_gauge_plate"
                         android:paddingHorizontal="16dp"
                         android:paddingTop="14dp"

@@ -9,11 +9,13 @@
 
 import { ajouteJours, estJourChome, isoLocal, israelParDefaut, jourSemaine } from './calendrier.js';
 import { SessionRule } from './seance.js';
+import { Anneaux, JaugeSemaine } from './regles.js';
 
 export const DEFAULT_START = 6 * 60;
 export const DEFAULT_END = 11 * 60;
 export const DEFAULT_SNOOZE = 15;
-export const DEFAULT_TARGET = 60;
+// 15 minutes, comme Android depuis le 29/09 : le conseil n° 2 le recommande.
+export const DEFAULT_TARGET = 15;
 export const DEFAULT_REMINDER = 7 * 60;
 export const DEFAULT_VOLUME = 60;
 
@@ -132,6 +134,13 @@ export function creeStore(stockage, { maintenant = () => new Date(), fuseau } = 
     // --- Séance -----------------------------------------------------------------
     targetMinutes: () => get('target_minutes', DEFAULT_TARGET),
     setTargetMinutes: (m) => set('target_minutes', m),
+    /** L'objectif de l'anneau du jour ; sans réglage, la durée habituelle (Anneaux). */
+    dailyGoal: () => Anneaux.objectifEffectif(get('daily_goal_minutes', 0), store.targetMinutes()),
+    setDailyGoal: (m) => set('daily_goal_minutes', Math.max(0, m)),
+    /** Les trois anneaux de l'accueil, ici et maintenant. */
+    anneaux: () => Anneaux.etat(
+      store.record()?.minutes ?? 0, store.dailyGoal(),
+      JaugeSemaine.progression(store.currentWeek()), store.streak()),
     sessionTheme: () => get('session_theme', null),
     setSessionTheme: (cle) => set('session_theme', cle),
     sessionStartedAt: () => get('session_started_at', 0),
@@ -255,6 +264,7 @@ export function creeStore(stockage, { maintenant = () => new Date(), fuseau } = 
           window_end: get('window_end', DEFAULT_END),
           snooze_minutes: get('snooze_minutes', DEFAULT_SNOOZE),
           target_minutes: store.targetMinutes(),
+          daily_goal_minutes: get('daily_goal_minutes', 0),
           pause_shabbat: store.shabbatMode(),
           in_israel: store.inIsrael(),
           reminder_enabled: get('reminder_on', false),
@@ -308,7 +318,7 @@ export function creeStore(stockage, { maintenant = () => new Date(), fuseau } = 
         const bool = (cle, pref) => { if (typeof s[cle] === 'boolean') set(pref ?? cle, s[cle]); };
         const texteNonVide = (cle, pref) => { if (typeof s[cle] === 'string' && s[cle].trim() !== '') set(pref ?? cle, s[cle]); };
         entier('window_start'); entier('window_end'); entier('snooze_minutes');
-        entier('target_minutes');
+        entier('target_minutes'); entier('daily_goal_minutes');
         bool('pause_shabbat'); bool('in_israel');
         bool('reminder_enabled', 'reminder_on'); entier('reminder_minutes');
         bool('music_enabled'); entier('music_volume');

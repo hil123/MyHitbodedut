@@ -114,6 +114,35 @@ export const Salutation = {
   },
 };
 
+/**
+ * Les trois anneaux de l'accueil (Anneaux.kt) : le jour en minutes sur
+ * l'objectif, la semaine, la série sur le prochain palier. Un anneau ne se
+ * ferme pas à l'objectif : la fraction dépasse 1 et le dessin fait un
+ * second tour, comme chez Apple.
+ */
+export const Anneaux = {
+  PALIERS: [7, 14, 30, 60, 100, 180, 365],
+  palier(serie) {
+    const p = this.PALIERS.find((x) => x >= serie);
+    return p ?? Math.ceil(serie / 365) * 365;
+  },
+  anneau(quel, fait, objectif) {
+    const fraction = objectif <= 0 ? 0 : fait / objectif;
+    return { quel, fait, objectif, fraction, tours: Math.floor(fraction), reste: fraction - Math.floor(fraction), atteint: objectif > 0 && fait >= objectif };
+  },
+  etat(minutesJour, objectifJour, semaine, serie) {
+    const s = Math.max(0, serie);
+    return {
+      jour: this.anneau('jour', Math.max(0, minutesJour), Math.max(0, objectifJour)),
+      semaine: this.anneau('semaine', semaine.faits, semaine.dus),
+      serie: this.anneau('serie', s, this.palier(s)),
+    };
+  },
+  objectifEffectif(regle, dureeHabituelle) {
+    return regle > 0 ? regle : Math.max(1, dureeHabituelle);
+  },
+};
+
 export const JaugeSemaine = {
   progression(jours) {
     const faits = jours.filter((j) => j.done).length;

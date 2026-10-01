@@ -235,6 +235,25 @@
 
             <View style="@style/Divider" />
 
+            <!-- L'objectif de l'anneau du jour. Vide, il vaut la durée ci-dessus. -->
+            <LinearLayout style="@style/SettingRow" android:layout_marginTop="0dp">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView style="@style/SettingLabelStacked" android:text="@string/settings_daily_goal" />
+
+                    <TextView style="@style/CardHint" android:text="@string/settings_daily_goal_hint" />
+                </LinearLayout>
+
+                <Button android:id="@+id/daily_goal" style="@style/SettingValue" />
+            </LinearLayout>
+
+            <View style="@style/Divider" />
+
             <LinearLayout style="@style/SettingRow" android:layout_marginTop="0dp">
 
                 <LinearLayout

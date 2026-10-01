@@ -64,6 +64,17 @@
     <string name="settings_window">Gate window</string>
     <string name="settings_snooze">Snooze length</string>
     <string name="settings_target">Hitbodedut length</string>
+    <string name="settings_daily_goal">Daily goal</string>
+    <string name="settings_daily_goal_hint">What the day ring measures. Until you set it, it is the hitbodedut length.</string>
+    <string name="rings_character_hint">Tap the chassid</string>
+    <string name="ring_day">Today</string>
+    <string name="ring_week">Week</string>
+    <string name="ring_streak">Streak</string>
+    <string name="ring_day_detail">Today: %1$s of %2$s</string>
+    <string name="ring_day_reached">Daily goal reached: %1$s of %2$s</string>
+    <string name="ring_streak_detail">Streak: %1$d of %2$d days</string>
+    <string name="ring_streak_reached">%2$d-day milestone reached!</string>
+    <string name="rings_description">Rings. Today: %1$s of %2$s. Week: %3$d of %4$d days. Streak: %5$d of %6$d days.</string>
     <string name="settings_shabbat">Shabbat and Yom Tov</string>
     <string name="settings_shabbat_hint">On those days: no blocking, no reminder, and the streak stays intact.</string>
     <string name="settings_exempt_today">Festival day today</string>

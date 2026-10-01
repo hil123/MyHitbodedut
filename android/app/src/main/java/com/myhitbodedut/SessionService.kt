@@ -227,6 +227,8 @@ class SessionService : Service() {
             .setContentTitle(getString(R.string.session_done_title))
             .setContentText(getString(R.string.session_done_text, Store.formatDuration(this, minutes)))
             .setSmallIcon(R.drawable.ic_notification)
+            // Les anneaux tels que la séance les laisse.
+            .setLargeIcon(AnneauxImage.notification(this))
             .setContentIntent(open)
             .setAutoCancel(true)
             .build()

@@ -65,6 +65,17 @@
     <string name="settings_window">חלון החסימה</string>
     <string name="settings_snooze">משך הדחייה</string>
     <string name="settings_target">משך ההתבודדות</string>
+    <string name="settings_daily_goal">יעד יומי</string>
+    <string name="settings_daily_goal_hint">מה שטבעת היום מודדת. כל עוד לא נקבע, זהו משך ההתבודדות.</string>
+    <string name="rings_character_hint">געו בחסיד</string>
+    <string name="ring_day">היום</string>
+    <string name="ring_week">השבוע</string>
+    <string name="ring_streak">רצף</string>
+    <string name="ring_day_detail">היום: %1$s מתוך %2$s</string>
+    <string name="ring_day_reached">היעד היומי הושג: %1$s מתוך %2$s</string>
+    <string name="ring_streak_detail">רצף: %1$d ימים מתוך %2$d</string>
+    <string name="ring_streak_reached">הגעתם ליעד של %2$d ימים!</string>
+    <string name="rings_description">טבעות. היום: %1$s מתוך %2$s. השבוע: %3$d ימים מתוך %4$d. רצף: %5$d ימים מתוך %6$d.</string>
     <string name="settings_shabbat">שבת ויום טוב</string>
     <string name="settings_shabbat_hint">בימים אלה: אין חסימה, אין תזכורת, והרצף נשמר.</string>
     <string name="settings_exempt_today">היום יום חג</string>

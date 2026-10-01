@@ -71,6 +71,7 @@ object Store {
     private const val KEY_SNOOZED_UNTIL = "snoozed_until"
     private const val KEY_ENABLED = "enabled"
     private const val KEY_TARGET = "target_minutes"
+    private const val KEY_DAILY_GOAL = "daily_goal_minutes"
     private const val KEY_PAUSE_SHABBAT = "pause_shabbat"
     private const val KEY_IN_ISRAEL = "in_israel"
     private const val KEY_PAUSED_DATES = "paused_dates"
@@ -396,6 +397,25 @@ object Store {
     fun setTargetMinutes(context: Context, minutes: Int) {
         prefs(context).edit().putInt(KEY_TARGET, minutes).apply()
     }
+
+    /**
+     * L'objectif de l'anneau du jour, en minutes. Tant qu'il n'est pas
+     * réglé, c'est la durée habituelle d'une hitbodedout (Anneaux).
+     */
+    fun dailyGoal(context: Context): Int =
+        Anneaux.objectifEffectif(prefs(context).getInt(KEY_DAILY_GOAL, 0), targetMinutes(context))
+
+    fun setDailyGoal(context: Context, minutes: Int) {
+        prefs(context).edit().putInt(KEY_DAILY_GOAL, minutes.coerceAtLeast(0)).apply()
+    }
+
+    /** Les trois anneaux de l'accueil, ici et maintenant. */
+    fun anneaux(context: Context): Anneaux.Etat = Anneaux.etat(
+        minutesJour = record(context)?.minutes ?: 0,
+        objectifJour = dailyGoal(context),
+        semaine = JaugeSemaine.progression(currentWeek(context)),
+        serie = streak(context)
+    )
 
     fun isEnabled(context: Context): Boolean = prefs(context).getBoolean(KEY_ENABLED, false)
 
@@ -794,6 +814,7 @@ object Store {
             .put("window_end", windowEnd(context))
             .put("snooze_minutes", snoozeMinutes(context))
             .put("target_minutes", targetMinutes(context))
+            .put("daily_goal_minutes", prefs(context).getInt(KEY_DAILY_GOAL, 0))
             .put("pause_shabbat", shabbatMode(context))
             .put("in_israel", inIsrael(context))
             .put("reminder_enabled", reminderEnabled(context))
@@ -875,6 +896,9 @@ object Store {
                 context,
                 settings.optInt("target_minutes", targetMinutes(context)).coerceIn(DureeSeance.MIN, DureeSeance.MAX)
             )
+            if (settings.has("daily_goal_minutes")) {
+                setDailyGoal(context, settings.optInt("daily_goal_minutes", 0).coerceIn(0, DureeSeance.MAX))
+            }
             setShabbatMode(context, settings.optBoolean("pause_shabbat", shabbatMode(context)))
             setInIsrael(context, settings.optBoolean("in_israel", inIsrael(context)))
             setReminderEnabled(context, settings.optBoolean("reminder_enabled", reminderEnabled(context)))

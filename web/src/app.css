@@ -76,14 +76,32 @@ button { font: inherit; color: inherit; }
 .jauge svg { position: absolute; inset: 0; width: 100%; height: 100%; }
 [dir="rtl"] .jauge svg { transform: scaleX(-1); }
 .jauge .piste { stroke: var(--day-todo); }
-.jauge .arc { stroke: var(--brand); transition: stroke-dashoffset 700ms cubic-bezier(0.2, 0.7, 0.3, 1); }
-@media (prefers-reduced-motion: reduce) { .jauge .arc { transition: none; } }
+.jauge .anneau-jour .arc { stroke: var(--brand); }
+.jauge .anneau-semaine .arc { stroke: var(--ring-week); }
+.jauge .anneau-serie .arc { stroke: var(--ring-streak); }
+.jauge .arc.second-tour { filter: brightness(0.72); }
+.jauge .anneau.efface { opacity: 0.28; }
+.jauge .anneau { transition: opacity 250ms; cursor: pointer; }
+.jauge .arc { transition: stroke-dashoffset 900ms cubic-bezier(0.2, 0.7, 0.3, 1); }
+@media (prefers-reduced-motion: reduce) { .jauge .arc, .jauge .anneau { transition: none; } }
+/* 34px : trois anneaux de 8, deux écarts de 3, et un peu d'air. */
 .plaque {
-  position: absolute; inset: 18px; border-radius: 50%; overflow: hidden;
-  background: var(--stage-soft); padding: 14px 16px 6px;
+  position: absolute; inset: 34px; border-radius: 50%; overflow: hidden; border: 0;
+  background: var(--stage-soft); padding: 12px 14px 4px; cursor: pointer;
 }
-.plaque img { width: 100%; height: 100%; object-fit: contain; display: block; }
+.plaque img { width: 100%; height: 100%; object-fit: contain; display: block; transform-origin: 50% 100%; }
+.plaque img.salut { animation: salut 640ms ease-out; }
+@keyframes salut {
+  0% { transform: none; }
+  35% { transform: translateY(-10px) scale(1.04, 1.06) rotate(-3deg); }
+  70% { transform: translateY(0) rotate(3deg); }
+  100% { transform: none; }
+}
+@media (prefers-reduced-motion: reduce) { .plaque img.salut { animation: none; } }
 .jauge-legende { margin-top: 6px; text-align: center; color: var(--muted); font-size: 13px; }
+.jauge-legende.legende-jour { color: var(--brand); }
+.jauge-legende.legende-semaine { color: var(--ring-week); }
+.jauge-legende.legende-serie { color: var(--ring-streak); }
 
 .principal {
   display: block; width: 100%; margin-top: 16px; padding: 17px 16px;

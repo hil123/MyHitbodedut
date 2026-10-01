@@ -72,6 +72,17 @@
     <string name="settings_window">Fenêtre de blocage</string>
     <string name="settings_snooze">Durée du report</string>
     <string name="settings_target">Durée d\'une hitbodedout</string>
+    <string name="settings_daily_goal">Objectif quotidien</string>
+    <string name="settings_daily_goal_hint">Ce que l’anneau du jour mesure. Sans réglage, c’est la durée d’une hitbodedout.</string>
+    <string name="rings_character_hint">Toucher le hassid</string>
+    <string name="ring_day">Aujourd’hui</string>
+    <string name="ring_week">Semaine</string>
+    <string name="ring_streak">Série</string>
+    <string name="ring_day_detail">Aujourd’hui : %1$s sur %2$s</string>
+    <string name="ring_day_reached">Objectif du jour atteint : %1$s sur %2$s</string>
+    <string name="ring_streak_detail">Série : %1$d jours sur %2$d</string>
+    <string name="ring_streak_reached">Palier de %2$d jours atteint !</string>
+    <string name="rings_description">Anneaux. Aujourd’hui : %1$s sur %2$s. Semaine : %3$d jours sur %4$d. Série : %5$d jours sur %6$d.</string>
     <string name="settings_shabbat">Shabbat et Yom Tov</string>
     <string name="settings_shabbat_hint">Ces jours-là : pas de blocage, pas de rappel, et la série reste intacte.</string>
     <string name="settings_exempt_today">Jour de fête aujourd\'hui</string>

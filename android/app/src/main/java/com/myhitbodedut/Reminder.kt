@@ -167,6 +167,9 @@ class ReminderReceiver : BroadcastReceiver() {
             .setContentTitle(context.getString(R.string.reminder_title))
             .setContentText(context.getString(R.string.reminder_text, duree))
             .setSmallIcon(R.drawable.ic_notification)
+            // Les anneaux du jour, vides ou pleins : on voit d'un coup d'œil
+            // ce qui reste à faire (demande du 01/10).
+            .setLargeIcon(AnneauxImage.notification(context))
             .setContentIntent(ouvrir)
             .setAutoCancel(true)
             .addAction(commencer)

@@ -99,7 +99,8 @@ class StreakWidget : AppWidgetProvider() {
             /** Shabbat, Yom Tov ou pause : rien n'est attendu aujourd'hui. */
             val repos: Boolean,
             val semaine: List<WeekDay>,
-            val fraction: Float
+            val fraction: Float,
+            val anneaux: Anneaux.Etat
         ) {
             companion object {
                 fun lire(context: Context): Etat {
@@ -110,7 +111,8 @@ class StreakWidget : AppWidgetProvider() {
                         done = Store.isDone(context),
                         repos = Store.isExempt(context, java.time.LocalDate.now()),
                         semaine = semaine,
-                        fraction = JaugeSemaine.progression(semaine).fraction
+                        fraction = JaugeSemaine.progression(semaine).fraction,
+                        anneaux = Store.anneaux(context)
                     )
                 }
             }
@@ -140,7 +142,7 @@ class StreakWidget : AppWidgetProvider() {
 
             views.setImageViewBitmap(
                 R.id.widget_gauge,
-                jauge(context, etat.fraction, Character.greeting(etat.done))
+                jauge(context, etat.anneaux, Character.greeting(etat.done))
             )
             views.setTextViewText(
                 R.id.widget_streak_label,
@@ -262,31 +264,31 @@ class StreakWidget : AppWidgetProvider() {
         }
 
         /**
-         * La jauge de la semaine, le hassid en son creux. Dessinée ici en
-         * image : une vignette n'accepte pas de vue sur mesure.
+         * Les trois anneaux de l'accueil, le hassid en leur creux. Dessinés
+         * ici en image : une vignette n'accepte pas de vue sur mesure. Les
+         * couleurs sont fixes : la vignette est dessinée par l'écran
+         * d'accueil du téléphone, sans le thème de l'application.
          */
-        private fun jauge(context: Context, fraction: Float, personnage: Int): Bitmap {
+        private fun jauge(context: Context, etat: Anneaux.Etat, personnage: Int): Bitmap {
             val densite = context.resources.displayMetrics.density
             val cote = (76 * densite).toInt().coerceIn(96, 320)
             val image = Bitmap.createBitmap(cote, cote, Bitmap.Config.ARGB_8888)
             val toile = Canvas(image)
-            val epaisseur = cote * 0.085f
-            val cadre = RectF(epaisseur / 2, epaisseur / 2, cote - epaisseur / 2, cote - epaisseur / 2)
-
-            val trait = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-                style = Paint.Style.STROKE
-                strokeWidth = epaisseur
-            }
-            trait.color = Color.argb(60, 255, 255, 255)
-            toile.drawOval(cadre, trait)
-            if (fraction > 0f) {
-                trait.color = ContextCompat.getColor(context, R.color.mint)
-                trait.strokeCap = Paint.Cap.ROUND
-                toile.drawArc(cadre, -90f, 360f * fraction.coerceAtMost(1f), false, trait)
-            }
+            val geometrie = AnneauxDessin.Geometrie(epaisseur = cote * 0.055f, ecart = cote * 0.02f)
+            AnneauxDessin.dessiner(
+                toile, RectF(0f, 0f, cote.toFloat(), cote.toFloat()), etat,
+                AnneauxDessin.Couleurs(
+                    jour = ContextCompat.getColor(context, R.color.mint),
+                    semaine = ContextCompat.getColor(context, R.color.ring_week_on_dark),
+                    serie = ContextCompat.getColor(context, R.color.ring_streak_on_dark),
+                    piste = Color.argb(60, 255, 255, 255)
+                ),
+                geometrie,
+                rtl = context.resources.configuration.layoutDirection == android.view.View.LAYOUT_DIRECTION_RTL
+            )
 
             // La plaque claire, puis le hassid, coupé au bord du cercle.
-            val marge = epaisseur * 1.7f
+            val marge = geometrie.largeur + cote * 0.02f
             val plaque = RectF(marge, marge, cote - marge, cote - marge)
             val fond = Paint(Paint.ANTI_ALIAS_FLAG).apply {
                 color = ContextCompat.getColor(context, R.color.stage_soft)

@@ -212,23 +212,57 @@ function ecouter(m) {
 }
 
 // --- Rendu : l'accueil ------------------------------------------------------------------
-function jauge(fraction) {
-  const r = 50 - 6 / 2.36; // 12 dp d'épaisseur sur 236 dp
-  const tour = 2 * Math.PI * r;
+// Les trois anneaux (Anneaux.kt, AnneauxDessin.kt) : jour au centre, puis
+// semaine, puis série. Un toucher met un anneau en avant ; la légende suit.
+let anneauEnAvant = null;
+
+function anneaux(etat) {
+  const EPAISSEUR = 8 / 2.36; // 8 dp sur 236 dp
+  const ECART = 3 / 2.36;
   const svg = s('svg', { viewBox: '0 0 100 100', 'aria-hidden': 'true' });
-  svg.append(s('circle', { class: 'piste', cx: 50, cy: 50, r, fill: 'none', 'stroke-width': 12 / 2.36 }));
-  if (fraction > 0) {
-    // Part d'en haut et tourne dans le sens de la lecture : à gauche en
-    // hébreu, où le dessin entier est retourné (app.css).
-    const arc = s('circle', {
-      class: 'arc', cx: 50, cy: 50, r, fill: 'none', 'stroke-width': 12 / 2.36, 'stroke-linecap': 'round',
-      'stroke-dasharray': tour, 'stroke-dashoffset': tour,
-      transform: 'rotate(-90 50 50)',
-    });
-    svg.append(arc);
-    requestAnimationFrame(() => requestAnimationFrame(() => arc.setAttribute('stroke-dashoffset', tour * (1 - fraction))));
-  }
+  const ordre = [etat.serie, etat.semaine, etat.jour]; // de l'extérieur vers le centre
+  ordre.forEach((a, rang) => {
+    const enAvant = anneauEnAvant === null || anneauEnAvant === a.quel;
+    const trait = anneauEnAvant === a.quel ? EPAISSEUR * 1.3 : EPAISSEUR;
+    const r = 50 - rang * (EPAISSEUR + ECART) - EPAISSEUR / 2;
+    const tour = 2 * Math.PI * r;
+    const g = s('g', { class: `anneau anneau-${a.quel}${enAvant ? '' : ' efface'}`, 'data-anneau': a.quel });
+    g.append(s('circle', { class: 'piste', cx: 50, cy: 50, r, fill: 'none', 'stroke-width': trait }));
+    if (a.tours >= 1) g.append(s('circle', { class: 'arc plein', cx: 50, cy: 50, r, fill: 'none', 'stroke-width': trait }));
+    if (a.reste > 0) {
+      const arc = s('circle', {
+        class: `arc${a.tours >= 1 ? ' second-tour' : ''}`, cx: 50, cy: 50, r, fill: 'none', 'stroke-width': trait, 'stroke-linecap': 'round',
+        'stroke-dasharray': tour, 'stroke-dashoffset': tour, transform: 'rotate(-90 50 50)',
+      });
+      g.append(arc);
+      requestAnimationFrame(() => requestAnimationFrame(() => arc.setAttribute('stroke-dashoffset', tour * (1 - a.reste))));
+    }
+    // Une bande transparente plus large que le trait : le doigt n'est pas une pointe.
+    g.append(s('circle', { class: 'prise', cx: 50, cy: 50, r, fill: 'none', 'stroke-width': EPAISSEUR + ECART, stroke: 'transparent' }));
+    g.addEventListener('click', (e) => { e.stopPropagation(); anneauEnAvant = anneauEnAvant === a.quel ? null : a.quel; rendre(); });
+    svg.append(g);
+  });
   return svg;
+}
+
+/** La légende sous les anneaux : la semaine, ou l'anneau mis en avant. */
+function legendeAnneaux(etat, progression) {
+  if (anneauEnAvant === 'jour') {
+    return tr.t(etat.jour.atteint ? 'ring_day_reached' : 'ring_day_detail', tr.duree(etat.jour.fait), tr.duree(etat.jour.objectif));
+  }
+  if (anneauEnAvant === 'serie') {
+    return tr.t(etat.serie.atteint ? 'ring_streak_reached' : 'ring_streak_detail', etat.serie.fait, etat.serie.objectif);
+  }
+  return tr.p('week_gauge', progression.faits, progression.faits, progression.dus);
+}
+
+/** Un toucher sur le hassid : il salue, et les anneaux se remplissent à nouveau. */
+function saluer(e) {
+  const img = e.currentTarget.querySelector('img');
+  img.classList.remove('salut');
+  void img.offsetWidth; // relance l'animation CSS
+  img.classList.add('salut');
+  rendre();
 }
 
 function panneauAujourdhui() {
@@ -238,6 +272,7 @@ function panneauAujourdhui() {
   const serie = store.streak();
   const semaine = store.currentWeek();
   const progression = JaugeSemaine.progression(semaine);
+  const etat = store.anneaux();
   const nomJour = new Intl.DateTimeFormat(tr.langue, { weekday: 'short', timeZone: 'UTC' });
 
   const bouton = store.isSessionRunning() ? tr.t('action_back_to_session')
@@ -263,9 +298,12 @@ function panneauAujourdhui() {
     fait ? h('div', { class: 'detail' },
       record.minutes > 0 ? tr.t('today_minutes', tr.duree(record.minutes)) : tr.t('today_declared')) : null,
 
-    h('div', { class: 'jauge' }, jauge(progression.fraction),
-      h('div', { class: 'plaque' }, h('img', { src: `img/${salutation(fait)}.webp`, alt: '' }))),
-    h('div', { class: 'jauge-legende' }, tr.p('week_gauge', progression.faits, progression.faits, progression.dus)),
+    h('div', { class: 'jauge', role: 'img', 'aria-label': tr.t('rings_description',
+      tr.duree(etat.jour.fait), tr.duree(etat.jour.objectif), etat.semaine.fait, etat.semaine.objectif, etat.serie.fait, etat.serie.objectif) },
+    anneaux(etat),
+    h('button', { class: 'plaque', type: 'button', 'aria-label': tr.t('rings_character_hint'), onclick: saluer },
+      h('img', { src: `img/${salutation(fait)}.webp`, alt: '' }))),
+    h('div', { class: `jauge-legende${anneauEnAvant ? ` legende-${anneauEnAvant}` : ''}` }, legendeAnneaux(etat, progression)),
 
     h('button', { class: 'principal', onclick: () => ouvrir('seance') }, bouton),
 

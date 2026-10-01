@@ -128,6 +128,12 @@ class SettingsActivity : AppCompatActivity() {
                 refresh()
             }
         }
+        findViewById<Button>(R.id.daily_goal).setOnClickListener {
+            DureeSeance.choisir(this, R.string.settings_daily_goal) {
+                Store.setDailyGoal(this, it)
+                refresh()
+            }
+        }
         findViewById<Button>(R.id.export_data).setOnClickListener {
             exportFile.launch("myhitbodedut-${Store.today()}.json")
         }
@@ -287,6 +293,8 @@ class SettingsActivity : AppCompatActivity() {
             Store.formatDuration(this, Store.snoozeMinutes(this))
         findViewById<Button>(R.id.target_length).text =
             Store.formatDuration(this, Store.targetMinutes(this))
+        findViewById<Button>(R.id.daily_goal).text =
+            Store.formatDuration(this, Store.dailyGoal(this))
         findViewById<Button>(R.id.region_button).setText(
             if (Store.inIsrael(this)) R.string.region_israel else R.string.region_diaspora
         )
