@@ -110,6 +110,60 @@ class WidgetTest {
         }
     }
 
+    /**
+     * Les couleurs choisies dans les réglages valent aussi pour la vignette
+     * (demande du 04/10). RemoteViews ne lit pas les attributs du thème, et
+     * avant Android 12 ne teint pas un fond de vue : les couleurs passent par
+     * Apparence, et chaque fond arrondi est une image teinte par le code.
+     */
+    @Test
+    fun `la vignette suit la palette choisie`() {
+        val code = lire("src/main/java/com/myhitbodedut/StreakWidget.kt")
+        assertTrue("la palette doit être résolue par Apparence", code.contains("Apparence.contexte(context)"))
+        assertTrue(code.contains("Apparence.couleur("))
+        assertTrue("une couleur lue sans la palette resterait verte", !code.contains("ContextCompat.getColor"))
+        listOf("widget_fond", "widget_start_fond", "widget_day_fond_0", "widget_title").forEach {
+            assertTrue("« $it » n'est pas teint par le code", code.contains("R.id.$it"))
+        }
+        assertTrue(code.contains("\"setColorFilter\""))
+        assertTrue("le voile d'un jour à venir", code.contains("\"setImageAlpha\""))
+
+        gabarits.forEach { (nom, xml) ->
+            // Un fond posé sur la vue elle-même ne pourrait plus changer de couleur.
+            assertTrue("$nom : fond figé", !xml.contains("android:background="))
+            assertTrue("$nom : pas de fond à teindre", xml.contains("""android:id="@+id/widget_fond""""))
+        }
+        listOf("widget_streak", "widget_large").forEach { nom ->
+            assertTrue(
+                "$nom : le bouton n'a pas de fond à teindre",
+                gabarits.getValue(nom).contains("""android:id="@+id/widget_start_fond""""),
+            )
+        }
+        (0..6).forEach {
+            assertTrue(
+                "jour $it : pas de fond à teindre",
+                gabarits.getValue("widget_large").contains("""android:id="@+id/widget_day_fond_$it""""),
+            )
+        }
+
+        // L'aperçu du sélecteur de vignettes est dessiné sans le code : les
+        // formes gardent le vert d'origine, que le code recouvre ensuite.
+        val formes = "src/main/res/drawable"
+        assertTrue(lire("$formes/bg_widget.xml").contains("@color/brand_dark"))
+        assertTrue(lire("$formes/bg_widget_button.xml").contains("@color/mint"))
+        assertTrue(lire("$formes/bg_widget_day_done.xml").contains("@color/mint"))
+        listOf("bg_widget.xml", "bg_widget_button.xml", "bg_widget_day_done.xml").forEach {
+            assertTrue("$it : coins carrés", lire("$formes/$it").contains("<corners"))
+        }
+
+        // Changer de palette ou de mode redessine la vignette tout de suite.
+        val reglages = lire("src/main/java/com/myhitbodedut/SettingsActivity.kt")
+        listOf("askFond", "askAccent", "askMode").forEach { f ->
+            val corps = reglages.substringAfter("private fun $f(").substringBefore("private fun ")
+            assertTrue("$f : la vignette n'est pas redessinée", corps.contains("StreakWidget.refresh(this)"))
+        }
+    }
+
     @Test
     fun `les libelles de la vignette existent dans les trois langues`() {
         val cles = listOf(

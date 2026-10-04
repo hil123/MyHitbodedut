@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Le fond de la vignette : la même carte sombre que l'écran de séance. -->
+<!--
+    Le fond de la vignette : la même carte sombre que l'écran de séance. Le
+    vert posé ici est celui de l'aperçu et de la palette d'origine ; le code
+    le recouvre de la couleur de la palette choisie (StreakWidget.Teintes),
+    par un filtre qui garde les coins arrondis.
+-->
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="rectangle">
     <solid android:color="@color/brand_dark" />

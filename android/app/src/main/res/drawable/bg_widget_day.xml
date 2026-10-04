@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Un jour de la semaine sur la vignette : couleurs fixes, le lanceur ne connaît pas le thème. -->
-<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
-    <solid android:color="#26FFFFFF" />
-    <corners android:radius="8dp" />
-</shape>

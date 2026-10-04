@@ -19,7 +19,6 @@ import android.os.SystemClock
 import android.util.SizeF
 import android.view.View
 import android.widget.RemoteViews
-import androidx.core.content.ContextCompat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -35,6 +34,9 @@ import java.time.format.DateTimeFormatter
  * une case, le compte et une coche ; la taille habituelle, la jauge de la
  * semaine avec le hassid, et le bouton ; une grande place, la semaine et
  * un texte de ’hizouk du jour en plus.
+ *
+ * Elle porte les couleurs choisies dans les réglages (demande du 04/10) :
+ * le fond, la couleur des boutons, le clair ou le sombre. Voir Teintes.
  */
 class StreakWidget : AppWidgetProvider() {
 
@@ -96,16 +98,17 @@ class StreakWidget : AppWidgetProvider() {
 
         private fun draw(context: Context, manager: AppWidgetManager, id: Int) {
             val etat = Etat.lire(context)
+            val teintes = Teintes.lire(context)
             val vues = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                 // Le lanceur choisit lui-même la version qui tient dans la place.
                 RemoteViews(WidgetTaille.entries.associate { taille ->
-                    SizeF(taille.largeurMin, taille.hauteurMin) to vues(context, taille, etat)
+                    SizeF(taille.largeurMin, taille.hauteurMin) to vues(context, taille, etat, teintes)
                 })
             } else {
                 val options = manager.getAppWidgetOptions(id)
                 val largeur = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH, 180)
                 val hauteur = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT, 110)
-                vues(context, WidgetTaille.pour(largeur.toFloat(), hauteur.toFloat()), etat)
+                vues(context, WidgetTaille.pour(largeur.toFloat(), hauteur.toFloat()), etat, teintes)
             }
             manager.updateAppWidget(id, vues)
         }
@@ -137,13 +140,103 @@ class StreakWidget : AppWidgetProvider() {
             }
         }
 
-        private fun vues(context: Context, taille: WidgetTaille, etat: Etat): RemoteViews {
+        /**
+         * Les couleurs de la vignette, prises dans la palette choisie. Le
+         * lanceur la dessine sans le thème de l'application, et RemoteViews
+         * ne lit pas « ?attr/mhBrand » : chaque couleur est donc résolue ici,
+         * dans un contexte aux couleurs choisies (Apparence.contexte, le même
+         * que l'écran de blocage), puis posée vue par vue.
+         *
+         * Avec le fond vert d'origine, la vignette reste la carte sombre de
+         * l'écran de séance, dans le foncé de la couleur des boutons : en
+         * vert, rien ne change. Avec un autre fond, elle prend la carte de ce
+         * fond, claire le jour et sombre la nuit comme l'application, et son
+         * bouton celui de l'application. Chaque encre y est posée sur un fond
+         * dont PaletteTest vérifie déjà le contraste.
+         *
+         * En mode automatique, la bascule du téléphone vers la nuit ne se
+         * voit qu'au prochain dessin (ouverture de l'application, minuit, ou
+         * l'heure suivante) : une vignette ne sait pas changer de couleurs
+         * d'elle-même.
+         */
+        private class Teintes(
+            /** Le corps de la vignette. */
+            val fond: Int,
+            /** Le compte, le temps de la séance, le texte du jour. */
+            val encre: Int,
+            /** Les libellés : la menthe sur la carte sombre. */
+            val douce: Int,
+            val bouton: Int,
+            val surBouton: Int,
+            val jourFait: Int,
+            val surJourFait: Int,
+            /** Un jour pas fait : sur la carte sombre, un voile blanc, d'où son opacité. */
+            val jourAutre: Int,
+            val opaciteJourAutre: Int,
+            val surJourAutre: Int,
+            val anneaux: AnneauxDessin.Couleurs,
+            /** La plaque claire sous le hassid, claire de nuit comme de jour. */
+            val plaque: Int
+        ) {
+            companion object {
+                fun lire(context: Context): Teintes {
+                    val palette = Apparence.contexte(context)
+                    fun c(id: Int) = Apparence.couleur(palette, id)
+                    return if (Store.fond(context) == Apparence.Fond.VERT) Teintes(
+                        fond = c(R.color.brand_dark),
+                        encre = c(R.color.white),
+                        douce = c(R.color.mint),
+                        bouton = c(R.color.mint),
+                        surBouton = c(R.color.brand_dark),
+                        jourFait = c(R.color.mint),
+                        surJourFait = c(R.color.brand_dark),
+                        jourAutre = Color.WHITE,
+                        opaciteJourAutre = 0x26,
+                        surJourAutre = c(R.color.mint),
+                        anneaux = AnneauxDessin.Couleurs(
+                            jour = c(R.color.mint),
+                            semaine = c(R.color.ring_week_on_dark),
+                            serie = c(R.color.ring_streak_on_dark),
+                            piste = Color.argb(60, 255, 255, 255)
+                        ),
+                        plaque = c(R.color.stage_soft)
+                    ) else Teintes(
+                        fond = c(R.color.card),
+                        encre = c(R.color.ink),
+                        douce = c(R.color.brand),
+                        bouton = c(R.color.brand),
+                        surBouton = c(R.color.on_brand),
+                        jourFait = c(R.color.day_done),
+                        surJourFait = c(R.color.white),
+                        jourAutre = c(R.color.day_todo),
+                        opaciteJourAutre = 255,
+                        surJourAutre = c(R.color.ink),
+                        // Les anneaux de l'accueil, qui sont posés sur la même carte.
+                        anneaux = AnneauxDessin.Couleurs(
+                            jour = c(R.color.brand),
+                            semaine = c(R.color.ring_week),
+                            serie = c(R.color.ring_streak),
+                            piste = c(R.color.day_todo)
+                        ),
+                        plaque = c(R.color.stage_soft)
+                    )
+                }
+            }
+        }
+
+        private fun vues(context: Context, taille: WidgetTaille, etat: Etat, teintes: Teintes): RemoteViews {
             val gabarit = when (taille) {
                 WidgetTaille.PETITE -> R.layout.widget_small
                 WidgetTaille.MOYENNE -> R.layout.widget_streak
                 WidgetTaille.GRANDE -> R.layout.widget_large
             }
             val views = RemoteViews(context.packageName, gabarit)
+            // Un fond de vue ne se teint pas par RemoteViews avant Android 12 :
+            // les fonds arrondis sont des images posées derrière le texte,
+            // recouvertes de la couleur par un filtre qui garde leurs coins.
+            views.setInt(R.id.widget_fond, "setColorFilter", teintes.fond)
+            views.setTextColor(R.id.widget_streak, teintes.encre)
+            views.setTextColor(R.id.widget_chrono, teintes.encre)
             views.setTextViewText(R.id.widget_streak, etat.streak.toString())
             compteur(context, views, etat)
             // Le reste de la vignette ouvre l'application, sans rien décider ;
@@ -156,13 +249,19 @@ class StreakWidget : AppWidgetProvider() {
 
             if (taille == WidgetTaille.PETITE) {
                 views.setTextViewText(R.id.widget_mark, if (etat.done) "✓" else "○")
+                views.setTextColor(R.id.widget_mark, teintes.douce)
                 return views
             }
 
             views.setImageViewBitmap(
                 R.id.widget_gauge,
-                jauge(context, etat.anneaux, Character.greeting(etat.done))
+                jauge(context, etat.anneaux, Character.greeting(etat.done), teintes)
             )
+            listOf(R.id.widget_title, R.id.widget_streak_label, R.id.widget_today).forEach {
+                views.setTextColor(it, teintes.douce)
+            }
+            views.setInt(R.id.widget_start_fond, "setColorFilter", teintes.bouton)
+            views.setTextColor(R.id.widget_start, teintes.surBouton)
             views.setTextViewText(
                 R.id.widget_streak_label,
                 if (etat.streak == 0) context.getString(R.string.status_streak_none)
@@ -208,7 +307,9 @@ class StreakWidget : AppWidgetProvider() {
             )
 
             if (taille == WidgetTaille.GRANDE) {
-                semaine(context, views, etat.semaine)
+                semaine(context, views, etat.semaine, teintes)
+                views.setTextColor(R.id.widget_text, teintes.encre)
+                views.setTextColor(R.id.widget_ref, teintes.douce)
                 texteDuJour(context, views)
             }
             return views
@@ -246,11 +347,15 @@ class StreakWidget : AppWidgetProvider() {
             R.id.widget_day_4, R.id.widget_day_5, R.id.widget_day_6
         )
 
+        /** Le fond arrondi de chaque jour, une image teinte derrière son texte. */
+        private val FONDS_JOURS = intArrayOf(
+            R.id.widget_day_fond_0, R.id.widget_day_fond_1, R.id.widget_day_fond_2, R.id.widget_day_fond_3,
+            R.id.widget_day_fond_4, R.id.widget_day_fond_5, R.id.widget_day_fond_6
+        )
+
         /** Les sept jours, comme sur l'accueil : fait, Chabbat, pause, à venir. */
-        private fun semaine(context: Context, views: RemoteViews, jours: List<WeekDay>) {
+        private fun semaine(context: Context, views: RemoteViews, jours: List<WeekDay>, teintes: Teintes) {
             val format = DateTimeFormatter.ofPattern("EEEEE", context.resources.configuration.locales[0])
-            val clair = ContextCompat.getColor(context, R.color.mint)
-            val fonce = ContextCompat.getColor(context, R.color.brand_dark)
             jours.take(7).forEachIndexed { i, jour ->
                 val marque = when {
                     jour.done -> "✓"
@@ -260,11 +365,9 @@ class StreakWidget : AppWidgetProvider() {
                     else -> "·"
                 }
                 views.setTextViewText(JOURS[i], jour.date.format(format) + "\n" + marque)
-                views.setTextColor(JOURS[i], if (jour.done) fonce else clair)
-                views.setInt(
-                    JOURS[i], "setBackgroundResource",
-                    if (jour.done) R.drawable.bg_widget_day_done else R.drawable.bg_widget_day
-                )
+                views.setTextColor(JOURS[i], if (jour.done) teintes.surJourFait else teintes.surJourAutre)
+                views.setInt(FONDS_JOURS[i], "setColorFilter", if (jour.done) teintes.jourFait else teintes.jourAutre)
+                views.setInt(FONDS_JOURS[i], "setImageAlpha", if (jour.done) 255 else teintes.opaciteJourAutre)
             }
         }
 
@@ -285,10 +388,11 @@ class StreakWidget : AppWidgetProvider() {
         /**
          * Les trois anneaux de l'accueil, le hassid en leur creux. Dessinés
          * ici en image : une vignette n'accepte pas de vue sur mesure. Les
-         * couleurs sont fixes : la vignette est dessinée par l'écran
-         * d'accueil du téléphone, sans le thème de l'application.
+         * couleurs des anneaux et de la plaque suivent la palette choisie
+         * (Teintes) : la vignette est dessinée par l'écran d'accueil du
+         * téléphone, sans le thème de l'application, d'où ce détour.
          */
-        private fun jauge(context: Context, etat: Anneaux.Etat, personnage: Int): Bitmap {
+        private fun jauge(context: Context, etat: Anneaux.Etat, personnage: Int, teintes: Teintes): Bitmap {
             val densite = context.resources.displayMetrics.density
             val cote = (76 * densite).toInt().coerceIn(96, 320)
             val image = Bitmap.createBitmap(cote, cote, Bitmap.Config.ARGB_8888)
@@ -296,12 +400,7 @@ class StreakWidget : AppWidgetProvider() {
             val geometrie = AnneauxDessin.Geometrie(epaisseur = cote * 0.055f, ecart = cote * 0.02f)
             AnneauxDessin.dessiner(
                 toile, RectF(0f, 0f, cote.toFloat(), cote.toFloat()), etat,
-                AnneauxDessin.Couleurs(
-                    jour = ContextCompat.getColor(context, R.color.mint),
-                    semaine = ContextCompat.getColor(context, R.color.ring_week_on_dark),
-                    serie = ContextCompat.getColor(context, R.color.ring_streak_on_dark),
-                    piste = Color.argb(60, 255, 255, 255)
-                ),
+                teintes.anneaux,
                 geometrie,
                 rtl = context.resources.configuration.layoutDirection == android.view.View.LAYOUT_DIRECTION_RTL
             )
@@ -309,9 +408,7 @@ class StreakWidget : AppWidgetProvider() {
             // La plaque claire, puis le hassid, coupé au bord du cercle.
             val marge = geometrie.largeur + cote * 0.02f
             val plaque = RectF(marge, marge, cote - marge, cote - marge)
-            val fond = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-                color = ContextCompat.getColor(context, R.color.stage_soft)
-            }
+            val fond = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = teintes.plaque }
             toile.drawOval(plaque, fond)
             dessin(context, personnage, plaque.height().toInt())?.let { perso ->
                 toile.save()
