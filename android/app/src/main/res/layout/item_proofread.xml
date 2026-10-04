@@ -61,6 +61,7 @@
 
     <TextView
         android:id="@+id/proofread_he"
+        android:fontFamily="@font/hebreu_serif"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"

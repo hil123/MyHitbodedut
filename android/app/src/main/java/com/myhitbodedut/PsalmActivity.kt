@@ -100,6 +100,7 @@ class PsalmActivity : AppCompatActivity() {
             TextView(this).apply {
                 text = verset.he
                 textSize = 19f
+                PoliceHebraique.appliquer(this)
                 textDirection = View.TEXT_DIRECTION_RTL
                 textAlignment = View.TEXT_ALIGNMENT_VIEW_START
                 setLineSpacing(dp(6).toFloat(), 1f)

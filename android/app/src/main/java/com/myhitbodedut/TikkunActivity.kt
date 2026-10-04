@@ -111,6 +111,7 @@ class TikkunActivity : AppCompatActivity() {
             holder.rank.text = ligne.rang.toString()
             holder.rank.visibility = View.VISIBLE
             holder.title.text = getString(R.string.tikkun_psalm_he, Reference.lettres(psaume.numero))
+            PoliceHebraique.appliquer(holder.title)
             holder.detail.text = getString(R.string.tikkun_verses, psaume.versets.size)
             val dit = psaume.numero in Store.tikkunDone(this@TikkunActivity)
             holder.state.visibility = if (dit) View.VISIBLE else View.GONE
@@ -125,6 +126,7 @@ class TikkunActivity : AppCompatActivity() {
         private fun bindBloc(holder: Holder, bloc: LiturgyBlock) {
             holder.rank.visibility = View.INVISIBLE
             holder.title.text = bloc.titre.he
+            PoliceHebraique.appliquer(holder.title)
             val langue = ChizukCard.language(this@TikkunActivity)
             val traduction = bloc.titre.forLanguage(langue)
             holder.detail.text =

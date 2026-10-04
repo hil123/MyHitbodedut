@@ -63,6 +63,7 @@ class LiturgyActivity : AppCompatActivity() {
             textSize = if (centre) 20f else 18f
             setLineSpacing(dp(6).toFloat(), 1f)
             setTextColor(Apparence.couleur(context, R.color.ink))
+            PoliceHebraique.appliquer(this)
         }
 
     private fun dp(value: Int): Int = (value * resources.displayMetrics.density).toInt()

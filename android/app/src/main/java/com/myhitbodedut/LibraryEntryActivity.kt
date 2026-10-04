@@ -52,6 +52,7 @@ class LibraryEntryActivity : AppCompatActivity() {
 
         val title = findViewById<TextView>(R.id.entry_title)
         title.text = source.titreHe
+        PoliceHebraique.appliquer(title)
         title.layoutDirection = View.LAYOUT_DIRECTION_RTL
         title.textAlignment = View.TEXT_ALIGNMENT_VIEW_START
 
@@ -83,6 +84,7 @@ class LibraryEntryActivity : AppCompatActivity() {
             textSize = 17f
             setLineSpacing(dp(4).toFloat(), 1f)
             setTextColor(Apparence.couleur(context, R.color.ink))
+            PoliceHebraique.appliquer(this)
         }
 
     // --- Article --------------------------------------------------------------
@@ -91,7 +93,10 @@ class LibraryEntryActivity : AppCompatActivity() {
         findViewById<TextView>(R.id.entry_kind).setText(R.string.library_kind_article)
         // Le titre est celui de l'article, en hébreu : c'est son vrai nom, pas
         // un texte à traduire — comme le titre d'une source.
-        findViewById<TextView>(R.id.entry_title).text = article.titre
+        findViewById<TextView>(R.id.entry_title).apply {
+            text = article.titre
+            PoliceHebraique.appliquer(this)
+        }
         findViewById<TextView>(R.id.entry_reference).text =
             listOfNotNull(article.auteur, article.site, article.date).joinToString(" · ")
 

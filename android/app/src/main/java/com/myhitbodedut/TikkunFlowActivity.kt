@@ -86,6 +86,7 @@ class TikkunFlowActivity : AppCompatActivity() {
         textSize = 20f
         setTypeface(typeface, android.graphics.Typeface.BOLD)
         setTextColor(Apparence.couleur(context, R.color.brand))
+        PoliceHebraique.appliquer(this)
     }
 
     private fun vueVerset(verset: Verse): View = TextView(this).apply {
@@ -96,6 +97,7 @@ class TikkunFlowActivity : AppCompatActivity() {
         textSize = 19f
         setLineSpacing(dp(6).toFloat(), 1f)
         setTextColor(Apparence.couleur(context, R.color.ink))
+        PoliceHebraique.appliquer(this)
     }
 
     private fun paragraphe(texte: String): View = TextView(this).apply {
@@ -106,6 +108,7 @@ class TikkunFlowActivity : AppCompatActivity() {
         textSize = 18f
         setLineSpacing(dp(6).toFloat(), 1f)
         setTextColor(Apparence.couleur(context, R.color.ink))
+        PoliceHebraique.appliquer(this)
     }
 
     private fun vueArret(arret: Pause): View = TextView(this).apply {
@@ -116,6 +119,7 @@ class TikkunFlowActivity : AppCompatActivity() {
         textSize = 15f
         setLineSpacing(dp(4).toFloat(), 1f)
         setTextColor(Apparence.couleur(context, R.color.muted))
+        PoliceHebraique.appliquer(this)
     }
 
     private fun ligneParams() = LinearLayout.LayoutParams(

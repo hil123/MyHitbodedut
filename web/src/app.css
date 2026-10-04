@@ -7,6 +7,12 @@
   iPhone, l'hébreu s'affiche ainsi dans la police hébraïque d'iOS.
 */
 
+/* La police des textes saints en hébreu (res/font/hebreu_serif.xml) : Noto Serif Hebrew,
+   SIL Open Font License 1.1 (polices/OFL-NotoSerifHebrew.txt). */
+@font-face { font-family: "Hebreu Serif"; font-weight: 400; font-display: swap; src: url(polices/hebreu_serif_regular.woff2) format("woff2"); }
+@font-face { font-family: "Hebreu Serif"; font-weight: 700; font-display: swap; src: url(polices/hebreu_serif_bold.woff2) format("woff2"); }
+.chizuk-he, .lecture .psaume, .lecture .psaume-titre { font-family: "Hebreu Serif", "Noto Serif Hebrew", "Times New Roman", serif; }
+
 * { box-sizing: border-box; }
 
 :root { color-scheme: light; }

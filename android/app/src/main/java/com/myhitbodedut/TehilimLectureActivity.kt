@@ -79,6 +79,7 @@ class TehilimLectureActivity : AppCompatActivity() {
         textSize = 20f
         setTypeface(typeface, android.graphics.Typeface.BOLD)
         setTextColor(Apparence.couleur(context, R.color.brand))
+        PoliceHebraique.appliquer(this)
     }
 
     /** Les versets d'un psaume en un seul bloc, chacun précédé de son numéro en lettres. */
@@ -108,6 +109,7 @@ class TehilimLectureActivity : AppCompatActivity() {
         setLineSpacing(dp(8).toFloat(), 1f)
         setTextColor(Apparence.couleur(context, R.color.ink))
         setTextIsSelectable(false)
+        PoliceHebraique.appliquer(this)
     }
 
     private fun dp(value: Int): Int = (value * resources.displayMetrics.density).toInt()
