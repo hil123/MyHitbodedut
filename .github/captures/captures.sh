@@ -26,6 +26,12 @@ adb shell am broadcast -a com.android.systemui.demo -e command clock -e hhmm 093
 adb shell am broadcast -a com.android.systemui.demo -e command battery -e level 100 -e plugged false || true
 adb shell am broadcast -a com.android.systemui.demo -e command notifications -e visible false || true
 
+# Le lanceur Pixel de l'emulateur ne repondait plus (ANR) et sa fenetre
+# couvrait toutes les captures : pas de fenetres d'erreur, pas de lanceur.
+adb shell settings put global hide_error_dialogs 1 || true
+adb shell pm disable-user --user 0 com.google.android.apps.nexuslauncher || true
+adb shell am broadcast -a android.intent.action.CLOSE_SYSTEM_DIALOGS || true
+
 if [ -n "${APK:-}" ]; then
   adb install -r -g "$APK" || adb install -r "$APK" || echo "installation echouee"
 fi

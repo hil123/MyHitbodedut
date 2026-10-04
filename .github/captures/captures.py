@@ -135,9 +135,26 @@ def defiler(vers_le_bas=True):
     pause(0.8)
 
 
+def fermer_anr(racine):
+    """Une fenetre « ... isn't responding » (lanceur de l'emulateur) : on touche « Wait »."""
+    if racine is None:
+        return racine
+    if not any("responding" in (n.get("text") or "") or "ne répond pas" in (n.get("text") or "")
+               for n in racine.iter("node")):
+        return racine
+    for n in racine.iter("node"):
+        if (n.get("text") or "") in ("Wait", "Attendre", "Close app", "Fermer l'application") and bornes(n):
+            b = bornes(n)
+            log("  fenetre ANR fermee")
+            sh(f"input tap {(b[0] + b[2]) // 2} {(b[1] + b[3]) // 2}")
+            pause(1.0)
+            return dump()
+    return racine
+
+
 def trouver(text=None, desc=None, rid=None, contains=False, defilements=0, index=0):
     for tour in range(defilements + 1):
-        racine = dump()
+        racine = fermer_anr(dump())
         if racine is not None:
             trouves = [n for n in racine.iter("node")
                        if correspond(n, text, desc, rid, contains) and bornes(n)]
@@ -170,6 +187,10 @@ def retour(n=1):
 
 def capture(nom, attente=1.2, ok=True):
     pause(attente)
+    try:
+        fermer_anr(dump())
+    except Exception:
+        pass
     if not ok:
         nom += "-INTROUVABLE"
     chemin = os.path.join(OUT, nom + ".png")
@@ -300,7 +321,10 @@ def main():
     for perm in ("android.permission.POST_NOTIFICATIONS",):
         sh(f"pm grant {PKG} {perm}")
     # Pas de presentation au premier lancement (Store.KEY_ONBOARDED, Onboarding.VERSION = 2).
-    regler({"onboarded_version": ("int", 2)})
+    regler({"onboarded_version": ("int", 2), "langue_app": ("string", "fr")})
+    # Un premier lancement, puis la langue : posee avant, elle n'etait pas
+    # gardee et l'application s'ouvrait en anglais.
+    lancer()
     langue("fr")
 
     def s01():
