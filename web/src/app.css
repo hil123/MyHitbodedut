@@ -11,7 +11,7 @@
    SIL Open Font License 1.1 (polices/OFL-NotoSerifHebrew.txt). */
 @font-face { font-family: "Hebreu Serif"; font-weight: 400; font-display: swap; src: url(polices/hebreu_serif_regular.woff2) format("woff2"); }
 @font-face { font-family: "Hebreu Serif"; font-weight: 700; font-display: swap; src: url(polices/hebreu_serif_bold.woff2) format("woff2"); }
-.chizuk-he, .lecture .psaume, .lecture .psaume-titre { font-family: "Hebreu Serif", "Noto Serif Hebrew", "Times New Roman", serif; }
+.chizuk-he, .lecture .psaume, .lecture .psaume-titre, .siddour .priere, .siddour .consigne, .nom-he { font-family: "Hebreu Serif", "Noto Serif Hebrew", "Times New Roman", serif; }
 
 * { box-sizing: border-box; }
 
@@ -373,3 +373,9 @@ input[type="range"] { width: 100%; accent-color: var(--brand); }
   background: var(--card); color: var(--brand); font-size: 16px; font-weight: 700; cursor: pointer;
 }
 .lecture-nav .principal, .lecture-nav .secondaire { padding: 14px 12px; font-size: 15px; }
+
+/* --- Siddour (SiddurActivity, SiddurLectureActivity) ------------------------------------ */
+.ligne-he .nom-he { font-size: 22px; color: var(--ink); text-align: start; }
+.siddour .priere { margin: 0 0 10px; color: var(--ink); font-size: 19px; line-height: 1.75; text-align: start; }
+.siddour .consigne { margin: 14px 0 4px; color: var(--muted); font-size: 14px; line-height: 1.5; text-align: start; }
+.siddour small { font-size: 0.8em; }

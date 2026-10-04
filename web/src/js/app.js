@@ -585,10 +585,77 @@ function ecranLecture() {
       h('button', { class: 'principal', style: p.debut < 150 ? null : 'visibility:hidden', onclick: () => aller(p.debut + 1) }, tr.t('tehilim_next'))) : null);
 }
 
+// --- Siddour (SiddurActivity.kt, SiddurLectureActivity.kt) ------------------------
+let siddur = null;
+let priere = null;
+function chargeSiddur() {
+  if (siddur) return true;
+  fetch('data/siddur.json').then((r) => r.json()).then((d) => { siddur = d; rendre(); });
+  return false;
+}
+
+/**
+ * Le balisage du siddour, en nœuds : seuls <b>, <small> et <br> existent dans
+ * siddur.json (tools/siddur_construction.py) ; tout le reste reste du texte.
+ */
+function riche(html) {
+  const racine = document.createDocumentFragment();
+  const pile = [racine];
+  for (const morceau of html.split(/(<\/?b>|<\/?small>|<br>)/)) {
+    if (!morceau) continue;
+    const ouvre = morceau.match(/^<(b|small)>$/);
+    if (ouvre) { const el = document.createElement(ouvre[1]); pile.at(-1).append(el); pile.push(el); }
+    else if (/^<\/(b|small)>$/.test(morceau)) { if (pile.length > 1) pile.pop(); }
+    else if (morceau === '<br>') pile.at(-1).append(document.createElement('br'));
+    else pile.at(-1).append(document.createTextNode(morceau));
+  }
+  return racine;
+}
+
+const titreTexte = (titre) => (tr.langue === 'he' ? titre.he : (titre[tr.langue] || titre.he));
+
+function ligneHebreu(hebreu, traduction, onclick) {
+  return h('button', { class: 'ligne ligne-he', onclick },
+    h('span', { class: 'corps' },
+      h('div', { class: 'nom-he', lang: 'he', dir: 'rtl' }, hebreu),
+      traduction && traduction !== hebreu ? h('div', { class: 'etat' }, traduction) : null),
+    h('span', { class: 'chevron', 'aria-hidden': 'true' }));
+}
+
+function ecranSiddur() {
+  const pret = chargeSiddur();
+  return h('div', { class: 'ecran' }, barre(tr.t('siddur_title')),
+    h('div', { class: 'defile' }, h('div', { class: 'contenu' },
+      h('p', { class: 'indice' }, tr.t('siddur_nusah')),
+      h('h2', { class: 'section' }, tr.t('siddur_books')),
+      h('div', { class: 'carte' }, ligneHebreu(tr.t('siddur_tehilim_he'), tr.t('tehilim_title'), () => ouvrir('tehilim'))),
+      ...(pret ? siddur.groupes.flatMap((g) => [
+        h('h2', { class: 'section' }, titreTexte(g.titre)),
+        h('div', { class: 'carte' }, siddur.textes.filter((x) => x.groupe === g.cle).map((x) =>
+          ligneHebreu(x.titre.he, titreTexte(x.titre), () => { priere = x.id; ouvrir('priere'); }))),
+      ]) : []))));
+}
+
+function ecranPriere() {
+  if (!chargeSiddur()) return h('div', { class: 'ecran' }, barre(tr.t('siddur_title')), h('div', { class: 'defile' }));
+  const x = siddur.textes.find((y) => y.id === priere);
+  // Rouvert directement sur #priere, sans texte choisi : la liste.
+  if (!x) return ecranSiddur();
+  const plusieurs = x.sections.length > 1;
+  return h('div', { class: 'ecran' }, barre(x.titre.he),
+    h('div', { class: 'defile' }, h('div', { class: 'contenu lecture siddour' },
+      h('p', { class: 'indice' }, titreTexte(x.titre) !== x.titre.he ? titreTexte(x.titre) : tr.t('siddur_nusah')),
+      ...x.sections.flatMap((s) => [
+        plusieurs && s.titre ? h('h2', { class: 'psaume-titre', lang: 'he', dir: 'rtl' }, s.titre) : null,
+        ...s.blocs.map((b) => h('p', { class: b.c !== undefined ? 'consigne' : 'priere', lang: 'he', dir: 'rtl' }, riche(b.c ?? b.t))),
+      ]))));
+}
+
 function panneauTextes() {
   return h('div', { class: 'contenu' },
     h('h1', { class: 'titre-ecran' }, tr.t('nav_texts')),
     h('div', { class: 'carte' },
+      ligne({ nom: tr.t('siddur_title'), etat: tr.t('siddur_hint'), onclick: () => ouvrir('siddur') }),
       // Tehilim est le premier texte lisible sur le web (04/10).
       ligne({ nom: tr.t('tehilim_title'), etat: tr.t('tehilim_today', libellePortion(portionDuMois().portion)), onclick: () => ouvrir('tehilim') }),
       // Les textes arrivent à l'étape 4.
@@ -1019,7 +1086,7 @@ function arreteDanse() {
 // et le geste de retour ramènent à l'accueil, sur l'onglet quitté.
 function ecranCourant() {
   const e = location.hash.slice(1);
-  return ['musique', 'reglages', 'seance', 'bravo', 'tehilim', 'lecture'].includes(e) ? e : 'accueil';
+  return ['musique', 'reglages', 'seance', 'bravo', 'tehilim', 'lecture', 'siddur', 'priere'].includes(e) ? e : 'accueil';
 }
 function ouvrir(ecran) {
   // L'entrée sur l'écran de séance tire le mot d'ouverture (SessionActivity.onCreate).
@@ -1063,6 +1130,8 @@ function rendre() {
   else if (ecran === 'bravo') app.append(ecranBravo());
   else if (ecran === 'tehilim') app.append(ecranTehilim());
   else if (ecran === 'lecture') app.append(ecranLecture());
+  else if (ecran === 'siddur') app.append(ecranSiddur());
+  else if (ecran === 'priere') app.append(ecranPriere());
   else {
     app.append(h('div', { class: 'ecran' },
       h('div', { class: 'defile' }, onglet === 'textes' ? panneauTextes() : panneauAujourdhui()),
