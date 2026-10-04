@@ -13,9 +13,11 @@ choisies pour leur licence :
   - Ashkenaz : The Metsudah Siddur 1981 (CC-BY) et Daat (domaine public).
     Les versions sans licence déclarée (Veshinantam, Torat Emet Ashkenaz)
     sont écartées.
-  Ce qui manque à un nusah dans ces sources (Tikoun 'Hatsot, Chéva bérakhot
-  en Ashkenaz) est repris d'un autre et marqué « nusah ». Les Hachkavot,
-  coutume séfarade, deviennent El malé ra'hamim en Sefard et en Ashkenaz.
+  Ce qui manque à un nusah dans ces sources (Tikoun 'Hatsot, ordre de l'Ari
+  z"l) est repris d'Edot HaMizrach et marqué « nusah ». Les Hachkavot,
+  coutume séfarade, deviennent l'El malé ra'hamim du Yizkor : Siddur Sefard
+  (Torat Emet) en Sefard, la page Yizkor de Sefaria en Ashkenaz, comme le
+  Chéva bérakhot ashkénaze (textes de Wikipédia en hébreu, CC-BY-SA).
   - Parashat HaMan : Chemot 16:4-36, « Tanach with Nikkud » (tanach.us,
     domaine public), comme le livre de Tehilim. Le passage est celui que lit
     le siddour Sefard (« Parashat Haman Reading »).
@@ -182,8 +184,8 @@ TITRES = {
 }
 EL_MALE = T("אֵל מָלֵא רַחֲמִים", "El malé ra’hamim", "El Malei Rachamim")
 NUSAH = {
-    "edot": T("נוסח עדות המזרח", "Noussa’h Edot HaMizra’h", "Nusach Edot HaMizrach"),
-    "sefard": T("נוסח ספרד", "Noussa’h Sefard", "Nusach Sefard"),
+    "edot": T("נוסח ספרדי – עדות המזרח", "Noussa’h séfarade (Edot HaMizra’h)", "Sephardi nusach (Edot HaMizrach)"),
+    "sefard": T("נוסח ספרד (האר״י)", "Noussa’h Sfard (Arizal)", "Nusach Sfard (Arizal)"),
     "ashkenaz": T("נוסח אשכנז", "Noussa’h Ashkenaz", "Nusach Ashkenaz"),
 }
 GROUPES = [
@@ -224,7 +226,16 @@ def main(dossier):
         "kaddich": (EM, EM.extrait(["Weekday Shacharit", "Kaveh"], 13, 16, "קדיש על ישראל")),
         "hachkavot": (EM, EM.extrait(["Fast Days and Mourning", "Mourning"], 19, 31, "השכבות")),
     }
-    el_male_sefard = ST.sections(["Fast Days", "El Maleh Prayer"])
+    # L'El malé ra'hamim de la prière du souvenir (Yizkor), pour un homme et
+    # pour une femme. Pas celui des jeûnes (« של כ' סיון »), qui est l'élégie
+    # de 5408 pour Rabbi Ye'hiel Mikhal de Nemirov : une erreur corrigée le 04/10.
+    el_male_sefard = ST.extrait(["Holidays", "Yizkor"], 11, 15, "אל מלא רחמים")
+    yizkor = charge(dossier, "Yizkor_PD.json")["text"]
+    el_male_ashkenaz = [{"titre": "אל מלא רחמים", "blocs": blocs(["לזכר:", yizkor[9], "לנקבה:", yizkor[11]], sauter_titre=False)}]
+    YZ = "Yizkor, Sefaria (texte de Wikipédia en hébreu, CC-BY-SA)"
+    sheva = charge(dossier, "Sheva_Brachot_WP.json")["text"]["Sheva Brachot"]
+    sheva_ashkenaz = [{"titre": "שבע ברכות", "blocs": blocs(list(sheva), sauter_titre=False)}]
+    SB = "Sheva Brachot, Sefaria (texte de Wikipédia en hébreu, CC-BY-SA)"
     sefard = {
         "birkot_hachahar": (SM, SM.plusieurs([["Upon Arising", "Modeh Ani"], ["Weekday Shacharit", "Morning Blessings"], ["Weekday Shacharit", "Blessings on Torah"]])),
         "chaharit": (SM, SM.sections(["Weekday Shacharit"])),
@@ -257,10 +268,10 @@ def main(dossier):
         "bore_nefachot": (AD, AD.sections(["Berachot", "Birkat Hanehenin", "Eating", "Brachot Achronot", "Borei Nefashot"])),
         "tefilat_haderekh": (AD, AD.sections(["Berachot", "Tefillat HaDerech"])),
         "birkat_halevana": (AM, AM.sections(["Weekday", "Maariv", "Birkat HaLevana"])),
-        "cheva_berakhot": ("sefard",) + sefard["cheva_berakhot"],
+        "cheva_berakhot": (SB, sheva_ashkenaz),
         "parachat_haman": (TN, haman),
         "kaddich": (AD, AD.sections(["Kaddish", "Mourner's Kaddish"])),
-        "hachkavot": ("sefard", ST, el_male_sefard, EL_MALE),
+        "hachkavot": (YZ, el_male_ashkenaz, EL_MALE),
     }
 
     for cle, table in [("edot", edot), ("sefard", sefard), ("ashkenaz", ashkenaz)]:

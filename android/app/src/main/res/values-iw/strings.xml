@@ -558,7 +558,7 @@
     <string name="siddur_title">סידור</string>
     <string name="siddur_hint">שחרית, מנחה, ערבית, ברכות…</string>
     <string name="siddur_books">ספרים</string>
-    <string name="siddur_nusah">נוסח עדות המזרח</string>
+    <string name="siddur_nusah">נוסח ספרדי – עדות המזרח</string>
     <string name="lecture_reglages">הגדרות קריאה</string>
     <string name="lecture_nuit">קריאה על רקע שחור</string>
     <string name="lecture_replier">קיפול</string>
@@ -573,8 +573,8 @@
     <string name="lecture_plus">אותיות גדולות יותר</string>
     <string name="lecture_moins">אותיות קטנות יותר</string>
     <string name="siddur_choose">נוסח</string>
-    <string name="siddur_nusah_edot">עדות המזרח</string>
-    <string name="siddur_nusah_sefard">ספרד</string>
+    <string name="siddur_nusah_edot">ספרדי (עדות המזרח)</string>
+    <string name="siddur_nusah_sefard">ספרד (האר״י)</string>
     <string name="siddur_nusah_ashkenaz">אשכנז</string>
     <string name="siddur_sources">מקורות: %1$s</string>
     <string name="siddur_source">מקור: %1$s</string>

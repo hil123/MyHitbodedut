@@ -39,11 +39,31 @@ class SiddurTest {
         fun empruntes(n: Nusah) = nusah.getValue(n).textes.filter { it.emprunt != null }.map { it.id }
         assertEquals(emptyList<String>(), empruntes(Nusah.EDOT))
         assertEquals(listOf("tikoun_hatsot"), empruntes(Nusah.SEFARD))
-        assertEquals(listOf("tikoun_hatsot", "cheva_berakhot", "hachkavot"), empruntes(Nusah.ASHKENAZ))
-        // Les Hachkavot, coutume séfarade, deviennent El malé ra'hamim.
-        listOf(Nusah.SEFARD, Nusah.ASHKENAZ).forEach {
-            assertEquals("El malé ra’hamim", nusah.getValue(it).texte("hachkavot")!!.titre.fr)
+        assertEquals(listOf("tikoun_hatsot"), empruntes(Nusah.ASHKENAZ))
+        // Les Hachkavot, coutume séfarade, deviennent l'El malé ra'hamim du
+        // souvenir, pour un homme et pour une femme ; jamais l'élégie du
+        // 20 Sivan (Rabbi Ye'hiel Mikhal de Nemirov), reprise par erreur.
+        listOf(Nusah.SEFARD, Nusah.ASHKENAZ).forEach { n ->
+            val t = nusah.getValue(n).texte("hachkavot")!!
+            assertEquals("El malé ra’hamim", t.titre.fr)
+            val blocs = t.sections.flatMap { it.blocs }
+            val texte = blocs.joinToString(" ") { it.texte }.replace(Regex("[\\u0591-\\u05C7]"), "")
+            assertTrue("$n", texte.contains("אל מלא רחמים שוכן במרומים") || texte.contains("אל מלא רחמים, שוכן במרומים"))
+            assertTrue("$n", !texte.contains("יחיאל") && !texte.contains("סיון"))
+            assertEquals("$n", 2, blocs.count { !it.consigne })
         }
+    }
+
+    /** Sfard (Ari z"l) n'est pas Sefarad : le libellé dit lequel, dans les trois langues. */
+    @Test
+    fun `sfard et sefarad ne se confondent pas`() {
+        val fr = File("src/main/res/values/strings.xml").readText()
+        assertTrue(fr.contains("<string name=\"siddur_nusah_edot\">Séfarade (Edot HaMizra’h)</string>"))
+        assertTrue(fr.contains("<string name=\"siddur_nusah_sefard\">Sfard (Arizal)</string>"))
+        val he = File("src/main/res/values-iw/strings.xml").readText()
+        assertTrue(he.contains("<string name=\"siddur_nusah_sefard\">ספרד (האר״י)</string>"))
+        assertTrue(nusah.getValue(Nusah.SEFARD).nusah.fr.contains("Sfard (Arizal)"))
+        assertTrue(nusah.getValue(Nusah.EDOT).nusah.fr.contains("séfarade"))
     }
 
     @Test

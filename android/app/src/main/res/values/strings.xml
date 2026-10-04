@@ -585,7 +585,7 @@
     <string name="siddur_title">Siddour</string>
     <string name="siddur_hint">Cha’harit, Min’ha, Arvit, bénédictions…</string>
     <string name="siddur_books">Livres</string>
-    <string name="siddur_nusah">Noussa’h Edot HaMizra’h</string>
+    <string name="siddur_nusah">Noussa’h séfarade (Edot HaMizra’h)</string>
     <string name="lecture_reglages">Réglages de lecture</string>
     <string name="lecture_nuit">Lecture sur fond noir</string>
     <string name="lecture_replier">Replier</string>
@@ -600,8 +600,8 @@
     <string name="lecture_plus">Lettres plus grandes</string>
     <string name="lecture_moins">Lettres plus petites</string>
     <string name="siddur_choose">Noussa’h</string>
-    <string name="siddur_nusah_edot">Edot HaMizra’h</string>
-    <string name="siddur_nusah_sefard">Sefard</string>
+    <string name="siddur_nusah_edot">Séfarade (Edot HaMizra’h)</string>
+    <string name="siddur_nusah_sefard">Sfard (Arizal)</string>
     <string name="siddur_nusah_ashkenaz">Ashkenaz</string>
     <string name="siddur_sources">Sources : %1$s</string>
     <string name="siddur_source">Source : %1$s</string>

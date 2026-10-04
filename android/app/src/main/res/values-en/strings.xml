@@ -545,7 +545,7 @@
     <string name="siddur_title">Siddur</string>
     <string name="siddur_hint">Shacharit, Mincha, Arvit, blessings…</string>
     <string name="siddur_books">Books</string>
-    <string name="siddur_nusah">Nusach Edot HaMizrach</string>
+    <string name="siddur_nusah">Sephardi nusach (Edot HaMizrach)</string>
     <string name="lecture_reglages">Reading settings</string>
     <string name="lecture_nuit">Read on a black background</string>
     <string name="lecture_replier">Fold away</string>
@@ -560,8 +560,8 @@
     <string name="lecture_plus">Larger letters</string>
     <string name="lecture_moins">Smaller letters</string>
     <string name="siddur_choose">Nusach</string>
-    <string name="siddur_nusah_edot">Edot HaMizrach</string>
-    <string name="siddur_nusah_sefard">Sefard</string>
+    <string name="siddur_nusah_edot">Sephardi (Edot HaMizrach)</string>
+    <string name="siddur_nusah_sefard">Sfard (Arizal)</string>
     <string name="siddur_nusah_ashkenaz">Ashkenaz</string>
     <string name="siddur_sources">Sources: %1$s</string>
     <string name="siddur_source">Source: %1$s</string>
