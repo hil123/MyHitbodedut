@@ -201,6 +201,21 @@ jobs:
                   print("@@ERREUR", f, e)
           PY
 
+      # Les captures aussi sur une branche à part (claude/captures-android) :
+      # lisibles avec git là où l'artefact ne se télécharge pas.
+      - name: Publish the captures to a branch
+        if: always()
+        env:
+          JETON: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          ls out/*.png >/dev/null 2>&1 || exit 0
+          rm -rf /tmp/pub && mkdir -p /tmp/pub && cp out/*.png /tmp/pub/
+          cd /tmp/pub
+          git init -q && git checkout -q -b claude/captures-android
+          git add ./*.png
+          git -c user.name="captures" -c user.email="actions@github.com" commit -q -m "Captures ${GITHUB_SHA::7}"
+          git push -q -f "https://x-access-token:${JETON}@github.com/${GITHUB_REPOSITORY}.git" claude/captures-android
+
       - name: Upload the captures
         if: always()
         uses: actions/upload-artifact@v4
