@@ -69,13 +69,21 @@ button { font: inherit; color: inherit; }
 .statut { margin-top: 4px; color: var(--muted); font-size: 15px; }
 .statut.titre { color: var(--ink); font-size: 24px; font-weight: 700; }
 .serie { display: flex; gap: 10px; color: var(--muted); font-size: 15px; }
+.serie { font-variant-numeric: tabular-nums; }
+.serie .separateur { flex: none; }
 .serie .total { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .detail { margin-top: 4px; color: var(--brand); font-size: 14px; }
 
 .jauge { position: relative; width: 236px; height: 236px; margin: 18px auto 0; }
+/* Écran haut : les anneaux prennent la place libre (values-h720dp). */
+@media (min-height: 720px) { .jauge { width: 268px; height: 268px; } .jauge .plaque { inset: 38px; } }
 .jauge svg { position: absolute; inset: 0; width: 100%; height: 100%; }
 [dir="rtl"] .jauge svg { transform: scaleX(-1); }
 .jauge .piste { stroke: var(--day-todo); }
+/* La piste vide prend la couleur de son anneau, très pâle (AnneauxDessin.TEINTE_PISTE). */
+.jauge .anneau-jour .piste { stroke: color-mix(in srgb, var(--brand) 22%, var(--day-todo)); }
+.jauge .anneau-semaine .piste { stroke: color-mix(in srgb, var(--ring-week) 22%, var(--day-todo)); }
+.jauge .anneau-serie .piste { stroke: color-mix(in srgb, var(--ring-streak) 22%, var(--day-todo)); }
 .jauge .anneau-jour .arc { stroke: var(--brand); }
 .jauge .anneau-semaine .arc { stroke: var(--ring-week); }
 .jauge .anneau-serie .arc { stroke: var(--ring-streak); }
@@ -97,7 +105,7 @@ button { font: inherit; color: inherit; }
 @keyframes plaque-sortie { from { transform: perspective(600px) rotateY(0); } to { transform: perspective(600px) rotateY(90deg); } }
 @keyframes plaque-entree { from { transform: perspective(600px) rotateY(-90deg); } to { transform: perspective(600px) rotateY(0); } }
 .plaque .face { height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; padding-bottom: 8px; text-align: center; }
-.face-valeur { font-size: 30px; font-weight: 700; line-height: 1.1; color: var(--ink); white-space: nowrap; }
+.face-valeur { font-size: 30px; font-weight: 700; line-height: 1.1; color: var(--ink); white-space: nowrap; font-variant-numeric: tabular-nums; }
 .face-valeur.valeur-jour { color: var(--brand); }
 .face-valeur.valeur-semaine { color: var(--ring-week); }
 .face-valeur.valeur-serie { color: var(--ring-streak); }
@@ -132,6 +140,9 @@ button { font: inherit; color: inherit; }
 .pastilles {
   display: flex; gap: 8px; margin: 12px -16px 0; padding: 0 16px;
   overflow-x: auto; scrollbar-width: none;
+  /* Un fondu aux bords : la rangée qui déborde se lit comme une rangée qui défile. */
+  -webkit-mask-image: linear-gradient(to right, transparent 0, #000 16px, #000 calc(100% - 28px), transparent 100%);
+  mask-image: linear-gradient(to right, transparent 0, #000 16px, #000 calc(100% - 28px), transparent 100%);
 }
 .pastilles::-webkit-scrollbar { display: none; }
 .pastille {
@@ -151,7 +162,9 @@ button { font: inherit; color: inherit; }
   display: flex; flex-direction: column; align-items: center;
 }
 .jour .nom { color: var(--muted); font-size: 11px; }
-.jour .marque-jour { color: var(--ink); font-size: 16px; font-weight: 700; min-height: 22px; }
+.jour .marque-jour { margin-top: 2px; color: var(--ink); font-size: 16px; font-weight: 700; min-height: 22px; font-variant-numeric: tabular-nums; }
+.jour.avenir .marque-jour { color: var(--muted); }
+.jour.aujourdhui { box-shadow: inset 0 0 0 1.5px var(--brand); }
 .jour.fait { background: var(--day-done); }
 .jour.fait .nom, .jour.fait .marque-jour { color: var(--white); }
 .jour.exempte { background: var(--day-exempt); }
@@ -233,10 +246,15 @@ input[type="range"] { width: 100%; accent-color: var(--brand); }
 }
 .onglet[aria-current="page"] { color: var(--brand); font-weight: 600; }
 .onglet[aria-current="page"] .icone { background: var(--line); }
-.onglet[data-onglet="aujourdhui"] { --icone: url(icones/ic_nav_today.svg); }
-.onglet[data-onglet="textes"] { --icone: url(icones/ic_nav_texts.svg); }
-.onglet[data-onglet="journal"] { --icone: url(icones/ic_nav_journal.svg); }
-.onglet[data-onglet="reglages"] { --icone: url(icones/ic_nav_settings.svg); }
+.onglet[data-onglet="aujourdhui"] { --icone: url(icones/ic_nav_today_off.svg); }
+.onglet[data-onglet="textes"] { --icone: url(icones/ic_nav_texts_off.svg); }
+.onglet[data-onglet="journal"] { --icone: url(icones/ic_nav_journal_off.svg); }
+.onglet[data-onglet="reglages"] { --icone: url(icones/ic_nav_settings_off.svg); }
+/* L'onglet actif : le dessin plein (ic_nav_*_on), comme sur Android. */
+.onglet[aria-current="page"][data-onglet="aujourdhui"] { --icone: url(icones/ic_nav_today_on.svg); }
+.onglet[aria-current="page"][data-onglet="textes"] { --icone: url(icones/ic_nav_texts_on.svg); }
+.onglet[aria-current="page"][data-onglet="journal"] { --icone: url(icones/ic_nav_journal_on.svg); }
+.onglet[aria-current="page"][data-onglet="reglages"] { --icone: url(icones/ic_nav_settings_on.svg); }
 
 /* --- Feuille de choix (les AlertDialog d'Android) --------------------------------------- */
 .voile {

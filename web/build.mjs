@@ -54,15 +54,22 @@ writeFileSync(join(DIST, 'palettes.css'), palettesCss({
 }));
 
 // --- Les icônes des onglets -------------------------------------------------
-// Les dessins vectoriels d'Android, en SVG : même tracé, trait de la couleur
-// du texte qui les porte (currentColor), comme la teinte des onglets.
+// Les dessins vectoriels d'Android, en SVG : même tracé, de la couleur du
+// texte qui les porte (currentColor), comme la teinte des onglets. Chaque
+// onglet a deux dessins : au trait au repos (_off), plein quand il est actif (_on).
 mkdirSync(join(DIST, 'icones'), { recursive: true });
-for (const nom of ['ic_nav_today', 'ic_nav_texts', 'ic_nav_journal', 'ic_nav_settings', 'ic_chevron']) {
+const onglets = ['ic_nav_today', 'ic_nav_texts', 'ic_nav_journal', 'ic_nav_settings'];
+for (const nom of [...onglets.flatMap((n) => [`${n}_off`, `${n}_on`]), 'ic_chevron']) {
   const xml = readFileSync(join(RES, 'drawable', `${nom}.xml`), 'utf8');
   const vue = xml.match(/android:viewportWidth="([\d.]+)"[\s\S]*?android:viewportHeight="([\d.]+)"/);
   const chemins = [...xml.matchAll(/<path\b([\s\S]*?)\/>/g)].map(([, attrs]) => {
     const a = (n) => attrs.match(new RegExp(`android:${n}="([^"]*)"`))?.[1];
+    if (a('fillColor')) {
+      return `<path d="${a('pathData')}" fill="currentColor" fill-opacity="${a('fillAlpha') ?? 1}"` +
+        ` fill-rule="${a('fillType') === 'evenOdd' ? 'evenodd' : 'nonzero'}"/>`;
+    }
     return `<path d="${a('pathData')}" fill="none" stroke="currentColor" stroke-width="${a('strokeWidth')}"` +
+      ` stroke-opacity="${a('strokeAlpha') ?? 1}"` +
       ` stroke-linecap="${a('strokeLineCap') ?? 'butt'}" stroke-linejoin="${a('strokeLineJoin') ?? 'miter'}"/>`;
   });
   writeFileSync(join(DIST, 'icones', `${nom}.svg`),

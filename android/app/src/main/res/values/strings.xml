@@ -544,6 +544,8 @@
     <string name="music_shuffle_short">Aléatoire</string>
     <string name="music_shuffle_summary">Lecture aléatoire, volume %1$d %%</string>
 
+    <string name="status_separator" translatable="false">·</string>
+
     <!-- Les faces du centre des anneaux (Plaque, 04/10). -->
     <string name="plaque_jour">aujourd’hui, sur %1$s</string>
     <string name="plaque_semaine">jours faits cette semaine</string>

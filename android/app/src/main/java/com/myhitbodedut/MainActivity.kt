@@ -3,6 +3,7 @@ package com.myhitbodedut
 import android.content.Intent
 import android.graphics.Typeface
 import android.os.Bundle
+import android.view.HapticFeedbackConstants
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
@@ -372,7 +373,13 @@ class MainActivity : AppCompatActivity() {
         } else {
             // L'anneau fermé passe devant, et sa face s'affiche au centre le
             // temps de la fête ; le hassid revient ensuite en sautant.
-            findViewById<AnneauxView>(R.id.week_gauge).feter(nouveaux.first())
+            findViewById<AnneauxView>(R.id.week_gauge).apply {
+                performHapticFeedback(
+                    if (android.os.Build.VERSION.SDK_INT >= 30) HapticFeedbackConstants.CONFIRM
+                    else HapticFeedbackConstants.LONG_PRESS
+                )
+                feter(nouveaux.first())
+            }
         }
     }
 
@@ -383,8 +390,9 @@ class MainActivity : AppCompatActivity() {
 
     private val retourHassid = Runnable { tournerPlaque(Plaque.Face.HASSID) }
 
-    /** Un toucher au centre : la face suivante, en tournant. */
+    /** Un toucher au centre : la face suivante, en tournant, avec un petit retour au doigt. */
     private fun toucherPlaque() {
+        findViewById<View>(R.id.hero_plate).performHapticFeedback(HapticFeedbackConstants.CONTEXT_CLICK)
         tournerPlaque(Plaque.suivante(face))
     }
 
@@ -654,8 +662,14 @@ class MainActivity : AppCompatActivity() {
         }
 
         val total = Store.totalMinutes(this)
-        findViewById<TextView>(R.id.status_total).text =
-            getString(R.string.status_total, Store.formatDuration(this, total))
+        // Le premier jour, « 0 min au total » n'apprend rien : la phrase
+        // d'accueil reste seule sur la ligne.
+        val avecTotal = total > 0
+        findViewById<View>(R.id.status_separator).visibility = if (avecTotal) View.VISIBLE else View.GONE
+        findViewById<TextView>(R.id.status_total).apply {
+            visibility = if (avecTotal) View.VISIBLE else View.GONE
+            text = getString(R.string.status_total, Store.formatDuration(this@MainActivity, total))
+        }
 
         val minutesToday = record?.minutes ?: 0
         val detail = findViewById<TextView>(R.id.today_detail)
@@ -695,12 +709,13 @@ class MainActivity : AppCompatActivity() {
 
             // Le samedi chômé ne porte pas de point à cocher : il porte sa marque.
             val restDay = day.shabbat && day.exempt
+            // Le numéro du jour remplit les cases encore ouvertes : la bande
+            // se lit comme un calendrier, pas comme des cases vides.
             mark.text = when {
                 day.done -> "✓"
                 restDay -> getString(R.string.week_shabbat_mark)
                 day.exempt -> "—"
-                day.future -> ""
-                else -> "·"
+                else -> day.date.dayOfMonth.toString()
             }
             cell.contentDescription = when {
                 day.done -> getString(R.string.week_done)
@@ -717,6 +732,7 @@ class MainActivity : AppCompatActivity() {
                     when {
                         day.done -> R.color.white
                         restDay -> R.color.brand
+                        day.future -> R.color.muted
                         else -> R.color.ink
                     }
                 )
@@ -725,6 +741,7 @@ class MainActivity : AppCompatActivity() {
                 when {
                     day.done -> R.drawable.bg_day_done
                     day.exempt -> R.drawable.bg_day_exempt
+                    day.date == java.time.LocalDate.now() -> R.drawable.bg_day_today
                     else -> R.drawable.bg_day_todo
                 }
             )

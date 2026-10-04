@@ -203,6 +203,7 @@ class AnneauxView @JvmOverloads constructor(
             MotionEvent.ACTION_UP -> {
                 val cible = AnneauxDessin.sousLePoint(carre, geometrie, event.x, event.y)
                 if (cible != null && cible == toucheSur) {
+                    performHapticFeedback(android.view.HapticFeedbackConstants.CONTEXT_CLICK)
                     performClick()
                     mettreEnAvant(if (misEnAvant == cible) null else cible)
                 }

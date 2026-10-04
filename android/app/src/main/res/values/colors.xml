@@ -40,7 +40,7 @@
     <!-- Les trois états d'une case de la bande hebdomadaire. -->
     <color name="day_done">#16775A</color>
     <color name="day_todo">#EDF2EE</color>
-    <color name="day_exempt">#EDE9F7</color>
+    <color name="day_exempt">#F3EEE2</color>
 
     <!-- Les anneaux de l'accueil : le jour prend la couleur de marque,
          la semaine et la série ont les leurs, fixes de jour et de nuit. -->

@@ -362,7 +362,10 @@ function tournerPlaque(vers) {
 }
 
 function plaqueAccueil() {
-  const btn = h('button', { class: 'plaque', type: 'button', onclick: () => tournerPlaque(Plaque.suivante(facePlaque)) });
+  const btn = h('button', { class: 'plaque', type: 'button', onclick: () => {
+    navigator.vibrate?.(8);
+    tournerPlaque(Plaque.suivante(facePlaque));
+  } });
   remplirPlaque(btn);
   return btn;
 }
@@ -430,9 +433,12 @@ function panneauAujourdhui() {
         : fait ? 'status_done'
           : semaine.filter((j) => !j.future).at(-1)?.exempt ? 'status_rest'
             : 'status_pending')),
+    // Le premier jour, « 0 min au total » n'apprend rien : la phrase d'accueil reste seule.
     h('div', { class: 'serie' },
-      h('span', {}, serie > 0 ? tr.p('status_streak', serie) : tr.t('status_streak_none')),
-      h('span', { class: 'total' }, tr.t('status_total', tr.duree(store.totalMinutes())))),
+      h('span', {}, serie > 0 ? tr.p('status_streak', serie)
+        : store.aDejaPratique() ? tr.t('status_streak_none') : tr.t('status_streak_first')),
+      store.totalMinutes() > 0 ? h('span', { class: 'separateur', 'aria-hidden': 'true' }, '·') : null,
+      store.totalMinutes() > 0 ? h('span', { class: 'total' }, tr.t('status_total', tr.duree(store.totalMinutes()))) : null),
     fait ? h('div', { class: 'detail' },
       record.minutes > 0 ? tr.t('today_minutes', tr.duree(record.minutes)) : tr.t('today_declared')) : null,
 
@@ -453,10 +459,12 @@ function panneauAujourdhui() {
 
     h('div', { class: 'semaine' }, semaine.map((j) => {
       const repos = j.shabbat && j.exempt;
-      const marque = j.done ? '✓' : repos ? tr.t('week_shabbat_mark') : j.exempt ? '—' : j.future ? '' : '·';
+      // Le numéro du jour remplit les cases ouvertes : la bande se lit comme un calendrier.
+      const marque = j.done ? '✓' : repos ? tr.t('week_shabbat_mark') : j.exempt ? '—' : String(Number(j.date.slice(8)));
       const etiquette = j.done ? tr.t('week_done') : repos ? tr.t('settings_shabbat')
         : j.exempt ? tr.t('gate_exempt_title') : tr.t('week_todo');
-      const classe = ['jour', j.done ? 'fait' : j.exempt ? 'exempte' : '', repos && !j.done ? 'repos' : ''].join(' ').trim();
+      const classe = ['jour', j.done ? 'fait' : j.exempt ? 'exempte' : '', repos && !j.done ? 'repos' : '',
+        !j.done && !j.exempt && j.date === store.today() ? 'aujourdhui' : '', j.future ? 'avenir' : ''].join(' ').replace(/\s+/g, ' ').trim();
       return h('div', { class: classe, role: 'img', 'aria-label': `${nomJour.format(new Date(`${j.date}T12:00:00Z`))} : ${etiquette}` },
         h('span', { class: 'nom', 'aria-hidden': 'true' }, nomJour.format(new Date(`${j.date}T12:00:00Z`))),
         h('span', { class: 'marque-jour', 'aria-hidden': 'true' }, marque));
@@ -509,11 +517,13 @@ function panneauTextes() {
 }
 
 function onglets() {
+  // Le journal n'existe pas encore sur le web : son onglet est masqué
+  // plutôt que montré grisé (finition du 04/10).
   const items = [
-    ['aujourdhui', 'nav_today'], ['textes', 'nav_texts'], ['journal', 'nav_journal'], ['reglages', 'settings_title'],
+    ['aujourdhui', 'nav_today'], ['textes', 'nav_texts'], ['reglages', 'settings_title'],
   ];
   return h('nav', { class: 'onglets' }, items.map(([cle, nom]) => h('button', {
-    class: `onglet${cle === 'journal' ? ' a-venir' : ''}`,
+    class: 'onglet',
     'data-onglet': cle,
     'aria-current': cle === onglet ? 'page' : null,
     onclick: () => {

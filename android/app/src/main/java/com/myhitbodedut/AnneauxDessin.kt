@@ -19,6 +19,9 @@ object AnneauxDessin {
     /** Les couleurs, resolues par l'appelant : l'ecran suit sa palette, la vignette non. */
     data class Couleurs(val jour: Int, val semaine: Int, val serie: Int, val piste: Int)
 
+    /** La part de la couleur de l'anneau dans sa piste vide. */
+    const val TEINTE_PISTE = 0.22f
+
     /** La place des anneaux dans un carre : rayon exterieur de chaque anneau, du centre vers l'exterieur. */
     data class Geometrie(val epaisseur: Float, val ecart: Float) {
         /** L'epaisseur totale des trois anneaux et de leurs deux ecarts. */
@@ -64,7 +67,9 @@ object AnneauxDessin {
             val alpha = if (enAvant) 255 else 70
 
             piste.strokeWidth = trait
-            piste.color = ColorUtils.setAlphaComponent(couleurs.piste, alpha)
+            // La piste vide prend la couleur de son anneau, très pâle : à zéro,
+            // on voit déjà les trois anneaux (finition du 04/10, comme chez Apple).
+            piste.color = ColorUtils.setAlphaComponent(ColorUtils.blendARGB(couleurs.piste, couleur, TEINTE_PISTE), alpha)
             toile.drawOval(cadre, piste)
 
             val fraction = anneau.fraction * avance.coerceIn(0f, 1f)

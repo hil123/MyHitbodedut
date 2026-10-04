@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Onglet Journal, actif : le crayon plein, et la ligne qu'il écrit. La teinte vient de l'onglet (color/nav_item.xml). -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+
+    <path
+        android:pathData="M16.2,3.3 A2.3,2.3 0 0,1 19.5,3.3 L20.7,4.5 A2.3,2.3 0 0,1 20.7,7.8 L8.5,20 L3.5,21 L4.5,16 Z"
+        android:fillColor="?attr/mhInk" />
+    <path
+        android:pathData="M13,19.75 L20.5,19.75 A1.25,1.25 0 0,1 20.5,22.25 L13,22.25 A1.25,1.25 0 0,1 13,19.75 Z"
+        android:fillAlpha="0.5"
+        android:fillColor="?attr/mhInk" />
+</vector>

@@ -71,6 +71,18 @@
                         android:id="@+id/status_streak"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:fontFeatureSettings="tnum"
+                        android:textColor="?attr/mhMuted"
+                        android:textSize="15sp" />
+
+                    <!-- Le point qui sépare la série du total ; masqué avec le total. -->
+                    <TextView
+                        android:id="@+id/status_separator"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:importantForAccessibility="no"
+                        android:text="@string/status_separator"
                         android:textColor="?attr/mhMuted"
                         android:textSize="15sp" />
 
@@ -78,7 +90,8 @@
                         android:id="@+id/status_total"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="10dp"
+                        android:layout_marginStart="8dp"
+                        android:fontFeatureSettings="tnum"
                         android:layout_weight="1"
                         android:ellipsize="end"
                         android:maxLines="1"
@@ -143,6 +156,7 @@
                                 android:autoSizeMaxTextSize="34sp"
                                 android:autoSizeMinTextSize="16sp"
                                 android:autoSizeTextType="uniform"
+                                android:fontFeatureSettings="tnum"
                                 android:gravity="center"
                                 android:maxLines="1"
                                 android:textStyle="bold" />
@@ -186,6 +200,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="12dp"
+                    android:fadingEdgeLength="28dp"
+                    android:requiresFadingEdge="horizontal"
                     android:scrollbars="none">
 
                     <LinearLayout
