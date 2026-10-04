@@ -136,7 +136,7 @@ class SiddurTest {
         listOf("values", "values-en", "values-iw").forEach { d ->
             val xml = File("src/main/res/$d/strings.xml").readText()
             listOf("siddur_title", "siddur_hint", "siddur_books", "siddur_choose", "siddur_nusah_edot", "siddur_nusah_sefard",
-                "siddur_nusah_ashkenaz", "siddur_sources", "siddur_source").forEach { assertTrue("$d : $it", xml.contains("name=\"$it\"")) }
+                "siddur_nusah_ashkenaz", "siddur_sources").forEach { assertTrue("$d : $it", xml.contains("name=\"$it\"")) }
         }
     }
 }

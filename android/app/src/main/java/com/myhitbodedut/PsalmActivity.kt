@@ -103,8 +103,10 @@ class PsalmActivity : AppCompatActivity() {
                 text = verset.numero.toString()
                 textSize = 12f
                 setTextColor(Apparence.couleur(context, R.color.brand))
-                layoutParams = LinearLayout.LayoutParams(dp(22), ViewGroup.LayoutParams.WRAP_CONTENT)
-                    .apply { topMargin = dp(5) }
+                // Large selon le nombre : « 45 » tient sur une ligne même à 200 %.
+                layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+                    .apply { topMargin = dp(5); marginEnd = dp(6) }
+                minWidth = dp(22)
             }, Role.TITRE)
         )
         ligne.addView(

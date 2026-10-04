@@ -199,14 +199,14 @@ def main(dossier):
     em_merged = charge(dossier, "Siddur_Edot_HaMizrach.json")
     sf_merged = charge(dossier, "Siddur_Sefard.json")
     as_merged = charge(dossier, "Siddur_Ashkenaz.json")
-    EM = Source(em_merged["text"], em_merged["schema"], "Siddur Edot HaMizrach (Torat Emet 357, domaine public ; Shaliehsaboo Edition, CC0)")
+    EM = Source(em_merged["text"], em_merged["schema"], "Siddur Edot HaMizrach (Torat Emet 357, Public Domain; Shaliehsaboo Edition, CC0)")
     SM = Source(charge(dossier, "Siddur_Sefard__Hebrew__The_Metsudah_siddur,_1981.json")["text"], sf_merged["schema"], "Siddur Sefard, The Metsudah Siddur 1981 (CC-BY)")
-    ST = Source(charge(dossier, "Siddur_Sefard__Hebrew__Torat_Emet_357.json")["text"], sf_merged["schema"], "Siddur Sefard, Torat Emet 357 (domaine public)")
+    ST = Source(charge(dossier, "Siddur_Sefard__Hebrew__Torat_Emet_357.json")["text"], sf_merged["schema"], "Siddur Sefard, Torat Emet 357 (Public Domain)")
     AM = Source(charge(dossier, "Ashk__The_Metsudah_siddur,_1981.json")["text"], as_merged["schema"], "Siddur Ashkenaz, The Metsudah Siddur 1981 (CC-BY)")
-    AD = Source(charge(dossier, "Ashk__Daat_Siddur_Ashkenaz.json")["text"], as_merged["schema"], "Siddur Ashkenaz, Daat (domaine public)")
+    AD = Source(charge(dossier, "Ashk__Daat_Siddur_Ashkenaz.json")["text"], as_merged["schema"], "Siddur Ashkenaz, Daat (Public Domain)")
     exode = charge(dossier, "Exodus_TN.json")["text"]
     haman = [{"titre": "שמות ט״ז, ד׳–ל״ו", "blocs": [{"t": NFC(qere(v)).replace("\u200d", "")} for v in exode[15][3:36]]}]
-    TN = "Tanach with Nikkud (tanach.us, domaine public), Chemot 16:4-36"
+    TN = "Tanach with Nikkud (tanach.us, Public Domain), Exodus 16:4-36"
 
     edot = {
         "birkot_hachahar": (EM, EM.sections(["Preparatory Prayers"])),
@@ -232,10 +232,10 @@ def main(dossier):
     el_male_sefard = ST.extrait(["Holidays", "Yizkor"], 11, 15, "אל מלא רחמים")
     yizkor = charge(dossier, "Yizkor_PD.json")["text"]
     el_male_ashkenaz = [{"titre": "אל מלא רחמים", "blocs": blocs(["לזכר:", yizkor[9], "לנקבה:", yizkor[11]], sauter_titre=False)}]
-    YZ = "Yizkor, Sefaria (texte de Wikipédia en hébreu, CC-BY-SA)"
+    YZ = "Yizkor, Sefaria / Wikipedia (he), CC-BY-SA"
     sheva = charge(dossier, "Sheva_Brachot_WP.json")["text"]["Sheva Brachot"]
     sheva_ashkenaz = [{"titre": "שבע ברכות", "blocs": blocs(list(sheva), sauter_titre=False)}]
-    SB = "Sheva Brachot, Sefaria (texte de Wikipédia en hébreu, CC-BY-SA)"
+    SB = "Sheva Brachot, Sefaria / Wikipedia (he), CC-BY-SA"
     sefard = {
         "birkot_hachahar": (SM, SM.plusieurs([["Upon Arising", "Modeh Ani"], ["Weekday Shacharit", "Morning Blessings"], ["Weekday Shacharit", "Blessings on Torah"]])),
         "chaharit": (SM, SM.sections(["Weekday Shacharit"])),

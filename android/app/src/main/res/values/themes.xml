@@ -15,6 +15,16 @@
         <item name="android:colorBackground">@color/paper</item>
         <item name="android:statusBarColor">@color/brand_dark</item>
         <item name="android:windowLightStatusBar">false</item>
+        <!-- Les surfaces Material (dialogues, interrupteurs) aux couleurs
+             d'origine, comme les autres fonds les définissent : sans elles,
+             le choix du nusah s'ouvrait sur le lavande de Material 3. -->
+        <item name="colorSurface">@color/card</item>
+        <item name="colorSurfaceContainerHigh">@color/card</item>
+        <item name="colorOnSurface">@color/ink</item>
+        <item name="colorOnSurfaceVariant">@color/muted</item>
+        <item name="colorOutline">@color/line</item>
+        <item name="colorPrimaryContainer">@color/mint</item>
+        <item name="colorOnPrimaryContainer">@color/brand_dark</item>
         <!-- Les couleurs réglables (values/attrs.xml), à leur valeur d'origine. -->
         <item name="mhBrandDark">@color/brand_dark</item>
         <item name="mhBrand">@color/brand</item>

@@ -19,6 +19,7 @@ import android.widget.PopupMenu
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.ColorUtils
+import androidx.core.view.ViewCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import kotlin.math.roundToInt
@@ -50,6 +51,17 @@ class ReglagesLecture private constructor(
     private val racine: FrameLayout = activite.findViewById(android.R.id.content)
     private val densite = contexte.resources.displayMetrics.density
     private fun dp(v: Int) = (v * densite).roundToInt()
+
+    /**
+     * La taille d'un bouton de la barre : 44 dp, moins sur un écran étroit
+     * (320 dp, ou un affichage agrandi) pour que la barre tienne toujours
+     * entière, « Replier » compris (audit du 04/10).
+     */
+    private val bouton: Int = run {
+        val largeur = contexte.resources.displayMetrics.widthPixels / densite
+        val nombre = if (avecNusah) 7 else 6
+        (((largeur - 24 - 48 - 18 - 12) / nombre).toInt()).coerceIn(30, 44)
+    }
 
     private val accent = Apparence.couleur(contexte, R.color.brand)
     private val surAccent = Apparence.couleur(contexte, R.color.on_brand)
@@ -92,7 +104,7 @@ class ReglagesLecture private constructor(
         barre.addView(pourcent.apply {
             layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, dp(44))
             gravity = Gravity.CENTER
-            minWidth = dp(56)
+            minWidth = dp(48)
             textSize = 14f
             typeface = Typeface.DEFAULT_BOLD
             setTextColor(surAccent)
@@ -102,7 +114,7 @@ class ReglagesLecture private constructor(
         barre.addView(lettre(plus = true))
         barre.addView(filet())
         barre.addView(lune.apply {
-            layoutParams = LinearLayout.LayoutParams(dp(44), dp(44))
+            layoutParams = LinearLayout.LayoutParams(dp(bouton), dp(44))
             setImageResource(R.drawable.ic_lecture_lune)
             imageTintList = ColorStateList.valueOf(surAccent)
             scaleType = ImageView.ScaleType.CENTER
@@ -137,7 +149,8 @@ class ReglagesLecture private constructor(
     }
 
     private fun placer() {
-        val pied = auDessusDe?.takeIf { it.visibility == View.VISIBLE }?.height ?: 0
+        val pied = auDessusDe?.takeIf { it.visibility == View.VISIBLE }
+            ?.let { it.height + ((it.layoutParams as? ViewGroup.MarginLayoutParams)?.bottomMargin ?: 0) } ?: 0
         val marge = pied + dp(16)
         listOf(pastille, barre).forEach { v ->
             val lp = v.layoutParams as FrameLayout.LayoutParams
@@ -161,7 +174,7 @@ class ReglagesLecture private constructor(
     }
 
     private fun icone(res: Int, description: Int, action: (View) -> Unit): View = ImageView(contexte).apply {
-        layoutParams = LinearLayout.LayoutParams(dp(44), dp(44))
+        layoutParams = LinearLayout.LayoutParams(dp(bouton), dp(44))
         setImageResource(res)
         imageTintList = ColorStateList.valueOf(surAccent)
         scaleType = ImageView.ScaleType.CENTER
@@ -172,7 +185,7 @@ class ReglagesLecture private constructor(
 
     /** « A− » et « A+ » : la lettre latine, comme partout pour la taille du texte. */
     private fun lettre(plus: Boolean): View = TextView(contexte).apply {
-        layoutParams = LinearLayout.LayoutParams(dp(44), dp(44))
+        layoutParams = LinearLayout.LayoutParams(dp(bouton), dp(44))
         gravity = Gravity.CENTER
         text = if (plus) "A+" else "A−"
         textSize = if (plus) 18f else 14f
@@ -242,7 +255,7 @@ class ReglagesLecture private constructor(
     }
 
     /** L'appui long sur le texte : le bouton revient, déplié. */
-    private fun retrouver() {
+    fun retrouver() {
         if (!Store.lectureMasquee(contexte)) return
         Store.setLectureMasquee(contexte, false)
         deplier(true)
@@ -256,6 +269,14 @@ class ReglagesLecture private constructor(
             .setDuration(180L).withEndAction { pastille.isClickable = visible }.start()
     }
 
+    /** Le chemin parcouru dans un sens : un défilement lent cache aussi la pastille. */
+    private var parcouru = 0
+
+    private fun defile(dy: Int) {
+        parcouru = if ((parcouru > 0) == (dy > 0)) parcouru + dy else dy
+        if (parcouru > dp(24)) { montrer(false); parcouru = 0 } else if (parcouru < -dp(24)) { montrer(true); parcouru = 0 }
+    }
+
     private val appuiLong = GestureDetector(contexte, object : GestureDetector.SimpleOnGestureListener() {
         override fun onLongPress(e: MotionEvent) = retrouver()
     })
@@ -263,7 +284,7 @@ class ReglagesLecture private constructor(
     private fun suivreListe(liste: RecyclerView) {
         liste.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                if (dy > dp(4)) montrer(false) else if (dy < -dp(4)) montrer(true)
+                defile(dy)
             }
         })
         liste.addOnItemTouchListener(object : RecyclerView.SimpleOnItemTouchListener() {
@@ -277,7 +298,7 @@ class ReglagesLecture private constructor(
     @SuppressLint("ClickableViewAccessibility")
     private fun suivreDefilement(defilement: View) {
         defilement.setOnScrollChangeListener { _, _, y, _, ancien ->
-            if (y - ancien > dp(4)) montrer(false) else if (ancien - y > dp(4)) montrer(true)
+            defile(y - ancien)
         }
         // Le texte ne prend pas les touchers : ils arrivent à la vue qui défile,
         // qui les laisse passer (false) après les avoir montrés au détecteur.
@@ -309,8 +330,33 @@ class ReglagesLecture private constructor(
             avecNusah: Boolean = false,
             auDessusDe: View? = null,
             surChangement: () -> Unit,
-        ): ReglagesLecture = ReglagesLecture(activite, avecNusah, auDessusDe, surChangement).also {
-            if (defilement is RecyclerView) it.suivreListe(defilement) else it.suivreDefilement(defilement)
+        ): ReglagesLecture {
+            // Une vue qui défile garde sa place quand les lettres grandissent :
+            // la même proportion du texte reste en haut de l'écran.
+            val garderPlace: () -> Unit = if (defilement is RecyclerView) surChangement else {
+                {
+                    val portee = ((defilement as? ViewGroup)?.getChildAt(0)?.height ?: 0) - defilement.height
+                    val part = if (portee > 0) defilement.scrollY.toFloat() / portee else 0f
+                    surChangement()
+                    defilement.post {
+                        val nouvelle = ((defilement as? ViewGroup)?.getChildAt(0)?.height ?: 0) - defilement.height
+                        if (nouvelle > 0) defilement.scrollTo(0, (part * nouvelle).toInt())
+                    }
+                }
+            }
+            val reglages = ReglagesLecture(activite, avecNusah, auDessusDe, garderPlace)
+            if (defilement is RecyclerView) reglages.suivreListe(defilement) else reglages.suivreDefilement(defilement)
+            // De quoi lire la fin du texte au-dessus de la barre ouverte.
+            val d = activite.resources.displayMetrics.density
+            defilement.setPadding(defilement.paddingLeft, defilement.paddingTop, defilement.paddingRight,
+                defilement.paddingBottom + (72 * d).toInt())
+            (defilement as? ViewGroup)?.clipToPadding = false
+            // Sans appui long (TalkBack, contacteur) : une action d'accessibilité fait revenir le bouton.
+            ViewCompat.addAccessibilityAction(defilement, activite.getString(R.string.lecture_reglages)) { _, _ ->
+                reglages.retrouver()
+                true
+            }
+            return reglages
         }
 
         fun rendu(contexte: Context): Rendu {
@@ -327,7 +373,10 @@ class ReglagesLecture private constructor(
         /** Marque une vue du texte : son rôle pour les couleurs, et sa taille de base en pixels. */
         fun <V : View> marquer(vue: V, role: Role): V {
             vue.setTag(R.id.lecture_role, role)
-            if (vue is TextView) vue.setTag(R.id.lecture_taille, vue.textSize)
+            if (vue is TextView) {
+                vue.setTag(R.id.lecture_taille, vue.textSize)
+                vue.setTag(R.id.lecture_interligne, vue.lineSpacingExtra)
+            }
             return vue
         }
 
@@ -347,6 +396,7 @@ class ReglagesLecture private constructor(
                     v.backgroundTintList = if (r.sombre) ColorStateList.valueOf(r.fond) else null
                 } else if (role != null && v is TextView) {
                     (v.getTag(R.id.lecture_taille) as? Float)?.let { v.setTextSize(TypedValue.COMPLEX_UNIT_PX, it * r.echelle) }
+                    (v.getTag(R.id.lecture_interligne) as? Float)?.let { v.setLineSpacing(it * r.echelle, 1f) }
                     v.setTextColor(
                         when (role) {
                             Role.TITRE -> r.titre

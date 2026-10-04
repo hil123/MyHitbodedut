@@ -902,8 +902,7 @@ function ecranPriere() {
     ...x.sections.flatMap((s) => [
       plusieurs && s.titre ? h('h2', { class: 'psaume-titre', lang: 'he', dir: 'rtl' }, s.titre) : null,
       ...s.blocs.map((b) => h('p', { class: b.c !== undefined ? 'consigne' : 'priere', lang: 'he', dir: 'rtl' }, riche(b.c ?? b.t))),
-    ]),
-    h('p', { class: 'indice source' }, tr.t('siddur_source', x.source))), { avecNusah: true });
+    ])), { avecNusah: true });
 }
 
 // --- Le Tikoun lu d'un seul trait (TikkunFlowActivity.kt) -------------------------

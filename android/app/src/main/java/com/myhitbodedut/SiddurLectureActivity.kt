@@ -13,18 +13,18 @@ import androidx.recyclerview.widget.RecyclerView
 
 /**
  * La lecture d'un texte du siddour : les titres de sections, la prière en
- * grand, les consignes plus petites et en gris, et la source à la fin.
- * Cha'harit compte plus de 500 paragraphes : une liste recyclée plutôt
- * qu'une vue par paragraphe. Le bouton de lecture (ReglagesLecture) règle
- * la taille, la lecture de nuit et le nusah ; le texte se redessine sur
- * place, au paragraphe où l'on était.
+ * grand, les consignes plus petites et en gris. Pas de note de source sous
+ * le texte (demande du 22/09) : les sources et leurs licences sont au pied
+ * de la liste du siddour. Cha'harit compte plus de 500 paragraphes : une
+ * liste recyclée plutôt qu'une vue par paragraphe. Le bouton de lecture
+ * (ReglagesLecture) règle la taille, la lecture de nuit et le nusah ; le
+ * texte se redessine sur place, au paragraphe où l'on était.
  */
 class SiddurLectureActivity : AppCompatActivity() {
 
     private sealed class Ligne {
         data class Titre(val texte: String) : Ligne()
         data class Paragraphe(val bloc: SiddurBloc) : Ligne()
-        data class Source(val texte: String) : Ligne()
     }
 
     private lateinit var id: String
@@ -67,7 +67,7 @@ class SiddurLectureActivity : AppCompatActivity() {
             // Une section seule porte déjà le nom du texte : pas de titre répété.
             (if (texte.sections.size > 1 && s.titre.isNotBlank()) listOf(Ligne.Titre(s.titre)) else emptyList()) +
                 s.blocs.map { Ligne.Paragraphe(it) }
-        } + Ligne.Source(getString(R.string.siddur_source, texte.source))
+        }
         val rendu = ReglagesLecture.rendu(this)
         val gestion = liste.layoutManager as LinearLayoutManager
         val place = gestion.findFirstVisibleItemPosition()
@@ -100,6 +100,9 @@ class SiddurLectureActivity : AppCompatActivity() {
             val e = rendu.echelle
             when (val ligne = lignes[position]) {
                 is Ligne.Titre -> vue.apply {
+                    // Remis à chaque fois : une vue recyclée garde les réglages d'avant.
+                    textDirection = View.TEXT_DIRECTION_RTL
+                    textAlignment = View.TEXT_ALIGNMENT_VIEW_START
                     setPadding(dp(20), dp(if (position == 0) 6 else 26), dp(20), dp(4))
                     text = ligne.texte
                     textSize = 20f * e
@@ -110,6 +113,8 @@ class SiddurLectureActivity : AppCompatActivity() {
                 }
                 is Ligne.Paragraphe -> vue.apply {
                     val consigne = ligne.bloc.consigne
+                    textDirection = View.TEXT_DIRECTION_RTL
+                    textAlignment = View.TEXT_ALIGNMENT_VIEW_START
                     setPadding(dp(20), dp(if (consigne) 10 else 8), dp(20), dp(if (consigne) 2 else 4))
                     text = Html.fromHtml(ligne.bloc.texte, Html.FROM_HTML_MODE_LEGACY)
                     textSize = (if (consigne) 14f else 19f) * e
@@ -117,16 +122,6 @@ class SiddurLectureActivity : AppCompatActivity() {
                     setTypeface(null, android.graphics.Typeface.NORMAL)
                     setTextColor(if (consigne) rendu.discret else rendu.texte)
                     PoliceHebraique.appliquer(this)
-                }
-                is Ligne.Source -> vue.apply {
-                    // La source, et sa licence : ce que demande la CC-BY du Metsudah.
-                    setPadding(dp(20), dp(28), dp(20), dp(88))
-                    text = ligne.texte
-                    textSize = 12f
-                    textDirection = View.TEXT_DIRECTION_LOCALE
-                    textAlignment = View.TEXT_ALIGNMENT_VIEW_START
-                    setTypeface(android.graphics.Typeface.DEFAULT, android.graphics.Typeface.NORMAL)
-                    setTextColor(rendu.discret)
                 }
             }
         }

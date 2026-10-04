@@ -453,7 +453,8 @@ object Store {
 
     /**
      * Le bouton de lecture masqué tout à fait (demande du 04/10) : il ne
-     * revient que par un appui long sur le texte, ou par les réglages.
+     * revient que par un appui long sur le texte, ou par l'action
+     * d'accessibilité « Réglages de lecture » de la vue qui défile.
      */
     fun lectureMasquee(context: Context): Boolean = prefs(context).getBoolean(KEY_LECTURE_MASQUEE, false)
 
