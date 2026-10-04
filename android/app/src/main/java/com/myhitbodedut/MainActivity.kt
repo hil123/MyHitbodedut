@@ -471,21 +471,23 @@ class MainActivity : AppCompatActivity() {
             Anneaux.Quel.SERIE -> R.color.ring_streak
             null -> R.color.ink
         }))
-        findViewById<View>(R.id.hero_plate).contentDescription = "${texte(cible)} $legendeTexte"
-        (valeur.getTag(R.id.plaque_compteur) as? android.animation.ValueAnimator)?.cancel()
+        findViewById<View>(R.id.hero_plate).contentDescription = listOf(texte(cible), legendeTexte).joinToString(" ")
+        compteurFace?.cancel()
         if (cible <= 0 || !android.animation.ValueAnimator.areAnimatorsEnabled()) {
             valeur.text = texte(cible)
             return
         }
         valeur.text = texte(0)
-        val compteur = android.animation.ValueAnimator.ofInt(0, cible).apply {
+        compteurFace = android.animation.ValueAnimator.ofInt(0, cible).apply {
             duration = 650L
             interpolator = android.view.animation.DecelerateInterpolator()
             addUpdateListener { valeur.text = texte(it.animatedValue as Int) }
             start()
         }
-        valeur.setTag(R.id.plaque_compteur, compteur)
     }
+
+    /** Le compteur qui fait monter le chiffre de la face ; arrêté quand la face change. */
+    private var compteurFace: android.animation.ValueAnimator? = null
 
     /** La légende sous les anneaux : la semaine, ou l'anneau mis en avant. */
     private fun renderLegende(quel: Anneaux.Quel?) {

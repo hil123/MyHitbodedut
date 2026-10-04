@@ -4,6 +4,4 @@
     <item name="chizuk_hauteur_fixe" type="id" />
     <item name="chizuk_corps_min" type="id" />
     <item name="chizuk_corps_max" type="id" />
-    <!-- Le compteur qui fait monter le chiffre du centre des anneaux. -->
-    <item name="plaque_compteur" type="id" />
 </resources>
