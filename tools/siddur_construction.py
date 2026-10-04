@@ -64,7 +64,7 @@ def bloc(s):
     lettres = len(re.findall("[\u05D0-\u05EA]", nu))
     voyelles = len(re.findall("[\u05B0-\u05BC\u05C1\u05C2\u05C7]", nu))
     if lettres and voyelles / lettres < 0.2:
-        return {"c": re.sub(r"</?small>", "", s).strip()}
+        return {"c": hebraise(re.sub(r"</?small>", "", s).strip())}
     # Une prière entière en petits caractères se lit en taille normale.
     entier = re.fullmatch(r"(<b>)?<small>(.*)</small>(</b>)?", s)
     if entier and "<small>" not in entier.group(2):
@@ -72,7 +72,13 @@ def bloc(s):
     # Le Nom en toutes lettres dans la prière (tools/noms_divins.py).
     s, n = developpe(s)
     COMPTE[0] += n
-    return {"t": s}
+    return {"t": hebraise(s)}
+
+
+def hebraise(s):
+    """Guershayim et guéresh hébreux au lieu des guillemets ASCII : בא"ח → בא״ח, ר' → ר׳."""
+    s = re.sub(r'([\u05D0-\u05EA][\u0591-\u05C7]*)"(?=[\u05D0-\u05EA])', "\\1\u05F4", s)
+    return re.sub(r"([\u05D0-\u05EA][\u0591-\u05C7]*)'(?=$|[\s,.:;)\]<])", "\\1\u05F3", s)
 
 
 COMPTE = [0]
@@ -124,7 +130,7 @@ class Source:
         # « לדוד ה' » : le Nom en toutes lettres jusque dans les titres.
         titre, compte = developpe(n["heTitle"].strip())
         COMPTE[0] += compte
-        return titre
+        return hebraise(titre)
 
     def sections(self, chemin, sauf=()):
         t = self.noeud(chemin)
@@ -176,9 +182,9 @@ TITRES = {
 }
 EL_MALE = T("אֵל מָלֵא רַחֲמִים", "El malé ra’hamim", "El Malei Rachamim")
 NUSAH = {
-    "edot": T("נוסח עדות המזרח", "Nusah Edot HaMizra’h", "Nusach Edot HaMizrach"),
-    "sefard": T("נוסח ספרד", "Nusah Sefard", "Nusach Sefard"),
-    "ashkenaz": T("נוסח אשכנז", "Nusah Ashkenaz", "Nusach Ashkenaz"),
+    "edot": T("נוסח עדות המזרח", "Noussa’h Edot HaMizra’h", "Nusach Edot HaMizrach"),
+    "sefard": T("נוסח ספרד", "Noussa’h Sefard", "Nusach Sefard"),
+    "ashkenaz": T("נוסח אשכנז", "Noussa’h Ashkenaz", "Nusach Ashkenaz"),
 }
 GROUPES = [
     {"cle": "jour", "titre": T("תְּפִלּוֹת הַיּוֹם", "Prières du jour", "Daily prayers")},
