@@ -7,7 +7,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { Anneaux, DureeSeance, JaugeSemaine, Reference, RegleLangue, Salutation } from '../src/js/regles.js';
+import { Anneaux, DureeSeance, JaugeSemaine, Plaque, Reference, RegleLangue, Salutation } from '../src/js/regles.js';
 import { estJourChome, israelParDefaut } from '../src/js/calendrier.js';
 import { creeStore, dateValide, memoire } from '../src/js/store.js';
 import { creeTraduction, formate, langueInitiale } from '../src/js/i18n.js';
@@ -395,4 +395,26 @@ test('la semaine se fête par semaine, la série par palier', () => {
   assert.ok(!Anneaux.aFeter(e, '2026-10-08', deja).includes('semaine'));
   assert.ok(Anneaux.aFeter(e, '2026-10-11', deja).includes('semaine'));
   assert.deepEqual(Anneaux.aFeter(Anneaux.etat(0, 15, { faits: 0, dus: 0 }, 14), '2026-10-07', deja), ['serie']);
+});
+
+// --- Le centre des anneaux (PlaqueTest.kt) ---------------------------------------
+test('les faces se suivent et reviennent au hassid', () => {
+  let face = 'hassid';
+  const vues = [];
+  for (let i = 0; i < Plaque.FACES.length; i++) { face = Plaque.suivante(face); vues.push(face); }
+  assert.equal(vues[0], 'jour');
+  assert.equal(vues.at(-1), 'hassid');
+  assert.equal(new Set(vues).size, Plaque.FACES.length);
+  assert.equal(Plaque.pour('serie'), 'serie');
+  assert.equal(Plaque.anneau('meilleure'), 'serie');
+  assert.equal(Plaque.anneau('total'), null);
+});
+
+test('la meilleure série ne casse pas sur un jour exempté', () => {
+  const faits = new Set(['2026-09-28', '2026-09-29', '2026-09-30', '2026-10-02', '2026-10-04']);
+  assert.equal(Plaque.meilleureSerie(faits, (d) => d === '2026-10-01'), 4);
+  assert.equal(Plaque.meilleureSerie(faits, () => false), 3);
+  assert.equal(Plaque.meilleureSerie(new Set(), () => false), 0);
+  assert.equal(Plaque.moyenne(50, 3), 17);
+  assert.equal(Plaque.moyenne(0, 0), 0);
 });

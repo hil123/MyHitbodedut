@@ -67,7 +67,7 @@
     <string name="settings_target">משך ההתבודדות</string>
     <string name="settings_daily_goal">יעד יומי</string>
     <string name="settings_daily_goal_hint">מה שטבעת היום מודדת. כל עוד לא נקבע, זהו משך ההתבודדות.</string>
-    <string name="rings_character_hint">געו בחסיד</string>
+    <string name="rings_character_hint">געו כדי לראות את המספרים שלכם</string>
     <string name="ring_day">היום</string>
     <string name="ring_week">השבוע</string>
     <string name="ring_streak">רצף</string>
@@ -515,4 +515,22 @@
     <string name="music_shuffle_hint">ניגון אקראי ואחריו עוד אחד; אף אחד לא חוזר לפני שכולם נוגנו.</string>
     <string name="music_shuffle_short">אקראי</string>
     <string name="music_shuffle_summary">אקראי, עוצמה %1$d%%</string>
+
+    <!-- Les faces du centre des anneaux (Plaque, 04/10). -->
+    <string name="plaque_jour">היום, מתוך %1$s</string>
+    <string name="plaque_semaine">ימים השבוע</string>
+    <string name="plaque_meilleure">הרצף הארוך ביותר שלכם</string>
+    <string name="plaque_total">של התבודדות בסך הכול</string>
+    <string name="plaque_moyenne">בממוצע, ליום של התבודדות</string>
+    <string name="plaque_semaine_valeur">%1$d/%2$d</string>
+    <plurals name="plaque_serie">
+        <item quantity="one">יום ברצף · היעד הבא %2$d</item>
+        <item quantity="two">ימים ברצף · היעד הבא %2$d</item>
+        <item quantity="other">ימים ברצף · היעד הבא %2$d</item>
+    </plurals>
+    <plurals name="plaque_jours">
+        <item quantity="one">יום של התבודדות</item>
+        <item quantity="two">ימים של התבודדות</item>
+        <item quantity="other">ימי התבודדות</item>
+    </plurals>
 </resources>

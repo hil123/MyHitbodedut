@@ -99,7 +99,7 @@ class AnneauxTest {
         }
         val accueil = lire("MainActivity.kt")
         assertTrue(accueil.contains("Store.anneaux(this)"))
-        assertTrue("le hassid doit saluer au toucher", accueil.contains("setOnClickListener { saluer() }"))
+        assertTrue("le centre doit changer de face au toucher", accueil.contains("setOnClickListener { toucherPlaque() }"))
         val gabarit = File("src/main/res/layout/activity_main.xml").readText()
         assertTrue(gabarit.contains("com.myhitbodedut.AnneauxView"))
         listOf("values", "values-en", "values-iw").forEach { d ->

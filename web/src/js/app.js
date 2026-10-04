@@ -4,7 +4,7 @@
 // n'existe pas encore est montré, mais inerte (classe « a-venir »).
 
 import { chargeTraduction, langueInitiale, LANGUES } from './i18n.js';
-import { Anneaux, DureeSeance, JaugeSemaine, Reference, Salutation } from './regles.js';
+import { Anneaux, DureeSeance, JaugeSemaine, Plaque, Reference, Salutation } from './regles.js';
 import { ART_DU_MOMENT, ChizukBag, ChizukRules } from './chizuk.js';
 import { DanseMesure } from './seance.js';
 import { creeStore, memoire } from './store.js';
@@ -239,7 +239,13 @@ function anneaux(etat) {
     }
     // Une bande transparente plus large que le trait : le doigt n'est pas une pointe.
     g.append(s('circle', { class: 'prise', cx: 50, cy: 50, r, fill: 'none', 'stroke-width': EPAISSEUR + ECART, stroke: 'transparent' }));
-    g.addEventListener('click', (e) => { e.stopPropagation(); anneauEnAvant = anneauEnAvant === a.quel ? null : a.quel; rendre(); });
+    g.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const quel = anneauEnAvant === a.quel ? null : a.quel;
+      mettreEnAvantSurPlace(quel);
+      // Toucher un anneau montre sa face au centre ; le relâcher ramène le hassid.
+      tournerPlaque(quel ? Plaque.pour(quel) : 'hassid');
+    });
     svg.append(g);
   });
   return svg;
@@ -269,10 +275,96 @@ function sauter(fois) {
   img.classList.add('salut');
 }
 
-/** Un toucher sur le hassid : les anneaux se remplissent à nouveau, et il salue. */
-function saluer() {
-  rendre();
-  sauter(1);
+// --- Le centre des anneaux (Plaque.kt) : le hassid, puis vos chiffres ---------
+let facePlaque = 'hassid';
+let minuteurPlaque = null;
+const sansMouvement = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/** Le chiffre d'une face, la façon de l'écrire, et ce qu'il compte. */
+function contenuFace(face) {
+  const etat = store.anneaux();
+  const nombre = (n) => String(n);
+  switch (face) {
+    case 'jour': return { cible: etat.jour.fait, texte: (n) => tr.duree(n), legende: tr.t('plaque_jour', tr.duree(etat.jour.objectif)) };
+    case 'semaine': return { cible: etat.semaine.fait, texte: (n) => tr.t('plaque_semaine_valeur', n, etat.semaine.objectif), legende: tr.t('plaque_semaine') };
+    case 'serie': return { cible: etat.serie.fait, texte: nombre, legende: tr.p('plaque_serie', etat.serie.fait, etat.serie.fait, etat.serie.objectif) };
+    case 'meilleure': return { cible: store.meilleureSerie(), texte: nombre, legende: tr.t('plaque_meilleure') };
+    case 'total': return { cible: store.totalMinutes(), texte: (n) => tr.duree(n), legende: tr.t('plaque_total') };
+    case 'jours': {
+      const jours = store.joursFaits().size;
+      return { cible: jours, texte: nombre, legende: tr.p('plaque_jours', jours, jours) };
+    }
+    default: return { cible: Plaque.moyenne(store.totalMinutes(), store.joursFaits().size), texte: (n) => tr.duree(n), legende: tr.t('plaque_moyenne') };
+  }
+}
+
+/** Le chiffre monte depuis zéro. */
+function compter(el, cible, texte) {
+  if (cible <= 0 || sansMouvement()) return;
+  const debut = performance.now();
+  const pas = (t) => {
+    const f = Math.min(1, (t - debut) / 650);
+    el.textContent = texte(Math.round(cible * (1 - (1 - f) ** 2)));
+    if (f < 1 && el.isConnected) requestAnimationFrame(pas);
+  };
+  el.textContent = texte(0);
+  requestAnimationFrame(pas);
+}
+
+/** Remplit la plaque avec la face courante. */
+function remplirPlaque(btn) {
+  if (facePlaque === 'hassid') {
+    btn.setAttribute('aria-label', tr.t('rings_character_hint'));
+    btn.replaceChildren(h('img', { src: `img/${salutation(store.record()?.faite === true)}.webp`, alt: '' }));
+    return;
+  }
+  const c = contenuFace(facePlaque);
+  const anneau = Plaque.anneau(facePlaque);
+  const valeur = h('div', { class: `face-valeur${anneau ? ` valeur-${anneau}` : ''}` }, c.texte(c.cible));
+  btn.setAttribute('aria-label', `${c.texte(c.cible)} ${c.legende}`);
+  btn.replaceChildren(h('div', { class: 'face' }, valeur, h('div', { class: 'face-legende' }, c.legende)));
+  compter(valeur, c.cible, c.texte);
+}
+
+/** Attend la fin d'une animation CSS de cet élément, pas de ses enfants. */
+function apresAnimation(el, nom, suite) {
+  const ecoute = (e) => {
+    if (e.target !== el || e.animationName !== nom) return;
+    el.removeEventListener('animationend', ecoute);
+    suite();
+  };
+  el.addEventListener('animationend', ecoute);
+}
+
+/** La plaque tourne comme une pièce ; à mi-tour, la face change. */
+function tournerPlaque(vers) {
+  clearTimeout(minuteurPlaque);
+  if (vers !== 'hassid') minuteurPlaque = setTimeout(() => tournerPlaque('hassid'), Plaque.RETOUR_MS);
+  if (vers === facePlaque) return;
+  const btn = app.querySelector('.plaque');
+  if (!btn) { facePlaque = vers; return; }
+  const changer = () => {
+    facePlaque = vers;
+    remplirPlaque(btn);
+    mettreEnAvantSurPlace(Plaque.anneau(vers));
+    btn.classList.remove('sortie');
+    if (sansMouvement()) return;
+    btn.classList.add('entree');
+    apresAnimation(btn, 'plaque-entree', () => {
+      btn.classList.remove('entree');
+      if (vers === 'hassid') sauter(1);
+    });
+  };
+  if (sansMouvement()) { changer(); return; }
+  btn.classList.remove('entree');
+  btn.classList.add('sortie');
+  apresAnimation(btn, 'plaque-sortie', changer);
+}
+
+function plaqueAccueil() {
+  const btn = h('button', { class: 'plaque', type: 'button', onclick: () => tournerPlaque(Plaque.suivante(facePlaque)) });
+  remplirPlaque(btn);
+  return btn;
 }
 
 /** Met un anneau en avant sans refaire le rendu, qui relancerait le remplissage. */
@@ -298,15 +390,16 @@ function animerAccueil() {
   const jour = store.today();
   const nouveaux = Anneaux.aFeter(etat, jour, store.anneauxFetes());
   store.setAnneauxFetes(Anneaux.marques(etat, jour));
-  if (nouveaux.length === 0) { sauter(1); return; }
-  const quel = nouveaux[0];
+  if (nouveaux.length === 0) { if (facePlaque === 'hassid') sauter(1); return; }
+  // L'anneau fermé passe devant et sa face s'affiche le temps de la fête.
+  const face = Plaque.pour(nouveaux[0]);
   const jauge = app.querySelector('.jauge');
   jauge.classList.remove('fete');
   void jauge.offsetWidth;
   jauge.classList.add('fete');
-  mettreEnAvantSurPlace(quel);
-  sauter(3);
-  setTimeout(() => { if (anneauEnAvant === quel) mettreEnAvantSurPlace(null); }, 2800);
+  mettreEnAvantSurPlace(nouveaux[0]);
+  tournerPlaque(face);
+  setTimeout(() => { if (facePlaque === face) { mettreEnAvantSurPlace(null); tournerPlaque('hassid'); } }, 2800);
 }
 
 function panneauAujourdhui() {
@@ -346,8 +439,7 @@ function panneauAujourdhui() {
     h('div', { class: 'jauge', role: 'img', 'aria-label': tr.t('rings_description',
       tr.duree(etat.jour.fait), tr.duree(etat.jour.objectif), etat.semaine.fait, etat.semaine.objectif, etat.serie.fait, etat.serie.objectif) },
     anneaux(etat),
-    h('button', { class: 'plaque', type: 'button', 'aria-label': tr.t('rings_character_hint'), onclick: saluer },
-      h('img', { src: `img/${salutation(fait)}.webp`, alt: '' }))),
+    plaqueAccueil()),
     h('div', { class: `jauge-legende${anneauEnAvant ? ` legende-${anneauEnAvant}` : ''}` }, legendeAnneaux(etat, progression)),
 
     h('button', { class: 'principal', onclick: () => ouvrir('seance') }, bouton),
@@ -882,7 +974,7 @@ function rendre() {
   if (memeEcran) app.querySelector('.defile').scrollTop = avant;
   // L'accueil qui apparaît s'anime seul : anneaux, puis saut ou fête (04/10).
   const accueil = ecran === 'accueil' && onglet === 'aujourdhui';
-  if (!accueil) accueilAnime = false;
+  if (!accueil) { accueilAnime = false; facePlaque = 'hassid'; clearTimeout(minuteurPlaque); }
   else if (!accueilAnime) { accueilAnime = true; setTimeout(animerAccueil, 950); }
   ajusteLesTextes();
   if (ecran === 'seance') demarreTic();
@@ -909,6 +1001,7 @@ async function demarrer() {
   document.addEventListener('visibilitychange', () => {
     if (document.hidden) return;
     accueilAnime = false;
+    facePlaque = 'hassid';
     if (store.isSessionRunning()) gardeEcranAllume();
     rendre();
   });

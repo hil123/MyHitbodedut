@@ -91,6 +91,17 @@ button { font: inherit; color: inherit; }
 }
 .plaque img { width: 100%; height: 100%; object-fit: contain; display: block; transform-origin: 50% 100%; }
 .plaque img.salut { animation: salut 640ms ease-out var(--sauts, 1); }
+/* Le centre des anneaux tourne comme une pièce, et montre vos chiffres (Plaque). */
+.plaque.sortie { animation: plaque-sortie 140ms ease-in forwards; }
+.plaque.entree { animation: plaque-entree 200ms ease-out; }
+@keyframes plaque-sortie { from { transform: perspective(600px) rotateY(0); } to { transform: perspective(600px) rotateY(90deg); } }
+@keyframes plaque-entree { from { transform: perspective(600px) rotateY(-90deg); } to { transform: perspective(600px) rotateY(0); } }
+.plaque .face { height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; padding-bottom: 8px; text-align: center; }
+.face-valeur { font-size: 30px; font-weight: 700; line-height: 1.1; color: var(--ink); white-space: nowrap; }
+.face-valeur.valeur-jour { color: var(--brand); }
+.face-valeur.valeur-semaine { color: var(--ring-week); }
+.face-valeur.valeur-serie { color: var(--ring-streak); }
+.face-legende { margin-top: 2px; font-size: 12px; line-height: 1.3; color: var(--muted); }
 /* La fête d'un anneau fermé : la jauge bat deux fois. */
 .jauge.fete { animation: fete 440ms ease-out 2; }
 @keyframes fete {

@@ -9,7 +9,7 @@
 
 import { ajouteJours, estJourChome, isoLocal, israelParDefaut, jourSemaine } from './calendrier.js';
 import { SessionRule } from './seance.js';
-import { Anneaux, JaugeSemaine } from './regles.js';
+import { Anneaux, JaugeSemaine, Plaque } from './regles.js';
 
 export const DEFAULT_START = 6 * 60;
 export const DEFAULT_END = 11 * 60;
@@ -140,6 +140,9 @@ export function creeStore(stockage, { maintenant = () => new Date(), fuseau } = 
       }
       return compte;
     },
+
+    /** La plus longue série jamais tenue (Plaque.meilleureSerie), au moins la série en cours. */
+    meilleureSerie: () => Math.max(Plaque.meilleureSerie(store.joursFaits(), (d) => store.isExempt(d)), store.streak()),
 
     /** La semaine en cours, du dimanche au samedi. */
     currentWeek() {

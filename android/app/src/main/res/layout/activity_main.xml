@@ -125,6 +125,38 @@
                             android:layout_height="match_parent"
                             android:contentDescription="@null"
                             android:scaleType="fitCenter" />
+
+                        <!-- Les autres faces du centre : un chiffre et ce qu'il compte (Plaque). -->
+                        <LinearLayout
+                            android:id="@+id/hero_face"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:paddingBottom="8dp"
+                            android:visibility="gone">
+
+                            <TextView
+                                android:id="@+id/hero_face_value"
+                                android:layout_width="match_parent"
+                                android:layout_height="44dp"
+                                android:autoSizeMaxTextSize="34sp"
+                                android:autoSizeMinTextSize="16sp"
+                                android:autoSizeTextType="uniform"
+                                android:gravity="center"
+                                android:maxLines="1"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/hero_face_caption"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:gravity="center"
+                                android:maxLines="3"
+                                android:textColor="?attr/mhMuted"
+                                android:textSize="12sp" />
+                        </LinearLayout>
                     </FrameLayout>
                 </FrameLayout>
 

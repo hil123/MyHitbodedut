@@ -167,6 +167,37 @@ export const Anneaux = {
   },
 };
 
+/**
+ * Les faces du centre des anneaux (Plaque.kt) : le hassid, puis vos
+ * chiffres. Chaque face qui parle d'un anneau le met en avant.
+ */
+export const Plaque = {
+  FACES: [['hassid', null], ['jour', 'jour'], ['semaine', 'semaine'], ['serie', 'serie'],
+    ['meilleure', 'serie'], ['total', null], ['jours', null], ['moyenne', null]],
+  RETOUR_MS: 8000,
+  anneau(face) { return this.FACES.find(([f]) => f === face)?.[1] ?? null; },
+  suivante(face) {
+    const i = this.FACES.findIndex(([f]) => f === face);
+    return this.FACES[(i + 1) % this.FACES.length][0];
+  },
+  pour(quel) { return this.FACES.find(([, a]) => a === quel)[0]; },
+  moyenne(totalMinutes, jours) { return jours <= 0 ? 0 : Math.round(totalMinutes / jours); },
+  /** La plus longue suite de jours faits ; un jour exempté ne compte pas et ne casse pas. */
+  meilleureSerie(faits, exempt) {
+    if (faits.size === 0) return 0;
+    const tries = [...faits].sort();
+    const jour = new Date(`${tries[0]}T00:00:00Z`);
+    const fin = tries.at(-1);
+    let courante = 0;
+    let meilleure = 0;
+    for (let iso = tries[0]; iso <= fin; jour.setUTCDate(jour.getUTCDate() + 1), iso = jour.toISOString().slice(0, 10)) {
+      if (faits.has(iso)) meilleure = Math.max(meilleure, ++courante);
+      else if (!exempt(iso)) courante = 0;
+    }
+    return meilleure;
+  },
+};
+
 export const JaugeSemaine = {
   progression(jours) {
     const faits = jours.filter((j) => j.done).length;

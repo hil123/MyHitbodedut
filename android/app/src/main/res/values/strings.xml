@@ -74,7 +74,7 @@
     <string name="settings_target">Durée d’une hitbodedout</string>
     <string name="settings_daily_goal">Objectif quotidien</string>
     <string name="settings_daily_goal_hint">Ce que l’anneau du jour mesure. Sans réglage, c’est la durée d’une hitbodedout.</string>
-    <string name="rings_character_hint">Toucher le hassid</string>
+    <string name="rings_character_hint">Toucher pour voir vos chiffres</string>
     <string name="ring_day">Aujourd’hui</string>
     <string name="ring_week">Semaine</string>
     <string name="ring_streak">Série</string>
@@ -543,4 +543,20 @@
     <string name="music_shuffle_hint">Un morceau au hasard, puis un autre ; aucun ne revient avant que tous aient été joués.</string>
     <string name="music_shuffle_short">Aléatoire</string>
     <string name="music_shuffle_summary">Lecture aléatoire, volume %1$d %%</string>
+
+    <!-- Les faces du centre des anneaux (Plaque, 04/10). -->
+    <string name="plaque_jour">aujourd’hui, sur %1$s</string>
+    <string name="plaque_semaine">jours faits cette semaine</string>
+    <string name="plaque_meilleure">votre plus longue série</string>
+    <string name="plaque_total">de hitbodedout au total</string>
+    <string name="plaque_moyenne">en moyenne, par jour de pratique</string>
+    <string name="plaque_semaine_valeur">%1$d/%2$d</string>
+    <plurals name="plaque_serie">
+        <item quantity="one">jour d’affilée · palier %2$d</item>
+        <item quantity="other">jours d’affilée · palier %2$d</item>
+    </plurals>
+    <plurals name="plaque_jours">
+        <item quantity="one">jour de hitbodedout</item>
+        <item quantity="other">jours de hitbodedout</item>
+    </plurals>
 </resources>

@@ -345,6 +345,12 @@ object Store {
         return count
     }
 
+    /** La plus longue série jamais tenue (Plaque.meilleureSerie), au moins la série en cours. */
+    fun meilleureSerie(context: Context): Int {
+        val faits = joursFaits(context).mapNotNull { dateValide(it) }.toSet()
+        return maxOf(Plaque.meilleureSerie(faits) { isExempt(context, it) }, streak(context))
+    }
+
     /**
      * La semaine en cours, du dimanche au samedi : c'est ainsi que se compte la
      * semaine juive, et le samedi doit tomber en fin de bande, pas au milieu.

@@ -109,8 +109,13 @@ class MainActivity : AppCompatActivity() {
         SessionService.reconcilier(this)
         applyServiceState()
         refresh()
-        // Chaque retour sur l'accueil : les anneaux se remplissent, puis le
-        // hassid salue ou fête l'anneau qui vient de se fermer (04/10).
+        // Chaque retour sur l'accueil : le hassid au centre, les anneaux se
+        // remplissent, puis il salue ou fête l'anneau qui vient de se fermer (04/10).
+        findViewById<View>(R.id.hero_plate).apply {
+            animate().cancel()
+            rotationY = 0f
+        }
+        montrerFace(Plaque.Face.HASSID)
         findViewById<AnneauxView>(R.id.week_gauge).rejouer()
         // La séance s'est close téléphone posé : le bravo attendait ici.
         CelebrationActivity.showIfPending(this)
@@ -187,7 +192,7 @@ class MainActivity : AppCompatActivity() {
         // La plaque ronde coupe l'illustration à son bord, au creux des anneaux.
         findViewById<View>(R.id.hero_plate).apply {
             clipToOutline = true
-            setOnClickListener { saluer() }
+            setOnClickListener { toucherPlaque() }
         }
         findViewById<Button>(R.id.today_note).setOnClickListener {
             NoteDialog.show(this, Store.today(), onSaved = { refresh() })
@@ -343,7 +348,11 @@ class MainActivity : AppCompatActivity() {
             Store.formatDuration(this, etat.jour.fait), Store.formatDuration(this, etat.jour.objectif),
             semaine.faits, semaine.dus, etat.serie.fait, etat.serie.objectif
         )
-        anneaux.surChoix = { renderLegende(it) }
+        anneaux.surChoix = { quel ->
+            renderLegende(quel)
+            // Toucher un anneau montre sa face au centre ; le relâcher ramène le hassid.
+            if (quel != face.anneau) tournerPlaque(if (quel == null) Plaque.Face.HASSID else Plaque.pour(quel))
+        }
         anneaux.surRempli = { apresRemplissage() }
         renderLegende(anneaux.misEnAvant)
     }
@@ -359,11 +368,123 @@ class MainActivity : AppCompatActivity() {
         val nouveaux = Anneaux.aFeter(etat, aujourdhui, Store.anneauxFetes(this))
         Store.setAnneauxFetes(this, Anneaux.marques(etat, aujourdhui))
         if (nouveaux.isEmpty()) {
-            sautiller(1)
+            if (face == Plaque.Face.HASSID) sautiller(1)
         } else {
+            // L'anneau fermé passe devant, et sa face s'affiche au centre le
+            // temps de la fête ; le hassid revient ensuite en sautant.
             findViewById<AnneauxView>(R.id.week_gauge).feter(nouveaux.first())
-            sautiller(3)
         }
+    }
+
+    // --- Le centre des anneaux (Plaque) ---------------------------------------
+
+    /** La face montrée au centre des anneaux. */
+    private var face = Plaque.Face.HASSID
+
+    private val retourHassid = Runnable { tournerPlaque(Plaque.Face.HASSID) }
+
+    /** Un toucher au centre : la face suivante, en tournant. */
+    private fun toucherPlaque() {
+        tournerPlaque(Plaque.suivante(face))
+    }
+
+    /**
+     * La plaque tourne sur elle-même comme une pièce : à mi-tour, la face
+     * change ; le chiffre monte ensuite depuis zéro. Sans animations dans le
+     * téléphone, la face change d'un coup.
+     */
+    private fun tournerPlaque(vers: Plaque.Face) {
+        val plaque = findViewById<View>(R.id.hero_plate)
+        plaque.removeCallbacks(retourHassid)
+        if (vers != Plaque.Face.HASSID) plaque.postDelayed(retourHassid, Plaque.RETOUR_MS)
+        if (vers == face) return
+        plaque.animate().cancel()
+        if (!android.animation.ValueAnimator.areAnimatorsEnabled()) {
+            plaque.rotationY = 0f
+            montrerFace(vers)
+            return
+        }
+        plaque.cameraDistance = 9000f * resources.displayMetrics.density
+        plaque.animate().rotationY(90f).setDuration(140L)
+            .setInterpolator(android.view.animation.AccelerateInterpolator())
+            .withEndAction {
+                montrerFace(vers)
+                plaque.rotationY = -90f
+                plaque.animate().rotationY(0f).setDuration(200L)
+                    .setInterpolator(android.view.animation.DecelerateInterpolator())
+                    .withEndAction { if (vers == Plaque.Face.HASSID) sautiller(1) }
+                    .start()
+            }
+            .start()
+    }
+
+    /** Remplit la plaque avec [vers], et met en avant l'anneau dont elle parle. */
+    private fun montrerFace(vers: Plaque.Face) {
+        face = vers
+        val hassid = findViewById<View>(R.id.hero_character)
+        val chiffres = findViewById<View>(R.id.hero_face)
+        val plaque = findViewById<View>(R.id.hero_plate)
+        if (vers == Plaque.Face.HASSID) {
+            plaque.removeCallbacks(retourHassid)
+            hassid.visibility = View.VISIBLE
+            chiffres.visibility = View.GONE
+            plaque.contentDescription = getString(R.string.rings_character_hint)
+        } else {
+            hassid.visibility = View.INVISIBLE
+            chiffres.visibility = View.VISIBLE
+            remplirFace(vers)
+        }
+        findViewById<AnneauxView>(R.id.week_gauge).mettreEnAvant(vers.anneau)
+    }
+
+    /** Le chiffre de la face et ce qu'il compte ; le chiffre monte depuis zéro. */
+    private fun remplirFace(vers: Plaque.Face) {
+        val etat = Store.anneaux(this)
+        val valeur = findViewById<TextView>(R.id.hero_face_value)
+        val legende = findViewById<TextView>(R.id.hero_face_caption)
+        val duree: (Int) -> String = { Store.formatDuration(this, it) }
+        val (cible, texte, legendeTexte) = when (vers) {
+            Plaque.Face.JOUR -> Triple(etat.jour.fait, duree,
+                getString(R.string.plaque_jour, duree(etat.jour.objectif)))
+            Plaque.Face.SEMAINE -> Triple(etat.semaine.fait,
+                { n: Int -> getString(R.string.plaque_semaine_valeur, n, etat.semaine.objectif) },
+                getString(R.string.plaque_semaine))
+            Plaque.Face.SERIE -> Triple(etat.serie.fait, { n: Int -> n.toString() },
+                resources.getQuantityString(R.plurals.plaque_serie, etat.serie.fait, etat.serie.fait, etat.serie.objectif))
+            Plaque.Face.MEILLEURE -> Triple(Store.meilleureSerie(this), { n: Int -> n.toString() },
+                getString(R.string.plaque_meilleure))
+            Plaque.Face.TOTAL -> Triple(Store.totalMinutes(this), duree, getString(R.string.plaque_total))
+            Plaque.Face.JOURS -> {
+                val jours = Store.joursFaits(this).size
+                Triple(jours, { n: Int -> n.toString() },
+                    resources.getQuantityString(R.plurals.plaque_jours, jours, jours))
+            }
+            Plaque.Face.MOYENNE -> Triple(
+                Plaque.moyenne(Store.totalMinutes(this), Store.joursFaits(this).size), duree,
+                getString(R.string.plaque_moyenne))
+            Plaque.Face.HASSID -> return
+        }
+        legende.text = legendeTexte
+        valeur.setTextColor(Apparence.couleur(this, when (vers.anneau) {
+            Anneaux.Quel.JOUR -> R.color.brand
+            Anneaux.Quel.SEMAINE -> R.color.ring_week
+            Anneaux.Quel.SERIE -> R.color.ring_streak
+            null -> R.color.ink
+        }))
+        findViewById<View>(R.id.hero_plate).contentDescription = "${texte(cible)} $legendeTexte"
+        (valeur.getTag(R.id.plaque_compteur) as? android.animation.ValueAnimator)?.cancel()
+        if (cible <= 0 || !android.animation.ValueAnimator.areAnimatorsEnabled()) {
+            valeur.text = texte(cible)
+            return
+        }
+        valeur.text = texte(0)
+        val compteur = android.animation.ValueAnimator.ofInt(0, cible).apply {
+            duration = 650L
+            interpolator = android.view.animation.DecelerateInterpolator()
+            addUpdateListener { valeur.text = texte(it.animatedValue as Int) }
+            start()
+        }
+        valeur.setTag(R.id.plaque_compteur, compteur)
     }
 
     /** La légende sous les anneaux : la semaine, ou l'anneau mis en avant. */
@@ -393,15 +514,6 @@ class MainActivity : AppCompatActivity() {
                 }
             )
         )
-    }
-
-    /**
-     * Un toucher sur le hassid : il salue d'un petit saut, et les anneaux
-     * se remplissent à nouveau depuis zéro, sans second saut à la fin.
-     */
-    private fun saluer() {
-        findViewById<AnneauxView>(R.id.week_gauge).montrer(Store.anneaux(this), depuisZero = true, prevenir = false)
-        sautiller(1)
     }
 
     /**

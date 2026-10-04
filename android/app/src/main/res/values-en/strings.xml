@@ -66,7 +66,7 @@
     <string name="settings_target">Hitbodedut length</string>
     <string name="settings_daily_goal">Daily goal</string>
     <string name="settings_daily_goal_hint">What the day ring measures. Until you set it, it is the hitbodedut length.</string>
-    <string name="rings_character_hint">Tap the chassid</string>
+    <string name="rings_character_hint">Tap to see your numbers</string>
     <string name="ring_day">Today</string>
     <string name="ring_week">Week</string>
     <string name="ring_streak">Streak</string>
@@ -505,4 +505,20 @@
     <string name="music_shuffle_hint">A random track, then another; none comes back until all have played.</string>
     <string name="music_shuffle_short">Shuffle</string>
     <string name="music_shuffle_summary">Shuffle, volume %1$d%%</string>
+
+    <!-- Les faces du centre des anneaux (Plaque, 04/10). -->
+    <string name="plaque_jour">today, of %1$s</string>
+    <string name="plaque_semaine">days done this week</string>
+    <string name="plaque_meilleure">your longest streak</string>
+    <string name="plaque_total">of hitbodedut in all</string>
+    <string name="plaque_moyenne">on average, per day of practice</string>
+    <string name="plaque_semaine_valeur">%1$d/%2$d</string>
+    <plurals name="plaque_serie">
+        <item quantity="one">day in a row · next %2$d</item>
+        <item quantity="other">days in a row · next %2$d</item>
+    </plurals>
+    <plurals name="plaque_jours">
+        <item quantity="one">day of hitbodedut</item>
+        <item quantity="other">days of hitbodedut</item>
+    </plurals>
 </resources>
