@@ -47,7 +47,8 @@ class SiddurTest {
             val t = nusah.getValue(n).texte("hachkavot")!!
             assertEquals("El malé ra’hamim", t.titre.fr)
             val blocs = t.sections.flatMap { it.blocs }
-            val texte = blocs.joinToString(" ") { it.texte }.replace(Regex("[\\u0591-\\u05C7]"), "")
+            val texte = blocs.joinToString(" ") { it.texte }
+                .replace(Regex("<[^>]+>"), "").replace(Regex("[\\u0591-\\u05C7]"), "")
             assertTrue("$n", texte.contains("אל מלא רחמים שוכן במרומים") || texte.contains("אל מלא רחמים, שוכן במרומים"))
             assertTrue("$n", !texte.contains("יחיאל") && !texte.contains("סיון"))
             assertEquals("$n", 2, blocs.count { !it.consigne })
