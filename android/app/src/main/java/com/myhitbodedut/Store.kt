@@ -78,6 +78,9 @@ object Store {
     private const val KEY_TARGET = "target_minutes"
     private const val KEY_DAILY_GOAL = "daily_goal_minutes"
     private const val KEY_ANNEAUX_FETES = "anneaux_fetes"
+    private const val KEY_SIDDUR_NUSAH = "siddur_nusah"
+    private const val KEY_LECTURE_ECHELLE = "lecture_echelle"
+    private const val KEY_LECTURE_SOMBRE = "lecture_sombre"
     private const val KEY_PAUSE_SHABBAT = "pause_shabbat"
     private const val KEY_IN_ISRAEL = "in_israel"
     private const val KEY_PAUSED_DATES = "paused_dates"
@@ -431,6 +434,28 @@ object Store {
      */
     fun dailyGoal(context: Context): Int =
         Anneaux.objectifEffectif(prefs(context).getInt(KEY_DAILY_GOAL, 0), targetMinutes(context))
+
+    /** La taille des lettres dans les écrans de lecture, de 0,8 à 2 fois la taille de base. */
+    fun lectureEchelle(context: Context): Float =
+        prefs(context).getFloat(KEY_LECTURE_ECHELLE, 1f).coerceIn(ReglagesLecture.MIN, ReglagesLecture.MAX)
+
+    fun setLectureEchelle(context: Context, echelle: Float) {
+        prefs(context).edit().putFloat(KEY_LECTURE_ECHELLE, echelle).apply()
+    }
+
+    /** La lecture sur fond noir, choisie d'un toucher sur l'ampoule. */
+    fun lectureSombre(context: Context): Boolean = prefs(context).getBoolean(KEY_LECTURE_SOMBRE, false)
+
+    fun setLectureSombre(context: Context, sombre: Boolean) {
+        prefs(context).edit().putBoolean(KEY_LECTURE_SOMBRE, sombre).apply()
+    }
+
+    /** Le nusah du siddour : Edot HaMizrach par défaut, comme CalJ. */
+    fun siddurNusah(context: Context): Nusah = Nusah.de(prefs(context).getString(KEY_SIDDUR_NUSAH, null))
+
+    fun setSiddurNusah(context: Context, nusah: Nusah) {
+        prefs(context).edit().putString(KEY_SIDDUR_NUSAH, nusah.cle).apply()
+    }
 
     /** Les marques des anneaux déjà fêtés (Anneaux.marque). */
     fun anneauxFetes(context: Context): Set<String> =

@@ -150,8 +150,7 @@ object Data {
     @Volatile
     private var tehilim: Tehilim? = null
 
-    @Volatile
-    private var siddur: Siddur? = null
+    private val siddurs = java.util.concurrent.ConcurrentHashMap<Nusah, Siddur>()
 
     fun chizuk(context: Context): Chizuk =
         chizuk ?: synchronized(this) {
@@ -174,9 +173,7 @@ object Data {
             tehilim ?: TehilimLoader.load(context.applicationContext).also { tehilim = it }
         }
 
-    /** Le siddour : 567 ko, lus une fois par processus. */
-    fun siddur(context: Context): Siddur =
-        siddur ?: synchronized(this) {
-            siddur ?: SiddurLoader.load(context.applicationContext).also { siddur = it }
-        }
+    /** Le siddour du nusah choisi : environ 550 ko par nusah, lus une fois par processus. */
+    fun siddur(context: Context, nusah: Nusah = Store.siddurNusah(context)): Siddur =
+        siddurs.getOrPut(nusah) { SiddurLoader.load(context.applicationContext, nusah) }
 }

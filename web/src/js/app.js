@@ -576,22 +576,74 @@ function ecranLecture() {
       h('p', { class: 'verset' }, h('span', { class: 'num', 'aria-hidden': 'true' }, `${Reference.lettres(v)} `), tous[v - 1]))));
   }
   const aller = (n) => { lecture = CycleTehilim.portion(n, n); rendre(); app.querySelector('.defile').scrollTop = 0; };
-  return h('div', { class: 'ecran' }, barre(libellePortion(p)),
-    h('div', { class: 'defile' }, h('div', { class: 'contenu lecture' },
+  return ecranLu(libellePortion(p), h('div', { class: 'contenu lecture' },
       h('p', { class: 'indice' }, tr.p('tehilim_verses', total, total)),
-      ...blocs)),
-    seul ? h('div', { class: 'lecture-nav' },
+      ...blocs), { avecNusah: false, pied: seul ? h('div', { class: 'lecture-nav' },
       h('button', { class: 'secondaire', style: p.debut > 1 ? null : 'visibility:hidden', onclick: () => aller(p.debut - 1) }, tr.t('tehilim_previous')),
-      h('button', { class: 'principal', style: p.debut < 150 ? null : 'visibility:hidden', onclick: () => aller(p.debut + 1) }, tr.t('tehilim_next'))) : null);
+      h('button', { class: 'principal', style: p.debut < 150 ? null : 'visibility:hidden', onclick: () => aller(p.debut + 1) }, tr.t('tehilim_next'))) : null });
 }
 
 // --- Siddour (SiddurActivity.kt, SiddurLectureActivity.kt) ------------------------
+const siddurs = {};
 let siddur = null;
 let priere = null;
+const NUSAH = [['edot', 'siddur_nusah_edot'], ['sefard', 'siddur_nusah_sefard'], ['ashkenaz', 'siddur_nusah_ashkenaz']];
+/** Le siddour du nusah choisi, chargé au premier besoin (un fichier par nusah). */
 function chargeSiddur() {
-  if (siddur) return true;
-  fetch('data/siddur.json').then((r) => r.json()).then((d) => { siddur = d; rendre(); });
+  const n = store.siddurNusah();
+  if (siddurs[n]) { siddur = siddurs[n]; return true; }
+  fetch(`data/siddur_${n}.json`).then((r) => r.json()).then((d) => { siddurs[n] = d; rendre(); });
   return false;
+}
+
+// --- Le bouton discret de lecture (ReglagesLecture.kt, capture de CalJ du 04/10) -----
+let reglagesOuverts = false;
+let choixNusahOuvert = false;
+const ICONES_LECTURE = {
+  reglages: ['M4,7 L20,7 M4,12 L20,12 M4,17 L20,17', 'M8.5,7 a2,2 0 1,0 4,0 a2,2 0 1,0 -4,0 M13,12 a2,2 0 1,0 4,0 a2,2 0 1,0 -4,0 M6,17 a2,2 0 1,0 4,0 a2,2 0 1,0 -4,0'],
+  ampoule: ['M9,18 L15,18 M10,21 L14,21 M12,3 A6,6 0 0,0 8.5,13.9 C9.3,14.6 9.5,15.4 9.5,16 L14.5,16 C14.5,15.4 14.7,14.6 15.5,13.9 A6,6 0 0,0 12,3 Z', 'M12,0.6 L12,1.4 M3.6,4.2 L4.3,4.8 M20.4,4.2 L19.7,4.8'],
+  nusah: ['M5,4.5 A1.5,1.5 0 0,1 6.5,3 L19,3 L19,17 L6.5,17 A1.5,1.5 0 0,0 5,18.5 Z M5,18.5 A1.5,1.5 0 0,0 6.5,20 L11,20', 'M13.5,19.5 A3,3 0 0,1 19.4,18.4 M19.6,16.6 L19.6,18.6 L17.6,18.6'],
+  fermer: ['M6,6 L18,18 M18,6 L6,18'],
+};
+function icone(nom) {
+  const svg = s('svg', { viewBox: '0 0 24 24', 'aria-hidden': 'true' });
+  for (const d of ICONES_LECTURE[nom]) {
+    svg.append(s('path', { d, fill: 'none', stroke: 'currentColor', 'stroke-width': '1.8', 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }));
+  }
+  return svg;
+}
+function reglagesLecture({ avecNusah }) {
+  const echelle = (delta) => {
+    const e = store.lectureEchelle();
+    const n = Math.round(Math.min(2, Math.max(0.8, e + delta)) * 10) / 10;
+    if (n !== e) { store.setLectureEchelle(n); rendre(); }
+  };
+  if (!reglagesOuverts) {
+    return h('button', { class: 'lecture-pastille', 'aria-label': tr.t('lecture_reglages'), onclick: () => { reglagesOuverts = true; rendre(); } }, icone('reglages'));
+  }
+  return h('div', { class: 'lecture-reglages' },
+    choixNusahOuvert ? h('div', { class: 'lecture-nusah', role: 'menu' }, NUSAH.map(([cle, nom]) => h('button', {
+      role: 'menuitemradio', 'aria-checked': String(cle === store.siddurNusah()),
+      onclick: () => { store.setSiddurNusah(cle); choixNusahOuvert = false; rendre(); },
+    }, tr.t(nom)))) : null,
+    h('div', { class: 'lecture-colonne' },
+      h('button', { 'aria-label': tr.t('lecture_nuit'), 'aria-pressed': String(store.lectureSombre()), onclick: () => { store.setLectureSombre(!store.lectureSombre()); rendre(); } }, icone('ampoule')),
+      avecNusah ? h('button', { 'aria-label': tr.t('siddur_choose'), onclick: () => { choixNusahOuvert = !choixNusahOuvert; rendre(); } }, icone('nusah')) : null,
+      h('button', { class: 'lettre plus', lang: 'he', 'aria-label': tr.t('lecture_plus'), onclick: () => echelle(0.1) }, 'א↑'),
+      h('button', { class: 'lettre', lang: 'he', 'aria-label': tr.t('lecture_moins'), onclick: () => echelle(-0.1) }, 'א↓'),
+      h('button', { 'aria-label': tr.t('lecture_fermer'), onclick: () => { reglagesOuverts = false; choixNusahOuvert = false; rendre(); } }, icone('fermer'))));
+}
+/** Un écran de lecture : le texte, ses réglages, et la pastille qui s'efface en descendant. */
+function ecranLu(titre, contenu, { avecNusah, pied = null }) {
+  const defile = h('div', { class: 'defile' }, contenu);
+  let avant = 0;
+  defile.addEventListener('scroll', () => {
+    const p = defile.parentElement?.querySelector('.lecture-pastille');
+    if (p) p.classList.toggle('cachee', defile.scrollTop > avant + 4 ? true : defile.scrollTop < avant - 4 ? false : p.classList.contains('cachee'));
+    avant = defile.scrollTop;
+  }, { passive: true });
+  return h('div', { class: `ecran lu${store.lectureSombre() ? ' nuit' : ''}`, style: `--echelle: ${store.lectureEchelle()}` },
+    barre(titre), defile, pied, reglagesLecture({ avecNusah }));
 }
 
 /**
@@ -626,14 +678,21 @@ function ecranSiddur() {
   const pret = chargeSiddur();
   return h('div', { class: 'ecran' }, barre(tr.t('siddur_title')),
     h('div', { class: 'defile' }, h('div', { class: 'contenu' },
-      h('p', { class: 'indice' }, tr.t('siddur_nusah')),
+      // Trois nusah au choix (demande du 04/10) ; le choix est gardé.
+      h('div', { class: 'choix-nusah', role: 'radiogroup', 'aria-label': tr.t('siddur_choose') }, NUSAH.map(([cle, nom]) => h('button', {
+        role: 'radio', 'aria-checked': String(cle === store.siddurNusah()),
+        onclick: () => { store.setSiddurNusah(cle); rendre(); },
+      }, tr.t(nom)))),
       h('h2', { class: 'section' }, tr.t('siddur_books')),
       h('div', { class: 'carte' }, ligneHebreu(tr.t('siddur_tehilim_he'), tr.t('tehilim_title'), () => ouvrir('tehilim'))),
       ...(pret ? siddur.groupes.flatMap((g) => [
         h('h2', { class: 'section' }, titreTexte(g.titre)),
         h('div', { class: 'carte' }, siddur.textes.filter((x) => x.groupe === g.cle).map((x) =>
-          ligneHebreu(x.titre.he, titreTexte(x.titre), () => { priere = x.id; ouvrir('priere'); }))),
-      ]) : []))));
+          ligneHebreu(x.titre.he, [titreTexte(x.titre) !== x.titre.he ? titreTexte(x.titre) : null, x.nusah ? titreTexte(x.nusah) : null].filter(Boolean).join(' · '),
+            () => { priere = x.id; ouvrir('priere'); }))),
+      ]) : []),
+      // Les sources, comme la licence CC-BY du siddour Metsudah le demande.
+      pret ? h('p', { class: 'indice sources' }, tr.t('siddur_sources', siddur._meta.sources.join(' ; '))) : null)));
 }
 
 function ecranPriere() {
@@ -642,13 +701,14 @@ function ecranPriere() {
   // Rouvert directement sur #priere, sans texte choisi : la liste.
   if (!x) return ecranSiddur();
   const plusieurs = x.sections.length > 1;
-  return h('div', { class: 'ecran' }, barre(x.titre.he),
-    h('div', { class: 'defile' }, h('div', { class: 'contenu lecture siddour' },
-      h('p', { class: 'indice' }, titreTexte(x.titre) !== x.titre.he ? titreTexte(x.titre) : tr.t('siddur_nusah')),
-      ...x.sections.flatMap((s) => [
-        plusieurs && s.titre ? h('h2', { class: 'psaume-titre', lang: 'he', dir: 'rtl' }, s.titre) : null,
-        ...s.blocs.map((b) => h('p', { class: b.c !== undefined ? 'consigne' : 'priere', lang: 'he', dir: 'rtl' }, riche(b.c ?? b.t))),
-      ]))));
+  const sousTitre = [titreTexte(x.titre) !== x.titre.he ? titreTexte(x.titre) : null, titreTexte(x.nusah ?? siddur._meta.nusah)].filter(Boolean).join(' · ');
+  return ecranLu(x.titre.he, h('div', { class: 'contenu lecture siddour' },
+    h('p', { class: 'indice' }, sousTitre),
+    ...x.sections.flatMap((s) => [
+      plusieurs && s.titre ? h('h2', { class: 'psaume-titre', lang: 'he', dir: 'rtl' }, s.titre) : null,
+      ...s.blocs.map((b) => h('p', { class: b.c !== undefined ? 'consigne' : 'priere', lang: 'he', dir: 'rtl' }, riche(b.c ?? b.t))),
+    ]),
+    h('p', { class: 'indice source' }, tr.t('siddur_source', x.source))), { avecNusah: true });
 }
 
 function panneauTextes() {
@@ -1142,6 +1202,7 @@ function rendre() {
   // L'accueil qui apparaît s'anime seul : anneaux, puis saut ou fête (04/10).
   const accueil = ecran === 'accueil' && onglet === 'aujourdhui';
   if (!accueil) { accueilAnime = false; facePlaque = 'hassid'; clearTimeout(minuteurPlaque); }
+  if (!['lecture', 'priere'].includes(ecran)) { reglagesOuverts = false; choixNusahOuvert = false; }
   else if (!accueilAnime) { accueilAnime = true; setTimeout(animerAccueil, 950); }
   ajusteLesTextes();
   if (ecran === 'seance') demarreTic();

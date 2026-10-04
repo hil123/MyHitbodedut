@@ -24,9 +24,9 @@ object DataFiles {
 
     val tehilim: Tehilim get() = TehilimLoader.parse(tehilimJson)
 
-    val siddurJson: String get() = read("siddur.json")
+    fun siddurJson(nusah: Nusah): String = read("siddur_${nusah.cle}.json")
 
-    val siddur: Siddur get() = SiddurLoader.parse(siddurJson)
+    fun siddur(nusah: Nusah): Siddur = SiddurLoader.parse(siddurJson(nusah))
 
     private fun read(name: String): String {
         val file = File("src/main/res/raw/$name")

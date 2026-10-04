@@ -37,11 +37,15 @@ class TehilimLectureActivity : AppCompatActivity() {
         )
         findViewById<Button>(R.id.lecture_previous).setOnClickListener { afficher(Portion(portion.debut - 1, portion.debut - 1)) }
         findViewById<Button>(R.id.lecture_next).setOnClickListener { afficher(Portion(portion.debut + 1, portion.debut + 1)) }
+        // Le bouton discret : fond noir et taille des lettres (pas de nusah ici).
+        ReglagesLecture(findViewById(R.id.lecture_cadre), avecNusah = false) { afficher(portion, garderPlace = true) }
+            .suivre(findViewById<ScrollView>(R.id.lecture_scroll))
         afficher(portion)
     }
 
-    private fun afficher(p: Portion) {
+    private fun afficher(p: Portion, garderPlace: Boolean = false) {
         portion = p
+        rendu = ReglagesLecture.rendu(this)
         val livre = Data.tehilim(this)
         findViewById<TextView>(R.id.lecture_title).text = TehilimTexte.portion(this, p)
         val versets = p.psaumes.sumOf { n -> p.versets(n, livre.versets(n).size).count() }
@@ -61,8 +65,13 @@ class TehilimLectureActivity : AppCompatActivity() {
         findViewById<View>(R.id.lecture_nav).visibility = if (seul) View.VISIBLE else View.GONE
         findViewById<View>(R.id.lecture_previous).visibility = if (p.debut > 1) View.VISIBLE else View.INVISIBLE
         findViewById<View>(R.id.lecture_next).visibility = if (p.debut < Tehilim.PSAUMES) View.VISIBLE else View.INVISIBLE
-        findViewById<ScrollView>(R.id.lecture_scroll).scrollTo(0, 0)
+        findViewById<ScrollView>(R.id.lecture_scroll).apply {
+            setBackgroundColor(rendu.fond)
+            if (!garderPlace) scrollTo(0, 0)
+        }
     }
+
+    private var rendu = ReglagesLecture.Rendu(1f, false, 0, 0, 0, 0)
 
     private fun titre(texte: String, premier: Boolean): View = TextView(this).apply {
         layoutParams = LinearLayout.LayoutParams(
@@ -76,9 +85,9 @@ class TehilimLectureActivity : AppCompatActivity() {
         text = texte
         layoutDirection = View.LAYOUT_DIRECTION_RTL
         textAlignment = View.TEXT_ALIGNMENT_VIEW_START
-        textSize = 20f
+        textSize = 20f * rendu.echelle
         setTypeface(typeface, android.graphics.Typeface.BOLD)
-        setTextColor(Apparence.couleur(context, R.color.brand))
+        setTextColor(rendu.titre)
         PoliceHebraique.appliquer(this)
     }
 
@@ -91,7 +100,7 @@ class TehilimLectureActivity : AppCompatActivity() {
             marginStart = dp(20)
             marginEnd = dp(20)
         }
-        val discret = Apparence.couleur(context, R.color.muted)
+        val discret = rendu.discret
         val bloc = SpannableStringBuilder()
         quels.forEach { v ->
             val verset = versets.getOrNull(v - 1) ?: return@forEach
@@ -105,9 +114,9 @@ class TehilimLectureActivity : AppCompatActivity() {
         text = bloc
         layoutDirection = View.LAYOUT_DIRECTION_RTL
         textAlignment = View.TEXT_ALIGNMENT_VIEW_START
-        textSize = 19f
-        setLineSpacing(dp(8).toFloat(), 1f)
-        setTextColor(Apparence.couleur(context, R.color.ink))
+        textSize = 19f * rendu.echelle
+        setLineSpacing(dp(8).toFloat() * rendu.echelle, 1f)
+        setTextColor(rendu.texte)
         setTextIsSelectable(false)
         PoliceHebraique.appliquer(this)
     }

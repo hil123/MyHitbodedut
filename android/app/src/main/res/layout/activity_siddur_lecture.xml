@@ -55,12 +55,18 @@
         </FrameLayout>
     </LinearLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/siddur_lecture_list"
+    <!-- Le texte, et par-dessus le bouton discret de lecture (ReglagesLecture). -->
+    <FrameLayout
+        android:id="@+id/siddur_lecture_cadre"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:clipToPadding="false"
-        android:paddingTop="8dp"
-        android:paddingBottom="24dp" />
+        android:layout_weight="1">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/siddur_lecture_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:paddingTop="8dp" />
+    </FrameLayout>
 </LinearLayout>

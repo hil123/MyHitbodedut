@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.text.Html
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -13,20 +14,37 @@ import androidx.recyclerview.widget.RecyclerView
 
 /**
  * La lecture d'un texte du siddour : les titres de sections, la prière en
- * grand, les consignes plus petites et en gris. Cha'harit compte plus de
- * 350 paragraphes : une liste recyclée plutôt qu'une vue par paragraphe.
+ * grand, les consignes plus petites et en gris, et la source à la fin.
+ * Cha'harit compte plus de 500 paragraphes : une liste recyclée plutôt
+ * qu'une vue par paragraphe. Le bouton discret (ReglagesLecture) règle la
+ * taille, le fond noir et le nusah ; le texte se redessine sur place.
  */
 class SiddurLectureActivity : AppCompatActivity() {
 
     private sealed class Ligne {
         data class Titre(val texte: String) : Ligne()
         data class Paragraphe(val bloc: SiddurBloc) : Ligne()
+        data class Source(val texte: String) : Ligne()
     }
+
+    private lateinit var id: String
+    private lateinit var liste: RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_siddur_lecture)
-        val texte = Data.siddur(this).texte(intent.getStringExtra(ID).orEmpty())
+        id = intent.getStringExtra(ID).orEmpty()
+        liste = findViewById<RecyclerView>(R.id.siddur_lecture_list).apply {
+            layoutManager = LinearLayoutManager(this@SiddurLectureActivity)
+        }
+        ReglagesLecture(findViewById<FrameLayout>(R.id.siddur_lecture_cadre), avecNusah = true) { afficher() }
+            .suivre(liste)
+        afficher()
+    }
+
+    private fun afficher() {
+        val siddur = Data.siddur(this)
+        val texte = siddur.texte(id)
         if (texte == null) {
             finish()
             return
@@ -36,25 +54,27 @@ class SiddurLectureActivity : AppCompatActivity() {
             text = texte.titre.he
             PoliceHebraique.appliquer(this)
         }
-        findViewById<TextView>(R.id.siddur_lecture_subtitle).text =
-            texte.titre.forLanguage(langue).takeIf { it != texte.titre.he } ?: getString(R.string.siddur_nusah)
+        findViewById<TextView>(R.id.siddur_lecture_subtitle).text = listOfNotNull(
+            texte.titre.forLanguage(langue).takeIf { it != texte.titre.he },
+            (texte.emprunt ?: siddur.nusah).forLanguage(langue),
+        ).joinToString(" · ")
 
         val lignes = texte.sections.flatMap { s ->
             // Une section seule porte déjà le nom du texte : pas de titre répété.
             (if (texte.sections.size > 1 && s.titre.isNotBlank()) listOf(Ligne.Titre(s.titre)) else emptyList()) +
                 s.blocs.map { Ligne.Paragraphe(it) }
-        }
-        findViewById<RecyclerView>(R.id.siddur_lecture_list).apply {
-            layoutManager = LinearLayoutManager(this@SiddurLectureActivity)
-            adapter = Adaptateur(lignes)
-        }
+        } + Ligne.Source(getString(R.string.siddur_source, texte.source))
+        val rendu = ReglagesLecture.rendu(this)
+        liste.setBackgroundColor(rendu.fond)
+        liste.adapter = Adaptateur(lignes, rendu)
     }
 
-    private inner class Adaptateur(private val lignes: List<Ligne>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    private inner class Adaptateur(
+        private val lignes: List<Ligne>,
+        private val rendu: ReglagesLecture.Rendu,
+    ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
         override fun getItemCount() = lignes.size
-
-        override fun getItemViewType(position: Int) = if (lignes[position] is Ligne.Titre) 0 else 1
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
             val vue = TextView(parent.context).apply {
@@ -68,25 +88,36 @@ class SiddurLectureActivity : AppCompatActivity() {
 
         override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
             val vue = holder.itemView as TextView
+            val e = rendu.echelle
             when (val ligne = lignes[position]) {
                 is Ligne.Titre -> vue.apply {
                     setPadding(dp(20), dp(if (position == 0) 6 else 26), dp(20), dp(4))
                     text = ligne.texte
-                    textSize = 20f
+                    textSize = 20f * e
                     setLineSpacing(0f, 1f)
                     setTypeface(null, android.graphics.Typeface.BOLD)
-                    setTextColor(Apparence.couleur(context, R.color.brand))
+                    setTextColor(rendu.titre)
                     PoliceHebraique.appliquer(this)
                 }
                 is Ligne.Paragraphe -> vue.apply {
                     val consigne = ligne.bloc.consigne
                     setPadding(dp(20), dp(if (consigne) 10 else 8), dp(20), dp(if (consigne) 2 else 4))
                     text = Html.fromHtml(ligne.bloc.texte, Html.FROM_HTML_MODE_LEGACY)
-                    textSize = if (consigne) 14f else 19f
-                    setLineSpacing(dp(if (consigne) 3 else 7).toFloat(), 1f)
+                    textSize = (if (consigne) 14f else 19f) * e
+                    setLineSpacing(dp(if (consigne) 3 else 7).toFloat() * e, 1f)
                     setTypeface(null, android.graphics.Typeface.NORMAL)
-                    setTextColor(Apparence.couleur(context, if (consigne) R.color.muted else R.color.ink))
+                    setTextColor(if (consigne) rendu.discret else rendu.texte)
                     PoliceHebraique.appliquer(this)
+                }
+                is Ligne.Source -> vue.apply {
+                    // La source, et sa licence : ce que demande la CC-BY du Metsudah.
+                    setPadding(dp(20), dp(28), dp(20), dp(88))
+                    text = ligne.texte
+                    textSize = 12f
+                    textDirection = View.TEXT_DIRECTION_LOCALE
+                    textAlignment = View.TEXT_ALIGNMENT_VIEW_START
+                    setTypeface(android.graphics.Typeface.DEFAULT, android.graphics.Typeface.NORMAL)
+                    setTextColor(rendu.discret)
                 }
             }
         }

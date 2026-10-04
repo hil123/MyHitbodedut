@@ -1,16 +1,26 @@
 # -*- coding: utf-8 -*-
 """
-Construit android/app/src/main/res/raw/siddur.json (04/10/2026) : les textes
-demandés par le propriétaire d'après la liste de l'application CalJ.
+Construit android/app/src/main/res/raw/siddur_{edot,sefard,ashkenaz}.json
+(04/10/2026) : les textes demandés par le propriétaire d'après la liste de
+l'application CalJ, dans les trois nusah.
 
-Sources (export public de Sefaria, storage.googleapis.com/sefaria-export) :
-  - Siddur Edot HaMizrach, version « merged » : Torat Emet 357 (domaine
-    public) et édition Shaliehsaboo (CC0). Nusah séfarade.
+Sources (export public de Sefaria, storage.googleapis.com/sefaria-export),
+choisies pour leur licence :
+  - Edot HaMizrach : version « merged » = Torat Emet 357 (domaine public) et
+    Shaliehsaboo Edition (CC0).
+  - Sefard : The Metsudah Siddur 1981 (CC-BY) pour les offices de semaine,
+    Torat Emet 357 (domaine public) pour le reste.
+  - Ashkenaz : The Metsudah Siddur 1981 (CC-BY) et Daat (domaine public).
+    Les versions sans licence déclarée (Veshinantam, Torat Emet Ashkenaz)
+    sont écartées.
+  Ce qui manque à un nusah dans ces sources (Tikoun 'Hatsot, Chéva bérakhot
+  en Ashkenaz) est repris d'un autre et marqué « nusah ». Les Hachkavot,
+  coutume séfarade, deviennent El malé ra'hamim en Sefard et en Ashkenaz.
   - Parashat HaMan : Chemot 16:4-36, « Tanach with Nikkud » (tanach.us,
     domaine public), comme le livre de Tehilim. Le passage est celui que lit
     le siddour Sefard (« Parashat Haman Reading »).
 
-Le Nom reste en toutes lettres, comme dans les sources (décision du 04/10).
+Le Nom reste tel que chaque source l'écrit (décision du 04/10 : « laisse tel quel »).
 
   python3 tools/siddur_construction.py <dossier contenant les deux fichiers>
 """
@@ -70,83 +80,205 @@ def blocs(segments, sauter_titre=True):
     return sortie
 
 
-def main(dossier):
-    sid = json.load(open(join(dossier, "Siddur_Edot_HaMizrach.json"), encoding="utf-8"))
-    texte, schema = sid["text"], sid["schema"]
-    exode = json.load(open(join(dossier, "Exodus_TN.json"), encoding="utf-8"))["text"]
+def charge(dossier, nom):
+    return json.load(open(join(dossier, nom), encoding="utf-8"))
 
-    def noeud_schema(chemin):
-        n = schema
-        for k in chemin:
-            n = next(c for c in n["nodes"] if k in (c.get("key"), c.get("enTitle")))
-        return n
 
-    def noeud(chemin):
-        t = texte
+def aplatit(t):
+    """Les segments d'un nœud, dans l'ordre, quelle que soit sa profondeur."""
+    if isinstance(t, dict):
+        for v in t.values():
+            yield from aplatit(v)
+    elif isinstance(t, list):
+        for v in t:
+            yield from aplatit(v)
+    elif isinstance(t, str):
+        yield t
+
+
+class Source:
+    """Une version de Sefaria (texte) et le schéma de son livre (titres hébreux des sections)."""
+
+    def __init__(self, texte, schema, nom):
+        self.texte, self.schema, self.nom = texte, schema, nom
+
+    def noeud(self, chemin):
+        t = self.texte
         for k in chemin:
             t = t[k]
         return t
 
-    def sections(chemin):
-        t = noeud(chemin)
+    def titre(self, chemin):
+        n = self.schema
+        for k in chemin:
+            n = next(c for c in n["nodes"] if k in (c.get("key"), c.get("enTitle")))
+        return n["heTitle"].strip()
+
+    def sections(self, chemin, sauf=()):
+        t = self.noeud(chemin)
         if isinstance(t, dict):
-            return [{"titre": noeud_schema(chemin + [k])["heTitle"].strip(), "blocs": blocs(v)}
-                    for k, v in t.items() if blocs(v)]
-        return [{"titre": noeud_schema(chemin)["heTitle"].strip(), "blocs": blocs(t)}]
+            sortie = []
+            for k, v in t.items():
+                if k in sauf:
+                    continue
+                b = blocs(list(aplatit(v)))
+                if b:
+                    sortie.append({"titre": self.titre(chemin + [k]), "blocs": b})
+            return sortie
+        return [{"titre": self.titre(chemin), "blocs": blocs(list(aplatit(t)))}]
 
-    def extrait(chemin, debut, fin, titre):
-        return [{"titre": titre, "blocs": blocs(noeud(chemin)[debut:fin], sauter_titre=False)}]
+    def plusieurs(self, chemins):
+        return [s for c in chemins for s in self.sections(c)]
 
-    def qere(v):
-        v = re.sub(r"([^\s\[\]־]+־?) ?\[([^\]]+)\]", r"\2", v)
-        v = re.sub(r"\[([^\]]+)\]", r"\1", v)
-        return re.sub(r"\s{2,}", " ", v.replace("־ ", "־")).strip()
+    def extrait(self, chemin, debut, fin, titre):
+        return [{"titre": titre, "blocs": blocs(list(aplatit(self.noeud(chemin)))[debut:fin], sauter_titre=False)}]
 
-    def T(he, fr, en):
-        return {"he": NFC(he), "fr": fr, "en": en}
 
-    E = "Siddur Edot HaMizrach"
-    textes = [
-        ("jour", "birkot_hachahar", T("בִּרְכוֹת הַשַּׁחַר", "Birkot hacha’har", "Morning blessings"), f"{E}, Preparatory Prayers", sections(["Preparatory Prayers"])),
-        ("jour", "chaharit", T("תְּפִלַּת שַׁחֲרִית", "Cha’harit", "Shacharit"), f"{E}, Weekday Shacharit", sections(["Weekday Shacharit"])),
-        ("jour", "minha", T("תְּפִלַּת מִנְחָה", "Min’ha", "Mincha"), f"{E}, Weekday Mincha", sections(["Weekday Mincha"])),
-        ("jour", "arvit", T("תְּפִלַּת עַרְבִית", "Arvit", "Arvit"), f"{E}, Weekday Arvit", sections(["Weekday Arvit"])),
-        ("jour", "chema_coucher", T("קְרִיאַת שְׁמַע שֶׁעַל הַמִּטָּה", "Chema du coucher", "Bedtime Shema"), f"{E}, Bedtime Shema", sections(["Bedtime Shema"])),
-        ("jour", "tikoun_hatsot", T("תִּקּוּן חֲצוֹת", "Tikoun ’hatsot", "Tikkun Chatzot"), f"{E}, The Midnight Rite", sections(["The Midnight Rite"])),
-        ("brakhot", "acher_yatsar", T("אֲשֶׁר יָצַר", "Acher yatsar", "Asher Yatzar"), f"{E}, Morning Blessings", extrait(["Preparatory Prayers", "Morning Blessings"], 3, 5, "אשר יצר")),
-        ("brakhot", "birkat_hamazon", T("בִּרְכַּת הַמָּזוֹן", "Birkat hamazone", "Birkat HaMazon"), f"{E}, Post Meal Blessing", sections(["Post Meal Blessing"])),
-        ("brakhot", "meen_chaloch", T("בְּרָכָה מֵעֵין שָׁלֹשׁ", "Méèn chaloch", "Me’ein Shalosh"), f"{E}, Al Hamihya", sections(["Al Hamihya"])),
-        ("brakhot", "bore_nefachot", T("בּוֹרֵא נְפָשׁוֹת", "Boré néfachot", "Borei Nefashot"), f"{E}, Blessings on Enjoyments", extrait(["Blessings on Enjoyments"], 11, 13, "בורא נפשות")),
-        ("brakhot", "tefilat_haderekh", T("תְּפִלַּת הַדֶּרֶךְ", "Téfilat hadérekh", "Traveler’s prayer"), f"{E}, Traveler's Prayer", sections(["Assorted Blessings and Prayers", "Traveler's Prayer"])),
-        ("moments", "birkat_halevana", T("בִּרְכַּת הַלְּבָנָה", "Birkat halévana", "Blessing of the moon"), f"{E}, Blessing of the Moon", sections(["Blessing of the Moon"])),
-        ("moments", "cheva_berakhot", T("שֶׁבַע בְּרָכוֹת", "Chéva bérakhot", "Sheva Berachot"), f"{E}, Sheva Berachot", sections(["Assorted Blessings and Prayers", "Sheva Berachot"])),
-        ("moments", "parachat_haman", T("פָּרָשַׁת הַמָּן", "Parachat hamane", "Parashat HaMan"), "Tanach with Nikkud, Chemot 16:4-36",
-         [{"titre": "שמות ט״ז, ד׳–ל״ו", "blocs": [{"t": NFC(qere(v))} for v in exode[15][3:36]]}]),
-        ("moments", "kaddich", T("קַדִּישׁ", "Kaddich", "Kaddish"), f"{E}, Kaveh", extrait(["Weekday Shacharit", "Kaveh"], 13, 16, "קדיש על ישראל")),
-        ("moments", "hachkavot", T("הַשְׁכָּבוֹת", "Hachkavot", "Hashkavot"), f"{E}, Mourning", extrait(["Fast Days and Mourning", "Mourning"], 19, 31, "השכבות")),
-    ]
-    sortie = {
-        "_meta": {
-            "version": "1.0", "date": "2026-10-04",
-            "source": {"siddur": "Siddur Edot HaMizrach (Sefaria, version merged : Torat Emet 357, domaine public ; Shaliehsaboo Edition, CC0)",
-                       "parachat_haman": "Tanach with Nikkud (tanach.us, domaine public), Chemot 16:4-36"},
-            "nusah": "Edot HaMizrach (séfarade), comme l'application CalJ dont vient la liste.",
-            "noms_divins": "En toutes lettres, comme dans les sources.",
-            "balisage": "Chaque paragraphe est soit {t: texte} avec <b>, <small>, <br> pour seules balises, soit {c: consigne}.",
-            "relecture": "Extraction automatique ; une lecture humaine reste souhaitable, en particulier des consignes.",
-        },
-        "groupes": [
-            {"cle": "jour", "titre": T("תְּפִלּוֹת הַיּוֹם", "Prières du jour", "Daily prayers")},
-            {"cle": "brakhot", "titre": T("בְּרָכוֹת", "Bénédictions", "Blessings")},
-            {"cle": "moments", "titre": T("לְעִתִּים", "Pour certains moments", "For particular times")},
-        ],
-        "textes": [{"id": i, "groupe": g, "titre": t, "source": s, "sections": sec} for g, i, t, s, sec in textes],
+def qere(v):
+    v = re.sub(r"([^\s\[\]\u05BE]+\u05BE?) ?\[([^\]]+)\]", r"\2", v)
+    v = re.sub(r"\[([^\]]+)\]", r"\1", v)
+    return re.sub(r"\s{2,}", " ", v.replace("\u05BE ", "\u05BE")).strip()
+
+
+def T(he, fr, en):
+    return {"he": NFC(he), "fr": fr, "en": en}
+
+
+TITRES = {
+    "birkot_hachahar": ("jour", T("בִּרְכוֹת הַשַּׁחַר", "Birkot hacha’har", "Morning blessings")),
+    "chaharit": ("jour", T("תְּפִלַּת שַׁחֲרִית", "Cha’harit", "Shacharit")),
+    "minha": ("jour", T("תְּפִלַּת מִנְחָה", "Min’ha", "Mincha")),
+    "arvit": ("jour", T("תְּפִלַּת עַרְבִית", "Arvit", "Arvit")),
+    "chema_coucher": ("jour", T("קְרִיאַת שְׁמַע שֶׁעַל הַמִּטָּה", "Chema du coucher", "Bedtime Shema")),
+    "tikoun_hatsot": ("jour", T("תִּקּוּן חֲצוֹת", "Tikoun ’hatsot", "Tikkun Chatzot")),
+    "acher_yatsar": ("brakhot", T("אֲשֶׁר יָצַר", "Acher yatsar", "Asher Yatzar")),
+    "birkat_hamazon": ("brakhot", T("בִּרְכַּת הַמָּזוֹן", "Birkat hamazone", "Birkat HaMazon")),
+    "meen_chaloch": ("brakhot", T("בְּרָכָה מֵעֵין שָׁלֹשׁ", "Méèn chaloch", "Me’ein Shalosh")),
+    "bore_nefachot": ("brakhot", T("בּוֹרֵא נְפָשׁוֹת", "Boré néfachot", "Borei Nefashot")),
+    "tefilat_haderekh": ("brakhot", T("תְּפִלַּת הַדֶּרֶךְ", "Téfilat hadérekh", "Traveler’s prayer")),
+    "birkat_halevana": ("moments", T("בִּרְכַּת הַלְּבָנָה", "Birkat halévana", "Blessing of the moon")),
+    "cheva_berakhot": ("moments", T("שֶׁבַע בְּרָכוֹת", "Chéva bérakhot", "Sheva Berachot")),
+    "parachat_haman": ("moments", T("פָּרָשַׁת הַמָּן", "Parachat hamane", "Parashat HaMan")),
+    "kaddich": ("moments", T("קַדִּישׁ", "Kaddich", "Kaddish")),
+    "hachkavot": ("moments", T("הַשְׁכָּבוֹת", "Hachkavot", "Hashkavot")),
+}
+EL_MALE = T("אֵל מָלֵא רַחֲמִים", "El malé ra’hamim", "El Malei Rachamim")
+NUSAH = {
+    "edot": T("נוסח עדות המזרח", "Nusah Edot HaMizra’h", "Nusach Edot HaMizrach"),
+    "sefard": T("נוסח ספרד", "Nusah Sefard", "Nusach Sefard"),
+    "ashkenaz": T("נוסח אשכנז", "Nusah Ashkenaz", "Nusach Ashkenaz"),
+}
+GROUPES = [
+    {"cle": "jour", "titre": T("תְּפִלּוֹת הַיּוֹם", "Prières du jour", "Daily prayers")},
+    {"cle": "brakhot", "titre": T("בְּרָכוֹת", "Bénédictions", "Blessings")},
+    {"cle": "moments", "titre": T("לְעִתִּים", "Pour certains moments", "For particular times")},
+]
+
+
+def main(dossier):
+    em_merged = charge(dossier, "Siddur_Edot_HaMizrach.json")
+    sf_merged = charge(dossier, "Siddur_Sefard.json")
+    as_merged = charge(dossier, "Siddur_Ashkenaz.json")
+    EM = Source(em_merged["text"], em_merged["schema"], "Siddur Edot HaMizrach (Torat Emet 357, domaine public ; Shaliehsaboo Edition, CC0)")
+    SM = Source(charge(dossier, "Siddur_Sefard__Hebrew__The_Metsudah_siddur,_1981.json")["text"], sf_merged["schema"], "Siddur Sefard, The Metsudah Siddur 1981 (CC-BY)")
+    ST = Source(charge(dossier, "Siddur_Sefard__Hebrew__Torat_Emet_357.json")["text"], sf_merged["schema"], "Siddur Sefard, Torat Emet 357 (domaine public)")
+    AM = Source(charge(dossier, "Ashk__The_Metsudah_siddur,_1981.json")["text"], as_merged["schema"], "Siddur Ashkenaz, The Metsudah Siddur 1981 (CC-BY)")
+    AD = Source(charge(dossier, "Ashk__Daat_Siddur_Ashkenaz.json")["text"], as_merged["schema"], "Siddur Ashkenaz, Daat (domaine public)")
+    exode = charge(dossier, "Exodus_TN.json")["text"]
+    haman = [{"titre": "שמות ט״ז, ד׳–ל״ו", "blocs": [{"t": NFC(qere(v))} for v in exode[15][3:36]]}]
+    TN = "Tanach with Nikkud (tanach.us, domaine public), Chemot 16:4-36"
+
+    edot = {
+        "birkot_hachahar": (EM, EM.sections(["Preparatory Prayers"])),
+        "chaharit": (EM, EM.sections(["Weekday Shacharit"])),
+        "minha": (EM, EM.sections(["Weekday Mincha"])),
+        "arvit": (EM, EM.sections(["Weekday Arvit"])),
+        "chema_coucher": (EM, EM.sections(["Bedtime Shema"])),
+        "tikoun_hatsot": (EM, EM.sections(["The Midnight Rite"])),
+        "acher_yatsar": (EM, EM.extrait(["Preparatory Prayers", "Morning Blessings"], 3, 5, "אשר יצר")),
+        "birkat_hamazon": (EM, EM.sections(["Post Meal Blessing"])),
+        "meen_chaloch": (EM, EM.sections(["Al Hamihya"])),
+        "bore_nefachot": (EM, EM.extrait(["Blessings on Enjoyments"], 11, 13, "בורא נפשות")),
+        "tefilat_haderekh": (EM, EM.sections(["Assorted Blessings and Prayers", "Traveler's Prayer"])),
+        "birkat_halevana": (EM, EM.sections(["Blessing of the Moon"])),
+        "cheva_berakhot": (EM, EM.sections(["Assorted Blessings and Prayers", "Sheva Berachot"])),
+        "parachat_haman": (TN, haman),
+        "kaddich": (EM, EM.extrait(["Weekday Shacharit", "Kaveh"], 13, 16, "קדיש על ישראל")),
+        "hachkavot": (EM, EM.extrait(["Fast Days and Mourning", "Mourning"], 19, 31, "השכבות")),
     }
-    chemin = "android/app/src/main/res/raw/siddur.json"
-    json.dump(sortie, open(chemin, "w", encoding="utf-8"), ensure_ascii=False, separators=(",", ":"))
-    for t in sortie["textes"]:
-        n = sum(len(s["blocs"]) for s in t["sections"])
-        print(f'{t["id"]:18} {len(t["sections"]):3} sections {n:4} paragraphes')
+    el_male_sefard = ST.sections(["Fast Days", "El Maleh Prayer"])
+    sefard = {
+        "birkot_hachahar": (SM, SM.plusieurs([["Upon Arising", "Modeh Ani"], ["Weekday Shacharit", "Morning Blessings"], ["Weekday Shacharit", "Blessings on Torah"]])),
+        "chaharit": (SM, SM.sections(["Weekday Shacharit"])),
+        "minha": (SM, SM.sections(["Weekday Mincha"])),
+        "arvit": (SM, SM.sections(["Weekday Maariv"])),
+        "chema_coucher": (ST, ST.sections(["Bedtime Shema"])),
+        "tikoun_hatsot": ("edot",) + edot["tikoun_hatsot"],
+        "acher_yatsar": (SM, SM.extrait(["Weekday Shacharit", "Morning Blessings"], 1, 2, "אשר יצר")),
+        "birkat_hamazon": (ST, ST.sections(["Birchat HaMazon", "Birchat HaMazon"])),
+        "meen_chaloch": (ST, ST.sections(["Blessings", "Me'ein Shalosh"])),
+        "bore_nefachot": (ST, ST.sections(["Blessings", "Borei Nefashot"])),
+        "tefilat_haderekh": (ST, ST.sections(["Blessings", "Traveler's Prayer"])),
+        "birkat_halevana": (ST, ST.sections(["Kiddush Levanah"])),
+        "cheva_berakhot": (ST, ST.sections(["Various Blessings", "Sheva Berachot"])),
+        "parachat_haman": (TN, haman),
+        "kaddich": (SM, SM.extrait(["Weekday Shacharit", "Aleinu"], 5, 9, "קדיש יתום")),
+        "hachkavot": (ST, el_male_sefard, EL_MALE),
+    }
+    ashkenaz = {
+        "birkot_hachahar": (AM, [s for k in ["Modeh Ani", "Netilat Yadayim", "Asher Yatzar", "Elokai Neshama", "Torah Blessings", "Morning Blessings"]
+                                 for s in AM.sections(["Weekday", "Shacharit", "Preparatory Prayers", k])]),
+        "chaharit": (AM, AM.sections(["Weekday", "Shacharit"])),
+        "minha": (AM, AM.sections(["Weekday", "Minchah"])),
+        "arvit": (AM, AM.sections(["Weekday", "Maariv"], sauf=("Birkat HaLevana", "Keri'at Shema al Hamita"))),
+        "chema_coucher": (AM, AM.sections(["Weekday", "Maariv", "Keri'at Shema al Hamita"])),
+        "tikoun_hatsot": ("edot",) + edot["tikoun_hatsot"],
+        "acher_yatsar": (AM, AM.sections(["Weekday", "Shacharit", "Preparatory Prayers", "Asher Yatzar"])),
+        "birkat_hamazon": (AM, AM.sections(["Berachot", "Birkat HaMazon"])),
+        "meen_chaloch": (AD, AD.sections(["Berachot", "Birkat Hanehenin", "Eating", "Brachot Achronot", "Al Hamichyah"])),
+        "bore_nefachot": (AD, AD.sections(["Berachot", "Birkat Hanehenin", "Eating", "Brachot Achronot", "Borei Nefashot"])),
+        "tefilat_haderekh": (AD, AD.sections(["Berachot", "Tefillat HaDerech"])),
+        "birkat_halevana": (AM, AM.sections(["Weekday", "Maariv", "Birkat HaLevana"])),
+        "cheva_berakhot": ("sefard",) + sefard["cheva_berakhot"],
+        "parachat_haman": (TN, haman),
+        "kaddich": (AD, AD.sections(["Kaddish", "Mourner's Kaddish"])),
+        "hachkavot": ("sefard", ST, el_male_sefard, EL_MALE),
+    }
+
+    for cle, table in [("edot", edot), ("sefard", sefard), ("ashkenaz", ashkenaz)]:
+        textes, sources = [], set()
+        for id_, (groupe, titre) in TITRES.items():
+            entree = table[id_]
+            emprunt = entree[0] if isinstance(entree[0], str) and entree[0] in NUSAH else None
+            if emprunt:
+                entree = entree[1:]
+            source, sections = entree[0], entree[1]
+            if len(entree) > 2:
+                titre = entree[2]
+            nom_source = source if isinstance(source, str) else source.nom
+            sources.add(nom_source)
+            t = {"id": id_, "groupe": groupe, "titre": titre, "source": nom_source, "sections": sections}
+            if emprunt:
+                # Absent des sources libres de ce nusah : repris d'un autre, et dit.
+                t["nusah"] = NUSAH[emprunt]
+            textes.append(t)
+        sortie = {
+            "_meta": {
+                "version": "1.0", "date": "2026-10-04", "nusah": NUSAH[cle],
+                "sources": sorted(sources),
+                "noms_divins": "Tels que dans les sources, sans substitution.",
+                "balisage": "Chaque paragraphe est soit {t: texte} avec <b>, <small>, <br> pour seules balises, soit {c: consigne}.",
+                "relecture": "Extraction automatique ; une lecture humaine reste souhaitable, en particulier des consignes.",
+            },
+            "groupes": GROUPES,
+            "textes": textes,
+        }
+        chemin = f"android/app/src/main/res/raw/siddur_{cle}.json"
+        json.dump(sortie, open(chemin, "w", encoding="utf-8"), ensure_ascii=False, separators=(",", ":"))
+        print(f"== {cle} : {len(textes)} textes, {sum(len(s['blocs']) for x in textes for s in x['sections'])} paragraphes")
+        for x in textes:
+            n = sum(len(s["blocs"]) for s in x["sections"])
+            print(f'   {x["id"]:18} {len(x["sections"]):3} sections {n:4} paragraphes {"(emprunt)" if "nusah" in x else ""}')
 
 
 if __name__ == "__main__":
