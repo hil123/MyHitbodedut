@@ -6,9 +6,8 @@ Source : « Tanach with Nikkud » (tanach.us, domaine public), via l'export
 public de Sefaria :
   https://storage.googleapis.com/sefaria-export/json/Tanakh/Writings/Psalms/Hebrew/Tanach%20with%20Nikkud.json
 
-Le qere est retenu ; le Nom reste en toutes lettres (demande du 04/10), alors
-que le Tikoun le substitue. Le contrôle compare donc au Tikoun après
-substitution. Usage :
+Le qere est retenu ; le Nom reste en toutes lettres (demande du 04/10), comme
+dans le Tikoun, que le contrôle compare verset par verset. Usage :
 
   python3 tools/tehilim_conversion.py chemin/vers/Tanach_with_Nikkud.json
 
@@ -57,9 +56,9 @@ if __name__ == "__main__":
     src = json.load(open(sys.argv[1], encoding="utf-8"))["text"]
     psaumes = [[livre(v) for v in ch] for ch in src]
     tikkun = json.load(open("android/app/src/main/res/raw/tikkun_haklali.json", encoding="utf-8"))
-    # Le Tikoun substitue les noms, le livre non : on compare après substitution.
+    # Le Tikoun et le livre écrivent tous deux le Nom en toutes lettres (04/10).
     ecarts = [f'{p["numero"]}:{v["n"]}' for p in tikkun["psaumes"] for v in p["versets"]
-              if NFC(noms(psaumes[p["numero"] - 1][v["n"] - 1])) != NFC(v["he"])]
+              if psaumes[p["numero"] - 1][v["n"] - 1] != NFC(v["he"])]
     print("versets :", sum(map(len, psaumes)), "| écarts avec le Tikoun :", ecarts or "aucun")
     if "--ecrire" in sys.argv:
         chemin = "android/app/src/main/res/raw/tehilim.json"

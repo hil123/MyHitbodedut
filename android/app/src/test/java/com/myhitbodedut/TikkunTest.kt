@@ -60,35 +60,30 @@ class TikkunTest {
     }
 
     /**
-     * Les noms divins sont substitues, comme partout ailleurs dans
-     * l'application. Un tetragramme en toutes lettres sur un ecran qu'on
-     * jette n'est pas une coquille ordinaire.
+     * Le Nom est écrit en toutes lettres, comme dans les sources (décision
+     * du propriétaire, 04/10/2026) : plus aucune forme substituée, ni dans
+     * les psaumes ni dans la liturgie.
      */
     @Test
-    fun `aucun nom divin n est ecrit en toutes lettres`() {
-        val interdits = listOf("יהוה", "אלהים", "אלהי", "אדני")
-        fun nu(t: String) = t.replace(Regex("[\\u0591-\\u05C7]"), "")
-
+    fun `le nom est ecrit en toutes lettres`() {
+        val substitues = listOf(Regex("ה'(?![\"״])"), Regex("אל\u05B9?ק"), Regex("אֲדֹ-נָי"))
+        fun nu(t: String) = java.text.Normalizer.normalize(t, java.text.Normalizer.Form.NFC)
         tikkun.psaumes.forEach { p ->
             p.versets.forEach { v ->
-                interdits.forEach {
-                    assertFalse("${p.ref}:${v.numero} contient « $it »", nu(v.he).contains(it))
+                substitues.forEach {
+                    assertFalse("${p.ref}:${v.numero} substitue le Nom", it.containsMatchIn(nu(v.he)))
                 }
             }
         }
-        // Meme regle dans la liturgie, la kavana exceptee (voir le test dedie).
-        tikkun.blocs.values
-            .filterNot { it.cle == Tikkun.KAVANA }
-            .forEach { bloc ->
-                bloc.paragraphes.forEachIndexed { i, para ->
-                    interdits.forEach {
-                        assertFalse(
-                            "${bloc.cle}[$i] contient « $it »",
-                            nu(para).contains(it),
-                        )
-                    }
+        tikkun.blocs.values.forEach { bloc ->
+            bloc.paragraphes.forEachIndexed { i, para ->
+                substitues.forEach {
+                    assertFalse("${bloc.cle}[$i] substitue le Nom", it.containsMatchIn(nu(para)))
                 }
             }
+        }
+        // Le premier psaume du Tikoun s'ouvre sur le Nom (16:1 dit אֵל ; 16:2 le Tétragramme).
+        assertTrue(tikkun.byNumero(16)!!.versets[1].he.contains("יהוָה"))
     }
 
     /**

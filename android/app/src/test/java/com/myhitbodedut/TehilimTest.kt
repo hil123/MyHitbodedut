@@ -44,21 +44,6 @@ class TehilimTest {
         }
     }
 
-    /**
-     * Les noms tels que le Tikoun les écrit : le livre garde le Nom en toutes
-     * lettres (demande du 04/10), le Tikoun le substitue. Même règle que
-     * tools/tehilim_conversion.py.
-     */
-    private val signes = "[\u0591-\u05BD\u05BF\u05C1\u05C2\u05C4\u05C5\u05C7]*"
-    private fun commeLeTikoun(v: String): String {
-        var s = v.replace("\u200D", "")
-        s = Regex("י${signes}ה${signes}ו${signes}ה$signes").replace(s, "ה'")
-        s = Regex("(א${signes}ל(?:$signes\u05B9$signes|${signes}ו$signes\u05B9$signes|${signes}ו\u05B9$signes))ה")
-            .replace(s, "$1ק")
-        s = Regex("(א${signes}ד$signes)(נ$signes\u05B8${signes}י)").replace(s, "$1-$2")
-        return nfc(s)
-    }
-
     @Test
     fun `le nom est ecrit en toutes lettres dans le livre`() {
         assertTrue(livre.versets(23)[0].contains(nfc("יְהוָה")))
@@ -68,14 +53,14 @@ class TehilimTest {
         }
     }
 
-    /** Les dix psaumes du Tikoun et le livre entier disent le même texte, aux noms près. */
+    /** Les dix psaumes du Tikoun et le livre entier disent exactement le même texte, Nom compris. */
     @Test
     fun `le tikoun et le livre concordent verset par verset`() {
         val tikkun = DataFiles.tikkun
         var compares = 0
         tikkun.psaumes.forEach { p ->
             p.versets.forEach { v ->
-                assertEquals("Tehilim ${p.numero}:${v.numero}", commeLeTikoun(livre.versets(p.numero)[v.numero - 1]), nfc(v.he))
+                assertEquals("Tehilim ${p.numero}:${v.numero}", nfc(livre.versets(p.numero)[v.numero - 1]), nfc(v.he))
                 compares++
             }
         }
