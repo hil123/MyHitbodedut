@@ -549,7 +549,7 @@ function ecranTehilim() {
   const versets = pret ? tehilim.reduce((n, ch) => n + ch.length, 0) : null;
   return h('div', { class: 'ecran' }, barre(tr.t('tehilim_title')),
     h('div', { class: 'defile' }, h('div', { class: 'contenu' },
-      versets ? h('p', { class: 'indice' }, tr.t('tehilim_count', 150, versets)) : null,
+      versets ? h('p', { class: 'indice' }, tr.t('tehilim_count', 150, versets.toLocaleString(tr.langue))) : null,
       h('div', { class: 'carte' },
         ligne({ nom: tr.t('tehilim_month'), etat: tr.t('tehilim_month_state', nombreTehilim(jour), libellePortion(portion)), onclick: () => lire(portion) }),
         ligne({ nom: tr.t('tehilim_week'), etat: tr.t('tehilim_week_state', nomJour.charAt(0).toLocaleUpperCase(tr.langue) + nomJour.slice(1), libellePortion(semaine)), onclick: () => lire(semaine) })),

@@ -524,7 +524,7 @@
 
     <!-- Le livre de Tehilim (TehilimActivity, 04/10). -->
     <string name="tehilim_title">Tehillim</string>
-    <string name="tehilim_count">%1$d psalms, %2$d verses</string>
+    <string name="tehilim_count">%1$d psalms, %2$s verses</string>
     <string name="tehilim_month">By day of the month</string>
     <string name="tehilim_month_state">Day %1$s of the month: %2$s</string>
     <string name="tehilim_week">By day of the week</string>

@@ -536,7 +536,7 @@
 
     <!-- Le livre de Tehilim (TehilimActivity, 04/10). -->
     <string name="tehilim_title">תהילים</string>
-    <string name="tehilim_count">%1$d מזמורים, %2$d פסוקים</string>
+    <string name="tehilim_count">%1$d מזמורים, %2$s פסוקים</string>
     <string name="tehilim_month">לפי ימי החודש</string>
     <string name="tehilim_month_state">יום %1$s לחודש: %2$s</string>
     <string name="tehilim_week">לפי ימי השבוע</string>
