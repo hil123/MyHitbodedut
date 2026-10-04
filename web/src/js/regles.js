@@ -253,3 +253,59 @@ export const DureeSeance = {
     return Math.min(DureeSeance.MAX, Math.max(DureeSeance.MIN, n));
   },
 };
+
+// --- SiddurMoment (Siddur.kt) ---------------------------------------------------
+// Le texte que l'heure suggère en tête du siddour, et le hassid qui l'accompagne.
+export const SiddurMoment = {
+  /** Le texte de l'heure locale (heures, minutes). */
+  suggestion(heures, minutes = 0) {
+    const m = heures * 60 + minutes;
+    if (m < 5 * 60) return 'tikoun_hatsot';
+    if (m < 6 * 60 + 30) return 'birkot_hachahar';
+    if (m < 12 * 60 + 30) return 'chaharit';
+    if (m < 18 * 60 + 30) return 'minha';
+    if (m < 22 * 60 + 30) return 'arvit';
+    return 'chema_coucher';
+  },
+  illustration(id) {
+    return {
+      tikoun_hatsot: 'char_sitting_low',
+      birkot_hachahar: 'char_welcome',
+      chaharit: 'char_praying',
+      minha: 'char_standing_back',
+      arvit: 'char_reading_seated',
+    }[id] ?? 'char_thinking';
+  },
+};
+
+// --- LibraryRules (LibraryRules.kt) ---------------------------------------------
+// Une « source » est du domaine public : ses paragraphes s'affichent. La
+// vocalisation d'une édition dont la licence n'est pas déclarée est un
+// travail éditorial qu'on ne reprend pas : le texte sans nikkoud, alors.
+export const LibraryRules = {
+  paragraphes(bibliotheque, source) {
+    const nikkoudOk = bibliotheque?._meta?.editions?.[source.edition]?.nikkoud_ok === true;
+    const avec = source.paragraphes ?? [];
+    if (nikkoudOk) return avec;
+    const sans = source.paragraphes_sans_nikkoud ?? [];
+    return sans.length > 0 ? sans : avec;
+  },
+  /** Les sources de la bibliothèque, par section et sous-section ; les articles restent sur Android. */
+  sources(bibliotheque) {
+    return (bibliotheque?.sections ?? []).map((section) => ({
+      ...section,
+      sous_sections: (section.sous_sections ?? []).map((sous) => ({
+        ...sous, entrees: (sous.entrees ?? []).filter((e) => e.type === 'source'),
+      })).filter((sous) => sous.entrees.length > 0),
+    })).filter((section) => section.sous_sections.length > 0);
+  },
+  entree(bibliotheque, id) {
+    for (const section of bibliotheque?.sections ?? []) {
+      for (const sous of section.sous_sections ?? []) {
+        const e = (sous.entrees ?? []).find((x) => x.id === id);
+        if (e) return e;
+      }
+    }
+    return null;
+  },
+};

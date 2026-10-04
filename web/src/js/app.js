@@ -4,7 +4,7 @@
 // n'existe pas encore est montré, mais inerte (classe « a-venir »).
 
 import { chargeTraduction, formate, langueInitiale, LANGUES } from './i18n.js';
-import { Anneaux, CycleTehilim, DureeSeance, JaugeSemaine, Plaque, Reference, Salutation } from './regles.js';
+import { Anneaux, CycleTehilim, DureeSeance, JaugeSemaine, LibraryRules, Plaque, Reference, Salutation, SiddurMoment } from './regles.js';
 import { ART_DU_MOMENT, ChizukBag, ChizukRules } from './chizuk.js';
 import { DanseMesure } from './seance.js';
 import { creeStore, memoire } from './store.js';
@@ -603,7 +603,7 @@ function chargeSiddur() {
 // écrans de lecture ; un appui long sur le texte la fait revenir.
 let reglagesOuverts = false;
 let choixNusahOuvert = false;
-const ECRANS_LUS = ['lecture', 'priere'];
+const ECRANS_LUS = ['lecture', 'priere', 'tikkun', 'source'];
 
 /** Les chaînes nouvelles, tant qu'Android ne les a pas encore : le français. */
 const CHAINES_LECTURE = {
@@ -792,28 +792,97 @@ function riche(html) {
 
 const titreTexte = (titre) => (tr.langue === 'he' ? titre.he : (titre[tr.langue] || titre.he));
 
+/** Une ligne de section : le nom hébreu, sa traduction dessous, le chevron. */
 function ligneHebreu(hebreu, traduction, onclick) {
   return h('button', { class: 'ligne ligne-he', onclick },
     h('span', { class: 'corps' },
-      h('div', { class: 'nom-he', lang: 'he', dir: 'rtl' }, hebreu),
-      traduction && traduction !== hebreu ? h('div', { class: 'etat' }, traduction) : null),
+      h('span', { class: 'nom-he', lang: 'he', dir: 'rtl' }, hebreu),
+      traduction && traduction !== hebreu ? h('span', { class: 'etat' }, traduction) : null),
     h('span', { class: 'chevron', 'aria-hidden': 'true' }));
 }
 
+/** Le personnage sur son panneau clair, comme sur l'accueil (bg_stage). */
+function plateau(dessin, classe) {
+  return h('span', { class: `plateau ${classe}`, 'aria-hidden': 'true' }, h('img', { src: `img/${dessin}.webp`, alt: '' }));
+}
+
+/**
+ * Le bandeau d'un écran à l'identité de l'application (bg_hero) : le
+ * retour, le titre, ce qui se règle dessous, et le hassid sur son panneau.
+ */
+function bandeau(titre, { puce = null, dessin = null } = {}) {
+  return h('header', { class: 'bandeau' },
+    h('button', { class: 'retour', 'aria-label': tr.t('action_back'), onclick: retour }),
+    h('div', { class: 'bandeau-corps' }, h('h1', {}, titre), puce),
+    dessin ? plateau(dessin, 'plateau-bandeau') : null);
+}
+
+/** Le nom du groupe en hébreu, à la couleur choisie ; sa traduction à côté. */
+function enteteGroupe(hebreu, traduction) {
+  const enHebreu = /[֐-׿]/.test(hebreu);
+  return h('h2', { class: 'entete-groupe' },
+    h('span', { class: `entete-he${enHebreu ? ' serif-he' : ''}`, lang: enHebreu ? 'he' : null, dir: enHebreu ? 'rtl' : null }, hebreu),
+    traduction && traduction !== hebreu ? h('span', { class: 'entete-trad' }, traduction) : null);
+}
+
+/** Les trois nusah ; le choix est gardé, et vaut aussi dans les lectures. */
+function choisirNusah() {
+  feuille(tr.t('siddur_choose'), (f, fermer) => {
+    f.append(h('div', { role: 'radiogroup', 'aria-label': tr.t('siddur_choose') }, NUSAH.map(([cle, nom]) => {
+      const courant = cle === store.siddurNusah();
+      return h('button', {
+        type: 'button', class: 'choix choix-radio', role: 'radio', 'aria-checked': String(courant),
+        onclick: () => { fermer(); if (!courant) { store.setSiddurNusah(cle); rendre(); } },
+      }, h('span', { class: 'radio', 'aria-hidden': 'true' }), tr.t(nom));
+    })));
+  });
+  document.querySelector('.feuille [aria-checked="true"]')?.focus();
+}
+
+/** La suggestion de l'heure : le hassid, l'heure dite en clair, le texte. */
+function carteMaintenant(x) {
+  const traduction = titreTexte(x.titre) !== x.titre.he ? titreTexte(x.titre) : null;
+  return h('button', { class: 'maintenant', onclick: () => { priere = x.id; ouvrir('priere'); } },
+    plateau(SiddurMoment.illustration(x.id), 'plateau-maintenant'),
+    h('span', { class: 'maintenant-corps' },
+      h('span', { class: 'maintenant-libelle' }, tr.t('siddur_maintenant')),
+      h('span', { class: 'maintenant-he', lang: 'he', dir: 'rtl' }, x.titre.he),
+      traduction ? h('span', { class: 'maintenant-trad' }, traduction) : null),
+    h('span', { class: 'chevron', 'aria-hidden': 'true' }));
+}
+
+/** Un livre en tuile : son personnage, son nom hébreu, son nom traduit. */
+function tuileLivre(hebreu, traduction, dessin, onclick) {
+  return h('button', { class: 'livre', onclick },
+    plateau(dessin, 'plateau-livre'),
+    h('span', { class: 'livre-he', lang: 'he', dir: 'rtl' }, hebreu),
+    traduction !== hebreu ? h('span', { class: 'livre-trad' }, traduction) : null);
+}
+
+/**
+ * Le siddour (SiddurActivity, 04/10), dans la manière de l'application : en
+ * tête, le texte que suggère l'heure ; puis Tehilim et le Tikoun côte à
+ * côte ; puis les textes par groupe. Le nusah se choisit sur le bandeau.
+ */
 function ecranSiddur() {
   const pret = chargeSiddur();
-  return h('div', { class: 'ecran' }, barre(tr.t('siddur_title')),
-    h('div', { class: 'defile' }, h('div', { class: 'contenu' },
-      // Trois nusah au choix (demande du 04/10) ; le choix est gardé.
-      h('div', { class: 'choix-nusah', role: 'radiogroup', 'aria-label': tr.t('siddur_choose') }, NUSAH.map(([cle, nom]) => h('button', {
-        role: 'radio', 'aria-checked': String(cle === store.siddurNusah()),
-        onclick: () => { store.setSiddurNusah(cle); rendre(); },
-      }, tr.t(nom)))),
-      h('h2', { class: 'section' }, tr.t('siddur_books')),
-      h('div', { class: 'carte' }, ligneHebreu(tr.t('siddur_tehilim_he'), tr.t('tehilim_title'), () => ouvrir('tehilim'))),
+  const nomNusah = pret ? titreTexte(siddur._meta.nusah) : tr.t(NUSAH.find(([c]) => c === store.siddurNusah())?.[1] ?? 'siddur_nusah');
+  const heure = new Date();
+  const suggere = pret ? siddur.textes.find((x) => x.id === SiddurMoment.suggestion(heure.getHours(), heure.getMinutes())) : null;
+  const puce = h('button', {
+    type: 'button', class: 'puce-bandeau', 'aria-haspopup': 'dialog', 'aria-label': `${tr.t('siddur_choose')} : ${nomNusah}`, onclick: choisirNusah,
+  }, h('span', {}, nomNusah), icone('replier'));
+  return h('div', { class: 'ecran avec-bandeau' }, bandeau(tr.t('siddur_title'), { puce, dessin: 'char_praying' }),
+    h('div', { class: 'defile' }, h('div', { class: 'contenu liste-siddour' },
+      suggere ? carteMaintenant(suggere) : null,
+      enteteGroupe(tr.t('siddur_books'), null),
+      h('div', { class: 'livres' },
+        tuileLivre(tr.t('siddur_tehilim_he'), tr.t('tehilim_title'), 'char_tehilim', () => ouvrir('tehilim')),
+        tuileLivre(tr.t('siddur_tikkun_he'), tr.t('tikkun_title'), 'char_torah', () => ouvrir('tikkun'))),
       ...(pret ? siddur.groupes.flatMap((g) => [
-        h('h2', { class: 'section' }, titreTexte(g.titre)),
-        h('div', { class: 'carte' }, siddur.textes.filter((x) => x.groupe === g.cle).map((x) =>
+        enteteGroupe(g.titre.he, titreTexte(g.titre)),
+        h('div', { class: 'carte carte-sections' }, siddur.textes.filter((x) => x.groupe === g.cle).map((x) =>
+          // Un texte absent des sources de ce nusah, emprunté à un autre, le dit.
           ligneHebreu(x.titre.he, [titreTexte(x.titre) !== x.titre.he ? titreTexte(x.titre) : null, x.nusah ? titreTexte(x.nusah) : null].filter(Boolean).join(' · '),
             () => { priere = x.id; ouvrir('priere'); }))),
       ]) : []),
@@ -837,6 +906,84 @@ function ecranPriere() {
     h('p', { class: 'indice source' }, tr.t('siddur_source', x.source))), { avecNusah: true });
 }
 
+// --- Le Tikoun lu d'un seul trait (TikkunFlowActivity.kt) -------------------------
+// « להמשיך מזה לזה ברצף אחד, ללא הפסק » : l'ouverture, les dix psaumes à la
+// suite, la clôture ; rien à toucher entre les psaumes. La kavana et la
+// prière de Rabbi Natan ne font pas partie du trait.
+function ecranTikkun() {
+  if (!tikkun) return h('div', { class: 'ecran' }, barre(tr.t('tikkun_title')), h('div', { class: 'defile' }));
+  const titre = (texte) => h('h2', { class: 'psaume-titre' }, texte);
+  const paragraphe = (texte) => h('p', { class: 'verset paragraphe' }, texte);
+  const blocs = [];
+  for (const b of [tikkun.ouverture].filter(Boolean)) blocs.push(titre(b.titre.he), ...b.paragraphes.map(paragraphe));
+  for (const p of tikkun.psaumes) {
+    blocs.push(titre(tr.t('tikkun_psalm_he', Reference.lettres(p.numero))));
+    for (const v of p.versets) {
+      blocs.push(h('p', { class: 'verset' }, v.he));
+      if (v.arret) blocs.push(h('p', { class: 'arret' }, v.arret.note));
+    }
+  }
+  if (tikkun.cloture) blocs.push(titre(tikkun.cloture.titre.he), ...tikkun.cloture.paragraphes.map(paragraphe));
+  const continuite = tikkun._meta.continuite;
+  const fini = () => {
+    // Tout dire d'un trait vaut les dix psaumes.
+    for (const p of tikkun.psaumes) store.setTikkunDone(p.numero, true);
+    retour();
+  };
+  return ecranLu(tr.t('tikkun_title'), h('div', { class: 'contenu lecture tikkun' },
+    continuite ? h('p', { class: 'indice' }, titreTexte(continuite)) : null,
+    h('div', { class: 'psaume', lang: 'he', dir: 'rtl' }, blocs)), {
+    pied: h('div', { class: 'lecture-nav' }, h('button', { class: 'principal', onclick: fini }, tr.t('tikkun_flow_done'))),
+  });
+}
+
+// --- La bibliothèque (LibraryActivity, LibraryEntryActivity) ----------------------
+// Sur le web, les sources seulement : des œuvres du domaine public, dont le
+// texte se lit en entier. Les articles, dont le texte reste chez leur
+// auteur, attendent leur fiche.
+let bibliotheque = null;
+let entreeBiblio = null;
+function chargeBibliotheque() {
+  if (bibliotheque) return true;
+  fetch('data/bibliotheque.json').then((r) => r.json()).then((d) => { bibliotheque = d; rendre(); });
+  return false;
+}
+
+function ecranBibliotheque() {
+  const pret = chargeBibliotheque();
+  return h('div', { class: 'ecran avec-bandeau' },
+    bandeau(tr.t('library_title'), { puce: h('p', { class: 'bandeau-sous-titre' }, tr.t('library_hint')), dessin: 'char_torah' }),
+    h('div', { class: 'defile' }, h('div', { class: 'contenu liste-siddour' },
+      ...(pret ? LibraryRules.sources(bibliotheque).flatMap((section) => [
+        enteteGroupe(section.titre.he, titreTexte(section.titre)),
+        ...section.sous_sections.flatMap((sous) => [
+          sous.titre.he !== section.titre.he ? h('h3', { class: 'sous-entete' },
+            h('span', { class: 'serif-he', lang: 'he', dir: 'rtl' }, sous.titre.he),
+            titreTexte(sous.titre) !== sous.titre.he ? h('span', { class: 'entete-trad' }, titreTexte(sous.titre)) : null) : null,
+          h('div', { class: 'carte carte-sections' }, sous.entrees.map((e) =>
+            ligneHebreu(e.titre_he, Reference.localise(e.ref, tr.langue), () => { entreeBiblio = e.id; ouvrir('source'); }))),
+        ]),
+      ]) : []))));
+}
+
+function ecranSource() {
+  if (!chargeBibliotheque()) return h('div', { class: 'ecran' }, barre(tr.t('library_title')), h('div', { class: 'defile' }));
+  const e = entreeBiblio ? LibraryRules.entree(bibliotheque, entreeBiblio) : null;
+  // Rouvert directement sur #source, sans entrée choisie : la liste.
+  if (!e || e.type !== 'source') return ecranBibliotheque();
+  return ecranLu(tr.t('library_title'), h('div', { class: 'contenu lecture source-biblio' },
+    h('div', { class: 'source-tete' },
+      h('div', { class: 'source-titres' },
+        h('span', { class: 'badge' }, tr.t('library_kind_source')),
+        h('h2', { class: 'source-titre', lang: 'he', dir: 'rtl' }, e.titre_he),
+        h('p', { class: 'source-ref' }, Reference.localise(e.ref, tr.langue))),
+      plateau('char_torah', 'plateau-source')),
+    h('div', { class: 'carte carte-texte psaume', lang: 'he', dir: 'rtl' },
+      LibraryRules.paragraphes(bibliotheque, e).map((p) => h('p', { class: 'verset paragraphe-source' }, p))),
+    // Ni note ni édition sous le texte : l'attribution passe par le lien vers Sefaria.
+    e.url ? h('a', { class: 'principal lien-sefaria', href: e.url, target: '_blank', rel: 'noopener noreferrer' }, tr.t('library_open_sefaria')) : null));
+}
+
 function panneauTextes() {
   return h('div', { class: 'contenu' },
     h('h1', { class: 'titre-ecran' }, tr.t('nav_texts')),
@@ -844,10 +991,12 @@ function panneauTextes() {
       ligne({ nom: tr.t('siddur_title'), etat: tr.t('siddur_hint'), onclick: () => ouvrir('siddur') }),
       // Tehilim est le premier texte lisible sur le web (04/10).
       ligne({ nom: tr.t('tehilim_title'), etat: tr.t('tehilim_today', libellePortion(portionDuMois().portion)), onclick: () => ouvrir('tehilim') }),
+      // Le Tikoun, lu d'un trait (04/10).
+      ligne({ nom: tr.t('tikkun_title'), etat: etatTikkun(), onclick: () => ouvrir('tikkun') }),
       // Les textes arrivent à l'étape 4.
-      ligne({ nom: tr.t('tikkun_title'), etat: etatTikkun(), aVenir: true }),
       ligne({ nom: tr.t('tefilot_title'), etat: tr.t('tefilot_hint'), aVenir: true }),
-      ligne({ nom: tr.t('library_title'), etat: tr.t('library_hint'), aVenir: true }),
+      // La bibliothèque : ses sources, lisibles (04/10) ; les articles attendent.
+      ligne({ nom: tr.t('library_title'), etat: tr.t('library_hint'), onclick: () => ouvrir('bibliotheque') }),
       ligne({ nom: tr.t('tips_title'), etat: tr.t('tips_hint'), aVenir: true })),
     h('h2', { class: 'section' }, tr.t('section_around')),
     h('div', { class: 'carte' },
@@ -1272,7 +1421,7 @@ function arreteDanse() {
 // et le geste de retour ramènent à l'accueil, sur l'onglet quitté.
 function ecranCourant() {
   const e = location.hash.slice(1);
-  return ['musique', 'reglages', 'seance', 'bravo', 'tehilim', 'lecture', 'siddur', 'priere'].includes(e) ? e : 'accueil';
+  return ['musique', 'reglages', 'seance', 'bravo', 'tehilim', 'lecture', 'siddur', 'priere', 'tikkun', 'bibliotheque', 'source'].includes(e) ? e : 'accueil';
 }
 function ouvrir(ecran) {
   // L'entrée sur l'écran de séance tire le mot d'ouverture (SessionActivity.onCreate).
@@ -1318,6 +1467,9 @@ function rendre() {
   else if (ecran === 'lecture') app.append(ecranLecture());
   else if (ecran === 'siddur') app.append(ecranSiddur());
   else if (ecran === 'priere') app.append(ecranPriere());
+  else if (ecran === 'tikkun') app.append(ecranTikkun());
+  else if (ecran === 'bibliotheque') app.append(ecranBibliotheque());
+  else if (ecran === 'source') app.append(ecranSource());
   else {
     app.append(h('div', { class: 'ecran' },
       h('div', { class: 'defile' }, onglet === 'textes' ? panneauTextes() : panneauAujourdhui()),

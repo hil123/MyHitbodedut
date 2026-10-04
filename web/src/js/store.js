@@ -290,6 +290,13 @@ export function creeStore(stockage, { maintenant = () => new Date(), fuseau } = 
       return new Set(String(get('tikkun_done', '')).split(',').map((s) => s.trim())
         .filter((s) => /^\d+$/.test(s)).map(Number));
     },
+    /** Store.setTikkunDone : la liste du jour, triée, comme Android l'écrit. */
+    setTikkunDone(numero, fait) {
+      const courant = store.tikkunDone();
+      if (fait) courant.add(numero); else courant.delete(numero);
+      set('tikkun_day', today());
+      set('tikkun_done', [...courant].sort((a, b) => a - b).join(','));
+    },
 
     // --- Musique ------------------------------------------------------------------
     musicEnabled: () => get('music_enabled', true),
