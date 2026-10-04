@@ -147,6 +147,9 @@ object Data {
     @Volatile
     private var tikkun: Tikkun? = null
 
+    @Volatile
+    private var tehilim: Tehilim? = null
+
     fun chizuk(context: Context): Chizuk =
         chizuk ?: synchronized(this) {
             chizuk ?: ChizukLoader.load(context.applicationContext).also { chizuk = it }
@@ -160,5 +163,11 @@ object Data {
     fun tikkun(context: Context): Tikkun =
         tikkun ?: synchronized(this) {
             tikkun ?: TikkunLoader.load(context.applicationContext).also { tikkun = it }
+        }
+
+    /** Le livre de Tehilim : 327 ko, lus une fois par processus comme les autres. */
+    fun tehilim(context: Context): Tehilim =
+        tehilim ?: synchronized(this) {
+            tehilim ?: TehilimLoader.load(context.applicationContext).also { tehilim = it }
         }
 }

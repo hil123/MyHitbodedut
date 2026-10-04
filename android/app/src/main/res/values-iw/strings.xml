@@ -533,4 +533,24 @@
         <item quantity="two">ימים של התבודדות</item>
         <item quantity="other">ימי התבודדות</item>
     </plurals>
+
+    <!-- Le livre de Tehilim (TehilimActivity, 04/10). -->
+    <string name="tehilim_title">תהילים</string>
+    <string name="tehilim_count">%1$d מזמורים, %2$d פסוקים</string>
+    <string name="tehilim_month">לפי ימי החודש</string>
+    <string name="tehilim_month_state">יום %1$s לחודש: %2$s</string>
+    <string name="tehilim_week">לפי ימי השבוע</string>
+    <string name="tehilim_week_state">%1$s: %2$s</string>
+    <string name="tehilim_all">כל המזמורים</string>
+    <string name="tehilim_single">תהילים %1$s</string>
+    <string name="tehilim_range">תהילים %1$s עד %2$s</string>
+    <string name="tehilim_range_verses">תהילים %1$s, פסוקים %2$s עד %3$s</string>
+    <string name="tehilim_previous">המזמור הקודם</string>
+    <string name="tehilim_next">המזמור הבא</string>
+    <string name="tehilim_today">היום: %1$s</string>
+    <plurals name="tehilim_verses">
+        <item quantity="one">פסוק אחד</item>
+        <item quantity="two">%d פסוקים</item>
+        <item quantity="other">%d פסוקים</item>
+    </plurals>
 </resources>

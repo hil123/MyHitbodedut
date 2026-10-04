@@ -20,6 +20,10 @@ object DataFiles {
 
     val tikkun: Tikkun get() = TikkunLoader.parse(tikkunJson)
 
+    val tehilimJson: String get() = read("tehilim.json")
+
+    val tehilim: Tehilim get() = TehilimLoader.parse(tehilimJson)
+
     private fun read(name: String): String {
         val file = File("src/main/res/raw/$name")
         require(file.exists()) { "ressource absente : ${file.absolutePath}" }

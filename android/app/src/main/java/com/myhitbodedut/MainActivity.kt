@@ -175,6 +175,9 @@ class MainActivity : AppCompatActivity() {
         findViewById<View>(R.id.tikkun_button).setOnClickListener {
             startActivity(Intent(this, TikkunActivity::class.java))
         }
+        findViewById<View>(R.id.tehilim_button).setOnClickListener {
+            startActivity(Intent(this, TehilimActivity::class.java))
+        }
         findViewById<View>(R.id.tefilot_button).setOnClickListener {
             startActivity(Intent(this, TefilotActivity::class.java))
         }
@@ -276,6 +279,7 @@ class MainActivity : AppCompatActivity() {
         renderMusic()
         renderRelance()
         renderTikkun()
+        renderTehilim()
         renderReminders()
         renderSettingsEntry()
         renderStartCard()
@@ -599,6 +603,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     /** Ou en est le Tikoun du jour, sans avoir a ouvrir la section. */
+    /** La ligne Tehilim dit la portion du jour, selon le mois hébraïque. */
+    private fun renderTehilim() {
+        val (jour, longueur) = CycleTehilim.jourHebreu(java.time.LocalDate.now())
+        findViewById<TextView>(R.id.tehilim_state).text =
+            getString(R.string.tehilim_today, TehilimTexte.portion(this, CycleTehilim.duMois(jour, longueur)))
+    }
+
     private fun renderTikkun() {
         val tikkun = Data.tikkun(this)
         val dits = Store.tikkunDone(this).size

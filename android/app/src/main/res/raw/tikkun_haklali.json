@@ -46,6 +46,7 @@
       "psaumes": "164/164 versets confrontes un a un a l'edition massoretique « Tanach with Nikkud » (tanach.us via le corpus public sefaria-export, domaine public). Aucune divergence subsistante, qere resolu et noms divins substitues.",
       "liturgie": "Ouverture, cloture, kavana et priere de Rabbi Natan proviennent de la seule page tikkun_haklali.html fournie le 20/09/2026. UN SEUL TEMOIN : contrairement aux psaumes, elles ne sont recoupees par aucune autre source. C'est la reserve principale de ce fichier.",
       "coquille_corrigee": "Tehilim 105:20 — la page fournie ecrit וַיַתִּירֵהוּ sans daguech, contre וַיַּתִּירֵהוּ dans les trois editions consultees. Corrige.",
+      "correction_2026_10_04": "En construisant le livre entier (tehilim.json) avec la même conversion, neuf versets se sont révélés fautifs ici et ont été corrigés : 77:1 et 105:28 avaient perdu « עַל־ » et « אֶת־ » en résolvant le qere ; 42:7 et 77:17 gardaient אֱלֹהַי / אֱלֹהִים (un caractère invisible avait bloqué la substitution) ; 41:5 portait ce caractère invisible ; 41:2, 59:4 et 105:3 avaient perdu le sof pasouq après le Nom ; 59:6 avait perdu le maqaf entre ה' et אֱלֹקִים. Les deux autres éditions consultées (Miqra according to the Masorah, texte consonantique) confirment 77:1 et 105:28.",
       "noms_divins": "Onze formes construites avaient echappe a la premiere substitution (אֱלֹהֵי, אֱלֹהֶיךָ, אֱלֹהָי, אֱלֹהֵינוּ, וֵאלֹהָי). Trouvees par un test durci apres une premiere livraison, et corrigees.",
       "relecture": {
         "par": "Claude, auteur du fichier",
@@ -179,7 +180,7 @@
         },
         {
           "n": 2,
-          "he": "אַשְׁרֵי מַשְׂכִּיל אֶל־דָּל בְּיוֹם רָעָה יְמַלְּטֵהוּ ה'"
+          "he": "אַשְׁרֵי מַשְׂכִּיל אֶל־דָּל בְּיוֹם רָעָה יְמַלְּטֵהוּ ה'׃"
         },
         {
           "n": 3,
@@ -191,7 +192,7 @@
         },
         {
           "n": 5,
-          "he": "אֲ‍נִי־אָמַרְתִּי ה' חָנֵּנִי רְפָאָה נַפְשִׁי כִּי־חָטָאתִי לָךְ׃"
+          "he": "אֲנִי־אָמַרְתִּי ה' חָנֵּנִי רְפָאָה נַפְשִׁי כִּי־חָטָאתִי לָךְ׃"
         },
         {
           "n": 6,
@@ -264,7 +265,7 @@
         },
         {
           "n": 7,
-          "he": "אֱ‍לֹהַי עָלַי נַפְשִׁי תִשְׁתּוֹחָח עַל־כֵּן אֶזְכָּרְךָ מֵאֶרֶץ יַרְדֵּן וְחֶרְמוֹנִים מֵהַר מִצְעָר׃"
+          "he": "אֱלֹקַי עָלַי נַפְשִׁי תִשְׁתּוֹחָח עַל־כֵּן אֶזְכָּרְךָ מֵאֶרֶץ יַרְדֵּן וְחֶרְמוֹנִים מֵהַר מִצְעָר׃"
         },
         {
           "n": 8,
@@ -309,7 +310,7 @@
         },
         {
           "n": 4,
-          "he": "כִּי הִנֵּה אָרְבוּ לְנַפְשִׁי יָגוּרוּ עָלַי עַזִים לֹא־פִשְׁעִי וְלֹא־חַטָּאתִי ה'"
+          "he": "כִּי הִנֵּה אָרְבוּ לְנַפְשִׁי יָגוּרוּ עָלַי עַזִים לֹא־פִשְׁעִי וְלֹא־חַטָּאתִי ה'׃"
         },
         {
           "n": 5,
@@ -317,7 +318,7 @@
         },
         {
           "n": 6,
-          "he": "וְאַתָּה ה'אֱלֹקִים צְבָאוֹת אֱלֹקֵי יִשְׂרָאֵל הָקִיצָה לִפְקֹד כָּל־הַגּוֹיִם אַל־תָּחֹן כָּל־בֹּגְדֵי אָוֶן סֶלָה׃"
+          "he": "וְאַתָּה ה'־אֱלֹקִים צְבָאוֹת אֱלֹקֵי יִשְׂרָאֵל הָקִיצָה לִפְקֹד כָּל־הַגּוֹיִם אַל־תָּחֹן כָּל־בֹּגְדֵי אָוֶן סֶלָה׃"
         },
         {
           "n": 7,
@@ -378,7 +379,7 @@
       "versets": [
         {
           "n": 1,
-          "he": "לַמְנַצֵּחַ יְדוּתוּן לְאָסָף מִזְמוֹר׃"
+          "he": "לַמְנַצֵּחַ עַל־יְדוּתוּן לְאָסָף מִזְמוֹר׃"
         },
         {
           "n": 2,
@@ -442,7 +443,7 @@
         },
         {
           "n": 17,
-          "he": "רָאוּךָ מַּיִם אֱ‍לֹהִים רָאוּךָ מַּיִם יָחִילוּ אַף יִרְגְּזוּ תְהֹמוֹת׃"
+          "he": "רָאוּךָ מַּיִם אֱלֹקִים רָאוּךָ מַּיִם יָחִילוּ אַף יִרְגְּזוּ תְהֹמוֹת׃"
         },
         {
           "n": 18,
@@ -556,7 +557,7 @@
         },
         {
           "n": 3,
-          "he": "הִתְהַלְלוּ בְּשֵׁם קָדְשׁוֹ יִשְׂמַח לֵב מְבַקְשֵׁי ה'"
+          "he": "הִתְהַלְלוּ בְּשֵׁם קָדְשׁוֹ יִשְׂמַח לֵב מְבַקְשֵׁי ה'׃"
         },
         {
           "n": 4,
@@ -656,7 +657,7 @@
         },
         {
           "n": 28,
-          "he": "שָׁלַח חֹשֶׁךְ וַיַּחְשִׁךְ וְלֹא־מָרוּ דְּבָרוֹ׃"
+          "he": "שָׁלַח חֹשֶׁךְ וַיַּחְשִׁךְ וְלֹא־מָרוּ אֶת־דְּבָרוֹ׃"
         },
         {
           "n": 29,

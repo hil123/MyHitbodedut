@@ -336,6 +336,28 @@
 
                         <ImageView style="@style/SectionChevron" />
                     </LinearLayout>
+                    <!-- Le livre entier, et la part du jour (04/10). -->
+                    <LinearLayout
+                        android:id="@+id/tehilim_button"
+                        style="@style/SectionRow">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                style="@style/SettingLabelStacked"
+                                android:text="@string/tehilim_title" />
+
+                            <TextView
+                                android:id="@+id/tehilim_state"
+                                style="@style/SectionState" />
+                        </LinearLayout>
+
+                        <ImageView style="@style/SectionChevron" />
+                    </LinearLayout>
                     <LinearLayout
                         android:id="@+id/tefilot_button"
                         style="@style/SectionRow">

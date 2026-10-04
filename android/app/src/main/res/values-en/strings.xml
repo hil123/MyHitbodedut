@@ -521,4 +521,23 @@
         <item quantity="one">day of hitbodedut</item>
         <item quantity="other">days of hitbodedut</item>
     </plurals>
+
+    <!-- Le livre de Tehilim (TehilimActivity, 04/10). -->
+    <string name="tehilim_title">Tehillim</string>
+    <string name="tehilim_count">%1$d psalms, %2$d verses</string>
+    <string name="tehilim_month">By day of the month</string>
+    <string name="tehilim_month_state">Day %1$s of the month: %2$s</string>
+    <string name="tehilim_week">By day of the week</string>
+    <string name="tehilim_week_state">%1$s: %2$s</string>
+    <string name="tehilim_all">All 150 psalms</string>
+    <string name="tehilim_single">Tehillim %1$s</string>
+    <string name="tehilim_range">Tehillim %1$s to %2$s</string>
+    <string name="tehilim_range_verses">Tehillim %1$s, verses %2$s to %3$s</string>
+    <string name="tehilim_previous">Previous psalm</string>
+    <string name="tehilim_next">Next psalm</string>
+    <string name="tehilim_today">Today: %1$s</string>
+    <plurals name="tehilim_verses">
+        <item quantity="one">%d verse</item>
+        <item quantity="other">%d verses</item>
+    </plurals>
 </resources>

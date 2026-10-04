@@ -561,4 +561,23 @@
         <item quantity="one">jour de hitbodedout</item>
         <item quantity="other">jours de hitbodedout</item>
     </plurals>
+
+    <!-- Le livre de Tehilim (TehilimActivity, 04/10). -->
+    <string name="tehilim_title">Tehilim</string>
+    <string name="tehilim_count">%1$d psaumes, %2$d versets</string>
+    <string name="tehilim_month">Selon le jour du mois</string>
+    <string name="tehilim_month_state">Jour %1$s du mois : %2$s</string>
+    <string name="tehilim_week">Selon le jour de la semaine</string>
+    <string name="tehilim_week_state">%1$s : %2$s</string>
+    <string name="tehilim_all">Les 150 psaumes</string>
+    <string name="tehilim_single">Tehilim %1$s</string>
+    <string name="tehilim_range">Tehilim %1$s à %2$s</string>
+    <string name="tehilim_range_verses">Tehilim %1$s, versets %2$s à %3$s</string>
+    <string name="tehilim_previous">Psaume précédent</string>
+    <string name="tehilim_next">Psaume suivant</string>
+    <string name="tehilim_today">Aujourd’hui : %1$s</string>
+    <plurals name="tehilim_verses">
+        <item quantity="one">%d verset</item>
+        <item quantity="other">%d versets</item>
+    </plurals>
 </resources>
