@@ -1,0 +1,479 @@
+#!/usr/bin/env python3
+"""
+Captures d'ecran reelles de l'application, sur l'emulateur du flux Android
+(job « captures », declenche a la main avec captures=true).
+
+Chaque etape est independante : un element introuvable donne une capture
+de ce qui est a l'ecran, nommee « NN-nom-INTROUVABLE », et l'arbre
+uiautomator de l'ecran est imprime dans le journal. Le job n'echoue jamais
+a cause d'une etape.
+"""
+import os
+import re
+import subprocess
+import sys
+import time
+import xml.etree.ElementTree as ET
+
+OUT = os.environ.get("CAPTURES_OUT", "out")
+os.makedirs(OUT, exist_ok=True)
+
+PKG = None
+ROOT = False
+PREFS = "shared_prefs/myhitbodedut.xml"
+
+
+def log(*a):
+    print(*a, flush=True)
+
+
+def adb(*args, input=None, timeout=90, binary=False):
+    try:
+        r = subprocess.run(["adb", *args], input=input, capture_output=True, timeout=timeout)
+    except subprocess.TimeoutExpired:
+        log("  adb timeout:", " ".join(args))
+        return b"" if binary else ""
+    if binary:
+        return r.stdout
+    out = r.stdout.decode("utf-8", "replace")
+    if r.returncode != 0:
+        log("  adb", " ".join(args), "->", r.returncode, r.stderr.decode("utf-8", "replace").strip()[:400])
+    return out
+
+
+def sh(cmd, **kw):
+    return adb("shell", cmd, **kw)
+
+
+def pause(s):
+    time.sleep(s)
+
+
+# --- Ecran -----------------------------------------------------------------
+
+def dump():
+    """L'arbre de l'ecran, ou None. uiautomator echoue parfois sur un ecran
+    qui ne se pose pas : on reessaie."""
+    for essai in range(4):
+        sh("rm -f /sdcard/ui.xml")
+        sh("uiautomator dump /sdcard/ui.xml", timeout=40)
+        brut = adb("exec-out", "cat", "/sdcard/ui.xml", binary=True)
+        if brut and brut.strip().startswith(b"<?xml"):
+            try:
+                return ET.fromstring(brut)
+            except ET.ParseError as e:
+                log("  xml illisible:", e)
+        pause(1.0)
+    return None
+
+
+def bornes(n):
+    m = re.match(r"\[(\d+),(\d+)\]\[(\d+),(\d+)\]", n.get("bounds", ""))
+    if not m:
+        return None
+    x1, y1, x2, y2 = map(int, m.groups())
+    if x2 <= x1 or y2 <= y1:
+        return None
+    return x1, y1, x2, y2
+
+
+def correspond(n, text=None, desc=None, rid=None, contains=False):
+    def eq(valeur, attendu):
+        if attendu is None:
+            return True
+        valeur = valeur or ""
+        if contains:
+            return attendu.lower() in valeur.lower()
+        return valeur == attendu
+
+    if rid is not None and not (n.get("resource-id", "") or "").endswith(":id/" + rid):
+        return False
+    if text is not None and not eq(n.get("text"), text):
+        return False
+    if desc is not None and not eq(n.get("content-desc"), desc):
+        return False
+    return True
+
+
+def ecran_texte(racine):
+    """L'ecran en clair pour le journal : une ligne par noeud parlant."""
+    if racine is None:
+        return "(aucun arbre)"
+    lignes = []
+    for n in racine.iter("node"):
+        t, d, r = n.get("text", ""), n.get("content-desc", ""), n.get("resource-id", "")
+        if t or d or r:
+            lignes.append(f"  [{n.get('class','').split('.')[-1]}] id={r.split('/')[-1]!s} text={t!r} desc={d!r} {n.get('bounds')}"
+                          + (" clickable" if n.get("clickable") == "true" else ""))
+    return "\n".join(lignes)
+
+
+def journal_ecran(pourquoi):
+    racine = dump()
+    log(f"---- ecran ({pourquoi}) ----")
+    log(ecran_texte(racine))
+    if racine is not None:
+        log("---- xml brut ----")
+        log(ET.tostring(racine, encoding="unicode")[:20000])
+    log("---- fin ----")
+
+
+def taille_ecran():
+    m = re.search(r"(\d+)x(\d+)", sh("wm size"))
+    return (int(m.group(1)), int(m.group(2))) if m else (1080, 2400)
+
+
+W, H = 1080, 2400
+
+
+def defiler(vers_le_bas=True):
+    x = W // 2
+    if vers_le_bas:
+        sh(f"input swipe {x} {int(H*0.72)} {x} {int(H*0.32)} 350")
+    else:
+        sh(f"input swipe {x} {int(H*0.32)} {x} {int(H*0.72)} 350")
+    pause(0.8)
+
+
+def trouver(text=None, desc=None, rid=None, contains=False, defilements=0, index=0):
+    for tour in range(defilements + 1):
+        racine = dump()
+        if racine is not None:
+            trouves = [n for n in racine.iter("node")
+                       if correspond(n, text, desc, rid, contains) and bornes(n)]
+            if len(trouves) > index:
+                return bornes(trouves[index])
+        if tour < defilements:
+            defiler(True)
+    return None
+
+
+def toucher(text=None, desc=None, rid=None, contains=False, defilements=0, index=0, attente=1.5):
+    quoi = " ".join(f"{k}={v!r}" for k, v in (("text", text), ("desc", desc), ("id", rid)) if v is not None)
+    b = trouver(text, desc, rid, contains, defilements, index)
+    if b is None:
+        log(f"  INTROUVABLE : {quoi}")
+        journal_ecran(f"recherche de {quoi}")
+        return False
+    x, y = (b[0] + b[2]) // 2, (b[1] + b[3]) // 2
+    log(f"  toucher {quoi} -> ({x},{y})")
+    sh(f"input tap {x} {y}")
+    pause(attente)
+    return True
+
+
+def retour(n=1):
+    for _ in range(n):
+        sh("input keyevent KEYCODE_BACK")
+        pause(1.0)
+
+
+def capture(nom, attente=1.2, ok=True):
+    pause(attente)
+    if not ok:
+        nom += "-INTROUVABLE"
+    chemin = os.path.join(OUT, nom + ".png")
+    png = adb("exec-out", "screencap", "-p", binary=True)
+    with open(chemin, "wb") as f:
+        f.write(png)
+    log(f"  capture {chemin} ({len(png)} octets)")
+
+
+# --- Application -----------------------------------------------------------
+
+def paquet():
+    paquets = [l.split(":", 1)[1].strip() for l in sh("pm list packages myhitbodedut").splitlines() if ":" in l]
+    log("paquets installes :", paquets)
+    for p in ("com.myhitbodedut.debug", "com.myhitbodedut"):
+        if p in paquets:
+            return p
+    return paquets[0] if paquets else "com.myhitbodedut.debug"
+
+
+def arreter():
+    sh(f"am force-stop {PKG}")
+    pause(1.0)
+
+
+def lancer(attente=4.0):
+    sh(f"am start -W -n {PKG}/com.myhitbodedut.MainActivity", timeout=60)
+    pause(attente)
+    # Si la presentation est la malgre la preference, on la passe.
+    if trouver(rid="onboarding_skip"):
+        log("  presentation affichee : on la passe")
+        toucher(rid="onboarding_skip")
+
+
+def lire_prefs():
+    return adb("exec-out", "run-as", PKG, "cat", PREFS, binary=True).decode("utf-8", "replace")
+
+
+def ecrire_prefs(contenu):
+    sh(f"run-as {PKG} mkdir -p shared_prefs")
+    adb("shell", f"run-as {PKG} sh -c 'cat > {PREFS}'", input=contenu.encode("utf-8"))
+
+
+def regler(valeurs):
+    """Ecrit des preferences (application arretee). valeurs : nom -> (type, valeur)."""
+    arreter()
+    xml = lire_prefs()
+    if "<map" not in xml:
+        xml = "<?xml version='1.0' encoding='utf-8' standalone='yes' ?>\n<map>\n</map>\n"
+    for nom, (typ, val) in valeurs.items():
+        xml = re.sub(rf'\s*<[^>]+name="{re.escape(nom)}"[^>]*/>', "", xml)
+        xml = re.sub(rf'\s*<string name="{re.escape(nom)}">.*?</string>', "", xml, flags=re.S)
+        if typ == "string":
+            ligne = f'    <string name="{nom}">{val}</string>'
+        else:
+            ligne = f'    <{typ} name="{nom}" value="{val}" />'
+        xml = xml.replace("</map>", ligne + "\n</map>")
+    ecrire_prefs(xml)
+    log("  preferences :", lire_prefs().replace("\n", " ")[:600])
+
+
+def langue(etiquette):
+    arreter()
+    sh(f"cmd locale set-app-locales {PKG} --locales {etiquette}")
+    log("  langue :", sh(f"cmd locale get-app-locales {PKG}").strip())
+
+
+def activite(classe, extras=""):
+    """Ouvre une activite non exportee : il faut adb root (images google_apis)."""
+    if not ROOT:
+        return False
+    sh(f"am start -W -n {PKG}/com.myhitbodedut.{classe} {extras}", timeout=60)
+    pause(2.5)
+    return True
+
+
+def etape(titre, fonction):
+    log(f"\n=== {titre} ===")
+    try:
+        fonction()
+    except Exception as e:  # une etape ratee ne doit pas arreter les suivantes
+        log(f"  ERREUR dans {titre} : {e!r}")
+        try:
+            journal_ecran("erreur")
+            capture(re.sub(r"\W+", "-", titre).strip("-") + "-ERREUR", attente=0.2)
+        except Exception:
+            pass
+
+
+def onglet_textes():
+    ok = toucher(rid="nav_texts", attente=1.5)
+    return ok
+
+
+def ouvrir_siddour():
+    lancer()
+    onglet_textes()
+    return toucher(rid="siddur_button", defilements=2, attente=2.0)
+
+
+def ouvrir_priere(fr=True):
+    if fr:
+        ok = toucher(text="Cha’harit", defilements=3, attente=3.0)
+        if not ok:
+            ok = toucher(text="harit", contains=True, defilements=2, attente=3.0)
+    else:
+        ok = toucher(text="שַׁחֲרִית", contains=True, defilements=3, attente=3.0)
+    if not ok:
+        ok = activite("SiddurLectureActivity", "--es id chaharit")
+    return ok
+
+
+# --- Le parcours -----------------------------------------------------------
+
+def main():
+    global PKG, ROOT, W, H
+    PKG = paquet()
+    log("paquet :", PKG)
+    W, H = taille_ecran()
+    log("ecran :", W, H)
+    r = adb("root")
+    log("adb root :", r.strip())
+    pause(3)
+    adb("wait-for-device")
+    ROOT = sh("id -u").strip() == "0"
+    log("root :", ROOT)
+
+    for perm in ("android.permission.POST_NOTIFICATIONS",):
+        sh(f"pm grant {PKG} {perm}")
+    # Pas de presentation au premier lancement (Store.KEY_ONBOARDED, Onboarding.VERSION = 2).
+    regler({"onboarded_version": ("int", 2)})
+    langue("fr")
+
+    def s01():
+        lancer(attente=6)
+        capture("01-accueil")
+        defiler(True)
+        capture("01b-accueil-suite")
+    etape("01 accueil", s01)
+
+    def s02():
+        ok = onglet_textes()
+        defiler(False)
+        capture("02-onglet-textes", ok=ok)
+    etape("02 onglet textes", s02)
+
+    def s03():
+        ok = toucher(rid="siddur_button", defilements=2, attente=2.5)
+        capture("03-siddour-liste", ok=ok)
+        defiler(True)
+        capture("03b-siddour-liste-suite", ok=ok)
+        defiler(False)
+        defiler(False)
+    etape("03 siddour", s03)
+
+    def s04():
+        ok = toucher(rid="siddur_heading_nusah", attente=1.5)
+        capture("04-choix-nusah", ok=ok)
+        if ok:
+            retour()
+    etape("04 nusah", s04)
+
+    def s05():
+        ok = ouvrir_priere()
+        capture("05-priere-pastille", attente=2.0, ok=ok)
+    etape("05 priere", s05)
+
+    def s06():
+        ok = toucher(desc="Réglages de lecture", attente=1.2)
+        capture("06-barre-depliee", ok=ok)
+    etape("06 barre", s06)
+
+    def s07():
+        ok = toucher(desc="Lettres plus grandes", attente=0.8)
+        ok = toucher(desc="Lettres plus grandes", attente=1.2) and ok
+        capture("07-lettres-plus-grandes", ok=ok)
+    etape("07 lettres", s07)
+
+    def s08():
+        ok = toucher(desc="Lecture sur fond noir", attente=1.5)
+        capture("08-lecture-nuit", ok=ok)
+    etape("08 nuit", s08)
+
+    def s09():
+        ok = toucher(desc="Masquer le bouton", attente=0.5)
+        capture("09-bouton-masque-snackbar", attente=0.3, ok=ok)
+    etape("09 masquer", s09)
+
+    def s10():
+        pause(4.5)  # la barre d'information s'en va
+        capture("10a-texte-sans-bouton", attente=0.2)
+        x, y = W // 2, int(H * 0.45)
+        sh(f"input swipe {x} {y} {x} {y} 900")
+        capture("10-appui-long-barre-revenue", attente=1.2)
+    etape("10 appui long", s10)
+
+    def remise_a_zero():
+        # Lecture de jour, 100 %, bouton visible : les ecrans suivants
+        # montrent l'etat ordinaire.
+        regler({"lecture_sombre": ("boolean", "false"),
+                "lecture_masquee": ("boolean", "false"),
+                "lecture_echelle": ("float", "1.0")})
+    etape("remise a zero de la lecture", remise_a_zero)
+
+    def s11():
+        lancer()
+        onglet_textes()
+        ok = toucher(rid="tehilim_button", defilements=2, attente=2.0)
+        capture("11a-tehilim", ok=ok)
+        ok2 = toucher(rid="tehilim_month_button", attente=3.0)
+        if not ok2:
+            ok2 = activite("TehilimLectureActivity", "--ei debut 1 --ei fin 1")
+        capture("11-tehilim-lecture", ok=ok2)
+    etape("11 tehilim", s11)
+
+    def s12():
+        lancer()
+        onglet_textes()
+        ok = toucher(rid="tikkun_button", defilements=2, attente=2.0)
+        capture("12a-tikkun", ok=ok)
+        ok2 = toucher(rid="tikkun_flow", defilements=1, attente=3.0)
+        if not ok2:
+            ok2 = activite("TikkunFlowActivity")
+        capture("12-tikkun-d-un-trait", ok=ok2)
+    etape("12 tikkun d'un trait", s12)
+
+    def s13():
+        lancer()
+        onglet_textes()
+        toucher(rid="tikkun_button", defilements=2, attente=2.0)
+        ok = toucher(rid="psalm_title", defilements=3, attente=3.0)
+        if not ok:
+            ok = activite("PsalmActivity", "--ei psalm_numero 16")
+        capture("13-tikkun-psaume", ok=ok)
+    etape("13 psaume du tikkun", s13)
+
+    def s14():
+        lancer()
+        onglet_textes()
+        ok = toucher(rid="library_button", defilements=3, attente=2.0)
+        capture("14a-bibliotheque", ok=ok)
+        ok = toucher(rid="subsection_he", defilements=1, attente=2.0)
+        capture("14b-bibliotheque-sous-section", ok=ok)
+        ok = toucher(rid="entry_title", defilements=1, attente=2.5)
+        if not ok:
+            ok = activite("LibraryEntryActivity", "--es entry_id src-lm2-25")
+        capture("14-bibliotheque-source", ok=ok)
+    etape("14 bibliotheque", s14)
+
+    def vitrine(nom):
+        resolu = sh(f"cmd package resolve-activity --brief -n {PKG}/com.myhitbodedut.VitrineWidgetActivity")
+        presente = "VitrineWidgetActivity" in sh(f"pm dump {PKG} | grep -i VitrineWidget")
+        log("  vitrine :", presente, resolu.strip()[:200])
+        if not presente:
+            log("  VitrineWidgetActivity absente : etape sautee")
+            return
+        sh(f"am start -W -n {PKG}/com.myhitbodedut.VitrineWidgetActivity", timeout=60)
+        capture(nom, attente=3.0)
+        defiler(True)
+        capture(nom + "-suite", attente=1.0)
+        defiler(True)
+        capture(nom + "-fin", attente=1.0)
+    etape("17 vitrine des vignettes", lambda: vitrine("17-vitrine-vignettes"))
+
+    def s15():
+        lancer()
+        ok = toucher(rid="nav_settings", attente=2.0)
+        ok = ok and toucher(rid="accent_button", defilements=4, attente=1.5)
+        capture("15a-choix-couleur", ok=ok)
+        ok = ok and toucher(text="Violet", attente=2.5)
+        capture("15b-reglages-violet", ok=ok)
+        if not ok:
+            regler({"apparence_accent": ("string", "violet")})
+        ouvrir_siddour()
+        capture("15c-siddour-violet")
+        ok = ouvrir_priere()
+        capture("15d-priere-pastille-violet", ok=ok)
+        ok = toucher(desc="Réglages de lecture", attente=1.2)
+        capture("15e-priere-barre-violet", ok=ok)
+    etape("15 couleur violette", s15)
+
+    etape("17b vitrine en violet", lambda: vitrine("17b-vitrine-vignettes-violet"))
+
+    def s16():
+        regler({"apparence_accent": ("string", "vert")})
+        langue("he")
+        lancer(attente=5)
+        capture("16a-he-accueil")
+        onglet_textes()
+        capture("16b-he-onglet-textes")
+        ok = toucher(rid="siddur_button", defilements=2, attente=2.5)
+        capture("16c-he-siddour-liste", ok=ok)
+        ok = ouvrir_priere(fr=False)
+        capture("16d-he-priere-pastille", attente=1.5, ok=ok)
+        ok = toucher(desc="הגדרות קריאה", attente=1.2)
+        capture("16e-he-priere-barre-depliee", ok=ok)
+    etape("16 passage en hebreu", s16)
+
+    log("\ncaptures :", sorted(os.listdir(OUT)))
+
+
+if __name__ == "__main__":
+    try:
+        main()
+    except Exception as e:
+        log("ERREUR generale :", repr(e))
+    sys.exit(0)
