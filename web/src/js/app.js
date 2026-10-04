@@ -3,7 +3,7 @@
 // écran de réglages. Les écrans suivants arrivent par étapes ; ce qui
 // n'existe pas encore est montré, mais inerte (classe « a-venir »).
 
-import { chargeTraduction, langueInitiale, LANGUES } from './i18n.js';
+import { chargeTraduction, formate, langueInitiale, LANGUES } from './i18n.js';
 import { Anneaux, CycleTehilim, DureeSeance, JaugeSemaine, Plaque, Reference, Salutation } from './regles.js';
 import { ART_DU_MOMENT, ChizukBag, ChizukRules } from './chizuk.js';
 import { DanseMesure } from './seance.js';
@@ -596,54 +596,180 @@ function chargeSiddur() {
   return false;
 }
 
-// --- Le bouton discret de lecture (ReglagesLecture.kt, capture de CalJ du 04/10) -----
+// --- Le bouton de lecture (ReglagesLecture.kt) -------------------------------------
+// Une petite pastille « Aa » au bas du texte, aux couleurs de l'utilisateur.
+// Touchée, elle s'ouvre en barre : taille des lettres, lecture de nuit,
+// nusah au siddour, masquer, replier. Masquée, elle disparaît de tous les
+// écrans de lecture ; un appui long sur le texte la fait revenir.
 let reglagesOuverts = false;
 let choixNusahOuvert = false;
+const ECRANS_LUS = ['lecture', 'priere'];
+
+/** Les chaînes nouvelles, tant qu'Android ne les a pas encore : le français. */
+const CHAINES_LECTURE = {
+  lecture_reglages: 'Réglages de lecture',
+  lecture_nuit: 'Lecture sur fond noir',
+  lecture_plus: 'Lettres plus grandes',
+  lecture_moins: 'Lettres plus petites',
+  lecture_masquer: 'Masquer le bouton',
+  lecture_masque_info: 'Bouton masqué. Appui long sur le texte pour le faire revenir.',
+  lecture_annuler_masque: 'Annuler',
+  lecture_replier: 'Replier',
+  lecture_taille: 'Taille du texte : %1$d %%',
+};
+function tl(cle, ...args) {
+  try { return tr.t(cle, ...args); } catch { return formate(CHAINES_LECTURE[cle] ?? cle, args); }
+}
+
+// Au trait, bouts arrondis : le dessin des autres icônes de l'application.
 const ICONES_LECTURE = {
-  reglages: ['M4,7 L20,7 M4,12 L20,12 M4,17 L20,17', 'M8.5,7 a2,2 0 1,0 4,0 a2,2 0 1,0 -4,0 M13,12 a2,2 0 1,0 4,0 a2,2 0 1,0 -4,0 M6,17 a2,2 0 1,0 4,0 a2,2 0 1,0 -4,0'],
-  ampoule: ['M9,18 L15,18 M10,21 L14,21 M12,3 A6,6 0 0,0 8.5,13.9 C9.3,14.6 9.5,15.4 9.5,16 L14.5,16 C14.5,15.4 14.7,14.6 15.5,13.9 A6,6 0 0,0 12,3 Z', 'M12,0.6 L12,1.4 M3.6,4.2 L4.3,4.8 M20.4,4.2 L19.7,4.8'],
-  nusah: ['M5,4.5 A1.5,1.5 0 0,1 6.5,3 L19,3 L19,17 L6.5,17 A1.5,1.5 0 0,0 5,18.5 Z M5,18.5 A1.5,1.5 0 0,0 6.5,20 L11,20', 'M13.5,19.5 A3,3 0 0,1 19.4,18.4 M19.6,16.6 L19.6,18.6 L17.6,18.6'],
-  fermer: ['M6,6 L18,18 M18,6 L6,18'],
+  lune: ['M19.5,14.6 A7.8,7.8 0 1,1 9.4,4.5 A6.2,6.2 0 0,0 19.5,14.6 Z'],
+  masquer: ['M3,12 C5,8 8.2,6 12,6 C15.8,6 19,8 21,12 C19,16 15.8,18 12,18 C8.2,18 5,16 3,12 Z', 'M9.2,12 a2.8,2.8 0 1,0 5.6,0 a2.8,2.8 0 1,0 -5.6,0', 'M4,4 L20,20'],
+  replier: ['M6.5,9.5 L12,15 L17.5,9.5'],
+  coche: ['M5,12.5 L10,17 L19,7.5'],
 };
 function icone(nom) {
   const svg = s('svg', { viewBox: '0 0 24 24', 'aria-hidden': 'true' });
   for (const d of ICONES_LECTURE[nom]) {
-    svg.append(s('path', { d, fill: 'none', stroke: 'currentColor', 'stroke-width': '1.8', 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }));
+    svg.append(s('path', { d, fill: 'none', stroke: 'currentColor', 'stroke-width': '1.9', 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }));
   }
   return svg;
 }
-function reglagesLecture({ avecNusah }) {
-  const echelle = (delta) => {
-    const e = store.lectureEchelle();
-    const n = Math.round(Math.min(2, Math.max(0.8, e + delta)) * 10) / 10;
-    if (n !== e) { store.setLectureEchelle(n); rendre(); }
-  };
-  if (!reglagesOuverts) {
-    return h('button', { class: 'lecture-pastille', 'aria-label': tr.t('lecture_reglages'), onclick: () => { reglagesOuverts = true; rendre(); } }, icone('reglages'));
-  }
-  return h('div', { class: 'lecture-reglages' },
-    choixNusahOuvert ? h('div', { class: 'lecture-nusah', role: 'menu' }, NUSAH.map(([cle, nom]) => h('button', {
-      role: 'menuitemradio', 'aria-checked': String(cle === store.siddurNusah()),
-      onclick: () => { store.setSiddurNusah(cle); choixNusahOuvert = false; rendre(); },
-    }, tr.t(nom)))) : null,
-    h('div', { class: 'lecture-colonne' },
-      h('button', { 'aria-label': tr.t('lecture_nuit'), 'aria-pressed': String(store.lectureSombre()), onclick: () => { store.setLectureSombre(!store.lectureSombre()); rendre(); } }, icone('ampoule')),
-      avecNusah ? h('button', { 'aria-label': tr.t('siddur_choose'), onclick: () => { choixNusahOuvert = !choixNusahOuvert; rendre(); } }, icone('nusah')) : null,
-      h('button', { class: 'lettre plus', lang: 'he', 'aria-label': tr.t('lecture_plus'), onclick: () => echelle(0.1) }, 'א↑'),
-      h('button', { class: 'lettre', lang: 'he', 'aria-label': tr.t('lecture_moins'), onclick: () => echelle(-0.1) }, 'א↓'),
-      h('button', { 'aria-label': tr.t('lecture_fermer'), onclick: () => { reglagesOuverts = false; choixNusahOuvert = false; rendre(); } }, icone('fermer'))));
+
+/** Un nouveau rendu, puis le doigt (ou le clavier) retrouve le bon bouton. */
+function rendreEtViser(selecteur) {
+  rendre();
+  app.querySelector(selecteur)?.focus({ preventScroll: true });
 }
-/** Un écran de lecture : le texte, ses réglages, et la pastille qui s'efface en descendant. */
-function ecranLu(titre, contenu, { avecNusah, pied = null }) {
+
+/** Un message bref avec une action (le Snackbar d'Android). */
+function signaleAvecAction(texte, action, onAction, duree = 5000) {
+  document.querySelector('.toast')?.remove();
+  const t = h('div', { class: 'toast toast-action', role: 'status' },
+    h('span', {}, texte),
+    h('button', { type: 'button', onclick: () => { t.remove(); onAction(); } }, action));
+  document.body.append(t);
+  setTimeout(() => t.remove(), duree);
+}
+
+function masquerLecture() {
+  store.setLectureMasquee(true);
+  reglagesOuverts = false;
+  choixNusahOuvert = false;
+  rendre();
+  signaleAvecAction(tl('lecture_masque_info'), tl('lecture_annuler_masque'), () => {
+    store.setLectureMasquee(false);
+    rendreEtViser('.lecture-pastille');
+  });
+}
+
+function ramenerLecture() {
+  store.setLectureMasquee(false);
+  reglagesOuverts = true;
+  document.querySelector('.toast')?.remove();
+  navigator.vibrate?.(10);
+  rendreEtViser('.lecture-barre button');
+}
+
+function reglagesLecture({ avecNusah }) {
+  if (store.lectureMasquee()) return null;
+  if (!reglagesOuverts) {
+    return h('div', { class: 'lecture-ctrl' },
+      h('button', {
+        type: 'button', class: 'lecture-pastille', lang: 'en', dir: 'ltr', 'aria-label': tl('lecture_reglages'), 'aria-expanded': 'false',
+        onclick: () => { reglagesOuverts = true; rendreEtViser('.lecture-barre button'); },
+      }, 'Aa'));
+  }
+  const e = store.lectureEchelle();
+  const pourcent = Math.round(e * 100);
+  const echelle = (n) => {
+    const v = Math.round(Math.min(2, Math.max(0.8, n)) * 10) / 10;
+    if (v !== e) { store.setLectureEchelle(v); rendre(); }
+  };
+  const nuit = store.lectureSombre();
+  const bouton = (attrs, ...enfants) => h('button', { type: 'button', ...attrs }, ...enfants);
+  const separateur = () => h('span', { class: 'lecture-sep', 'aria-hidden': 'true' });
+  return h('div', { class: 'lecture-ctrl' },
+    choixNusahOuvert ? h('div', { class: 'lecture-nusah', role: 'menu', 'aria-label': tl('siddur_choose') }, NUSAH.map(([cle, nom]) => {
+      const courant = cle === store.siddurNusah();
+      return bouton({
+        role: 'menuitemradio', 'aria-checked': String(courant),
+        onclick: () => { store.setSiddurNusah(cle); choixNusahOuvert = false; rendreEtViser('.lecture-nusah-bouton'); },
+      }, h('span', { class: 'coche' }, courant ? icone('coche') : null), tr.t(nom));
+    })) : null,
+    h('div', { class: 'lecture-barre', role: 'toolbar', 'aria-label': tl('lecture_reglages') },
+      bouton({ class: 'lettres', lang: 'en', dir: 'ltr', 'aria-label': tl('lecture_moins'), disabled: e <= 0.8, onclick: () => echelle(e - 0.1) }, 'A−'),
+      bouton({ class: 'taille', 'aria-label': tl('lecture_taille', pourcent), onclick: () => echelle(1) },
+        new Intl.NumberFormat(tr.langue, { style: 'percent' }).format(pourcent / 100)),
+      bouton({ class: 'lettres', lang: 'en', dir: 'ltr', 'aria-label': tl('lecture_plus'), disabled: e >= 2, onclick: () => echelle(e + 0.1) }, 'A+'),
+      separateur(),
+      bouton({ class: 'icone-bouton', 'aria-label': tl('lecture_nuit'), 'aria-pressed': String(nuit), onclick: () => { store.setLectureSombre(!nuit); rendreEtViser('.lecture-barre [aria-pressed]'); } }, icone('lune')),
+      avecNusah ? bouton({
+        class: 'lecture-nusah-bouton', 'aria-haspopup': 'menu', 'aria-expanded': String(choixNusahOuvert),
+        onclick: () => { choixNusahOuvert = !choixNusahOuvert; rendreEtViser(choixNusahOuvert ? '.lecture-nusah [aria-checked="true"]' : '.lecture-nusah-bouton'); },
+      }, tr.t('siddur_choose')) : null,
+      separateur(),
+      bouton({ class: 'icone-bouton', 'aria-label': tl('lecture_masquer'), onclick: masquerLecture }, icone('masquer')),
+      bouton({ class: 'icone-bouton', 'aria-label': tl('lecture_replier'), 'aria-expanded': 'true', onclick: () => { reglagesOuverts = false; choixNusahOuvert = false; rendreEtViser('.lecture-pastille'); } }, icone('replier'))));
+}
+
+/**
+ * L'appui long sur le texte, quand le bouton est masqué : 550 ms sans
+ * bouger de plus de 10 px, ou le menu contextuel. Rien n'est empêché tant
+ * qu'il n'a pas abouti : le texte défile comme d'habitude.
+ */
+function appuiLongPourRamener(zone) {
+  let minuteur = null;
+  let depart = null;
+  let abouti = 0;
+  const annule = () => { clearTimeout(minuteur); minuteur = null; depart = null; };
+  zone.addEventListener('pointerdown', (e) => {
+    if (!store.lectureMasquee() || (e.pointerType === 'mouse' && e.button !== 0)) return;
+    depart = { x: e.clientX, y: e.clientY };
+    minuteur = setTimeout(() => { minuteur = null; abouti = Date.now(); ramenerLecture(); }, 550);
+  });
+  zone.addEventListener('pointermove', (e) => {
+    if (depart && Math.hypot(e.clientX - depart.x, e.clientY - depart.y) > 10) annule();
+  });
+  for (const fin of ['pointerup', 'pointercancel', 'pointerleave', 'scroll']) zone.addEventListener(fin, annule, { passive: true });
+  zone.addEventListener('contextmenu', (e) => {
+    if (Date.now() - abouti < 800) { e.preventDefault(); return; }
+    if (!store.lectureMasquee()) return;
+    e.preventDefault();
+    annule();
+    abouti = Date.now();
+    ramenerLecture();
+  });
+  // Le doigt qui se lève après l'appui long ne touche rien d'autre.
+  zone.addEventListener('click', (e) => {
+    if (Date.now() - abouti < 800) { e.preventDefault(); e.stopPropagation(); }
+  }, true);
+}
+
+/**
+ * Un écran de lecture de texte saint : le texte à la taille choisie, de
+ * nuit si demandé, et le bouton de lecture au-dessus du pied d'écran.
+ */
+function ecranLu(titre, contenu, { avecNusah = false, pied = null } = {}) {
   const defile = h('div', { class: 'defile' }, contenu);
+  const ctrl = reglagesLecture({ avecNusah });
   let avant = 0;
   defile.addEventListener('scroll', () => {
-    const p = defile.parentElement?.querySelector('.lecture-pastille');
-    if (p) p.classList.toggle('cachee', defile.scrollTop > avant + 4 ? true : defile.scrollTop < avant - 4 ? false : p.classList.contains('cachee'));
-    avant = defile.scrollTop;
+    const p = ctrl?.querySelector('.lecture-pastille');
+    const y = defile.scrollTop;
+    if (p) {
+      // En bas du texte, la pastille revient : on n'a plus à remonter pour la trouver.
+      const enBas = y + defile.clientHeight >= defile.scrollHeight - 4;
+      if (enBas || y < avant - 4) p.classList.remove('cachee');
+      else if (y > avant + 4) p.classList.add('cachee');
+    }
+    avant = y;
   }, { passive: true });
+  appuiLongPourRamener(defile);
   return h('div', { class: `ecran lu${store.lectureSombre() ? ' nuit' : ''}`, style: `--echelle: ${store.lectureEchelle()}` },
-    barre(titre), defile, pied, reglagesLecture({ avecNusah }));
+    barre(titre),
+    h('div', { class: `lu-zone${pied ? '' : ' sans-pied'}` }, defile, ctrl),
+    pied);
 }
 
 /**
@@ -1202,8 +1328,9 @@ function rendre() {
   // L'accueil qui apparaît s'anime seul : anneaux, puis saut ou fête (04/10).
   const accueil = ecran === 'accueil' && onglet === 'aujourdhui';
   if (!accueil) { accueilAnime = false; facePlaque = 'hassid'; clearTimeout(minuteurPlaque); }
-  if (!['lecture', 'priere'].includes(ecran)) { reglagesOuverts = false; choixNusahOuvert = false; }
   else if (!accueilAnime) { accueilAnime = true; setTimeout(animerAccueil, 950); }
+  // En quittant la lecture, le bouton se replie ; l'écran suivant le retrouve en pastille.
+  if (!ECRANS_LUS.includes(ecran)) { reglagesOuverts = false; choixNusahOuvert = false; }
   ajusteLesTextes();
   if (ecran === 'seance') demarreTic();
   if (ecran === 'bravo') danse();

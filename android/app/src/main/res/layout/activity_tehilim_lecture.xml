@@ -60,7 +60,7 @@
         </FrameLayout>
     </LinearLayout>
 
-    <!-- Le texte, et par-dessus le bouton discret de lecture (ReglagesLecture). -->
+    <!-- Le texte ; le bouton de lecture (ReglagesLecture) se pose par-dessus tout l'écran. -->
     <FrameLayout
         android:id="@+id/lecture_cadre"
         android:layout_width="match_parent"

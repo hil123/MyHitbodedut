@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.ScrollView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -64,6 +65,12 @@ class LibraryEntryActivity : AppCompatActivity() {
             container.addView(hebrewParagraph(paragraphe, first = index == 0))
         }
 
+        // Le bouton de lecture, pour le texte hébreu : taille et lecture de nuit.
+        val defilement = findViewById<ScrollView>(R.id.entry_scroll)
+        ReglagesLecture.marquer(container, ReglagesLecture.Role.FOND)
+        ReglagesLecture.installer(this, defilement) { ReglagesLecture.appliquer(container) }
+        ReglagesLecture.appliquer(container)
+
         // Ni note ni édition sous le texte : ce sont des détails d'atelier,
         // pas de lecture. Ils restent dans bibliotheque.json, qui est le
         // registre de ce qui a été vérifié pour chaque source ; l'attribution
@@ -73,7 +80,7 @@ class LibraryEntryActivity : AppCompatActivity() {
 
     /** Un paragraphe hébreu : lu de droite à gauche, quelle que soit l'UI. */
     private fun hebrewParagraph(text: String, first: Boolean): TextView =
-        TextView(this).apply {
+        ReglagesLecture.marquer(TextView(this).apply {
             layoutParams = LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -85,7 +92,7 @@ class LibraryEntryActivity : AppCompatActivity() {
             setLineSpacing(dp(4).toFloat(), 1f)
             setTextColor(Apparence.couleur(context, R.color.ink))
             PoliceHebraique.appliquer(this)
-        }
+        }, ReglagesLecture.Role.TEXTE)
 
     // --- Article --------------------------------------------------------------
 

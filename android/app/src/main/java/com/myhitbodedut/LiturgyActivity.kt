@@ -5,7 +5,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.LinearLayout
+import android.widget.ScrollView
 import android.widget.TextView
+import com.myhitbodedut.ReglagesLecture.Role
 import androidx.appcompat.app.AppCompatActivity
 
 /**
@@ -48,10 +50,17 @@ class LiturgyActivity : AppCompatActivity() {
 
         findViewById<Button>(R.id.psalm_done).visibility = View.GONE
         findViewById<Button>(R.id.psalm_next).visibility = View.GONE
+
+        // Le bouton de lecture : taille des lettres et lecture de nuit.
+        val defilement = findViewById<ScrollView>(R.id.psalm_scroll)
+        ReglagesLecture.marquer(defilement, Role.FOND)
+        ReglagesLecture.marquer(conteneur, Role.FOND)
+        ReglagesLecture.installer(this, defilement) { ReglagesLecture.appliquer(defilement) }
+        ReglagesLecture.appliquer(defilement)
     }
 
     private fun paragraphe(texte: String, premier: Boolean, centre: Boolean): View =
-        TextView(this).apply {
+        ReglagesLecture.marquer(TextView(this).apply {
             layoutParams = LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -64,7 +73,7 @@ class LiturgyActivity : AppCompatActivity() {
             setLineSpacing(dp(6).toFloat(), 1f)
             setTextColor(Apparence.couleur(context, R.color.ink))
             PoliceHebraique.appliquer(this)
-        }
+        }, Role.TEXTE)
 
     private fun dp(value: Int): Int = (value * resources.displayMetrics.density).toInt()
 

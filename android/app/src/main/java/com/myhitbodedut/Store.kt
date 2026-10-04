@@ -81,6 +81,7 @@ object Store {
     private const val KEY_SIDDUR_NUSAH = "siddur_nusah"
     private const val KEY_LECTURE_ECHELLE = "lecture_echelle"
     private const val KEY_LECTURE_SOMBRE = "lecture_sombre"
+    private const val KEY_LECTURE_MASQUEE = "lecture_masquee"
     private const val KEY_PAUSE_SHABBAT = "pause_shabbat"
     private const val KEY_IN_ISRAEL = "in_israel"
     private const val KEY_PAUSED_DATES = "paused_dates"
@@ -443,14 +444,24 @@ object Store {
         prefs(context).edit().putFloat(KEY_LECTURE_ECHELLE, echelle).apply()
     }
 
-    /** La lecture sur fond noir, choisie d'un toucher sur l'ampoule. */
+    /** La lecture sur fond noir, choisie d'un toucher sur la lune. */
     fun lectureSombre(context: Context): Boolean = prefs(context).getBoolean(KEY_LECTURE_SOMBRE, false)
 
     fun setLectureSombre(context: Context, sombre: Boolean) {
         prefs(context).edit().putBoolean(KEY_LECTURE_SOMBRE, sombre).apply()
     }
 
-    /** Le nusah du siddour : Edot HaMizrach par défaut, comme CalJ. */
+    /**
+     * Le bouton de lecture masqué tout à fait (demande du 04/10) : il ne
+     * revient que par un appui long sur le texte, ou par les réglages.
+     */
+    fun lectureMasquee(context: Context): Boolean = prefs(context).getBoolean(KEY_LECTURE_MASQUEE, false)
+
+    fun setLectureMasquee(context: Context, masquee: Boolean) {
+        prefs(context).edit().putBoolean(KEY_LECTURE_MASQUEE, masquee).apply()
+    }
+
+    /** Le nusah du siddour : Edot HaMizra'h par défaut. */
     fun siddurNusah(context: Context): Nusah = Nusah.de(prefs(context).getString(KEY_SIDDUR_NUSAH, null))
 
     fun setSiddurNusah(context: Context, nusah: Nusah) {

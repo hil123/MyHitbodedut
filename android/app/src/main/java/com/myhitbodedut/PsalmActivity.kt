@@ -6,7 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.LinearLayout
+import android.widget.ScrollView
 import android.widget.TextView
+import com.myhitbodedut.ReglagesLecture.Role
 import androidx.appcompat.app.AppCompatActivity
 
 /** Un psaume du Tikoun, verset par verset. */
@@ -42,6 +44,15 @@ class PsalmActivity : AppCompatActivity() {
             // source : elle n'est pas du texte, elle dit comment le lire.
             verset.arret?.let { conteneur.addView(vueArret(it)) }
         }
+
+        // Le bouton de lecture : taille des lettres et lecture de nuit.
+        val defilement = findViewById<ScrollView>(R.id.psalm_scroll)
+        ReglagesLecture.marquer(defilement, Role.FOND)
+        ReglagesLecture.marquer(conteneur, Role.FOND)
+        ReglagesLecture.installer(this, defilement, auDessusDe = findViewById(R.id.psalm_actions)) {
+            ReglagesLecture.appliquer(defilement)
+        }
+        ReglagesLecture.appliquer(defilement)
 
         findViewById<Button>(R.id.psalm_next).apply {
             val suivant = tikkun.psaumes.getOrNull(rang)
@@ -88,16 +99,16 @@ class PsalmActivity : AppCompatActivity() {
             ).apply { topMargin = if (premier) 0 else dp(12) }
         }
         ligne.addView(
-            TextView(this).apply {
+            ReglagesLecture.marquer(TextView(this).apply {
                 text = verset.numero.toString()
                 textSize = 12f
                 setTextColor(Apparence.couleur(context, R.color.brand))
                 layoutParams = LinearLayout.LayoutParams(dp(22), ViewGroup.LayoutParams.WRAP_CONTENT)
                     .apply { topMargin = dp(5) }
-            }
+            }, Role.TITRE)
         )
         ligne.addView(
-            TextView(this).apply {
+            ReglagesLecture.marquer(TextView(this).apply {
                 text = verset.he
                 textSize = 19f
                 PoliceHebraique.appliquer(this)
@@ -108,7 +119,7 @@ class PsalmActivity : AppCompatActivity() {
                 layoutParams = LinearLayout.LayoutParams(
                     0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f
                 )
-            }
+            }, Role.TEXTE)
         )
         return ligne
     }
@@ -118,7 +129,7 @@ class PsalmActivity : AppCompatActivity() {
      * comme un avertissement : ni pictogramme, ni cadre, ni couleur d'alerte.
      * Seule la teinte attenuee la distingue du verset.
      */
-    private fun vueArret(arret: Pause): View = TextView(this).apply {
+    private fun vueArret(arret: Pause): View = ReglagesLecture.marquer(TextView(this).apply {
         layoutParams = LinearLayout.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT,
             ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -133,7 +144,7 @@ class PsalmActivity : AppCompatActivity() {
         textSize = 15f
         setLineSpacing(dp(4).toFloat(), 1f)
         setTextColor(Apparence.couleur(context, R.color.muted))
-    }
+    }, Role.DISCRET)
 
     private fun dp(value: Int): Int = (value * resources.displayMetrics.density).toInt()
 

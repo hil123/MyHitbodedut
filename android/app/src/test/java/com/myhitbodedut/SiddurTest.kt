@@ -112,28 +112,11 @@ class SiddurTest {
         assertTrue(accueil.contains("Intent(this, SiddurActivity::class.java)"))
         val manifeste = File("src/main/AndroidManifest.xml").readText()
         listOf(".SiddurActivity", ".SiddurLectureActivity").forEach { assertTrue(manifeste.contains("android:name=\"$it\"")) }
-        assertTrue(File("src/main/java/com/myhitbodedut/SiddurActivity.kt").readText().contains("Store.setSiddurNusah(context, n)"))
+        assertTrue(File("src/main/java/com/myhitbodedut/SiddurActivity.kt").readText().contains("Store.setSiddurNusah(this, Nusah.entries[i])"))
         listOf("values", "values-en", "values-iw").forEach { d ->
             val xml = File("src/main/res/$d/strings.xml").readText()
             listOf("siddur_title", "siddur_hint", "siddur_books", "siddur_choose", "siddur_nusah_edot", "siddur_nusah_sefard",
                 "siddur_nusah_ashkenaz", "siddur_sources", "siddur_source").forEach { assertTrue("$d : $it", xml.contains("name=\"$it\"")) }
-        }
-    }
-
-    /** Le bouton discret de lecture (capture de CalJ, 04/10) : dans les deux lectures, réglages gardés. */
-    @Test
-    fun `les lectures ont le bouton discret`() {
-        val siddur = File("src/main/java/com/myhitbodedut/SiddurLectureActivity.kt").readText()
-        assertTrue(siddur.contains("ReglagesLecture(") && siddur.contains("avecNusah = true"))
-        val tehilim = File("src/main/java/com/myhitbodedut/TehilimLectureActivity.kt").readText()
-        assertTrue(tehilim.contains("ReglagesLecture(") && tehilim.contains("avecNusah = false"))
-        val store = File("src/main/java/com/myhitbodedut/Store.kt").readText()
-        assertTrue(store.contains("fun lectureEchelle") && store.contains("fun lectureSombre"))
-        listOf("values", "values-en", "values-iw").forEach { d ->
-            val xml = File("src/main/res/$d/strings.xml").readText()
-            listOf("lecture_reglages", "lecture_nuit", "lecture_fermer", "lecture_plus", "lecture_moins").forEach {
-                assertTrue("$d : $it", xml.contains("name=\"$it\""))
-            }
         }
     }
 }

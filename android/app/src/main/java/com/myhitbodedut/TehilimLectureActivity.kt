@@ -37,9 +37,10 @@ class TehilimLectureActivity : AppCompatActivity() {
         )
         findViewById<Button>(R.id.lecture_previous).setOnClickListener { afficher(Portion(portion.debut - 1, portion.debut - 1)) }
         findViewById<Button>(R.id.lecture_next).setOnClickListener { afficher(Portion(portion.debut + 1, portion.debut + 1)) }
-        // Le bouton discret : fond noir et taille des lettres (pas de nusah ici).
-        ReglagesLecture(findViewById(R.id.lecture_cadre), avecNusah = false) { afficher(portion, garderPlace = true) }
-            .suivre(findViewById<ScrollView>(R.id.lecture_scroll))
+        // Le bouton de lecture : taille des lettres et lecture de nuit (pas de nusah ici).
+        ReglagesLecture.installer(this, findViewById<ScrollView>(R.id.lecture_scroll), auDessusDe = findViewById(R.id.lecture_nav)) {
+            afficher(portion, garderPlace = true)
+        }
         afficher(portion)
     }
 

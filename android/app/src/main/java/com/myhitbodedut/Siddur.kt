@@ -86,3 +86,33 @@ object SiddurLoader {
 
     fun load(context: Context, nusah: Nusah): Siddur = parse(Json.readRaw(context, nusah.brut))
 }
+
+/**
+ * Le texte que l'heure suggère, en tête de la liste du siddour : une
+ * indication d'après l'horloge, non un horaire de zmanim. Les heures sont
+ * larges exprès ; la liste entière reste juste en dessous.
+ */
+object SiddurMoment {
+
+    fun suggestion(heure: java.time.LocalTime): String {
+        val minutes = heure.hour * 60 + heure.minute
+        return when {
+            minutes < 5 * 60 -> "tikoun_hatsot"
+            minutes < 6 * 60 + 30 -> "birkot_hachahar"
+            minutes < 12 * 60 + 30 -> "chaharit"
+            minutes < 18 * 60 + 30 -> "minha"
+            minutes < 22 * 60 + 30 -> "arvit"
+            else -> "chema_coucher"
+        }
+    }
+
+    /** Le hassid qui accompagne la suggestion, parmi les illustrations de l'application. */
+    fun illustration(id: String): Int = when (id) {
+        "tikoun_hatsot" -> R.drawable.char_sitting_low
+        "birkot_hachahar" -> R.drawable.char_welcome
+        "chaharit" -> R.drawable.char_praying
+        "minha" -> R.drawable.char_standing_back
+        "arvit" -> R.drawable.char_reading_seated
+        else -> R.drawable.char_thinking
+    }
+}

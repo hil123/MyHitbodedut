@@ -51,8 +51,7 @@
     <color name="ring_streak_on_dark">#F0C46A</color>
     <!-- Fond très dilué du badge d'avertissement. -->
     <color name="warning_wash">#1FC66B2D</color>
-    <!-- La lecture des textes saints (ReglagesLecture) : le bouton discret, et le fond noir. -->
-    <color name="lecture_bouton">#D96A9BD1</color>
+    <!-- La lecture de nuit des textes saints (ReglagesLecture) ; le bouton, lui, prend l'accent choisi. -->
     <color name="lecture_nuit_fond">#000000</color>
     <color name="lecture_nuit_texte">#F2F0EA</color>
     <color name="lecture_nuit_discret">#A3A8A5</color>

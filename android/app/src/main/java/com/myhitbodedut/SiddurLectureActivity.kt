@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.text.Html
 import android.view.View
 import android.view.ViewGroup
-import android.widget.FrameLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -16,8 +15,9 @@ import androidx.recyclerview.widget.RecyclerView
  * La lecture d'un texte du siddour : les titres de sections, la prière en
  * grand, les consignes plus petites et en gris, et la source à la fin.
  * Cha'harit compte plus de 500 paragraphes : une liste recyclée plutôt
- * qu'une vue par paragraphe. Le bouton discret (ReglagesLecture) règle la
- * taille, le fond noir et le nusah ; le texte se redessine sur place.
+ * qu'une vue par paragraphe. Le bouton de lecture (ReglagesLecture) règle
+ * la taille, la lecture de nuit et le nusah ; le texte se redessine sur
+ * place, au paragraphe où l'on était.
  */
 class SiddurLectureActivity : AppCompatActivity() {
 
@@ -37,12 +37,16 @@ class SiddurLectureActivity : AppCompatActivity() {
         liste = findViewById<RecyclerView>(R.id.siddur_lecture_list).apply {
             layoutManager = LinearLayoutManager(this@SiddurLectureActivity)
         }
-        ReglagesLecture(findViewById<FrameLayout>(R.id.siddur_lecture_cadre), avecNusah = true) { afficher() }
-            .suivre(liste)
-        afficher()
+        ReglagesLecture.installer(this, liste, avecNusah = true) {
+            // Même nusah : on garde sa place ; un autre nusah n'a pas les mêmes paragraphes.
+            afficher(garderPlace = Data.siddur(this).nusah == nusahAffiche)
+        }
+        afficher(garderPlace = false)
     }
 
-    private fun afficher() {
+    private var nusahAffiche: LocalizedText? = null
+
+    private fun afficher(garderPlace: Boolean) {
         val siddur = Data.siddur(this)
         val texte = siddur.texte(id)
         if (texte == null) {
@@ -65,8 +69,13 @@ class SiddurLectureActivity : AppCompatActivity() {
                 s.blocs.map { Ligne.Paragraphe(it) }
         } + Ligne.Source(getString(R.string.siddur_source, texte.source))
         val rendu = ReglagesLecture.rendu(this)
+        val gestion = liste.layoutManager as LinearLayoutManager
+        val place = gestion.findFirstVisibleItemPosition()
+        val decalage = gestion.findViewByPosition(place)?.top ?: 0
+        nusahAffiche = siddur.nusah
         liste.setBackgroundColor(rendu.fond)
         liste.adapter = Adaptateur(lignes, rendu)
+        if (garderPlace && place in lignes.indices) gestion.scrollToPositionWithOffset(place, decalage)
     }
 
     private inner class Adaptateur(

@@ -177,6 +177,9 @@ export function creeStore(stockage, { maintenant = () => new Date(), fuseau } = 
     setLectureEchelle: (e) => set('lecture_echelle', Math.round(Math.min(2, Math.max(0.8, e)) * 10) / 10),
     lectureSombre: () => get('lecture_sombre', false) === true,
     setLectureSombre: (v) => set('lecture_sombre', !!v),
+    /** Le bouton de lecture masqué par l'utilisateur, sur tous les écrans de lecture. */
+    lectureMasquee: () => get('lecture_masquee', false) === true,
+    setLectureMasquee: (v) => set('lecture_masquee', !!v),
     setAnneauxFetes: (marques) => set('anneaux_fetes', [...marques]),
     /** Les trois anneaux de l'accueil, ici et maintenant. */
     anneaux: () => Anneaux.etat(
