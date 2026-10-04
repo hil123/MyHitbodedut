@@ -20,11 +20,14 @@ choisies pour leur licence :
     domaine public), comme le livre de Tehilim. Le passage est celui que lit
     le siddour Sefard (« Parashat Haman Reading »).
 
-Le Nom reste tel que chaque source l'écrit (décision du 04/10 : « laisse tel quel »).
+Le Nom est écrit en toutes lettres dans les prières (demande du 04/10) : voir tools/noms_divins.py.
 
   python3 tools/siddur_construction.py <dossier contenant les deux fichiers>
 """
 import html, json, re, sys, unicodedata
+import os
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from noms_divins import developpe
 from os.path import join
 
 NFC = lambda s: unicodedata.normalize("NFC", s)
@@ -66,7 +69,13 @@ def bloc(s):
     entier = re.fullmatch(r"(<b>)?<small>(.*)</small>(</b>)?", s)
     if entier and "<small>" not in entier.group(2):
         s = (entier.group(1) or "") + entier.group(2) + (entier.group(3) or "")
+    # Le Nom en toutes lettres dans la prière (tools/noms_divins.py).
+    s, n = developpe(s)
+    COMPTE[0] += n
     return {"t": s}
+
+
+COMPTE = [0]
 
 
 def blocs(segments, sauter_titre=True):
@@ -112,7 +121,10 @@ class Source:
         n = self.schema
         for k in chemin:
             n = next(c for c in n["nodes"] if k in (c.get("key"), c.get("enTitle")))
-        return n["heTitle"].strip()
+        # « לדוד ה' » : le Nom en toutes lettres jusque dans les titres.
+        titre, compte = developpe(n["heTitle"].strip())
+        COMPTE[0] += compte
+        return titre
 
     def sections(self, chemin, sauf=()):
         t = self.noeud(chemin)
@@ -185,7 +197,7 @@ def main(dossier):
     AM = Source(charge(dossier, "Ashk__The_Metsudah_siddur,_1981.json")["text"], as_merged["schema"], "Siddur Ashkenaz, The Metsudah Siddur 1981 (CC-BY)")
     AD = Source(charge(dossier, "Ashk__Daat_Siddur_Ashkenaz.json")["text"], as_merged["schema"], "Siddur Ashkenaz, Daat (domaine public)")
     exode = charge(dossier, "Exodus_TN.json")["text"]
-    haman = [{"titre": "שמות ט״ז, ד׳–ל״ו", "blocs": [{"t": NFC(qere(v))} for v in exode[15][3:36]]}]
+    haman = [{"titre": "שמות ט״ז, ד׳–ל״ו", "blocs": [{"t": NFC(qere(v)).replace("\u200d", "")} for v in exode[15][3:36]]}]
     TN = "Tanach with Nikkud (tanach.us, domaine public), Chemot 16:4-36"
 
     edot = {
@@ -266,7 +278,7 @@ def main(dossier):
             "_meta": {
                 "version": "1.0", "date": "2026-10-04", "nusah": NUSAH[cle],
                 "sources": sorted(sources),
-                "noms_divins": "Tels que dans les sources, sans substitution.",
+                "noms_divins": "En toutes lettres : les abréviations des sources (יְיָ, יי, ה', אלקים) sont développées dans les prières, pas dans les consignes (tools/noms_divins.py).",
                 "balisage": "Chaque paragraphe est soit {t: texte} avec <b>, <small>, <br> pour seules balises, soit {c: consigne}.",
                 "relecture": "Extraction automatique ; une lecture humaine reste souhaitable, en particulier des consignes.",
             },
@@ -275,6 +287,7 @@ def main(dossier):
         }
         chemin = f"android/app/src/main/res/raw/siddur_{cle}.json"
         json.dump(sortie, open(chemin, "w", encoding="utf-8"), ensure_ascii=False, separators=(",", ":"))
+        print(f"   noms développés jusqu'ici : {COMPTE[0]}")
         print(f"== {cle} : {len(textes)} textes, {sum(len(s['blocs']) for x in textes for s in x['sections'])} paragraphes")
         for x in textes:
             n = sum(len(s["blocs"]) for s in x["sections"])
