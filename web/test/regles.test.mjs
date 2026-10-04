@@ -7,7 +7,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { Anneaux, DureeSeance, JaugeSemaine, Plaque, Reference, RegleLangue, Salutation } from '../src/js/regles.js';
+import { Anneaux, CycleTehilim, DureeSeance, JaugeSemaine, Plaque, Reference, RegleLangue, Salutation } from '../src/js/regles.js';
 import { estJourChome, israelParDefaut } from '../src/js/calendrier.js';
 import { creeStore, dateValide, memoire } from '../src/js/store.js';
 import { creeTraduction, formate, langueInitiale } from '../src/js/i18n.js';
@@ -417,4 +417,25 @@ test('la meilleure série ne casse pas sur un jour exempté', () => {
   assert.equal(Plaque.meilleureSerie(new Set(), () => false), 0);
   assert.equal(Plaque.moyenne(50, 3), 17);
   assert.equal(Plaque.moyenne(0, 0), 0);
+});
+
+// --- Tehilim (TehilimTest.kt) ---------------------------------------------------------
+test('le cycle du mois couvre tout le livre, 119 coupé en deux', () => {
+  assert.equal(CycleTehilim.MOIS.length, 30);
+  assert.deepEqual(CycleTehilim.duMois(1, 30), CycleTehilim.portion(1, 9));
+  assert.deepEqual(CycleTehilim.duMois(25, 30), CycleTehilim.portion(119, 119, 1, 96));
+  assert.deepEqual(CycleTehilim.duMois(30, 30), CycleTehilim.portion(145, 150));
+  assert.deepEqual(CycleTehilim.duMois(29, 29), CycleTehilim.portion(140, 150));
+  assert.deepEqual(CycleTehilim.duMois(29, 30), CycleTehilim.portion(140, 144));
+  const entiers = CycleTehilim.MOIS.filter((p) => !CycleTehilim.partielle(p));
+  const psaumes = entiers.flatMap((p) => Array.from({ length: p.fin - p.debut + 1 }, (_, i) => p.debut + i));
+  assert.deepEqual(psaumes, Array.from({ length: 150 }, (_, i) => i + 1).filter((n) => n !== 119));
+});
+
+test('le cycle de la semaine va du dimanche au Shabbat', () => {
+  assert.deepEqual(CycleTehilim.deLaSemaine(0), CycleTehilim.portion(1, 29));
+  assert.deepEqual(CycleTehilim.deLaSemaine(6), CycleTehilim.portion(120, 150));
+  CycleTehilim.SEMAINE.slice(1).forEach((p, i) => assert.equal(p.debut, CycleTehilim.SEMAINE[i].fin + 1));
+  assert.deepEqual(CycleTehilim.versets(CycleTehilim.portion(119, 119, 97, 176), 119, 176).length, 80);
+  assert.deepEqual(CycleTehilim.versets(CycleTehilim.portion(1, 9), 1, 6), [1, 2, 3, 4, 5, 6]);
 });

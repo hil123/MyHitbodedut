@@ -77,7 +77,7 @@ for (const nom of [...onglets.flatMap((n) => [`${n}_off`, `${n}_on`]), 'ic_chevr
 }
 
 // --- Les textes vérifiés, tels quels ---------------------------------------
-for (const nom of ['chizuk.json', 'bibliotheque.json', 'tikkun_haklali.json']) {
+for (const nom of ['chizuk.json', 'bibliotheque.json', 'tikkun_haklali.json', 'tehilim.json']) {
   cpSync(join(RES, 'raw', nom), join(DIST, 'data', nom));
 }
 

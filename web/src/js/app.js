@@ -4,7 +4,7 @@
 // n'existe pas encore est montré, mais inerte (classe « a-venir »).
 
 import { chargeTraduction, langueInitiale, LANGUES } from './i18n.js';
-import { Anneaux, DureeSeance, JaugeSemaine, Plaque, Reference, Salutation } from './regles.js';
+import { Anneaux, CycleTehilim, DureeSeance, JaugeSemaine, Plaque, Reference, Salutation } from './regles.js';
 import { ART_DU_MOMENT, ChizukBag, ChizukRules } from './chizuk.js';
 import { DanseMesure } from './seance.js';
 import { creeStore, memoire } from './store.js';
@@ -501,10 +501,96 @@ function etatMusique() {
   return volumeReglable ? tr.t('music_on_summary', titreMorceau(m), store.musicVolume()) : titreMorceau(m);
 }
 
+// --- Tehilim (Tehilim.kt, TehilimActivity.kt) ------------------------------------
+// Le livre entier, chargé au premier besoin : 327 ko qu'on ne lit pas à chaque ouverture.
+let tehilim = null;
+let lecture = null;
+function chargeTehilim() {
+  if (tehilim) return true;
+  fetch('data/tehilim.json').then((r) => r.json()).then((d) => { tehilim = d.psaumes; rendre(); });
+  return false;
+}
+
+/** Le jour du mois hébraïque et la longueur du mois (29 ou 30), par le calendrier du navigateur. */
+function jourHebreu(date = new Date()) {
+  const jour = (d) => Number(new Intl.DateTimeFormat('en-u-ca-hebrew', { day: 'numeric' }).format(d));
+  const j = jour(date);
+  const demain = new Date(date);
+  demain.setDate(date.getDate() + 1);
+  return { jour: j, longueur: j === 29 && jour(demain) === 1 ? 29 : 30 };
+}
+
+const nombreTehilim = (n) => (tr.langue === 'he' ? Reference.lettres(n) : String(n));
+
+function libellePortion(p) {
+  if (CycleTehilim.partielle(p)) {
+    return tr.t('tehilim_range_verses', nombreTehilim(p.debut), nombreTehilim(p.debutVerset), nombreTehilim(p.finVerset));
+  }
+  if (p.debut === p.fin) return tr.t('tehilim_single', nombreTehilim(p.debut));
+  return tr.t('tehilim_range', nombreTehilim(p.debut), nombreTehilim(p.fin));
+}
+
+function portionDuMois() {
+  const { jour, longueur } = jourHebreu();
+  return { jour, portion: CycleTehilim.duMois(jour, longueur) };
+}
+
+function lire(p) {
+  lecture = p;
+  ouvrir('lecture');
+}
+
+function ecranTehilim() {
+  const { jour, portion } = portionDuMois();
+  const auj = new Date();
+  const semaine = CycleTehilim.deLaSemaine(auj.getDay());
+  const nomJour = new Intl.DateTimeFormat(tr.langue, { weekday: 'long' }).format(auj);
+  const pret = chargeTehilim();
+  const versets = pret ? tehilim.reduce((n, ch) => n + ch.length, 0) : null;
+  return h('div', { class: 'ecran' }, barre(tr.t('tehilim_title')),
+    h('div', { class: 'defile' }, h('div', { class: 'contenu' },
+      versets ? h('p', { class: 'indice' }, tr.t('tehilim_count', 150, versets)) : null,
+      h('div', { class: 'carte' },
+        ligne({ nom: tr.t('tehilim_month'), etat: tr.t('tehilim_month_state', nombreTehilim(jour), libellePortion(portion)), onclick: () => lire(portion) }),
+        ligne({ nom: tr.t('tehilim_week'), etat: tr.t('tehilim_week_state', nomJour.charAt(0).toLocaleUpperCase(tr.langue) + nomJour.slice(1), libellePortion(semaine)), onclick: () => lire(semaine) })),
+      h('h2', { class: 'section' }, tr.t('tehilim_all')),
+      h('div', { class: 'grille-psaumes' }, Array.from({ length: 150 }, (_, i) => i + 1).map((n) =>
+        h('button', { class: 'case-psaume', 'aria-label': libellePortion(CycleTehilim.portion(n, n)), onclick: () => lire(CycleTehilim.portion(n, n)) },
+          nombreTehilim(n)))))));
+}
+
+function ecranLecture() {
+  // Rouvert directement sur #lecture, sans passage choisi : le livre.
+  if (!lecture) return ecranTehilim();
+  const p = lecture;
+  if (!chargeTehilim()) return h('div', { class: 'ecran' }, barre(libellePortion(p)), h('div', { class: 'defile' }));
+  const seul = p.debut === p.fin && !CycleTehilim.partielle(p);
+  const blocs = [];
+  let total = 0;
+  for (let n = p.debut; n <= p.fin; n++) {
+    const tous = tehilim[n - 1];
+    const quels = CycleTehilim.versets(p, n, tous.length);
+    total += quels.length;
+    blocs.push(h('h2', { class: 'psaume-titre', lang: 'he', dir: 'rtl' }, tr.t('tikkun_psalm_he', Reference.lettres(n))));
+    blocs.push(h('div', { class: 'psaume', lang: 'he', dir: 'rtl' }, quels.map((v) =>
+      h('p', { class: 'verset' }, h('span', { class: 'num', 'aria-hidden': 'true' }, `${Reference.lettres(v)} `), tous[v - 1]))));
+  }
+  const aller = (n) => { lecture = CycleTehilim.portion(n, n); rendre(); app.querySelector('.defile').scrollTop = 0; };
+  return h('div', { class: 'ecran' }, barre(libellePortion(p)),
+    h('div', { class: 'defile' }, h('div', { class: 'contenu lecture' },
+      h('p', { class: 'indice' }, tr.p('tehilim_verses', total, total)),
+      ...blocs)),
+    seul ? h('div', { class: 'lecture-nav' },
+      h('button', { class: 'secondaire', style: p.debut > 1 ? null : 'visibility:hidden', onclick: () => aller(p.debut - 1) }, tr.t('tehilim_previous')),
+      h('button', { class: 'principal', style: p.debut < 150 ? null : 'visibility:hidden', onclick: () => aller(p.debut + 1) }, tr.t('tehilim_next'))) : null);
+}
+
 function panneauTextes() {
   return h('div', { class: 'contenu' },
     h('h1', { class: 'titre-ecran' }, tr.t('nav_texts')),
     h('div', { class: 'carte' },
+      // Tehilim est le premier texte lisible sur le web (04/10).
+      ligne({ nom: tr.t('tehilim_title'), etat: tr.t('tehilim_today', libellePortion(portionDuMois().portion)), onclick: () => ouvrir('tehilim') }),
       // Les textes arrivent à l'étape 4.
       ligne({ nom: tr.t('tikkun_title'), etat: etatTikkun(), aVenir: true }),
       ligne({ nom: tr.t('tefilot_title'), etat: tr.t('tefilot_hint'), aVenir: true }),
@@ -933,7 +1019,7 @@ function arreteDanse() {
 // et le geste de retour ramènent à l'accueil, sur l'onglet quitté.
 function ecranCourant() {
   const e = location.hash.slice(1);
-  return ['musique', 'reglages', 'seance', 'bravo'].includes(e) ? e : 'accueil';
+  return ['musique', 'reglages', 'seance', 'bravo', 'tehilim', 'lecture'].includes(e) ? e : 'accueil';
 }
 function ouvrir(ecran) {
   // L'entrée sur l'écran de séance tire le mot d'ouverture (SessionActivity.onCreate).
@@ -975,6 +1061,8 @@ function rendre() {
   else if (ecran === 'reglages') app.append(ecranReglages());
   else if (ecran === 'seance') app.append(ecranSeance());
   else if (ecran === 'bravo') app.append(ecranBravo());
+  else if (ecran === 'tehilim') app.append(ecranTehilim());
+  else if (ecran === 'lecture') app.append(ecranLecture());
   else {
     app.append(h('div', { class: 'ecran' },
       h('div', { class: 'defile' }, onglet === 'textes' ? panneauTextes() : panneauAujourdhui()),

@@ -198,6 +198,37 @@ export const Plaque = {
   },
 };
 
+/**
+ * Les deux façons de dire tout le livre de Tehilim (Tehilim.kt) : une
+ * portion par jour du mois hébraïque, ou par jour de la semaine.
+ */
+const portion = (debut, fin, debutVerset = 1, finVerset = null) => ({ debut, fin, debutVerset, finVerset });
+export const CycleTehilim = {
+  MOIS: [
+    [1, 9], [10, 17], [18, 22], [23, 28], [29, 34], [35, 38], [39, 43], [44, 48], [49, 54], [55, 59],
+    [60, 65], [66, 68], [69, 71], [72, 76], [77, 78], [79, 82], [83, 87], [88, 89], [90, 96], [97, 103],
+    [104, 105], [106, 107], [108, 112], [113, 118], [119, 119, 1, 96], [119, 119, 97, 176],
+    [120, 134], [135, 139], [140, 144], [145, 150],
+  ].map((a) => portion(...a)),
+  /** Du dimanche au Shabbat. */
+  SEMAINE: [[1, 29], [30, 50], [51, 72], [73, 89], [90, 106], [107, 119], [120, 150]].map((a) => portion(...a)),
+  /** Un mois de 29 jours dit le 29 les deux dernières portions. */
+  duMois(jour, longueur) {
+    if (jour >= 29 && longueur === 29) return portion(140, 150);
+    return this.MOIS[Math.min(30, Math.max(1, jour)) - 1];
+  },
+  /** [jour] : Date.getDay(), 0 pour dimanche. */
+  deLaSemaine(jour) { return this.SEMAINE[jour]; },
+  partielle(p) { return p.debut === p.fin && (p.debutVerset > 1 || p.finVerset !== null); },
+  /** Les numéros des versets à lire dans [psaume], qui en compte [total]. */
+  versets(p, psaume, total) {
+    const de = psaume === p.debut ? p.debutVerset : 1;
+    const a = psaume === p.fin ? (p.finVerset ?? total) : total;
+    return Array.from({ length: a - de + 1 }, (_, i) => de + i);
+  },
+  portion,
+};
+
 export const JaugeSemaine = {
   progression(jours) {
     const faits = jours.filter((j) => j.done).length;
