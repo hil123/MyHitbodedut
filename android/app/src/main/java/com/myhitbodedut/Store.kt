@@ -77,6 +77,7 @@ object Store {
     private const val KEY_ENABLED = "enabled"
     private const val KEY_TARGET = "target_minutes"
     private const val KEY_DAILY_GOAL = "daily_goal_minutes"
+    private const val KEY_ANNEAUX_FETES = "anneaux_fetes"
     private const val KEY_PAUSE_SHABBAT = "pause_shabbat"
     private const val KEY_IN_ISRAEL = "in_israel"
     private const val KEY_PAUSED_DATES = "paused_dates"
@@ -424,6 +425,14 @@ object Store {
      */
     fun dailyGoal(context: Context): Int =
         Anneaux.objectifEffectif(prefs(context).getInt(KEY_DAILY_GOAL, 0), targetMinutes(context))
+
+    /** Les marques des anneaux déjà fêtés (Anneaux.marque). */
+    fun anneauxFetes(context: Context): Set<String> =
+        prefs(context).getStringSet(KEY_ANNEAUX_FETES, null)?.toSet() ?: emptySet()
+
+    fun setAnneauxFetes(context: Context, marques: Set<String>) {
+        prefs(context).edit().putStringSet(KEY_ANNEAUX_FETES, marques.toSet()).apply()
+    }
 
     fun setDailyGoal(context: Context, minutes: Int) {
         prefs(context).edit().putInt(KEY_DAILY_GOAL, minutes.coerceAtLeast(0)).apply()

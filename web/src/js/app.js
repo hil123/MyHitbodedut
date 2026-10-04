@@ -4,7 +4,7 @@
 // n'existe pas encore est montré, mais inerte (classe « a-venir »).
 
 import { chargeTraduction, langueInitiale, LANGUES } from './i18n.js';
-import { DureeSeance, JaugeSemaine, Reference, Salutation } from './regles.js';
+import { Anneaux, DureeSeance, JaugeSemaine, Reference, Salutation } from './regles.js';
 import { ART_DU_MOMENT, ChizukBag, ChizukRules } from './chizuk.js';
 import { DanseMesure } from './seance.js';
 import { creeStore, memoire } from './store.js';
@@ -256,13 +256,57 @@ function legendeAnneaux(etat, progression) {
   return tr.p('week_gauge', progression.faits, progression.faits, progression.dus);
 }
 
-/** Un toucher sur le hassid : il salue, et les anneaux se remplissent à nouveau. */
-function saluer(e) {
-  const img = e.currentTarget.querySelector('img');
+/**
+ * Le saut du hassid, [fois] de suite. Sur l'image du rendu en cours : un
+ * nouveau rendu la remplace, et l'ancienne sautait hors de l'écran.
+ */
+function sauter(fois) {
+  const img = app.querySelector('.plaque img');
+  if (!img) return;
+  img.style.setProperty('--sauts', String(fois));
   img.classList.remove('salut');
   void img.offsetWidth; // relance l'animation CSS
   img.classList.add('salut');
+}
+
+/** Un toucher sur le hassid : les anneaux se remplissent à nouveau, et il salue. */
+function saluer() {
   rendre();
+  sauter(1);
+}
+
+/** Met un anneau en avant sans refaire le rendu, qui relancerait le remplissage. */
+function mettreEnAvantSurPlace(quel) {
+  anneauEnAvant = quel;
+  app.querySelectorAll('.jauge .anneau').forEach((g) =>
+    g.classList.toggle('efface', quel !== null && g.dataset.anneau !== quel));
+  const legende = app.querySelector('.jauge-legende');
+  if (legende) {
+    legende.className = `jauge-legende${quel ? ` legende-${quel}` : ''}`;
+    legende.textContent = legendeAnneaux(store.anneaux(), JaugeSemaine.progression(store.currentWeek()));
+  }
+}
+
+/**
+ * La fin du remplissage, quand l'accueil apparaît (MainActivity.apresRemplissage) :
+ * un anneau qui vient de se fermer est fêté une fois, sinon le hassid salue.
+ */
+let accueilAnime = false;
+function animerAccueil() {
+  if (!app.querySelector('.jauge')) return;
+  const etat = store.anneaux();
+  const jour = store.today();
+  const nouveaux = Anneaux.aFeter(etat, jour, store.anneauxFetes());
+  store.setAnneauxFetes(Anneaux.marques(etat, jour));
+  if (nouveaux.length === 0) { sauter(1); return; }
+  const quel = nouveaux[0];
+  const jauge = app.querySelector('.jauge');
+  jauge.classList.remove('fete');
+  void jauge.offsetWidth;
+  jauge.classList.add('fete');
+  mettreEnAvantSurPlace(quel);
+  sauter(3);
+  setTimeout(() => { if (anneauEnAvant === quel) mettreEnAvantSurPlace(null); }, 2800);
 }
 
 function panneauAujourdhui() {
@@ -836,6 +880,10 @@ function rendre() {
   }
   app.dataset.ecran = `${ecran}/${onglet}`;
   if (memeEcran) app.querySelector('.defile').scrollTop = avant;
+  // L'accueil qui apparaît s'anime seul : anneaux, puis saut ou fête (04/10).
+  const accueil = ecran === 'accueil' && onglet === 'aujourdhui';
+  if (!accueil) accueilAnime = false;
+  else if (!accueilAnime) { accueilAnime = true; setTimeout(animerAccueil, 950); }
   ajusteLesTextes();
   if (ecran === 'seance') demarreTic();
   if (ecran === 'bravo') danse();
@@ -860,6 +908,7 @@ async function demarrer() {
   // arrivée à son terme, le décompte qui a continué pendant le sommeil.
   document.addEventListener('visibilitychange', () => {
     if (document.hidden) return;
+    accueilAnime = false;
     if (store.isSessionRunning()) gardeEcranAllume();
     rendre();
   });

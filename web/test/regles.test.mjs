@@ -378,3 +378,21 @@ test('l\'import rejette les dates fausses ou à venir et borne les valeurs', () 
   assert.equal(dateValide('2026-02-30'), false);
   assert.equal(dateValide('2026-09-29'), true);
 });
+
+// --- La fête des anneaux (Anneaux.aFeter), comme AnneauxTest -------------------
+test('un anneau fermé se fête une fois, puis le lendemain', () => {
+  const plein = Anneaux.etat(15, 15, { faits: 4, dus: 6 }, 4);
+  assert.deepEqual(Anneaux.aFeter(plein, '2026-10-07', new Set()), ['jour']);
+  const deja = Anneaux.marques(plein, '2026-10-07');
+  assert.deepEqual(Anneaux.aFeter(plein, '2026-10-07', deja), []);
+  assert.deepEqual(Anneaux.aFeter(plein, '2026-10-08', deja), ['jour']);
+});
+
+test('la semaine se fête par semaine, la série par palier', () => {
+  const e = Anneaux.etat(0, 15, { faits: 6, dus: 6 }, 7);
+  assert.deepEqual(Anneaux.aFeter(e, '2026-10-07', new Set()), ['semaine', 'serie']);
+  const deja = Anneaux.marques(e, '2026-10-07');
+  assert.ok(!Anneaux.aFeter(e, '2026-10-08', deja).includes('semaine'));
+  assert.ok(Anneaux.aFeter(e, '2026-10-11', deja).includes('semaine'));
+  assert.deepEqual(Anneaux.aFeter(Anneaux.etat(0, 15, { faits: 0, dus: 0 }, 14), '2026-10-07', deja), ['serie']);
+});

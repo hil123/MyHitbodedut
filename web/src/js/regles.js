@@ -141,6 +141,30 @@ export const Anneaux = {
   objectifEffectif(regle, dureeHabituelle) {
     return regle > 0 ? regle : Math.max(1, dureeHabituelle);
   },
+  /**
+   * Ce qui rend « nouveau » un anneau fermé (Anneaux.marque) : la date, le
+   * dimanche de la semaine, le palier. Un anneau se fête une fois par marque.
+   * [aujourdhui] : « AAAA-MM-JJ ».
+   */
+  marque(anneau, aujourdhui) {
+    if (!anneau.atteint) return null;
+    if (anneau.quel === 'jour') return `jour:${aujourdhui}`;
+    if (anneau.quel === 'semaine') {
+      const d = new Date(`${aujourdhui}T00:00:00Z`);
+      d.setUTCDate(d.getUTCDate() - d.getUTCDay());
+      return `semaine:${d.toISOString().slice(0, 10)}`;
+    }
+    return `serie:${anneau.objectif}`;
+  },
+  marques(etat, aujourdhui) {
+    return new Set([etat.jour, etat.semaine, etat.serie].map((a) => this.marque(a, aujourdhui)).filter(Boolean));
+  },
+  /** Les anneaux fermés pas encore fêtés, du centre vers l'extérieur. */
+  aFeter(etat, aujourdhui, dejaFetes) {
+    return [etat.jour, etat.semaine, etat.serie]
+      .filter((a) => { const m = this.marque(a, aujourdhui); return m !== null && !dejaFetes.has(m); })
+      .map((a) => a.quel);
+  },
 };
 
 export const JaugeSemaine = {

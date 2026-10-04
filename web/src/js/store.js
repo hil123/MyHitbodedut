@@ -164,6 +164,9 @@ export function creeStore(stockage, { maintenant = () => new Date(), fuseau } = 
     /** L'objectif de l'anneau du jour ; sans réglage, la durée habituelle (Anneaux). */
     dailyGoal: () => Anneaux.objectifEffectif(get('daily_goal_minutes', 0), store.targetMinutes()),
     setDailyGoal: (m) => set('daily_goal_minutes', Math.max(0, m)),
+    /** Les marques des anneaux déjà fêtés (Anneaux.marque). */
+    anneauxFetes: () => new Set(get('anneaux_fetes', [])),
+    setAnneauxFetes: (marques) => set('anneaux_fetes', [...marques]),
     /** Les trois anneaux de l'accueil, ici et maintenant. */
     anneaux: () => Anneaux.etat(
       store.record()?.minutes ?? 0, store.dailyGoal(),

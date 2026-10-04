@@ -74,6 +74,10 @@ class MainActivity : AppCompatActivity() {
             when (item.itemId) {
                 R.id.nav_today, R.id.nav_texts -> {
                     montrerPanneau(item.itemId)
+                    // Revenir sur l'accueil rejoue les anneaux, comme à l'ouverture.
+                    if (item.itemId == R.id.nav_today) {
+                        findViewById<AnneauxView>(R.id.week_gauge).rejouer()
+                    }
                     true
                 }
                 R.id.nav_journal -> {
@@ -105,6 +109,9 @@ class MainActivity : AppCompatActivity() {
         SessionService.reconcilier(this)
         applyServiceState()
         refresh()
+        // Chaque retour sur l'accueil : les anneaux se remplissent, puis le
+        // hassid salue ou fête l'anneau qui vient de se fermer (04/10).
+        findViewById<AnneauxView>(R.id.week_gauge).rejouer()
         // La séance s'est close téléphone posé : le bravo attendait ici.
         CelebrationActivity.showIfPending(this)
         // La vignette d'accueil suit ce que l'écran vient de montrer.
@@ -337,7 +344,26 @@ class MainActivity : AppCompatActivity() {
             semaine.faits, semaine.dus, etat.serie.fait, etat.serie.objectif
         )
         anneaux.surChoix = { renderLegende(it) }
+        anneaux.surRempli = { apresRemplissage() }
         renderLegende(anneaux.misEnAvant)
+    }
+
+    /**
+     * La fin d'un remplissage. Un anneau qui vient de se fermer est fêté
+     * (les anneaux battent, le hassid saute trois fois), une seule fois par
+     * jour, par semaine ou par palier ; sinon le hassid salue d'un saut.
+     */
+    private fun apresRemplissage() {
+        val etat = Store.anneaux(this)
+        val aujourdhui = java.time.LocalDate.now()
+        val nouveaux = Anneaux.aFeter(etat, aujourdhui, Store.anneauxFetes(this))
+        Store.setAnneauxFetes(this, Anneaux.marques(etat, aujourdhui))
+        if (nouveaux.isEmpty()) {
+            sautiller(1)
+        } else {
+            findViewById<AnneauxView>(R.id.week_gauge).feter(nouveaux.first())
+            sautiller(3)
+        }
     }
 
     /** La légende sous les anneaux : la semaine, ou l'anneau mis en avant. */
@@ -371,13 +397,20 @@ class MainActivity : AppCompatActivity() {
 
     /**
      * Un toucher sur le hassid : il salue d'un petit saut, et les anneaux
-     * se remplissent à nouveau depuis zéro. Rien si les animations sont
-     * coupées dans le téléphone.
+     * se remplissent à nouveau depuis zéro, sans second saut à la fin.
      */
     private fun saluer() {
-        val anneaux = findViewById<AnneauxView>(R.id.week_gauge)
-        anneaux.montrer(Store.anneaux(this), depuisZero = true)
-        if (!android.animation.ValueAnimator.areAnimatorsEnabled()) return
+        findViewById<AnneauxView>(R.id.week_gauge).montrer(Store.anneaux(this), depuisZero = true, prevenir = false)
+        sautiller(1)
+    }
+
+    /**
+     * Le petit saut du hassid, [fois] de suite. Rien si les animations sont
+     * coupées dans le téléphone (Options pour les développeurs ou
+     * Accessibilité → Supprimer les animations).
+     */
+    private fun sautiller(fois: Int) {
+        if (fois <= 0 || !android.animation.ValueAnimator.areAnimatorsEnabled()) return
         val hassid = findViewById<ImageView>(R.id.hero_character)
         val saut = 10f * resources.displayMetrics.density
         hassid.animate().cancel()
@@ -393,7 +426,9 @@ class MainActivity : AppCompatActivity() {
                     .setDuration(260L)
                     .setInterpolator(android.view.animation.BounceInterpolator())
                     .withEndAction {
-                        hassid.animate().rotation(0f).setDuration(160L).start()
+                        hassid.animate().rotation(0f).setDuration(160L)
+                            .withEndAction { sautiller(fois - 1) }
+                            .start()
                     }
                     .start()
             }
