@@ -175,6 +175,9 @@ class MainActivity : AppCompatActivity() {
         findViewById<View>(R.id.tikkun_button).setOnClickListener {
             startActivity(Intent(this, TikkunActivity::class.java))
         }
+        findViewById<View>(R.id.siddur_button).setOnClickListener {
+            startActivity(Intent(this, SiddurActivity::class.java))
+        }
         findViewById<View>(R.id.tehilim_button).setOnClickListener {
             startActivity(Intent(this, TehilimActivity::class.java))
         }

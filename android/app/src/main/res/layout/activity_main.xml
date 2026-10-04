@@ -336,6 +336,28 @@
 
                         <ImageView style="@style/SectionChevron" />
                     </LinearLayout>
+                    <!-- Le siddour : les prières du jour et les bénédictions (04/10). -->
+                    <LinearLayout
+                        android:id="@+id/siddur_button"
+                        style="@style/SectionRow">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                style="@style/SettingLabelStacked"
+                                android:text="@string/siddur_title" />
+
+                            <TextView
+                                style="@style/SectionState"
+                                android:text="@string/siddur_hint" />
+                        </LinearLayout>
+
+                        <ImageView style="@style/SectionChevron" />
+                    </LinearLayout>
                     <!-- Le livre entier, et la part du jour (04/10). -->
                     <LinearLayout
                         android:id="@+id/tehilim_button"

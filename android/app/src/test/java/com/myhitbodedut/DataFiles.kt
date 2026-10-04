@@ -24,6 +24,10 @@ object DataFiles {
 
     val tehilim: Tehilim get() = TehilimLoader.parse(tehilimJson)
 
+    val siddurJson: String get() = read("siddur.json")
+
+    val siddur: Siddur get() = SiddurLoader.parse(siddurJson)
+
     private fun read(name: String): String {
         val file = File("src/main/res/raw/$name")
         require(file.exists()) { "ressource absente : ${file.absolutePath}" }

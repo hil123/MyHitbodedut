@@ -540,4 +540,10 @@
         <item quantity="one">%d verse</item>
         <item quantity="other">%d verses</item>
     </plurals>
+
+    <!-- Le siddour (SiddurActivity, 04/10). -->
+    <string name="siddur_title">Siddur</string>
+    <string name="siddur_hint">Shacharit, Mincha, Arvit, blessings…</string>
+    <string name="siddur_books">Books</string>
+    <string name="siddur_nusah">Nusach Edot HaMizrach</string>
 </resources>

@@ -553,4 +553,10 @@
         <item quantity="two">%d פסוקים</item>
         <item quantity="other">%d פסוקים</item>
     </plurals>
+
+    <!-- Le siddour (SiddurActivity, 04/10). -->
+    <string name="siddur_title">סידור</string>
+    <string name="siddur_hint">שחרית, מנחה, ערבית, ברכות…</string>
+    <string name="siddur_books">ספרים</string>
+    <string name="siddur_nusah">נוסח עדות המזרח</string>
 </resources>

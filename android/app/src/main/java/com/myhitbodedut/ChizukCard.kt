@@ -150,6 +150,9 @@ object Data {
     @Volatile
     private var tehilim: Tehilim? = null
 
+    @Volatile
+    private var siddur: Siddur? = null
+
     fun chizuk(context: Context): Chizuk =
         chizuk ?: synchronized(this) {
             chizuk ?: ChizukLoader.load(context.applicationContext).also { chizuk = it }
@@ -169,5 +172,11 @@ object Data {
     fun tehilim(context: Context): Tehilim =
         tehilim ?: synchronized(this) {
             tehilim ?: TehilimLoader.load(context.applicationContext).also { tehilim = it }
+        }
+
+    /** Le siddour : 567 ko, lus une fois par processus. */
+    fun siddur(context: Context): Siddur =
+        siddur ?: synchronized(this) {
+            siddur ?: SiddurLoader.load(context.applicationContext).also { siddur = it }
         }
 }

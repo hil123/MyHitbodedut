@@ -580,4 +580,12 @@
         <item quantity="one">%d verset</item>
         <item quantity="other">%d versets</item>
     </plurals>
+
+    <!-- Le siddour (SiddurActivity, 04/10). -->
+    <string name="siddur_title">Siddour</string>
+    <string name="siddur_hint">Cha’harit, Min’ha, Arvit, bénédictions…</string>
+    <string name="siddur_books">Livres</string>
+    <string name="siddur_nusah">Nusah Edot HaMizra’h</string>
+    <string name="siddur_tehilim_he" translatable="false">סֵפֶר תְּהִלִּים</string>
+    <string name="siddur_tikkun_he" translatable="false">הַתִּקּוּן הַכְּלָלִי</string>
 </resources>
