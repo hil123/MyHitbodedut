@@ -110,7 +110,7 @@ class TikkunActivity : AppCompatActivity() {
             val psaume = ligne.psaume
             holder.rank.text = ligne.rang.toString()
             holder.rank.visibility = View.VISIBLE
-            holder.title.text = getString(R.string.tikkun_psalm_he, psaume.numero)
+            holder.title.text = getString(R.string.tikkun_psalm_he, Reference.lettres(psaume.numero))
             holder.detail.text = getString(R.string.tikkun_verses, psaume.versets.size)
             val dit = psaume.numero in Store.tikkunDone(this@TikkunActivity)
             holder.state.visibility = if (dit) View.VISIBLE else View.GONE

@@ -45,7 +45,7 @@ const LIVRES = [
   ["Si'hot HaRan ", 'Sichot HaRan ', 'שיחות הר״ן '],
   ["'Hayé Moharan ", 'Chayei Moharan ', 'חיי מוהר״ן '],
   ["Chiv'hei HaRan ", 'Shivchei HaRan ', 'שבחי הר״ן '],
-  ['Tehilim ', 'Tehillim ', 'תהלים '],
+  ['Tehilim ', 'Tehillim ', 'תהילים '],
   ['Michlé ', 'Mishlei ', 'משלי '],
   ['Eikha ', 'Eichah ', 'איכה '],
 ].map(([fr, en, he]) => ({ fr, en, he }));

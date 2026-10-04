@@ -30,7 +30,7 @@ class PsalmActivity : AppCompatActivity() {
         done = findViewById(R.id.psalm_done)
 
         findViewById<TextView>(R.id.psalm_heading).text =
-            getString(R.string.tikkun_psalm_he, psaume.numero)
+            getString(R.string.tikkun_psalm_he, Reference.lettres(psaume.numero))
         val rang = tikkun.psaumes.indexOf(psaume) + 1
         findViewById<TextView>(R.id.psalm_position).text =
             getString(R.string.tikkun_position, rang, tikkun.psaumes.size, psaume.versets.size)

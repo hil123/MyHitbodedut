@@ -46,7 +46,7 @@ class TikkunFlowActivity : AppCompatActivity() {
         }
 
         tikkun.psaumes.forEach { psaume ->
-            contenu.addView(titre(getString(R.string.tikkun_psalm_he, psaume.numero), premier))
+            contenu.addView(titre(getString(R.string.tikkun_psalm_he, Reference.lettres(psaume.numero)), premier))
             premier = false
             psaume.versets.forEach { verset ->
                 contenu.addView(vueVerset(verset))

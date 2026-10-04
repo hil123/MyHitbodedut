@@ -40,7 +40,7 @@
     <string name="gate_no_apps_detail">The gate has nothing to block. Choose at least one app.</string>
     <string name="gate_done_title">Day confirmed</string>
     <string name="gate_done_detail">Nothing will be blocked today. The gate returns tomorrow.</string>
-    <string name="gate_exempt_title">Day off</string>
+    <string name="gate_exempt_title">Rest day</string>
     <string name="gate_exempt_detail">Shabbat, Yom Tov or a pause: the gate is silent and the streak stays intact.</string>
     <string name="gate_snoozed_title">Snoozed</string>
     <string name="gate_snoozed_detail">You asked for a delay. The gate returns when it ends.</string>
@@ -77,8 +77,8 @@
     <string name="rings_description">Rings. Today: %1$s of %2$s. Week: %3$d of %4$d days. Streak: %5$d of %6$d days.</string>
     <string name="settings_shabbat">Shabbat and Yom Tov</string>
     <string name="settings_shabbat_hint">On those days: no blocking, no reminder, and the streak stays intact.</string>
-    <string name="settings_exempt_today">Festival day today</string>
-    <string name="settings_exempt_today_hint">Turn on for a Yom Tov or a travel day.</string>
+    <string name="settings_exempt_today">Rest day today</string>
+    <string name="settings_exempt_today_hint">For a Yom Tov, a trip or illness: the day does not count against you.</string>
     <string name="settings_screen_missing">This settings screen does not exist on this phone.</string>
 
     <string name="permission_overlay">Display over other apps</string>
@@ -129,7 +129,7 @@
     <string name="session_remaining">%1$s left</string>
     <string name="session_open">No set length</string>
     <string name="session_open_caption">No set length: you stop when you stop.</string>
-    <string name="session_elapsed">For %1$s</string>
+    <string name="session_elapsed">%1$s so far</string>
     <string name="settings_hide_countdown">Hide the countdown</string>
     <string name="settings_hide_countdown_hint">Nothing on screen during the hitbodedut, a quiet sound at the end.</string>
     <string name="session_hidden_caption">The countdown is hidden. A sound will tell you.</string>
@@ -152,12 +152,12 @@
     <string name="hitbodedut_sihah_invite">Speak in your own language, as you would to someone. Everything on your heart, unrehearsed.</string>
     <string name="hitbodedut_harata">Regret for the past</string>
     <string name="hitbodedut_harata_invite">Say what you regret, and say it plainly. Regret before Him is not a trial.</string>
-    <string name="hitbodedut_bakasha">The asking</string>
+    <string name="hitbodedut_bakasha">Asking</string>
     <string name="hitbodedut_bakasha_invite">Ask for what you lack, and first of all to be brought close to Him. Even what you believe yourself too far from.</string>
     <string name="hitbodedut_torah">Turn learning into prayer</string>
     <string name="hitbodedut_torah_invite">Take a teaching you heard today, and ask to reach it yourself.</string>
     <string name="hitbodedut_hodaa">Thanksgiving</string>
-    <string name="hitbodedut_hodaa_invite">Give thanks for what you have been given, each according to what he can. This is how you take leave.</string>
+    <string name="hitbodedut_hodaa_invite">Give thanks for what you have been given, each according to your strength. This is how you take leave.</string>
     <string name="onboarding_step">%1$d / %2$d</string>
     <string name="onboarding_next">Next</string>
     <string name="onboarding_back">Back</string>
@@ -179,7 +179,7 @@
     <string name="reminder_title">Time for hitbodedut</string>
     <string name="reminder_text">A %1$s hitbodedut is waiting.</string>
     <string name="channel_gate">Morning gate</string>
-    <string name="channel_gate_description">Ongoing notification Android requires while the gate is watching.</string>
+    <string name="channel_gate_description">Ongoing notification Android requires while the morning gate is on.</string>
     <string name="channel_session">Hitbodedut in progress</string>
     <string name="channel_session_description">Countdown shown during a hitbodedut.</string>
     <string name="channel_reminder">Reminders</string>
@@ -224,7 +224,7 @@
     <string name="music_library">Library</string>
     <string name="music_library_hint">Tap to choose, the pencil to rename or remove.</string>
     <string name="music_add">Add a track from the phone</string>
-    <string name="music_add_failed">This file could not be added for keeps.</string>
+    <string name="music_add_failed">This file could not be added permanently.</string>
     <string name="music_play_failed">This track could not be played.</string>
     <string name="music_unnamed">Untitled</string>
     <string name="music_origin_bundled">Shipped with the app</string>
@@ -252,26 +252,26 @@
 
     <!-- Tips for Hitbodedut -->
     <string name="tips_title">Tips for Hitbodedut</string>
-    <string name="tips_hint">Ten markers, to begin and to keep going.</string>
+    <string name="tips_hint">Ten pointers, to begin and to keep going.</string>
     <string name="tips_open">Read the tips</string>
     <string name="tip_1_title">Choose a quiet, separate place</string>
     <string name="tip_1_body">The first step in hitbodedut is to find a quiet place where you can be alone with yourself and with Hashem. It does not have to be entirely isolated, but it must be somewhere you will not be interrupted. A free room at home, a quiet stretch of beach, a spot out in nature. If you can, choose a natural setting: nature itself can be a source of inner quiet.</string>
-    <string name="tip_2_title">Set a daily or weekly time</string>
-    <string name="tip_2_body">If you are new to this, start short. Give fifteen minutes a day to hitbodedut, and lengthen it gradually until you reach a full hour. Do not jump straight to a long hitbodedut. Go step by step, so that it becomes a habit and not a burden. Fix a regular time, so the practice becomes part of your routine rather than something random.</string>
-    <string name="tip_3_title">Begin with inner speech</string>
-    <string name="tip_3_body">Begin the hitbodedut with inner speech, talk with Hashem. Do not worry if at first you do not know quite what to say. Simply open your heart and begin. It can be asking forgiveness, a plain prayer about what you feel, or even a sense of gratitude. Hitbodedut does not have to be orderly or planned in advance. It is a place to release what is in your heart and to turn towards the bond with Hashem.</string>
+    <string name="tip_2_title">Set a time every day</string>
+    <string name="tip_2_body">If you are new to this, start short. Give fifteen minutes a day to hitbodedut, and lengthen it little by little, up to an hour if you can. Do not jump straight to a long hitbodedut. Go step by step, so that it becomes a habit and not a burden. Fix a regular time, so the practice becomes part of your day rather than something random.</string>
+    <string name="tip_3_title">Begin by speaking</string>
+    <string name="tip_3_body">Begin the hitbodedut by speaking to Hashem, in your own words, in a whisper if need be. Do not worry if at first you do not know quite what to say. Simply open your heart and begin. It can be asking forgiveness, a plain prayer about what you feel, or a thank you. Hitbodedut does not have to be orderly or planned in advance. It is a place to set down what is in your heart and to turn towards Hashem.</string>
     <string name="tip_4_title">Put the devices away</string>
     <string name="tip_4_body">If you want to feel truly alone with yourself, avoid devices entirely during hitbodedut. Turn the phone off, or leave it in another room. The freer you are of outside distraction, the better you will connect to yourself and to the Creator. Cutting off from the outside world helps you concentrate and settle into the quiet within.</string>
-    <string name="tip_5_title">Start with Tehilim, or your own words</string>
-    <string name="tip_5_body">If you are not sure how to begin, open Tehilim and read a few chapters. The Psalms are prayer already formed, very direct, and they touch the soul. In hitbodedut they can be a spiritual thread leading you straight to Hashem. And if you feel you have no words, you can simply speak with Hashem freely, sharing your thoughts and what you feel.</string>
+    <string name="tip_5_title">Start with Tehillim, or your own words</string>
+    <string name="tip_5_body">If you are not sure how to begin, open Tehillim and read a few chapters. The Psalms are prayer already formed, very direct, and they touch the soul. In hitbodedut they can be a spiritual thread leading you straight to Hashem. And if you feel you have no words, you can simply speak with Hashem freely, sharing your thoughts and what you feel.</string>
     <string name="tip_6_title">Ask yourself inward questions</string>
     <string name="tip_6_body">During hitbodedut, ask yourself inward questions. What am I feeling right now? What am I going through? How can I feel closer to Hashem? What do I need to improve in my life? This is a time for a real cheshbon nefesh. Sometimes, in the inner quiet, you come to see your real needs and the right direction for your life.</string>
     <string name="tip_7_title">Put honesty first</string>
     <string name="tip_7_body">During hitbodedut, do not try to hide from Hashem what you feel. This is a time when you are allowed to be honest with yourself and with the Creator. If you feel anger, frustration, fear or insecurity, this is the place to say it. Honesty is the key to spiritual growth. The more honest you are, the more inner quiet you will find.</string>
     <string name="tip_8_title">Make peace with yourself</string>
-    <string name="tip_8_body">Hitbodedut can also be a time to make peace with yourself. That means being somewhere you are not judging, not criticising, not angry at yourself. It is a time of reconciliation, where you forgive yourself, ask forgiveness for your mistakes, and resolve to improve the way you walk.</string>
-    <string name="tip_9_title">Leave room for silence, or follow the breath</string>
-    <string name="tip_9_body">Part of hitbodedut can be complete silence, or a moment of attention to the breath. Sit quietly for a while, follow your breathing, rest your attention on the body. That silence lets the inner parts of you surface and come clear.</string>
+    <string name="tip_8_body">Hitbodedut can also be a time to make peace with yourself. That means being somewhere you are not judging, not criticizing, not angry at yourself. It is a time of reconciliation, where you forgive yourself, ask forgiveness for your mistakes, and resolve to improve the way you walk.</string>
+    <string name="tip_9_title">Leave room for silence</string>
+    <string name="tip_9_body">Part of hitbodedut can be complete silence. When the words do not come, stay a while before Hashem without saying anything: being there, ready and wanting to speak, already counts (Likutei Moharan II, 25). In that silence, what is inside surfaces and comes clear.</string>
     <string name="tip_10_title">End with a deep breath and thanks</string>
     <string name="tip_10_body">At the end of hitbodedut, finish with a deep breath and bless Hashem for the time you spent together. It is a moment of thanks for the great gift of connection, and for the inner quiet you found. Even if you felt it was hard to find answers, do not worry: this meeting with yourself and with Hashem already brings spiritual abundance into your life.</string>
 
@@ -320,7 +320,7 @@
     <string name="tikkun_title">Tikkun HaKlali</string>
     <string name="tikkun_hint">The ten psalms of Rabbi Nachman, in order: 16, 32, 41, 42, 59, 77, 90, 105, 137, 150.</string>
     <string name="tikkun_open">Open the Tikkun</string>
-    <string name="tikkun_psalm_he">תהילים %1$d</string>
+    <string name="tikkun_psalm_he">תהילים %1$s</string>
     <string name="tikkun_verses">%1$d verses</string>
     <string name="tikkun_position">Psalm %1$d of %2$d · %3$d verses</string>
     <string name="tikkun_progress_none">%1$d psalms, %2$d verses</string>
@@ -340,7 +340,7 @@
     <string name="reminders_hint">One or several times a day. Nothing rings on a rest day, or once the hitbodedut is done.</string>
     <string name="reminders_open">Set the reminders</string>
     <string name="reminders_enable">Remind me to do hitbodedut</string>
-    <string name="reminders_enable_hint">A reminder at the times you set, as long as today\'s hitbodedut is not done.</string>
+    <string name="reminders_enable_hint">A reminder at the times you set, as long as today’s hitbodedut is not done.</string>
     <string name="reminders_hours">Times</string>
     <string name="reminders_hours_hint">Tap a time to change it. A single reminder is easy to miss.</string>
     <string name="reminders_add">Add a time</string>
@@ -373,7 +373,6 @@
     <string name="theme_difficultes">Hardship</string>
     <string name="theme_croissance">Working on myself</string>
     <string name="theme_autre">Something else</string>
-    <string name="hero_greeting">Hello %1$s</string>
     <string name="hero_greeting_morning">Good morning %1$s</string>
     <string name="hero_greeting_afternoon">Good afternoon %1$s</string>
     <string name="hero_greeting_evening">Good evening %1$s</string>
@@ -396,11 +395,11 @@
     <string name="settings_name_hint">So the home screen can greet you. It never leaves the phone.</string>
     <string name="settings_name_empty">Not set</string>
 
-    <!-- Tfilot screen: ten subjects, two prayers each (Likutei Tefilot). -->
-    <string name="tefilot_title">Tfilot</string>
+    <!-- Tefilot screen: ten subjects, two prayers each (Likutei Tefilot). -->
+    <string name="tefilot_title">Tefilot</string>
     <string name="tefilot_hint">Ten subjects, twenty-one prayers. Rabbi Natan of Breslov.</string>
     <string name="tefilot_count">%d prayers</string>
-    <string name="tefilot_warning">The lesson cited is on another subject; the plea is inside the prayer.</string>
+    <string name="tefilot_warning">The lesson cited deals with another subject; it is the prayer that carries this plea.</string>
     <string name="tefila_hitbodedut">Hitbodedut</string>
     <string name="tefila_simcha">Simcha</string>
     <string name="tefila_uman">Uman, Rosh Hashana</string>
@@ -413,12 +412,12 @@
     <string name="tefila_refua">Refua shlema</string>
 
     <!-- Présentation détaillée, bravo de fin de séance, apparence (28/09). -->
-    <string name="onboarding_session">The hitbodedut</string>
+    <string name="onboarding_session">Your hitbodedut</string>
     <string name="onboarding_session_body">Pick a length, or an open hitbodedut, and a subject if you like. A niggun can play along. A word of chizuk opens and closes the hitbodedut, and if the words won’t come, a button is there to help.</string>
     <string name="onboarding_days">Day after day</string>
     <string name="onboarding_days_body">The streak counts your days in a row, and the week shows at a glance. After each hitbodedut, a note can go into your journal. Reminders nudge you at the time you choose.</string>
     <string name="onboarding_texts">Texts to pray with</string>
-    <string name="onboarding_texts_body">Tikkun HaKlali, Tfilot sorted by subject, a library and tips for hitbodedut, ready whenever you are.</string>
+    <string name="onboarding_texts_body">Tikkun HaKlali, Tefilot sorted by subject, a library and tips for hitbodedut, ready whenever you are.</string>
     <string name="onboarding_yours">Your way</string>
     <string name="onboarding_yours_body">In Settings: the language (French, English or Hebrew), the screen colors, your first name and your usual hitbodedut length. Music has its own section.</string>
     <string name="onboarding_adresse">What should we call you?</string>

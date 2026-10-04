@@ -30,7 +30,7 @@ object Reference {
         Livre("Si'hot HaRan ", "Sichot HaRan ", "שיחות הר״ן "),
         Livre("'Hayé Moharan ", "Chayei Moharan ", "חיי מוהר״ן "),
         Livre("Chiv'hei HaRan ", "Shivchei HaRan ", "שבחי הר״ן "),
-        Livre("Tehilim ", "Tehillim ", "תהלים "),
+        Livre("Tehilim ", "Tehillim ", "תהילים "),
         Livre("Michlé ", "Mishlei ", "משלי "),
         Livre("Eikha ", "Eichah ", "איכה "),
     )
