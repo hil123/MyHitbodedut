@@ -1,63 +1,105 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- La vignette sur une seule case : le compte, et une coche si c'est fait. -->
+<!--
+    La vignette sur une petite place : les anneaux et le hassid la
+    remplissent, la série dans une pastille posée sur leur bas (le temps
+    en direct pendant une hitbodedout).
+
+    Le fond et les anneaux sont des images dessinées par le code
+    (StreakWidget.fond, StreakWidget.jauge) : RemoteViews n'accepte pas de
+    vue sur mesure, et avant Android 12 ne teint pas un fond de vue. Les
+    images posées ici ne servent qu'à l'aperçu du sélecteur de vignettes.
+
+    « @android:id/background » : le lanceur d'Android 12 et plus y reconnaît
+    le fond, et en arrondit les coins comme ceux des autres vignettes.
+-->
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/widget_body"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!--
-        Le fond arrondi, teint par le code aux couleurs choisies : un fond de
-        vue ne se teint pas par RemoteViews avant Android 12, une image si.
-    -->
-    <ImageView
-        android:id="@+id/widget_fond"
+    <FrameLayout
+        android:id="@android:id/background"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:contentDescription="@null"
-        android:importantForAccessibility="no"
-        android:scaleType="fitXY"
-        android:src="@drawable/bg_widget" />
+        android:layout_height="match_parent">
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_margin="4dp"
-        android:gravity="center_horizontal"
-        android:orientation="vertical">
+        <ImageView
+            android:id="@+id/widget_fond"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="@null"
+            android:importantForAccessibility="no"
+            android:scaleType="fitXY"
+            android:src="@drawable/bg_widget" />
 
-        <TextView
-            android:id="@+id/widget_streak"
+        <ImageView
+            android:id="@+id/widget_gauge"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="12dp"
+            android:contentDescription="@null"
+            android:padding="8dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/widget_apercu_anneaux" />
+
+        <!-- La pastille : la flamme et le compte, sur un voile sombre. -->
+        <FrameLayout
+            android:id="@+id/widget_badge"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/white"
-            android:textSize="26sp"
-            android:textStyle="bold" />
+            android:layout_gravity="bottom|center_horizontal"
+            android:layout_marginBottom="7dp">
 
+            <ImageView
+                android:id="@+id/widget_badge_fond"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:contentDescription="@null"
+                android:importantForAccessibility="no"
+                android:scaleType="fitXY"
+                android:src="@drawable/bg_widget_voile" />
 
-        <!-- Pendant la séance : le temps qui reste, ou qui passe pour une séance sans durée. -->
-        <Chronometer
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingHorizontal="9dp"
+                android:paddingVertical="3dp">
 
-            android:id="@+id/widget_chrono"
+                <ImageView
+                    android:id="@+id/widget_flame"
+                    android:layout_width="13dp"
+                    android:layout_height="13dp"
+                    android:contentDescription="@null"
+                    android:importantForAccessibility="no"
+                    android:src="@drawable/ic_widget_flame" />
 
-            android:layout_width="wrap_content"
+                <TextView
+                    android:id="@+id/widget_streak"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="3dp"
+                    android:fontFamily="sans-serif-medium"
+                    android:includeFontPadding="false"
+                    android:maxLines="1"
+                    android:text="@string/widget_apercu_serie"
+                    android:textColor="@color/white"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
 
-            android:layout_height="wrap_content"
-
-            android:textColor="@color/white"
-
-            android:textSize="18sp"
-
-            android:textStyle="bold"
-
-            android:visibility="gone" />
-
-        <TextView
-            android:id="@+id/widget_mark"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/mint"
-            android:textSize="15sp"
-            android:textStyle="bold" />
-    </LinearLayout>
+                <!-- Pendant la hitbodedout : le temps qui reste, ou qui passe sans durée fixée. -->
+                <Chronometer
+                    android:id="@+id/widget_chrono"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="3dp"
+                    android:fontFamily="sans-serif-medium"
+                    android:includeFontPadding="false"
+                    android:textColor="@color/white"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:visibility="gone" />
+            </LinearLayout>
+        </FrameLayout>
+    </FrameLayout>
 </FrameLayout>

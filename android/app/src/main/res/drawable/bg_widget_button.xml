@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Le bouton de la vignette, en vert d'origine ; le code le teint à la couleur des boutons choisie. -->
+<!--
+    Le bouton de la vignette, une pastille claire. La couleur posée ici est
+    celle de l'aperçu ; le code la recouvre de la plaque claire de la
+    palette choisie (StreakWidget.Teintes), par un filtre qui garde la forme.
+-->
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="rectangle">
-    <solid android:color="@color/mint" />
-    <corners android:radius="14dp" />
+    <solid android:color="@color/stage_soft" />
+    <corners android:radius="100dp" />
 </shape>

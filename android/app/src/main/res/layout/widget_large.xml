@@ -1,326 +1,575 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
     La vignette sur une grande place : celle de taille habituelle, plus la
-    semaine et un texte de ’hizouk du jour. La jauge est une image dessinée par le code
-    (StreakWidget.jauge) : RemoteViews n'accepte pas de vue sur mesure.
+    semaine en sept pastilles et un texte de ’hizouk du jour, en hébreu.
+
+    Le fond et les anneaux sont des images dessinées par le code
+    (StreakWidget.fond, StreakWidget.jauge) : RemoteViews n'accepte pas de
+    vue sur mesure, et avant Android 12 ne teint pas un fond de vue. Les
+    images et les chiffres posés ici ne servent qu'à l'aperçu du sélecteur
+    de vignettes, qui la dessine sans le code.
+
+    « @android:id/background » : le lanceur d'Android 12 et plus y reconnaît
+    le fond, et en arrondit les coins comme ceux des autres vignettes.
 -->
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/widget_body"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!--
-        Le fond arrondi, teint par le code aux couleurs choisies : un fond de
-        vue ne se teint pas par RemoteViews avant Android 12, une image si.
-    -->
-    <ImageView
-        android:id="@+id/widget_fond"
+    <FrameLayout
+        android:id="@android:id/background"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:contentDescription="@null"
-        android:importantForAccessibility="no"
-        android:scaleType="fitXY"
-        android:src="@drawable/bg_widget" />
+        android:layout_height="match_parent">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:paddingHorizontal="14dp"
-        android:paddingVertical="12dp">
+        <ImageView
+            android:id="@+id/widget_fond"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="@null"
+            android:importantForAccessibility="no"
+            android:scaleType="fitXY"
+            android:src="@drawable/bg_widget" />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:id="@+id/widget_gauge"
-                android:layout_width="76dp"
-                android:layout_height="76dp"
-                android:contentDescription="@null" />
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="16dp">
 
             <LinearLayout
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
-                android:layout_weight="1"
-                android:orientation="vertical">
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/widget_title"
-                    android:layout_width="wrap_content"
+                <ImageView
+                    android:id="@+id/widget_gauge"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:letterSpacing="0.14"
-                    android:maxLines="1"
-                    android:text="@string/session_screen_title"
-                    android:textColor="@color/mint"
-                    android:textSize="11sp" />
+                    android:layout_weight="2"
+                    android:adjustViewBounds="true"
+                    android:contentDescription="@null"
+                    android:maxHeight="116dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/widget_apercu_anneaux" />
 
-                <TextView
-                    android:id="@+id/widget_streak"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/white"
-                    android:textSize="30sp"
-                    android:textStyle="bold" />
+                    android:layout_marginStart="12dp"
+                    android:layout_weight="3"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical">
 
+                    <!-- La salutation de l'heure, ou l'état du jour ; la série dans sa pastille. -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
 
-                <!-- Pendant la séance : le temps qui reste, ou qui passe pour une séance sans durée. -->
-                <Chronometer
+                        <TextView
+                            android:id="@+id/widget_greeting"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:ellipsize="end"
+                            android:fontFamily="sans-serif-medium"
+                            android:maxLines="1"
+                            android:text="@string/widget_todo"
+                            android:textColor="@color/mint"
+                            android:textSize="12sp" />
 
-                    android:id="@+id/widget_chrono"
+                        <FrameLayout
+                            android:id="@+id/widget_badge"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="6dp">
 
-                    android:layout_width="wrap_content"
+                            <ImageView
+                                android:id="@+id/widget_badge_fond"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:contentDescription="@null"
+                                android:importantForAccessibility="no"
+                                android:scaleType="fitXY"
+                                android:src="@drawable/bg_widget_voile" />
 
-                    android:layout_height="wrap_content"
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal"
+                                android:paddingHorizontal="8dp"
+                                android:paddingVertical="2dp">
 
-                    android:textColor="@color/white"
+                                <ImageView
+                                    android:id="@+id/widget_flame"
+                                    android:layout_width="12dp"
+                                    android:layout_height="12dp"
+                                    android:contentDescription="@null"
+                                    android:importantForAccessibility="no"
+                                    android:src="@drawable/ic_widget_flame" />
 
-                    android:textSize="26sp"
+                                <TextView
+                                    android:id="@+id/widget_streak"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="3dp"
+                                    android:fontFamily="sans-serif-medium"
+                                    android:includeFontPadding="false"
+                                    android:maxLines="1"
+                                    android:text="@string/widget_apercu_serie"
+                                    android:textColor="@color/white"
+                                    android:textSize="12sp"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
+                        </FrameLayout>
+                    </LinearLayout>
 
-                    android:textStyle="bold"
+                    <!-- Les minutes du jour sur l'objectif, en grands chiffres. -->
+                    <TextView
+                        android:id="@+id/widget_minutes"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:fontFamily="sans-serif"
+                        android:maxLines="1"
+                        android:text="@string/widget_apercu_minutes"
+                        android:textColor="@color/white"
+                        android:textSize="28sp"
+                        android:textStyle="bold" />
 
-                    android:visibility="gone" />
+                    <!-- Pendant la hitbodedout : le temps qui reste, ou qui passe sans durée fixée. -->
+                    <Chronometer
+                        android:id="@+id/widget_chrono"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:fontFamily="sans-serif"
+                        android:textColor="@color/white"
+                        android:textSize="28sp"
+                        android:textStyle="bold"
+                        android:visibility="gone" />
 
-                <TextView
-                    android:id="@+id/widget_streak_label"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:maxLines="1"
-                    android:textColor="@color/mint"
-                    android:textSize="13sp" />
+                    <TextView
+                        android:id="@+id/widget_week_label"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:textColor="@color/mint"
+                        android:textSize="12sp" />
 
-                <TextView
-                    android:id="@+id/widget_today"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:maxLines="1"
-                    android:textColor="@color/mint"
-                    android:textSize="12sp" />
+                    <!-- Le bouton : une pastille claire, teinte par le code à la palette choisie. -->
+                    <FrameLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp">
+
+                        <ImageView
+                            android:id="@+id/widget_start_fond"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:contentDescription="@null"
+                            android:importantForAccessibility="no"
+                            android:scaleType="fitXY"
+                            android:src="@drawable/bg_widget_button" />
+
+                        <TextView
+                            android:id="@+id/widget_start"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:ellipsize="end"
+                            android:fontFamily="sans-serif-medium"
+                            android:gravity="center"
+                            android:maxLines="1"
+                            android:minWidth="88dp"
+                            android:paddingHorizontal="16dp"
+                            android:paddingVertical="7dp"
+                            android:text="@string/widget_start"
+                            android:textColor="@color/on_plate"
+                            android:textSize="13sp"
+                            android:textStyle="bold" />
+                    </FrameLayout>
+                </LinearLayout>
             </LinearLayout>
-        </LinearLayout>
 
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp">
-
-            <!-- Le fond du bouton, teint par le code à la couleur des boutons choisie. -->
-            <ImageView
-                android:id="@+id/widget_start_fond"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:contentDescription="@null"
-                android:importantForAccessibility="no"
-                android:scaleType="fitXY"
-                android:src="@drawable/bg_widget_button" />
-
-            <TextView
-                android:id="@+id/widget_start"
+            <!-- Les sept jours : plein s'il est fait, cerclé s'il reste à faire, ש pour Shabbat. -->
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:paddingVertical="9dp"
-                android:textColor="@color/brand_dark"
-                android:textSize="14sp"
-                android:textStyle="bold" />
-        </FrameLayout>
+                android:layout_marginTop="12dp"
+                android:orientation="horizontal">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:orientation="horizontal">
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical">
 
+                    <TextView
+                        android:id="@+id/widget_day_label_0"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif-medium"
+                        android:maxLines="1"
+                        android:textColor="@color/mint"
+                        android:textSize="10sp" />
+
+                    <FrameLayout
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_marginTop="3dp">
+
+                        <ImageView
+                            android:id="@+id/widget_day_fond_0"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:contentDescription="@null"
+                            android:importantForAccessibility="no"
+                            android:scaleType="fitXY"
+                            android:src="@drawable/bg_widget_day_todo" />
+
+                        <TextView
+                            android:id="@+id/widget_day_0"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:includeFontPadding="false"
+                            android:maxLines="1"
+                            android:textColor="@color/white"
+                            android:textSize="11sp"
+                            android:textStyle="bold" />
+                    </FrameLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="2dp"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/widget_day_label_1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif-medium"
+                        android:maxLines="1"
+                        android:textColor="@color/mint"
+                        android:textSize="10sp" />
+
+                    <FrameLayout
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_marginTop="3dp">
+
+                        <ImageView
+                            android:id="@+id/widget_day_fond_1"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:contentDescription="@null"
+                            android:importantForAccessibility="no"
+                            android:scaleType="fitXY"
+                            android:src="@drawable/bg_widget_day_todo" />
+
+                        <TextView
+                            android:id="@+id/widget_day_1"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:includeFontPadding="false"
+                            android:maxLines="1"
+                            android:textColor="@color/white"
+                            android:textSize="11sp"
+                            android:textStyle="bold" />
+                    </FrameLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="2dp"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/widget_day_label_2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif-medium"
+                        android:maxLines="1"
+                        android:textColor="@color/mint"
+                        android:textSize="10sp" />
+
+                    <FrameLayout
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_marginTop="3dp">
+
+                        <ImageView
+                            android:id="@+id/widget_day_fond_2"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:contentDescription="@null"
+                            android:importantForAccessibility="no"
+                            android:scaleType="fitXY"
+                            android:src="@drawable/bg_widget_day_todo" />
+
+                        <TextView
+                            android:id="@+id/widget_day_2"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:includeFontPadding="false"
+                            android:maxLines="1"
+                            android:textColor="@color/white"
+                            android:textSize="11sp"
+                            android:textStyle="bold" />
+                    </FrameLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="2dp"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/widget_day_label_3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif-medium"
+                        android:maxLines="1"
+                        android:textColor="@color/mint"
+                        android:textSize="10sp" />
+
+                    <FrameLayout
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_marginTop="3dp">
+
+                        <ImageView
+                            android:id="@+id/widget_day_fond_3"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:contentDescription="@null"
+                            android:importantForAccessibility="no"
+                            android:scaleType="fitXY"
+                            android:src="@drawable/bg_widget_day_todo" />
+
+                        <TextView
+                            android:id="@+id/widget_day_3"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:includeFontPadding="false"
+                            android:maxLines="1"
+                            android:textColor="@color/white"
+                            android:textSize="11sp"
+                            android:textStyle="bold" />
+                    </FrameLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="2dp"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/widget_day_label_4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif-medium"
+                        android:maxLines="1"
+                        android:textColor="@color/mint"
+                        android:textSize="10sp" />
+
+                    <FrameLayout
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_marginTop="3dp">
+
+                        <ImageView
+                            android:id="@+id/widget_day_fond_4"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:contentDescription="@null"
+                            android:importantForAccessibility="no"
+                            android:scaleType="fitXY"
+                            android:src="@drawable/bg_widget_day_todo" />
+
+                        <TextView
+                            android:id="@+id/widget_day_4"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:includeFontPadding="false"
+                            android:maxLines="1"
+                            android:textColor="@color/white"
+                            android:textSize="11sp"
+                            android:textStyle="bold" />
+                    </FrameLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="2dp"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/widget_day_label_5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif-medium"
+                        android:maxLines="1"
+                        android:textColor="@color/mint"
+                        android:textSize="10sp" />
+
+                    <FrameLayout
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_marginTop="3dp">
+
+                        <ImageView
+                            android:id="@+id/widget_day_fond_5"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:contentDescription="@null"
+                            android:importantForAccessibility="no"
+                            android:scaleType="fitXY"
+                            android:src="@drawable/bg_widget_day_todo" />
+
+                        <TextView
+                            android:id="@+id/widget_day_5"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:includeFontPadding="false"
+                            android:maxLines="1"
+                            android:textColor="@color/white"
+                            android:textSize="11sp"
+                            android:textStyle="bold" />
+                    </FrameLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="2dp"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/widget_day_label_6"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif-medium"
+                        android:maxLines="1"
+                        android:textColor="@color/mint"
+                        android:textSize="10sp" />
+
+                    <FrameLayout
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_marginTop="3dp">
+
+                        <ImageView
+                            android:id="@+id/widget_day_fond_6"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:contentDescription="@null"
+                            android:importantForAccessibility="no"
+                            android:scaleType="fitXY"
+                            android:src="@drawable/bg_widget_day_todo" />
+
+                        <TextView
+                            android:id="@+id/widget_day_6"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:includeFontPadding="false"
+                            android:maxLines="1"
+                            android:textColor="@color/white"
+                            android:textSize="11sp"
+                            android:textStyle="bold" />
+                    </FrameLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- Un texte de ’hizouk du jour, en hébreu, sur un voile sombre : il se lit dans toutes les langues. -->
             <FrameLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginTop="12dp"
                 android:layout_weight="1">
 
                 <ImageView
-                    android:id="@+id/widget_day_fond_0"
+                    android:id="@+id/widget_text_fond"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:contentDescription="@null"
                     android:importantForAccessibility="no"
                     android:scaleType="fitXY"
-                    android:src="@drawable/bg_widget_day_done" />
+                    android:src="@drawable/bg_widget_voile" />
 
-                <TextView
-                    android:id="@+id/widget_day_0"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:paddingVertical="4dp"
-                    android:textSize="11sp" />
-            </FrameLayout>
-
-            <FrameLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:layout_weight="1">
-
-                <ImageView
-                    android:id="@+id/widget_day_fond_1"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:contentDescription="@null"
-                    android:importantForAccessibility="no"
-                    android:scaleType="fitXY"
-                    android:src="@drawable/bg_widget_day_done" />
+                    android:gravity="center_vertical"
+                    android:orientation="vertical"
+                    android:paddingHorizontal="14dp"
+                    android:paddingVertical="10dp">
 
-                <TextView
-                    android:id="@+id/widget_day_1"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:paddingVertical="4dp"
-                    android:textSize="11sp" />
-            </FrameLayout>
+                    <!--
+                        « serif » et non la police hébraïque de l’application : le lanceur gonfle la
+                        vignette dans un contexte restreint, où TextView ne charge pas
+                        les polices de l'application. La famille serif du système porte
+                        la même Noto Serif Hebrew sur les Android récents.
+                        À droite quelle que soit la langue de l'écran d'accueil : c'est de l'hébreu.
+                    -->
+                    <TextView
+                        android:id="@+id/widget_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:fontFamily="serif"
+                        android:gravity="right"
+                        tools:ignore="RtlHardcoded"
+                        android:lineSpacingMultiplier="1.12"
+                        android:maxLines="3"
+                        android:textColor="@color/white"
+                        android:textDirection="rtl"
+                        android:textSize="15sp" />
 
-            <FrameLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:layout_weight="1">
-
-                <ImageView
-                    android:id="@+id/widget_day_fond_2"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:contentDescription="@null"
-                    android:importantForAccessibility="no"
-                    android:scaleType="fitXY"
-                    android:src="@drawable/bg_widget_day_done" />
-
-                <TextView
-                    android:id="@+id/widget_day_2"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:paddingVertical="4dp"
-                    android:textSize="11sp" />
-            </FrameLayout>
-
-            <FrameLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:layout_weight="1">
-
-                <ImageView
-                    android:id="@+id/widget_day_fond_3"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:contentDescription="@null"
-                    android:importantForAccessibility="no"
-                    android:scaleType="fitXY"
-                    android:src="@drawable/bg_widget_day_done" />
-
-                <TextView
-                    android:id="@+id/widget_day_3"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:paddingVertical="4dp"
-                    android:textSize="11sp" />
-            </FrameLayout>
-
-            <FrameLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:layout_weight="1">
-
-                <ImageView
-                    android:id="@+id/widget_day_fond_4"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:contentDescription="@null"
-                    android:importantForAccessibility="no"
-                    android:scaleType="fitXY"
-                    android:src="@drawable/bg_widget_day_done" />
-
-                <TextView
-                    android:id="@+id/widget_day_4"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:paddingVertical="4dp"
-                    android:textSize="11sp" />
-            </FrameLayout>
-
-            <FrameLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:layout_weight="1">
-
-                <ImageView
-                    android:id="@+id/widget_day_fond_5"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:contentDescription="@null"
-                    android:importantForAccessibility="no"
-                    android:scaleType="fitXY"
-                    android:src="@drawable/bg_widget_day_done" />
-
-                <TextView
-                    android:id="@+id/widget_day_5"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:paddingVertical="4dp"
-                    android:textSize="11sp" />
-            </FrameLayout>
-
-            <FrameLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:layout_weight="1">
-
-                <ImageView
-                    android:id="@+id/widget_day_fond_6"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:contentDescription="@null"
-                    android:importantForAccessibility="no"
-                    android:scaleType="fitXY"
-                    android:src="@drawable/bg_widget_day_done" />
-
-                <TextView
-                    android:id="@+id/widget_day_6"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:paddingVertical="4dp"
-                    android:textSize="11sp" />
+                    <TextView
+                        android:id="@+id/widget_ref"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:ellipsize="end"
+                        android:gravity="right"
+                        tools:ignore="RtlHardcoded"
+                        android:maxLines="1"
+                        android:textColor="@color/mint"
+                        android:textSize="11sp" />
+                </LinearLayout>
             </FrameLayout>
         </LinearLayout>
-
-        <!-- Un texte de ’hizouk du jour, en hébreu : il se lit dans toutes les langues. -->
-        <TextView
-            android:id="@+id/widget_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:ellipsize="end"
-            android:maxLines="3"
-            android:textColor="@color/white"
-            android:textDirection="rtl"
-            android:textSize="14sp" />
-
-        <TextView
-            android:id="@+id/widget_ref"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
-            android:maxLines="1"
-            android:textColor="@color/mint"
-            android:textSize="11sp" />
-    </LinearLayout>
+    </FrameLayout>
 </FrameLayout>

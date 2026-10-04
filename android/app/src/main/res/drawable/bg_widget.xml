@@ -1,12 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-    Le fond de la vignette : la même carte sombre que l'écran de séance. Le
-    vert posé ici est celui de l'aperçu et de la palette d'origine ; le code
-    le recouvre de la couleur de la palette choisie (StreakWidget.Teintes),
-    par un filtre qui garde les coins arrondis.
+    Le fond de la vignette tel que le montre l'aperçu du sélecteur (qui la
+    dessine sans le code) : le dégradé de la palette verte d'origine, du
+    vert des jours faits vers le vert foncé. Sur l'écran d'accueil, le code
+    le remplace par une image au dégradé de la palette choisie, avec ses
+    arcs et son halo (StreakWidget.fond, VignetteDecor).
 -->
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="rectangle">
-    <solid android:color="@color/brand_dark" />
-    <corners android:radius="20dp" />
+    <gradient
+        android:angle="315"
+        android:endColor="@color/brand_dark"
+        android:startColor="@color/day_done"
+        android:type="linear" />
+    <corners android:radius="22dp" />
 </shape>
