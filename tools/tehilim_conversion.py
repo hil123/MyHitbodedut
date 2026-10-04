@@ -6,8 +6,9 @@ Source : « Tanach with Nikkud » (tanach.us, domaine public), via l'export
 public de Sefaria :
   https://storage.googleapis.com/sefaria-export/json/Tanakh/Writings/Psalms/Hebrew/Tanach%20with%20Nikkud.json
 
-Conventions de l'application (les mêmes que tikkun_haklali.json) : le qere
-est retenu, les noms divins sont substitués. Usage :
+Le qere est retenu ; le Nom reste en toutes lettres (demande du 04/10), alors
+que le Tikoun le substitue. Le contrôle compare donc au Tikoun après
+substitution. Usage :
 
   python3 tools/tehilim_conversion.py chemin/vers/Tanach_with_Nikkud.json
 
@@ -42,15 +43,23 @@ def noms(v):
     return v
 
 def convertit(v):
+    """Le texte du Tikoun : qere retenu, noms divins substitués."""
     return NFC(noms(qere(NFC(v))))
+
+
+def livre(v):
+    """Le texte du livre de Tehilim : qere retenu, Nom en toutes lettres
+    (demande du propriétaire, 04/10). Seul le caractère invisible est retiré."""
+    return NFC(qere(NFC(v)).replace("\u200d", ""))
 
 if __name__ == "__main__":
     import sys
     src = json.load(open(sys.argv[1], encoding="utf-8"))["text"]
-    psaumes = [[convertit(v) for v in ch] for ch in src]
+    psaumes = [[livre(v) for v in ch] for ch in src]
     tikkun = json.load(open("android/app/src/main/res/raw/tikkun_haklali.json", encoding="utf-8"))
+    # Le Tikoun substitue les noms, le livre non : on compare après substitution.
     ecarts = [f'{p["numero"]}:{v["n"]}' for p in tikkun["psaumes"] for v in p["versets"]
-              if psaumes[p["numero"] - 1][v["n"] - 1] != NFC(v["he"])]
+              if NFC(noms(psaumes[p["numero"] - 1][v["n"] - 1])) != NFC(v["he"])]
     print("versets :", sum(map(len, psaumes)), "| écarts avec le Tikoun :", ecarts or "aucun")
     if "--ecrire" in sys.argv:
         chemin = "android/app/src/main/res/raw/tehilim.json"
