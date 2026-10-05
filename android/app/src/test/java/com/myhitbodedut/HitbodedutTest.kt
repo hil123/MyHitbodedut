@@ -53,7 +53,7 @@ class HitbodedutTest {
         assertEquals("ליקוטי מוהר״ן תניינא, כ״ה", Reference.localise(Hitbodedut.SOURCE_LIKOUTEI, "he"))
         assertEquals("רמב״ם, הלכות תפילה א׳, ב׳", Reference.localise(Hitbodedut.SOURCE_RAMBAM, "he"))
         assertEquals("Likutei Moharan II, 25", Reference.localise(Hitbodedut.SOURCE_LIKOUTEI, "en"))
-        assertEquals("Rambam, Hilchot Tefillah 1:2", Reference.localise(Hitbodedut.SOURCE_RAMBAM, "en"))
+        assertEquals("Rambam, Hilkhot Tefillah 1:2", Reference.localise(Hitbodedut.SOURCE_RAMBAM, "en"))
     }
 
     /**
