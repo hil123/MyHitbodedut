@@ -12,8 +12,8 @@ import android.content.Context
  * livres cités sont peu nombreux : on remplace le nom du livre, les numéros
  * restent.
  *
- * L'anglais reprend les graphies des chaînes anglaises (Likutei, Sichot,
- * Chayei, Shivchei) ; l'hébreu, les titres usuels avec leurs guerchayim.
+ * L'anglais reprend les graphies des chaînes anglaises (Likutei, Sihot,
+ * Hayei, Shivhei) ; l'hébreu, les titres usuels avec leurs guerchayim.
  */
 object Reference {
 
@@ -21,18 +21,18 @@ object Reference {
 
     /** Du plus long au plus court : « Likoutei Moharan II » avant « … I ». */
     private val LIVRES = listOf(
-        Livre("Likoutei Etsot, Hit'hazkout ", "Likutei Etzot, Strengthening ", "ליקוטי עצות, התחזקות "),
-        Livre("Rambam, Hilkhot Tefila ", "Rambam, Hilchot Tefillah ", "רמב״ם, הלכות תפילה "),
+        Livre("Likoutei Etsot, Hit'hazkout ", "Likutei Etsot, Strengthening ", "ליקוטי עצות, התחזקות "),
+        Livre("Rambam, Hilkhot Tefila ", "Rambam, Hilkhot Tefillah ", "רמב״ם, הלכות תפילה "),
         Livre("Likoutei Moharan II, ", "Likutei Moharan II, ", "ליקוטי מוהר״ן תניינא, "),
         Livre("Likoutei Moharan I, ", "Likutei Moharan I, ", "ליקוטי מוהר״ן, "),
         Livre("Likoutei Tefilot II, ", "Likutei Tefilot II, ", "ליקוטי תפילות ב, "),
         Livre("Likoutei Tefilot I, ", "Likutei Tefilot I, ", "ליקוטי תפילות א, "),
-        Livre("Si'hot HaRan ", "Sichot HaRan ", "שיחות הר״ן "),
-        Livre("'Hayé Moharan ", "Chayei Moharan ", "חיי מוהר״ן "),
-        Livre("Chiv'hei HaRan ", "Shivchei HaRan ", "שבחי הר״ן "),
+        Livre("Si'hot HaRan ", "Sihot HaRan ", "שיחות הר״ן "),
+        Livre("'Hayé Moharan ", "Hayei Moharan ", "חיי מוהר״ן "),
+        Livre("Chiv'hei HaRan ", "Shivhei HaRan ", "שבחי הר״ן "),
         Livre("Tehilim ", "Tehillim ", "תהילים "),
         Livre("Michlé ", "Mishlei ", "משלי "),
-        Livre("Eikha ", "Eichah ", "איכה "),
+        Livre("Eikha ", "Eikha ", "איכה "),
     )
 
     /** La langue est passée plutôt que lue, pour que la règle se teste sans appareil. */

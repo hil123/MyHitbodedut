@@ -169,7 +169,7 @@ export function creeStore(stockage, { maintenant = () => new Date(), fuseau } = 
     setDailyGoal: (m) => set('daily_goal_minutes', Math.max(0, m)),
     /** Les marques des anneaux déjà fêtés (Anneaux.marque). */
     anneauxFetes: () => new Set(get('anneaux_fetes', [])),
-    /** Le nusah du siddour (Nusah, Siddur.kt) : Edot HaMizrach par défaut. */
+    /** Le nusah du siddour (Nusah, Siddur.kt) : Edot HaMizra’h par défaut. */
     siddurNusah: () => (['edot', 'sefard', 'ashkenaz'].includes(get('siddur_nusah', 'edot')) ? get('siddur_nusah', 'edot') : 'edot'),
     setSiddurNusah: (n) => set('siddur_nusah', n),
     /** La lecture (ReglagesLecture.kt) : taille des lettres de 0,8 à 2, fond noir. */

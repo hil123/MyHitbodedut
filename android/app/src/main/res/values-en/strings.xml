@@ -266,7 +266,7 @@
     <string name="tip_5_title">Start with Tehillim, or your own words</string>
     <string name="tip_5_body">If you are not sure how to begin, open Tehillim and read a few chapters. The Psalms are prayer already formed, very direct, and they touch the soul. In hitbodedut they can be a spiritual thread leading you straight to Hashem. And if you feel you have no words, you can simply speak with Hashem freely, sharing your thoughts and what you feel.</string>
     <string name="tip_6_title">Ask yourself inward questions</string>
-    <string name="tip_6_body">During hitbodedut, ask yourself inward questions. What am I feeling right now? What am I going through? How can I feel closer to Hashem? What do I need to improve in my life? This is a time for a real cheshbon nefesh. Sometimes, in the inner quiet, you come to see your real needs and the right direction for your life.</string>
+    <string name="tip_6_body">During hitbodedut, ask yourself inward questions. What am I feeling right now? What am I going through? How can I feel closer to Hashem? What do I need to improve in my life? This is a time for a real heshbon nefesh. Sometimes, in the inner quiet, you come to see your real needs and the right direction for your life.</string>
     <string name="tip_7_title">Put honesty first</string>
     <string name="tip_7_body">During hitbodedut, do not try to hide from Hashem what you feel. This is a time when you are allowed to be honest with yourself and with Hashem. If you feel anger, frustration, fear or insecurity, this is the place to say it. Honesty is the key to spiritual growth. The more honest you are, the more inner quiet you will find.</string>
     <string name="tip_8_title">Make peace with yourself</string>
@@ -319,7 +319,7 @@
 
     <!-- Section Tikoun HaKlali -->
     <string name="tikkun_title">Tikkun HaKlali</string>
-    <string name="tikkun_hint">The ten psalms of Rabbi Nachman, in order: 16, 32, 41, 42, 59, 77, 90, 105, 137, 150.</string>
+    <string name="tikkun_hint">The ten psalms of Rabbi Nahman, in order: 16, 32, 41, 42, 59, 77, 90, 105, 137, 150.</string>
     <string name="tikkun_open">Open the Tikkun</string>
     <string name="tikkun_psalm_he">תהילים %1$s</string>
     <string name="tikkun_verses">%1$d verses</string>
@@ -402,7 +402,7 @@
     <string name="tefilot_count">%d prayers</string>
     <string name="tefilot_warning">The lesson cited deals with another subject; it is the prayer that carries this plea.</string>
     <string name="tefila_hitbodedut">Hitbodedut</string>
-    <string name="tefila_simcha">Simcha</string>
+    <string name="tefila_simcha">Simha</string>
     <string name="tefila_uman">Uman, Rosh Hashana</string>
     <string name="tefila_kdusha">Kedusha</string>
     <string name="tefila_zera">Zera shel kayama</string>
@@ -410,11 +410,11 @@
     <string name="tefila_brit">Shmirat habrit</string>
     <string name="tefila_geula">Geula</string>
     <string name="tefila_zivug">Zivug</string>
-    <string name="tefila_refua">Refua shlema</string>
+    <string name="tefila_refua">Refua shelema</string>
 
     <!-- Présentation détaillée, bravo de fin de séance, apparence (28/09). -->
     <string name="onboarding_session">Your hitbodedut</string>
-    <string name="onboarding_session_body">Pick a length, or an open hitbodedut, and a subject if you like. A niggun can play along. A word of chizuk opens and closes the hitbodedut, and if the words won’t come, a button is there to help.</string>
+    <string name="onboarding_session_body">Pick a length, or an open hitbodedut, and a subject if you like. A niggun can play along. A word of hizuk opens and closes the hitbodedut, and if the words won’t come, a button is there to help.</string>
     <string name="onboarding_days">Day after day</string>
     <string name="onboarding_days_body">The streak counts your days in a row, and the week shows at a glance. After each hitbodedut, a note can go into your journal. Reminders nudge you at the time you choose.</string>
     <string name="onboarding_texts">Texts to pray with</string>
@@ -423,11 +423,11 @@
     <string name="onboarding_yours_body">In Settings: the language (French, English or Hebrew), the screen colors, your first name and your usual hitbodedut length. Music has its own section.</string>
     <string name="onboarding_adresse">What should we call you?</string>
     <string name="onboarding_adresse_body">At the end of each hitbodedut, the app congratulates you. Pick the word that fits you; you can change it in Settings.</string>
-    <string name="adresse_tsadik">Tzadik</string>
-    <string name="adresse_tsadeket">Tzadeket</string>
+    <string name="adresse_tsadik">Tsadik</string>
+    <string name="adresse_tsadeket">Tsadeket</string>
     <string name="adresse_none">Not chosen</string>
-    <string name="celebration_tsadik">Well done, Tzadik!</string>
-    <string name="celebration_tsadeket">Well done, Tzadeket!</string>
+    <string name="celebration_tsadik">Well done, Tsadik!</string>
+    <string name="celebration_tsadeket">Well done, Tsadeket!</string>
     <string name="celebration_neutral">Well done!</string>
     <string name="celebration_continue">Continue</string>
     <string name="settings_adresse">Address me as</string>
@@ -456,8 +456,8 @@
         <item quantity="other">%d minutes of hitbodedut</item>
     </plurals>
     <!-- Séance annulée : un encouragement au lieu du bravo (28/09). -->
-    <string name="annulation_hazak">Chazak!</string>
-    <string name="annulation_hizki">Chizki!</string>
+    <string name="annulation_hazak">Hazak!</string>
+    <string name="annulation_hizki">Hizki!</string>
     <string name="annulation_neutral">Take heart!</string>
     <string name="annulation_subtitle">For everything you have done so far. Next time will be better.</string>
 
@@ -544,9 +544,9 @@
 
     <!-- Le siddour (SiddurActivity, 04/10). -->
     <string name="siddur_title">Siddur</string>
-    <string name="siddur_hint">Shacharit, Mincha, Arvit, blessings…</string>
+    <string name="siddur_hint">Shaharit, Minha, Arvit, blessings…</string>
     <string name="siddur_books">Books</string>
-    <string name="siddur_nusah">Sephardi nusach (Edot HaMizrach)</string>
+    <string name="siddur_nusah">Sephardi nusah (Edot HaMizrah)</string>
     <string name="lecture_reglages">Reading settings</string>
     <string name="lecture_nuit">Read on a black background</string>
     <string name="lecture_replier">Fold away</string>
@@ -560,8 +560,8 @@
     <string name="siddur_maintenant">For this hour</string>
     <string name="lecture_plus">Larger letters</string>
     <string name="lecture_moins">Smaller letters</string>
-    <string name="siddur_choose">Nusach</string>
-    <string name="siddur_nusah_edot">Sephardi (Edot HaMizrach)</string>
+    <string name="siddur_choose">Nusah</string>
+    <string name="siddur_nusah_edot">Sephardi (Edot HaMizrah)</string>
     <string name="siddur_nusah_sefard">Sfard (Arizal)</string>
     <string name="siddur_nusah_ashkenaz">Ashkenaz</string>
     <string name="siddur_sources">Sources: %1$s</string>

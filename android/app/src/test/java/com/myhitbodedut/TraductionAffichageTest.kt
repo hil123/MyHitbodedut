@@ -51,7 +51,7 @@ class TraductionAffichageTest {
 
     @Test
     fun `en anglais une reference ne garde aucune graphie francaise`() {
-        val francais = Regex("""Likoutei|Si'hot|'Hayé|Chiv'hei|Michlé|Etsot|Hilkhot| ; """)
+        val francais = Regex("""Likoutei|Si'hot|'Hayé|Chiv'hei|Michlé|Hit'hazkout|\bTefila\b| ; """)
         refs.forEach { ref ->
             val en = Reference.localise(ref, "en")
             assertFalse("« $ref » → « $en »", francais.containsMatchIn(en))
