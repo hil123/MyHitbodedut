@@ -32,7 +32,7 @@ object HitbodedutCard {
         card.findViewById<TextView>(R.id.hitbodedut_he).text = mouvement.he
         card.findViewById<TextView>(R.id.hitbodedut_title).setText(mouvement.titre)
         card.findViewById<TextView>(R.id.hitbodedut_invite).setText(mouvement.invite)
-        card.findViewById<TextView>(R.id.hitbodedut_source).text = mouvement.source
+        card.findViewById<TextView>(R.id.hitbodedut_source).text = Reference.localise(context, mouvement.source)
 
         val previous = card.findViewById<TextView>(R.id.hitbodedut_previous)
         previous.visibility = if (Hitbodedut.estPremier(index)) View.INVISIBLE else View.VISIBLE

@@ -1,5 +1,7 @@
 package com.myhitbodedut
 
+import java.time.LocalDate
+
 /**
  * Les trois anneaux de l'accueil, a la maniere des anneaux d'activite
  * d'Apple (demande du 01/10) : de l'interieur vers l'exterieur,
@@ -70,6 +72,29 @@ object Anneaux {
      * habituelle d'une hitbodedout. Un objectif nul ou negatif n'a pas de
      * sens ; il retombe sur la duree.
      */
+    /**
+     * Ce qui rend « nouveau » un anneau fermé : la date pour le jour, le
+     * dimanche de la semaine pour la semaine, le palier pour la série. Un
+     * anneau se fête une fois par marque, pas à chaque ouverture de
+     * l'accueil (demande du 04/10 : des animations automatiques).
+     */
+    fun marque(anneau: Anneau, aujourdhui: LocalDate): String? {
+        if (!anneau.atteint) return null
+        return when (anneau.quel) {
+            Quel.JOUR -> "jour:$aujourdhui"
+            Quel.SEMAINE -> "semaine:${aujourdhui.minusDays((aujourdhui.dayOfWeek.value % 7).toLong())}"
+            Quel.SERIE -> "serie:${anneau.objectif}"
+        }
+    }
+
+    /** Les marques des anneaux fermés en ce moment : ce qu'on garde une fois la fête faite. */
+    fun marques(etat: Etat, aujourdhui: LocalDate): Set<String> =
+        etat.duCentre.mapNotNull { marque(it, aujourdhui) }.toSet()
+
+    /** Les anneaux fermés qui n'ont pas encore été fêtés, du centre vers l'extérieur. */
+    fun aFeter(etat: Etat, aujourdhui: LocalDate, dejaFetes: Set<String>): List<Quel> =
+        etat.duCentre.filter { a -> marque(a, aujourdhui)?.let { it !in dejaFetes } ?: false }.map { it.quel }
+
     fun objectifEffectif(regle: Int, dureeHabituelle: Int): Int =
         if (regle > 0) regle else dureeHabituelle.coerceAtLeast(1)
 }

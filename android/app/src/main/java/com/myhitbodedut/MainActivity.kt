@@ -3,6 +3,7 @@ package com.myhitbodedut
 import android.content.Intent
 import android.graphics.Typeface
 import android.os.Bundle
+import android.view.HapticFeedbackConstants
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
@@ -74,6 +75,10 @@ class MainActivity : AppCompatActivity() {
             when (item.itemId) {
                 R.id.nav_today, R.id.nav_texts -> {
                     montrerPanneau(item.itemId)
+                    // Revenir sur l'accueil rejoue les anneaux, comme à l'ouverture.
+                    if (item.itemId == R.id.nav_today) {
+                        findViewById<AnneauxView>(R.id.week_gauge).rejouer()
+                    }
                     true
                 }
                 R.id.nav_journal -> {
@@ -105,6 +110,14 @@ class MainActivity : AppCompatActivity() {
         SessionService.reconcilier(this)
         applyServiceState()
         refresh()
+        // Chaque retour sur l'accueil : le hassid au centre, les anneaux se
+        // remplissent, puis il salue ou fête l'anneau qui vient de se fermer (04/10).
+        findViewById<View>(R.id.hero_plate).apply {
+            animate().cancel()
+            rotationY = 0f
+        }
+        montrerFace(Plaque.Face.HASSID)
+        findViewById<AnneauxView>(R.id.week_gauge).rejouer()
         // La séance s'est close téléphone posé : le bravo attendait ici.
         CelebrationActivity.showIfPending(this)
         // La vignette d'accueil suit ce que l'écran vient de montrer.
@@ -162,6 +175,12 @@ class MainActivity : AppCompatActivity() {
         findViewById<View>(R.id.tikkun_button).setOnClickListener {
             startActivity(Intent(this, TikkunActivity::class.java))
         }
+        findViewById<View>(R.id.siddur_button).setOnClickListener {
+            startActivity(Intent(this, SiddurActivity::class.java))
+        }
+        findViewById<View>(R.id.tehilim_button).setOnClickListener {
+            startActivity(Intent(this, TehilimActivity::class.java))
+        }
         findViewById<View>(R.id.tefilot_button).setOnClickListener {
             startActivity(Intent(this, TefilotActivity::class.java))
         }
@@ -180,7 +199,7 @@ class MainActivity : AppCompatActivity() {
         // La plaque ronde coupe l'illustration à son bord, au creux des anneaux.
         findViewById<View>(R.id.hero_plate).apply {
             clipToOutline = true
-            setOnClickListener { saluer() }
+            setOnClickListener { toucherPlaque() }
         }
         findViewById<Button>(R.id.today_note).setOnClickListener {
             NoteDialog.show(this, Store.today(), onSaved = { refresh() })
@@ -263,6 +282,7 @@ class MainActivity : AppCompatActivity() {
         renderMusic()
         renderRelance()
         renderTikkun()
+        renderTehilim()
         renderReminders()
         renderSettingsEntry()
         renderStartCard()
@@ -336,9 +356,153 @@ class MainActivity : AppCompatActivity() {
             Store.formatDuration(this, etat.jour.fait), Store.formatDuration(this, etat.jour.objectif),
             semaine.faits, semaine.dus, etat.serie.fait, etat.serie.objectif
         )
-        anneaux.surChoix = { renderLegende(it) }
+        anneaux.surChoix = { quel ->
+            renderLegende(quel)
+            // Toucher un anneau montre sa face au centre ; le relâcher ramène le hassid.
+            if (quel != face.anneau) tournerPlaque(if (quel == null) Plaque.Face.HASSID else Plaque.pour(quel))
+        }
+        anneaux.surRempli = { apresRemplissage() }
         renderLegende(anneaux.misEnAvant)
     }
+
+    /**
+     * La fin d'un remplissage. Un anneau qui vient de se fermer est fêté
+     * (les anneaux battent, le hassid saute trois fois), une seule fois par
+     * jour, par semaine ou par palier ; sinon le hassid salue d'un saut.
+     */
+    private fun apresRemplissage() {
+        val etat = Store.anneaux(this)
+        val aujourdhui = java.time.LocalDate.now()
+        val nouveaux = Anneaux.aFeter(etat, aujourdhui, Store.anneauxFetes(this))
+        Store.setAnneauxFetes(this, Anneaux.marques(etat, aujourdhui))
+        if (nouveaux.isEmpty()) {
+            if (face == Plaque.Face.HASSID) sautiller(1)
+        } else {
+            // L'anneau fermé passe devant, et sa face s'affiche au centre le
+            // temps de la fête ; le hassid revient ensuite en sautant.
+            findViewById<AnneauxView>(R.id.week_gauge).apply {
+                performHapticFeedback(
+                    if (android.os.Build.VERSION.SDK_INT >= 30) HapticFeedbackConstants.CONFIRM
+                    else HapticFeedbackConstants.LONG_PRESS
+                )
+                feter(nouveaux.first())
+            }
+        }
+    }
+
+    // --- Le centre des anneaux (Plaque) ---------------------------------------
+
+    /** La face montrée au centre des anneaux. */
+    private var face = Plaque.Face.HASSID
+
+    private val retourHassid = Runnable { tournerPlaque(Plaque.Face.HASSID) }
+
+    /** Un toucher au centre : la face suivante, en tournant, avec un petit retour au doigt. */
+    private fun toucherPlaque() {
+        findViewById<View>(R.id.hero_plate).performHapticFeedback(HapticFeedbackConstants.CONTEXT_CLICK)
+        tournerPlaque(Plaque.suivante(face))
+    }
+
+    /**
+     * La plaque tourne sur elle-même comme une pièce : à mi-tour, la face
+     * change ; le chiffre monte ensuite depuis zéro. Sans animations dans le
+     * téléphone, la face change d'un coup.
+     */
+    private fun tournerPlaque(vers: Plaque.Face) {
+        val plaque = findViewById<View>(R.id.hero_plate)
+        plaque.removeCallbacks(retourHassid)
+        if (vers != Plaque.Face.HASSID) plaque.postDelayed(retourHassid, Plaque.RETOUR_MS)
+        if (vers == face) return
+        plaque.animate().cancel()
+        if (!android.animation.ValueAnimator.areAnimatorsEnabled()) {
+            plaque.rotationY = 0f
+            montrerFace(vers)
+            return
+        }
+        plaque.cameraDistance = 9000f * resources.displayMetrics.density
+        plaque.animate().rotationY(90f).setDuration(140L)
+            .setInterpolator(android.view.animation.AccelerateInterpolator())
+            .withEndAction {
+                montrerFace(vers)
+                plaque.rotationY = -90f
+                plaque.animate().rotationY(0f).setDuration(200L)
+                    .setInterpolator(android.view.animation.DecelerateInterpolator())
+                    .withEndAction { if (vers == Plaque.Face.HASSID) sautiller(1) }
+                    .start()
+            }
+            .start()
+    }
+
+    /** Remplit la plaque avec [vers], et met en avant l'anneau dont elle parle. */
+    private fun montrerFace(vers: Plaque.Face) {
+        face = vers
+        val hassid = findViewById<View>(R.id.hero_character)
+        val chiffres = findViewById<View>(R.id.hero_face)
+        val plaque = findViewById<View>(R.id.hero_plate)
+        if (vers == Plaque.Face.HASSID) {
+            plaque.removeCallbacks(retourHassid)
+            hassid.visibility = View.VISIBLE
+            chiffres.visibility = View.GONE
+            plaque.contentDescription = getString(R.string.rings_character_hint)
+        } else {
+            hassid.visibility = View.INVISIBLE
+            chiffres.visibility = View.VISIBLE
+            remplirFace(vers)
+        }
+        findViewById<AnneauxView>(R.id.week_gauge).mettreEnAvant(vers.anneau)
+    }
+
+    /** Le chiffre de la face et ce qu'il compte ; le chiffre monte depuis zéro. */
+    private fun remplirFace(vers: Plaque.Face) {
+        val etat = Store.anneaux(this)
+        val valeur = findViewById<TextView>(R.id.hero_face_value)
+        val legende = findViewById<TextView>(R.id.hero_face_caption)
+        val duree: (Int) -> String = { Store.formatDuration(this, it) }
+        val (cible, texte, legendeTexte) = when (vers) {
+            Plaque.Face.JOUR -> Triple(etat.jour.fait, duree,
+                getString(R.string.plaque_jour, duree(etat.jour.objectif)))
+            Plaque.Face.SEMAINE -> Triple(etat.semaine.fait,
+                { n: Int -> getString(R.string.plaque_semaine_valeur, n, etat.semaine.objectif) },
+                getString(R.string.plaque_semaine))
+            Plaque.Face.SERIE -> Triple(etat.serie.fait, { n: Int -> n.toString() },
+                resources.getQuantityString(R.plurals.plaque_serie, etat.serie.fait, etat.serie.fait, etat.serie.objectif))
+            Plaque.Face.MEILLEURE -> Triple(Store.meilleureSerie(this), { n: Int -> n.toString() },
+                getString(R.string.plaque_meilleure))
+            Plaque.Face.TOTAL -> Triple(Store.totalMinutes(this), duree, getString(R.string.plaque_total))
+            Plaque.Face.JOURS -> {
+                val jours = Store.joursFaits(this).size
+                Triple(jours, { n: Int -> n.toString() },
+                    resources.getQuantityString(R.plurals.plaque_jours, jours, jours))
+            }
+            Plaque.Face.MOYENNE -> Triple(
+                Plaque.moyenne(Store.totalMinutes(this), Store.joursFaits(this).size), duree,
+                getString(R.string.plaque_moyenne))
+            Plaque.Face.HASSID -> return
+        }
+        legende.text = legendeTexte
+        valeur.setTextColor(Apparence.couleur(this, when (vers.anneau) {
+            Anneaux.Quel.JOUR -> R.color.brand
+            Anneaux.Quel.SEMAINE -> R.color.ring_week
+            Anneaux.Quel.SERIE -> R.color.ring_streak
+            null -> R.color.ink
+        }))
+        findViewById<View>(R.id.hero_plate).contentDescription = listOf(texte(cible), legendeTexte).joinToString(" ")
+        compteurFace?.cancel()
+        if (cible <= 0 || !android.animation.ValueAnimator.areAnimatorsEnabled()) {
+            valeur.text = texte(cible)
+            return
+        }
+        valeur.text = texte(0)
+        compteurFace = android.animation.ValueAnimator.ofInt(0, cible).apply {
+            duration = 650L
+            interpolator = android.view.animation.DecelerateInterpolator()
+            addUpdateListener { valeur.text = texte(it.animatedValue as Int) }
+            start()
+        }
+    }
+
+    /** Le compteur qui fait monter le chiffre de la face ; arrêté quand la face change. */
+    private var compteurFace: android.animation.ValueAnimator? = null
 
     /** La légende sous les anneaux : la semaine, ou l'anneau mis en avant. */
     private fun renderLegende(quel: Anneaux.Quel?) {
@@ -370,14 +534,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
-     * Un toucher sur le hassid : il salue d'un petit saut, et les anneaux
-     * se remplissent à nouveau depuis zéro. Rien si les animations sont
-     * coupées dans le téléphone.
+     * Le petit saut du hassid, [fois] de suite. Rien si les animations sont
+     * coupées dans le téléphone (Options pour les développeurs ou
+     * Accessibilité → Supprimer les animations).
      */
-    private fun saluer() {
-        val anneaux = findViewById<AnneauxView>(R.id.week_gauge)
-        anneaux.montrer(Store.anneaux(this), depuisZero = true)
-        if (!android.animation.ValueAnimator.areAnimatorsEnabled()) return
+    private fun sautiller(fois: Int) {
+        if (fois <= 0 || !android.animation.ValueAnimator.areAnimatorsEnabled()) return
         val hassid = findViewById<ImageView>(R.id.hero_character)
         val saut = 10f * resources.displayMetrics.density
         hassid.animate().cancel()
@@ -393,7 +555,9 @@ class MainActivity : AppCompatActivity() {
                     .setDuration(260L)
                     .setInterpolator(android.view.animation.BounceInterpolator())
                     .withEndAction {
-                        hassid.animate().rotation(0f).setDuration(160L).start()
+                        hassid.animate().rotation(0f).setDuration(160L)
+                            .withEndAction { sautiller(fois - 1) }
+                            .start()
                     }
                     .start()
             }
@@ -442,6 +606,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     /** Ou en est le Tikoun du jour, sans avoir a ouvrir la section. */
+    /** La ligne Tehilim dit la portion du jour, selon le mois hébraïque. */
+    private fun renderTehilim() {
+        val (jour, longueur) = CycleTehilim.jourHebreu(java.time.LocalDate.now())
+        findViewById<TextView>(R.id.tehilim_state).text =
+            getString(R.string.tehilim_today, TehilimTexte.portion(this, CycleTehilim.duMois(jour, longueur)))
+    }
+
     private fun renderTikkun() {
         val tikkun = Data.tikkun(this)
         val dits = Store.tikkunDone(this).size
@@ -505,8 +676,14 @@ class MainActivity : AppCompatActivity() {
         }
 
         val total = Store.totalMinutes(this)
-        findViewById<TextView>(R.id.status_total).text =
-            getString(R.string.status_total, Store.formatDuration(this, total))
+        // Le premier jour, « 0 min au total » n'apprend rien : la phrase
+        // d'accueil reste seule sur la ligne.
+        val avecTotal = total > 0
+        findViewById<View>(R.id.status_separator).visibility = if (avecTotal) View.VISIBLE else View.GONE
+        findViewById<TextView>(R.id.status_total).apply {
+            visibility = if (avecTotal) View.VISIBLE else View.GONE
+            text = getString(R.string.status_total, Store.formatDuration(this@MainActivity, total))
+        }
 
         val minutesToday = record?.minutes ?: 0
         val detail = findViewById<TextView>(R.id.today_detail)
@@ -546,12 +723,13 @@ class MainActivity : AppCompatActivity() {
 
             // Le samedi chômé ne porte pas de point à cocher : il porte sa marque.
             val restDay = day.shabbat && day.exempt
+            // Le numéro du jour remplit les cases encore ouvertes : la bande
+            // se lit comme un calendrier, pas comme des cases vides.
             mark.text = when {
                 day.done -> "✓"
                 restDay -> getString(R.string.week_shabbat_mark)
                 day.exempt -> "—"
-                day.future -> ""
-                else -> "·"
+                else -> day.date.dayOfMonth.toString()
             }
             cell.contentDescription = when {
                 day.done -> getString(R.string.week_done)
@@ -568,6 +746,7 @@ class MainActivity : AppCompatActivity() {
                     when {
                         day.done -> R.color.white
                         restDay -> R.color.brand
+                        day.future -> R.color.muted
                         else -> R.color.ink
                     }
                 )
@@ -576,6 +755,7 @@ class MainActivity : AppCompatActivity() {
                 when {
                     day.done -> R.drawable.bg_day_done
                     day.exempt -> R.drawable.bg_day_exempt
+                    day.date == java.time.LocalDate.now() -> R.drawable.bg_day_today
                     else -> R.drawable.bg_day_todo
                 }
             )

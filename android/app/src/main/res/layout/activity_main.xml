@@ -71,6 +71,18 @@
                         android:id="@+id/status_streak"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:fontFeatureSettings="tnum"
+                        android:textColor="?attr/mhMuted"
+                        android:textSize="15sp" />
+
+                    <!-- Le point qui sépare la série du total ; masqué avec le total. -->
+                    <TextView
+                        android:id="@+id/status_separator"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:importantForAccessibility="no"
+                        android:text="@string/status_separator"
                         android:textColor="?attr/mhMuted"
                         android:textSize="15sp" />
 
@@ -78,7 +90,8 @@
                         android:id="@+id/status_total"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="10dp"
+                        android:layout_marginStart="8dp"
+                        android:fontFeatureSettings="tnum"
                         android:layout_weight="1"
                         android:ellipsize="end"
                         android:maxLines="1"
@@ -125,6 +138,39 @@
                             android:layout_height="match_parent"
                             android:contentDescription="@null"
                             android:scaleType="fitCenter" />
+
+                        <!-- Les autres faces du centre : un chiffre et ce qu'il compte (Plaque). -->
+                        <LinearLayout
+                            android:id="@+id/hero_face"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:paddingBottom="8dp"
+                            android:visibility="gone">
+
+                            <TextView
+                                android:id="@+id/hero_face_value"
+                                android:layout_width="match_parent"
+                                android:layout_height="44dp"
+                                android:autoSizeMaxTextSize="34sp"
+                                android:autoSizeMinTextSize="16sp"
+                                android:autoSizeTextType="uniform"
+                                android:fontFeatureSettings="tnum"
+                                android:gravity="center"
+                                android:maxLines="1"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/hero_face_caption"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:gravity="center"
+                                android:maxLines="3"
+                                android:textColor="?attr/mhMuted"
+                                android:textSize="12sp" />
+                        </LinearLayout>
                     </FrameLayout>
                 </FrameLayout>
 
@@ -154,6 +200,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="12dp"
+                    android:fadingEdgeLength="28dp"
+                    android:requiresFadingEdge="horizontal"
                     android:scrollbars="none">
 
                     <LinearLayout
@@ -283,6 +331,50 @@
 
                             <TextView
                                 android:id="@+id/tikkun_state"
+                                style="@style/SectionState" />
+                        </LinearLayout>
+
+                        <ImageView style="@style/SectionChevron" />
+                    </LinearLayout>
+                    <!-- Le siddour : les prières du jour et les bénédictions (04/10). -->
+                    <LinearLayout
+                        android:id="@+id/siddur_button"
+                        style="@style/SectionRow">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                style="@style/SettingLabelStacked"
+                                android:text="@string/siddur_title" />
+
+                            <TextView
+                                style="@style/SectionState"
+                                android:text="@string/siddur_hint" />
+                        </LinearLayout>
+
+                        <ImageView style="@style/SectionChevron" />
+                    </LinearLayout>
+                    <!-- Le livre entier, et la part du jour (04/10). -->
+                    <LinearLayout
+                        android:id="@+id/tehilim_button"
+                        style="@style/SectionRow">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                style="@style/SettingLabelStacked"
+                                android:text="@string/tehilim_title" />
+
+                            <TextView
+                                android:id="@+id/tehilim_state"
                                 style="@style/SectionState" />
                         </LinearLayout>
 

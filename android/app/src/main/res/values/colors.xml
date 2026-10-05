@@ -40,7 +40,7 @@
     <!-- Les trois états d'une case de la bande hebdomadaire. -->
     <color name="day_done">#16775A</color>
     <color name="day_todo">#EDF2EE</color>
-    <color name="day_exempt">#EDE9F7</color>
+    <color name="day_exempt">#F3EEE2</color>
 
     <!-- Les anneaux de l'accueil : le jour prend la couleur de marque,
          la semaine et la série ont les leurs, fixes de jour et de nuit. -->
@@ -51,4 +51,9 @@
     <color name="ring_streak_on_dark">#F0C46A</color>
     <!-- Fond très dilué du badge d'avertissement. -->
     <color name="warning_wash">#1FC66B2D</color>
+    <!-- La lecture de nuit des textes saints (ReglagesLecture) ; le bouton, lui, prend l'accent choisi. -->
+    <color name="lecture_nuit_fond">#000000</color>
+    <color name="lecture_nuit_texte">#F2F0EA</color>
+    <color name="lecture_nuit_discret">#A3A8A5</color>
+    <color name="lecture_nuit_titre">#D6C28C</color>
 </resources>

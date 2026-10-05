@@ -5,12 +5,19 @@ on:
     branches: [main]
   pull_request:
   workflow_dispatch:
+    inputs:
+      captures:
+        description: "Captures d'ecran sur emulateur (job captures) au lieu de la construction"
+        type: boolean
+        default: false
 
 permissions:
   contents: write
 
 jobs:
   build:
+    # Une demande de captures ne reconstruit pas les releases.
+    if: github.event_name != 'workflow_dispatch' || !inputs.captures
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -107,3 +114,113 @@ jobs:
           name: lint-report
           path: android/app/build/reports/lint-results-debug.html
           if-no-files-found: ignore
+
+  # Captures d'ecran reelles, sur un emulateur, pour montrer les changements
+  # au proprietaire. Seulement sur demande (workflow_dispatch, captures=true) :
+  # les envois et les PR n'en sont pas ralentis. Le parcours est dans
+  # .github/captures/ ; il ne fait jamais echouer le job.
+  captures:
+    if: github.event_name == 'workflow_dispatch' && inputs.captures
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+
+      # L'emulateur veut plus de 7 Go pour ses donnees ; le runner n'en
+      # laissait que 6 (« Not enough space to create userdata partition »).
+      - name: Free disk space
+        run: |
+          df -h /
+          sudo rm -rf /usr/share/dotnet /opt/ghc /usr/local/.ghcup /usr/local/share/boost \
+            /opt/hostedtoolcache/CodeQL /usr/local/lib/node_modules /usr/share/swift /usr/local/share/powershell
+          sudo docker image prune -af > /dev/null 2>&1 || true
+          df -h /
+
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Ensure Android platform 35
+        run: yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "platforms;android-35" "build-tools;35.0.0" || true
+
+      - name: Build the debug edition
+        working-directory: android
+        env:
+          VERSION_CODE: ${{ github.run_number }}
+        run: ./gradlew --no-daemon :app:assembleFullDebug
+
+      - name: Capture the screens
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 34
+          target: google_apis
+          arch: x86_64
+          profile: pixel_6
+          cores: 4
+          ram-size: 4096M
+          disk-size: 4096M
+          disable-animations: true
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none -camera-front none
+          script: bash .github/captures/captures.sh
+
+      # Apercus reduits, en base64 dans le journal : on peut les relire la
+      # ou le telechargement de l'artefact n'est pas possible.
+      - name: Print small previews in the log
+        if: always()
+        run: |
+          python3 -m pip install --quiet pillow || true
+          python3 - <<'PY'
+          import base64, glob, io, os
+          try:
+              from PIL import Image
+          except ImportError:
+              raise SystemExit("pas de Pillow")
+          for f in sorted(glob.glob("out/*.png")):
+              try:
+                  im = Image.open(f).convert("RGB")
+                  im.thumbnail((432, 1000))
+                  buf = io.BytesIO()
+                  im.save(buf, "JPEG", quality=70)
+                  b = base64.b64encode(buf.getvalue()).decode()
+                  print("@@APERCU " + os.path.basename(f))
+                  for i in range(0, len(b), 3000):
+                      print("@@B64 " + b[i:i + 3000])
+                  print("@@FIN")
+              except Exception as e:
+                  print("@@ERREUR", f, e)
+          PY
+
+      # Les captures aussi sur une branche à part (claude/captures-android) :
+      # lisibles avec git là où l'artefact ne se télécharge pas.
+      - name: Publish the captures to a branch
+        if: always()
+        env:
+          JETON: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          ls out/*.png >/dev/null 2>&1 || exit 0
+          rm -rf /tmp/pub && mkdir -p /tmp/pub && cp out/*.png /tmp/pub/
+          cd /tmp/pub
+          git init -q && git checkout -q -b claude/captures-android
+          git add ./*.png
+          git -c user.name="captures" -c user.email="actions@github.com" commit -q -m "Captures ${GITHUB_SHA::7}"
+          git push -q -f "https://x-access-token:${JETON}@github.com/${GITHUB_REPOSITORY}.git" claude/captures-android
+
+      - name: Upload the captures
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: captures-android
+          path: out/*.png
+          retention-days: 14
+          if-no-files-found: warn

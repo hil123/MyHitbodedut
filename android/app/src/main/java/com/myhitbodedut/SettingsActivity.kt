@@ -379,18 +379,22 @@ class SettingsActivity : AppCompatActivity() {
         val modes = Apparence.Mode.values()
         choisirParmi(R.string.settings_mode, modes.map { it.nom }, modes.indexOf(Store.modeApparence(this))) {
             Store.setModeApparence(this, modes[it])
+            // La vignette n'est pas un écran : elle se redessine à part.
+            StreakWidget.refresh(this)
             Apparence.appliquerMode(this)
         }
     }
 
     /**
      * Le fond et les boutons se posent à la création d'un écran : celui-ci
-     * se recrée tout de suite, les autres en reprenant la main.
+     * se recrée tout de suite, les autres en reprenant la main. La vignette,
+     * dessinée par l'écran d'accueil, est redessinée tout de suite.
      */
     private fun askFond() {
         val fonds = Apparence.Fond.values()
         choisirParmi(R.string.settings_fond, fonds.map { it.nom }, fonds.indexOf(Store.fond(this))) {
             Store.setFond(this, fonds[it])
+            StreakWidget.refresh(this)
             recreate()
         }
     }
@@ -399,6 +403,7 @@ class SettingsActivity : AppCompatActivity() {
         val accents = Apparence.Accent.values()
         choisirParmi(R.string.settings_accent, accents.map { it.nom }, accents.indexOf(Store.accent(this))) {
             Store.setAccent(this, accents[it])
+            StreakWidget.refresh(this)
             recreate()
         }
     }
@@ -480,6 +485,8 @@ class SettingsActivity : AppCompatActivity() {
             Toast.makeText(this, R.string.import_invalid, Toast.LENGTH_LONG).show()
             return
         }
+        // Le clair ou le sombre de la sauvegarde, tout de suite (audit du 04/10).
+        Apparence.appliquerMode(this)
         StreakWidget.refresh(this)
         Toast.makeText(
             this,

@@ -21,9 +21,9 @@ class SalutationTest {
     @Test
     fun `chaque langue nomme les trois moments et le francais dit bonsoir`() {
         mapOf(
-            "values" to "Bonsoir %1\$s",
-            "values-en" to "Good evening %1\$s",
-            "values-iw" to "ערב טוב %1\$s",
+            "values" to "Bonsoir, %1\$s",
+            "values-en" to "Good evening, %1\$s",
+            "values-iw" to "ערב טוב, %1\$s",
         ).forEach { (d, soir) ->
             val xml = File("src/main/res/$d/strings.xml").readText()
             listOf("hero_greeting_morning", "hero_greeting_afternoon").forEach {

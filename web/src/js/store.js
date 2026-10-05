@@ -9,7 +9,7 @@
 
 import { ajouteJours, estJourChome, isoLocal, israelParDefaut, jourSemaine } from './calendrier.js';
 import { SessionRule } from './seance.js';
-import { Anneaux, JaugeSemaine } from './regles.js';
+import { Anneaux, JaugeSemaine, Plaque } from './regles.js';
 
 export const DEFAULT_START = 6 * 60;
 export const DEFAULT_END = 11 * 60;
@@ -141,6 +141,9 @@ export function creeStore(stockage, { maintenant = () => new Date(), fuseau } = 
       return compte;
     },
 
+    /** La plus longue série jamais tenue (Plaque.meilleureSerie), au moins la série en cours. */
+    meilleureSerie: () => Math.max(Plaque.meilleureSerie(store.joursFaits(), (d) => store.isExempt(d)), store.streak()),
+
     /** La semaine en cours, du dimanche au samedi. */
     currentWeek() {
       const faits = store.joursFaits();
@@ -164,6 +167,20 @@ export function creeStore(stockage, { maintenant = () => new Date(), fuseau } = 
     /** L'objectif de l'anneau du jour ; sans réglage, la durée habituelle (Anneaux). */
     dailyGoal: () => Anneaux.objectifEffectif(get('daily_goal_minutes', 0), store.targetMinutes()),
     setDailyGoal: (m) => set('daily_goal_minutes', Math.max(0, m)),
+    /** Les marques des anneaux déjà fêtés (Anneaux.marque). */
+    anneauxFetes: () => new Set(get('anneaux_fetes', [])),
+    /** Le nusah du siddour (Nusah, Siddur.kt) : Edot HaMizra’h par défaut. */
+    siddurNusah: () => (['edot', 'sefard', 'ashkenaz'].includes(get('siddur_nusah', 'edot')) ? get('siddur_nusah', 'edot') : 'edot'),
+    setSiddurNusah: (n) => set('siddur_nusah', n),
+    /** La lecture (ReglagesLecture.kt) : taille des lettres de 0,8 à 2, fond noir. */
+    lectureEchelle: () => Math.min(2, Math.max(0.8, Number(get('lecture_echelle', 1)) || 1)),
+    setLectureEchelle: (e) => set('lecture_echelle', Math.round(Math.min(2, Math.max(0.8, e)) * 10) / 10),
+    lectureSombre: () => get('lecture_sombre', false) === true,
+    setLectureSombre: (v) => set('lecture_sombre', !!v),
+    /** Le bouton de lecture masqué par l'utilisateur, sur tous les écrans de lecture. */
+    lectureMasquee: () => get('lecture_masquee', false) === true,
+    setLectureMasquee: (v) => set('lecture_masquee', !!v),
+    setAnneauxFetes: (marques) => set('anneaux_fetes', [...marques]),
     /** Les trois anneaux de l'accueil, ici et maintenant. */
     anneaux: () => Anneaux.etat(
       store.record()?.minutes ?? 0, store.dailyGoal(),
@@ -272,6 +289,13 @@ export function creeStore(stockage, { maintenant = () => new Date(), fuseau } = 
       if (get('tikkun_day', '') !== today()) return new Set();
       return new Set(String(get('tikkun_done', '')).split(',').map((s) => s.trim())
         .filter((s) => /^\d+$/.test(s)).map(Number));
+    },
+    /** Store.setTikkunDone : la liste du jour, triée, comme Android l'écrit. */
+    setTikkunDone(numero, fait) {
+      const courant = store.tikkunDone();
+      if (fait) courant.add(numero); else courant.delete(numero);
+      set('tikkun_day', today());
+      set('tikkun_done', [...courant].sort((a, b) => a - b).join(','));
     },
 
     // --- Musique ------------------------------------------------------------------

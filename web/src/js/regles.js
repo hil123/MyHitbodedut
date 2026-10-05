@@ -45,7 +45,7 @@ const LIVRES = [
   ["Si'hot HaRan ", 'Sihot HaRan ', 'שיחות הר״ן '],
   ["'Hayé Moharan ", 'Hayei Moharan ', 'חיי מוהר״ן '],
   ["Chiv'hei HaRan ", 'Shivhei HaRan ', 'שבחי הר״ן '],
-  ['Tehilim ', 'Tehillim ', 'תהלים '],
+  ['Tehilim ', 'Tehillim ', 'תהילים '],
   ['Michlé ', 'Mishlei ', 'משלי '],
   ['Eikha ', 'Eikha ', 'איכה '],
 ].map(([fr, en, he]) => ({ fr, en, he }));
@@ -141,6 +141,92 @@ export const Anneaux = {
   objectifEffectif(regle, dureeHabituelle) {
     return regle > 0 ? regle : Math.max(1, dureeHabituelle);
   },
+  /**
+   * Ce qui rend « nouveau » un anneau fermé (Anneaux.marque) : la date, le
+   * dimanche de la semaine, le palier. Un anneau se fête une fois par marque.
+   * [aujourdhui] : « AAAA-MM-JJ ».
+   */
+  marque(anneau, aujourdhui) {
+    if (!anneau.atteint) return null;
+    if (anneau.quel === 'jour') return `jour:${aujourdhui}`;
+    if (anneau.quel === 'semaine') {
+      const d = new Date(`${aujourdhui}T00:00:00Z`);
+      d.setUTCDate(d.getUTCDate() - d.getUTCDay());
+      return `semaine:${d.toISOString().slice(0, 10)}`;
+    }
+    return `serie:${anneau.objectif}`;
+  },
+  marques(etat, aujourdhui) {
+    return new Set([etat.jour, etat.semaine, etat.serie].map((a) => this.marque(a, aujourdhui)).filter(Boolean));
+  },
+  /** Les anneaux fermés pas encore fêtés, du centre vers l'extérieur. */
+  aFeter(etat, aujourdhui, dejaFetes) {
+    return [etat.jour, etat.semaine, etat.serie]
+      .filter((a) => { const m = this.marque(a, aujourdhui); return m !== null && !dejaFetes.has(m); })
+      .map((a) => a.quel);
+  },
+};
+
+/**
+ * Les faces du centre des anneaux (Plaque.kt) : le hassid, puis vos
+ * chiffres. Chaque face qui parle d'un anneau le met en avant.
+ */
+export const Plaque = {
+  FACES: [['hassid', null], ['jour', 'jour'], ['semaine', 'semaine'], ['serie', 'serie'],
+    ['meilleure', 'serie'], ['total', null], ['jours', null], ['moyenne', null]],
+  RETOUR_MS: 8000,
+  anneau(face) { return this.FACES.find(([f]) => f === face)?.[1] ?? null; },
+  suivante(face) {
+    const i = this.FACES.findIndex(([f]) => f === face);
+    return this.FACES[(i + 1) % this.FACES.length][0];
+  },
+  pour(quel) { return this.FACES.find(([, a]) => a === quel)[0]; },
+  moyenne(totalMinutes, jours) { return jours <= 0 ? 0 : Math.round(totalMinutes / jours); },
+  /** La plus longue suite de jours faits ; un jour exempté ne compte pas et ne casse pas. */
+  meilleureSerie(faits, exempt) {
+    if (faits.size === 0) return 0;
+    const tries = [...faits].sort();
+    const jour = new Date(`${tries[0]}T00:00:00Z`);
+    const fin = tries.at(-1);
+    let courante = 0;
+    let meilleure = 0;
+    for (let iso = tries[0]; iso <= fin; jour.setUTCDate(jour.getUTCDate() + 1), iso = jour.toISOString().slice(0, 10)) {
+      if (faits.has(iso)) meilleure = Math.max(meilleure, ++courante);
+      else if (!exempt(iso)) courante = 0;
+    }
+    return meilleure;
+  },
+};
+
+/**
+ * Les deux façons de dire tout le livre de Tehilim (Tehilim.kt) : une
+ * portion par jour du mois hébraïque, ou par jour de la semaine.
+ */
+const portion = (debut, fin, debutVerset = 1, finVerset = null) => ({ debut, fin, debutVerset, finVerset });
+export const CycleTehilim = {
+  MOIS: [
+    [1, 9], [10, 17], [18, 22], [23, 28], [29, 34], [35, 38], [39, 43], [44, 48], [49, 54], [55, 59],
+    [60, 65], [66, 68], [69, 71], [72, 76], [77, 78], [79, 82], [83, 87], [88, 89], [90, 96], [97, 103],
+    [104, 105], [106, 107], [108, 112], [113, 118], [119, 119, 1, 96], [119, 119, 97, 176],
+    [120, 134], [135, 139], [140, 144], [145, 150],
+  ].map((a) => portion(...a)),
+  /** Du dimanche au Shabbat. */
+  SEMAINE: [[1, 29], [30, 50], [51, 72], [73, 89], [90, 106], [107, 119], [120, 150]].map((a) => portion(...a)),
+  /** Un mois de 29 jours dit le 29 les deux dernières portions. */
+  duMois(jour, longueur) {
+    if (jour >= 29 && longueur === 29) return portion(140, 150);
+    return this.MOIS[Math.min(30, Math.max(1, jour)) - 1];
+  },
+  /** [jour] : Date.getDay(), 0 pour dimanche. */
+  deLaSemaine(jour) { return this.SEMAINE[jour]; },
+  partielle(p) { return p.debut === p.fin && (p.debutVerset > 1 || p.finVerset !== null); },
+  /** Les numéros des versets à lire dans [psaume], qui en compte [total]. */
+  versets(p, psaume, total) {
+    const de = psaume === p.debut ? p.debutVerset : 1;
+    const a = psaume === p.fin ? (p.finVerset ?? total) : total;
+    return Array.from({ length: a - de + 1 }, (_, i) => de + i);
+  },
+  portion,
 };
 
 export const JaugeSemaine = {
@@ -165,5 +251,61 @@ export const DureeSeance = {
     // toIntOrNull() de Kotlin rend null hors des entiers 32 bits.
     if (n > 2147483647 || n < -2147483648) return null;
     return Math.min(DureeSeance.MAX, Math.max(DureeSeance.MIN, n));
+  },
+};
+
+// --- SiddurMoment (Siddur.kt) ---------------------------------------------------
+// Le texte que l'heure suggère en tête du siddour, et le hassid qui l'accompagne.
+export const SiddurMoment = {
+  /** Le texte de l'heure locale (heures, minutes). */
+  suggestion(heures, minutes = 0) {
+    const m = heures * 60 + minutes;
+    if (m < 5 * 60) return 'tikoun_hatsot';
+    if (m < 6 * 60 + 30) return 'birkot_hachahar';
+    if (m < 12 * 60 + 30) return 'chaharit';
+    if (m < 18 * 60 + 30) return 'minha';
+    if (m < 22 * 60 + 30) return 'arvit';
+    return 'chema_coucher';
+  },
+  illustration(id) {
+    return {
+      tikoun_hatsot: 'char_sitting_low',
+      birkot_hachahar: 'char_welcome',
+      chaharit: 'char_praying',
+      minha: 'char_standing_back',
+      arvit: 'char_reading_seated',
+    }[id] ?? 'char_thinking';
+  },
+};
+
+// --- LibraryRules (LibraryRules.kt) ---------------------------------------------
+// Une « source » est du domaine public : ses paragraphes s'affichent. La
+// vocalisation d'une édition dont la licence n'est pas déclarée est un
+// travail éditorial qu'on ne reprend pas : le texte sans nikkoud, alors.
+export const LibraryRules = {
+  paragraphes(bibliotheque, source) {
+    const nikkoudOk = bibliotheque?._meta?.editions?.[source.edition]?.nikkoud_ok === true;
+    const avec = source.paragraphes ?? [];
+    if (nikkoudOk) return avec;
+    const sans = source.paragraphes_sans_nikkoud ?? [];
+    return sans.length > 0 ? sans : avec;
+  },
+  /** Les sources de la bibliothèque, par section et sous-section ; les articles restent sur Android. */
+  sources(bibliotheque) {
+    return (bibliotheque?.sections ?? []).map((section) => ({
+      ...section,
+      sous_sections: (section.sous_sections ?? []).map((sous) => ({
+        ...sous, entrees: (sous.entrees ?? []).filter((e) => e.type === 'source'),
+      })).filter((sous) => sous.entrees.length > 0),
+    })).filter((section) => section.sous_sections.length > 0);
+  },
+  entree(bibliotheque, id) {
+    for (const section of bibliotheque?.sections ?? []) {
+      for (const sous of section.sous_sections ?? []) {
+        const e = (sous.entrees ?? []).find((x) => x.id === id);
+        if (e) return e;
+      }
+    }
+    return null;
   },
 };

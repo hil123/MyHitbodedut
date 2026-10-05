@@ -5,7 +5,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.LinearLayout
+import android.widget.ScrollView
 import android.widget.TextView
+import com.myhitbodedut.ReglagesLecture.Role
 import androidx.appcompat.app.AppCompatActivity
 
 /**
@@ -46,7 +48,7 @@ class TikkunFlowActivity : AppCompatActivity() {
         }
 
         tikkun.psaumes.forEach { psaume ->
-            contenu.addView(titre(getString(R.string.tikkun_psalm_he, psaume.numero), premier))
+            contenu.addView(titre(getString(R.string.tikkun_psalm_he, Reference.lettres(psaume.numero)), premier))
             premier = false
             psaume.versets.forEach { verset ->
                 contenu.addView(vueVerset(verset))
@@ -59,7 +61,14 @@ class TikkunFlowActivity : AppCompatActivity() {
             bloc.paragraphes.forEach { contenu.addView(paragraphe(it)) }
         }
 
-        findViewById<Button>(R.id.flow_done).apply {
+        // Le bouton de lecture : taille des lettres et lecture de nuit.
+        val defilement = findViewById<ScrollView>(R.id.flow_scroll)
+        ReglagesLecture.marquer(defilement, Role.FOND)
+        val fin = findViewById<Button>(R.id.flow_done)
+        ReglagesLecture.installer(this, defilement, auDessusDe = fin) { ReglagesLecture.appliquer(defilement) }
+        ReglagesLecture.appliquer(defilement)
+
+        fin.apply {
             setText(R.string.tikkun_flow_done)
             setOnClickListener {
                 // Tout dire d'un trait vaut les dix psaumes.
@@ -70,7 +79,7 @@ class TikkunFlowActivity : AppCompatActivity() {
     }
 
     /** Le nom d'un psaume ou d'une partie, sur un filet, sans rien a toucher. */
-    private fun titre(texte: String, premier: Boolean): View = TextView(this).apply {
+    private fun titre(texte: String, premier: Boolean): View = ReglagesLecture.marquer(TextView(this).apply {
         layoutParams = LinearLayout.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT,
             ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -86,9 +95,10 @@ class TikkunFlowActivity : AppCompatActivity() {
         textSize = 20f
         setTypeface(typeface, android.graphics.Typeface.BOLD)
         setTextColor(Apparence.couleur(context, R.color.brand))
-    }
+        PoliceHebraique.appliquer(this)
+    }, Role.TITRE)
 
-    private fun vueVerset(verset: Verse): View = TextView(this).apply {
+    private fun vueVerset(verset: Verse): View = ReglagesLecture.marquer(TextView(this).apply {
         layoutParams = ligneParams()
         text = verset.he
         layoutDirection = View.LAYOUT_DIRECTION_RTL
@@ -96,9 +106,10 @@ class TikkunFlowActivity : AppCompatActivity() {
         textSize = 19f
         setLineSpacing(dp(6).toFloat(), 1f)
         setTextColor(Apparence.couleur(context, R.color.ink))
-    }
+        PoliceHebraique.appliquer(this)
+    }, Role.TEXTE)
 
-    private fun paragraphe(texte: String): View = TextView(this).apply {
+    private fun paragraphe(texte: String): View = ReglagesLecture.marquer(TextView(this).apply {
         layoutParams = ligneParams()
         text = texte
         layoutDirection = View.LAYOUT_DIRECTION_RTL
@@ -106,9 +117,10 @@ class TikkunFlowActivity : AppCompatActivity() {
         textSize = 18f
         setLineSpacing(dp(6).toFloat(), 1f)
         setTextColor(Apparence.couleur(context, R.color.ink))
-    }
+        PoliceHebraique.appliquer(this)
+    }, Role.TEXTE)
 
-    private fun vueArret(arret: Pause): View = TextView(this).apply {
+    private fun vueArret(arret: Pause): View = ReglagesLecture.marquer(TextView(this).apply {
         layoutParams = ligneParams()
         text = arret.note
         layoutDirection = View.LAYOUT_DIRECTION_RTL
@@ -116,7 +128,8 @@ class TikkunFlowActivity : AppCompatActivity() {
         textSize = 15f
         setLineSpacing(dp(4).toFloat(), 1f)
         setTextColor(Apparence.couleur(context, R.color.muted))
-    }
+        PoliceHebraique.appliquer(this)
+    }, Role.DISCRET)
 
     private fun ligneParams() = LinearLayout.LayoutParams(
         ViewGroup.LayoutParams.MATCH_PARENT,

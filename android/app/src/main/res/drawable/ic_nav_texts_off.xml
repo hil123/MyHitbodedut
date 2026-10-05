@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Onglet Textes, au repos : un livre au trait arrondi. La teinte vient de l'onglet (color/nav_item.xml). -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+
+    <path
+        android:pathData="M4,19.5 A2.5,2.5 0 0,1 6.5,17 L20,17 L20,4 A1,1 0 0,0 19,3 L6.5,3 A2.5,2.5 0 0,0 4,5.5 Z M4,19.5 A2.5,2.5 0 0,0 6.5,22 L19,22 A1,1 0 0,0 20,21 L20,17"
+        android:strokeColor="?attr/mhInk"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:strokeWidth="2" />
+</vector>

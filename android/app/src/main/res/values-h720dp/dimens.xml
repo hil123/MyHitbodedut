@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Hauteur disponible >= 720dp : les anneaux prennent la place libre sous l'accueil (finition du 04/10). -->
+<resources>
+    <dimen name="gauge_size">268dp</dimen>
+</resources>

@@ -51,11 +51,15 @@ data class Mouvement(
  */
 object Hitbodedut {
 
-    /** Le chapitre d'où viennent les quatre premiers temps. */
-    const val SOURCE_LIKOUTEI = "לקוטי מוהר\"ן תנינא, סימן כ\"ה"
+    /**
+     * Le chapitre d'où viennent les quatre premiers temps. Graphie française
+     * des données, comme les références de chizuk.json : Reference.localise
+     * la rend en anglais et en hébreu (lot textes 2, 04/10).
+     */
+    const val SOURCE_LIKOUTEI = "Likoutei Moharan II, 25"
 
     /** Et celui d'où vient l'action de grâce, qui n'est pas dans ce chapitre. */
-    const val SOURCE_RAMBAM = "רמב\"ם, הלכות תפילה א, ב"
+    const val SOURCE_RAMBAM = "Rambam, Hilkhot Tefila 1:2"
 
     val MOUVEMENTS: List<Mouvement> = listOf(
         Mouvement(

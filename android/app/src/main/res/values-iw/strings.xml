@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="status_done">התבודדת היום</string>
-    <string name="status_pending">עדיין לא התבודדת היום</string>
+    <string name="status_done">ההתבודדות נעשתה היום</string>
+    <string name="status_pending">ההתבודדות עוד לא נעשתה היום</string>
     <string name="status_running">התבודדות בעיצומה</string>
     <string name="status_rest">היום לא נדרשת התבודדות</string>
-    <string name="status_streak_none">הרצף מחכה להתחלה</string>
+    <string name="status_streak_none">הרצף מחכה לחידוש</string>
     <string name="status_streak_first">עדיין אין רצף</string>
     <string name="action_done_offline">התבודדתי בלי הטלפון</string>
     <string name="offline_which_day">באיזה יום?</string>
@@ -29,14 +29,14 @@
 
     <string name="gate_armed_title">החסימה פעילה</string>
     <plurals name="gate_armed_detail">
-        <item quantity="one">אפליקציה אחת חסומה עד %2$s או עד שתתבודד.</item>
-        <item quantity="two">%1$d אפליקציות חסומות עד %2$s או עד שתתבודד.</item>
-        <item quantity="other">%1$d אפליקציות חסומות עד %2$s או עד שתתבודד.</item>
+        <item quantity="one">אפליקציה אחת חסומה עד %2$s או עד להתבודדות.</item>
+        <item quantity="two">%1$d אפליקציות חסומות עד %2$s או עד להתבודדות.</item>
+        <item quantity="other">%1$d אפליקציות חסומות עד %2$s או עד להתבודדות.</item>
     </plurals>
     <string name="gate_permissions_title">חסרות הרשאות</string>
-    <string name="gate_permissions_detail">אשר הצגה מעל אפליקציות אחרות וגישה לנתוני שימוש, למטה.</string>
+    <string name="gate_permissions_detail">אשרו הצגה מעל אפליקציות אחרות וגישה לנתוני שימוש, למטה.</string>
     <string name="gate_disabled_title">החסימה כבויה</string>
-    <string name="gate_disabled_detail">הפעילו את מתג חסימת הבוקר כדי שתפעל.</string>
+    <string name="gate_disabled_detail">הפעילו את מתג חסימת הבוקר כדי שהחסימה תפעל.</string>
     <string name="gate_no_apps_title">לא נבחרה אפליקציה</string>
     <string name="gate_no_apps_detail">אין מה לחסום. בחרו לפחות אפליקציה אחת.</string>
     <string name="gate_done_title">היום אושר</string>
@@ -44,7 +44,7 @@
     <string name="gate_exempt_title">יום ללא חובה</string>
     <string name="gate_exempt_detail">שבת, יום טוב או הפסקה: החסימה שותקת והרצף נשמר.</string>
     <string name="gate_snoozed_title">נדחה</string>
-    <string name="gate_snoozed_detail">ביקשת דחייה. החסימה תחזור בסיומה.</string>
+    <string name="gate_snoozed_detail">התבקשה דחייה. החסימה תחזור בסיומה.</string>
     <string name="gate_window_title">מחוץ לחלון</string>
     <string name="gate_window_detail">החסימה פועלת בין %1$s ל־%2$s. מחוץ לזה דבר לא נחסם.</string>
 
@@ -67,7 +67,7 @@
     <string name="settings_target">משך ההתבודדות</string>
     <string name="settings_daily_goal">יעד יומי</string>
     <string name="settings_daily_goal_hint">מה שטבעת היום מודדת. כל עוד לא נקבע, זהו משך ההתבודדות.</string>
-    <string name="rings_character_hint">געו בחסיד</string>
+    <string name="rings_character_hint">הקישו כדי לראות את המספרים שלכם</string>
     <string name="ring_day">היום</string>
     <string name="ring_week">השבוע</string>
     <string name="ring_streak">רצף</string>
@@ -78,8 +78,8 @@
     <string name="rings_description">טבעות. היום: %1$s מתוך %2$s. השבוע: %3$d ימים מתוך %4$d. רצף: %5$d ימים מתוך %6$d.</string>
     <string name="settings_shabbat">שבת ויום טוב</string>
     <string name="settings_shabbat_hint">בימים אלה: אין חסימה, אין תזכורת, והרצף נשמר.</string>
-    <string name="settings_exempt_today">היום יום חג</string>
-    <string name="settings_exempt_today_hint">להפעיל ביום טוב או ביום נסיעה.</string>
+    <string name="settings_exempt_today">הפסקה היום</string>
+    <string name="settings_exempt_today_hint">ליום טוב, נסיעה או מחלה: היום לא נספר לרעתכם.</string>
     <string name="settings_screen_missing">מסך ההגדרות הזה לא קיים בטלפון.</string>
 
     <string name="permission_overlay">הצגה מעל אפליקציות אחרות</string>
@@ -95,15 +95,15 @@
     <string name="permission_usage_why">כדי לדעת איזו אפליקציה נפתחה זה עתה. שום דבר אינו נשמר ואינו נשלח.</string>
     <string name="permission_granted">אושרה</string>
     <string name="permission_missing">חסרה</string>
-    <string name="preview_needs_overlay">קודם אשר הצגה מעל אפליקציות אחרות.</string>
+    <string name="preview_needs_overlay">קודם אשרו הצגה מעל אפליקציות אחרות.</string>
 
     <string name="apps_title">אפליקציות לחסימה</string>
-    <string name="apps_loading">טוען אפליקציות…</string>
+    <string name="apps_loading">האפליקציות נטענות…</string>
     <string name="apps_select_all">לבחור הכול</string>
     <string name="apps_clear">לנקות הכול</string>
     <string name="apps_none_warning">לא נבחרה אפליקציה: דבר לא ייחסם.</string>
 
-    <string name="blocker_question">התבודדת היום?</string>
+    <string name="blocker_question">התבודדתם היום?</string>
     <string name="blocker_subtitle">רגע של התבודדות לפני כל השאר.</string>
     <string name="blocker_streak_none">היום הראשון ברצף.</string>
     <string name="blocker_start">להתחיל עכשיו, %1$s</string>
@@ -116,7 +116,7 @@
     <string name="blocker_close_preview">לסגור את התצוגה</string>
 
     <string name="session_screen_title">התבודדות</string>
-    <string name="session_idle_caption">בחרו משך, והניחו את הטלפון.</string>
+    <string name="session_idle_caption">בחרו משך והניחו את הטלפון.</string>
     <string name="session_idle_done">כבר אושר היום. אפשר להתחיל שוב.</string>
     <string name="session_start">להתחיל, %1$s</string>
     <string name="session_target">התבודדות של %1$s</string>
@@ -133,23 +133,24 @@
     <string name="session_elapsed">כבר %1$s</string>
     <string name="settings_hide_countdown">הסתרת הספירה</string>
     <string name="settings_hide_countdown_hint">כלום על המסך במהלך ההתבודדות, וצליל שקט בסוף.</string>
-    <string name="session_hidden_caption">הספירה מוסתרת. צליל יודיע לך.</string>
+    <string name="session_hidden_caption">הספירה מוסתרת. צליל יודיע על הסיום.</string>
     <string name="session_running_hidden">הספירה מוסתרת.</string>
     <string name="blocker_session_hidden_subtitle">התבודדות בעיצומה. הטלפון יכול לחכות.</string>
     <string name="widget_label">רצף MyHitbodedut</string>
     <string name="widget_description">הרצף הנוכחי, ולחיצה אחת כדי להתחיל.</string>
-    <string name="widget_done">נעשה היום.</string>
+    <string name="widget_done">נעשתה היום.</string>
     <string name="widget_todo">עדיין לא היום.</string>
     <string name="widget_rest">לא נדרשת היום.</string>
     <string name="widget_running">התבודדות בעיצומה.</string>
     <string name="widget_start">להתחיל</string>
     <string name="widget_resume">חזרה להתבודדות</string>
+    <string name="widget_minutes">%1$d / %2$d דק׳</string>
     <string name="settings_hitbodedut">התבודדות מודרכת</string>
-    <string name="settings_hitbodedut_hint">חמישה שלבים, כדי לדעת במה להמשיך — על פי ליקוטי מוהר&quot;ן תניינא, כ&quot;ה, והרמב&quot;ם.</string>
+    <string name="settings_hitbodedut_hint">חמישה שלבים, כדי לדעת במה להמשיך — על פי ליקוטי מוהר״ן תניינא, כ״ה, והרמב״ם.</string>
     <string name="hitbodedut_step">%1$d / %2$d</string>
     <string name="hitbodedut_previous">הקודם</string>
     <string name="hitbodedut_next">הבא</string>
-    <string name="hitbodedut_sihah">לפרש את מה שעל הלב</string>
+    <string name="hitbodedut_sihah">לומר את מה שעל הלב</string>
     <string name="hitbodedut_sihah_invite">דברו בשפה שלכם, כמו שמדברים אל מישהו. כל מה שעל הלב, בלי להכין.</string>
     <string name="hitbodedut_harata">חרטה על העבר</string>
     <string name="hitbodedut_harata_invite">אמרו על מה אתם מתחרטים, ואמרו זאת בפשטות. חרטה לפניו אינה משפט.</string>
@@ -157,7 +158,7 @@
     <string name="hitbodedut_bakasha_invite">בקשו את מה שחסר לכם, וקודם כול שיקרב אתכם אליו. גם את מה שנדמה לכם שאתם רחוקים ממנו מדי.</string>
     <string name="hitbodedut_torah">לעשות מהתורה תפילה</string>
     <string name="hitbodedut_torah_invite">קחו דבר תורה ששמעתם היום, ובקשו לזכות גם אתם להגיע אליו.</string>
-    <string name="hitbodedut_hodaa">הודאה</string>
+    <string name="hitbodedut_hodaa">הודיה</string>
     <string name="hitbodedut_hodaa_invite">הודו על הטובה שהושפעה לכם, כל אחד לפי כוחו. בזה נפרדים.</string>
     <string name="onboarding_step">%1$d / %2$d</string>
     <string name="onboarding_next">הבא</string>
@@ -165,7 +166,7 @@
     <string name="onboarding_skip">דילוג</string>
     <string name="onboarding_start">להתחיל</string>
     <string name="onboarding_practice">פשוט לדבר</string>
-    <string name="onboarding_practice_body">התבודדות היא להתייחד לבד זמן־מה בכל יום ולדבר אל ה׳ בשפה שלך, כמו שמדברים אל מישהו. בלי נוסח לדקלם, בלי דרגה להגיע אליה.</string>
+    <string name="onboarding_practice_body">התבודדות היא להתייחד לבד זמן־מה בכל יום ולדבר אל השם בשפה שלכם, כמו שמדברים אל מישהו. בלי נוסח לדקלם, בלי דרגה להגיע אליה.</string>
     <string name="onboarding_private">כלום לא יוצא מכאן</string>
     <string name="onboarding_private_body">האפליקציה אינה מבקשת שום גישה לאינטרנט. מה שתכתבו נשאר בטלפון הזה, ורק אתם יכולים להוציא אותו, דרך הייצוא.</string>
     <string name="blocker_session_open_subtitle">התבודדות פתוחה, כבר %1$s. הטלפון יכול לחכות.</string>
@@ -175,12 +176,12 @@
     <string name="journal_title">יומן</string>
     <string name="journal_empty">עדיין לא נרשמה התבודדות.</string>
     <string name="note_title">הערה על ההתבודדות</string>
-    <string name="note_hint">מה עלה, מה ביקשת…</string>
+    <string name="note_hint">מה עלה, מה התבקש…</string>
 
     <string name="reminder_title">הגיע זמן ההתבודדות</string>
-    <string name="reminder_text">מחכה לך התבודדות של %1$s.</string>
+    <string name="reminder_text">התבודדות של %1$s מחכה.</string>
     <string name="channel_gate">חסימת הבוקר</string>
-    <string name="channel_gate_description">התראה קבועה שאנדרואיד דורש בזמן המעקב.</string>
+    <string name="channel_gate_description">התראה קבועה שאנדרואיד דורש כל עוד חסימת הבוקר פעילה.</string>
     <string name="channel_session">התבודדות בעיצומה</string>
     <string name="channel_session_description">ספירה לאחור בזמן ההתבודדות.</string>
     <string name="channel_reminder">תזכורות</string>
@@ -228,7 +229,7 @@
     <string name="music_enable_hint">הניגון מתחיל עם הטיימר ודועך בסיום.</string>
     <string name="music_volume">עוצמה</string>
     <string name="music_library">ספרייה</string>
-    <string name="music_library_hint">הקשה לבחירה, העיפרון לשינוי שם או להסרה.</string>
+    <string name="music_library_hint">הקישו כדי לבחור, ועל העיפרון כדי לשנות שם או להסיר.</string>
     <string name="music_add">הוספת ניגון מהטלפון</string>
     <string name="music_add_failed">לא ניתן להוסיף את הקובץ באופן קבוע.</string>
     <string name="music_play_failed">לא ניתן לנגן את הקובץ.</string>
@@ -244,7 +245,7 @@
     <string name="music_none_summary">אין ניגונים בספרייה.</string>
     <string name="music_on_summary">%1$s, עוצמה %2$d%%</string>
     <string name="session_music_line">מוזיקה: %1$s</string>
-    <string name="music_open_library">פתיחת הספרייה</string>
+    <string name="music_open_library">פתיחת ספריית המוזיקה</string>
     <string name="app_version">גרסה %1$s (%2$d) · %3$s</string>
     <string name="edition_full">מהדורה מלאה</string>
     <string name="edition_light">מהדורת Light</string>
@@ -262,24 +263,24 @@
     <string name="tips_open">לקריאת העצות</string>
     <string name="tip_1_title">בחרו מקום שקט ונפרד</string>
     <string name="tip_1_body">השלב הראשון בהתבודדות הוא למצוא מקום שקט, שבו תוכלו להיות לבד עם עצמכם ועם השם. המקום לא חייב להיות מבודד לחלוטין, אך הוא צריך להיות מקום שבו אתם לא תופרעו. זה יכול להיות חדר פנוי בבית, חוף ים שקט, או מקום בטבע. אם אתם יכולים, מומלץ לבחור מקום טבעי, שכן הטבע עצמו עשוי להיות מקור לשקט פנימי.</string>
-    <string name="tip_2_title">קבעו זמן יומי או שבועי להתבודדות</string>
-    <string name="tip_2_body">התחילו בזמן קצר בהתחלה, אם אתם חדשים בזה. הקדישו חמש-עשרה דקות ביום להתבודדות, והגבירו את הזמן בהדרגה עד שתגיעו לשעה שלמה. חשוב לא לקפוץ מיד לזמן ארוך מדי, אלא להתחיל צעד-צעד, כך שההתבודדות תהפוך להרגל ולא לנטל. קבעו זמן קבוע שבו אתם מתבודדים, כך שהתהליך יהפוך לחלק מהשגרה שלכם ולא לפעולה אקראית.</string>
-    <string name="tip_3_title">תתחילו בדיבור פנימי</string>
-    <string name="tip_3_body">התחילו את ההתבודדות בדיבור פנימי, דברו עם השם. אל תדאגו אם בהתחלה לא תדעו בדיוק מה לומר. פשוט פתחו את הלב והתחילו לשוחח. זה יכול להיות בקשת סליחה, תפילה פשוטה על מה שאתם מרגישים, או אפילו תחושות של תודה. ההתבודדות לא צריכה להיות מסודרת או מתוכננת מראש, היא מקום שבו אתם יכולים לשחרר את מה שיש בליבכם ולהתמקד בקשר עם השם.</string>
+    <string name="tip_2_title">קבעו זמן בכל יום</string>
+    <string name="tip_2_body">אם אתם חדשים בזה, התחילו בזמן קצר. הקדישו חמש־עשרה דקות ביום להתבודדות, והאריכו בהדרגה, עד שעה אם תוכלו. אל תקפצו מיד לזמן ארוך, אלא התקדמו צעד־צעד, כך שההתבודדות תהפוך להרגל ולא לנטל. קבעו שעה קבועה, כך שההתבודדות תהיה חלק מהיום שלכם ולא מעשה אקראי.</string>
+    <string name="tip_3_title">התחילו לדבר</string>
+    <string name="tip_3_body">התחילו את ההתבודדות בדיבור אל השם, במילים שלכם, בלחש אם צריך. אל תדאגו אם בהתחלה לא תדעו בדיוק מה לומר. פשוט פתחו את הלב והתחילו. זה יכול להיות בקשת סליחה, תפילה פשוטה על מה שאתם מרגישים, או תודה. ההתבודדות לא צריכה להיות מסודרת או מתוכננת מראש. היא מקום להניח בו את מה שיש בלב ולפנות אל השם.</string>
     <string name="tip_4_title">הימנעו ממכשירים טכנולוגיים</string>
     <string name="tip_4_body">אם אתם רוצים להרגיש באמת לבד עם עצמכם, חשוב להימנע לחלוטין מהמכשירים הטכנולוגיים במהלך ההתבודדות. כבו את הטלפון הנייד או הניחו אותו בחדר אחר. ככל שתהיו יותר פנויים מהסחות דעת חיצוניות, כך תצליחו להתחבר בצורה טובה יותר לעצמכם ולבורא עולם. ניתוק מהעולם החיצוני עוזר להתרכז ולהתמקד בשקט הפנימי.</string>
     <string name="tip_5_title">התחילו עם ספר תהילים או תפילה אישית</string>
-    <string name="tip_5_body">אם אתם לא בטוחים איך להתחיל, אפשר לפתוח בספר תהילים ולקרוא כמה פרקים. תהילים הם תפילה מחוברת, מאוד ישירה ונוגעת בנפש. כשאתם מתבודדים, תהילים יכולים להוות חוט מקשר רוחני שמחבר אתכם ישירות אל השם. אם אתם מרגישים חסרי מילים, אתם יכולים גם פשוט לדבר עם השם באופן חופשי, לשתף אותו במחשבות ובתחושות שלכם.</string>
+    <string name="tip_5_body">אם אתם לא בטוחים איך להתחיל, אפשר לפתוח בספר תהילים ולקרוא כמה פרקים. תהילים הם תפילה מוכנה, מאוד ישירה ונוגעת בנפש. כשאתם מתבודדים, תהילים יכולים להוות חוט מקשר רוחני שמחבר אתכם ישירות אל השם. אם אתם מרגישים חסרי מילים, אתם יכולים גם פשוט לדבר עם השם באופן חופשי, לשתף אותו במחשבות ובתחושות שלכם.</string>
     <string name="tip_6_title">שאלו את עצמכם שאלות פנימיות</string>
-    <string name="tip_6_body">במהלך ההתבודדות, שאלו את עצמכם שאלות פנימיות: מה עובר עליי עכשיו? מה יקרב אותי אל השם? מה צריך לתקן בחיי? זהו זמן לחשבון נפש אמיתי. לפעמים, בשקט הפנימי, אתם יכולים להבין את הצרכים האמיתיים שלכם ולהתחיל להבין את הכיוונים הנכונים לחיים שלכם.</string>
+    <string name="tip_6_body">במהלך ההתבודדות, שאלו את עצמכם שאלות פנימיות: מה יש בלבי עכשיו? מה עובר עליי? מה יקרב אותי אל השם? מה צריך לתקן בחיי? זהו זמן לחשבון נפש אמיתי. לפעמים, בשקט הפנימי, רואים את הצרכים האמיתיים ואת הכיוון הנכון לחיים.</string>
     <string name="tip_7_title">שימו דגש על כנות פנימית</string>
     <string name="tip_7_body">במהלך ההתבודדות, אל תנסו להסתיר מהשם את מה שאתם מרגישים. ההתבודדות היא זמן שבו מותר לכם להיות כנים עם עצמכם ועם בורא עולם. אם אתם מרגישים כעס, תסכול, פחד או חוסר ביטחון, זהו המקום לשתף את תחושותיכם. הכנות היא המפתח להתפתחות רוחנית. ככל שתהיו יותר כנים, כך תחוו יותר שקט פנימי.</string>
     <string name="tip_8_title">הפכו את ההתבודדות לרגע של התפייסות עם עצמכם</string>
-    <string name="tip_8_body">ההתבודדות יכולה גם להיות זמן שבו אתם מתפייסים עם עצמכם. הכוונה היא להיות במקום שבו אתם לא שיפוטיים, לא ביקורתיים ולא נזעמים על עצמכם. זהו זמן של פיוס, שבו אתם סולחים לעצמכם ומבקשים סליחה על טעויות, ומתכוונים לשפר את הדרך.</string>
-    <string name="tip_9_title">הוסיפו זמן לשקט או התרכזו בנשימות</string>
-    <string name="tip_9_body">חלק מההתבודדות יכולה להיות שקט מוחלט, או רגע של התרכזות בנשימות. ניתן לשבת בשקט למשך זמן מסוים, להתרכז בנשימות ולהתמקד בתחושות הגוף. השקט הזה מאפשר לחלקים הפנימיים שלכם להתגלות ולהתבהר.</string>
+    <string name="tip_8_body">ההתבודדות יכולה גם להיות זמן שבו אתם מתפייסים עם עצמכם. הכוונה היא להיות במקום שבו אתם לא שיפוטיים, לא ביקורתיים ולא כועסים על עצמכם. זהו זמן של פיוס, שבו אתם סולחים לעצמכם ומבקשים סליחה על טעויות, ומתכוונים לשפר את הדרך.</string>
+    <string name="tip_9_title">השאירו מקום לשקט</string>
+    <string name="tip_9_body">חלק מההתבודדות יכול להיות שקט מוחלט. כשהמילים לא באות, הישארו רגע לפני השם בלי לומר דבר: עצם ההכנה והרצון לדבר כבר נחשבים (ליקוטי מוהר״ן תניינא, כ״ה). בשקט הזה, מה שבפנים עולה ומתבהר.</string>
     <string name="tip_10_title">סיימו בנשימה עמוקה והודיה</string>
-    <string name="tip_10_body">בסיומה של ההתבודדות, חשוב לסיים בנשימה עמוקה ולברך את השם על הזמן שביליתם עמו. זהו זמן של הודיה על המתנה הגדולה של החיבור עם רוחניות, ועל השקט הפנימי שהושג. גם אם הרגשתם שקשה למצוא תשובות, אל תדאגו, המפגש הזה עם עצמכם ועם השם עצמו כבר מביא שפע רוחני בחיים.</string>
+    <string name="tip_10_body">בסיומה של ההתבודדות, חשוב לסיים בנשימה עמוקה ולברך את השם על הזמן שביליתם עמו. זהו זמן של הודיה על המתנה הגדולה של החיבור אליו, ועל השקט הפנימי שהושג. גם אם הרגשתם שקשה למצוא תשובות, אל תדאגו: המפגש הזה עם עצמכם ועם השם כבר מביא שפע רוחני לחייכם.</string>
 
     <!-- Point 3 : règle de publication -->
     <string name="chizuk_badge_to_proofread">להגהה</string>
@@ -323,10 +324,10 @@
     <string name="moment_lieu">המקום והזמן</string>
 
     <!-- Section Tikoun HaKlali -->
-    <string name="tikkun_title">תיקון הכללי</string>
-    <string name="tikkun_hint">עשרת המזמורים של רבי נחמן, לפי הסדר: טז, לב, מא, מב, נט, עז, צ, קה, קלז, קנ.</string>
+    <string name="tikkun_title">התיקון הכללי</string>
+    <string name="tikkun_hint">עשרת המזמורים של רבי נחמן, לפי הסדר: ט״ז, ל״ב, מ״א, מ״ב, נ״ט, ע״ז, צ׳, ק״ה, קל״ז, ק״נ.</string>
     <string name="tikkun_open">פתיחת התיקון</string>
-    <string name="tikkun_psalm_he">תהילים %1$d</string>
+    <string name="tikkun_psalm_he">תהילים %1$s</string>
     <string name="tikkun_verses">%1$d פסוקים</string>
     <string name="tikkun_position">מזמור %1$d מתוך %2$d · %3$d פסוקים</string>
     <string name="tikkun_progress_none">%1$d מזמורים, %2$d פסוקים</string>
@@ -334,7 +335,7 @@
     <string name="tikkun_progress_all">נאמר במלואו היום.</string>
     <string name="tikkun_next">המזמור הבא</string>
     <string name="tikkun_paragraphs">%1$d פסקאות</string>
-    <string name="tikkun_flow_open">לומר הכל ברצף</string>
+    <string name="tikkun_flow_open">לומר הכול ברצף</string>
     <string name="tikkun_flow_done">אמרתי את התיקון כולו</string>
     <string name="tikkun_mark">סימון כנאמר</string>
     <string name="tikkun_unmark">הסרת הסימון</string>
@@ -348,23 +349,23 @@
     <string name="reminders_enable">להזכיר לי להתבודד</string>
     <string name="reminders_enable_hint">תזכורת בשעות שהוגדרו, כל עוד ההתבודדות של היום לא נעשתה.</string>
     <string name="reminders_hours">שעות</string>
-    <string name="reminders_hours_hint">יש לגעת בשעה כדי לשנות אותה. תזכורת אחת קל לפספס.</string>
+    <string name="reminders_hours_hint">הקישו על שעה כדי לשנות אותה. תזכורת אחת קל לפספס.</string>
     <string name="reminders_add">הוספת שעה</string>
     <string name="reminders_remove">הסרה</string>
     <string name="reminders_off">כבויות.</string>
     <string name="reminders_none">לא הוגדרה שעה.</string>
-    <string name="reminders_permission_missing">ההתראות חסומות: התזכורת לא תוצג. יש לגעת כאן כדי לאשר אותן.</string>
+    <string name="reminders_permission_missing">ההתראות חסומות: התזכורת לא תוצג. הקישו כאן כדי לאשר אותן.</string>
     <string name="reminder_action_start">להתחיל</string>
     <string name="reminder_action_later">מאוחר יותר</string>
 
     <plurals name="reminders_count">
         <item quantity="one">הוגדרה שעה אחת.</item>
-        <item quantity="two">הוגדרו %1$d שעות.</item>
+        <item quantity="two">הוגדרו שתי שעות.</item>
         <item quantity="other">הוגדרו %1$d שעות.</item>
     </plurals>
     <plurals name="permissions_missing">
         <item quantity="one">נותרה הרשאה אחת לאשר.</item>
-        <item quantity="two">נותרו %1$d הרשאות לאשר.</item>
+        <item quantity="two">נותרו שתי הרשאות לאשר.</item>
         <item quantity="other">נותרו %1$d הרשאות לאשר.</item>
     </plurals>
     <string name="session_theme_title">על מה תרצו לדבר?</string>
@@ -372,19 +373,18 @@
     <string name="session_theme_none_short">ללא</string>
     <string name="session_theme_chosen">נושא: %1$s</string>
     <string name="theme_emotions">הרגשות שלי</string>
-    <string name="theme_gratitude">הודאה</string>
+    <string name="theme_gratitude">הודיה</string>
     <string name="theme_decisions">בלבול והכרעות</string>
     <string name="theme_famille">משפחה</string>
     <string name="theme_zivoug">זיווג</string>
     <string name="theme_parnassa">פרנסה</string>
-    <string name="theme_avoda">עבודת ה׳</string>
+    <string name="theme_avoda">עבודת השם</string>
     <string name="theme_difficultes">קשיים</string>
     <string name="theme_croissance">עבודה על המידות</string>
     <string name="theme_autre">משהו אחר</string>
-    <string name="hero_greeting">שלום %1$s</string>
-    <string name="hero_greeting_morning">בוקר טוב %1$s</string>
-    <string name="hero_greeting_afternoon">צהריים טובים %1$s</string>
-    <string name="hero_greeting_evening">ערב טוב %1$s</string>
+    <string name="hero_greeting_morning">בוקר טוב, %1$s</string>
+    <string name="hero_greeting_afternoon">צהריים טובים, %1$s</string>
+    <string name="hero_greeting_evening">ערב טוב, %1$s</string>
     <string name="nav_today">היום</string>
     <string name="nav_texts">התבודדות</string>
     <string name="nav_journal">יומן</string>
@@ -427,7 +427,7 @@
     <string name="onboarding_days">יום אחרי יום</string>
     <string name="onboarding_days_body">הרצף סופר את הימים ברציפות, והשבוע כולו נראה במבט אחד. אחרי כל התבודדות אפשר להשאיר הערה ביומן. תזכורות מאותתות בשעה שבוחרים.</string>
     <string name="onboarding_texts">טקסטים לתפילה</string>
-    <string name="onboarding_texts_body">תיקון הכללי, תפילות לפי נושא, ספרייה ועצות להתבודדות, זמינים מתי שרוצים.</string>
+    <string name="onboarding_texts_body">התיקון הכללי, תהילים, הסידור, תפילות לפי נושא, ספרייה ועצות להתבודדות, זמינים מתי שרוצים.</string>
     <string name="onboarding_yours">בדרך שלכם</string>
     <string name="onboarding_yours_body">בהגדרות: השפה (צרפתית, אנגלית או עברית), צבעי המסך, השם הפרטי ומשך ההתבודדות הרגיל. למוזיקה יש מסך משלה.</string>
     <string name="onboarding_adresse">איך לפנות אליכם?</string>
@@ -469,7 +469,7 @@
     <string name="annulation_hazak">חזק!</string>
     <string name="annulation_hizki">חזקי!</string>
     <string name="annulation_neutral">לא מוותרים!</string>
-    <string name="annulation_subtitle">על כל מה שעשית עד עכשיו. הפעם הבאה תהיה טובה יותר.</string>
+    <string name="annulation_subtitle">על כל מה שעשיתם עד עכשיו. הפעם הבאה תהיה טובה יותר.</string>
 
     <!-- Les morceaux livrés : le numéro seul, le titre réel n’étant pas connu. -->
     <string name="track_niggoun_01">ניגון 01</string>
@@ -516,4 +516,66 @@
     <string name="music_shuffle_hint">ניגון אקראי ואחריו עוד אחד; אף אחד לא חוזר לפני שכולם נוגנו.</string>
     <string name="music_shuffle_short">אקראי</string>
     <string name="music_shuffle_summary">אקראי, עוצמה %1$d%%</string>
+
+    <!-- Les faces du centre des anneaux (Plaque, 04/10). -->
+    <string name="plaque_jour">היום, מתוך %1$s</string>
+    <string name="plaque_semaine">ימים שהושלמו השבוע</string>
+    <string name="plaque_meilleure">הרצף הארוך ביותר שלכם</string>
+    <string name="plaque_total">של התבודדות בסך הכול</string>
+    <string name="plaque_moyenne">בממוצע, ליום של התבודדות</string>
+    <string name="plaque_semaine_valeur">%1$d/%2$d</string>
+    <plurals name="plaque_serie">
+        <item quantity="one">יום ברצף · היעד הבא %2$d</item>
+        <item quantity="two">ימים ברצף · היעד הבא %2$d</item>
+        <item quantity="other">ימים ברצף · היעד הבא %2$d</item>
+    </plurals>
+    <plurals name="plaque_jours">
+        <item quantity="one">יום של התבודדות</item>
+        <item quantity="two">ימי התבודדות</item>
+        <item quantity="other">ימי התבודדות</item>
+    </plurals>
+
+    <!-- Le livre de Tehilim (TehilimActivity, 04/10). -->
+    <string name="tehilim_title">תהילים</string>
+    <string name="tehilim_count">%1$d מזמורים, %2$s פסוקים</string>
+    <string name="tehilim_month">לפי ימי החודש</string>
+    <string name="tehilim_month_state">יום %1$s לחודש: %2$s</string>
+    <string name="tehilim_week">לפי ימי השבוע</string>
+    <string name="tehilim_week_state">%1$s: %2$s</string>
+    <string name="tehilim_all">כל ק״נ המזמורים</string>
+    <string name="tehilim_single">תהילים %1$s</string>
+    <string name="tehilim_range">תהילים %1$s עד %2$s</string>
+    <string name="tehilim_range_verses">תהילים %1$s, פסוקים %2$s עד %3$s</string>
+    <string name="tehilim_previous">המזמור הקודם</string>
+    <string name="tehilim_next">המזמור הבא</string>
+    <string name="tehilim_today">היום: %1$s</string>
+    <plurals name="tehilim_verses">
+        <item quantity="one">פסוק אחד</item>
+        <item quantity="two">%d פסוקים</item>
+        <item quantity="other">%d פסוקים</item>
+    </plurals>
+
+    <!-- Le siddour (SiddurActivity, 04/10). -->
+    <string name="siddur_title">סידור</string>
+    <string name="siddur_hint">שחרית, מנחה, ערבית, ברכות…</string>
+    <string name="siddur_books">ספרים</string>
+    <string name="siddur_nusah">נוסח ספרדי – עדות המזרח</string>
+    <string name="lecture_reglages">הגדרות קריאה</string>
+    <string name="lecture_nuit">קריאה על רקע שחור</string>
+    <string name="lecture_replier">קיפול</string>
+    <string name="lecture_masquer">הסתרת הכפתור</string>
+    <string name="lecture_masque_info">הכפתור הוסתר. לחיצה ארוכה על הטקסט תחזיר אותו.</string>
+    <string name="lecture_annuler_masque">ביטול</string>
+    <string name="lecture_taille">גודל הטקסט: %1$d%%</string>
+    <string name="lecture_pourcent">%1$d%%</string>
+    <string name="lecture_nuit_oui">פעילה</string>
+    <string name="lecture_nuit_non">כבויה</string>
+    <string name="siddur_maintenant">לשעה זו</string>
+    <string name="lecture_plus">אותיות גדולות יותר</string>
+    <string name="lecture_moins">אותיות קטנות יותר</string>
+    <string name="siddur_choose">נוסח</string>
+    <string name="siddur_nusah_edot">ספרדי (עדות המזרח)</string>
+    <string name="siddur_nusah_sefard">ספרד (האר״י)</string>
+    <string name="siddur_nusah_ashkenaz">אשכנז</string>
+    <string name="siddur_sources">מקורות: %1$s</string>
 </resources>

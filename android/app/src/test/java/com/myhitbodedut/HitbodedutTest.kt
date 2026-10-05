@@ -48,10 +48,12 @@ class HitbodedutTest {
         attendus.forEach { (cle, he) ->
             assertEquals(he, Hitbodedut.MOUVEMENTS.first { it.cle == cle }.he)
         }
-        assertTrue(Hitbodedut.SOURCE_LIKOUTEI.contains("תנינא"))
-        assertTrue(Hitbodedut.SOURCE_LIKOUTEI.contains("כ\"ה"))
-        assertTrue(Hitbodedut.SOURCE_RAMBAM.contains("רמב\"ם"))
-        assertTrue(Hitbodedut.SOURCE_RAMBAM.contains("הלכות תפילה"))
+        // Les sources suivent la langue de l'interface (lot textes 2) : en
+        // hébreu, rien que de l'hébreu, numéros en lettres.
+        assertEquals("ליקוטי מוהר״ן תניינא, כ״ה", Reference.localise(Hitbodedut.SOURCE_LIKOUTEI, "he"))
+        assertEquals("רמב״ם, הלכות תפילה א׳, ב׳", Reference.localise(Hitbodedut.SOURCE_RAMBAM, "he"))
+        assertEquals("Likutei Moharan II, 25", Reference.localise(Hitbodedut.SOURCE_LIKOUTEI, "en"))
+        assertEquals("Rambam, Hilkhot Tefillah 1:2", Reference.localise(Hitbodedut.SOURCE_RAMBAM, "en"))
     }
 
     /**

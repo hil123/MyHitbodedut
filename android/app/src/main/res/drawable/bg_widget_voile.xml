@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Un voile sombre aux coins arrondis, sous le texte du jour et sous le
+    compte de la série : il ne fait que gagner du contraste sur le dégradé.
+    Le code en règle l'opacité (VignetteDecor.VOILE_PANNEAU, VOILE_BADGE).
+-->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="#000000" />
+    <corners android:radius="16dp" />
+</shape>

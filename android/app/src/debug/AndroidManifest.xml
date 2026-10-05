@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Ce que l'édition de test ajoute : la vitrine des vignettes, pour les
+    voir (et les capturer) sans les poser sur un écran d'accueil. Absente
+    de la release : ce dossier n'est compilé que pour « debug ».
+-->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <application>
+        <activity
+            android:name="com.myhitbodedut.VitrineWidgetActivity"
+            android:exported="true"
+            android:label="@string/widget_label" />
+    </application>
+</manifest>

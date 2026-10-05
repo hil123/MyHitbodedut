@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Onglet Aujourd'hui, actif : la maison pleine, porte ouverte. La teinte vient de l'onglet (color/nav_item.xml). -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+
+    <path
+        android:pathData="M12,3.2 C12.4,3.2 12.7,3.3 13,3.6 L20.6,9.5 C20.9,9.8 21,10.1 21,10.5 L21,19 A2.5,2.5 0 0,1 18.5,21.5 L15,21.5 L15,16 A1.5,1.5 0 0,0 13.5,14.5 L10.5,14.5 A1.5,1.5 0 0,0 9,16 L9,21.5 L5.5,21.5 A2.5,2.5 0 0,1 3,19 L3,10.5 C3,10.1 3.1,9.8 3.4,9.5 L11,3.6 C11.3,3.3 11.6,3.2 12,3.2 Z"
+        android:fillColor="?attr/mhInk" />
+</vector>

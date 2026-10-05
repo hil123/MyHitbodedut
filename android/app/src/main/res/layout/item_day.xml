@@ -19,6 +19,8 @@
         android:id="@+id/day_mark"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:fontFeatureSettings="tnum"
         android:textColor="?attr/mhInk"
         android:textSize="16sp"
         android:textStyle="bold" />

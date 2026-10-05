@@ -1,15 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    La vignette de la série. Posée d'abord sur 4 × 2 cases : sa version
+    habituelle met les anneaux d'un côté et les grands chiffres de l'autre,
+    à l'étroit sur trois. Elle se réduit jusqu'à une case et s'agrandit en
+    carré (WidgetTaille). Sous Android 12 et plus, le sélecteur montre le
+    gabarit lui-même (previewLayout), dessiné sans le code : ses images et
+    ses chiffres d'exemple sont là pour lui.
+-->
 <appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
     android:description="@string/widget_description"
     android:initialLayout="@layout/widget_streak"
     android:minHeight="110dp"
     android:minResizeHeight="40dp"
     android:minResizeWidth="40dp"
-    android:minWidth="180dp"
+    android:minWidth="250dp"
     android:previewImage="@mipmap/ic_launcher"
     android:previewLayout="@layout/widget_streak"
     android:resizeMode="horizontal|vertical"
     android:targetCellHeight="2"
-    android:targetCellWidth="3"
+    android:targetCellWidth="4"
     android:updatePeriodMillis="3600000"
     android:widgetCategory="home_screen" />

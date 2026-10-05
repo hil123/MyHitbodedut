@@ -3,8 +3,8 @@
 // écran de réglages. Les écrans suivants arrivent par étapes ; ce qui
 // n'existe pas encore est montré, mais inerte (classe « a-venir »).
 
-import { chargeTraduction, langueInitiale, LANGUES } from './i18n.js';
-import { DureeSeance, JaugeSemaine, Reference, Salutation } from './regles.js';
+import { chargeTraduction, formate, langueInitiale, LANGUES } from './i18n.js';
+import { Anneaux, CycleTehilim, DureeSeance, JaugeSemaine, LibraryRules, Plaque, Reference, Salutation, SiddurMoment } from './regles.js';
 import { ART_DU_MOMENT, ChizukBag, ChizukRules } from './chizuk.js';
 import { DanseMesure } from './seance.js';
 import { creeStore, memoire } from './store.js';
@@ -239,7 +239,13 @@ function anneaux(etat) {
     }
     // Une bande transparente plus large que le trait : le doigt n'est pas une pointe.
     g.append(s('circle', { class: 'prise', cx: 50, cy: 50, r, fill: 'none', 'stroke-width': EPAISSEUR + ECART, stroke: 'transparent' }));
-    g.addEventListener('click', (e) => { e.stopPropagation(); anneauEnAvant = anneauEnAvant === a.quel ? null : a.quel; rendre(); });
+    g.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const quel = anneauEnAvant === a.quel ? null : a.quel;
+      mettreEnAvantSurPlace(quel);
+      // Toucher un anneau montre sa face au centre ; le relâcher ramène le hassid.
+      tournerPlaque(quel ? Plaque.pour(quel) : 'hassid');
+    });
     svg.append(g);
   });
   return svg;
@@ -256,13 +262,147 @@ function legendeAnneaux(etat, progression) {
   return tr.p('week_gauge', progression.faits, progression.faits, progression.dus);
 }
 
-/** Un toucher sur le hassid : il salue, et les anneaux se remplissent à nouveau. */
-function saluer(e) {
-  const img = e.currentTarget.querySelector('img');
+/**
+ * Le saut du hassid, [fois] de suite. Sur l'image du rendu en cours : un
+ * nouveau rendu la remplace, et l'ancienne sautait hors de l'écran.
+ */
+function sauter(fois) {
+  const img = app.querySelector('.plaque img');
+  if (!img) return;
+  img.style.setProperty('--sauts', String(fois));
   img.classList.remove('salut');
   void img.offsetWidth; // relance l'animation CSS
   img.classList.add('salut');
-  rendre();
+}
+
+// --- Le centre des anneaux (Plaque.kt) : le hassid, puis vos chiffres ---------
+let facePlaque = 'hassid';
+let minuteurPlaque = null;
+const sansMouvement = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/** Le chiffre d'une face, la façon de l'écrire, et ce qu'il compte. */
+function contenuFace(face) {
+  const etat = store.anneaux();
+  const nombre = (n) => String(n);
+  switch (face) {
+    case 'jour': return { cible: etat.jour.fait, texte: (n) => tr.duree(n), legende: tr.t('plaque_jour', tr.duree(etat.jour.objectif)) };
+    case 'semaine': return { cible: etat.semaine.fait, texte: (n) => tr.t('plaque_semaine_valeur', n, etat.semaine.objectif), legende: tr.t('plaque_semaine') };
+    case 'serie': return { cible: etat.serie.fait, texte: nombre, legende: tr.p('plaque_serie', etat.serie.fait, etat.serie.fait, etat.serie.objectif) };
+    case 'meilleure': return { cible: store.meilleureSerie(), texte: nombre, legende: tr.t('plaque_meilleure') };
+    case 'total': return { cible: store.totalMinutes(), texte: (n) => tr.duree(n), legende: tr.t('plaque_total') };
+    case 'jours': {
+      const jours = store.joursFaits().size;
+      return { cible: jours, texte: nombre, legende: tr.p('plaque_jours', jours, jours) };
+    }
+    default: return { cible: Plaque.moyenne(store.totalMinutes(), store.joursFaits().size), texte: (n) => tr.duree(n), legende: tr.t('plaque_moyenne') };
+  }
+}
+
+/** Le chiffre monte depuis zéro. */
+function compter(el, cible, texte) {
+  if (cible <= 0 || sansMouvement()) return;
+  const debut = performance.now();
+  const pas = (t) => {
+    const f = Math.min(1, (t - debut) / 650);
+    el.textContent = texte(Math.round(cible * (1 - (1 - f) ** 2)));
+    if (f < 1 && el.isConnected) requestAnimationFrame(pas);
+  };
+  el.textContent = texte(0);
+  requestAnimationFrame(pas);
+}
+
+/** Remplit la plaque avec la face courante. */
+function remplirPlaque(btn) {
+  if (facePlaque === 'hassid') {
+    btn.setAttribute('aria-label', tr.t('rings_character_hint'));
+    btn.replaceChildren(h('img', { src: `img/${salutation(store.record()?.faite === true)}.webp`, alt: '' }));
+    return;
+  }
+  const c = contenuFace(facePlaque);
+  const anneau = Plaque.anneau(facePlaque);
+  const valeur = h('div', { class: `face-valeur${anneau ? ` valeur-${anneau}` : ''}` }, c.texte(c.cible));
+  btn.setAttribute('aria-label', `${c.texte(c.cible)} ${c.legende}`);
+  btn.replaceChildren(h('div', { class: 'face' }, valeur, h('div', { class: 'face-legende' }, c.legende)));
+  compter(valeur, c.cible, c.texte);
+}
+
+/** Attend la fin d'une animation CSS de cet élément, pas de ses enfants. */
+function apresAnimation(el, nom, suite) {
+  const ecoute = (e) => {
+    if (e.target !== el || e.animationName !== nom) return;
+    el.removeEventListener('animationend', ecoute);
+    suite();
+  };
+  el.addEventListener('animationend', ecoute);
+}
+
+/** La plaque tourne comme une pièce ; à mi-tour, la face change. */
+function tournerPlaque(vers) {
+  clearTimeout(minuteurPlaque);
+  if (vers !== 'hassid') minuteurPlaque = setTimeout(() => tournerPlaque('hassid'), Plaque.RETOUR_MS);
+  if (vers === facePlaque) return;
+  const btn = app.querySelector('.plaque');
+  if (!btn) { facePlaque = vers; return; }
+  const changer = () => {
+    facePlaque = vers;
+    remplirPlaque(btn);
+    mettreEnAvantSurPlace(Plaque.anneau(vers));
+    btn.classList.remove('sortie');
+    if (sansMouvement()) return;
+    btn.classList.add('entree');
+    apresAnimation(btn, 'plaque-entree', () => {
+      btn.classList.remove('entree');
+      if (vers === 'hassid') sauter(1);
+    });
+  };
+  if (sansMouvement()) { changer(); return; }
+  btn.classList.remove('entree');
+  btn.classList.add('sortie');
+  apresAnimation(btn, 'plaque-sortie', changer);
+}
+
+function plaqueAccueil() {
+  const btn = h('button', { class: 'plaque', type: 'button', onclick: () => {
+    navigator.vibrate?.(8);
+    tournerPlaque(Plaque.suivante(facePlaque));
+  } });
+  remplirPlaque(btn);
+  return btn;
+}
+
+/** Met un anneau en avant sans refaire le rendu, qui relancerait le remplissage. */
+function mettreEnAvantSurPlace(quel) {
+  anneauEnAvant = quel;
+  app.querySelectorAll('.jauge .anneau').forEach((g) =>
+    g.classList.toggle('efface', quel !== null && g.dataset.anneau !== quel));
+  const legende = app.querySelector('.jauge-legende');
+  if (legende) {
+    legende.className = `jauge-legende${quel ? ` legende-${quel}` : ''}`;
+    legende.textContent = legendeAnneaux(store.anneaux(), JaugeSemaine.progression(store.currentWeek()));
+  }
+}
+
+/**
+ * La fin du remplissage, quand l'accueil apparaît (MainActivity.apresRemplissage) :
+ * un anneau qui vient de se fermer est fêté une fois, sinon le hassid salue.
+ */
+let accueilAnime = false;
+function animerAccueil() {
+  if (!app.querySelector('.jauge')) return;
+  const etat = store.anneaux();
+  const jour = store.today();
+  const nouveaux = Anneaux.aFeter(etat, jour, store.anneauxFetes());
+  store.setAnneauxFetes(Anneaux.marques(etat, jour));
+  if (nouveaux.length === 0) { if (facePlaque === 'hassid') sauter(1); return; }
+  // L'anneau fermé passe devant et sa face s'affiche le temps de la fête.
+  const face = Plaque.pour(nouveaux[0]);
+  const jauge = app.querySelector('.jauge');
+  jauge.classList.remove('fete');
+  void jauge.offsetWidth;
+  jauge.classList.add('fete');
+  mettreEnAvantSurPlace(nouveaux[0]);
+  tournerPlaque(face);
+  setTimeout(() => { if (facePlaque === face) { mettreEnAvantSurPlace(null); tournerPlaque('hassid'); } }, 2800);
 }
 
 function panneauAujourdhui() {
@@ -293,17 +433,19 @@ function panneauAujourdhui() {
         : fait ? 'status_done'
           : semaine.filter((j) => !j.future).at(-1)?.exempt ? 'status_rest'
             : 'status_pending')),
+    // Le premier jour, « 0 min au total » n'apprend rien : la phrase d'accueil reste seule.
     h('div', { class: 'serie' },
-      h('span', {}, serie > 0 ? tr.p('status_streak', serie) : tr.t('status_streak_none')),
-      h('span', { class: 'total' }, tr.t('status_total', tr.duree(store.totalMinutes())))),
+      h('span', {}, serie > 0 ? tr.p('status_streak', serie)
+        : store.aDejaPratique() ? tr.t('status_streak_none') : tr.t('status_streak_first')),
+      store.totalMinutes() > 0 ? h('span', { class: 'separateur', 'aria-hidden': 'true' }, '·') : null,
+      store.totalMinutes() > 0 ? h('span', { class: 'total' }, tr.t('status_total', tr.duree(store.totalMinutes()))) : null),
     fait ? h('div', { class: 'detail' },
       record.minutes > 0 ? tr.t('today_minutes', tr.duree(record.minutes)) : tr.t('today_declared')) : null,
 
     h('div', { class: 'jauge', role: 'img', 'aria-label': tr.t('rings_description',
       tr.duree(etat.jour.fait), tr.duree(etat.jour.objectif), etat.semaine.fait, etat.semaine.objectif, etat.serie.fait, etat.serie.objectif) },
     anneaux(etat),
-    h('button', { class: 'plaque', type: 'button', 'aria-label': tr.t('rings_character_hint'), onclick: saluer },
-      h('img', { src: `img/${salutation(fait)}.webp`, alt: '' }))),
+    plaqueAccueil()),
     h('div', { class: `jauge-legende${anneauEnAvant ? ` legende-${anneauEnAvant}` : ''}` }, legendeAnneaux(etat, progression)),
 
     h('button', { class: 'principal', onclick: () => ouvrir('seance') }, bouton),
@@ -317,10 +459,12 @@ function panneauAujourdhui() {
 
     h('div', { class: 'semaine' }, semaine.map((j) => {
       const repos = j.shabbat && j.exempt;
-      const marque = j.done ? '✓' : repos ? tr.t('week_shabbat_mark') : j.exempt ? '—' : j.future ? '' : '·';
+      // Le numéro du jour remplit les cases ouvertes : la bande se lit comme un calendrier.
+      const marque = j.done ? '✓' : repos ? tr.t('week_shabbat_mark') : j.exempt ? '—' : String(Number(j.date.slice(8)));
       const etiquette = j.done ? tr.t('week_done') : repos ? tr.t('settings_shabbat')
         : j.exempt ? tr.t('gate_exempt_title') : tr.t('week_todo');
-      const classe = ['jour', j.done ? 'fait' : j.exempt ? 'exempte' : '', repos && !j.done ? 'repos' : ''].join(' ').trim();
+      const classe = ['jour', j.done ? 'fait' : j.exempt ? 'exempte' : '', repos && !j.done ? 'repos' : '',
+        !j.done && !j.exempt && j.date === store.today() ? 'aujourdhui' : '', j.future ? 'avenir' : ''].join(' ').replace(/\s+/g, ' ').trim();
       return h('div', { class: classe, role: 'img', 'aria-label': `${nomJour.format(new Date(`${j.date}T12:00:00Z`))} : ${etiquette}` },
         h('span', { class: 'nom', 'aria-hidden': 'true' }, nomJour.format(new Date(`${j.date}T12:00:00Z`))),
         h('span', { class: 'marque-jour', 'aria-hidden': 'true' }, marque));
@@ -357,14 +501,501 @@ function etatMusique() {
   return volumeReglable ? tr.t('music_on_summary', titreMorceau(m), store.musicVolume()) : titreMorceau(m);
 }
 
+// --- Tehilim (Tehilim.kt, TehilimActivity.kt) ------------------------------------
+// Le livre entier, chargé au premier besoin : 327 ko qu'on ne lit pas à chaque ouverture.
+let tehilim = null;
+let lecture = null;
+function chargeTehilim() {
+  if (tehilim) return true;
+  fetch('data/tehilim.json').then((r) => r.json()).then((d) => { tehilim = d.psaumes; rendre(); });
+  return false;
+}
+
+/** Le jour du mois hébraïque et la longueur du mois (29 ou 30), par le calendrier du navigateur. */
+function jourHebreu(date = new Date()) {
+  const jour = (d) => Number(new Intl.DateTimeFormat('en-u-ca-hebrew', { day: 'numeric' }).format(d));
+  const j = jour(date);
+  const demain = new Date(date);
+  demain.setDate(date.getDate() + 1);
+  return { jour: j, longueur: j === 29 && jour(demain) === 1 ? 29 : 30 };
+}
+
+const nombreTehilim = (n) => (tr.langue === 'he' ? Reference.lettres(n) : String(n));
+
+function libellePortion(p) {
+  if (CycleTehilim.partielle(p)) {
+    return tr.t('tehilim_range_verses', nombreTehilim(p.debut), nombreTehilim(p.debutVerset), nombreTehilim(p.finVerset));
+  }
+  if (p.debut === p.fin) return tr.t('tehilim_single', nombreTehilim(p.debut));
+  return tr.t('tehilim_range', nombreTehilim(p.debut), nombreTehilim(p.fin));
+}
+
+function portionDuMois() {
+  const { jour, longueur } = jourHebreu();
+  return { jour, portion: CycleTehilim.duMois(jour, longueur) };
+}
+
+function lire(p) {
+  lecture = p;
+  ouvrir('lecture');
+}
+
+function ecranTehilim() {
+  const { jour, portion } = portionDuMois();
+  const auj = new Date();
+  const semaine = CycleTehilim.deLaSemaine(auj.getDay());
+  const nomJour = new Intl.DateTimeFormat(tr.langue, { weekday: 'long' }).format(auj);
+  const pret = chargeTehilim();
+  const versets = pret ? tehilim.reduce((n, ch) => n + ch.length, 0) : null;
+  return h('div', { class: 'ecran' }, barre(tr.t('tehilim_title')),
+    h('div', { class: 'defile' }, h('div', { class: 'contenu' },
+      versets ? h('p', { class: 'indice' }, tr.t('tehilim_count', 150, versets.toLocaleString(tr.langue))) : null,
+      h('div', { class: 'carte' },
+        ligne({ nom: tr.t('tehilim_month'), etat: tr.t('tehilim_month_state', nombreTehilim(jour), libellePortion(portion)), onclick: () => lire(portion) }),
+        ligne({ nom: tr.t('tehilim_week'), etat: tr.t('tehilim_week_state', nomJour.charAt(0).toLocaleUpperCase(tr.langue) + nomJour.slice(1), libellePortion(semaine)), onclick: () => lire(semaine) })),
+      h('h2', { class: 'section' }, tr.t('tehilim_all')),
+      h('div', { class: 'grille-psaumes' }, Array.from({ length: 150 }, (_, i) => i + 1).map((n) =>
+        h('button', { class: 'case-psaume', 'aria-label': libellePortion(CycleTehilim.portion(n, n)), onclick: () => lire(CycleTehilim.portion(n, n)) },
+          nombreTehilim(n)))))));
+}
+
+function ecranLecture() {
+  // Rouvert directement sur #lecture, sans passage choisi : le livre.
+  if (!lecture) return ecranTehilim();
+  const p = lecture;
+  if (!chargeTehilim()) return h('div', { class: 'ecran' }, barre(libellePortion(p)), h('div', { class: 'defile' }));
+  const seul = p.debut === p.fin && !CycleTehilim.partielle(p);
+  const blocs = [];
+  let total = 0;
+  for (let n = p.debut; n <= p.fin; n++) {
+    const tous = tehilim[n - 1];
+    const quels = CycleTehilim.versets(p, n, tous.length);
+    total += quels.length;
+    blocs.push(h('h2', { class: 'psaume-titre', lang: 'he', dir: 'rtl' }, tr.t('tikkun_psalm_he', Reference.lettres(n))));
+    blocs.push(h('div', { class: 'psaume', lang: 'he', dir: 'rtl' }, quels.map((v) =>
+      h('p', { class: 'verset' }, h('span', { class: 'num', 'aria-hidden': 'true' }, `${Reference.lettres(v)} `), tous[v - 1]))));
+  }
+  const aller = (n) => { lecture = CycleTehilim.portion(n, n); rendre(); app.querySelector('.defile').scrollTop = 0; };
+  return ecranLu(libellePortion(p), h('div', { class: 'contenu lecture' },
+      h('p', { class: 'indice' }, tr.p('tehilim_verses', total, total)),
+      ...blocs), { avecNusah: false, pied: seul ? h('div', { class: 'lecture-nav' },
+      h('button', { class: 'secondaire', style: p.debut > 1 ? null : 'visibility:hidden', onclick: () => aller(p.debut - 1) }, tr.t('tehilim_previous')),
+      h('button', { class: 'principal', style: p.debut < 150 ? null : 'visibility:hidden', onclick: () => aller(p.debut + 1) }, tr.t('tehilim_next'))) : null });
+}
+
+// --- Siddour (SiddurActivity.kt, SiddurLectureActivity.kt) ------------------------
+const siddurs = {};
+let siddur = null;
+let priere = null;
+const NUSAH = [['edot', 'siddur_nusah_edot'], ['sefard', 'siddur_nusah_sefard'], ['ashkenaz', 'siddur_nusah_ashkenaz']];
+/** Le siddour du nusah choisi, chargé au premier besoin (un fichier par nusah). */
+function chargeSiddur() {
+  const n = store.siddurNusah();
+  if (siddurs[n]) { siddur = siddurs[n]; return true; }
+  fetch(`data/siddur_${n}.json`).then((r) => r.json()).then((d) => { siddurs[n] = d; rendre(); });
+  return false;
+}
+
+// --- Le bouton de lecture (ReglagesLecture.kt) -------------------------------------
+// Une petite pastille « Aa » au bas du texte, aux couleurs de l'utilisateur.
+// Touchée, elle s'ouvre en barre : taille des lettres, lecture de nuit,
+// nusah au siddour, masquer, replier. Masquée, elle disparaît de tous les
+// écrans de lecture ; un appui long sur le texte la fait revenir.
+let reglagesOuverts = false;
+let choixNusahOuvert = false;
+const ECRANS_LUS = ['lecture', 'priere', 'tikkun', 'source'];
+
+/** Les chaînes nouvelles, tant qu'Android ne les a pas encore : le français. */
+const CHAINES_LECTURE = {
+  lecture_reglages: 'Réglages de lecture',
+  lecture_nuit: 'Lecture sur fond noir',
+  lecture_plus: 'Lettres plus grandes',
+  lecture_moins: 'Lettres plus petites',
+  lecture_masquer: 'Masquer le bouton',
+  lecture_masque_info: 'Bouton masqué. Appui long sur le texte pour le faire revenir.',
+  lecture_annuler_masque: 'Annuler',
+  lecture_replier: 'Replier',
+  lecture_taille: 'Taille du texte : %1$d %%',
+};
+function tl(cle, ...args) {
+  try { return tr.t(cle, ...args); } catch { return formate(CHAINES_LECTURE[cle] ?? cle, args); }
+}
+
+// Au trait, bouts arrondis : le dessin des autres icônes de l'application.
+const ICONES_LECTURE = {
+  lune: ['M19.5,14.6 A7.8,7.8 0 1,1 9.4,4.5 A6.2,6.2 0 0,0 19.5,14.6 Z'],
+  masquer: ['M3,12 C5,8 8.2,6 12,6 C15.8,6 19,8 21,12 C19,16 15.8,18 12,18 C8.2,18 5,16 3,12 Z', 'M9.2,12 a2.8,2.8 0 1,0 5.6,0 a2.8,2.8 0 1,0 -5.6,0', 'M4,4 L20,20'],
+  replier: ['M6.5,9.5 L12,15 L17.5,9.5'],
+  coche: ['M5,12.5 L10,17 L19,7.5'],
+};
+function icone(nom) {
+  const svg = s('svg', { viewBox: '0 0 24 24', 'aria-hidden': 'true' });
+  for (const d of ICONES_LECTURE[nom]) {
+    svg.append(s('path', { d, fill: 'none', stroke: 'currentColor', 'stroke-width': '1.9', 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }));
+  }
+  return svg;
+}
+
+/** Un nouveau rendu, puis le doigt (ou le clavier) retrouve le bon bouton. */
+function rendreEtViser(selecteur) {
+  rendre();
+  app.querySelector(selecteur)?.focus({ preventScroll: true });
+}
+
+/** Un message bref avec une action (le Snackbar d'Android). */
+function signaleAvecAction(texte, action, onAction, duree = 5000) {
+  document.querySelector('.toast')?.remove();
+  const t = h('div', { class: 'toast toast-action', role: 'status' },
+    h('span', {}, texte),
+    h('button', { type: 'button', onclick: () => { t.remove(); onAction(); } }, action));
+  document.body.append(t);
+  setTimeout(() => t.remove(), duree);
+}
+
+function masquerLecture() {
+  store.setLectureMasquee(true);
+  reglagesOuverts = false;
+  choixNusahOuvert = false;
+  rendre();
+  signaleAvecAction(tl('lecture_masque_info'), tl('lecture_annuler_masque'), () => {
+    store.setLectureMasquee(false);
+    rendreEtViser('.lecture-pastille');
+  });
+}
+
+function ramenerLecture() {
+  store.setLectureMasquee(false);
+  reglagesOuverts = true;
+  document.querySelector('.toast')?.remove();
+  navigator.vibrate?.(10);
+  rendreEtViser('.lecture-barre button');
+}
+
+function reglagesLecture({ avecNusah }) {
+  if (store.lectureMasquee()) return null;
+  if (!reglagesOuverts) {
+    return h('div', { class: 'lecture-ctrl' },
+      h('button', {
+        type: 'button', class: 'lecture-pastille', lang: 'en', dir: 'ltr', 'aria-label': tl('lecture_reglages'), 'aria-expanded': 'false',
+        onclick: () => { reglagesOuverts = true; rendreEtViser('.lecture-barre button'); },
+      }, 'Aa'));
+  }
+  const e = store.lectureEchelle();
+  const pourcent = Math.round(e * 100);
+  const echelle = (n) => {
+    const v = Math.round(Math.min(2, Math.max(0.8, n)) * 10) / 10;
+    if (v !== e) { store.setLectureEchelle(v); rendre(); }
+  };
+  const nuit = store.lectureSombre();
+  const bouton = (attrs, ...enfants) => h('button', { type: 'button', ...attrs }, ...enfants);
+  const separateur = () => h('span', { class: 'lecture-sep', 'aria-hidden': 'true' });
+  return h('div', { class: 'lecture-ctrl' },
+    choixNusahOuvert ? h('div', { class: 'lecture-nusah', role: 'menu', 'aria-label': tl('siddur_choose') }, NUSAH.map(([cle, nom]) => {
+      const courant = cle === store.siddurNusah();
+      return bouton({
+        role: 'menuitemradio', 'aria-checked': String(courant),
+        onclick: () => { store.setSiddurNusah(cle); choixNusahOuvert = false; rendreEtViser('.lecture-nusah-bouton'); },
+      }, h('span', { class: 'coche' }, courant ? icone('coche') : null), tr.t(nom));
+    })) : null,
+    h('div', { class: 'lecture-barre', role: 'toolbar', 'aria-label': tl('lecture_reglages') },
+      bouton({ class: 'lettres', lang: 'en', dir: 'ltr', 'aria-label': tl('lecture_moins'), disabled: e <= 0.8, onclick: () => echelle(e - 0.1) }, 'A−'),
+      bouton({ class: 'taille', 'aria-label': tl('lecture_taille', pourcent), onclick: () => echelle(1) },
+        new Intl.NumberFormat(tr.langue, { style: 'percent' }).format(pourcent / 100)),
+      bouton({ class: 'lettres', lang: 'en', dir: 'ltr', 'aria-label': tl('lecture_plus'), disabled: e >= 2, onclick: () => echelle(e + 0.1) }, 'A+'),
+      separateur(),
+      bouton({ class: 'icone-bouton', 'aria-label': tl('lecture_nuit'), 'aria-pressed': String(nuit), onclick: () => { store.setLectureSombre(!nuit); rendreEtViser('.lecture-barre [aria-pressed]'); } }, icone('lune')),
+      avecNusah ? bouton({
+        class: 'lecture-nusah-bouton', 'aria-haspopup': 'menu', 'aria-expanded': String(choixNusahOuvert),
+        onclick: () => { choixNusahOuvert = !choixNusahOuvert; rendreEtViser(choixNusahOuvert ? '.lecture-nusah [aria-checked="true"]' : '.lecture-nusah-bouton'); },
+      }, tr.t('siddur_choose')) : null,
+      separateur(),
+      bouton({ class: 'icone-bouton', 'aria-label': tl('lecture_masquer'), onclick: masquerLecture }, icone('masquer')),
+      bouton({ class: 'icone-bouton', 'aria-label': tl('lecture_replier'), 'aria-expanded': 'true', onclick: () => { reglagesOuverts = false; choixNusahOuvert = false; rendreEtViser('.lecture-pastille'); } }, icone('replier'))));
+}
+
+/**
+ * L'appui long sur le texte, quand le bouton est masqué : 550 ms sans
+ * bouger de plus de 10 px, ou le menu contextuel. Rien n'est empêché tant
+ * qu'il n'a pas abouti : le texte défile comme d'habitude.
+ */
+function appuiLongPourRamener(zone) {
+  let minuteur = null;
+  let depart = null;
+  let abouti = 0;
+  const annule = () => { clearTimeout(minuteur); minuteur = null; depart = null; };
+  zone.addEventListener('pointerdown', (e) => {
+    if (!store.lectureMasquee() || (e.pointerType === 'mouse' && e.button !== 0)) return;
+    depart = { x: e.clientX, y: e.clientY };
+    minuteur = setTimeout(() => { minuteur = null; abouti = Date.now(); ramenerLecture(); }, 550);
+  });
+  zone.addEventListener('pointermove', (e) => {
+    if (depart && Math.hypot(e.clientX - depart.x, e.clientY - depart.y) > 10) annule();
+  });
+  for (const fin of ['pointerup', 'pointercancel', 'pointerleave', 'scroll']) zone.addEventListener(fin, annule, { passive: true });
+  zone.addEventListener('contextmenu', (e) => {
+    if (Date.now() - abouti < 800) { e.preventDefault(); return; }
+    if (!store.lectureMasquee()) return;
+    e.preventDefault();
+    annule();
+    abouti = Date.now();
+    ramenerLecture();
+  });
+  // Le doigt qui se lève après l'appui long ne touche rien d'autre.
+  zone.addEventListener('click', (e) => {
+    if (Date.now() - abouti < 800) { e.preventDefault(); e.stopPropagation(); }
+  }, true);
+}
+
+/**
+ * Un écran de lecture de texte saint : le texte à la taille choisie, de
+ * nuit si demandé, et le bouton de lecture au-dessus du pied d'écran.
+ */
+function ecranLu(titre, contenu, { avecNusah = false, pied = null } = {}) {
+  const defile = h('div', { class: 'defile' }, contenu);
+  const ctrl = reglagesLecture({ avecNusah });
+  let avant = 0;
+  defile.addEventListener('scroll', () => {
+    const p = ctrl?.querySelector('.lecture-pastille');
+    const y = defile.scrollTop;
+    if (p) {
+      // En bas du texte, la pastille revient : on n'a plus à remonter pour la trouver.
+      const enBas = y + defile.clientHeight >= defile.scrollHeight - 4;
+      if (enBas || y < avant - 4) p.classList.remove('cachee');
+      else if (y > avant + 4) p.classList.add('cachee');
+    }
+    avant = y;
+  }, { passive: true });
+  appuiLongPourRamener(defile);
+  return h('div', { class: `ecran lu${store.lectureSombre() ? ' nuit' : ''}`, style: `--echelle: ${store.lectureEchelle()}` },
+    barre(titre),
+    h('div', { class: `lu-zone${pied ? '' : ' sans-pied'}` }, defile, ctrl),
+    pied);
+}
+
+/**
+ * Le balisage du siddour, en nœuds : seuls <b>, <small> et <br> existent dans
+ * siddur.json (tools/siddur_construction.py) ; tout le reste reste du texte.
+ */
+function riche(html) {
+  const racine = document.createDocumentFragment();
+  const pile = [racine];
+  for (const morceau of html.split(/(<\/?b>|<\/?small>|<br>)/)) {
+    if (!morceau) continue;
+    const ouvre = morceau.match(/^<(b|small)>$/);
+    if (ouvre) { const el = document.createElement(ouvre[1]); pile.at(-1).append(el); pile.push(el); }
+    else if (/^<\/(b|small)>$/.test(morceau)) { if (pile.length > 1) pile.pop(); }
+    else if (morceau === '<br>') pile.at(-1).append(document.createElement('br'));
+    else pile.at(-1).append(document.createTextNode(morceau));
+  }
+  return racine;
+}
+
+const titreTexte = (titre) => (tr.langue === 'he' ? titre.he : (titre[tr.langue] || titre.he));
+
+/** Une ligne de section : le nom hébreu, sa traduction dessous, le chevron. */
+function ligneHebreu(hebreu, traduction, onclick) {
+  return h('button', { class: 'ligne ligne-he', onclick },
+    h('span', { class: 'corps' },
+      h('span', { class: 'nom-he', lang: 'he', dir: 'rtl' }, hebreu),
+      traduction && traduction !== hebreu ? h('span', { class: 'etat' }, traduction) : null),
+    h('span', { class: 'chevron', 'aria-hidden': 'true' }));
+}
+
+/** Le personnage sur son panneau clair, comme sur l'accueil (bg_stage). */
+function plateau(dessin, classe) {
+  return h('span', { class: `plateau ${classe}`, 'aria-hidden': 'true' }, h('img', { src: `img/${dessin}.webp`, alt: '' }));
+}
+
+/**
+ * Le bandeau d'un écran à l'identité de l'application (bg_hero) : le
+ * retour, le titre, ce qui se règle dessous, et le hassid sur son panneau.
+ */
+function bandeau(titre, { puce = null, dessin = null } = {}) {
+  return h('header', { class: 'bandeau' },
+    h('button', { class: 'retour', 'aria-label': tr.t('action_back'), onclick: retour }),
+    h('div', { class: 'bandeau-corps' }, h('h1', {}, titre), puce),
+    dessin ? plateau(dessin, 'plateau-bandeau') : null);
+}
+
+/** Le nom du groupe en hébreu, à la couleur choisie ; sa traduction à côté. */
+function enteteGroupe(hebreu, traduction) {
+  const enHebreu = /[֐-׿]/.test(hebreu);
+  return h('h2', { class: 'entete-groupe' },
+    h('span', { class: `entete-he${enHebreu ? ' serif-he' : ''}`, lang: enHebreu ? 'he' : null, dir: enHebreu ? 'rtl' : null }, hebreu),
+    traduction && traduction !== hebreu ? h('span', { class: 'entete-trad' }, traduction) : null);
+}
+
+/** Les trois nusah ; le choix est gardé, et vaut aussi dans les lectures. */
+function choisirNusah() {
+  feuille(tr.t('siddur_choose'), (f, fermer) => {
+    f.append(h('div', { role: 'radiogroup', 'aria-label': tr.t('siddur_choose') }, NUSAH.map(([cle, nom]) => {
+      const courant = cle === store.siddurNusah();
+      return h('button', {
+        type: 'button', class: 'choix choix-radio', role: 'radio', 'aria-checked': String(courant),
+        onclick: () => { fermer(); if (!courant) { store.setSiddurNusah(cle); rendre(); } },
+      }, h('span', { class: 'radio', 'aria-hidden': 'true' }), tr.t(nom));
+    })));
+  });
+  document.querySelector('.feuille [aria-checked="true"]')?.focus();
+}
+
+/** La suggestion de l'heure : le hassid, l'heure dite en clair, le texte. */
+function carteMaintenant(x) {
+  const traduction = titreTexte(x.titre) !== x.titre.he ? titreTexte(x.titre) : null;
+  return h('button', { class: 'maintenant', onclick: () => { priere = x.id; ouvrir('priere'); } },
+    plateau(SiddurMoment.illustration(x.id), 'plateau-maintenant'),
+    h('span', { class: 'maintenant-corps' },
+      h('span', { class: 'maintenant-libelle' }, tr.t('siddur_maintenant')),
+      h('span', { class: 'maintenant-he', lang: 'he', dir: 'rtl' }, x.titre.he),
+      traduction ? h('span', { class: 'maintenant-trad' }, traduction) : null),
+    h('span', { class: 'chevron', 'aria-hidden': 'true' }));
+}
+
+/** Un livre en tuile : son personnage, son nom hébreu, son nom traduit. */
+function tuileLivre(hebreu, traduction, dessin, onclick) {
+  return h('button', { class: 'livre', onclick },
+    plateau(dessin, 'plateau-livre'),
+    h('span', { class: 'livre-he', lang: 'he', dir: 'rtl' }, hebreu),
+    traduction !== hebreu ? h('span', { class: 'livre-trad' }, traduction) : null);
+}
+
+/**
+ * Le siddour (SiddurActivity, 04/10), dans la manière de l'application : en
+ * tête, le texte que suggère l'heure ; puis Tehilim et le Tikoun côte à
+ * côte ; puis les textes par groupe. Le nusah se choisit sur le bandeau.
+ */
+function ecranSiddur() {
+  const pret = chargeSiddur();
+  const nomNusah = pret ? titreTexte(siddur._meta.nusah) : tr.t(NUSAH.find(([c]) => c === store.siddurNusah())?.[1] ?? 'siddur_nusah');
+  const heure = new Date();
+  const suggere = pret ? siddur.textes.find((x) => x.id === SiddurMoment.suggestion(heure.getHours(), heure.getMinutes())) : null;
+  const puce = h('button', {
+    type: 'button', class: 'puce-bandeau', 'aria-haspopup': 'dialog', 'aria-label': `${tr.t('siddur_choose')} : ${nomNusah}`, onclick: choisirNusah,
+  }, h('span', {}, nomNusah), icone('replier'));
+  return h('div', { class: 'ecran avec-bandeau' }, bandeau(tr.t('siddur_title'), { puce, dessin: 'char_praying' }),
+    h('div', { class: 'defile' }, h('div', { class: 'contenu liste-siddour' },
+      suggere ? carteMaintenant(suggere) : null,
+      enteteGroupe(tr.t('siddur_books'), null),
+      h('div', { class: 'livres' },
+        tuileLivre(tr.t('siddur_tehilim_he'), tr.t('tehilim_title'), 'char_tehilim', () => ouvrir('tehilim')),
+        tuileLivre(tr.t('siddur_tikkun_he'), tr.t('tikkun_title'), 'char_torah', () => ouvrir('tikkun'))),
+      ...(pret ? siddur.groupes.flatMap((g) => [
+        enteteGroupe(g.titre.he, titreTexte(g.titre)),
+        h('div', { class: 'carte carte-sections' }, siddur.textes.filter((x) => x.groupe === g.cle).map((x) =>
+          // Un texte absent des sources de ce nusah, emprunté à un autre, le dit.
+          ligneHebreu(x.titre.he, [titreTexte(x.titre) !== x.titre.he ? titreTexte(x.titre) : null, x.nusah ? titreTexte(x.nusah) : null].filter(Boolean).join(' · '),
+            () => { priere = x.id; ouvrir('priere'); }))),
+      ]) : []),
+      // Les sources, comme la licence CC-BY du siddour Metsudah le demande.
+      pret ? h('p', { class: 'indice sources' }, tr.t('siddur_sources', siddur._meta.sources.join(' ; '))) : null)));
+}
+
+function ecranPriere() {
+  if (!chargeSiddur()) return h('div', { class: 'ecran' }, barre(tr.t('siddur_title')), h('div', { class: 'defile' }));
+  const x = siddur.textes.find((y) => y.id === priere);
+  // Rouvert directement sur #priere, sans texte choisi : la liste.
+  if (!x) return ecranSiddur();
+  const plusieurs = x.sections.length > 1;
+  const sousTitre = [titreTexte(x.titre) !== x.titre.he ? titreTexte(x.titre) : null, titreTexte(x.nusah ?? siddur._meta.nusah)].filter(Boolean).join(' · ');
+  return ecranLu(x.titre.he, h('div', { class: 'contenu lecture siddour' },
+    h('p', { class: 'indice' }, sousTitre),
+    ...x.sections.flatMap((s) => [
+      plusieurs && s.titre ? h('h2', { class: 'psaume-titre', lang: 'he', dir: 'rtl' }, s.titre) : null,
+      ...s.blocs.map((b) => h('p', { class: b.c !== undefined ? 'consigne' : 'priere', lang: 'he', dir: 'rtl' }, riche(b.c ?? b.t))),
+    ])), { avecNusah: true });
+}
+
+// --- Le Tikoun lu d'un seul trait (TikkunFlowActivity.kt) -------------------------
+// « להמשיך מזה לזה ברצף אחד, ללא הפסק » : l'ouverture, les dix psaumes à la
+// suite, la clôture ; rien à toucher entre les psaumes. La kavana et la
+// prière de Rabbi Natan ne font pas partie du trait.
+function ecranTikkun() {
+  if (!tikkun) return h('div', { class: 'ecran' }, barre(tr.t('tikkun_title')), h('div', { class: 'defile' }));
+  const titre = (texte) => h('h2', { class: 'psaume-titre' }, texte);
+  const paragraphe = (texte) => h('p', { class: 'verset paragraphe' }, texte);
+  const blocs = [];
+  for (const b of [tikkun.ouverture].filter(Boolean)) blocs.push(titre(b.titre.he), ...b.paragraphes.map(paragraphe));
+  for (const p of tikkun.psaumes) {
+    blocs.push(titre(tr.t('tikkun_psalm_he', Reference.lettres(p.numero))));
+    for (const v of p.versets) {
+      blocs.push(h('p', { class: 'verset' }, v.he));
+      if (v.arret) blocs.push(h('p', { class: 'arret' }, v.arret.note));
+    }
+  }
+  if (tikkun.cloture) blocs.push(titre(tikkun.cloture.titre.he), ...tikkun.cloture.paragraphes.map(paragraphe));
+  const continuite = tikkun._meta.continuite;
+  const fini = () => {
+    // Tout dire d'un trait vaut les dix psaumes.
+    for (const p of tikkun.psaumes) store.setTikkunDone(p.numero, true);
+    retour();
+  };
+  return ecranLu(tr.t('tikkun_title'), h('div', { class: 'contenu lecture tikkun' },
+    continuite ? h('p', { class: 'indice' }, titreTexte(continuite)) : null,
+    h('div', { class: 'psaume', lang: 'he', dir: 'rtl' }, blocs)), {
+    pied: h('div', { class: 'lecture-nav' }, h('button', { class: 'principal', onclick: fini }, tr.t('tikkun_flow_done'))),
+  });
+}
+
+// --- La bibliothèque (LibraryActivity, LibraryEntryActivity) ----------------------
+// Sur le web, les sources seulement : des œuvres du domaine public, dont le
+// texte se lit en entier. Les articles, dont le texte reste chez leur
+// auteur, attendent leur fiche.
+let bibliotheque = null;
+let entreeBiblio = null;
+function chargeBibliotheque() {
+  if (bibliotheque) return true;
+  fetch('data/bibliotheque.json').then((r) => r.json()).then((d) => { bibliotheque = d; rendre(); });
+  return false;
+}
+
+function ecranBibliotheque() {
+  const pret = chargeBibliotheque();
+  return h('div', { class: 'ecran avec-bandeau' },
+    bandeau(tr.t('library_title'), { puce: h('p', { class: 'bandeau-sous-titre' }, tr.t('library_hint')), dessin: 'char_torah' }),
+    h('div', { class: 'defile' }, h('div', { class: 'contenu liste-siddour' },
+      ...(pret ? LibraryRules.sources(bibliotheque).flatMap((section) => [
+        enteteGroupe(section.titre.he, titreTexte(section.titre)),
+        ...section.sous_sections.flatMap((sous) => [
+          sous.titre.he !== section.titre.he ? h('h3', { class: 'sous-entete' },
+            h('span', { class: 'serif-he', lang: 'he', dir: 'rtl' }, sous.titre.he),
+            titreTexte(sous.titre) !== sous.titre.he ? h('span', { class: 'entete-trad' }, titreTexte(sous.titre)) : null) : null,
+          h('div', { class: 'carte carte-sections' }, sous.entrees.map((e) =>
+            ligneHebreu(e.titre_he, Reference.localise(e.ref, tr.langue), () => { entreeBiblio = e.id; ouvrir('source'); }))),
+        ]),
+      ]) : []))));
+}
+
+function ecranSource() {
+  if (!chargeBibliotheque()) return h('div', { class: 'ecran' }, barre(tr.t('library_title')), h('div', { class: 'defile' }));
+  const e = entreeBiblio ? LibraryRules.entree(bibliotheque, entreeBiblio) : null;
+  // Rouvert directement sur #source, sans entrée choisie : la liste.
+  if (!e || e.type !== 'source') return ecranBibliotheque();
+  return ecranLu(tr.t('library_title'), h('div', { class: 'contenu lecture source-biblio' },
+    h('div', { class: 'source-tete' },
+      h('div', { class: 'source-titres' },
+        h('span', { class: 'badge' }, tr.t('library_kind_source')),
+        h('h2', { class: 'source-titre', lang: 'he', dir: 'rtl' }, e.titre_he),
+        h('p', { class: 'source-ref' }, Reference.localise(e.ref, tr.langue))),
+      plateau('char_torah', 'plateau-source')),
+    h('div', { class: 'carte carte-texte psaume', lang: 'he', dir: 'rtl' },
+      LibraryRules.paragraphes(bibliotheque, e).map((p) => h('p', { class: 'verset paragraphe-source' }, p))),
+    // Ni note ni édition sous le texte : l'attribution passe par le lien vers Sefaria.
+    e.url ? h('a', { class: 'principal lien-sefaria', href: e.url, target: '_blank', rel: 'noopener noreferrer' }, tr.t('library_open_sefaria')) : null));
+}
+
 function panneauTextes() {
   return h('div', { class: 'contenu' },
     h('h1', { class: 'titre-ecran' }, tr.t('nav_texts')),
     h('div', { class: 'carte' },
+      ligne({ nom: tr.t('siddur_title'), etat: tr.t('siddur_hint'), onclick: () => ouvrir('siddur') }),
+      // Tehilim est le premier texte lisible sur le web (04/10).
+      ligne({ nom: tr.t('tehilim_title'), etat: tr.t('tehilim_today', libellePortion(portionDuMois().portion)), onclick: () => ouvrir('tehilim') }),
+      // Le Tikoun, lu d'un trait (04/10).
+      ligne({ nom: tr.t('tikkun_title'), etat: etatTikkun(), onclick: () => ouvrir('tikkun') }),
       // Les textes arrivent à l'étape 4.
-      ligne({ nom: tr.t('tikkun_title'), etat: etatTikkun(), aVenir: true }),
       ligne({ nom: tr.t('tefilot_title'), etat: tr.t('tefilot_hint'), aVenir: true }),
-      ligne({ nom: tr.t('library_title'), etat: tr.t('library_hint'), aVenir: true }),
+      // La bibliothèque : ses sources, lisibles (04/10) ; les articles attendent.
+      ligne({ nom: tr.t('library_title'), etat: tr.t('library_hint'), onclick: () => ouvrir('bibliotheque') }),
       ligne({ nom: tr.t('tips_title'), etat: tr.t('tips_hint'), aVenir: true })),
     h('h2', { class: 'section' }, tr.t('section_around')),
     h('div', { class: 'carte' },
@@ -373,11 +1004,13 @@ function panneauTextes() {
 }
 
 function onglets() {
+  // Le journal n'existe pas encore sur le web : son onglet est masqué
+  // plutôt que montré grisé (finition du 04/10).
   const items = [
-    ['aujourdhui', 'nav_today'], ['textes', 'nav_texts'], ['journal', 'nav_journal'], ['reglages', 'settings_title'],
+    ['aujourdhui', 'nav_today'], ['textes', 'nav_texts'], ['reglages', 'settings_title'],
   ];
   return h('nav', { class: 'onglets' }, items.map(([cle, nom]) => h('button', {
-    class: `onglet${cle === 'journal' ? ' a-venir' : ''}`,
+    class: 'onglet',
     'data-onglet': cle,
     'aria-current': cle === onglet ? 'page' : null,
     onclick: () => {
@@ -787,7 +1420,7 @@ function arreteDanse() {
 // et le geste de retour ramènent à l'accueil, sur l'onglet quitté.
 function ecranCourant() {
   const e = location.hash.slice(1);
-  return ['musique', 'reglages', 'seance', 'bravo'].includes(e) ? e : 'accueil';
+  return ['musique', 'reglages', 'seance', 'bravo', 'tehilim', 'lecture', 'siddur', 'priere', 'tikkun', 'bibliotheque', 'source'].includes(e) ? e : 'accueil';
 }
 function ouvrir(ecran) {
   // L'entrée sur l'écran de séance tire le mot d'ouverture (SessionActivity.onCreate).
@@ -829,6 +1462,13 @@ function rendre() {
   else if (ecran === 'reglages') app.append(ecranReglages());
   else if (ecran === 'seance') app.append(ecranSeance());
   else if (ecran === 'bravo') app.append(ecranBravo());
+  else if (ecran === 'tehilim') app.append(ecranTehilim());
+  else if (ecran === 'lecture') app.append(ecranLecture());
+  else if (ecran === 'siddur') app.append(ecranSiddur());
+  else if (ecran === 'priere') app.append(ecranPriere());
+  else if (ecran === 'tikkun') app.append(ecranTikkun());
+  else if (ecran === 'bibliotheque') app.append(ecranBibliotheque());
+  else if (ecran === 'source') app.append(ecranSource());
   else {
     app.append(h('div', { class: 'ecran' },
       h('div', { class: 'defile' }, onglet === 'textes' ? panneauTextes() : panneauAujourdhui()),
@@ -836,6 +1476,12 @@ function rendre() {
   }
   app.dataset.ecran = `${ecran}/${onglet}`;
   if (memeEcran) app.querySelector('.defile').scrollTop = avant;
+  // L'accueil qui apparaît s'anime seul : anneaux, puis saut ou fête (04/10).
+  const accueil = ecran === 'accueil' && onglet === 'aujourdhui';
+  if (!accueil) { accueilAnime = false; facePlaque = 'hassid'; clearTimeout(minuteurPlaque); }
+  else if (!accueilAnime) { accueilAnime = true; setTimeout(animerAccueil, 950); }
+  // En quittant la lecture, le bouton se replie ; l'écran suivant le retrouve en pastille.
+  if (!ECRANS_LUS.includes(ecran)) { reglagesOuverts = false; choixNusahOuvert = false; }
   ajusteLesTextes();
   if (ecran === 'seance') demarreTic();
   if (ecran === 'bravo') danse();
@@ -860,6 +1506,8 @@ async function demarrer() {
   // arrivée à son terme, le décompte qui a continué pendant le sommeil.
   document.addEventListener('visibilitychange', () => {
     if (document.hidden) return;
+    accueilAnime = false;
+    facePlaque = 'hassid';
     if (store.isSessionRunning()) gardeEcranAllume();
     rendre();
   });

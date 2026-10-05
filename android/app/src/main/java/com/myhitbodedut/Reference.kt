@@ -12,8 +12,8 @@ import android.content.Context
  * livres cités sont peu nombreux : on remplace le nom du livre, les numéros
  * restent.
  *
- * L'anglais reprend les graphies des chaînes anglaises (Likutei, Sichot,
- * Chayei, Shivchei) ; l'hébreu, les titres usuels avec leurs guerchayim.
+ * L'anglais reprend les graphies des chaînes anglaises (Likutei, Sihot,
+ * Hayei, Shivhei) ; l'hébreu, les titres usuels avec leurs guerchayim.
  */
 object Reference {
 
@@ -30,7 +30,7 @@ object Reference {
         Livre("Si'hot HaRan ", "Sihot HaRan ", "שיחות הר״ן "),
         Livre("'Hayé Moharan ", "Hayei Moharan ", "חיי מוהר״ן "),
         Livre("Chiv'hei HaRan ", "Shivhei HaRan ", "שבחי הר״ן "),
-        Livre("Tehilim ", "Tehillim ", "תהלים "),
+        Livre("Tehilim ", "Tehillim ", "תהילים "),
         Livre("Michlé ", "Mishlei ", "משלי "),
         Livre("Eikha ", "Eikha ", "איכה "),
     )

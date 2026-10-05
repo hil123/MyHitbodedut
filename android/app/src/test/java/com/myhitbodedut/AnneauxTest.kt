@@ -5,6 +5,7 @@ import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import java.io.File
+import java.time.LocalDate
 
 /**
  * Les trois anneaux de l'accueil (demande du 01/10) : ce qu'ils mesurent,
@@ -98,7 +99,7 @@ class AnneauxTest {
         }
         val accueil = lire("MainActivity.kt")
         assertTrue(accueil.contains("Store.anneaux(this)"))
-        assertTrue("le hassid doit saluer au toucher", accueil.contains("setOnClickListener { saluer() }"))
+        assertTrue("le centre doit changer de face au toucher", accueil.contains("setOnClickListener { toucherPlaque() }"))
         val gabarit = File("src/main/res/layout/activity_main.xml").readText()
         assertTrue(gabarit.contains("com.myhitbodedut.AnneauxView"))
         listOf("values", "values-en", "values-iw").forEach { d ->
@@ -107,5 +108,55 @@ class AnneauxTest {
                 assertTrue("$d : $it", xml.contains("name=\"$it\""))
             }
         }
+    }
+
+    // --- Animations automatiques (demande du 04/10) ---------------------------
+
+    private fun source(f: String) = File("src/main/java/com/myhitbodedut/$f").readText()
+
+    private val mercredi = LocalDate.of(2026, 10, 7)
+
+    @Test
+    fun `un anneau ferme se fete une fois puis plus`() {
+        val plein = Anneaux.etat(minutesJour = 15, objectifJour = 15, semaine = semaine, serie = 4)
+        assertEquals(listOf(Anneaux.Quel.JOUR), Anneaux.aFeter(plein, mercredi, emptySet()))
+        val deja = Anneaux.marques(plein, mercredi)
+        assertEquals(emptyList<Anneaux.Quel>(), Anneaux.aFeter(plein, mercredi, deja))
+        // Le lendemain, l'anneau du jour refermé se fête de nouveau.
+        assertEquals(listOf(Anneaux.Quel.JOUR), Anneaux.aFeter(plein, mercredi.plusDays(1), deja))
+    }
+
+    @Test
+    fun `rien a feter tant qu aucun anneau n est ferme`() {
+        val e = Anneaux.etat(minutesJour = 8, objectifJour = 15, semaine = semaine, serie = 4)
+        assertEquals(emptyList<Anneaux.Quel>(), Anneaux.aFeter(e, mercredi, emptySet()))
+        assertEquals(emptySet<String>(), Anneaux.marques(e, mercredi))
+    }
+
+    @Test
+    fun `la semaine se fete une fois par semaine et la serie une fois par palier`() {
+        val semainePleine = JaugeSemaine.Progression(faits = 6, dus = 6)
+        val e = Anneaux.etat(minutesJour = 0, objectifJour = 15, semaine = semainePleine, serie = 7)
+        assertEquals(listOf(Anneaux.Quel.SEMAINE, Anneaux.Quel.SERIE), Anneaux.aFeter(e, mercredi, emptySet()))
+        val deja = Anneaux.marques(e, mercredi)
+        // Jeudi, même semaine : rien de neuf pour la semaine.
+        assertFalse(Anneaux.Quel.SEMAINE in Anneaux.aFeter(e, mercredi.plusDays(1), deja))
+        // Dimanche suivant : une autre semaine.
+        assertTrue(Anneaux.Quel.SEMAINE in Anneaux.aFeter(e, LocalDate.of(2026, 10, 11), deja))
+        // Le palier suivant de la série (14) se fête à son tour.
+        val quatorze = Anneaux.etat(0, 15, JaugeSemaine.Progression(0, 0), 14)
+        assertEquals(listOf(Anneaux.Quel.SERIE), Anneaux.aFeter(quatorze, mercredi, deja))
+    }
+
+    @Test
+    fun `l accueil anime les anneaux sans qu on touche`() {
+        val accueil = source("MainActivity.kt")
+        val reprise = accueil.substringAfter("override fun onResume()").substringBefore("\n    }")
+        assertTrue("onResume doit rejouer les anneaux", reprise.contains("R.id.week_gauge).rejouer()"))
+        assertTrue(accueil.contains("anneaux.surRempli = { apresRemplissage() }"))
+        assertTrue(accueil.contains("Anneaux.aFeter(etat, aujourdhui, Store.anneauxFetes(this))"))
+        val vue = source("AnneauxView.kt")
+        assertTrue("un état changé doit se remplir à nouveau", vue.contains("etat != nouvel"))
+        assertTrue(vue.contains("fun feter(quel: Anneaux.Quel)"))
     }
 }

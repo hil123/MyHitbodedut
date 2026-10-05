@@ -7,7 +7,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { Anneaux, DureeSeance, JaugeSemaine, Reference, RegleLangue, Salutation } from '../src/js/regles.js';
+import { Anneaux, CycleTehilim, DureeSeance, JaugeSemaine, LibraryRules, Plaque, Reference, RegleLangue, Salutation, SiddurMoment } from '../src/js/regles.js';
 import { estJourChome, israelParDefaut } from '../src/js/calendrier.js';
 import { creeStore, dateValide, memoire } from '../src/js/store.js';
 import { creeTraduction, formate, langueInitiale } from '../src/js/i18n.js';
@@ -377,4 +377,119 @@ test('l\'import rejette les dates fausses ou à venir et borne les valeurs', () 
   assert.equal(s.isExempt('2026-02-30'), false);
   assert.equal(dateValide('2026-02-30'), false);
   assert.equal(dateValide('2026-09-29'), true);
+});
+
+// --- La fête des anneaux (Anneaux.aFeter), comme AnneauxTest -------------------
+test('un anneau fermé se fête une fois, puis le lendemain', () => {
+  const plein = Anneaux.etat(15, 15, { faits: 4, dus: 6 }, 4);
+  assert.deepEqual(Anneaux.aFeter(plein, '2026-10-07', new Set()), ['jour']);
+  const deja = Anneaux.marques(plein, '2026-10-07');
+  assert.deepEqual(Anneaux.aFeter(plein, '2026-10-07', deja), []);
+  assert.deepEqual(Anneaux.aFeter(plein, '2026-10-08', deja), ['jour']);
+});
+
+test('la semaine se fête par semaine, la série par palier', () => {
+  const e = Anneaux.etat(0, 15, { faits: 6, dus: 6 }, 7);
+  assert.deepEqual(Anneaux.aFeter(e, '2026-10-07', new Set()), ['semaine', 'serie']);
+  const deja = Anneaux.marques(e, '2026-10-07');
+  assert.ok(!Anneaux.aFeter(e, '2026-10-08', deja).includes('semaine'));
+  assert.ok(Anneaux.aFeter(e, '2026-10-11', deja).includes('semaine'));
+  assert.deepEqual(Anneaux.aFeter(Anneaux.etat(0, 15, { faits: 0, dus: 0 }, 14), '2026-10-07', deja), ['serie']);
+});
+
+// --- Le centre des anneaux (PlaqueTest.kt) ---------------------------------------
+test('les faces se suivent et reviennent au hassid', () => {
+  let face = 'hassid';
+  const vues = [];
+  for (let i = 0; i < Plaque.FACES.length; i++) { face = Plaque.suivante(face); vues.push(face); }
+  assert.equal(vues[0], 'jour');
+  assert.equal(vues.at(-1), 'hassid');
+  assert.equal(new Set(vues).size, Plaque.FACES.length);
+  assert.equal(Plaque.pour('serie'), 'serie');
+  assert.equal(Plaque.anneau('meilleure'), 'serie');
+  assert.equal(Plaque.anneau('total'), null);
+});
+
+test('la meilleure série ne casse pas sur un jour exempté', () => {
+  const faits = new Set(['2026-09-28', '2026-09-29', '2026-09-30', '2026-10-02', '2026-10-04']);
+  assert.equal(Plaque.meilleureSerie(faits, (d) => d === '2026-10-01'), 4);
+  assert.equal(Plaque.meilleureSerie(faits, () => false), 3);
+  assert.equal(Plaque.meilleureSerie(new Set(), () => false), 0);
+  assert.equal(Plaque.moyenne(50, 3), 17);
+  assert.equal(Plaque.moyenne(0, 0), 0);
+});
+
+// --- Tehilim (TehilimTest.kt) ---------------------------------------------------------
+test('le cycle du mois couvre tout le livre, 119 coupé en deux', () => {
+  assert.equal(CycleTehilim.MOIS.length, 30);
+  assert.deepEqual(CycleTehilim.duMois(1, 30), CycleTehilim.portion(1, 9));
+  assert.deepEqual(CycleTehilim.duMois(25, 30), CycleTehilim.portion(119, 119, 1, 96));
+  assert.deepEqual(CycleTehilim.duMois(30, 30), CycleTehilim.portion(145, 150));
+  assert.deepEqual(CycleTehilim.duMois(29, 29), CycleTehilim.portion(140, 150));
+  assert.deepEqual(CycleTehilim.duMois(29, 30), CycleTehilim.portion(140, 144));
+  const entiers = CycleTehilim.MOIS.filter((p) => !CycleTehilim.partielle(p));
+  const psaumes = entiers.flatMap((p) => Array.from({ length: p.fin - p.debut + 1 }, (_, i) => p.debut + i));
+  assert.deepEqual(psaumes, Array.from({ length: 150 }, (_, i) => i + 1).filter((n) => n !== 119));
+});
+
+test('le cycle de la semaine va du dimanche au Shabbat', () => {
+  assert.deepEqual(CycleTehilim.deLaSemaine(0), CycleTehilim.portion(1, 29));
+  assert.deepEqual(CycleTehilim.deLaSemaine(6), CycleTehilim.portion(120, 150));
+  CycleTehilim.SEMAINE.slice(1).forEach((p, i) => assert.equal(p.debut, CycleTehilim.SEMAINE[i].fin + 1));
+  assert.deepEqual(CycleTehilim.versets(CycleTehilim.portion(119, 119, 97, 176), 119, 176).length, 80);
+  assert.deepEqual(CycleTehilim.versets(CycleTehilim.portion(1, 9), 1, 6), [1, 2, 3, 4, 5, 6]);
+});
+
+// --- SiddurMoment (SiddurMomentTest) -----------------------------------------------
+test('le siddour suggère le texte de l’heure, aux bornes d’Android', () => {
+  const cas = [[0, 0, 'tikoun_hatsot'], [4, 59, 'tikoun_hatsot'], [5, 0, 'birkot_hachahar'], [6, 29, 'birkot_hachahar'],
+    [6, 30, 'chaharit'], [12, 29, 'chaharit'], [12, 30, 'minha'], [18, 29, 'minha'], [18, 30, 'arvit'],
+    [22, 29, 'arvit'], [22, 30, 'chema_coucher'], [23, 59, 'chema_coucher']];
+  for (const [h, m, id] of cas) assert.equal(SiddurMoment.suggestion(h, m), id, `${h}:${m}`);
+  assert.equal(SiddurMoment.illustration('chaharit'), 'char_praying');
+  assert.equal(SiddurMoment.illustration('chema_coucher'), 'char_thinking');
+  // Chaque suggestion existe dans chacun des trois siddourim, et son hassid aussi.
+  for (const n of ['edot', 'sefard', 'ashkenaz']) {
+    const ids = new Set(JSON.parse(readFileSync(join(RES, 'raw', `siddur_${n}.json`), 'utf8')).textes.map((t) => t.id));
+    for (const [h, m] of cas) assert.ok(ids.has(SiddurMoment.suggestion(h, m)), `${n} : ${SiddurMoment.suggestion(h, m)}`);
+  }
+  for (const [h, m] of cas) {
+    const img = SiddurMoment.illustration(SiddurMoment.suggestion(h, m));
+    assert.ok(readFileSync(join(RES, 'drawable-nodpi', `${img}.webp`)).length > 0);
+  }
+});
+
+// --- LibraryRules (LibraryRulesTest) ------------------------------------------------
+test('une source sans licence de vocalisation se lit sans nikkoud', () => {
+  const lib = { _meta: { editions: { ok: { nikkoud_ok: true }, non: { nikkoud_ok: false } } } };
+  const s = { paragraphes: ['בְּ'], paragraphes_sans_nikkoud: ['ב'] };
+  assert.deepEqual(LibraryRules.paragraphes(lib, { ...s, edition: 'ok' }), ['בְּ']);
+  assert.deepEqual(LibraryRules.paragraphes(lib, { ...s, edition: 'non' }), ['ב']);
+  assert.deepEqual(LibraryRules.paragraphes(lib, { ...s, edition: 'inconnue' }), ['ב']);
+  // Faute de texte sans nikkoud, le texte tel quel.
+  assert.deepEqual(LibraryRules.paragraphes(lib, { paragraphes: ['בְּ'], edition: 'non' }), ['בְּ']);
+});
+
+test('la bibliothèque du web ne montre que des sources, chacune avec du texte', () => {
+  const lib = JSON.parse(readFileSync(join(RES, 'raw', 'bibliotheque.json'), 'utf8'));
+  const sources = LibraryRules.sources(lib).flatMap((s) => s.sous_sections.flatMap((ss) => ss.entrees));
+  assert.ok(sources.length > 10);
+  for (const e of sources) {
+    assert.equal(e.type, 'source');
+    assert.ok(LibraryRules.paragraphes(lib, e).length > 0, e.id);
+    assert.equal(LibraryRules.entree(lib, e.id), e);
+  }
+  assert.equal(LibraryRules.entree(lib, 'inexistante'), null);
+});
+
+test('le Tikoun dit d’un trait marque les dix psaumes, pour le jour seulement', () => {
+  const horloge = { t: new Date('2026-10-04T10:00:00').getTime() };
+  const s = creeStore(memoire(), { maintenant: () => new Date(horloge.t), fuseau: 'Europe/Paris' });
+  assert.equal(s.tikkunDone().size, 0);
+  for (const n of [150, 16, 32]) s.setTikkunDone(n, true);
+  assert.deepEqual([...s.tikkunDone()].sort((a, b) => a - b), [16, 32, 150]);
+  s.setTikkunDone(32, false);
+  assert.deepEqual([...s.tikkunDone()].sort((a, b) => a - b), [16, 150]);
+  horloge.t += 86400000;
+  assert.equal(s.tikkunDone().size, 0);
 });

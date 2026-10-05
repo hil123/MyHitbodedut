@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Onglet Journal, au repos : un crayon au trait arrondi. La teinte vient de l'onglet (color/nav_item.xml). -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+
+    <path
+        android:pathData="M13,20.5 L20.5,20.5 M16.5,3.5 A2.12,2.12 0 0,1 19.5,6.5 L7.5,18.5 L3.5,19.5 L4.5,15.5 Z"
+        android:strokeColor="?attr/mhInk"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:strokeWidth="2" />
+</vector>

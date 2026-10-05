@@ -112,6 +112,26 @@
             android:label="@string/tikkun_title" />
 
         <activity
+            android:name=".SiddurActivity"
+            android:exported="false"
+            android:label="@string/siddur_title" />
+
+        <activity
+            android:name=".SiddurLectureActivity"
+            android:exported="false"
+            android:label="@string/siddur_title" />
+
+        <activity
+            android:name=".TehilimActivity"
+            android:exported="false"
+            android:label="@string/tehilim_title" />
+
+        <activity
+            android:name=".TehilimLectureActivity"
+            android:exported="false"
+            android:label="@string/tehilim_title" />
+
+        <activity
             android:name=".PsalmActivity"
             android:exported="false"
             android:label="@string/tikkun_title" />

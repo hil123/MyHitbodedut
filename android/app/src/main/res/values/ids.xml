@@ -4,4 +4,8 @@
     <item name="chizuk_hauteur_fixe" type="id" />
     <item name="chizuk_corps_min" type="id" />
     <item name="chizuk_corps_max" type="id" />
+    <!-- Ce que ReglagesLecture retient d'une vue de texte : son rôle, sa taille de base. -->
+    <item name="lecture_role" type="id" />
+    <item name="lecture_taille" type="id" />
+    <item name="lecture_interligne" type="id" />
 </resources>

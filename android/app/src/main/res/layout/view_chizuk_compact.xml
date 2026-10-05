@@ -74,6 +74,7 @@
 
     <TextView
         android:id="@+id/chizuk_he"
+        android:fontFamily="@font/hebreu_serif"
         android:layout_width="match_parent"
         android:layout_height="78dp"
         android:autoSizeMaxTextSize="17sp"
