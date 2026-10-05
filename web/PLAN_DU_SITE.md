@@ -70,7 +70,7 @@ Les libellés entre guillemets sont ceux que l'application affiche. Ils sont lus
 ## English version
 
 ### First launch
-- ⏳ Onboarding: 7 screens, with the Tzadik / Tzadeket choice (step 2).
+- ⏳ Onboarding: 7 screens, with the Tsadik / Tsadeket choice (step 2).
 
 ### "Today" tab (home) ✅
 - "MyHitbodedut", then "Hello [first name]" if a first name is saved.
@@ -94,16 +94,16 @@ Les libellés entre guillemets sont ceux que l'application affiche. Ils sont lus
 - During the session:
   - the countdown, or the elapsed time for a session with "No set length";
   - the chosen niggun;
-  - the "To begin" chizuk card;
+  - the "To begin" hizuk card;
   - "I cannot find the words", which shows a "When the words do not come" text;
   - "Finish now" and "Abandon", each with a confirmation.
 - At the end: the "To close" card, then → **Bravo**.
 
 ### Bravo ✅
-- "Well done, Tzadik!", "Well done, Tzadeket!" or "Well done!", depending on the choice made in the onboarding.
+- "Well done, Tsadik!", "Well done, Tsadeket!" or "Well done!", depending on the choice made in the onboarding.
 - The hassid's dance, rising notes, "… minutes of hitbodedut".
 - "Continue" → **Session note**.
-- After abandoning: "Chazak!", "Chizki!" or "Take heart!", with a "Back on the road" card.
+- After abandoning: "Hazak!", "Hizki!" or "Take heart!", with a "Back on the road" card.
 
 ### Session note ✅
 - Free text, then "Later" or "Save".
