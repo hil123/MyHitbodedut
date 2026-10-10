@@ -47,7 +47,7 @@ class ProofreadTest {
             "aucun filtre de publication ici : c'est ce qui reste à relire qu'on relit",
             activity.contains("ChizukRules.visible"),
         )
-        assertEquals(86, DataFiles.chizuk.items.size)
+        assertEquals(85, DataFiles.chizuk.items.size)
     }
 
     @Test

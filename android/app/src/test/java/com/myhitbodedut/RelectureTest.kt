@@ -74,30 +74,19 @@ class RelectureTest {
 
     /**
      * La regle du point 3 tient toujours sur les textes de 'hizouk : 37, plus
-     * les 9 textes sur le desespoir choisis par le proprietaire le 28/09.
-     * Les 40 ajouts du 10/10 attendent la relecture du proprietaire : ils
-     * sont nommes dans _meta.verification.ajouts_2026_10_10, et seuls eux
-     * peuvent encore porter relu=false.
+     * les 9 textes sur le desespoir choisis par le proprietaire le 28/09, plus
+     * les 39 ajouts du 10/10 qu'il a relus le jour meme.
      */
     @Test
-    fun `les quarante-six textes de hizouk restent publiables`() {
+    fun `les textes de hizouk restent publiables`() {
         val items = chizuk.getJSONArray("items")
-        assertEquals(86, items.length())
-        val enAttente = chizuk.getJSONObject("_meta").getJSONObject("verification")
-            .getJSONObject("ajouts_2026_10_10").getJSONArray("items")
-            .let { a -> (0 until a.length()).map { a.getString(it) }.toSet() }
-        assertEquals(40, enAttente.size)
-        var publies = 0
+        assertEquals(85, items.length())
         (0 until items.length()).forEach { i ->
             val item = items.getJSONObject(i)
             val id = item.optString("id", "#$i")
             assertEquals("« $id » : statut", "verifie_texte", item.getString("statut_verif"))
-            if (id !in enAttente) {
-                assertTrue("« $id » : non relu", item.getBoolean("relu"))
-                publies++
-            }
+            assertTrue("« $id » : non relu", item.getBoolean("relu"))
         }
-        assertEquals(46, publies)
     }
 
     /**

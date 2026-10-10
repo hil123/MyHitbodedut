@@ -124,7 +124,6 @@
           "tehilim-5-2",
           "chmouel-1-1-13",
           "tehilim-19-15",
-          "hochea-14-3",
           "le-hitbodedut-4-point-bon",
           "le-hitbodedut-16-ces-generations",
           "le-hitbodedut-23-coeur-brise",
@@ -150,7 +149,7 @@
         "hebreu": "Chaque fragment découpé mécaniquement dans l'édition citée (export public du corpus sur storage.googleapis.com, le 10/10/2026), sans retouche ; « … » marque chaque coupe ; Nom divin développé selon _meta.noms_divins.",
         "recoupement": "Tanakh : 15/15 identiques, lettres et voyelles, à une seconde édition indépendante (MAM, codex d'Alep). Breslev : 25/25 concordants avec he.wikisource (numérisation breslev.eip.co.il) ; les variantes orthographiques relevées sont dans la note de l'item.",
         "traductions": "FR et EN originales (Claude, 10/10/2026) ; relecture par un tiers souhaitable.",
-        "relu": "relu=false pour les 40 : invisibles en release tant que le propriétaire ne les a pas relus (écran ProofreadActivity de la compilation de test)."
+        "relu": "Relus par le propriétaire le 10/10/2026 sur la page de relecture : 39 validés ; Hochéa 14:3 retiré à sa demande."
       }
     }
   },
@@ -1287,7 +1286,7 @@
       "tags": [],
       "duree_lecture_sec": 12,
       "statut_verif": "verifie_texte",
-      "relu": false
+      "relu": true
     },
     {
       "id": "lm2-98-la-parole-revele-le-coeur",
@@ -1310,7 +1309,7 @@
       "tags": [],
       "duree_lecture_sec": 16,
       "statut_verif": "verifie_texte",
-      "relu": false
+      "relu": true
     },
     {
       "id": "lm1-124-il-envoie-les-mots",
@@ -1334,7 +1333,7 @@
       "tags": [],
       "duree_lecture_sec": 26,
       "statut_verif": "verifie_texte",
-      "relu": false
+      "relu": true
     },
     {
       "id": "lm1-112-une-parole-vraie",
@@ -1357,7 +1356,7 @@
       "tags": [],
       "duree_lecture_sec": 25,
       "statut_verif": "verifie_texte",
-      "relu": false
+      "relu": true
     },
     {
       "id": "lm1-99-prier-quand-meme",
@@ -1380,7 +1379,7 @@
       "tags": [],
       "duree_lecture_sec": 24,
       "statut_verif": "verifie_texte",
-      "relu": false
+      "relu": true
     },
     {
       "id": "lm1-282-ouvrir-la-bouche",
@@ -1404,7 +1403,7 @@
       "tags": [],
       "duree_lecture_sec": 29,
       "statut_verif": "verifie_texte",
-      "relu": false
+      "relu": true
     },
     {
       "id": "sh-75-comme-un-enfant",
@@ -1429,7 +1428,7 @@
       "duree_lecture_sec": 27,
       "he_sans_nikkoud": "ואפלו אם לפעמים הוא מיגע עצמו ואינו יכול להתפלל כלל, אף־על־פי־כן אל יפל בדעתו מזה כלל, כי זה כלל גדול: שאסור לפל בדעתו בשום אפן, אפלו אם יעבר עליו מה, ואפלו אם אינו יכול להתפלל כלל. רק יכריח את עצמו על־כל־פנים לדבר דבורי התפלה בפשיטות גמור, כמו תינוק בבית הספר ממש. ויאמר כך כמה וכמה דבורים בפשיטות גמור.",
       "statut_verif": "verifie_texte",
-      "relu": false
+      "relu": true
     },
     {
       "id": "sh-75-sans-elan",
@@ -1453,7 +1452,7 @@
       "duree_lecture_sec": 13,
       "he_sans_nikkoud": "ויתפלל כך כסדר בפשיטות גמור אפלו בלי התעוררות וחיות והתלהבות, וילך כך בתפלתו כמה וכמה מלות או כמה דפין עד שבתוך כך יעזרו יהוה ברחמיו להתעוררות …",
       "statut_verif": "verifie_texte",
-      "relu": false
+      "relu": true
     },
     {
       "id": "sh-245-d-ou-vient-ce-mot",
@@ -1477,7 +1476,7 @@
       "duree_lecture_sec": 9,
       "he_sans_nikkoud": "הינו כשאפלו אין מוציאין אלא דבור אחד בדחק גדול, גם זה פלאות הבורא יתברך. כי מהיכן לוקחין אפלו זה הדבור!.",
       "statut_verif": "verifie_texte",
-      "relu": false
+      "relu": true
     },
     {
       "id": "cm-508-simplement",
@@ -1500,7 +1499,7 @@
       "tags": [],
       "duree_lecture_sec": 19,
       "statut_verif": "verifie_texte",
-      "relu": false
+      "relu": true
     },
     {
       "id": "le-tefila-75-depuis-l-etroit",
@@ -1524,7 +1523,7 @@
       "duree_lecture_sec": 33,
       "he_sans_nikkoud": "אף על פי שאין האדם יכול לדבר כלל, ונדמה לו שאינו יכול לפתח פיו בתפלה והתבודדות מגדל הגשמיות שלו, ומרבוי צרות הנפש והגוף שעוברים עליו, אף על פי כן צריך להתחזק אז דיקא להכריח את עצמו לקרא ליהוה מתוך המצר והדחק. כי עקר ההתעוררות הוא, שיתעורר האדם מן המצר והדחק תחלה, ועל־ידי זה יזכה אחר כך על פי רב לבוא להרחבה גדולה עד שיוכל להתפלל ולפרש שיחתו כראוי …",
       "statut_verif": "verifie_texte",
-      "relu": false
+      "relu": true
     },
     {
       "id": "le-hitbodedut-2-les-mots-envoyes",
@@ -1548,7 +1547,7 @@
       "duree_lecture_sec": 16,
       "he_sans_nikkoud": "הדבורים שאדם משיח ומדבר בינו לבין קונו הם בחינת רוח הקדש. כי על ידי שיכנס לזה, ומכריח עצמו ומכין עצמו לדבר לפני השם יתברך, שולח לו השם יתברך דבורים בפיו שהם בחינת רוח הקדש.",
       "statut_verif": "verifie_texte",
-      "relu": false
+      "relu": true
     },
     {
       "id": "le-hitbodedut-20-maitre-ou-ami",
@@ -1572,7 +1571,7 @@
       "duree_lecture_sec": 13,
       "he_sans_nikkoud": "כשהשם יתברך עוזר בהתבודדות, יוכל לפרש שיחתו לפני השם יתברך כאשר ידבר איש אל רעהו. וצריכין להרגיל עצמו בזה, שידבר עם השם יתברך כמו שמדבר עם רבו או חברו …",
       "statut_verif": "verifie_texte",
-      "relu": false
+      "relu": true
     },
     {
       "id": "tehilim-51-17",
@@ -1595,7 +1594,7 @@
       "tags": [],
       "duree_lecture_sec": 4,
       "statut_verif": "verifie_texte",
-      "relu": false
+      "relu": true
     },
     {
       "id": "tehilim-139-4",
@@ -1618,7 +1617,7 @@
       "tags": [],
       "duree_lecture_sec": 6,
       "statut_verif": "verifie_texte",
-      "relu": false
+      "relu": true
     },
     {
       "id": "tehilim-38-10",
@@ -1641,7 +1640,7 @@
       "tags": [],
       "duree_lecture_sec": 5,
       "statut_verif": "verifie_texte",
-      "relu": false
+      "relu": true
     },
     {
       "id": "tehilim-5-2",
@@ -1664,7 +1663,7 @@
       "tags": [],
       "duree_lecture_sec": 4,
       "statut_verif": "verifie_texte",
-      "relu": false
+      "relu": true
     },
     {
       "id": "chmouel-1-1-13",
@@ -1687,7 +1686,7 @@
       "tags": [],
       "duree_lecture_sec": 6,
       "statut_verif": "verifie_texte",
-      "relu": false
+      "relu": true
     },
     {
       "id": "tehilim-19-15",
@@ -1710,30 +1709,7 @@
       "tags": [],
       "duree_lecture_sec": 7,
       "statut_verif": "verifie_texte",
-      "relu": false
-    },
-    {
-      "id": "hochea-14-3",
-      "moments": [
-        "blocage"
-      ],
-      "theme": "parole",
-      "edition": "tanakh",
-      "ref": "Hochéa 14:3",
-      "ref_sefaria": "Hosea 14:3",
-      "url": "https://www.sefaria.org/Hosea.14.3",
-      "he": "קְחוּ עִמָּכֶם דְּבָרִים וְשׁוּבוּ אֶל־יְהֹוָה …",
-      "fr": "« Prenez avec vous des paroles, et revenez à Hachem… »",
-      "en": "“Take words with you, and return to Hashem…”",
-      "yiddish": null,
-      "recoupement": [
-        "Seconde édition numérique indépendante : MAM (codex d'Alep), comparée lettre à lettre"
-      ],
-      "note": null,
-      "tags": [],
-      "duree_lecture_sec": 4,
-      "statut_verif": "verifie_texte",
-      "relu": false
+      "relu": true
     },
     {
       "id": "le-hitbodedut-4-point-bon",
@@ -1757,7 +1733,7 @@
       "duree_lecture_sec": 19,
       "he_sans_nikkoud": "בכל אחד מישראל יש נקדה טובה יקרה מאד, שרצונה חזק תמיד רק לעשות רצון קונה. אך התאוות שוברין לבו, ועל־ידי זה לבו רחוק מהנקדה. על־כן צריך כל אחד לדבר בינו לבין קונו, כדי שיאיר בחינת הנקדה שבו ללבו …",
       "statut_verif": "verifie_texte",
-      "relu": false
+      "relu": true
     },
     {
       "id": "le-hitbodedut-16-ces-generations",
@@ -1781,7 +1757,7 @@
       "duree_lecture_sec": 37,
       "he_sans_nikkoud": "כל הצדיקים והיראים האמתיים לא באו למדרגתם כי אם על־ידי התבודדות ושיחה בינו לבין קונו (כמבאר לעיל). ובפרט בדורות האלו בסוף הגלות, שהיצר הרע והסטרא אחרא מתגברין מאד מאד, והדורות חלושים מאד בגוף ונפש, אי אפשר להנצל עתה מהתגברות היצר הרע ומרבוי המניעות ולהתקרב להשם יתברך, כי אם על־ידי שיחה בינו לבין קונו, שירגיל עצמו לקבע שעה מיחדת בכל יום לפרש שיחתו לפני השם יתברך בלשון שמדברים בו דיקא.",
       "statut_verif": "verifie_texte",
-      "relu": false
+      "relu": true
     },
     {
       "id": "le-hitbodedut-23-coeur-brise",
@@ -1806,7 +1782,7 @@
       "duree_lecture_sec": 23,
       "he_sans_nikkoud": "לב נשבר יקר מאד. ודע שלב נשבר ועצבות אינם ענין אחד כלל. כי עצבות הוא כמו שהוא בכעס וברגז, אבל לב נשבר הוא כבן המתחטא לפני אביו, כתינוק שבוכה וקובל לפני אביו על שנתרחק ממנו, וזה יקר וחביב לפני השם יתברך.",
       "statut_verif": "verifie_texte",
-      "relu": false
+      "relu": true
     },
     {
       "id": "le-hitchazkut-2-les-eloignes",
@@ -1830,7 +1806,7 @@
       "duree_lecture_sec": 29,
       "he_sans_nikkoud": "עקר גדלתו של הקדוש ברוך הוא, הוא שגם הרחוקים ממנו יתברך מאד מאד, גם הם יתקרבו לעבודתו, ובזה נתיקר ונתעלה שמו יתברך למעלה ולמטה. על־כן אין לאדם ליאש עצמו מלהתקרב לעבודת יהוה, מחמת שנתרחק מאד מהשם יתברך על ידי חטאיו המרבים, אף שהרבה לעשות הרע ח\"ו, כי אדרבא, ממנו דיקא יתעלה וישתבח ויתגדל כבודו יתברך ביותר …",
       "statut_verif": "verifie_texte",
-      "relu": false
+      "relu": true
     },
     {
       "id": "le-hitchazkut-4-il-se-glorifie",
@@ -1854,7 +1830,7 @@
       "duree_lecture_sec": 29,
       "he_sans_nikkoud": "צריך לדעת, שהשם יתברך מתפאר אפלו עם הקל שבקלים שבישראל, אפלו פושעי ישראל כל זמן ששם ישראל נקרא עליו יש בו התפארות פרטי, שהשם יתברך מתפאר עמו. על־כן אסור לאדם ליאש עצמו מהשם יתברך אפלו אם קלקל ופגם הרבה מאד ח\"ו, כי עדין לא פסק חביבות השם יתברך ממנו כנ\"ל, ועל־כן עדין יכול לשוב להשם יתברך.",
       "statut_verif": "verifie_texte",
-      "relu": false
+      "relu": true
     },
     {
       "id": "le-hitchazkut-5-descente",
@@ -1878,7 +1854,7 @@
       "duree_lecture_sec": 30,
       "he_sans_nikkoud": "כשצריך האדם לעלות מדרגא לדרגא צריך שיהיה ירידה קדם העליה, כי הירידה היא תכלית העליה. וזה יכול כל אדם להבין, כמה הוא צריך להתחזק בעבודת יהוה ולא יפל לעולם בדעתו מכל הנפילות והירידות שבעולם. כי אם יתאמץ ויתחזק לבלי להסתכל על זה בשום אפן שבעולם אפלו אם יעבר עליו מה, יזכה לבסוף שיתהפכו כל הירידות לעליות גדולות, כי הירידה היא תכלית העליה",
       "statut_verif": "verifie_texte",
-      "relu": false
+      "relu": true
     },
     {
       "id": "le-hitchazkut-11-la-ou-tu-es",
@@ -1902,7 +1878,7 @@
       "duree_lecture_sec": 30,
       "he_sans_nikkoud": "גלל כן צריך שתדע, אפלו אם אתה משקע במדור הקלפות ואתה במדרגה תחתונה מאד, עד שנדמה לך שאי אפשר עוד להתקרב אליו יתברך מחמת שנתרחקת מאד ממנו, אף על פי כן תדע שאפלו במקומך גם כן שם תוכל למצא אלהותו, ומשם אתה יכול לדבק את עצמך בו יתברך ולשוב אליו בתשובה שלמה, כי לא רחוקה היא ממך אלא שבמקומך שם רבו הלבושים.",
       "statut_verif": "verifie_texte",
-      "relu": false
+      "relu": true
     },
     {
       "id": "sh-14-le-desir",
@@ -1926,7 +1902,7 @@
       "duree_lecture_sec": 19,
       "he_sans_nikkoud": "אף־על־פי־כן גם זה טוב, כשאוחזין בזה שאין רוצין לצאת עם האנס, רק שכסופו חזק ורצונו תקיף מאד לזכות לעשות עבודת יהוה בפעל. וזה הרצון בעצמו טוב מאד. ואם אף־על־פי־כן הוא אנוס ואינו זוכה אל העבודה, הרצון הנ\"ל בעצמו הוא טוב מאד.",
       "statut_verif": "verifie_texte",
-      "relu": false
+      "relu": true
     },
     {
       "id": "sh-288-un-seul-jour",
@@ -1950,7 +1926,7 @@
       "duree_lecture_sec": 11,
       "he_sans_nikkoud": "כלומר שאפלו אם לא תזכה כל ימי חייך קדם שתמות כי אם לשוב להשם יתברך יום אחד בלבד גם זה טוב מאד ויקר מכל הון …",
       "statut_verif": "verifie_texte",
-      "relu": false
+      "relu": true
     },
     {
       "id": "sh-75-un-morceau-de-priere",
@@ -1974,7 +1950,7 @@
       "duree_lecture_sec": 19,
       "he_sans_nikkoud": "על־כן אל יפל לב אדם בראותו שזכה להתפלל קצת בכונה איזה חלק מהתפלה ופתאם נפסק ואינו יכול עוד להתפלל כראוי בשום אפן, כי זה מכרח כנ\"ל. וישתדל להתפלל שאר התפלה בפשיטות גמור.",
       "statut_verif": "verifie_texte",
-      "relu": false
+      "relu": true
     },
     {
       "id": "lm1-282-un-peu-de-bien",
@@ -1998,7 +1974,7 @@
       "tags": [],
       "duree_lecture_sec": 7,
       "statut_verif": "verifie_texte",
-      "relu": false
+      "relu": true
     },
     {
       "id": "tehilim-55-23",
@@ -2022,7 +1998,7 @@
       "tags": [],
       "duree_lecture_sec": 6,
       "statut_verif": "verifie_texte",
-      "relu": false
+      "relu": true
     },
     {
       "id": "tehilim-27-14",
@@ -2046,7 +2022,7 @@
       "tags": [],
       "duree_lecture_sec": 5,
       "statut_verif": "verifie_texte",
-      "relu": false
+      "relu": true
     },
     {
       "id": "tehilim-147-3",
@@ -2070,7 +2046,7 @@
       "tags": [],
       "duree_lecture_sec": 4,
       "statut_verif": "verifie_texte",
-      "relu": false
+      "relu": true
     },
     {
       "id": "yechayahou-65-24",
@@ -2094,7 +2070,7 @@
       "tags": [],
       "duree_lecture_sec": 5,
       "statut_verif": "verifie_texte",
-      "relu": false
+      "relu": true
     },
     {
       "id": "tehilim-130-1",
@@ -2117,7 +2093,7 @@
       "tags": [],
       "duree_lecture_sec": 4,
       "statut_verif": "verifie_texte",
-      "relu": false
+      "relu": true
     },
     {
       "id": "tehilim-121-1-2",
@@ -2140,7 +2116,7 @@
       "tags": [],
       "duree_lecture_sec": 10,
       "statut_verif": "verifie_texte",
-      "relu": false
+      "relu": true
     },
     {
       "id": "tehilim-116-1",
@@ -2164,7 +2140,7 @@
       "tags": [],
       "duree_lecture_sec": 4,
       "statut_verif": "verifie_texte",
-      "relu": false
+      "relu": true
     },
     {
       "id": "tehilim-102-1",
@@ -2187,7 +2163,7 @@
       "tags": [],
       "duree_lecture_sec": 5,
       "statut_verif": "verifie_texte",
-      "relu": false
+      "relu": true
     },
     {
       "id": "sh-275-derriere-un-livre",
@@ -2211,7 +2187,7 @@
       "duree_lecture_sec": 7,
       "he_sans_nikkoud": "גם יכולין לישב על הספר ויסברו אחרים שהוא לומד, והוא יכול אז לדבר בינו לבין קונו.",
       "statut_verif": "verifie_texte",
-      "relu": false
+      "relu": true
     }
   ]
 }
