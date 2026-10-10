@@ -267,7 +267,8 @@ input[type="range"] { width: 100%; accent-color: var(--brand); }
    sur le côté, au début de la ligne (à droite en hébreu), et l'accueil
    s'élargit. Sur téléphone, rien ne change : la barre reste en bas, ses
    onglets resserrés au milieu comme le contenu. */
-@media (min-width: 900px) {
+/* Le téléphone couché y a droit aussi : la hauteur y est trop rare pour une barre en bas. */
+@media (min-width: 900px), (orientation: landscape) and (max-height: 500px) {
   .ecran.avec-onglets { flex-direction: row; }
   .ecran.avec-onglets .onglets {
     order: -1; flex: none; flex-direction: column; justify-content: flex-start; gap: 8px; width: 104px;
@@ -278,6 +279,30 @@ input[type="range"] { width: 100%; accent-color: var(--brand); }
   .ecran.avec-onglets .onglet { flex: none; max-width: none; padding: 8px 0; }
   .ecran.avec-onglets .contenu { max-width: 720px; }
   .toast { bottom: calc(24px + env(safe-area-inset-bottom)); }
+}
+
+/* Téléphone couché : les anneaux à côté de l'en-tête et des actions, pour que
+   le bouton « Commencer » se voie sans faire défiler. */
+@media (orientation: landscape) and (max-height: 500px) {
+  .accueil {
+    display: grid; grid-template-columns: auto minmax(0, 1fr); grid-template-areas: "jauge tete" "jauge actions";
+    column-gap: 24px; align-items: start; padding-top: 12px; padding-bottom: 12px;
+  }
+  .accueil-tete { grid-area: tete; }
+  .accueil-jauge { grid-area: jauge; align-self: center; }
+  .accueil-actions { grid-area: actions; }
+  .accueil .jauge { width: 196px; height: 196px; margin-top: 0; }
+  .accueil .jauge .plaque { inset: 30px; }
+  .accueil .principal { margin-top: 12px; padding-block: 14px; }
+  .accueil .semaine { margin-top: 12px; }
+
+  /* La séance : la scène et le minuteur à gauche ; à droite, le bouton
+     principal d'abord, puis les durées, et le mot de chizuk en dernier. */
+  .seance .contenu { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: 24px; align-items: start; }
+  .seance-actions { display: flex; flex-direction: column; padding-top: 16px; }
+  .seance-actions .principal { order: -1; margin-top: 0; }
+  .seance-actions .chizuk, .seance-actions .blocage { order: 2; }
+  .seance-actions .durees { margin-top: 12px; }
 }
 
 /* --- Feuille de choix (les AlertDialog d'Android) --------------------------------------- */

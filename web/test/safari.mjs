@@ -78,6 +78,29 @@ try {
     if (etat.horsSite.length) erreurs.push(`${nom} : requêtes hors du site ${etat.horsSite.join(', ')}`);
   }
 
+  // La mise en page selon la taille de la fenêtre, dans le vrai Safari :
+  // ordinateur (onglets sur le côté, accueil élargi) et téléphone couché
+  // (onglets sur le côté, bouton « Commencer » visible sans défiler).
+  for (const [nom, largeur, hauteur] of [['ordinateur', 1280, 800], ['couche', 844, 390]]) {
+    await wd('POST', `${S}/window/rect`, { width: largeur, height: hauteur });
+    await wd('POST', `${S}/url`, { url: `${base}version.txt` });
+    await executer('localStorage.clear(); localStorage.setItem("myhitbodedut", arguments[0]); localStorage.setItem("myhitbodedut-journal", arguments[1]);',
+      [JSON.stringify({ langue_app: 'fr' }), journal]);
+    await wd('POST', `${S}/url`, { url: base });
+    await attendre(1500);
+    const m = await executer(`const n = document.querySelector('.onglets').getBoundingClientRect();
+      const b = document.querySelector('.accueil .principal').getBoundingClientRect();
+      return { l: innerWidth, h: innerHeight, deborde: document.documentElement.scrollWidth > innerWidth,
+        colonne: n.height > n.width && n.left < 1, bouton: b.bottom };`);
+    const png = await wd('GET', `${S}/screenshot`);
+    writeFileSync(join(SORTIE, `safari-${nom}.png`), Buffer.from(png, 'base64'));
+    rapport.push(`${nom} : fenêtre ${m.l}×${m.h}, onglets ${m.colonne ? 'sur le côté' : 'en bas'}, bouton jusqu'à ${Math.round(m.bouton)}`);
+    if (m.deborde) erreurs.push(`${nom} : la page déborde en largeur`);
+    const attendue = m.l >= 900 || (m.l > m.h && m.h <= 500);
+    if (m.colonne !== attendue) erreurs.push(`${nom} : onglets ${m.colonne ? 'sur le côté' : 'en bas'} à ${m.l}×${m.h}`);
+    if (attendue && m.bouton > m.h) erreurs.push(`${nom} : bouton « Commencer » sous le pli (${m.bouton} > ${m.h})`);
+  }
+
   // Le calendrier hébraïque de Safari lui-même.
   const cal = await executerAsync(`const fin = arguments[arguments.length - 1];
     import(arguments[0]).then(({ estJourChome: c }) => fin({

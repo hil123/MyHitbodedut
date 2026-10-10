@@ -423,7 +423,9 @@ function panneauAujourdhui() {
   const sujet = store.sessionTheme();
   const morceau = store.musicEnabled() ? morceauChoisi() : null;
 
-  return h('div', { class: 'contenu' },
+  // Trois blocs : en-tête, anneaux, actions. Ils s'empilent ; sur un
+  // téléphone couché, les anneaux passent à côté (app.css, « Téléphone couché »).
+  return h('div', { class: 'contenu accueil' }, h('div', { class: 'accueil-tete' },
     h('div', { class: 'marque' }, tr.t('app_name')),
     prenom ? h('div', { class: 'salut' }, tr.t(Salutation.cle(new Date().getHours()), prenom)) : null,
     // Sans prénom, l'état du jour prend la place du titre.
@@ -440,15 +442,15 @@ function panneauAujourdhui() {
       store.totalMinutes() > 0 ? h('span', { class: 'separateur', 'aria-hidden': 'true' }, '·') : null,
       store.totalMinutes() > 0 ? h('span', { class: 'total' }, tr.t('status_total', tr.duree(store.totalMinutes()))) : null),
     fait ? h('div', { class: 'detail' },
-      record.minutes > 0 ? tr.t('today_minutes', tr.duree(record.minutes)) : tr.t('today_declared')) : null,
+      record.minutes > 0 ? tr.t('today_minutes', tr.duree(record.minutes)) : tr.t('today_declared')) : null),
 
-    h('div', { class: 'jauge', role: 'img', 'aria-label': tr.t('rings_description',
+    h('div', { class: 'accueil-jauge' }, h('div', { class: 'jauge', role: 'img', 'aria-label': tr.t('rings_description',
       tr.duree(etat.jour.fait), tr.duree(etat.jour.objectif), etat.semaine.fait, etat.semaine.objectif, etat.serie.fait, etat.serie.objectif) },
     anneaux(etat),
     plaqueAccueil()),
-    h('div', { class: `jauge-legende${anneauEnAvant ? ` legende-${anneauEnAvant}` : ''}` }, legendeAnneaux(etat, progression)),
+    h('div', { class: `jauge-legende${anneauEnAvant ? ` legende-${anneauEnAvant}` : ''}` }, legendeAnneaux(etat, progression))),
 
-    h('button', { class: 'principal', onclick: () => ouvrir('seance') }, bouton),
+    h('div', { class: 'accueil-actions' }, h('button', { class: 'principal', onclick: () => ouvrir('seance') }, bouton),
 
     h('div', { class: 'pastilles' },
       pastille(tr.t('start_duration'), tr.duree(store.targetMinutes()), () => choisirDuree((m) => {
@@ -470,7 +472,7 @@ function panneauAujourdhui() {
         h('span', { class: 'marque-jour', 'aria-hidden': 'true' }, marque));
     })),
 
-    fait ? h('button', { class: 'texte-bouton', onclick: () => ecrireNote(store.today(), rendre) }, tr.t('action_write_note')) : null);
+    fait ? h('button', { class: 'texte-bouton', onclick: () => ecrireNote(store.today(), rendre) }, tr.t('action_write_note')) : null));
 }
 
 function pastille(libelle, valeur, onclick) {
@@ -1303,7 +1305,7 @@ function ecranSeance() {
     h('p', { class: 'legende' }, enCours ? c.legende : tr.t(fait ? 'session_idle_done' : 'session_idle_caption')),
     morceau ? h('p', { class: 'legende petite' }, tr.t('session_music_line', titreMorceau(morceau))) : null,
     carteChizuk(chizukSeance),
-    enCours && aBlocage ? h('button', { class: 'texte-clair', onclick: () => { tireChizuk('blocage'); rendre(); } }, tr.t('chizuk_stuck')) : null,
+    enCours && aBlocage ? h('button', { class: 'texte-clair blocage', onclick: () => { tireChizuk('blocage'); rendre(); } }, tr.t('chizuk_stuck')) : null,
     h('button', { class: 'texte-clair', onclick: choisirSujet },
       sujet ? tr.t('session_theme_chosen', tr.t(`theme_${sujet}`)) : tr.t('session_theme_none')),
   ];
@@ -1332,7 +1334,11 @@ function ecranSeance() {
   return h('div', { class: 'ecran seance' },
     h('header', { class: 'barre' },
       h('button', { class: 'retour', 'aria-label': tr.t('action_back'), onclick: retour })),
-    h('div', { class: 'defile' }, h('div', { class: 'contenu' }, corps)));
+    // La scène et ses chiffres, puis le reste : l'un sous l'autre, ou côte à côte
+    // sur un téléphone couché (app.css, « Téléphone couché »).
+    h('div', { class: 'defile' }, h('div', { class: 'contenu' },
+      h('div', { class: 'seance-scene' }, corps.slice(0, 5)),
+      h('div', { class: 'seance-actions' }, corps.slice(5)))));
 }
 
 // --- Le bravo (CelebrationActivity) -------------------------------------------------

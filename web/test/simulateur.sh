@@ -50,3 +50,21 @@ xcrun simctl bootstatus "$UDID" -b
 capture "$URL#" accueil-he 20
 
 xcrun simctl shutdown "$UDID" || true
+
+# Le même site sur un iPad simulé, debout : les onglets restent en bas,
+# resserrés au milieu. (Le simulateur ne se couche pas en ligne de commande ;
+# la tablette couchée est vérifiée sous WebKit par web/test/tailles.mjs.)
+IPAD=$(xcrun simctl list devices available -j | python3 -c '
+import json, sys
+appareils = [d for r, ds in json.load(sys.stdin)["devices"].items() if "iOS" in r for d in ds if d["name"].startswith("iPad")]
+print(appareils[-1]["udid"] if appareils else "")')
+if [ -n "$IPAD" ]; then
+  UDID="$IPAD"
+  echo "iPad : $(xcrun simctl list devices available | grep "$UDID" | sed -E 's/^ *//; s/ \(.*//')" | tee -a "$SORTIE/iphone-rapport.txt"
+  xcrun simctl boot "$UDID" || true
+  xcrun simctl bootstatus "$UDID" -b
+  capture "$URL" ipad-accueil 20
+  capture "$URL#siddur" ipad-siddur
+  capture "$URL#seance" ipad-seance
+  xcrun simctl shutdown "$UDID" || true
+fi
