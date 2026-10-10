@@ -37,6 +37,8 @@ export const RegleLangue = {
 // Du plus long au plus court : « Likoutei Moharan II » avant « … I ».
 const LIVRES = [
   ["Likoutei Etsot, Hit'hazkout ", 'Likutei Etsot, Strengthening ', 'ליקוטי עצות, התחזקות '],
+  ['Likoutei Etsot, Hitbodedout ', 'Likutei Etsot, Hitbodedut ', 'ליקוטי עצות, התבודדות '],
+  ['Likoutei Etsot, Téfila ', 'Likutei Etsot, Prayer ', 'ליקוטי עצות, תפילה '],
   ['Rambam, Hilkhot Tefila ', 'Rambam, Hilkhot Tefillah ', 'רמב״ם, הלכות תפילה '],
   ['Likoutei Moharan II, ', 'Likutei Moharan II, ', 'ליקוטי מוהר״ן תניינא, '],
   ['Likoutei Moharan I, ', 'Likutei Moharan I, ', 'ליקוטי מוהר״ן, '],
@@ -48,6 +50,9 @@ const LIVRES = [
   ['Tehilim ', 'Tehillim ', 'תהילים '],
   ['Michlé ', 'Mishlei ', 'משלי '],
   ['Eikha ', 'Eikha ', 'איכה '],
+  ['Chmouel I ', 'I Samuel ', 'שמואל א '],
+  ['Yechayahou ', 'Isaiah ', 'ישעיהו '],
+  ['Hochéa ', 'Hosea ', 'הושע '],
 ].map(([fr, en, he]) => ({ fr, en, he }));
 
 const UNITES = ' אבגדהוזחט';

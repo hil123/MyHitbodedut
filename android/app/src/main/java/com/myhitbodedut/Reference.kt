@@ -22,6 +22,8 @@ object Reference {
     /** Du plus long au plus court : « Likoutei Moharan II » avant « … I ». */
     private val LIVRES = listOf(
         Livre("Likoutei Etsot, Hit'hazkout ", "Likutei Etsot, Strengthening ", "ליקוטי עצות, התחזקות "),
+        Livre("Likoutei Etsot, Hitbodedout ", "Likutei Etsot, Hitbodedut ", "ליקוטי עצות, התבודדות "),
+        Livre("Likoutei Etsot, Téfila ", "Likutei Etsot, Prayer ", "ליקוטי עצות, תפילה "),
         Livre("Rambam, Hilkhot Tefila ", "Rambam, Hilkhot Tefillah ", "רמב״ם, הלכות תפילה "),
         Livre("Likoutei Moharan II, ", "Likutei Moharan II, ", "ליקוטי מוהר״ן תניינא, "),
         Livre("Likoutei Moharan I, ", "Likutei Moharan I, ", "ליקוטי מוהר״ן, "),
@@ -33,6 +35,9 @@ object Reference {
         Livre("Tehilim ", "Tehillim ", "תהילים "),
         Livre("Michlé ", "Mishlei ", "משלי "),
         Livre("Eikha ", "Eikha ", "איכה "),
+        Livre("Chmouel I ", "I Samuel ", "שמואל א "),
+        Livre("Yechayahou ", "Isaiah ", "ישעיהו "),
+        Livre("Hochéa ", "Hosea ", "הושע "),
     )
 
     /** La langue est passée plutôt que lue, pour que la règle se teste sans appareil. */
