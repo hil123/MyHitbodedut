@@ -492,7 +492,96 @@ def main():
         capture("16e-he-priere-barre-depliee", ok=ok)
     etape("16 passage en hebreu", s16)
 
+    etape("20 tailles d'ecran", lambda: tailles())
+
     log("\ncaptures :", sorted(os.listdir(OUT)))
+
+
+# --- Tailles d'ecran -----------------------------------------------------------
+# Le parcours ci-dessus ne voit qu'un Pixel 6. La presentation s'est revelee
+# illisible sur un 480x854 (titre, texte et boutons sous le bord) : chaque
+# taille parcourt ici les sept ecrans de la presentation, en verifiant que
+# titre, texte et « Suivant » se voient sans defiler, puis capture l'accueil,
+# l'onglet des textes et la seance. Un ecran fautif est marque « HORS-ECRAN »
+# dans son nom et compte dans le bilan du journal.
+
+TAILLES = [
+    # nom, taille physique forcee (ou None), densite (ou None), couche
+    ("petit", "480x854", 240, False),
+    ("petit-couche", "480x854", 240, True),
+    ("pixel6", None, None, False),
+    ("pixel6-couche", None, None, True),
+    ("tablette", "1600x2560", 320, False),
+    ("tablette-couchee", "1600x2560", 320, True),
+]
+
+
+def appliquer_taille(taille, densite, couche):
+    global W, H
+    sh("wm size " + (taille or "reset"))
+    sh("wm density " + (str(densite) if densite else "reset"))
+    sh("settings put system accelerometer_rotation 0")
+    sh(f"settings put system user_rotation {1 if couche else 0}")
+    pause(2.5)
+    m = re.search(r"Override size: (\d+)x(\d+)", sh("wm size")) or re.search(r"(\d+)x(\d+)", sh("wm size"))
+    w, h = (int(m.group(1)), int(m.group(2))) if m else (1080, 2400)
+    W, H = (max(w, h), min(w, h)) if couche else (min(w, h), max(w, h))
+    log(f"  ecran : {W}x{H}, densite {sh('wm density').strip()}")
+
+
+FAUTES = []
+
+
+def visibles(racine, rids):
+    """Les identifiants dont le noeud est entierement a l'ecran."""
+    vus = set()
+    if racine is None:
+        return vus
+    for n in racine.iter("node"):
+        b = bornes(n)
+        rid = (n.get("resource-id", "") or "").split("/")[-1]
+        if rid in rids and b and b[3] <= H and b[1] >= 0 and (b[3] - b[1]) > 8:
+            vus.add(rid)
+    return vus
+
+
+def presentation(nom, langue_app="fr"):
+    regler({"onboarded_version": ("int", 0), "langue_app": ("string", langue_app)})
+    langue(langue_app)
+    sh(f"am start -W -n {PKG}/com.myhitbodedut.MainActivity", timeout=60)
+    pause(4.0)
+    for i in range(1, 8):
+        racine = dump()
+        voulus = {"onboarding_title", "onboarding_body", "onboarding_next"}
+        vus = visibles(racine, voulus)
+        manque = sorted(voulus - vus)
+        suffixe = "" if not manque else "-HORS-ECRAN"
+        if manque:
+            FAUTES.append(f"{nom} ecran {i} : {', '.join(manque)} hors de l'ecran")
+        capture(f"20-{nom}-presentation-{i}{suffixe}", attente=0.3)
+        if not toucher(rid="onboarding_next", attente=1.2):
+            FAUTES.append(f"{nom} ecran {i} : « Suivant » introuvable")
+            break
+
+
+def tailles():
+    for nom, taille, densite, couche in TAILLES:
+        log(f"\n--- taille {nom} ---")
+        appliquer_taille(taille, densite, couche)
+        presentation(nom)
+        lancer()
+        capture(f"20-{nom}-accueil")
+        onglet_textes()
+        capture(f"20-{nom}-textes")
+        if activite("SessionActivity"):
+            capture(f"20-{nom}-seance")
+        if nom in ("petit", "pixel6-couche", "tablette-couchee"):
+            presentation(nom + "-he", "he")
+    appliquer_taille(None, None, False)
+    regler({"langue_app": ("string", "fr")})
+    langue("fr")
+    log("\n=== bilan des tailles ===")
+    log("\n".join(FAUTES) if FAUTES else "presentation : titre, texte et « Suivant » visibles a toutes les tailles")
 
 
 if __name__ == "__main__":

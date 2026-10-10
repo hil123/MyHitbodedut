@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Hauteur disponible >= 640dp : la presentation reprend son air. Voir values/dimens.xml. -->
+<resources>
+    <dimen name="onboarding_pad_v">22dp</dimen>
+    <dimen name="onboarding_art_min">150dp</dimen>
+    <dimen name="onboarding_art_gap">18dp</dimen>
+    <dimen name="onboarding_title_gap">20dp</dimen>
+    <dimen name="onboarding_title_size">21sp</dimen>
+    <dimen name="onboarding_body_gap">8dp</dimen>
+    <dimen name="onboarding_next_gap">16dp</dimen>
+    <dimen name="onboarding_next_pad">14dp</dimen>
+</resources>

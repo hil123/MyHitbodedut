@@ -37,6 +37,21 @@
     <dimen name="chizuk_he_height">108dp</dimen>
     <dimen name="chizuk_body_height">84dp</dimen>
 
+    <!--
+        La presentation du premier lancement. Le defaut vise l'ecran court
+        (480x854 debout : environ 500dp utiles) : titre, texte et « Suivant »
+        doivent s'y voir sans defiler, l'illustration prenant ce qui reste.
+        values-h640dp rend l'air des que la hauteur le permet.
+    -->
+    <dimen name="onboarding_pad_v">14dp</dimen>
+    <dimen name="onboarding_art_min">96dp</dimen>
+    <dimen name="onboarding_art_gap">12dp</dimen>
+    <dimen name="onboarding_title_gap">14dp</dimen>
+    <dimen name="onboarding_title_size">19sp</dimen>
+    <dimen name="onboarding_body_gap">6dp</dimen>
+    <dimen name="onboarding_next_gap">12dp</dimen>
+    <dimen name="onboarding_next_pad">10dp</dimen>
+
     <!-- La jauge de l'accueil et le hassid en son creux. -->
     <dimen name="gauge_size">236dp</dimen>
 </resources>

@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    La présentation, couchée (téléphone en paysage, tablette en paysage).
+    Debout, l'illustration au-dessus du texte ne laissait qu'une bande
+    sous le titre : ici elle prend la moitié gauche (droite en hébreu) sur
+    toute la hauteur, et le texte et les boutons l'autre moitié. Seule cette
+    colonne défile, si la hauteur manque. Mêmes identifiants que la
+    disposition debout : OnboardingActivity ne fait pas la différence.
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/mhPaper"
+    android:orientation="horizontal"
+    android:paddingHorizontal="@dimen/edge"
+    android:paddingVertical="@dimen/onboarding_pad_v">
+
+    <FrameLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:background="@drawable/bg_stage"
+        android:padding="14dp">
+
+        <com.myhitbodedut.IllustrationSouple
+            android:id="@+id/onboarding_art"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="@null"
+            android:scaleType="fitCenter" />
+    </FrameLayout>
+
+    <ScrollView
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_marginStart="20dp"
+        android:layout_weight="1.25"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/onboarding_step"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_chip_mint"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="4dp"
+                android:textColor="?attr/mhOnPlate"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/onboarding_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/onboarding_title_gap"
+                android:textColor="?attr/mhInk"
+                android:textSize="@dimen/onboarding_title_size"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/onboarding_body"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/onboarding_body_gap"
+                android:lineSpacingExtra="3sp"
+                android:textColor="?attr/mhMuted"
+                android:textSize="15sp" />
+
+            <!-- Seulement sur l'écran « comment vous appeler ». Choisir est facultatif. -->
+            <LinearLayout
+                android:id="@+id/onboarding_adresse"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <Button
+                    android:id="@+id/onboarding_tsadik"
+                    style="@style/Widget.Material3.Button.OutlinedButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checkable="true"
+                    android:text="@string/adresse_tsadik" />
+
+                <Button
+                    android:id="@+id/onboarding_tsadeket"
+                    style="@style/Widget.Material3.Button.OutlinedButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:checkable="true"
+                    android:text="@string/adresse_tsadeket" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/onboarding_next"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/onboarding_next_gap"
+                android:paddingVertical="@dimen/onboarding_next_pad"
+                android:textSize="16sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/onboarding_back"
+                    style="@style/Widget.Material3.Button.TextButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/onboarding_back" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1" />
+
+                <Button
+                    android:id="@+id/onboarding_skip"
+                    style="@style/Widget.Material3.Button.TextButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/onboarding_skip" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>
