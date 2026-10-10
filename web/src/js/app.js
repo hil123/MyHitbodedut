@@ -1353,7 +1353,9 @@ function ecranCalendrier() {
     const memeAnnee = d0.getUTCFullYear() === d1.getUTCFullYear();
     const mois = (d, an) => new Intl.DateTimeFormat(tr.langue, { month: 'long', ...(an ? { year: 'numeric' } : {}), timeZone: 'UTC' }).format(d);
     titre = h('p', { class: 'mois-principal mois-hebreu', lang: 'he', dir: 'rtl' }, jourJuif(debut, israel).moisEtAnnee);
-    sousTitre = h('p', { class: 'mois-second' }, `${mois(d0, !memeAnnee)} – ${mois(d1, true)}`);
+    // Seule l'initiale de la plage prend la majuscule (« Septembre – octobre 2026 »).
+    const plage = `${mois(d0, !memeAnnee)} – ${mois(d1, true)}`;
+    sousTitre = h('p', { class: 'mois-second' }, plage.charAt(0).toLocaleUpperCase(tr.langue) + plage.slice(1));
     decale = (n) => { moisHebreuCalendrier = moisHebreuVoisin(debut, n); rendre(); };
   }
   const bascule = (versCivil) => { store.setCalendrierCivil(versCivil); moisCalendrier = null; moisHebreuCalendrier = null; rendre(); };

@@ -81,14 +81,14 @@ class CalendrierActivity : AppCompatActivity() {
         val (titre, sousTitre) = if (civil) {
             val premier = CalendrierJuif.jour(jours.first(), israel).moisEtAnnee
             val dernier = CalendrierJuif.jour(jours.last(), israel).moisEtAnnee
-            mois.format(DateTimeFormatter.ofPattern("LLLL yyyy", locale)) to
+            initiale(mois.format(DateTimeFormatter.ofPattern("LLLL yyyy", locale)), locale) to
                 (if (premier == dernier) premier else "$premier – $dernier")
         } else {
             val d0 = jours.first()
             val d1 = jours.last()
             val debutCivil = d0.format(DateTimeFormatter.ofPattern(if (d0.year == d1.year) "LLLL" else "LLLL yyyy", locale))
             CalendrierJuif.jour(debutHebreu, israel).moisEtAnnee to
-                "$debutCivil – ${d1.format(DateTimeFormatter.ofPattern("LLLL yyyy", locale))}"
+                initiale("$debutCivil – ${d1.format(DateTimeFormatter.ofPattern("LLLL yyyy", locale))}", locale)
         }
         val tete = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL; gravity = Gravity.CENTER_VERTICAL }
         tete.addView(fleche(if (rtl) "›" else "‹", R.string.calendrier_precedent) { decaler(civil, debutHebreu, -1) })
@@ -218,6 +218,9 @@ class CalendrierActivity : AppCompatActivity() {
         layoutParams = LinearLayout.LayoutParams(dp(48), dp(48))
         setOnClickListener { action() }
     }
+
+    /** La majuscule à l'initiale seulement : « Septembre – octobre 2026 ». */
+    private fun initiale(s: String, locale: Locale) = s.replaceFirstChar { it.titlecase(locale) }
 
     private fun dp(v: Int) = (v * resources.displayMetrics.density).toInt()
 

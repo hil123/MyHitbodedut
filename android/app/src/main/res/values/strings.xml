@@ -642,7 +642,7 @@
     <string name="reglage_allumage">Allumage des bougies</string>
     <string name="reglage_allumage_valeur">%1$d min avant la chki’a</string>
     <string name="reglage_allumage_jerusalem">%1$d min avant la chki’a · coutume de Jérusalem</string>
-    <string name="reglage_allumage_proposition">À Jérusalem, l’usage est d’allumer 40 min avant</string>
+    <string name="reglage_allumage_proposition">À Jérusalem, l’usage est d’allumer 40 min avant la chki’a</string>
     <string name="reglage_tahanoun_tichri">Ta’hanoun en fin de Tichri</string>
     <string name="reglage_tahanoun_tichri_dit">Dit après Isrou ’hag</string>
     <string name="reglage_tahanoun_tichri_sans">Pas dit jusqu’à Roch ’Hodech ’Hechvan</string>

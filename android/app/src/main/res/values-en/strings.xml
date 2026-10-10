@@ -596,7 +596,7 @@
     <string name="reglage_allumage">Candle lighting</string>
     <string name="reglage_allumage_valeur">%1$d min before sunset</string>
     <string name="reglage_allumage_jerusalem">%1$d min before sunset · Jerusalem custom</string>
-    <string name="reglage_allumage_proposition">In Jerusalem, the custom is to light 40 min before</string>
+    <string name="reglage_allumage_proposition">In Jerusalem, the custom is to light 40 min before sunset</string>
     <string name="reglage_tahanoun_tichri">Tachanun at the end of Tishrei</string>
     <string name="reglage_tahanoun_tichri_dit">Said after Isru Chag</string>
     <string name="reglage_tahanoun_tichri_sans">Not said until Rosh Chodesh Cheshvan</string>
@@ -647,7 +647,7 @@
     <string name="ajout_anenou_officiant">Aneinu of the chazzan (repetition)</string>
     <string name="ajout_anenou_particulier">Aneinu of the individual (Shomea tefila)</string>
     <string name="ajout_anenou_particulier_matin_minha">Aneinu of the individual, at Shacharit and Mincha</string>
-    <string name="ajout_anenou_particulier_trois">Aneinu of the individual, at Maariv, Shacharit and Mincha</string>
+    <string name="ajout_anenou_particulier_trois">Aneinu of the individual, at Arvit, Shacharit and Mincha</string>
     <string name="ajout_anenou_particulier_minha">Aneinu of the individual, at Mincha only</string>
     <string name="ajout_hallel_partiel_sans_berakha">Partial Hallel, without a blessing</string>
     <string name="ajout_hallel_partiel_avec_berakha">Partial Hallel, with a blessing</string>
