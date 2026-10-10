@@ -565,21 +565,14 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
-     * Ce que l'onglet « Réglages » annonce : le nombre d'autorisations qui
-     * manquent, en pastille. Ce qui manque doit se voir sans l'ouvrir :
-     * sinon personne ne va chercher une autorisation avant que quelque
-     * chose ait déjà cessé de marcher. (La ligne Réglages de l'onglet
-     * Hitbodedout faisait doublon avec l'onglet ; retirée le 29/09.)
+     * L'onglet « Réglages » ne porte plus de pastille (demande du 10/10) :
+     * les autorisations manquantes se lisent dans les Réglages eux-mêmes, et
+     * le chiffre rouge sur l'accueil était de trop. removeBadge reste, pour
+     * effacer celle qu'une version précédente aurait posée pendant que
+     * l'application tournait.
      */
     private fun renderSettingsEntry() {
-        val manquantes = Permissions.missing(this).size
-        findViewById<BottomNavigationView>(R.id.bottom_nav).apply {
-            if (manquantes == 0) {
-                removeBadge(R.id.nav_settings)
-            } else {
-                getOrCreateBadge(R.id.nav_settings).number = manquantes
-            }
-        }
+        findViewById<BottomNavigationView>(R.id.bottom_nav).removeBadge(R.id.nav_settings)
     }
 
     /** L'état de la musique, sur la carte qui lui est consacrée. */

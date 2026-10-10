@@ -152,9 +152,11 @@ class HomeTest {
         }
         assertTrue(code.contains("JournalActivity::class.java"))
         // Les réglages : l'onglet seul (la ligne en double est retirée le 29/09),
-        // et les autorisations manquantes en pastille sur cet onglet.
+        // Plus de pastille sur cet onglet quand des autorisations manquent
+        // (demande du 10/10) : elles se lisent dans les Réglages.
         assertTrue(!layout.contains("@+id/settings_button\""))
-        assertTrue(code.contains("getOrCreateBadge(R.id.nav_settings)"))
+        assertTrue(!code.contains("getOrCreateBadge("))
+        assertTrue(code.contains("removeBadge(R.id.nav_settings)"))
         assertTrue("l'onglet doit survivre à une rotation", code.contains("ETAT_ONGLET"))
     }
 
