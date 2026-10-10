@@ -95,7 +95,7 @@ class LayoutPaysageTest {
 
     @Test
     fun `rien dans l air des grands ecrans ne reprend edge`() {
-        (res("layout").listFiles().orEmpty() + couchees()).filter { it.extension == "xml" }.forEach { f ->
+        (res("layout").listFiles().orEmpty().toList() + couchees()).filter { it.extension == "xml" }.forEach { f ->
             val xml = f.readText()
             var reste = xml
             while (reste.contains("""android:paddingHorizontal="@dimen/wide_gutter"""")) {
