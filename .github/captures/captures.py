@@ -531,6 +531,28 @@ def appliquer_taille(taille, densite, couche):
 
 FAUTES = []
 
+# Chaque activite de l'application (AndroidManifest.xml), avec ce qu'il lui
+# faut pour s'ouvrir sur un contenu reel.
+ECRANS_APP = [
+    ("SettingsActivity", ""),
+    ("SessionActivity", ""),
+    ("CelebrationActivity", "--ei minutes 20"),
+    ("JournalActivity", ""),
+    ("TipsActivity", ""),
+    ("RemindersActivity", ""),
+    ("MusicActivity", ""),
+    ("SiddurActivity", ""),
+    ("SiddurLectureActivity", "--es id chaharit"),
+    ("TefilotActivity", ""),
+    ("TehilimActivity", ""),
+    ("TehilimLectureActivity", "--ei debut 1 --ei fin 1"),
+    ("TikkunActivity", ""),
+    ("TikkunFlowActivity", ""),
+    ("PsalmActivity", "--ei psalm_numero 16"),
+    ("LibraryActivity", ""),
+    ("LibraryEntryActivity", "--es entry_id src-lm2-25"),
+]
+
 
 def visibles(racine, rids):
     """Les identifiants dont le noeud est entierement a l'ecran."""
@@ -571,10 +593,15 @@ def tailles():
         presentation(nom)
         lancer()
         capture(f"20-{nom}-accueil")
+        defiler(True)
+        capture(f"20-{nom}-accueil-suite")
         onglet_textes()
         capture(f"20-{nom}-textes")
-        if activite("SessionActivity"):
-            capture(f"20-{nom}-seance")
+        # Tous les autres ecrans de l'application, ouverts directement.
+        for classe, extras in ECRANS_APP:
+            arreter()
+            if activite(classe, extras):
+                capture(f"20-{nom}-{classe.replace('Activity', '').lower()}", attente=0.8)
         if nom in ("petit", "pixel6-couche", "tablette-couchee"):
             presentation(nom + "-he", "he")
     appliquer_taille(None, None, False)
