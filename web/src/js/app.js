@@ -1470,7 +1470,7 @@ function rendre() {
   else if (ecran === 'bibliotheque') app.append(ecranBibliotheque());
   else if (ecran === 'source') app.append(ecranSource());
   else {
-    app.append(h('div', { class: 'ecran' },
+    app.append(h('div', { class: 'ecran avec-onglets' },
       h('div', { class: 'defile' }, onglet === 'textes' ? panneauTextes() : panneauAujourdhui()),
       onglets()));
   }

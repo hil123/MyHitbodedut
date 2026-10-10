@@ -64,6 +64,14 @@ jobs:
           node test/captures.mjs webkit captures
           node test/captures.mjs chromium captures
 
+      # Chaque écran à chaque taille, du petit téléphone à l'ordinateur :
+      # aucun débordement, et les onglets en bas ou sur le côté selon la largeur.
+      - name: Every screen at every size (Chromium)
+        working-directory: web
+        env:
+          PLAYWRIGHT_MODULE: ${{ github.workspace }}/web/node_modules/playwright
+        run: node test/tailles.mjs chromium captures/tailles
+
       # Le quota d'artefacts du compte est plein (voir android.yml) : les
       # captures partent sur une branche à part, remplacée à chaque fois.
       - name: Publish screenshots to the captures branch

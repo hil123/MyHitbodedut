@@ -239,8 +239,9 @@ input[type="range"] { width: 100%; accent-color: var(--brand); }
   display: flex; background: var(--card); border-top: 1px solid var(--line);
   padding-bottom: env(safe-area-inset-bottom);
 }
+.onglets { justify-content: center; }
 .onglet {
-  flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px;
+  flex: 1; max-width: 186px; display: flex; flex-direction: column; align-items: center; gap: 4px;
   padding: 10px 0 8px; border: 0; background: none; color: var(--muted); font-size: 12px; cursor: pointer;
 }
 .onglet .icone {
@@ -261,6 +262,23 @@ input[type="range"] { width: 100%; accent-color: var(--brand); }
 .onglet[aria-current="page"][data-onglet="textes"] { --icone: url(icones/ic_nav_texts_on.svg); }
 .onglet[aria-current="page"][data-onglet="journal"] { --icone: url(icones/ic_nav_journal_on.svg); }
 .onglet[aria-current="page"][data-onglet="reglages"] { --icone: url(icones/ic_nav_settings_on.svg); }
+
+/* Grand écran (tablette couchée, ordinateur) : les onglets passent en colonne
+   sur le côté, au début de la ligne (à droite en hébreu), et l'accueil
+   s'élargit. Sur téléphone, rien ne change : la barre reste en bas, ses
+   onglets resserrés au milieu comme le contenu. */
+@media (min-width: 900px) {
+  .ecran.avec-onglets { flex-direction: row; }
+  .ecran.avec-onglets .onglets {
+    order: -1; flex: none; flex-direction: column; justify-content: flex-start; gap: 8px; width: 104px;
+    border-top: 0; border-inline-end: 1px solid var(--line);
+    padding: calc(20px + env(safe-area-inset-top)) 0 calc(12px + env(safe-area-inset-bottom));
+    padding-inline-start: env(safe-area-inset-left);
+  }
+  .ecran.avec-onglets .onglet { flex: none; max-width: none; padding: 8px 0; }
+  .ecran.avec-onglets .contenu { max-width: 720px; }
+  .toast { bottom: calc(24px + env(safe-area-inset-bottom)); }
+}
 
 /* --- Feuille de choix (les AlertDialog d'Android) --------------------------------------- */
 .voile {
@@ -367,6 +385,7 @@ input[type="range"] { width: 100%; accent-color: var(--brand); }
 .lecture .verset { margin: 0 0 8px; color: var(--ink); font-size: calc(19px * var(--echelle, 1)); line-height: 1.75; text-align: start; }
 .lecture .verset .num { color: var(--muted); font-size: 0.7em; }
 .lecture-nav { display: flex; gap: 12px; padding: 8px 16px calc(12px + env(safe-area-inset-bottom)); background: var(--paper); }
+@media (min-width: 600px) { .lecture-nav { padding-inline: calc((100% - 560px) / 2 + 16px); } }
 .lecture-nav button { flex: 1; margin: 0; }
 .secondaire {
   display: block; width: 100%; padding: 14px 16px; border: 1px solid var(--line); border-radius: 999px;
@@ -407,6 +426,8 @@ input[type="range"] { width: 100%; accent-color: var(--brand); }
   padding-top: calc(14px + env(safe-area-inset-top)); padding-bottom: 18px;
   padding-inline: calc(6px + env(safe-area-inset-left)) calc(16px + env(safe-area-inset-right));
 }
+/* Sur grand écran, le fond va d'un bord à l'autre ; ce qu'il porte s'aligne sur la colonne du contenu. */
+@media (min-width: 600px) { .bandeau { padding-inline: calc((100% - 560px) / 2 + 6px) calc((100% - 560px) / 2 + 16px); } }
 .bandeau .retour { align-self: flex-start; margin-top: -7px; color: var(--white); }
 .bandeau-corps { flex: 1; min-width: 0; }
 .bandeau h1 { margin: 0; font-size: 24px; line-height: 1.25; font-weight: 700; color: var(--white); }
