@@ -224,6 +224,16 @@ test('JourAffiche : allumage, sortie, ajouts nommés et grille, comme Android', 
   assert.ok(av.has('ticha_beav'));
   assert.deepEqual(A.ajouts(av, 'edot').filter((k) => k.startsWith('ajout_anenou')), ['ajout_anenou_officiant', 'ajout_anenou_particulier_trois']);
   assert.deepEqual(A.ajouts(av, 'sefard').filter((k) => k.startsWith('ajout_anenou')), ['ajout_anenou_officiant', 'ajout_anenou_particulier_minha']);
+  // Veille de Roch Hachana (OC 581:3) ; fin de Tichri, Edot sans Ta'hanoun.
+  assert.ok(!jour('2026-09-11', true).conditions.has('tahanoun_chaharit'));
+  assert.ok(jour('2026-09-10', true).conditions.has('tahanoun_minha'));
+  const { conditionsPour } = await import('../src/js/siddur-jour.js');
+  const fin = jour('2026-10-05', true).conditions;
+  assert.ok(fin.has('fin_tichri') && fin.has('tahanoun_chaharit'));
+  assert.ok(!conditionsPour('edot', true, fin).has('tahanoun_chaharit'));
+  assert.ok(!A.ajouts(fin, 'edot').includes('ajout_tahanoun'));
+  assert.ok(A.ajouts(fin, 'ashkenaz').includes('ajout_tahanoun'));
+  assert.ok(conditionsPour('edot', true, jour('2026-10-13', true).conditions).has('tahanoun_chaharit'));
   // Jérusalem : Pourim et Al hanissim le 15 Adar II 5787 (24/03/2027).
   assert.ok(!jour('2027-03-23', true, true).conditions.has('al_hanissim'));
   assert.ok(jour('2027-03-24', true, true).conditions.has('pourim'));

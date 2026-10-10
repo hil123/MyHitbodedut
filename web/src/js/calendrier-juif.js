@@ -3,7 +3,7 @@
 // (tefila.js). Même entrée, même sortie qu'Android : web/test vérifie l'égalité
 // jour par jour avec ce que KosherJava répond (vecteurs_kosherjava.json).
 
-import { DateTime, HebrewDateFormatter, JewishCalendar } from '../vendor/kosher-zmanim-0.9.0.min.js';
+import { DateTime, HebrewDateFormatter, JewishCalendar, JewishDate } from '../vendor/kosher-zmanim-0.9.0.min.js';
 import * as T from './tefila.js';
 
 /** Les clés de condition, communes à Android, au web et aux annotations du siddour. */
@@ -15,7 +15,7 @@ export const C = Object.freeze({
   HALLEL: 'hallel', HALLEL_COMPLET: 'hallel_complet',
   TAHANOUN_CHAHARIT: 'tahanoun_chaharit', TAHANOUN_MINHA: 'tahanoun_minha', LUNDI_JEUDI: 'lundi_jeudi',
   ASSERET_YEMEI_TECHOUVA: 'asseret_yemei_techouva', JEUNE: 'jeune', TICHA_BEAV: 'ticha_beav',
-  CHABBAT: 'chabbat', MOTSAE_CHABBAT: 'motsae_chabbat', OMER: 'omer',
+  CHABBAT: 'chabbat', MOTSAE_CHABBAT: 'motsae_chabbat', OMER: 'omer', FIN_TICHRI: 'fin_tichri',
 });
 export const TOUTES = Object.values(C);
 
@@ -87,7 +87,8 @@ export function jour(iso, enIsrael, mukafChoma = false) {
   si(T.isVeseinBerachaRecited(regles), C.BERAKHA);
   si(T.isHallelRecited(regles), C.HALLEL);
   si(T.isHallelShalemRecited(regles), C.HALLEL_COMPLET);
-  const tahanoun = T.isTachanunRecitedShacharis(regles);
+  // La veille de Roch Hachana, pas de Ta'hanoun à la prière (OC 581:3).
+  const tahanoun = T.isTachanunRecitedShacharis(regles) && regles.getYomTovIndex() !== JewishCalendar.EREV_ROSH_HASHANA;
   si(tahanoun, C.TAHANOUN_CHAHARIT);
   si(T.isTachanunRecitedMincha(regles), C.TAHANOUN_MINHA);
   si(tahanoun && (semaine === 1 || semaine === 4), C.LUNDI_JEUDI);
@@ -97,6 +98,7 @@ export function jour(iso, enIsrael, mukafChoma = false) {
   si(semaine === 6, C.CHABBAT);
   si(semaine === 0, C.MOTSAE_CHABBAT);
   si(regles.getDayOfOmer() > 0, C.OMER);
+  si(regles.getJewishMonth() === JewishDate.TISHREI && regles.getJewishDayOfMonth() >= 22, C.FIN_TICHRI);
 
   const fetes = [];
   const fete = FETES.get(affiche.getYomTovIndex());

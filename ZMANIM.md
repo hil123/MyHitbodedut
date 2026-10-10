@@ -81,7 +81,9 @@ change, sur la carte du jour et dans le siddour :
 | Bénédiction du Hallel partiel (Roch 'Hodech, fin de Pessa'h) | sans bénédiction, même en communauté | avec | avec | OC 422:2 : « שאף הצבור אין מברך עליו … וכן נוהגי' בכל מלכות ארץ ישראל » ; Rema : « דגם יחיד מברך עליו … וכן נוהגין במדינות אלו » |
 | Morid hatal l'été | dit | dit | **hors d'Israël, pas dit** (dit en Israël) | Rema, OC 114:3 : « ואנו בני אשכנז לא מזכירין טל » ; en Israël : [yeshiva.co, question 6293](https://www.yeshiva.co/ask/6293) |
 | Anénou de l'officiant (répétition) | Cha'harit et Min'ha | idem | idem | OC 565:3 : « שליח ציבור אומרו גם בתפלת שחרית » |
-| Anénou du particulier (Chomea téfila) | Cha'harit et Min'ha ; à Tich'a bèAv, Arvit aussi | Min'ha seulement | Min'ha seulement | OC 565:3 : « ובארבע צומות גם היחיד אומרו בכל תפלותיו » ; Rema : « ונהגו בכל הצומות שלא לאומרו כי אם במנחה » ; Tich'a bèAv : Peninei Halakha ([yeshiva.co 48403](https://www.yeshiva.co/midrash/48403)) |
+| Anénou du particulier (Chomea téfila) | Cha'harit et Min'ha, jeûne d'Esther compris ; à Tich'a bèAv, Arvit aussi | Min'ha seulement | Min'ha seulement | OC 565:3 : « ובארבע צומות גם היחיד אומרו בכל תפלותיו » ; Rema : « ונהגו בכל הצומות שלא לאומרו כי אם במנחה » ; Tich'a bèAv : Peninei Halakha ([yeshiva.co 48403](https://www.yeshiva.co/midrash/48403)) |
+| Ta'hanoun du 22 Tichri à la fin du mois | pas dit (du 11 Tichri au 2 'Hechvan) | dit après Isrou 'hag | dit après Isrou 'hag | coutume séfarade ; ailleurs, réglage par défaut de `TefilaRules` (`isTachanunRecitedEndOfTishrei`) |
+| Ta'hanoun la veille de Roch Hachana, le matin | pas dit | pas dit | pas dit | OC 581:3 : « אין נופלים על פניהם בערב ראש השנה בתפלה » (`TefilaRules` 2.5.0 le fait dire : corrigé dans `CalendrierJuif`) |
 
 Limites déclarées :
 
@@ -98,21 +100,22 @@ Limites déclarées :
   Le siddour Edot porte lui-même un Anénou d'Arvit « בתשעה באב », annoté
   pour ce seul jour.
 
-Le texte du Choul'han Aroukh (OC 114:3, 422:2, 565:3, 697:1) a été relu
-dans l'édition de Lemberg (1893). Les coutumes actuelles (Edot à
-Cha'harit et Min'ha, Morid hatal des Ashkénazes en Israël) reposent sur des
-sources secondaires.
-
-Point ouvert : le Me'haber limite « dans toutes ses prières » aux quatre
-jeûnes ; le jeûne d'Esther n'en est pas. Aucune source consultée ne décrit
-une coutume séfarade différente ce jour-là : l'application y montre la même
-règle qu'aux autres jeûnes. À valider par un Rav.
+Le texte du Choul'han Aroukh (OC 114:3, 422:2, 565:3, 581:3, 697:1) a été
+relu dans l'édition de Lemberg (1893). Les coutumes actuelles des Edot
+(Anénou du particulier à Cha'harit et Min'ha, jeûne d'Esther compris ; pas
+de Ta'hanoun jusqu'au 2 'Hechvan ; Hallel partiel sans bénédiction) ont été
+vérifiées auprès d'abrégés de halakha séfarade contemporains.
 
 **Les coutumes de Ta'hanoun** sont les réglages par défaut de `TefilaRules`,
-les mêmes pour les trois noussa'him. Par exemple : Ta'hanoun le vendredi et
-le dimanche ; pas de Ta'hanoun du 9 au 21 Tichri ; pas de Ta'hanoun à Pessa'h
-chéni.
-Ce sont précisément les points où les communautés divergent.
+avec deux corrections (tableau ci-dessus) : la veille de Roch Hachana pour
+tous, la fin de Tichri pour les Edot. Les jours sans Ta'hanoun de la liste
+séfarade concordent avec ces réglages : tout Nissan, Pessa'h chéni,
+Lag baOmer, de Roch 'Hodech Sivan au 12 inclus, Tich'a bèAv, Tou bèAv, veilles
+de Roch Hachana et de Kippour, 'Hanouka, Tou biChvat, 14 et 15 des deux Adar,
+Roch 'Hodech ; à Min'ha, la veille d'un jour sans Ta'hanoun, sauf veilles de
+Roch Hachana, de Kippour et de Pessa'h chéni. Restent des coutumes qui
+divergent entre communautés, Sfard et Ashkenaz surtout (fin de Tichri, 13
+Sivan hors d'Israël).
 
 **Le soir** : Arvit et le Chema du coucher relèvent du jour hébreu suivant à
 partir de midi (`jourDeLaPriere`). Midi plutôt que la chki'a, qui demanderait

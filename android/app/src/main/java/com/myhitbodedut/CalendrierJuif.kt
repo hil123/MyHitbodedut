@@ -2,6 +2,7 @@ package com.myhitbodedut
 
 import com.kosherjava.zmanim.hebrewcalendar.HebrewDateFormatter
 import com.kosherjava.zmanim.hebrewcalendar.JewishCalendar
+import com.kosherjava.zmanim.hebrewcalendar.JewishDate
 import com.kosherjava.zmanim.hebrewcalendar.TefilaRules
 import java.time.DayOfWeek
 import java.time.LocalDate
@@ -52,12 +53,14 @@ object CalendrierJuif {
         const val CHABBAT = "chabbat"
         const val MOTSAE_CHABBAT = "motsae_chabbat"
         const val OMER = "omer"
+        /** Du 22 Tichri à la fin du mois : Ta'hanoun selon la coutume (SiddurJour.conditionsPour). */
+        const val FIN_TICHRI = "fin_tichri"
 
         val TOUTES = listOf(
             YAALE_VEYAVO, ROCH_HODECH, PESSAH, SOUKKOT, CHAVOUOT, ROCH_HACHANA, CHEMINI_ATSERET, KIPPOUR, AL_HANISSIM, HANOUKA, POURIM,
             MACHIV_HAROUAH, MORID_HATAL, TAL_OUMATAR, BERAKHA, HALLEL, HALLEL_COMPLET,
             TAHANOUN_CHAHARIT, TAHANOUN_MINHA, LUNDI_JEUDI, ASSERET_YEMEI_TECHOUVA,
-            JEUNE, TICHA_BEAV, CHABBAT, MOTSAE_CHABBAT, OMER,
+            JEUNE, TICHA_BEAV, CHABBAT, MOTSAE_CHABBAT, OMER, FIN_TICHRI,
         )
     }
 
@@ -170,7 +173,10 @@ object CalendrierJuif {
             if (tefila.isVeseinBerachaRecited(regles)) add(C.BERAKHA)
             if (tefila.isHallelRecited(regles)) add(C.HALLEL)
             if (tefila.isHallelShalemRecited(regles)) add(C.HALLEL_COMPLET)
-            val tahanoun = tefila.isTachanunRecitedShacharis(regles)
+            // La veille de Roch Hachana, pas de Ta'hanoun à la prière (Choul'han
+            // Aroukh, OC 581:3), que TefilaRules 2.5.0 fait dire.
+            val tahanoun = tefila.isTachanunRecitedShacharis(regles) &&
+                regles.yomTovIndex != JewishCalendar.EREV_ROSH_HASHANA
             if (tahanoun) add(C.TAHANOUN_CHAHARIT)
             if (tefila.isTachanunRecitedMincha(regles)) add(C.TAHANOUN_MINHA)
             // « לשני וחמישי » : le titre de la section du siddour le dit ; les
@@ -182,6 +188,7 @@ object CalendrierJuif {
             if (semaine == DayOfWeek.SATURDAY) add(C.CHABBAT)
             if (semaine == DayOfWeek.SUNDAY) add(C.MOTSAE_CHABBAT)
             if (regles.dayOfOmer > 0) add(C.OMER)
+            if (regles.jewishMonth == JewishDate.TISHREI && regles.jewishDayOfMonth >= 22) add(C.FIN_TICHRI)
         }
 
         val fetes = buildList {

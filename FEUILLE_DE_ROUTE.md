@@ -793,5 +793,7 @@ Hebcal le fait dire partout. Le résultat de KosherJava est gardé ; voir
   Ashkenaz avec), Morid hatal ashkénaze hors d'Israël, Anénou du particulier ;
 - Pourim le 15 Adar quand la ville choisie est Jérusalem ;
 - l'omer affiché est celui qu'on compte le soir même.
+- Ta'hanoun : plus de Ta'hanoun le matin de la veille de Roch Hachana
+  (OC 581:3), ni, pour les Edot, du 22 Tichri à la fin du mois.
 
 Détail et sources : `ZMANIM.md`, « Différences de noussa'h ».

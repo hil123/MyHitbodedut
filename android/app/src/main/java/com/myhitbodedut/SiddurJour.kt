@@ -142,10 +142,17 @@ object SiddurJour {
      * Les conditions du jour, ajustées au nusah (demande du 10/10, « attention
      * aux différences ») : les Ashkénazes ne disent pas Morid hatal hors
      * d'Israël (Rema, OC 114:3), quand le nusah Sfard et les Séfarades le
-     * disent. À valider (ZMANIM.md, « Différences de noussa'h »).
+     * disent ; les Edot ne disent pas Ta'hanoun jusqu'à la fin de Tichri.
+     * À valider (ZMANIM.md, « Différences de noussa'h »).
      */
-    fun conditionsPour(nusah: String, enIsrael: Boolean, conditions: Set<String>): Set<String> =
-        if (nusah == "ashkenaz" && !enIsrael) conditions - CalendrierJuif.C.MORID_HATAL else conditions
+    fun conditionsPour(nusah: String, enIsrael: Boolean, conditions: Set<String>): Set<String> = when {
+        nusah == "ashkenaz" && !enIsrael -> conditions - CalendrierJuif.C.MORID_HATAL
+        // Edot : pas de Ta'hanoun du lendemain de Kippour jusqu'au 2 'Hechvan ;
+        // TefilaRules le fait reprendre après Isrou 'hag.
+        nusah == "edot" && CalendrierJuif.C.FIN_TICHRI in conditions -> conditions -
+            setOf(CalendrierJuif.C.TAHANOUN_CHAHARIT, CalendrierJuif.C.TAHANOUN_MINHA, CalendrierJuif.C.LUNDI_JEUDI)
+        else -> conditions
+    }
 
     /**
      * Le libellé d'un ajout, un jour donné : celui de l'annotation s'il en a un ;

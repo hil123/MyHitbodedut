@@ -21,12 +21,13 @@ export function libelle(condition) {
 
 /**
  * Les conditions du jour, ajustées au nusah (SiddurJour.conditionsPour) :
- * beaucoup d'Ashkénazes ne disent pas Morid hatal hors d'Israël.
+ * pas de Morid hatal ashkénaze hors d'Israël, pas de Ta'hanoun Edot en fin de Tichri.
  */
 export function conditionsPour(nusah, enIsrael, conditions) {
-  if (nusah !== 'ashkenaz' || enIsrael) return conditions;
   const c = new Set(conditions);
-  c.delete('morid_hatal');
+  if (nusah === 'ashkenaz' && !enIsrael) c.delete('morid_hatal');
+  // Edot : pas de Ta'hanoun du lendemain de Kippour jusqu'au 2 'Hechvan.
+  if (nusah === 'edot' && c.has('fin_tichri')) for (const k of ['tahanoun_chaharit', 'tahanoun_minha', 'lundi_jeudi']) c.delete(k);
   return c;
 }
 

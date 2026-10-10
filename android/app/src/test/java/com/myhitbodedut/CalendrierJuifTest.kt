@@ -105,6 +105,30 @@ class CalendrierJuifTest {
     }
 
     @Test
+    fun `veille de roch hachana - pas de tahanoun le matin, ta'hanoun la veille a min'ha`() {
+        // 29 Eloul 5786 = 11/09/2026 (Choul'han Aroukh, OC 581:3).
+        listOf(true, false).forEach { israel ->
+            val erev = CalendrierJuif.jour(LocalDate.parse("2026-09-11"), israel).conditions
+            assertFalse(C.TAHANOUN_CHAHARIT in erev || C.TAHANOUN_MINHA in erev)
+            assertTrue(C.TAHANOUN_MINHA in CalendrierJuif.jour(LocalDate.parse("2026-09-10"), israel).conditions)
+        }
+    }
+
+    @Test
+    fun `fin de tichri - ta'hanoun selon le nusah`() {
+        // 25 Tichri 5787 = lundi 05/10/2026.
+        val c = CalendrierJuif.jour(LocalDate.parse("2026-10-05"), true).conditions
+        assertTrue(C.FIN_TICHRI in c && C.TAHANOUN_CHAHARIT in c)
+        assertFalse(C.TAHANOUN_CHAHARIT in SiddurJour.conditionsPour("edot", true, c))
+        assertFalse(C.LUNDI_JEUDI in SiddurJour.conditionsPour("edot", true, c))
+        assertTrue(C.TAHANOUN_CHAHARIT in SiddurJour.conditionsPour("ashkenaz", true, c))
+        assertTrue(C.TAHANOUN_CHAHARIT in SiddurJour.conditionsPour("sefard", false, c))
+        // 3 'Hechvan (13/10/2026) : de nouveau Ta'hanoun pour tous.
+        val apres = CalendrierJuif.jour(LocalDate.parse("2026-10-13"), true).conditions
+        assertTrue(C.TAHANOUN_CHAHARIT in SiddurJour.conditionsPour("edot", true, apres))
+    }
+
+    @Test
     fun `jerusalem - pourim et al hanissim le 15 adar`() {
         // 14 Adar II 5787 = 23/03/2027, 15 Adar II = 24/03/2027.
         val c14 = CalendrierJuif.jour(LocalDate.parse("2027-03-23"), true, mukafChoma = true).conditions
