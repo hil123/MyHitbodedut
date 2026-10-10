@@ -42,12 +42,22 @@
             android:minHeight="150dp"
             android:padding="14dp">
 
+            <!-- maxHeight ne joue qu'à la première mesure, celle où le
+                 ScrollView demande à la page sa hauteur naturelle : sans lui,
+                 adjustViewBounds y donnait au portrait sa pleine hauteur en
+                 pleine largeur, la page dépassait l'écran, fillViewport ne
+                 pouvait plus rien répartir, et sur un téléphone haut
+                 (1080×2340, vidéo du 07/10) le bouton « Suivant » passait sous
+                 le bord. Plafonnée là, l'illustration laisse la page tenir ;
+                 la seconde mesure, exacte, l'étire ensuite sur toute la place
+                 libre. -->
             <ImageView
                 android:id="@+id/onboarding_art"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:adjustViewBounds="true"
                 android:contentDescription="@null"
+                android:maxHeight="150dp"
                 android:scaleType="fitCenter" />
         </FrameLayout>
 
