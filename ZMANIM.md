@@ -78,10 +78,10 @@ change, sur la carte du jour et dans le siddour :
 
 | Point | Edot hamizra'h | Sfard | Ashkenaz | Sources |
 | --- | --- | --- | --- | --- |
-| Bénédiction du Hallel partiel (Roch 'Hodech, fin de Pessa'h) | sans bénédiction | avec | avec | Choul'han Aroukh et Rema, OC 422:2, résumés sur [OU Torah](https://outorah.org/p/211828) et [Kol Torah](https://www.koltorah.org/halachah/chatzi-hallel-by-rabbi-chaim-jachter) |
-| Morid hatal l'été | dit | dit | **hors d'Israël, pas dit** (dit en Israël) | [yeshiva.co, question 6293](https://www.yeshiva.co/ask/6293), [yeshiva.co 47759](https://yeshiva.co/midrash/47759) |
-| Anénou de l'officiant (répétition) | Cha'harit et Min'ha | idem | idem | Choul'han Aroukh, OC 565:3, résumé sur [Etzion](https://etzion.org.il/en/node/26258) |
-| Anénou du particulier (Chomea téfila) | Cha'harit et Min'ha ; à Tich'a bèAv, Arvit aussi | Min'ha seulement | Min'ha seulement | Choul'han Aroukh et Rema, OC 565:3 ([Etzion](https://etzion.org.il/en/node/26258)) ; Tich'a bèAv : Peninei Halakha ([yeshiva.co 48403](https://www.yeshiva.co/midrash/48403)) |
+| Bénédiction du Hallel partiel (Roch 'Hodech, fin de Pessa'h) | sans bénédiction, même en communauté | avec | avec | OC 422:2 : « שאף הצבור אין מברך עליו … וכן נוהגי' בכל מלכות ארץ ישראל » ; Rema : « דגם יחיד מברך עליו … וכן נוהגין במדינות אלו » |
+| Morid hatal l'été | dit | dit | **hors d'Israël, pas dit** (dit en Israël) | Rema, OC 114:3 : « ואנו בני אשכנז לא מזכירין טל » ; en Israël : [yeshiva.co, question 6293](https://www.yeshiva.co/ask/6293) |
+| Anénou de l'officiant (répétition) | Cha'harit et Min'ha | idem | idem | OC 565:3 : « שליח ציבור אומרו גם בתפלת שחרית » |
+| Anénou du particulier (Chomea téfila) | Cha'harit et Min'ha ; à Tich'a bèAv, Arvit aussi | Min'ha seulement | Min'ha seulement | OC 565:3 : « ובארבע צומות גם היחיד אומרו בכל תפלותיו » ; Rema : « ונהגו בכל הצומות שלא לאומרו כי אם במנחה » ; Tich'a bèAv : Peninei Halakha ([yeshiva.co 48403](https://www.yeshiva.co/midrash/48403)) |
 
 Limites déclarées :
 
@@ -98,8 +98,15 @@ Limites déclarées :
   Le siddour Edot porte lui-même un Anénou d'Arvit « בתשעה באב », annoté
   pour ce seul jour.
 
-Les références au Choul'han Aroukh viennent de sources secondaires
-concordantes.
+Le texte du Choul'han Aroukh (OC 114:3, 422:2, 565:3, 697:1) a été relu
+dans l'édition de Lemberg (1893). Les coutumes actuelles (Edot à
+Cha'harit et Min'ha, Morid hatal des Ashkénazes en Israël) reposent sur des
+sources secondaires.
+
+Point ouvert : le Me'haber limite « dans toutes ses prières » aux quatre
+jeûnes ; le jeûne d'Esther n'en est pas. Aucune source consultée ne décrit
+une coutume séfarade différente ce jour-là : l'application y montre la même
+règle qu'aux autres jeûnes. À valider par un Rav.
 
 **Les coutumes de Ta'hanoun** sont les réglages par défaut de `TefilaRules`,
 les mêmes pour les trois noussa'him. Par exemple : Ta'hanoun le vendredi et
@@ -195,11 +202,9 @@ conditions. Vecteurs dans `web/test/vecteurs_kosherjava.json`, produits par
   Hebcal marque lui-même « selon les communautés » ;
 - **un vrai désaccord : le 15 Adar I** (Chouchan Pourim katan).
   KosherJava ne dit pas Ta'hanoun, Hebcal le fait dire partout. Le
-  Choul'han Aroukh, OC 697:1, l'exclut les 14 et 15 Adar I, d'après deux
-  sources secondaires concordantes ([Etzion](https://etzion.org.il/en/holidays/purim/adar-alef-and-holiday-purim)
-  cite le Me'haber ; le Michna Beroura est résumé sur [OU Torah](https://outorah.org/p/229903)).
-  Le résultat de
-  KosherJava, moteur retenu, est gardé.
+  Choul'han Aroukh l'exclut
+  (OC 697:1, « יום י״ד וט״ו שבאדר ראשון אין נופלין על פניהם »). Le
+  résultat de KosherJava, moteur retenu, est gardé.
 
 L'accord de deux moteurs ne prouve pas l'exactitude : ils partagent
 l'algorithme solaire de la NOAA. C'est pourquoi l'astronomie est vérifiée

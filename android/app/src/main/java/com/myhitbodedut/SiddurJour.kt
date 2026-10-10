@@ -140,9 +140,9 @@ object SiddurJour {
 
     /**
      * Les conditions du jour, ajustées au nusah (demande du 10/10, « attention
-     * aux différences ») : beaucoup d'Ashkénazes ne disent pas Morid hatal hors
-     * d'Israël, quand le nusah Sfard et les Séfarades le disent. Sources
-     * secondaires concordantes, à valider (ZMANIM.md, « Différences de nusah »).
+     * aux différences ») : les Ashkénazes ne disent pas Morid hatal hors
+     * d'Israël (Rema, OC 114:3), quand le nusah Sfard et les Séfarades le
+     * disent. À valider (ZMANIM.md, « Différences de noussa'h »).
      */
     fun conditionsPour(nusah: String, enIsrael: Boolean, conditions: Set<String>): Set<String> =
         if (nusah == "ashkenaz" && !enIsrael) conditions - CalendrierJuif.C.MORID_HATAL else conditions

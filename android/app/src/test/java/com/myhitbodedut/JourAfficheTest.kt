@@ -56,7 +56,7 @@ class JourAfficheTest {
     @Test
     fun `le nusah - hallel partiel, morid hatal, anenou`() {
         val rc = CalendrierJuif.jour(LocalDate.parse("2026-10-12"), false).conditions
-        // Bénédiction du Hallel partiel : sans pour le particulier (Choul'han
+        // Bénédiction du Hallel partiel : sans, même en communauté (Choul'han
         // Aroukh, OC 422:2, Edot), avec (Rema, Ashkenaz et Sfard).
         assertTrue("ajout_hallel_partiel_sans_berakha" in JourAffiche.ajouts(rc, "edot"))
         assertTrue("ajout_hallel_partiel_avec_berakha" in JourAffiche.ajouts(rc, "sefard"))

@@ -626,7 +626,7 @@
     <string name="zman_methode_niveau_mer">בגובה פני הים</string>
     <string name="zman_methode_mga_72">היום מ־%1$s דקות לפני הנץ עד %1$s דקות אחרי השקיעה</string>
     <string name="zman_methode_gra">שעות זמניות מהנץ עד השקיעה</string>
-    <string name="zman_methode_meridien">מעבר השמש בקו האורך</string>
+    <string name="zman_methode_meridien">מעבר השמש במרידיאן</string>
     <string name="zman_methode_minutes">%1$s דקות אחרי השקיעה</string>
     <string name="zman_methode_milieu_chatsot">אמצע בין חצות היום לחצות של מחר</string>
     <string name="zman_methode_avant_chkia">%1$s דקות לפני השקיעה</string>
@@ -651,10 +651,10 @@
     <string name="ajout_hallel_annonce">הלל</string>
     <string name="ajout_anenou_officiant">עננו של שליח הציבור (חזרת הש״ץ)</string>
     <string name="ajout_anenou_particulier">עננו של היחיד (שומע תפלה)</string>
-    <string name="ajout_anenou_particulier_matin_minha">עננו ליחיד, בשחרית ובמנחה</string>
-    <string name="ajout_anenou_particulier_trois">עננו ליחיד, בערבית, בשחרית ובמנחה</string>
-    <string name="ajout_anenou_particulier_minha">עננו ליחיד, במנחה בלבד</string>
-    <string name="ajout_hallel_partiel_sans_berakha">הלל בדילוג, בלי ברכה ליחיד</string>
+    <string name="ajout_anenou_particulier_matin_minha">עננו של היחיד, בשחרית ובמנחה</string>
+    <string name="ajout_anenou_particulier_trois">עננו של היחיד, בערבית, בשחרית ובמנחה</string>
+    <string name="ajout_anenou_particulier_minha">עננו של היחיד, במנחה בלבד</string>
+    <string name="ajout_hallel_partiel_sans_berakha">הלל בדילוג, בלי ברכה</string>
     <string name="ajout_hallel_partiel_avec_berakha">הלל בדילוג, בברכה</string>
     <string name="zmanim_omer_ce_soir">ספירת העומר הלילה: %1$d</string>
     <string name="ajout_omer">ספירת העומר</string>

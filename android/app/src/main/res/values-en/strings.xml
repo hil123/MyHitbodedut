@@ -641,7 +641,7 @@
     <string name="ajout_anenou_particulier_matin_minha">Aneinu of the individual, at Shacharit and Mincha</string>
     <string name="ajout_anenou_particulier_trois">Aneinu of the individual, at Maariv, Shacharit and Mincha</string>
     <string name="ajout_anenou_particulier_minha">Aneinu of the individual, at Mincha only</string>
-    <string name="ajout_hallel_partiel_sans_berakha">Partial Hallel, no blessing for an individual</string>
+    <string name="ajout_hallel_partiel_sans_berakha">Partial Hallel, without a blessing</string>
     <string name="ajout_hallel_partiel_avec_berakha">Partial Hallel, with a blessing</string>
     <string name="zmanim_omer_ce_soir">Omer tonight: day %1$d</string>
     <string name="ajout_omer">Counting the Omer</string>
