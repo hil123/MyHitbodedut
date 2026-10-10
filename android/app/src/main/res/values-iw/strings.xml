@@ -601,6 +601,9 @@
     <string name="calendrier_precedent">החודש הקודם</string>
     <string name="calendrier_suivant">החודש הבא</string>
     <string name="calendrier_aujourdhui">היום</string>
+    <string name="calendrier_vue">תצוגת הלוח</string>
+    <string name="calendrier_vue_hebreu">עברי</string>
+    <string name="calendrier_vue_civil">לועזי</string>
     <string name="reglage_lieu">מקום לזמנים</string>
     <string name="reglage_lieu_aucun">לא נבחר</string>
     <string name="reglage_allumage">הדלקת נרות</string>

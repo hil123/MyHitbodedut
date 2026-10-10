@@ -588,6 +588,9 @@
     <string name="calendrier_precedent">Previous month</string>
     <string name="calendrier_suivant">Next month</string>
     <string name="calendrier_aujourdhui">Today</string>
+    <string name="calendrier_vue">Calendar view</string>
+    <string name="calendrier_vue_hebreu">Hebrew</string>
+    <string name="calendrier_vue_civil">Gregorian</string>
     <string name="reglage_lieu">Zmanim location</string>
     <string name="reglage_lieu_aucun">None</string>
     <string name="reglage_allumage">Candle lighting</string>

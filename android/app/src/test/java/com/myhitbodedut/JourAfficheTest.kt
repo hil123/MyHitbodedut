@@ -92,6 +92,23 @@ class JourAfficheTest {
         assertEquals(5, s.size)
     }
 
+    /** Bornes relevées dans le calendrier hébreu d'ICU et dans Hebcal (10/10/2026). */
+    @Test
+    fun `le mois de Tichri 5787 et ses voisins, Adar I et Adar II compris`() {
+        val d = LocalDate.parse("2026-10-10")
+        val t = JourAffiche.joursMoisHebreu(d)
+        assertEquals(30, t.size)
+        assertEquals(LocalDate.parse("2026-09-12"), t.first())
+        assertEquals(LocalDate.parse("2026-10-11"), t.last())
+        assertEquals(LocalDate.parse("2026-09-12"), JourAffiche.semainesHebreu(d)[0][6])
+        assertEquals(LocalDate.parse("2026-10-12"), JourAffiche.moisHebreuVoisin(d, 1))
+        assertEquals(LocalDate.parse("2026-08-14"), JourAffiche.moisHebreuVoisin(d, -1))
+        assertEquals(LocalDate.parse("2027-02-08"), JourAffiche.moisHebreuVoisin(LocalDate.parse("2027-01-15"), 1))
+        assertEquals(LocalDate.parse("2027-03-10"), JourAffiche.moisHebreuVoisin(LocalDate.parse("2027-02-08"), 1))
+        assertEquals(LocalDate.parse("2027-04-08"), JourAffiche.moisHebreuVoisin(LocalDate.parse("2027-03-10"), 1))
+        assertEquals(LocalDate.parse("2027-02-08"), JourAffiche.moisHebreuVoisin(LocalDate.parse("2027-03-10"), -1))
+    }
+
     @Test
     fun `le siddour suit les zmanim du lieu`() {
         val jer = Zmanim.Lieu("Jérusalem", 31.76904, 35.21633, 0.0, "Asia/Jerusalem")

@@ -634,6 +634,9 @@
     <string name="calendrier_precedent">Mois précédent</string>
     <string name="calendrier_suivant">Mois suivant</string>
     <string name="calendrier_aujourdhui">Aujourd’hui</string>
+    <string name="calendrier_vue">Vue du calendrier</string>
+    <string name="calendrier_vue_hebreu">Hébraïque</string>
+    <string name="calendrier_vue_civil">Grégorien</string>
     <string name="reglage_lieu">Lieu des zmanim</string>
     <string name="reglage_lieu_aucun">Aucun</string>
     <string name="reglage_allumage">Allumage des bougies</string>

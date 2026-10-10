@@ -112,10 +112,31 @@ object JourAffiche {
      * Les semaines d'un mois civil, du dimanche au samedi comme le calendrier
      * juif ; null hors du mois.
      */
-    fun semaines(mois: YearMonth): List<List<LocalDate?>> {
-        val premier = mois.atDay(1)
-        val decalage = premier.dayOfWeek.value % 7 // dimanche = 0
-        val cases = List(decalage) { null } + (1..mois.lengthOfMonth()).map { mois.atDay(it) }
+    fun semaines(mois: YearMonth): List<List<LocalDate?>> = grille((1..mois.lengthOfMonth()).map { mois.atDay(it) })
+
+    /** Le premier jour (1er) du mois hébreu qui contient [date]. Le mois ne dépend pas du lieu. */
+    fun debutMoisHebreu(date: LocalDate): LocalDate =
+        date.minusDays((CalendrierJuif.jour(date, false).jourHebreu - 1).toLong())
+
+    /** Les 29 ou 30 jours du mois hébreu qui contient [date]. */
+    fun joursMoisHebreu(date: LocalDate): List<LocalDate> {
+        val debut = debutMoisHebreu(date)
+        val mois = CalendrierJuif.jour(debut, false).moisHebreu
+        return generateSequence(debut) { it.plusDays(1) }
+            .takeWhile { CalendrierJuif.jour(it, false).moisHebreu == mois }.toList()
+    }
+
+    /** Les semaines du mois hébreu qui contient [date], du dimanche au samedi ; null hors du mois. */
+    fun semainesHebreu(date: LocalDate): List<List<LocalDate?>> = grille(joursMoisHebreu(date))
+
+    /** Le 1er du mois hébreu suivant ([sens] = 1) ou précédent ([sens] = -1). */
+    fun moisHebreuVoisin(date: LocalDate, sens: Int): LocalDate =
+        if (sens > 0) joursMoisHebreu(date).last().plusDays(1)
+        else debutMoisHebreu(debutMoisHebreu(date).minusDays(1))
+
+    private fun grille(jours: List<LocalDate>): List<List<LocalDate?>> {
+        val decalage = jours.first().dayOfWeek.value % 7 // dimanche = 0
+        val cases = List(decalage) { null } + jours
         return cases.chunked(7).map { it + List(7 - it.size) { null } }
     }
 }

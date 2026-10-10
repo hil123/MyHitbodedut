@@ -19,26 +19,32 @@ import java.util.Locale
 
 /**
  * Le calendrier (demande du 10/10) : un mois, du dimanche au samedi, chaque
- * case avec le quantième civil et le quantième hébreu ; Chabbat et fêtes
- * teintés, les fêtes marquées d'un point. Le jour touché montre sa carte et
- * ses horaires sous la grille. La grille vient de JourAffiche.semaines.
+ * case avec le quantième hébreu et le quantième civil ; Chabbat et fêtes
+ * teintés, les fêtes marquées d'un point. Le mois hébreu est la vue
+ * principale, le mois civil au choix (Store.calendrierCivil) ; le quantième
+ * principal est en haut de la case. Le jour touché montre sa carte et ses
+ * horaires sous la grille. Les grilles viennent de JourAffiche.
  */
 class CalendrierActivity : AppCompatActivity() {
 
     private val choixLieu = ChoixLieu(this) { afficher() }
     private var mois: YearMonth = YearMonth.now()
     private var choisi: LocalDate = LocalDate.now()
+    /** Le 1er du mois hébreu affiché ; null : celui du jour choisi. */
+    private var moisHebreu: LocalDate? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_calendrier)
         savedInstanceState?.getString(ETAT_JOUR)?.let { choisi = LocalDate.parse(it); mois = YearMonth.from(choisi) }
+        savedInstanceState?.getString(ETAT_MOIS_HEBREU)?.let { moisHebreu = LocalDate.parse(it) }
         afficher()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putString(ETAT_JOUR, choisi.toString())
+        moisHebreu?.let { outState.putString(ETAT_MOIS_HEBREU, it.toString()) }
     }
 
     private fun afficher() {
@@ -51,30 +57,63 @@ class CalendrierActivity : AppCompatActivity() {
         contenu.removeAllViews()
 
         val carte = VueJour.carte(this)
-        val semaines = JourAffiche.semaines(mois)
+        val civil = Store.calendrierCivil(this)
+        val debutHebreu = moisHebreu ?: JourAffiche.debutMoisHebreu(choisi)
+        val semaines = if (civil) JourAffiche.semaines(mois) else JourAffiche.semainesHebreu(debutHebreu)
         val jours = semaines.flatten().filterNotNull()
-        val premier = CalendrierJuif.jour(jours.first(), israel).moisEtAnnee
-        val dernier = CalendrierJuif.jour(jours.last(), israel).moisEtAnnee
 
-        // L'en-tête : mois précédent, le mois civil et ses mois hébreux, mois suivant.
+        // La vue : le mois hébreu, ou le mois civil.
+        carte.addView(LinearLayout(this).apply {
+            orientation = LinearLayout.HORIZONTAL
+            layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+                .apply { gravity = Gravity.CENTER_HORIZONTAL; bottomMargin = dp(8) }
+            setPadding(dp(3), dp(3), dp(3), dp(3))
+            background = GradientDrawable().apply {
+                cornerRadius = dp(999).toFloat()
+                setColor(ColorUtils.setAlphaComponent(Apparence.couleur(context, R.color.brand), 0x17))
+            }
+            contentDescription = getString(R.string.calendrier_vue)
+            addView(choixVue(R.string.calendrier_vue_hebreu, !civil) { basculer(false) })
+            addView(choixVue(R.string.calendrier_vue_civil, civil) { basculer(true) })
+        })
+
+        // L'en-tête : mois précédent, le mois principal et l'autre calendrier, mois suivant.
+        val (titre, sousTitre) = if (civil) {
+            val premier = CalendrierJuif.jour(jours.first(), israel).moisEtAnnee
+            val dernier = CalendrierJuif.jour(jours.last(), israel).moisEtAnnee
+            mois.format(DateTimeFormatter.ofPattern("LLLL yyyy", locale)) to
+                (if (premier == dernier) premier else "$premier – $dernier")
+        } else {
+            val d0 = jours.first()
+            val d1 = jours.last()
+            val debutCivil = d0.format(DateTimeFormatter.ofPattern(if (d0.year == d1.year) "LLLL" else "LLLL yyyy", locale))
+            CalendrierJuif.jour(debutHebreu, israel).moisEtAnnee to
+                "$debutCivil – ${d1.format(DateTimeFormatter.ofPattern("LLLL yyyy", locale))}"
+        }
         val tete = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL; gravity = Gravity.CENTER_VERTICAL }
-        tete.addView(fleche(if (rtl) "›" else "‹", R.string.calendrier_precedent) { mois = mois.minusMonths(1); afficher() })
+        tete.addView(fleche(if (rtl) "›" else "‹", R.string.calendrier_precedent) { decaler(civil, debutHebreu, -1) })
         tete.addView(LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
             layoutParams = LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f)
-            addView(VueJour.texte(this@CalendrierActivity, mois.format(DateTimeFormatter.ofPattern("LLLL yyyy", locale)), 17f,
-                R.color.ink, gras = true).apply { gravity = Gravity.CENTER })
-            addView(VueJour.texte(this@CalendrierActivity, if (premier == dernier) premier else "$premier – $dernier", 15f,
-                R.color.brand).apply { gravity = Gravity.CENTER; PoliceHebraique.appliquer(this) })
+            addView(VueJour.texte(this@CalendrierActivity, titre, if (civil) 17f else 20f, R.color.ink, gras = true).apply {
+                gravity = Gravity.CENTER
+                if (!civil) PoliceHebraique.appliquer(this)
+            })
+            addView(VueJour.texte(this@CalendrierActivity, sousTitre, 15f, R.color.brand).apply {
+                gravity = Gravity.CENTER
+                if (civil) PoliceHebraique.appliquer(this)
+            })
         })
-        tete.addView(fleche(if (rtl) "‹" else "›", R.string.calendrier_suivant) { mois = mois.plusMonths(1); afficher() })
+        tete.addView(fleche(if (rtl) "‹" else "›", R.string.calendrier_suivant) { decaler(civil, debutHebreu, 1) })
         carte.addView(tete)
 
         // Les initiales, du dimanche au samedi.
         carte.addView(rangee().apply {
             (0 until 7).forEach { i ->
                 val jour = DayOfWeek.SUNDAY.plus(i.toLong())
-                addView(case().apply {
+                addView(TextView(this@CalendrierActivity).apply {
+                    gravity = Gravity.CENTER
+                    layoutParams = LinearLayout.LayoutParams(0, dp(24), 1f).apply { marginStart = dp(2); marginEnd = dp(2) }
                     text = jour.getDisplayName(TextStyle.NARROW, locale)
                     textSize = 12f
                     setTextColor(Apparence.couleur(context, R.color.muted))
@@ -89,10 +128,27 @@ class CalendrierActivity : AppCompatActivity() {
                         if (d == null) return@apply
                         val j = CalendrierJuif.jour(d, israel, Store.mukafChoma(this@CalendrierActivity))
                         val point = if (j.fetes.isNotEmpty()) " •" else ""
-                        text = "${d.dayOfMonth}$point\n${j.jourEnLettres}"
-                        textSize = 14f
-                        setTextColor(Apparence.couleur(context, if (d == aujourdhui) R.color.brand else R.color.ink))
-                        if (d == aujourdhui) setTypeface(typeface, Typeface.BOLD)
+                        // Le 1er d'un mois civil porte le nom du mois, pour qu'on lise où il bascule.
+                        val quantieme = if (!civil && d.dayOfMonth == 1)
+                            "1 " + d.format(DateTimeFormatter.ofPattern("LLL", locale)) else d.dayOfMonth.toString()
+                        val haut = TextView(context).apply {
+                            text = (if (civil) quantieme else j.jourEnLettres) + point
+                            textSize = if (civil) 15f else 17f
+                            gravity = Gravity.CENTER
+                            setTextColor(Apparence.couleur(context, if (d == aujourdhui) R.color.brand else R.color.ink))
+                            if (d == aujourdhui) setTypeface(typeface, Typeface.BOLD)
+                            if (!civil) PoliceHebraique.appliquer(this)
+                        }
+                        val bas = TextView(context).apply {
+                            text = if (civil) j.jourEnLettres else quantieme
+                            textSize = 11f
+                            gravity = Gravity.CENTER
+                            maxLines = 1
+                            setTextColor(Apparence.couleur(context, R.color.muted))
+                            if (civil) PoliceHebraique.appliquer(this)
+                        }
+                        addView(haut)
+                        addView(bas)
                         background = GradientDrawable().apply {
                             cornerRadius = dp(10).toFloat()
                             setColor(if (j.chome) ColorUtils.setAlphaComponent(brand, 0x1A) else 0)
@@ -108,7 +164,7 @@ class CalendrierActivity : AppCompatActivity() {
         carte.addView(VueJour.texte(this, getString(R.string.calendrier_aujourdhui), 15f, R.color.brand, gras = true, haut = 10).apply {
             gravity = Gravity.CENTER
             setPadding(0, dp(6), 0, dp(6))
-            setOnClickListener { choisi = aujourdhui; mois = YearMonth.from(aujourdhui); afficher() }
+            setOnClickListener { choisi = aujourdhui; mois = YearMonth.from(aujourdhui); moisHebreu = null; afficher() }
         })
         contenu.addView(carte)
         contenu.addView(VueJour.carteJour(this, choisi, israel))
@@ -122,10 +178,35 @@ class CalendrierActivity : AppCompatActivity() {
             .apply { topMargin = dp(4) }
     }
 
-    private fun case() = TextView(this).apply {
+    private fun case() = LinearLayout(this).apply {
+        orientation = LinearLayout.VERTICAL
         gravity = Gravity.CENTER
-        layoutParams = LinearLayout.LayoutParams(0, dp(48), 1f).apply { marginStart = dp(2); marginEnd = dp(2) }
-        setLineSpacing(0f, 0.95f)
+        layoutParams = LinearLayout.LayoutParams(0, dp(52), 1f).apply { marginStart = dp(2); marginEnd = dp(2) }
+    }
+
+    private fun choixVue(texte: Int, actif: Boolean, action: () -> Unit) = TextView(this).apply {
+        setText(texte)
+        textSize = 14f
+        setPadding(dp(16), dp(6), dp(16), dp(6))
+        setTextColor(Apparence.couleur(context, if (actif) R.color.on_brand else R.color.brand))
+        if (actif) {
+            setTypeface(typeface, Typeface.BOLD)
+            background = GradientDrawable().apply { cornerRadius = dp(999).toFloat(); setColor(Apparence.couleur(context, R.color.brand)) }
+        }
+        isSelected = actif
+        setOnClickListener { action() }
+    }
+
+    private fun basculer(civil: Boolean) {
+        Store.setCalendrierCivil(this, civil)
+        mois = YearMonth.from(choisi)
+        moisHebreu = null
+        afficher()
+    }
+
+    private fun decaler(civil: Boolean, debutHebreu: LocalDate, sens: Int) {
+        if (civil) mois = mois.plusMonths(sens.toLong()) else moisHebreu = JourAffiche.moisHebreuVoisin(debutHebreu, sens)
+        afficher()
     }
 
     private fun fleche(signe: String, description: Int, action: () -> Unit) = TextView(this).apply {
@@ -142,5 +223,6 @@ class CalendrierActivity : AppCompatActivity() {
 
     private companion object {
         const val ETAT_JOUR = "jour"
+        const val ETAT_MOIS_HEBREU = "mois_hebreu"
     }
 }

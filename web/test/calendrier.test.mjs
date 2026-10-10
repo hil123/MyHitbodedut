@@ -254,6 +254,28 @@ test('JourAffiche : allumage, sortie, ajouts nommés et grille, comme Android', 
   assert.equal(s.flat().filter(Boolean).length, 31);
 });
 
+// Le calendrier hébraïque en vue principale (10/10) : chaque mois, contre Hebcal.
+test('calendrier : les mois hébreux de 2026 à 2028, bornes et longueurs comme Hebcal', async () => {
+  const A = await import('../src/js/jour-affiche.js');
+  const iso = (d) => d.toISOString().slice(0, 10);
+  for (let d = new Date(Date.UTC(2026, 0, 1, 12)); d < new Date(Date.UTC(2029, 0, 1)); d.setUTCDate(d.getUTCDate() + 1)) {
+    const hd = new HDate(new Date(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()));
+    const debut = new HDate(1, hd.getMonth(), hd.getFullYear()).greg();
+    const attendu = `${debut.getFullYear()}-${String(debut.getMonth() + 1).padStart(2, '0')}-${String(debut.getDate()).padStart(2, '0')}`;
+    assert.equal(A.debutMoisHebreu(iso(d)), attendu, iso(d));
+    if (hd.getDate() === 1) assert.equal(A.joursMoisHebreu(iso(d)).length, hd.daysInMonth(), iso(d));
+  }
+  const t = A.semainesHebreu('2026-10-10');
+  assert.deepEqual(t[0], [null, null, null, null, null, null, '2026-09-12']);
+  assert.equal(t.flat().filter(Boolean).length, 30);
+  assert.equal(A.moisHebreuVoisin('2026-10-10', 1), '2026-10-12');
+  assert.equal(A.moisHebreuVoisin('2026-10-10', -1), '2026-08-14');
+  // 5787 est embolismique : Chevat, Adar I, Adar II, Nissan.
+  assert.equal(A.moisHebreuVoisin('2027-01-15', 1), '2027-02-08');
+  assert.equal(A.moisHebreuVoisin('2027-02-08', 1), '2027-03-10');
+  assert.equal(A.moisHebreuVoisin('2027-03-10', 1), '2027-04-08');
+});
+
 // --- 6. L'algorithme de la NOAA ---------------------------------------------------------
 test('zmanim : l’algorithme de la NOAA, à deux secondes près de ses formules', () => {
   assert.equal(Z.calculateur(LIEUX[1], '2026-10-10'), 'US National Oceanic and Atmospheric Administration Algorithm');

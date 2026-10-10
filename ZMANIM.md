@@ -199,6 +199,13 @@ ICU (`Intl`), qui concordent ; cas de Roch 'Hodech, 'Hanouka, des deux dates
 de Tal oumatar (Israël, diaspora, année avant une bissextile civile), des
 jeûnes, du lundi et du jeudi, de l'omer, de Pourim.
 
+**Grille du mois hébreu** (`JourAfficheTest`, `web/test/calendrier.test.mjs`).
+L'écran Calendrier s'ouvre sur le mois hébreu (demande du 10/10/2026) ; le
+mois civil est un choix mémorisé, et chaque case porte toujours les deux
+quantièmes, le principal en haut. Le 1er et la longueur de chaque mois hébreu
+de 2026 à 2028 concordent avec Hebcal, jour par jour ; Tichri 5787 et la
+suite Chevat, Adar I, Adar II, Nissan de 5787 sont relevés aussi dans ICU.
+
 **Fidélité du web à Android** (`web/test/calendrier.test.mjs`). Chaque jour
 du 01/09/2025 au 31/12/2030, en Israël et en diaspora, le web rend
 exactement la réponse de KosherJava : date, fêtes, omer, paracha,

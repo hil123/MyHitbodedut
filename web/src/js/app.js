@@ -11,7 +11,7 @@ import { creeStore, memoire } from './store.js';
 import { isoLocal } from './calendrier.js';
 import { JERUSALEM_GEONAMES, jour as jourJuif, jourDeLaPriere } from './calendrier-juif.js';
 import { conditionsPour, index as indexAjouts, libelleJour, vrai as ajoutVrai } from './siddur-jour.js';
-import { ajouts as ajoutsDuJour, horaires, momentDuSiddour, semaines } from './jour-affiche.js';
+import { ajouts as ajoutsDuJour, debutMoisHebreu, horaires, momentDuSiddour, moisHebreuVoisin, semaines, semainesHebreu } from './jour-affiche.js';
 import { ALLUMAGES, heure as heureZman } from './zmanim.js';
 
 // --- Stockage ---------------------------------------------------------------
@@ -1204,6 +1204,8 @@ function chargeVilles() {
 }
 let jourCalendrier = null;
 let moisCalendrier = null;
+/** Le 1er du mois hébreu affiché, en vue hébraïque ; null : celui du jour choisi. */
+let moisHebreuCalendrier = null;
 
 /** « 16.1 » → « 16,1 » en français : les paramètres des méthodes, à la locale. */
 const parametre = (p) => (p !== '' && !Number.isNaN(Number(p)) ? Number(p).toLocaleString(tr.langue) : p);
@@ -1317,41 +1319,75 @@ function ecranZmanim() {
       ...piedZmanim())));
 }
 
-/** Le calendrier : un mois, du dimanche au samedi ; un jour touché montre son détail. */
+/**
+ * Le calendrier : un mois, du dimanche au samedi ; un jour touché montre son détail.
+ * Le mois hébreu est la vue principale, le mois civil au choix ; chaque case porte
+ * toujours les deux quantièmes, le principal en haut.
+ */
 function ecranCalendrier() {
   const aujourdhui = isoLocal(new Date());
   const choisi = jourCalendrier ?? aujourdhui;
-  const [a, m] = moisCalendrier ?? choisi.split('-').map(Number);
-  const grille = semaines(a, m);
-  const jours = grille.flat().filter(Boolean);
-  const premier = jourJuif(jours[0], store.inIsrael());
-  const dernier = jourJuif(jours.at(-1), store.inIsrael());
-  const hebreu = premier.moisEtAnnee === dernier.moisEtAnnee ? premier.moisEtAnnee : `${premier.moisEtAnnee} – ${dernier.moisEtAnnee}`;
-  const titre = new Intl.DateTimeFormat(tr.langue, { month: 'long', year: 'numeric', timeZone: 'UTC' }).format(new Date(Date.UTC(a, m - 1, 15)));
-  const decale = (n) => { const d = new Date(Date.UTC(a, m - 1 + n, 1)); moisCalendrier = [d.getUTCFullYear(), d.getUTCMonth() + 1]; rendre(); };
+  const civil = store.calendrierCivil();
+  const israel = store.inIsrael();
+  const moisCourt = new Intl.DateTimeFormat(tr.langue, { month: 'short', timeZone: 'UTC' });
+  const date = (iso) => new Date(`${iso}T12:00:00Z`);
+  let grille;
+  let titre;
+  let sousTitre;
+  let decale;
+  if (civil) {
+    const [a, m] = moisCalendrier ?? choisi.split('-').map(Number);
+    grille = semaines(a, m);
+    const jours = grille.flat().filter(Boolean);
+    const premier = jourJuif(jours[0], israel);
+    const dernier = jourJuif(jours.at(-1), israel);
+    titre = h('p', { class: 'mois-principal' }, new Intl.DateTimeFormat(tr.langue, { month: 'long', year: 'numeric', timeZone: 'UTC' }).format(new Date(Date.UTC(a, m - 1, 15))));
+    sousTitre = h('p', { class: 'mois-second mois-hebreu', lang: 'he', dir: 'rtl' },
+      premier.moisEtAnnee === dernier.moisEtAnnee ? premier.moisEtAnnee : `${premier.moisEtAnnee} – ${dernier.moisEtAnnee}`);
+    decale = (n) => { const d = new Date(Date.UTC(a, m - 1 + n, 1)); moisCalendrier = [d.getUTCFullYear(), d.getUTCMonth() + 1]; rendre(); };
+  } else {
+    const debut = moisHebreuCalendrier ?? debutMoisHebreu(choisi);
+    grille = semainesHebreu(debut);
+    const jours = grille.flat().filter(Boolean);
+    const [d0, d1] = [date(jours[0]), date(jours.at(-1))];
+    const memeAnnee = d0.getUTCFullYear() === d1.getUTCFullYear();
+    const mois = (d, an) => new Intl.DateTimeFormat(tr.langue, { month: 'long', ...(an ? { year: 'numeric' } : {}), timeZone: 'UTC' }).format(d);
+    titre = h('p', { class: 'mois-principal mois-hebreu', lang: 'he', dir: 'rtl' }, jourJuif(debut, israel).moisEtAnnee);
+    sousTitre = h('p', { class: 'mois-second' }, `${mois(d0, !memeAnnee)} – ${mois(d1, true)}`);
+    decale = (n) => { moisHebreuCalendrier = moisHebreuVoisin(debut, n); rendre(); };
+  }
+  const bascule = (versCivil) => { store.setCalendrierCivil(versCivil); moisCalendrier = null; moisHebreuCalendrier = null; rendre(); };
   // Les initiales des jours, du dimanche (4/10/2026) au samedi.
   const initiales = Array.from({ length: 7 }, (_, i) => new Intl.DateTimeFormat(tr.langue, { weekday: 'narrow', timeZone: 'UTC' })
     .format(new Date(Date.UTC(2026, 9, 4 + i, 12))));
   return h('div', { class: 'ecran' }, barre(tr.t('calendrier_title')),
     h('div', { class: 'defile' }, h('div', { class: 'contenu' },
       h('div', { class: 'carte carte-calendrier' },
+        h('div', { class: 'vue-calendrier', role: 'group', 'aria-label': tr.t('calendrier_vue') },
+          h('button', { class: civil ? '' : 'actif', 'aria-pressed': String(!civil), onclick: () => bascule(false) }, tr.t('calendrier_vue_hebreu')),
+          h('button', { class: civil ? 'actif' : '', 'aria-pressed': String(civil), onclick: () => bascule(true) }, tr.t('calendrier_vue_civil'))),
         h('div', { class: 'mois-tete' },
           h('button', { class: 'icone-bouton mois-precedent', 'aria-label': tr.t('calendrier_precedent'), onclick: () => decale(-1) }, tr.rtl ? '›' : '‹'),
-          h('div', { class: 'mois-titres' }, h('p', { class: 'mois-civil' }, titre), h('p', { class: 'mois-hebreu', lang: 'he', dir: 'rtl' }, hebreu)),
+          h('div', { class: 'mois-titres' }, titre, sousTitre),
           h('button', { class: 'icone-bouton mois-suivant', 'aria-label': tr.t('calendrier_suivant'), onclick: () => decale(1) }, tr.rtl ? '‹' : '›')),
         h('div', { class: 'grille-jours', role: 'grid' },
           initiales.map((x) => h('span', { class: 'jour-initiale', 'aria-hidden': 'true' }, x)),
           grille.flat().map((d) => {
             if (!d) return h('span', { class: 'case vide' });
-            const j = jourJuif(d, store.inIsrael(), mukafChoma());
+            const j = jourJuif(d, israel, mukafChoma());
+            const quantieme = Number(d.slice(8));
+            // Le 1er d'un mois civil porte le nom du mois, pour qu'on lise où il bascule.
+            const civilTexte = !civil && quantieme === 1 ? `1 ${moisCourt.format(date(d))}` : String(quantieme);
+            const hebreu = h('span', { class: civil ? 'case-bas case-hebreu' : 'case-haut case-hebreu', lang: 'he', dir: 'rtl' }, j.jourEnLettres);
+            const civ = h('span', { class: civil ? 'case-haut case-civil' : 'case-bas case-civil' }, civilTexte);
             return h('button', {
               class: ['case', d === aujourdhui ? 'aujourdhui' : '', d === choisi ? 'choisi' : '', j.chome ? 'chome' : '', j.fetes.length ? 'fete' : ''].filter(Boolean).join(' '),
               'aria-pressed': String(d === choisi),
               'aria-label': `${d} · ${j.dateHebraique}${j.fetes.length ? ` · ${j.fetes.map((f) => tr.t(`fete_${f}`)).join(', ')}` : ''}`,
-              onclick: () => { jourCalendrier = d; moisCalendrier = [a, m]; rendre(); },
-            }, h('span', { class: 'case-civil' }, String(Number(d.slice(8)))), h('span', { class: 'case-hebreu', lang: 'he', dir: 'rtl' }, j.jourEnLettres));
+              onclick: () => { jourCalendrier = d; rendre(); },
+            }, ...(civil ? [civ, hebreu] : [hebreu, civ]));
           })),
-        h('button', { class: 'lien-aujourdhui', onclick: () => { jourCalendrier = aujourdhui; moisCalendrier = null; rendre(); } }, tr.t('calendrier_aujourdhui'))),
+        h('button', { class: 'lien-aujourdhui', onclick: () => { jourCalendrier = aujourdhui; moisCalendrier = null; moisHebreuCalendrier = null; rendre(); } }, tr.t('calendrier_aujourdhui'))),
       carteJour(choisi),
       listeZmanim(choisi),
       ...piedZmanim())));

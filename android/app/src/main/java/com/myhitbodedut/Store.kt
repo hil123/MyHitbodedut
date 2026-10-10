@@ -80,6 +80,7 @@ object Store {
     private const val KEY_ANNEAUX_FETES = "anneaux_fetes"
     private const val KEY_SIDDUR_NUSAH = "siddur_nusah"
     private const val KEY_TAHANOUN_TICHRI_SFARD = "sans_tahanoun_fin_tichri_sfard"
+    private const val KEY_CALENDRIER_CIVIL = "calendrier_civil"
     private const val KEY_LECTURE_ECHELLE = "lecture_echelle"
     private const val KEY_LECTURE_SOMBRE = "lecture_sombre"
     private const val KEY_LECTURE_MASQUEE = "lecture_masquee"
@@ -373,6 +374,13 @@ object Store {
 
     fun setSansTahanounFinTichriSfard(context: Context, sans: Boolean) {
         prefs(context).edit().putBoolean(KEY_TAHANOUN_TICHRI_SFARD, sans).apply()
+    }
+
+    /** Le calendrier s'ouvre sur le mois hébreu ; le mois civil est au choix. */
+    fun calendrierCivil(context: Context): Boolean = prefs(context).getBoolean(KEY_CALENDRIER_CIVIL, false)
+
+    fun setCalendrierCivil(context: Context, civil: Boolean) {
+        prefs(context).edit().putBoolean(KEY_CALENDRIER_CIVIL, civil).apply()
     }
 
     fun pausedDates(context: Context): Set<String> =

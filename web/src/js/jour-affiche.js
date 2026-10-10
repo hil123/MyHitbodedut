@@ -89,10 +89,44 @@ export function momentDuSiddour(lieu, maintenant) {
 
 /** Les semaines d'un mois civil (mois 1-12), du dimanche au samedi ; null hors du mois. */
 export function semaines(annee, mois) {
-  const p = (n) => String(n).padStart(2, '0');
-  const decalage = new Date(Date.UTC(annee, mois - 1, 1)).getUTCDay();
   const longueur = new Date(Date.UTC(annee, mois, 0)).getUTCDate();
-  const cases = [...Array(decalage).fill(null), ...Array.from({ length: longueur }, (_, i) => `${annee}-${p(mois)}-${p(i + 1)}`)];
+  const p = (n) => String(n).padStart(2, '0');
+  return grille(Array.from({ length: longueur }, (_, i) => `${annee}-${p(mois)}-${p(i + 1)}`));
+}
+
+const decaleIso = (iso, n) => {
+  const d = new Date(`${iso}T12:00:00Z`);
+  d.setUTCDate(d.getUTCDate() + n);
+  return d.toISOString().slice(0, 10);
+};
+
+/** Le premier jour (1er) du mois hébreu qui contient iso. Le mois ne dépend pas du lieu. */
+export function debutMoisHebreu(iso) {
+  return decaleIso(iso, -(jour(iso, false).jourHebreu - 1));
+}
+
+/** Les 29 ou 30 jours du mois hébreu qui contient iso. */
+export function joursMoisHebreu(iso) {
+  const debut = debutMoisHebreu(iso);
+  const mois = jour(debut, false).moisHebreu;
+  const jours = [debut];
+  for (let d = decaleIso(debut, 1); jour(d, false).moisHebreu === mois; d = decaleIso(d, 1)) jours.push(d);
+  return jours;
+}
+
+/** Les semaines du mois hébreu qui contient iso, du dimanche au samedi ; null hors du mois. */
+export function semainesHebreu(iso) {
+  return grille(joursMoisHebreu(iso));
+}
+
+/** Le 1er du mois hébreu suivant (sens = 1) ou précédent (sens = -1). */
+export function moisHebreuVoisin(iso, sens) {
+  return sens > 0 ? decaleIso(joursMoisHebreu(iso).at(-1), 1) : debutMoisHebreu(decaleIso(debutMoisHebreu(iso), -1));
+}
+
+function grille(jours) {
+  const decalage = new Date(`${jours[0]}T12:00:00Z`).getUTCDay();
+  const cases = [...Array(decalage).fill(null), ...jours];
   const s = [];
   for (let i = 0; i < cases.length; i += 7) {
     const l = cases.slice(i, i + 7);
