@@ -500,13 +500,16 @@ def main():
         capture("18d-calendrier", ok=ok2)
         defiler(True)
         capture("18e-calendrier-jour", ok=ok2)
-        ouvrir_siddour()
-        capture("18f-siddour-pour-cette-heure")
-        ok3 = ouvrir_priere()
-        for i in range(6):
+        # Le calendrier reste au-dessus de l'accueil : on en sort avant d'ouvrir le siddour.
+        retour(2)
+        ok4 = ouvrir_siddour()
+        capture("18f-siddour-pour-cette-heure", ok=ok4)
+        # Le soir de la CI (heure de Paris), c'est Arvit qui porte les ajouts du jour.
+        ok3 = toucher(text="Arvit", defilements=3, attente=3.0) or activite("SiddurLectureActivity", "--es id arvit")
+        for i in range(12):
             defiler(True)
         capture("18g-priere-ajouts", ok=ok3)
-        for i in range(3):
+        for i in range(4):
             defiler(True)
         capture("18h-priere-ajouts-suite", ok=ok3)
     etape("18 zmanim, calendrier, ajouts", s18)
