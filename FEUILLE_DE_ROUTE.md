@@ -720,3 +720,24 @@ texte (pour Likoutei Tefilot II 39 : le livre imprimé du propriétaire, qui a
 confirmé le texte). Détail dans chizuk.json,
 _meta.verification.ajouts_2026_09_28. Le moment « relance » passe de 7 à 16
 textes.
+
+## Mise à jour (10/10) : la bande de signets du siddour
+
+**Demande du propriétaire, d'après la capture d'une autre application** : une
+bande de marque-pages en haut de la lecture, pratique mais discrète. Un
+signet par section titrée (פתיחת אליהו, ציצית, תפילין…), de droite à gauche
+comme le texte ; on touche, on y est ; la section qu'on lit se marque
+d'elle-même d'une pastille pâle, et la bande la garde en vue. La bande est du
+ton de la page (fond noir en lecture de nuit), en petits caractères, avec un
+trait fin dessous : 34 px de haut sur le web. Un texte d'une seule section
+(Acher yatsar, Kaddich…) n'en a pas.
+
+Une règle tranche le cas des sections courtes de fin (עלינו) : elles ne
+montent jamais jusqu'en haut de l'écran, donc tout en bas de la page c'est
+la dernière section commencée à l'écran qui se marque, et un signet touché
+reste marqué tant que le doigt ne reprend pas la page. La règle est la même
+sur Android et sur le web (`SignetsSiddur`, `Siddur.kt` et `regles.js`),
+avec les mêmes cas de test.
+
+Pas de marque-page personnel (« reprendre où j'en étais ») : non demandé. Il
+se grefferait sur la même bande si on le veut.

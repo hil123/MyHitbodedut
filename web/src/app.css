@@ -11,7 +11,7 @@
    SIL Open Font License 1.1 (polices/OFL-NotoSerifHebrew.txt). */
 @font-face { font-family: "Hebreu Serif"; font-weight: 400; font-display: swap; src: url(polices/hebreu_serif_regular.woff2) format("woff2"); }
 @font-face { font-family: "Hebreu Serif"; font-weight: 700; font-display: swap; src: url(polices/hebreu_serif_bold.woff2) format("woff2"); }
-.chizuk-he, .lecture .psaume, .lecture .psaume-titre, .siddour .priere, .siddour .consigne, .nom-he { font-family: "Hebreu Serif", "Noto Serif Hebrew", "Times New Roman", serif; }
+.chizuk-he, .lecture .psaume, .lecture .psaume-titre, .siddour .priere, .siddour .consigne, .nom-he, .signet { font-family: "Hebreu Serif", "Noto Serif Hebrew", "Times New Roman", serif; }
 
 * { box-sizing: border-box; }
 
@@ -542,6 +542,22 @@ input[type="range"] { width: 100%; accent-color: var(--brand); }
 }
 
 /* --- La lecture de nuit : fond noir, lettres claires ------------------------------------ */
+/* La bande de signets du siddour (10/10) : discrète, du ton de la page, un
+   trait fin dessous ; seule la section en cours se marque d'une pastille pâle. */
+.signets {
+  position: relative; flex: none; display: flex; gap: 2px; overflow-x: auto; padding: 3px 8px;
+  background: var(--paper); border-bottom: 1px solid color-mix(in srgb, var(--muted) 25%, transparent);
+  scrollbar-width: none; -webkit-overflow-scrolling: touch;
+}
+.signets::-webkit-scrollbar { display: none; }
+.signet {
+  flex: none; margin: 0; padding: 4px 10px; border: 0; border-radius: 999px; background: none;
+  color: var(--muted); font-size: 14px; line-height: 1.4; white-space: nowrap; cursor: pointer;
+}
+.signet[aria-current="true"] { color: var(--brand); background: color-mix(in srgb, var(--brand) 14%, transparent); }
+.ecran.lu.nuit .signets { background: var(--lecture-nuit-fond, #000); border-bottom-color: color-mix(in srgb, var(--lecture-nuit-discret, #A3A8A5) 25%, transparent); }
+.ecran.lu.nuit .signet { color: var(--lecture-nuit-discret, #A3A8A5); }
+.ecran.lu.nuit .signet[aria-current="true"] { color: var(--lecture-nuit-titre, #D6C28C); background: color-mix(in srgb, var(--lecture-nuit-titre, #D6C28C) 15%, transparent); }
 .ecran.lu.nuit { background: var(--lecture-nuit-fond, #000); color: var(--lecture-nuit-texte, #F2F0EA); }
 .ecran.lu.nuit .barre h1 { color: var(--lecture-nuit-texte, #F2F0EA); }
 .ecran.lu.nuit .lecture .verset, .ecran.lu.nuit .siddour .priere { color: var(--lecture-nuit-texte, #F2F0EA); }

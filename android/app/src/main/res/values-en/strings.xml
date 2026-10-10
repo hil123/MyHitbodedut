@@ -561,6 +561,7 @@
     <string name="lecture_plus">Larger letters</string>
     <string name="lecture_moins">Smaller letters</string>
     <string name="siddur_choose">Nusah</string>
+    <string name="siddur_signets">Sections</string>
     <string name="siddur_nusah_edot">Sephardi (Edot HaMizrah)</string>
     <string name="siddur_nusah_sefard">Sfard (Arizal)</string>
     <string name="siddur_nusah_ashkenaz">Ashkenaz</string>

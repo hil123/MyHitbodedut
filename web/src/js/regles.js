@@ -278,6 +278,23 @@ export const SiddurMoment = {
   },
 };
 
+// --- SignetsSiddur (Siddur.kt) ---------------------------------------------------
+// La bande de signets en tête de la lecture (10/10). Les débuts et les bornes
+// sont des positions croissantes : lignes de liste sur Android, pixels ici.
+export const SignetsSiddur = {
+  /**
+   * L'indice du signet de la section qu'on lit : la dernière commencée à
+   * la première ligne visible ; tout en bas, à la dernière ligne visible, sans
+   * quoi une section courte de fin ne serait jamais marquée.
+   */
+  courant(debuts, premiere, derniere, enBas) {
+    const borne = enBas ? derniere : premiere;
+    let i = -1;
+    debuts.forEach((d, k) => { if (d <= borne) i = k; });
+    return Math.max(i, 0);
+  },
+};
+
 // --- LibraryRules (LibraryRules.kt) ---------------------------------------------
 // Une « source » est du domaine public : ses paragraphes s'affichent. La
 // vocalisation d'une édition dont la licence n'est pas déclarée est un

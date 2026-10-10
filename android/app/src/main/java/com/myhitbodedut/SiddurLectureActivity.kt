@@ -2,12 +2,18 @@ package com.myhitbodedut
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.text.Html
+import android.util.TypedValue
 import android.view.View
 import android.view.ViewGroup
+import android.widget.HorizontalScrollView
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import androidx.core.graphics.ColorUtils
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
@@ -19,6 +25,10 @@ import androidx.recyclerview.widget.RecyclerView
  * liste recyclée plutôt qu'une vue par paragraphe. Le bouton de lecture
  * (ReglagesLecture) règle la taille, la lecture de nuit et le nusah ; le
  * texte se redessine sur place, au paragraphe où l'on était.
+ *
+ * En tête, une bande de signets (demande du 10/10) : une section par
+ * signet ; on touche, on y est ; la section en cours se marque d'elle-même
+ * pendant la lecture (SignetsSiddur).
  */
 class SiddurLectureActivity : AppCompatActivity() {
 
@@ -30,12 +40,27 @@ class SiddurLectureActivity : AppCompatActivity() {
     private lateinit var id: String
     private lateinit var liste: RecyclerView
 
+    /** Les lignes où commencent les sections titrées : un signet chacune. */
+    private var debuts: List<Int> = emptyList()
+
+    /** Le signet touché : il reste marqué tant que le doigt ne reprend pas la page. */
+    private var choisi: Int? = null
+    private var actif = -1
+    private var renduBande: ReglagesLecture.Rendu? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_siddur_lecture)
         id = intent.getStringExtra(ID).orEmpty()
         liste = findViewById<RecyclerView>(R.id.siddur_lecture_list).apply {
             layoutManager = LinearLayoutManager(this@SiddurLectureActivity)
+            addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                    if (newState == RecyclerView.SCROLL_STATE_DRAGGING) choisi = null
+                }
+
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) = suivre()
+            })
         }
         ReglagesLecture.installer(this, liste, avecNusah = true) {
             // Même nusah : on garde sa place ; un autre nusah n'a pas les mêmes paragraphes.
@@ -76,6 +101,77 @@ class SiddurLectureActivity : AppCompatActivity() {
         liste.setBackgroundColor(rendu.fond)
         liste.adapter = Adaptateur(lignes, rendu)
         if (garderPlace && place in lignes.indices) gestion.scrollToPositionWithOffset(place, decalage)
+        debuts = lignes.indices.filter { lignes[it] is Ligne.Titre }
+        bande(lignes, rendu)
+        liste.post { suivre() }
+    }
+
+    /** La bande de signets, rebâtie avec le texte : un autre nusah, la nuit, une autre taille. */
+    private fun bande(lignes: List<Ligne>, rendu: ReglagesLecture.Rendu) {
+        val defile = findViewById<HorizontalScrollView>(R.id.siddur_lecture_signets_defile)
+        val trait = findViewById<View>(R.id.siddur_lecture_signets_trait)
+        val rang = findViewById<LinearLayout>(R.id.siddur_lecture_signets)
+        rang.removeAllViews()
+        actif = -1
+        choisi = null
+        renduBande = rendu
+        val presente = debuts.size > 1
+        defile.visibility = if (presente) View.VISIBLE else View.GONE
+        trait.visibility = defile.visibility
+        if (!presente) return
+        defile.setBackgroundColor(rendu.fond)
+        defile.contentDescription = getString(R.string.siddur_signets)
+        trait.setBackgroundColor(ColorUtils.setAlphaComponent(rendu.discret, 0x40))
+        val ondulation = TypedValue().also {
+            theme.resolveAttribute(android.R.attr.selectableItemBackgroundBorderless, it, true)
+        }.resourceId
+        debuts.forEachIndexed { i, position ->
+            rang.addView(TextView(this).apply {
+                text = (lignes[position] as Ligne.Titre).texte
+                textSize = 13f
+                setPadding(dp(10), dp(4), dp(10), dp(4))
+                setTextColor(rendu.discret)
+                PoliceHebraique.appliquer(this)
+                foreground = ContextCompat.getDrawable(context, ondulation)
+                setOnClickListener {
+                    choisi = i
+                    liste.stopScroll()
+                    (liste.layoutManager as LinearLayoutManager).scrollToPositionWithOffset(position, 0)
+                    marquer(i)
+                }
+            })
+        }
+    }
+
+    /** Marque le signet de la section qu'on lit. */
+    private fun suivre() {
+        if (debuts.size < 2) return
+        val gestion = liste.layoutManager as LinearLayoutManager
+        val premiere = gestion.findFirstVisibleItemPosition()
+        if (premiere == RecyclerView.NO_POSITION) return
+        marquer(choisi ?: SignetsSiddur.courant(
+            debuts, premiere, gestion.findLastVisibleItemPosition(), !liste.canScrollVertically(1),
+        ))
+    }
+
+    /** Une pastille pâle sous le signet en cours, rien sous les autres ; la bande le garde en vue. */
+    private fun marquer(i: Int) {
+        val rendu = renduBande ?: return
+        if (i == actif) return
+        actif = i
+        val rang = findViewById<LinearLayout>(R.id.siddur_lecture_signets)
+        for (k in 0 until rang.childCount) (rang.getChildAt(k) as TextView).apply {
+            val oui = k == i
+            isSelected = oui
+            setTextColor(if (oui) rendu.titre else rendu.discret)
+            background = if (oui) GradientDrawable().apply {
+                cornerRadius = dp(999).toFloat()
+                setColor(ColorUtils.setAlphaComponent(rendu.titre, 0x26))
+            } else null
+        }
+        val defile = findViewById<HorizontalScrollView>(R.id.siddur_lecture_signets_defile)
+        val vue = rang.getChildAt(i) ?: return
+        defile.post { defile.smoothScrollTo(vue.left - (defile.width - vue.width) / 2, 0) }
     }
 
     private inner class Adaptateur(

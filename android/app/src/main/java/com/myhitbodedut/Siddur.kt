@@ -88,6 +88,26 @@ object SiddurLoader {
 }
 
 /**
+ * La bande de signets en tête de la lecture (demande du 10/10) : une
+ * section par signet, et celle où l'on lit d'après ce qui est à l'écran.
+ * Les débuts et les bornes sont des positions croissantes, lignes de la
+ * liste côté Android, pixels côté web : la même règle sert aux deux.
+ */
+object SignetsSiddur {
+
+    /**
+     * L'indice du signet de la section en cours. En haut de la page : la
+     * dernière section commencée à la première ligne visible. Tout en bas, où
+     * la page ne peut plus monter, une section courte n'atteindrait jamais
+     * le haut : c'est alors la dernière commencée à l'écran qui compte.
+     */
+    fun courant(debuts: List<Int>, premiere: Int, derniere: Int, enBas: Boolean): Int {
+        val borne = if (enBas) derniere else premiere
+        return debuts.indexOfLast { it <= borne }.coerceAtLeast(0)
+    }
+}
+
+/**
  * Le texte que l'heure suggère, en tête de la liste du siddour : une
  * indication d'après l'horloge, non un horaire de zmanim. Les heures sont
  * larges exprès ; la liste entière reste juste en dessous.

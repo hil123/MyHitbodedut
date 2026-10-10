@@ -7,7 +7,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { Anneaux, CycleTehilim, DureeSeance, JaugeSemaine, LibraryRules, Plaque, Reference, RegleLangue, Salutation, SiddurMoment } from '../src/js/regles.js';
+import { Anneaux, CycleTehilim, DureeSeance, JaugeSemaine, LibraryRules, Plaque, Reference, RegleLangue, Salutation, SiddurMoment, SignetsSiddur } from '../src/js/regles.js';
 import { estJourChome, israelParDefaut } from '../src/js/calendrier.js';
 import { creeStore, dateValide, memoire } from '../src/js/store.js';
 import { creeTraduction, formate, langueInitiale } from '../src/js/i18n.js';
@@ -438,6 +438,18 @@ test('le cycle de la semaine va du dimanche au Shabbat', () => {
   CycleTehilim.SEMAINE.slice(1).forEach((p, i) => assert.equal(p.debut, CycleTehilim.SEMAINE[i].fin + 1));
   assert.deepEqual(CycleTehilim.versets(CycleTehilim.portion(119, 119, 97, 176), 119, 176).length, 80);
   assert.deepEqual(CycleTehilim.versets(CycleTehilim.portion(1, 9), 1, 6), [1, 2, 3, 4, 5, 6]);
+});
+
+// --- SignetsSiddur (SiddurTest) ------------------------------------------------------
+test('le signet suit la section qu’on lit, comme sur Android', () => {
+  const debuts = [0, 11, 14, 40];
+  assert.equal(SignetsSiddur.courant(debuts, 0, 6, false), 0);
+  assert.equal(SignetsSiddur.courant(debuts, 10, 13, false), 0);
+  assert.equal(SignetsSiddur.courant(debuts, 11, 16, false), 1);
+  assert.equal(SignetsSiddur.courant(debuts, 39, 45, false), 2);
+  assert.equal(SignetsSiddur.courant(debuts, 40, 45, false), 3);
+  assert.equal(SignetsSiddur.courant(debuts, 35, 45, true), 3);
+  assert.equal(SignetsSiddur.courant([3, 9], 1, 4, false), 0);
 });
 
 // --- SiddurMoment (SiddurMomentTest) -----------------------------------------------

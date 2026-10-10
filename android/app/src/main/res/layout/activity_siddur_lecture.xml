@@ -55,6 +55,36 @@
         </FrameLayout>
     </LinearLayout>
 
+    <!-- La bande de signets : une section par signet, de droite à gauche comme
+         le texte. Discrète exprès : petite, du ton de la page, un trait fin
+         dessous ; seule la section en cours se marque. Absente d'un texte
+         d'une seule section. -->
+    <HorizontalScrollView
+        android:id="@+id/siddur_lecture_signets_defile"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fillViewport="true"
+        android:layoutDirection="rtl"
+        android:overScrollMode="never"
+        android:scrollbars="none"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:id="@+id/siddur_lecture_signets"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layoutDirection="rtl"
+            android:orientation="horizontal"
+            android:paddingHorizontal="8dp"
+            android:paddingVertical="3dp" />
+    </HorizontalScrollView>
+
+    <View
+        android:id="@+id/siddur_lecture_signets_trait"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:visibility="gone" />
+
     <!-- Le texte ; le bouton de lecture (ReglagesLecture) se pose par-dessus tout l'écran. -->
     <FrameLayout
         android:id="@+id/siddur_lecture_cadre"

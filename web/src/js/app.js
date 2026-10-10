@@ -4,7 +4,7 @@
 // n'existe pas encore est montré, mais inerte (classe « a-venir »).
 
 import { chargeTraduction, formate, langueInitiale, LANGUES } from './i18n.js';
-import { Anneaux, CycleTehilim, DureeSeance, JaugeSemaine, LibraryRules, Plaque, Reference, Salutation, SiddurMoment } from './regles.js';
+import { Anneaux, CycleTehilim, DureeSeance, JaugeSemaine, LibraryRules, Plaque, Reference, Salutation, SiddurMoment, SignetsSiddur } from './regles.js';
 import { ART_DU_MOMENT, ChizukBag, ChizukRules } from './chizuk.js';
 import { DanseMesure } from './seance.js';
 import { creeStore, memoire } from './store.js';
@@ -750,7 +750,7 @@ function appuiLongPourRamener(zone) {
  * Un écran de lecture de texte saint : le texte à la taille choisie, de
  * nuit si demandé, et le bouton de lecture au-dessus du pied d'écran.
  */
-function ecranLu(titre, contenu, { avecNusah = false, pied = null } = {}) {
+function ecranLu(titre, contenu, { avecNusah = false, pied = null, bande = null } = {}) {
   const defile = h('div', { class: 'defile' }, contenu);
   const ctrl = reglagesLecture({ avecNusah });
   let avant = 0;
@@ -768,6 +768,7 @@ function ecranLu(titre, contenu, { avecNusah = false, pied = null } = {}) {
   appuiLongPourRamener(defile);
   return h('div', { class: `ecran lu${store.lectureSombre() ? ' nuit' : ''}`, style: `--echelle: ${store.lectureEchelle()}` },
     barre(titre),
+    bande,
     h('div', { class: `lu-zone${pied ? '' : ' sans-pied'}` }, defile, ctrl),
     pied);
 }
@@ -897,12 +898,66 @@ function ecranPriere() {
   if (!x) return ecranSiddur();
   const plusieurs = x.sections.length > 1;
   const sousTitre = [titreTexte(x.titre) !== x.titre.he ? titreTexte(x.titre) : null, titreTexte(x.nusah ?? siddur._meta.nusah)].filter(Boolean).join(' · ');
-  return ecranLu(x.titre.he, h('div', { class: 'contenu lecture siddour' },
+  const titres = [];
+  const contenu = h('div', { class: 'contenu lecture siddour' },
     h('p', { class: 'indice' }, sousTitre),
-    ...x.sections.flatMap((s) => [
-      plusieurs && s.titre ? h('h2', { class: 'psaume-titre', lang: 'he', dir: 'rtl' }, s.titre) : null,
-      ...s.blocs.map((b) => h('p', { class: b.c !== undefined ? 'consigne' : 'priere', lang: 'he', dir: 'rtl' }, riche(b.c ?? b.t))),
-    ])), { avecNusah: true });
+    ...x.sections.flatMap((s) => {
+      const t = plusieurs && s.titre ? h('h2', { class: 'psaume-titre', lang: 'he', dir: 'rtl' }, s.titre) : null;
+      if (t) titres.push({ titre: s.titre, el: t });
+      return [t, ...s.blocs.map((b) => h('p', { class: b.c !== undefined ? 'consigne' : 'priere', lang: 'he', dir: 'rtl' }, riche(b.c ?? b.t)))];
+    }));
+  const bande = titres.length > 1 ? bandeSignets(titres) : null;
+  const ecran = ecranLu(x.titre.he, contenu, { avecNusah: true, bande: bande?.nav });
+  bande?.suivre(ecran.querySelector('.defile'));
+  return ecran;
+}
+
+/**
+ * La bande de signets en tête de la lecture (demande du 10/10, comme
+ * SiddurLectureActivity) : une section par signet ; on touche, on y est ; la
+ * section qu'on lit se marque d'elle-même (SignetsSiddur). Le signet touché
+ * reste marqué tant que le doigt ne reprend pas la page : une section courte
+ * de fin ne monte jamais jusqu'en haut.
+ */
+function bandeSignets(titres) {
+  let defile = null;
+  let choisi = null;
+  let actif = -1;
+  // Position d'un titre dans le texte qui défile, quel que soit le défilement.
+  const position = (el) => el.getBoundingClientRect().top - defile.getBoundingClientRect().top + defile.scrollTop;
+  const signets = titres.map(({ titre, el }, i) => h('button', {
+    type: 'button', class: 'signet', lang: 'he',
+    onclick: () => { choisi = i; defile.scrollTop = position(el) - 6; marque(i); },
+  }, titre));
+  const nav = h('nav', { class: 'signets', dir: 'rtl', 'aria-label': tr.t('siddur_signets') }, signets);
+
+  function marque(i) {
+    if (i === actif) return;
+    actif = i;
+    signets.forEach((b, k) => b.setAttribute('aria-current', k === i ? 'true' : 'false'));
+    // Le signet en cours reste en vue, au milieu de la bande. offsetLeft et
+    // scrollLeft se comptent du même bord, en RTL comme en LTR.
+    const b = signets[i];
+    nav.scrollTo({ left: b.offsetLeft - (nav.clientWidth - b.offsetWidth) / 2, behavior: 'smooth' });
+  }
+
+  function suit() {
+    if (!defile || !defile.isConnected) return;
+    if (choisi !== null) { marque(choisi); return; }
+    const haut = defile.scrollTop;
+    const bas = haut + defile.clientHeight;
+    marque(SignetsSiddur.courant(titres.map(({ el }) => position(el)), haut + 12, bas - 1, bas >= defile.scrollHeight - 4));
+  }
+
+  return {
+    nav,
+    suivre(d) {
+      defile = d;
+      defile.addEventListener('scroll', suit, { passive: true });
+      for (const geste of ['touchstart', 'wheel', 'keydown']) defile.addEventListener(geste, () => { choisi = null; }, { passive: true });
+      requestAnimationFrame(suit);
+    },
+  };
 }
 
 // --- Le Tikoun lu d'un seul trait (TikkunFlowActivity.kt) -------------------------
