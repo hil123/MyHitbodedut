@@ -339,7 +339,8 @@ class MainActivity : AppCompatActivity() {
         findViewById<TextView>(R.id.status_title).apply {
             val titre = prenom.isBlank()
             textSize = if (titre) 24f else 15f
-            setTypeface(null, if (titre) Typeface.BOLD else Typeface.NORMAL)
+            // Titre : la police système en gras ; ligne d'état : Varela Round, comme sous le titre.
+            typeface = if (titre) Typeface.DEFAULT_BOLD else androidx.core.content.res.ResourcesCompat.getFont(this@MainActivity, R.font.varela_round)
             setTextColor(Apparence.couleur(this@MainActivity, if (titre) R.color.ink else R.color.muted))
         }
     }

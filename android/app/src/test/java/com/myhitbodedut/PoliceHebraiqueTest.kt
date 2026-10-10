@@ -24,6 +24,18 @@ class PoliceHebraiqueTest {
     }
 
     @Test
+    fun `les lignes d'etat de l'accueil sont en Varela Round, livree avec sa licence`() {
+        val f = File("src/main/res/font/varela_round.ttf")
+        assertTrue(f.isFile && f.length() > 100_000)
+        assertTrue(lire("assets/licences/OFL-VarelaRound.txt").contains("SIL Open Font License"))
+        val accueil = lire("res/layout/activity_main.xml")
+        listOf("status_title", "status_streak", "status_separator", "status_total", "today_detail").forEach { id ->
+            val bloc = accueil.substringAfter("@+id/$id\"").substringBefore("/>")
+            assertTrue("$id sans Varela Round", bloc.contains("@font/varela_round"))
+        }
+    }
+
+    @Test
     fun `chaque ecran de texte saint pose la police`() {
         listOf(
             "TehilimLectureActivity.kt", "TikkunFlowActivity.kt", "PsalmActivity.kt",

@@ -10,7 +10,10 @@
 /* La police des textes saints en hébreu (res/font/hebreu_serif.xml) : Noto Serif Hebrew,
    SIL Open Font License 1.1 (polices/OFL-NotoSerifHebrew.txt). */
 @font-face { font-family: "Hebreu Serif"; font-weight: 400; font-display: swap; src: url(polices/hebreu_serif_regular.woff2) format("woff2"); }
+/* Les lignes d'état de l'accueil (10/10) : Varela Round, fichier d'origine, OFL (polices/OFL-VarelaRound.txt). */
+@font-face { font-family: "Varela Round"; font-weight: 400; font-display: swap; src: url(polices/varela_round.ttf) format("truetype"); }
 @font-face { font-family: "Hebreu Serif"; font-weight: 700; font-display: swap; src: url(polices/hebreu_serif_bold.woff2) format("woff2"); }
+.statut:not(.titre), .serie, .detail { font-family: "Varela Round", system-ui, sans-serif; }
 .chizuk-he, .lecture .psaume, .lecture .psaume-titre, .siddour .priere, .siddour .consigne, .nom-he, .signet { font-family: "Hebreu Serif", "Noto Serif Hebrew", "Times New Roman", serif; }
 
 * { box-sizing: border-box; }
