@@ -211,6 +211,8 @@ class CalendrierActivity : AppCompatActivity() {
 
     private fun fleche(signe: String, description: Int, action: () -> Unit) = TextView(this).apply {
         text = signe
+        // Sens fixé : sinon le bidi refléterait « ‹ › » en RTL, en plus du choix fait plus haut.
+        textDirection = View.TEXT_DIRECTION_LTR
         textSize = 26f
         gravity = Gravity.CENTER
         setTextColor(Apparence.couleur(context, R.color.brand))
