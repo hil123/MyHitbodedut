@@ -1,0 +1,9 @@
+Safari 26.6.2 (macOS)
+accueil-fr : 68 éléments, lang=fr, dir=ltr, « Pas de hitbodedout attendue aujourd’hui »
+accueil-he : 69 éléments, lang=he, dir=rtl, « היום לא נדרשת התבודדות »
+accueil-en-sombre : 68 éléments, lang=en, dir=ltr, « No hitbodedut expected today »
+musique-he : 183 éléments, lang=he, dir=rtl, « מוזיקה »
+ordinateur : fenêtre 1280×748, onglets sur le côté, bouton jusqu'à 479
+couche : fenêtre 844×338, onglets sur le côté, bouton jusqu'à 151
+Calendrier hébraïque de Safari : juste
+Musique (niggoun_01) : {"duree":203.04979591836735,"refus":"NotAllowedError","joue":false}
