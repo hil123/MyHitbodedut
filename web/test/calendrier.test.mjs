@@ -227,6 +227,9 @@ test('JourAffiche : allumage, sortie, ajouts nommés et grille, comme Android', 
   // Jérusalem : Pourim et Al hanissim le 15 Adar II 5787 (24/03/2027).
   assert.ok(!jour('2027-03-23', true, true).conditions.has('al_hanissim'));
   assert.ok(jour('2027-03-24', true, true).conditions.has('pourim'));
+  assert.deepEqual(jour('2027-03-23', true, true).fetes, ['pourim_ailleurs']);
+  assert.deepEqual(jour('2027-03-24', true, true).fetes, ['pourim_jerusalem']);
+  assert.deepEqual(jour('2027-03-23', true).fetes, ['pourim']);
   assert.ok(jour('2027-03-23', true).conditions.has('al_hanissim'));
   assert.ok(!jour('2027-03-24', true).conditions.has('al_hanissim'));
   const chaines = readFileSync(join(ICI, '..', '..', 'android', 'app', 'src', 'main', 'res', 'values', 'strings.xml'), 'utf8');

@@ -688,6 +688,8 @@
     <string name="fete_jeune_esther">תענית אסתר</string>
     <string name="fete_pourim">פורים</string>
     <string name="fete_chouchan_pourim">שושן פורים</string>
+    <string name="fete_pourim_ailleurs">פורים (מחוץ לירושלים)</string>
+    <string name="fete_pourim_jerusalem">פורים בירושלים (שושן פורים)</string>
     <string name="fete_pourim_katan">פורים קטן</string>
     <string name="fete_roch_hodech">ראש חודש</string>
     <string name="fete_yom_hachoah">יום השואה</string>

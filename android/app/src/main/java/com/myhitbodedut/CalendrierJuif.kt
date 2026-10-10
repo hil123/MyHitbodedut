@@ -133,6 +133,9 @@ object CalendrierJuif {
     /** Jérusalem, ville murée depuis Josué : Pourim y est le 15 Adar (Chouchan Pourim). */
     const val JERUSALEM_GEONAMES = 281184L
 
+    /** Les noms de Pourim dans une ville murée (libellés « fete_<clé> »). */
+    private val MUREE = mapOf("pourim" to "pourim_ailleurs", "chouchan_pourim" to "pourim_jerusalem")
+
     /**
      * [mukafChoma] : une ville murée depuis Josué, où Pourim et Al hanissim
      * sont le 15 Adar (JewishCalendar.setIsMukafChoma). Seule Jérusalem l'est
@@ -182,7 +185,8 @@ object CalendrierJuif {
         }
 
         val fetes = buildList {
-            FETES[affiche.yomTovIndex]?.let { add(it) }
+            // Dans une ville murée, le 15 Adar est Pourim ; le 14 ne l'est qu'ailleurs.
+            FETES[affiche.yomTovIndex]?.let { add(if (mukafChoma) MUREE[it] ?: it else it) }
             if (affiche.isRoshChodesh && "roch_hodech" !in this) add("roch_hodech")
         }
         val paracha = if (semaine == DayOfWeek.SATURDAY && regles.parshah != JewishCalendar.Parsha.NONE)

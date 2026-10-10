@@ -68,7 +68,8 @@ aucune règle n'est écrite à la main :
   Tich'a bèAv compris, et le jeûne d'Esther) ;
 - Pourim à Jérusalem le 15 Adar : `JewishCalendar.setIsMukafChoma`, quand la
   ville choisie est Jérusalem (GeoNames 281184). Les villes dont le statut
-  est douteux gardent le 14, comme le calendrier commun.
+  est douteux gardent le 14, comme le calendrier commun. Le 14 s'y affiche
+  alors « Pourim (hors Jérusalem) », le 15 « Pourim à Jérusalem ».
 
 ### Différences de noussa'h
 

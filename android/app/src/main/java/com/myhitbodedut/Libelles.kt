@@ -57,6 +57,8 @@ object Libelles {
         "fete_pessah" -> R.string.fete_pessah
         "fete_pessah_cheni" -> R.string.fete_pessah_cheni
         "fete_pourim" -> R.string.fete_pourim
+        "fete_pourim_ailleurs" -> R.string.fete_pourim_ailleurs
+        "fete_pourim_jerusalem" -> R.string.fete_pourim_jerusalem
         "fete_pourim_katan" -> R.string.fete_pourim_katan
         "fete_roch_hachana" -> R.string.fete_roch_hachana
         "fete_roch_hodech" -> R.string.fete_roch_hodech

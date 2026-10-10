@@ -111,6 +111,8 @@ class CalendrierJuifTest {
         val c15 = CalendrierJuif.jour(LocalDate.parse("2027-03-24"), true, mukafChoma = true).conditions
         assertFalse(C.POURIM in c14 || C.AL_HANISSIM in c14)
         assertTrue(C.POURIM in c15 && C.AL_HANISSIM in c15)
+        assertEquals(listOf("pourim_ailleurs"), CalendrierJuif.jour(LocalDate.parse("2027-03-23"), true, mukafChoma = true).fetes)
+        assertEquals(listOf("pourim_jerusalem"), CalendrierJuif.jour(LocalDate.parse("2027-03-24"), true, mukafChoma = true).fetes)
         // Ailleurs, le 14.
         assertTrue(C.AL_HANISSIM in CalendrierJuif.jour(LocalDate.parse("2027-03-23"), true).conditions)
         assertFalse(C.AL_HANISSIM in CalendrierJuif.jour(LocalDate.parse("2027-03-24"), true).conditions)

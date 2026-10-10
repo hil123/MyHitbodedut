@@ -721,6 +721,8 @@
     <string name="fete_jeune_esther">Jeûne d’Esther</string>
     <string name="fete_pourim">Pourim</string>
     <string name="fete_chouchan_pourim">Chouchan Pourim</string>
+    <string name="fete_pourim_ailleurs">Pourim (hors Jérusalem)</string>
+    <string name="fete_pourim_jerusalem">Pourim à Jérusalem (Chouchan Pourim)</string>
     <string name="fete_pourim_katan">Pourim katan</string>
     <string name="fete_roch_hodech">Roch ’Hodech</string>
     <string name="fete_yom_hachoah">Yom HaChoah</string>

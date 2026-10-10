@@ -675,6 +675,8 @@
     <string name="fete_jeune_esther">Fast of Esther</string>
     <string name="fete_pourim">Purim</string>
     <string name="fete_chouchan_pourim">Shushan Purim</string>
+    <string name="fete_pourim_ailleurs">Purim (outside Jerusalem)</string>
+    <string name="fete_pourim_jerusalem">Purim in Jerusalem (Shushan Purim)</string>
     <string name="fete_pourim_katan">Purim Katan</string>
     <string name="fete_roch_hodech">Rosh Chodesh</string>
     <string name="fete_yom_hachoah">Yom HaShoah</string>

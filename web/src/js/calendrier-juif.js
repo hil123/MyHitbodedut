@@ -55,6 +55,8 @@ function calendrier(iso, enIsrael, modernes, mukafChoma) {
 
 /** Jérusalem (GeoNames), ville murée depuis Josué : Pourim y est le 15 Adar. */
 export const JERUSALEM_GEONAMES = 281184;
+/** Les noms de Pourim dans une ville murée (CalendrierJuif.MUREE). */
+const MUREE = { pourim: 'pourim_ailleurs', chouchan_pourim: 'pourim_jerusalem' };
 
 /**
  * Le jour hébreu d'une date civile « AAAA-MM-JJ », comme CalendrierJuif.jour.
@@ -98,7 +100,8 @@ export function jour(iso, enIsrael, mukafChoma = false) {
 
   const fetes = [];
   const fete = FETES.get(affiche.getYomTovIndex());
-  if (fete) fetes.push(fete);
+  // Dans une ville murée, le 15 Adar est Pourim ; le 14 ne l'est qu'ailleurs.
+  if (fete) fetes.push(mukafChoma ? (MUREE[fete] ?? fete) : fete);
   if (affiche.isRoshChodesh() && !fetes.includes('roch_hodech')) fetes.push('roch_hodech');
 
   // JewishCalendar.Parsha.NONE vaut 0 dans kosher-zmanim comme dans KosherJava.
