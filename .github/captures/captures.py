@@ -512,15 +512,18 @@ def main():
 # dans son nom et compte dans le bilan du journal.
 
 TAILLES = [
-    # nom, taille physique forcee (ou None), densite (ou None), couche
-    ("petit", "480x854", 240, False),
+    # nom, taille physique forcee (ou None), densite (ou None), couche.
+    # Les ecrans couches d'abord : ce sont ceux qui ont le plus change, et
+    # l'emulateur finit parfois par se figer (« QEMU2 main loop ») sur la
+    # grande tablette apres une demi-heure.
     ("petit-couche", "480x854", 240, True),
+    ("tablette-couchee", "1600x2560", 320, True),
     # Taille forcee, comme les autres : apres un « wm size reset », le
     # Pixel 6 restait couche et ses captures debout sortaient en paysage.
-    ("pixel6", "1080x2400", 420, False),
     ("pixel6-couche", "1080x2400", 420, True),
+    ("petit", "480x854", 240, False),
+    ("pixel6", "1080x2400", 420, False),
     ("tablette", "1600x2560", 320, False),
-    ("tablette-couchee", "1600x2560", 320, True),
 ]
 
 
@@ -538,6 +541,12 @@ def appliquer_taille(taille, densite, couche):
 
 
 FAUTES = []
+
+
+def faute(texte):
+    """Une faute de mise en page : dans le bilan, et tout de suite au journal."""
+    FAUTES.append(texte)
+    log("  FAUTE : " + texte)
 
 # Chaque activite de l'application (AndroidManifest.xml), avec ce qu'il lui
 # faut pour s'ouvrir sur un contenu reel.
@@ -587,10 +596,10 @@ def presentation(nom, langue_app="fr"):
         manque = sorted(voulus - vus)
         suffixe = "" if not manque else "-HORS-ECRAN"
         if manque:
-            FAUTES.append(f"{nom} ecran {i} : {', '.join(manque)} hors de l'ecran")
+            faute(f"{nom} ecran {i} : {', '.join(manque)} hors de l'ecran")
         capture(f"20-{nom}-presentation-{i}{suffixe}", attente=0.3)
         if not toucher(rid="onboarding_next", attente=1.2):
-            FAUTES.append(f"{nom} ecran {i} : « Suivant » introuvable")
+            faute(f"{nom} ecran {i} : « Suivant » introuvable")
             break
 
 
@@ -601,7 +610,7 @@ def tailles():
         presentation(nom)
         lancer()
         if "start_session" not in visibles(dump(), {"start_session"}):
-            FAUTES.append(f"{nom} accueil : « Commencer » hors de l'ecran")
+            faute(f"{nom} accueil : « Commencer » hors de l'ecran")
         capture(f"20-{nom}-accueil")
         defiler(True)
         capture(f"20-{nom}-accueil-suite")
@@ -612,9 +621,9 @@ def tailles():
             arreter()
             if activite(classe, extras):
                 if classe == "SessionActivity" and "session_primary" not in visibles(dump(), {"session_primary"}):
-                    FAUTES.append(f"{nom} seance : « Commencer » hors de l'ecran")
+                    faute(f"{nom} seance : « Commencer » hors de l'ecran")
                 capture(f"20-{nom}-{classe.replace('Activity', '').lower()}", attente=0.8)
-        if nom in ("petit", "pixel6-couche", "tablette-couchee"):
+        if nom in ("petit", "petit-couche", "pixel6-couche"):
             presentation(nom + "-he", "he")
     appliquer_taille(None, None, False)
     regler({"langue_app": ("string", "fr")})
