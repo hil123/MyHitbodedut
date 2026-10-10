@@ -20,6 +20,14 @@
 <resources>
     <dimen name="edge">16dp</dimen>
     <dimen name="wide_gutter">0dp</dimen>
+    <!--
+        « edge_inner » : la marge d'un texte posé DANS l'air des grands écrans
+        (wide_gutter). Les deux s'ajoutent : edge_inner = edge - wide_gutter,
+        pour que le texte s'aligne sur les cartes (16dp de marge propre). Y
+        mettre « edge » doublait la marge : sur une tablette couchée de
+        1280dp, il ne restait que 32dp, et l'accueil s'affichait vide.
+    -->
+    <dimen name="edge_inner">16dp</dimen>
 
     <!--
         Les hauteurs fixes, elles, se declinent par hauteur disponible (« h »).
@@ -54,4 +62,10 @@
 
     <!-- La jauge de l'accueil et le hassid en son creux. -->
     <dimen name="gauge_size">236dp</dimen>
+    <!--
+        La même jauge, posée à côté de l'en-tête (layout-land/activity_main.xml).
+        Couché sur un 480x854, il reste 216dp sous la barre d'état et au-dessus
+        des onglets : 168dp y laissent la légende.
+    -->
+    <dimen name="gauge_size_side">168dp</dimen>
 </resources>

@@ -130,11 +130,17 @@ class ScreenFitTest {
         // portent deja leur marge.
         assertTrue("sur téléphone l'air des grands écrans doit être nul",
             dimen("values", "wide_gutter") == 0.0 && dimen("values-w360dp", "wide_gutter") == 0.0)
-        // Et sur une fenetre de bureau, il doit vraiment brider la largeur.
-        val large = dimen("values-w1200dp", "wide_gutter")!! * 2 + dimen("values-w1200dp", "edge")!! * 2
+        // Et sur une fenetre de bureau, il doit vraiment brider la largeur,
+        // sans l'etrangler : l'air et la marge interieure s'ajoutent
+        // (edge_inner, LayoutPaysageTest).
+        val large = (dimen("values-w1200dp", "wide_gutter")!! + dimen("values-w1200dp", "edge_inner")!!) * 2
         assertTrue(
             "sur 1200dp il resterait ${1200 - large}dp de ligne : trop long à lire",
             1200 - large <= 700,
+        )
+        assertTrue(
+            "sur 1200dp il ne resterait que ${1200 - large}dp de ligne : l'écran paraît vide",
+            1200 - large >= 480,
         )
     }
 

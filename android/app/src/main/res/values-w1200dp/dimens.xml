@@ -3,4 +3,5 @@
 <resources>
     <dimen name="edge">320dp</dimen>
     <dimen name="wide_gutter">304dp</dimen>
+    <dimen name="edge_inner">16dp</dimen>
 </resources>

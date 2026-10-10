@@ -10,6 +10,10 @@ on:
         description: "Captures d'ecran sur emulateur (job captures) au lieu de la construction"
         type: boolean
         default: false
+      tailles_seules:
+        description: "Avec captures : seulement le passage des six tailles d'ecran"
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -122,7 +126,8 @@ jobs:
   captures:
     if: github.event_name == 'workflow_dispatch' && inputs.captures
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    # Le passage des six tailles (20) prend a lui seul pres d'une heure.
+    timeout-minutes: 120
     steps:
       - uses: actions/checkout@v4
 
@@ -162,6 +167,8 @@ jobs:
 
       - name: Capture the screens
         uses: reactivecircus/android-emulator-runner@v2
+        env:
+          CAPTURES_TAILLES_SEULES: ${{ inputs.tailles_seules && '1' || '0' }}
         with:
           api-level: 34
           target: google_apis

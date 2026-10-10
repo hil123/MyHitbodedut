@@ -124,7 +124,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
                 android:letterSpacing="0.08"
-                android:paddingHorizontal="@dimen/edge"
+                android:paddingHorizontal="@dimen/edge_inner"
                 android:text="@string/tehilim_all"
                 android:textAllCaps="true"
                 android:textColor="?attr/mhMuted"

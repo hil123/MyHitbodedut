@@ -1,0 +1,566 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    L'accueil couché (téléphone ou tablette en paysage) : la même chose que
+    layout/activity_main.xml, mêmes identifiants (LayoutPaysageTest), mais
+    les anneaux à côté de l'en-tête et du bouton. Empilés, sur un téléphone
+    couché, ils repoussaient « Commencer » sous les onglets.
+
+    L'accueil, pistes A + D choisies par le propriétaire le 28/09 : le hassid
+    qui accueille, au creux de la jauge de la semaine, un seul bouton pour
+    commencer, et des onglets en bas.
+
+    Deux panneaux se partagent l'écran : « Aujourd'hui » et « Textes ».
+    Journal et Réglages sont des écrans à part, ouverts par leurs onglets.
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/mhPaper"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <!-- Aujourd'hui -->
+        <ScrollView
+            android:id="@+id/main_scroll"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true"
+            android:paddingHorizontal="@dimen/wide_gutter">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingHorizontal="@dimen/edge_inner"
+                android:paddingTop="12dp"
+                android:paddingBottom="16dp">
+
+                <!-- Les anneaux à part, au début de la ligne (à droite en hébreu). -->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:orientation="vertical">
+
+                    <!-- Les trois anneaux (jour, semaine, série), et le hassid qui accueille en leur creux. -->
+                    <FrameLayout
+                        android:layout_width="@dimen/gauge_size_side"
+                        android:layout_height="@dimen/gauge_size_side"
+                        android:layout_gravity="center_horizontal">
+
+                        <com.myhitbodedut.AnneauxView
+                            android:id="@+id/week_gauge"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent" />
+
+                        <!-- 34dp : trois anneaux de 8dp, deux écarts de 3dp, et un peu d'air. -->
+                        <FrameLayout
+                            android:id="@+id/hero_plate"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_margin="34dp"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:contentDescription="@string/rings_character_hint"
+                            android:background="@drawable/bg_gauge_plate"
+                            android:paddingHorizontal="16dp"
+                            android:paddingTop="14dp"
+                            android:paddingBottom="6dp">
+
+                            <ImageView
+                                android:id="@+id/hero_character"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:contentDescription="@null"
+                                android:scaleType="fitCenter" />
+
+                            <!-- Les autres faces du centre : un chiffre et ce qu'il compte (Plaque). -->
+                            <LinearLayout
+                                android:id="@+id/hero_face"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:gravity="center"
+                                android:orientation="vertical"
+                                android:paddingBottom="8dp"
+                                android:visibility="gone">
+
+                                <TextView
+                                    android:id="@+id/hero_face_value"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="44dp"
+                                    android:autoSizeMaxTextSize="34sp"
+                                    android:autoSizeMinTextSize="16sp"
+                                    android:autoSizeTextType="uniform"
+                                    android:fontFeatureSettings="tnum"
+                                    android:gravity="center"
+                                    android:maxLines="1"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:id="@+id/hero_face_caption"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="2dp"
+                                    android:gravity="center"
+                                    android:maxLines="3"
+                                    android:textColor="?attr/mhMuted"
+                                    android:textSize="12sp" />
+                            </LinearLayout>
+                        </FrameLayout>
+                    </FrameLayout>
+
+                    <TextView
+                        android:id="@+id/week_gauge_label"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:gravity="center"
+                        android:textColor="?attr/mhMuted"
+                        android:textSize="13sp" />
+                </LinearLayout>
+
+                <!-- L'en-tête, puis « Commencer » et ce qui l'accompagne. -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="24dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:letterSpacing="0.08"
+                        android:text="@string/app_name"
+                        android:textColor="?attr/mhMuted"
+                        android:textSize="13sp" />
+
+                    <TextView
+                        android:id="@+id/hero_greeting"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:textColor="?attr/mhInk"
+                        android:textSize="26sp"
+                        android:textStyle="bold"
+                        android:visibility="gone" />
+
+                    <!-- Sans prénom, cette ligne devient le titre (MainActivity.renderGreeting). -->
+                    <TextView
+                        android:id="@+id/status_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:textColor="?attr/mhMuted"
+                        android:textSize="15sp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/status_streak"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFeatureSettings="tnum"
+                            android:textColor="?attr/mhMuted"
+                            android:textSize="15sp" />
+
+                        <!-- Le point qui sépare la série du total ; masqué avec le total. -->
+                        <TextView
+                            android:id="@+id/status_separator"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:importantForAccessibility="no"
+                            android:text="@string/status_separator"
+                            android:textColor="?attr/mhMuted"
+                            android:textSize="15sp" />
+
+                        <TextView
+                            android:id="@+id/status_total"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:fontFeatureSettings="tnum"
+                            android:layout_weight="1"
+                            android:ellipsize="end"
+                            android:maxLines="1"
+                            android:textColor="?attr/mhMuted"
+                            android:textSize="15sp" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/today_detail"
+                        style="@style/CardHint"
+                        android:layout_marginTop="4dp"
+                        android:textColor="?attr/mhBrand"
+                        android:visibility="gone" />
+
+
+                    <Button
+                        android:id="@+id/start_session"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:paddingVertical="14dp"
+                        android:textSize="17sp" />
+
+                    <!--
+                        Ce avec quoi on entre dans la séance, en pastilles sous le
+                        bouton. Chacune se change d'une touche, aucune n'est
+                        obligatoire, et la rangée défile si elle déborde.
+                    -->
+                    <HorizontalScrollView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:fadingEdgeLength="28dp"
+                        android:requiresFadingEdge="horizontal"
+                        android:scrollbars="none">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <LinearLayout
+                                android:id="@+id/start_duration"
+                                style="@style/StartChip">
+
+                                <TextView style="@style/StartChipLabel" android:text="@string/start_duration" />
+
+                                <TextView android:id="@+id/start_duration_value" style="@style/StartChipValue" />
+                            </LinearLayout>
+                            <LinearLayout
+                                android:id="@+id/start_theme"
+                                style="@style/StartChip">
+
+                                <TextView style="@style/StartChipLabel" android:text="@string/start_theme" />
+
+                                <TextView android:id="@+id/start_theme_value" style="@style/StartChipValue" />
+                            </LinearLayout>
+                            <LinearLayout
+                                android:id="@+id/start_music"
+                                style="@style/StartChip">
+
+                                <TextView style="@style/StartChipLabel" android:text="@string/start_music" />
+
+                                <TextView android:id="@+id/start_music_value" style="@style/StartChipValue" />
+                            </LinearLayout>
+                            <LinearLayout
+                                android:id="@+id/start_focus"
+                                style="@style/StartChip">
+
+                                <TextView style="@style/StartChipLabel" android:text="@string/start_focus" />
+
+                                <TextView android:id="@+id/start_focus_value" style="@style/StartChipValue" />
+                            </LinearLayout>
+                        </LinearLayout>
+                    </HorizontalScrollView>
+
+                    <LinearLayout
+                        android:id="@+id/week_strip"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:orientation="horizontal" />
+
+                    <!-- Le moment « relance », après une rupture de série. -->
+                    <include
+                        android:id="@+id/relance_chizuk"
+                        layout="@layout/view_chizuk"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="14dp" />
+
+                    <Button
+                        android:id="@+id/today_note"
+                        style="@style/Widget.Material3.Button.TextButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:text="@string/action_write_note"
+                        android:visibility="gone" />
+
+                    <!--
+                        Une hitbodedout faite loin du téléphone, comme le conseil
+                        n° 4 y invite : elle compte aussi (revue du 29/09).
+                    -->
+                    <Button
+                        android:id="@+id/today_offline"
+                        style="@style/Widget.Material3.Button.TextButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:text="@string/action_done_offline"
+                        android:visibility="gone" />
+                </LinearLayout>
+            </LinearLayout>
+        </ScrollView>
+
+        <!--
+            Textes : tout ce qui était en lignes sous la séance. Aucune
+            section n'est retirée, et chaque ligne garde son état sur sa
+            deuxième ligne — les psaumes déjà dits, le morceau choisi, l'heure
+            des rappels, les autorisations qui manquent.
+        -->
+        <ScrollView
+            android:id="@+id/texts_scroll"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true"
+            android:paddingHorizontal="@dimen/wide_gutter"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingBottom="24dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingHorizontal="@dimen/edge_inner"
+                    android:paddingTop="20dp"
+                    android:text="@string/nav_texts"
+                    android:textColor="?attr/mhInk"
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
+
+                <LinearLayout style="@style/Card">
+
+                    <LinearLayout
+                        android:id="@+id/tikkun_button"
+                        style="@style/SectionRow">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                style="@style/SettingLabelStacked"
+                                android:text="@string/tikkun_title" />
+
+                            <TextView
+                                android:id="@+id/tikkun_state"
+                                style="@style/SectionState" />
+                        </LinearLayout>
+
+                        <ImageView style="@style/SectionChevron" />
+                    </LinearLayout>
+                    <!-- Le siddour : les prières du jour et les bénédictions (04/10). -->
+                    <LinearLayout
+                        android:id="@+id/siddur_button"
+                        style="@style/SectionRow">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                style="@style/SettingLabelStacked"
+                                android:text="@string/siddur_title" />
+
+                            <TextView
+                                style="@style/SectionState"
+                                android:text="@string/siddur_hint" />
+                        </LinearLayout>
+
+                        <ImageView style="@style/SectionChevron" />
+                    </LinearLayout>
+                    <!-- Le livre entier, et la part du jour (04/10). -->
+                    <LinearLayout
+                        android:id="@+id/tehilim_button"
+                        style="@style/SectionRow">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                style="@style/SettingLabelStacked"
+                                android:text="@string/tehilim_title" />
+
+                            <TextView
+                                android:id="@+id/tehilim_state"
+                                style="@style/SectionState" />
+                        </LinearLayout>
+
+                        <ImageView style="@style/SectionChevron" />
+                    </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/tefilot_button"
+                        style="@style/SectionRow">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                style="@style/SettingLabelStacked"
+                                android:text="@string/tefilot_title" />
+
+                            <TextView
+                                style="@style/SectionState"
+                                android:text="@string/tefilot_hint" />
+                        </LinearLayout>
+
+                        <ImageView style="@style/SectionChevron" />
+                    </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/library_button"
+                        style="@style/SectionRow">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                style="@style/SettingLabelStacked"
+                                android:text="@string/library_title" />
+
+                            <TextView
+                                style="@style/SectionState"
+                                android:text="@string/library_hint" />
+                        </LinearLayout>
+
+                        <ImageView style="@style/SectionChevron" />
+                    </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/tips_button"
+                        style="@style/SectionRow">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                style="@style/SettingLabelStacked"
+                                android:text="@string/tips_title" />
+
+                            <TextView
+                                style="@style/SectionState"
+                                android:text="@string/tips_hint" />
+                        </LinearLayout>
+
+                        <ImageView style="@style/SectionChevron" />
+                    </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/proofread_button"
+                        style="@style/SectionRow"
+                        android:visibility="gone">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                style="@style/SettingLabelStacked"
+                                android:text="@string/proofread_open" />
+                        </LinearLayout>
+
+                        <ImageView style="@style/SectionChevron" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:letterSpacing="0.08"
+                    android:paddingHorizontal="@dimen/edge_inner"
+                    android:text="@string/section_around"
+                    android:textAllCaps="true"
+                    android:textColor="?attr/mhMuted"
+                    android:textSize="12sp" />
+
+                <LinearLayout
+                    style="@style/Card"
+                    android:layout_marginTop="8dp">
+
+                    <LinearLayout
+                        android:id="@+id/music_button"
+                        style="@style/SectionRow">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                style="@style/SettingLabelStacked"
+                                android:text="@string/music_title" />
+
+                            <TextView
+                                android:id="@+id/music_state"
+                                style="@style/SectionState" />
+                        </LinearLayout>
+
+                        <com.google.android.material.materialswitch.MaterialSwitch
+                            android:id="@+id/music_switch_main"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+
+                        <ImageView style="@style/SectionChevron" />
+                    </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/reminders_button"
+                        style="@style/SectionRow">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                style="@style/SettingLabelStacked"
+                                android:text="@string/reminders_title" />
+
+                            <TextView
+                                android:id="@+id/reminders_state"
+                                style="@style/SectionState" />
+                        </LinearLayout>
+
+                        <ImageView style="@style/SectionChevron" />
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+        </ScrollView>
+    </FrameLayout>
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_nav"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/mhCard"
+        app:itemActiveIndicatorStyle="@style/NavIndicator"
+        app:itemIconTint="@color/nav_item"
+        app:itemTextColor="@color/nav_item"
+        app:labelVisibilityMode="labeled"
+        app:menu="@menu/nav_main" />
+</LinearLayout>

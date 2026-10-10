@@ -25,7 +25,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/bg_hero"
             android:orientation="vertical"
-            android:paddingHorizontal="@dimen/edge"
+            android:paddingHorizontal="@dimen/edge_inner"
             android:paddingTop="28dp"
             android:paddingBottom="24dp">
 

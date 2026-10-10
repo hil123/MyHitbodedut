@@ -327,6 +327,12 @@ def main():
     lancer()
     langue("fr")
 
+    # Sur demande (CAPTURES_TAILLES_SEULES=1) : le seul passage des tailles,
+    # deux fois plus court que le parcours entier.
+    if os.environ.get("CAPTURES_TAILLES_SEULES") == "1":
+        etape("20 tailles d'ecran", lambda: tailles())
+        return
+
     def s01():
         lancer(attente=6)
         capture("01-accueil")
@@ -509,8 +515,10 @@ TAILLES = [
     # nom, taille physique forcee (ou None), densite (ou None), couche
     ("petit", "480x854", 240, False),
     ("petit-couche", "480x854", 240, True),
-    ("pixel6", None, None, False),
-    ("pixel6-couche", None, None, True),
+    # Taille forcee, comme les autres : apres un « wm size reset », le
+    # Pixel 6 restait couche et ses captures debout sortaient en paysage.
+    ("pixel6", "1080x2400", 420, False),
+    ("pixel6-couche", "1080x2400", 420, True),
     ("tablette", "1600x2560", 320, False),
     ("tablette-couchee", "1600x2560", 320, True),
 ]
@@ -592,6 +600,8 @@ def tailles():
         appliquer_taille(taille, densite, couche)
         presentation(nom)
         lancer()
+        if "start_session" not in visibles(dump(), {"start_session"}):
+            FAUTES.append(f"{nom} accueil : « Commencer » hors de l'ecran")
         capture(f"20-{nom}-accueil")
         defiler(True)
         capture(f"20-{nom}-accueil-suite")
@@ -601,6 +611,8 @@ def tailles():
         for classe, extras in ECRANS_APP:
             arreter()
             if activite(classe, extras):
+                if classe == "SessionActivity" and "session_primary" not in visibles(dump(), {"session_primary"}):
+                    FAUTES.append(f"{nom} seance : « Commencer » hors de l'ecran")
                 capture(f"20-{nom}-{classe.replace('Activity', '').lower()}", attente=0.8)
         if nom in ("petit", "pixel6-couche", "tablette-couchee"):
             presentation(nom + "-he", "he")
@@ -608,7 +620,8 @@ def tailles():
     regler({"langue_app": ("string", "fr")})
     langue("fr")
     log("\n=== bilan des tailles ===")
-    log("\n".join(FAUTES) if FAUTES else "presentation : titre, texte et « Suivant » visibles a toutes les tailles")
+    log("\n".join(FAUTES) if FAUTES else
+        "presentation (titre, texte, « Suivant »), accueil et seance (« Commencer ») visibles a toutes les tailles")
 
 
 if __name__ == "__main__":

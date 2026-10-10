@@ -31,7 +31,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:paddingHorizontal="@dimen/edge"
+                android:paddingHorizontal="@dimen/edge_inner"
                 android:paddingTop="20dp"
                 android:paddingBottom="24dp">
 
@@ -306,7 +306,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingHorizontal="@dimen/edge"
+                    android:paddingHorizontal="@dimen/edge_inner"
                     android:paddingTop="20dp"
                     android:text="@string/nav_texts"
                     android:textColor="?attr/mhInk"
@@ -468,7 +468,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
                     android:letterSpacing="0.08"
-                    android:paddingHorizontal="@dimen/edge"
+                    android:paddingHorizontal="@dimen/edge_inner"
                     android:text="@string/section_around"
                     android:textAllCaps="true"
                     android:textColor="?attr/mhMuted"
