@@ -63,7 +63,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
                     android:textColor="?attr/mhMuted"
-                    android:textSize="15sp" />
+                    android:textSize="17sp" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -77,7 +77,7 @@
                         android:layout_height="wrap_content"
                         android:fontFeatureSettings="tnum"
                         android:textColor="?attr/mhMuted"
-                        android:textSize="15sp" />
+                        android:textSize="17sp" />
 
                     <!-- Le point qui sépare la série du total ; masqué avec le total. -->
                     <TextView
@@ -89,7 +89,7 @@
                         android:importantForAccessibility="no"
                         android:text="@string/status_separator"
                         android:textColor="?attr/mhMuted"
-                        android:textSize="15sp" />
+                        android:textSize="17sp" />
 
                     <TextView
                         android:id="@+id/status_total"
@@ -102,13 +102,14 @@
                         android:ellipsize="end"
                         android:maxLines="1"
                         android:textColor="?attr/mhMuted"
-                        android:textSize="15sp" />
+                        android:textSize="17sp" />
                 </LinearLayout>
 
                 <TextView
                     android:id="@+id/today_detail"
                     android:fontFamily="@font/varela_round"
                     style="@style/CardHint"
+                    android:textSize="16sp"
                     android:layout_marginTop="4dp"
                     android:textColor="?attr/mhBrand"
                     android:visibility="gone" />
@@ -188,7 +189,7 @@
                     android:layout_marginTop="6dp"
                     android:gravity="center"
                     android:textColor="?attr/mhMuted"
-                    android:textSize="13sp" />
+                    android:textSize="16sp" />
 
                 <Button
                     android:id="@+id/start_session"

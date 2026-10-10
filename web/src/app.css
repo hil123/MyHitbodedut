@@ -75,13 +75,13 @@ button { font: inherit; color: inherit; }
 /* --- Accueil -------------------------------------------------------------------- */
 .marque { color: var(--muted); font-size: 13px; letter-spacing: 0.08em; }
 .salut { margin-top: 8px; font-size: 26px; font-weight: 700; }
-.statut { margin-top: 4px; color: var(--muted); font-size: 15px; }
+.statut { margin-top: 4px; color: var(--muted); font-size: 17px; }
 .statut.titre { color: var(--ink); font-size: 24px; font-weight: 700; }
-.serie { display: flex; gap: 10px; color: var(--muted); font-size: 15px; }
+.serie { display: flex; gap: 10px; color: var(--muted); font-size: 17px; }
 .serie { font-variant-numeric: tabular-nums; }
 .serie .separateur { flex: none; }
 .serie .total { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.detail { margin-top: 4px; color: var(--brand); font-size: 14px; }
+.detail { margin-top: 4px; color: var(--brand); font-size: 16px; }
 
 .jauge { position: relative; width: 236px; height: 236px; margin: 18px auto 0; }
 /* Écran haut : les anneaux prennent la place libre (values-h720dp). */
@@ -134,7 +134,7 @@ button { font: inherit; color: inherit; }
   100% { transform: none; }
 }
 @media (prefers-reduced-motion: reduce) { .plaque img.salut { animation: none; } }
-.jauge-legende { margin-top: 6px; text-align: center; color: var(--muted); font-size: 13px; }
+.jauge-legende { margin-top: 6px; text-align: center; color: var(--muted); font-size: 16px; }
 .jauge-legende.legende-jour { color: var(--brand); }
 .jauge-legende.legende-semaine { color: var(--ring-week); }
 .jauge-legende.legende-serie { color: var(--ring-streak); }
