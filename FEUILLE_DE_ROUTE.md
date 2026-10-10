@@ -781,3 +781,17 @@ Hebcal le fait dire partout. Le résultat de KosherJava est gardé ; voir
   l'écran ;
 - l'onglet Réglages ne porte plus de pastille quand une autorisation
   manque.
+
+**Suite du 10/10** :
+
+- l'algorithme de la NOAA est imposé explicitement (`NOAACalculator`) sur
+  Android et sur le web, et vérifié contre les formules publiées par la NOAA ;
+- Anénou : deux mentions distinctes, l'officiant (répétition) et le
+  particulier (Chomea téfila), pour tous les jeûnes publics, Tich'a bèAv
+  compris ;
+- le noussa'h compte : bénédiction du Hallel partiel (Edot sans, Sfard et
+  Ashkenaz avec), Morid hatal ashkénaze hors d'Israël, Anénou du particulier ;
+- Pourim le 15 Adar quand la ville choisie est Jérusalem ;
+- l'omer affiché est celui qu'on compte le soir même.
+
+Détail et sources : `ZMANIM.md`, « Différences de noussa'h ».

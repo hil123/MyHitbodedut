@@ -105,6 +105,22 @@ class CalendrierJuifTest {
     }
 
     @Test
+    fun `jerusalem - pourim et al hanissim le 15 adar`() {
+        // 14 Adar II 5787 = 23/03/2027, 15 Adar II = 24/03/2027.
+        val c14 = CalendrierJuif.jour(LocalDate.parse("2027-03-23"), true, mukafChoma = true).conditions
+        val c15 = CalendrierJuif.jour(LocalDate.parse("2027-03-24"), true, mukafChoma = true).conditions
+        assertFalse(C.POURIM in c14 || C.AL_HANISSIM in c14)
+        assertTrue(C.POURIM in c15 && C.AL_HANISSIM in c15)
+        // Ailleurs, le 14.
+        assertTrue(C.AL_HANISSIM in CalendrierJuif.jour(LocalDate.parse("2027-03-23"), true).conditions)
+        assertFalse(C.AL_HANISSIM in CalendrierJuif.jour(LocalDate.parse("2027-03-24"), true).conditions)
+        // Pas de Ta'hanoun les deux jours, partout (TefilaRules).
+        listOf("2027-03-23", "2027-03-24").forEach {
+            assertFalse(it, C.TAHANOUN_CHAHARIT in CalendrierJuif.jour(LocalDate.parse(it), true, mukafChoma = true).conditions)
+        }
+    }
+
+    @Test
     fun `arvit releve du jour hebreu suivant des l apres-midi`() {
         val date = LocalDate.parse("2026-10-10")
         assertEquals(date.plusDays(1), CalendrierJuif.jourDeLaPriere("arvit", date, LocalTime.of(19, 30)))

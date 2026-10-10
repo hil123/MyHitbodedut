@@ -636,6 +636,14 @@
     <string name="ajout_motsae_chabbat">Motzaei Shabbat</string>
     <string name="ajout_roch_hodech">Rosh Chodesh</string>
     <string name="ajout_hallel_annonce">Hallel</string>
+    <string name="ajout_anenou_officiant">Aneinu of the chazzan (repetition)</string>
+    <string name="ajout_anenou_particulier">Aneinu of the individual (Shomea tefila)</string>
+    <string name="ajout_anenou_particulier_matin_minha">Aneinu of the individual, at Shacharit and Mincha</string>
+    <string name="ajout_anenou_particulier_trois">Aneinu of the individual, at Maariv, Shacharit and Mincha</string>
+    <string name="ajout_anenou_particulier_minha">Aneinu of the individual, at Mincha only</string>
+    <string name="ajout_hallel_partiel_sans_berakha">Partial Hallel, no blessing for an individual</string>
+    <string name="ajout_hallel_partiel_avec_berakha">Partial Hallel, with a blessing</string>
+    <string name="zmanim_omer_ce_soir">Omer tonight: day %1$d</string>
     <string name="ajout_omer">Counting the Omer</string>
     <string name="siddur_aujourdhui">Today</string>
     <string name="siddur_pas_aujourdhui">Not today · tap to read</string>

@@ -130,12 +130,21 @@ object CalendrierJuif {
 
     private val formatHebreu = HebrewDateFormatter().apply { isHebrewFormat = true }
 
-    fun jour(date: LocalDate, enIsrael: Boolean): Jour {
+    /** Jérusalem, ville murée depuis Josué : Pourim y est le 15 Adar (Chouchan Pourim). */
+    const val JERUSALEM_GEONAMES = 281184L
+
+    /**
+     * [mukafChoma] : une ville murée depuis Josué, où Pourim et Al hanissim
+     * sont le 15 Adar (JewishCalendar.setIsMukafChoma). Seule Jérusalem l'est
+     * avec certitude parmi les villes proposées ; les villes en doute (Tibériade,
+     * Safed…) gardent le 14, comme le calendrier commun.
+     */
+    fun jour(date: LocalDate, enIsrael: Boolean, mukafChoma: Boolean = false): Jour {
         // Deux calendriers : les fêtes modernes s'affichent, mais n'entrent pas
         // dans les règles de prière, où leur coutume varie (TefilaRules les
         // compte si isUseModernHolidays est vrai).
-        val regles = calendrier(date, enIsrael, modernes = false)
-        val affiche = calendrier(date, enIsrael, modernes = true)
+        val regles = calendrier(date, enIsrael, modernes = false).apply { setIsMukafChoma(mukafChoma) }
+        val affiche = calendrier(date, enIsrael, modernes = true).apply { setIsMukafChoma(mukafChoma) }
         val tefila = TefilaRules()
         val semaine = date.dayOfWeek
 

@@ -40,6 +40,7 @@ class SiddurJourTest {
                 assertTrue("${n.cle} : ${a.condition}", a.condition.removePrefix("!") in connues)
                 xml.forEach { assertTrue("${n.cle} : ${SiddurJour.libelle(a.condition)}", it.contains("name=\"${SiddurJour.libelle(a.condition)}\"")) }
                 if (a.sorte == SiddurJour.Sorte.BLOC) assertTrue(a.groupe != null && a.racine != null)
+                a.libelle?.let { l -> xml.forEach { assertTrue("${n.cle} : $l", it.contains("name=\"$l\"")) } }
             }
         }
     }
@@ -61,7 +62,7 @@ class SiddurJourTest {
         val annotations = SiddurJour.parse(json, "edot").getValue("chaharit")
         val rc = CalendrierJuif.jour(java.time.LocalDate.parse("2026-10-12"), false).conditions
         val lignes = SiddurJour.lignes(texte, annotations, rc)
-        assertTrue(SiddurJour.Ligne.Etiquette("yaale_veyavo") in lignes)
+        assertTrue(SiddurJour.Ligne.Etiquette("yaale_veyavo", "ajout_yaale_veyavo") in lignes)
         assertTrue(lignes.any { it is SiddurJour.Ligne.Replie && it.condition == "al_hanissim" && !it.ouvert })
         // Dans Ya'alé véyavo du jour, la variante de Pessa'h reste lisible, estompée.
         val pessah = lignes.filterIsInstance<SiddurJour.Ligne.Bloc>()
@@ -75,6 +76,38 @@ class SiddurJourTest {
         val tous = lignes.filterIsInstance<SiddurJour.Ligne.Replie>().map { it.cle }.toSet()
         val blocsTous = SiddurJour.lignes(texte, annotations, rc, tous).count { it is SiddurJour.Ligne.Bloc }
         assertEquals(texte.sections.sumOf { it.blocs.size }, blocsTous)
+    }
+
+    @Test
+    fun `anenou - l officiant et le particulier, selon le nusah`() {
+        val jeune = CalendrierJuif.jour(java.time.LocalDate.parse("2026-12-20"), false).conditions // 10 Tevet
+        fun etiquettes(n: Nusah, id: String) = SiddurJour.lignes(DataFiles.siddur(n).texte(id)!!,
+            SiddurJour.parse(json, n.cle).getValue(id), jeune, nusah = n.cle)
+            .filterIsInstance<SiddurJour.Ligne.Etiquette>().map { it.libelle }
+        // Edot : l'officiant et le particulier, à Cha'harit comme à Min'ha.
+        assertTrue(etiquettes(Nusah.EDOT, "chaharit").containsAll(listOf("ajout_anenou_officiant", "ajout_anenou_particulier")))
+        assertTrue(etiquettes(Nusah.EDOT, "minha").containsAll(listOf("ajout_anenou_officiant", "ajout_anenou_particulier")))
+        // Ashkenaz et Sfard : à Cha'harit, l'officiant seul ; à Min'ha, les deux.
+        listOf(Nusah.ASHKENAZ, Nusah.SEFARD).forEach { n ->
+            assertEquals("${n.cle}", listOf("ajout_anenou_officiant"), etiquettes(n, "chaharit").filter { it.startsWith("ajout_anenou") })
+            assertTrue("${n.cle}", etiquettes(n, "minha").containsAll(listOf("ajout_anenou_officiant", "ajout_anenou_particulier")))
+        }
+        // Un jour ordinaire, tous les Anénou sont repliés.
+        val ordinaire = CalendrierJuif.jour(java.time.LocalDate.parse("2026-12-21"), false).conditions
+        val replis = SiddurJour.lignes(DataFiles.siddur(Nusah.SEFARD).texte("minha")!!,
+            SiddurJour.parse(json, "sefard").getValue("minha"), ordinaire, nusah = "sefard")
+            .filterIsInstance<SiddurJour.Ligne.Replie>().map { it.libelle }
+        assertTrue(replis.containsAll(listOf("ajout_anenou_officiant", "ajout_anenou_particulier")))
+    }
+
+    @Test
+    fun `ashkenaz hors d israel - morid hatal replie l ete`() {
+        val ete = CalendrierJuif.jour(java.time.LocalDate.parse("2027-06-01"), false).conditions
+        fun etat(n: Nusah, israel: Boolean) = SiddurJour.lignes(DataFiles.siddur(n).texte("chaharit")!!,
+            SiddurJour.parse(json, n.cle).getValue("chaharit"), ete, nusah = n.cle, enIsrael = israel)
+        assertTrue(etat(Nusah.ASHKENAZ, false).any { it is SiddurJour.Ligne.Replie && it.condition == "morid_hatal" })
+        assertTrue(SiddurJour.Ligne.Etiquette("morid_hatal", "ajout_morid_hatal") in etat(Nusah.ASHKENAZ, true))
+        assertTrue(SiddurJour.Ligne.Etiquette("morid_hatal", "ajout_morid_hatal") in etat(Nusah.SEFARD, false))
     }
 
     @Test

@@ -44,19 +44,27 @@ export const FETES = new Map([
 const FORMAT = new HebrewDateFormatter();
 FORMAT.setHebrewFormat(true);
 
-function calendrier(iso, enIsrael, modernes) {
+function calendrier(iso, enIsrael, modernes, mukafChoma) {
   const [year, month, day] = iso.split('-').map(Number);
   const jc = new JewishCalendar(DateTime.fromObject({ year, month, day }));
   jc.setInIsrael(enIsrael);
   jc.setUseModernHolidays(modernes);
+  jc.setIsMukafChoma(mukafChoma);
   return jc;
 }
 
-/** Le jour hébreu d'une date civile « AAAA-MM-JJ », comme CalendrierJuif.jour. */
-export function jour(iso, enIsrael) {
+/** Jérusalem (GeoNames), ville murée depuis Josué : Pourim y est le 15 Adar. */
+export const JERUSALEM_GEONAMES = 281184;
+
+/**
+ * Le jour hébreu d'une date civile « AAAA-MM-JJ », comme CalendrierJuif.jour.
+ * [mukafChoma] : Pourim et Al hanissim le 15 Adar (seule Jérusalem, parmi les
+ * villes proposées, l'est avec certitude).
+ */
+export function jour(iso, enIsrael, mukafChoma = false) {
   // Les fêtes modernes s'affichent, mais n'entrent pas dans les règles de prière.
-  const regles = calendrier(iso, enIsrael, false);
-  const affiche = calendrier(iso, enIsrael, true);
+  const regles = calendrier(iso, enIsrael, false, mukafChoma);
+  const affiche = calendrier(iso, enIsrael, true, mukafChoma);
   const semaine = new Date(`${iso}T12:00:00Z`).getUTCDay(); // 0 = dimanche
   const c = new Set();
   const si = (oui, cle) => { if (oui) c.add(cle); };

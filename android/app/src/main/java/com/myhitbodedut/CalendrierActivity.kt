@@ -87,7 +87,7 @@ class CalendrierActivity : AppCompatActivity() {
                 semaine.forEach { d ->
                     addView(case().apply {
                         if (d == null) return@apply
-                        val j = CalendrierJuif.jour(d, israel)
+                        val j = CalendrierJuif.jour(d, israel, Store.mukafChoma(this@CalendrierActivity))
                         val point = if (j.fetes.isNotEmpty()) " •" else ""
                         text = "${d.dayOfMonth}$point\n${j.jourEnLettres}"
                         textSize = 14f

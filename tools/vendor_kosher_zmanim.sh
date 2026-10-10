@@ -9,6 +9,6 @@ T=$(mktemp -d)
 cd "$T"
 npm init -y >/dev/null
 npm install --no-audit --no-fund kosher-zmanim@0.9.0 >/dev/null
-echo 'export { ComplexZmanimCalendar, GeoLocation, JewishCalendar, JewishDate, HebrewDateFormatter, Calendar, DateTime } from "kosher-zmanim";' > entree.mjs
+echo 'export { ComplexZmanimCalendar, GeoLocation, JewishCalendar, JewishDate, HebrewDateFormatter, Calendar, DateTime, NOAACalculator } from "kosher-zmanim";' > entree.mjs
 npx --yes esbuild@0.25.10 entree.mjs --bundle --format=esm --minify --legal-comments=inline \
   --outfile="$OLDPWD/web/src/vendor/kosher-zmanim-0.9.0.min.js"

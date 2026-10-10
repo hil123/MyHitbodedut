@@ -1,5 +1,6 @@
 package com.myhitbodedut
 
+import com.myhitbodedut.CalendrierJuif.C
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
@@ -42,13 +43,43 @@ class JourAfficheTest {
     @Test
     fun `les ajouts nommes suivent les conditions`() {
         val rc = JourAffiche.ajouts(CalendrierJuif.jour(LocalDate.parse("2026-10-12"), false).conditions)
-        assertEquals(listOf("ajout_machiv_harouah", "ajout_berakha", "ajout_yaale_veyavo", "ajout_hallel", "ajout_sans_tahanoun"), rc)
+        assertEquals(listOf("ajout_machiv_harouah", "ajout_berakha", "ajout_yaale_veyavo", "ajout_hallel_partiel_sans_berakha",
+            "ajout_sans_tahanoun"), rc)
         val hanouka = JourAffiche.ajouts(CalendrierJuif.jour(LocalDate.parse("2026-12-07"), false).conditions)
         assertTrue("ajout_al_hanissim" in hanouka && "ajout_hallel_complet" in hanouka && "ajout_tal_oumatar" in hanouka)
         val chabbat = JourAffiche.ajouts(CalendrierJuif.jour(LocalDate.parse("2026-10-10"), false).conditions)
         assertTrue(chabbat.none { it.contains("tahanoun") })
         // Chaque clé a son libellé dans la table.
         (rc + hanouka).forEach { assertTrue(it, Libelles.res(it) != null) }
+    }
+
+    @Test
+    fun `le nusah - hallel partiel, morid hatal, anenou`() {
+        val rc = CalendrierJuif.jour(LocalDate.parse("2026-10-12"), false).conditions
+        // Bénédiction du Hallel partiel : sans pour le particulier (Choul'han
+        // Aroukh, OC 422:2, Edot), avec (Rema, Ashkenaz et Sfard).
+        assertTrue("ajout_hallel_partiel_sans_berakha" in JourAffiche.ajouts(rc, "edot"))
+        assertTrue("ajout_hallel_partiel_avec_berakha" in JourAffiche.ajouts(rc, "sefard"))
+        assertTrue("ajout_hallel_partiel_avec_berakha" in JourAffiche.ajouts(rc, "ashkenaz"))
+        // Morid hatal, l'été : beaucoup d'Ashkénazes ne le disent pas hors d'Israël.
+        val ete = CalendrierJuif.jour(LocalDate.parse("2027-06-01"), false).conditions
+        assertTrue("ajout_morid_hatal" in JourAffiche.ajouts(ete, "edot"))
+        assertTrue("ajout_morid_hatal" in JourAffiche.ajouts(ete, "sefard"))
+        assertFalse("ajout_morid_hatal" in JourAffiche.ajouts(ete, "ashkenaz"))
+        assertTrue("ajout_morid_hatal" in JourAffiche.ajouts(ete, "ashkenaz", enIsrael = true))
+        // Anénou : l'officiant partout ; le particulier, à Min'ha seulement chez Ashkenaz et Sfard.
+        val jeune = CalendrierJuif.jour(LocalDate.parse("2026-12-20"), false).conditions
+        assertEquals(listOf("ajout_anenou_officiant", "ajout_anenou_particulier_matin_minha"),
+            JourAffiche.ajouts(jeune, "edot").filter { it.startsWith("ajout_anenou") })
+        assertEquals(listOf("ajout_anenou_officiant", "ajout_anenou_particulier_minha"),
+            JourAffiche.ajouts(jeune, "ashkenaz").filter { it.startsWith("ajout_anenou") })
+        // Tich'a bèAv 5787 (12/08/2027) : chez les Edot, Arvit aussi.
+        val av = CalendrierJuif.jour(LocalDate.parse("2027-08-12"), false).conditions
+        assertTrue(C.TICHA_BEAV in av)
+        assertEquals(listOf("ajout_anenou_officiant", "ajout_anenou_particulier_trois"),
+            JourAffiche.ajouts(av, "edot").filter { it.startsWith("ajout_anenou") })
+        assertEquals(listOf("ajout_anenou_officiant", "ajout_anenou_particulier_minha"),
+            JourAffiche.ajouts(av, "sefard").filter { it.startsWith("ajout_anenou") })
     }
 
     @Test

@@ -59,12 +59,26 @@ class ChoixLieu(private val activite: AppCompatActivity, private val apres: () -
     @SuppressLint("MissingPermission") // vérifiée par demanderPosition
     private fun localiser() {
         val lm = activite.getSystemService(LocationManager::class.java) ?: return echec()
-        val fournisseurs = listOf(LocationManager.NETWORK_PROVIDER, LocationManager.GPS_PROVIDER, LocationManager.PASSIVE_PROVIDER)
-            .filter { runCatching { lm.isProviderEnabled(it) }.getOrDefault(false) }
-        val connue = fournisseurs.mapNotNull { runCatching { lm.getLastKnownLocation(it) }.getOrNull() }.maxByOrNull { it.time }
+        val tous = listOf(LocationManager.NETWORK_PROVIDER, LocationManager.GPS_PROVIDER, LocationManager.PASSIVE_PROVIDER)
+        // Avant Android 12, les fournisseurs GPS et passif exigent la
+        // localisation précise : avec la seule approximative, les interroger
+        // lève SecurityException. On s'en tient alors au réseau.
+        val permis = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) tous else listOf(LocationManager.NETWORK_PROVIDER)
+        val connue = tous.mapNotNull { runCatching { lm.getLastKnownLocation(it) }.getOrNull() }.maxByOrNull { it.time }
         if (connue != null && System.currentTimeMillis() - connue.time < UNE_HEURE) return enregistrer(connue)
-        val fournisseur = fournisseurs.firstOrNull() ?: return echec()
+        val fournisseur = permis.firstOrNull { runCatching { lm.isProviderEnabled(it) }.getOrDefault(false) } ?: return echec()
         Toast.makeText(activite, activite.getString(R.string.zmanim_position_attente), Toast.LENGTH_SHORT).show()
+        try {
+            demanderUneFois(lm, fournisseur)
+        } catch (e: SecurityException) {
+            echec()
+        } catch (e: IllegalArgumentException) {
+            echec()
+        }
+    }
+
+    @SuppressLint("MissingPermission") // vérifiée par demanderPosition
+    private fun demanderUneFois(lm: LocationManager, fournisseur: String) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             lm.getCurrentLocation(fournisseur, null, activite.mainExecutor) { it?.let(::enregistrer) ?: echec() }
         } else {
@@ -83,7 +97,7 @@ class ChoixLieu(private val activite: AppCompatActivity, private val apres: () -
     }
 
     private fun enregistrer(position: Location) {
-        if (activite.isFinishing) return
+        if (activite.isFinishing || activite.isDestroyed) return
         val lieu = Zmanim.Lieu(activite.getString(R.string.zmanim_position), position.latitude, position.longitude, 0.0,
             TimeZone.getDefault().id)
         Store.setLieuZmanim(activite, lieu, null)
@@ -91,7 +105,7 @@ class ChoixLieu(private val activite: AppCompatActivity, private val apres: () -
     }
 
     private fun echec() {
-        if (activite.isFinishing) return
+        if (activite.isFinishing || activite.isDestroyed) return
         Toast.makeText(activite, activite.getString(R.string.zmanim_position_refusee), Toast.LENGTH_LONG).show()
     }
 

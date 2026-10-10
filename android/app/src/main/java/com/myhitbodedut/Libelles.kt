@@ -6,18 +6,25 @@ package com.myhitbodedut
  * écrite plutôt que getIdentifier : la réduction des ressources de la
  * version publiée ne voit que les références directes, et retirerait le reste.
  *
- * Fichier tiré de res/values/strings.xml (préfixes ajout_, fete_, zman_) ;
- * LibellesTest vérifie qu'aucune clé n'y manque.
+ * Fichier produit par tools/libelles_construction.py ; LibellesTest vérifie
+ * qu'aucune clé n'y manque.
  */
 object Libelles {
     fun res(cle: String): Int? = when (cle) {
         "ajout_al_hanissim" -> R.string.ajout_al_hanissim
+        "ajout_anenou_officiant" -> R.string.ajout_anenou_officiant
+        "ajout_anenou_particulier" -> R.string.ajout_anenou_particulier
+        "ajout_anenou_particulier_matin_minha" -> R.string.ajout_anenou_particulier_matin_minha
+        "ajout_anenou_particulier_minha" -> R.string.ajout_anenou_particulier_minha
+        "ajout_anenou_particulier_trois" -> R.string.ajout_anenou_particulier_trois
         "ajout_asseret_yemei_techouva" -> R.string.ajout_asseret_yemei_techouva
         "ajout_berakha" -> R.string.ajout_berakha
         "ajout_chabbat" -> R.string.ajout_chabbat
         "ajout_hallel" -> R.string.ajout_hallel
         "ajout_hallel_annonce" -> R.string.ajout_hallel_annonce
         "ajout_hallel_complet" -> R.string.ajout_hallel_complet
+        "ajout_hallel_partiel_avec_berakha" -> R.string.ajout_hallel_partiel_avec_berakha
+        "ajout_hallel_partiel_sans_berakha" -> R.string.ajout_hallel_partiel_sans_berakha
         "ajout_jeune" -> R.string.ajout_jeune
         "ajout_lundi_jeudi" -> R.string.ajout_lundi_jeudi
         "ajout_machiv_harouah" -> R.string.ajout_machiv_harouah

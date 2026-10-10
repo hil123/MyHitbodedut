@@ -97,11 +97,13 @@ class SiddurLectureActivity : AppCompatActivity() {
 
         // Le jour hébreu de cette prière : Arvit, l'après-midi, est déjà celui de demain.
         val israel = Store.inIsrael(this)
-        val jour = CalendrierJuif.jour(CalendrierJuif.jourDeLaPriere(id, LocalDate.now(), LocalTime.now()), israel)
+        val jour = CalendrierJuif.jour(CalendrierJuif.jourDeLaPriere(id, LocalDate.now(), LocalTime.now()), israel,
+            Store.mukafChoma(this))
         val annotations = Data.ajouts(this)[id].orEmpty()
         val note = if (annotations.isEmpty()) emptyList() else listOf(Note(getString(R.string.siddur_jour_ajouts,
             jour.dateHebraique, getString(if (israel) R.string.region_israel else R.string.region_diaspora))))
-        val lignes: List<Any> = note + SiddurJour.lignes(texte, annotations, jour.conditions, ouverts)
+        val lignes: List<Any> = note + SiddurJour.lignes(texte, annotations, jour.conditions, ouverts,
+            Store.siddurNusah(this).cle, israel)
         val rendu = ReglagesLecture.rendu(this)
         val gestion = liste.layoutManager as LinearLayoutManager
         val place = gestion.findFirstVisibleItemPosition()
@@ -183,9 +185,8 @@ class SiddurLectureActivity : AppCompatActivity() {
         defile.post { defile.smoothScrollTo(vue.left - (defile.width - vue.width) / 2, 0) }
     }
 
-    /** Le nom d'une condition dans la langue de l'application (SiddurJour.libelle). */
-    private fun nom(condition: String): String =
-        Libelles.res(SiddurJour.libelle(condition))?.let { getString(it) } ?: condition
+    /** Un libellé (clé de chaîne) dans la langue de l'application. */
+    private fun nom(libelle: String): String = Libelles.res(libelle)?.let { getString(it) } ?: libelle
 
     private inner class Adaptateur(
         private val lignes: List<Any>,
@@ -210,6 +211,7 @@ class SiddurLectureActivity : AppCompatActivity() {
             vue.apply {
                 background = null
                 alpha = 1f
+                contentDescription = null
                 setOnClickListener(null)
                 isClickable = false
                 layoutDirection = View.LAYOUT_DIRECTION_RTL
@@ -250,7 +252,7 @@ class SiddurLectureActivity : AppCompatActivity() {
                     layoutDirection = View.LAYOUT_DIRECTION_LOCALE
                     textDirection = View.TEXT_DIRECTION_LOCALE
                     setPadding(dp(20), dp(10), dp(20), dp(2))
-                    text = getString(R.string.siddur_aujourdhui) + " · " + nom(ligne.condition)
+                    text = getString(R.string.siddur_aujourdhui) + " · " + nom(ligne.libelle)
                     textSize = 12f
                     setTypeface(typeface, android.graphics.Typeface.BOLD)
                     setTextColor(rendu.titre)
@@ -267,16 +269,17 @@ class SiddurLectureActivity : AppCompatActivity() {
                     layoutDirection = View.LAYOUT_DIRECTION_LOCALE
                     textDirection = View.TEXT_DIRECTION_LOCALE
                     setPadding(dp(20), dp(10), dp(20), dp(10))
-                    val fleche = if (ligne.ouvert) "▾" else if (layoutDirection == View.LAYOUT_DIRECTION_RTL) "◂" else "▸"
+                    val rtl = resources.configuration.layoutDirection == View.LAYOUT_DIRECTION_RTL
+                    val fleche = if (ligne.ouvert) "▾" else if (rtl) "◂" else "▸"
                     val etat = getString(if (ligne.ouvert) R.string.siddur_replier else R.string.siddur_pas_aujourdhui)
-                    text = "$fleche  ${nom(ligne.condition)}  ·  $etat"
+                    text = "$fleche  ${nom(ligne.libelle)}  ·  $etat"
                     textSize = 14f
                     setTextColor(rendu.discret)
                     background = GradientDrawable().apply {
                         cornerRadius = dp(12).toFloat()
                         setStroke(dp(1), ColorUtils.setAlphaComponent(rendu.discret, 0x73), dp(5).toFloat(), dp(4).toFloat())
                     }
-                    contentDescription = "${nom(ligne.condition)}, $etat"
+                    contentDescription = "${nom(ligne.libelle)}, $etat"
                     setOnClickListener {
                         if (!ouverts.remove(ligne.cle)) ouverts.add(ligne.cle)
                         afficher(garderPlace = true)

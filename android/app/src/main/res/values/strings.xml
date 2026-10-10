@@ -682,6 +682,14 @@
     <string name="ajout_motsae_chabbat">Motsaé Chabbat</string>
     <string name="ajout_roch_hodech">Roch ’Hodech</string>
     <string name="ajout_hallel_annonce">Hallel</string>
+    <string name="ajout_anenou_officiant">Anénou de l’officiant (répétition)</string>
+    <string name="ajout_anenou_particulier">Anénou du particulier (Chomea téfila)</string>
+    <string name="ajout_anenou_particulier_matin_minha">Anénou du particulier, à Cha’harit et Min’ha</string>
+    <string name="ajout_anenou_particulier_trois">Anénou du particulier, à Arvit, Cha’harit et Min’ha</string>
+    <string name="ajout_anenou_particulier_minha">Anénou du particulier, à Min’ha seulement</string>
+    <string name="ajout_hallel_partiel_sans_berakha">Hallel partiel, sans bénédiction pour le particulier</string>
+    <string name="ajout_hallel_partiel_avec_berakha">Hallel partiel, avec bénédiction</string>
+    <string name="zmanim_omer_ce_soir">Omer ce soir : jour %1$d</string>
     <string name="ajout_omer">Compte de l’omer</string>
     <string name="siddur_aujourdhui">Aujourd’hui</string>
     <string name="siddur_pas_aujourdhui">Pas aujourd’hui · toucher pour lire</string>

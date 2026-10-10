@@ -12,16 +12,33 @@ import java.time.YearMonth
  */
 object JourAffiche {
 
-    /** Les ajouts du jour, dans l'ordre de l'Amida : des clés de libellé (Libelles). */
-    fun ajouts(c: Set<String>): List<String> = buildList {
+    /**
+     * Les ajouts du jour, dans l'ordre de l'Amida : des clés de libellé
+     * (Libelles). Le nusah change trois choses (ZMANIM.md, « Différences de
+     * nusah ») : Morid hatal hors d'Israël chez beaucoup d'Ashkénazes, la
+     * bénédiction du Hallel partiel, et l'Anénou du particulier (Ashkenaz et
+     * Sfard : à Min'ha seulement, Rema OC 565:3 ; Edot : à Cha'harit et à Min'ha,
+     * et à Arvit le soir de Tich'a bèAv).
+     */
+    fun ajouts(c0: Set<String>, nusah: String = "edot", enIsrael: Boolean = false): List<String> = buildList {
+        val c = SiddurJour.conditionsPour(nusah, enIsrael, c0)
         if (C.ASSERET_YEMEI_TECHOUVA in c) add("ajout_asseret_yemei_techouva")
-        add(if (C.MACHIV_HAROUAH in c) "ajout_machiv_harouah" else "ajout_morid_hatal")
+        if (C.MACHIV_HAROUAH in c) add("ajout_machiv_harouah") else if (C.MORID_HATAL in c) add("ajout_morid_hatal")
         add(if (C.TAL_OUMATAR in c) "ajout_tal_oumatar" else "ajout_berakha")
-        if (C.JEUNE in c) add("ajout_jeune")
+        if (C.JEUNE in c) {
+            add("ajout_anenou_officiant")
+            // Edot : à Tich'a bèAv, le jeûne commence la veille au soir, et
+            // Arvit en est (Peninei Halakha, yeshiva.co/midrash/48403).
+            add(when {
+                nusah != "edot" -> "ajout_anenou_particulier_minha"
+                C.TICHA_BEAV in c -> "ajout_anenou_particulier_trois"
+                else -> "ajout_anenou_particulier_matin_minha"
+            })
+        }
         if (C.TICHA_BEAV in c) add("ajout_ticha_beav")
         if (C.YAALE_VEYAVO in c) add("ajout_yaale_veyavo")
         if (C.AL_HANISSIM in c) add("ajout_al_hanissim")
-        if (C.HALLEL_COMPLET in c) add("ajout_hallel_complet") else if (C.HALLEL in c) add("ajout_hallel")
+        SiddurJour.libelleHallel(nusah, c)?.let { add(it) }
         // Le Chabbat, il n'y a pas d'Amida de semaine où dire ou taire Ta'hanoun.
         if (C.CHABBAT !in c) add(if (C.TAHANOUN_CHAHARIT in c) "ajout_tahanoun" else "ajout_sans_tahanoun")
     }

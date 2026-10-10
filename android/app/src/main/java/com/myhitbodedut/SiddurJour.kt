@@ -28,6 +28,8 @@ object SiddurJour {
         /** Pour un bloc : son groupe, et la condition qui ouvre ou replie le groupe. */
         val groupe: Int? = null,
         val racine: String? = null,
+        /** Un libellé propre (« ajout_anenou_officiant »), sinon celui de la condition. */
+        val libelle: String? = null,
     )
 
     /** Les annotations d'un nusah, par identifiant de texte. */
@@ -48,6 +50,7 @@ object SiddurJour {
                     texte = a.optString("texte", "").ifBlank { null },
                     groupe = if (a.has("g")) a.getInt("g") else null,
                     racine = a.optString("racine", "").ifBlank { null },
+                    libelle = a.optString("libelle", "").ifBlank { null },
                 )
             }
         }
@@ -60,14 +63,14 @@ object SiddurJour {
         data class Titre(val texte: String) : Ligne()
         data class Bloc(val bloc: SiddurBloc, val style: Style) : Ligne()
 
-        /** « Aujourd'hui · Ya'alé véyavo », au-dessus d'un ajout mis en évidence. */
-        data class Etiquette(val condition: String) : Ligne()
+        /** « Aujourd'hui · Ya'alé véyavo », au-dessus d'un ajout mis en évidence ; [libelle] : la clé de chaîne. */
+        data class Etiquette(val condition: String, val libelle: String) : Ligne()
 
         /** « Aujourd'hui : המלך הקדוש », sous un bloc qui mêle une variante. */
         data class Indice(val texte: String) : Ligne()
 
         /** Un ajout hors du jour, replié ; [ouvert] quand on l'a déplié. */
-        data class Replie(val cle: String, val condition: String, val ouvert: Boolean) : Ligne()
+        data class Replie(val cle: String, val condition: String, val ouvert: Boolean, val libelle: String) : Ligne()
     }
 
     /**
@@ -80,9 +83,13 @@ object SiddurJour {
     fun lignes(
         texte: SiddurTexte,
         annotations: List<Annotation>,
-        conditions: Set<String>,
+        conditionsDuJour: Set<String>,
         ouverts: Set<String> = emptySet(),
+        nusah: String = "edot",
+        enIsrael: Boolean = false,
     ): List<Ligne> {
+        val conditions = conditionsPour(nusah, enIsrael, conditionsDuJour)
+        fun nom(a: Annotation, condition: String) = libelleJour(a.libelle, condition, nusah, conditions)
         val sections = annotations.filter { it.sorte == Sorte.SECTION }.associateBy { it.section }
         val blocs = annotations.filter { it.sorte == Sorte.BLOC }.associateBy { it.section to it.bloc!! }
         val indices = annotations.filter { it.sorte == Sorte.INDICE }.groupBy { it.section to it.bloc!! }
@@ -93,11 +100,11 @@ object SiddurJour {
             val section = sections[si]
             if (section != null) {
                 if (vrai(section.condition, conditions)) {
-                    sortie += Ligne.Etiquette(section.condition)
+                    sortie += Ligne.Etiquette(section.condition, nom(section, section.condition))
                     s.blocs.forEach { sortie += Ligne.Bloc(it, Style.DU_JOUR) }
                 } else {
                     val cle = "§$si"
-                    sortie += Ligne.Replie(cle, section.condition, cle in ouverts)
+                    sortie += Ligne.Replie(cle, section.condition, cle in ouverts, nom(section, section.condition))
                     if (cle in ouverts) s.blocs.forEach { sortie += Ligne.Bloc(it, Style.HORS) }
                 }
                 return@forEachIndexed
@@ -119,16 +126,44 @@ object SiddurJour {
                 }
                 val racine = a.racine ?: a.condition
                 if (vrai(racine, conditions)) {
-                    sortie += Ligne.Etiquette(racine)
+                    sortie += Ligne.Etiquette(racine, nom(a, racine))
                     membres.forEach { (b, m) -> sortie += Ligne.Bloc(b, if (vrai(m.condition, conditions)) Style.DU_JOUR else Style.HORS) }
                 } else {
                     val cle = "$si:${a.groupe}"
-                    sortie += Ligne.Replie(cle, racine, cle in ouverts)
+                    sortie += Ligne.Replie(cle, racine, cle in ouverts, nom(a, racine))
                     if (cle in ouverts) membres.forEach { (b, _) -> sortie += Ligne.Bloc(b, Style.HORS) }
                 }
             }
         }
         return sortie
+    }
+
+    /**
+     * Les conditions du jour, ajustées au nusah (demande du 10/10, « attention
+     * aux différences ») : beaucoup d'Ashkénazes ne disent pas Morid hatal hors
+     * d'Israël, quand le nusah Sfard et les Séfarades le disent. Sources
+     * secondaires concordantes, à valider (ZMANIM.md, « Différences de nusah »).
+     */
+    fun conditionsPour(nusah: String, enIsrael: Boolean, conditions: Set<String>): Set<String> =
+        if (nusah == "ashkenaz" && !enIsrael) conditions - CalendrierJuif.C.MORID_HATAL else conditions
+
+    /**
+     * Le libellé d'un ajout, un jour donné : celui de l'annotation s'il en a un ;
+     * pour l'annonce du Hallel, complet ou partiel, et la bénédiction du
+     * Hallel partiel selon le nusah (Choul'han Aroukh et Rema, OC 422:2).
+     */
+    fun libelleJour(libelleAnnotation: String?, condition: String, nusah: String, conditions: Set<String>): String = when {
+        libelleAnnotation != null -> libelleAnnotation
+        condition == CalendrierJuif.C.HALLEL -> libelleHallel(nusah, conditions) ?: libelle(condition)
+        else -> libelle(condition)
+    }
+
+    /** Hallel complet, ou partiel avec ou sans bénédiction selon le nusah ; null hors Hallel. */
+    fun libelleHallel(nusah: String, conditions: Set<String>): String? = when {
+        CalendrierJuif.C.HALLEL_COMPLET in conditions -> "ajout_hallel_complet"
+        CalendrierJuif.C.HALLEL !in conditions -> null
+        nusah == "edot" -> "ajout_hallel_partiel_sans_berakha"
+        else -> "ajout_hallel_partiel_avec_berakha"
     }
 
     fun vrai(condition: String, conditions: Set<String>): Boolean =

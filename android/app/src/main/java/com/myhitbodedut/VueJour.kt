@@ -45,7 +45,9 @@ object VueJour {
 
     /** La carte d'un jour : la date hébraïque, la date civile, les fêtes, ce qu'il change aux prières. */
     fun carteJour(c: Context, date: LocalDate, enIsrael: Boolean): View {
-        val j = CalendrierJuif.jour(date, enIsrael)
+        val j = CalendrierJuif.jour(date, enIsrael, Store.mukafChoma(c))
+        // L'omer se compte le soir, pour le jour hébreu qui commence : celui de demain.
+        val omerCeSoir = CalendrierJuif.jour(date.plusDays(1), enIsrael).omer
         val langue = ChizukCard.language(c)
         val carte = carte(c)
         carte.addView(texte(c, j.dateHebraique, 26f, R.color.brand, gras = true).apply {
@@ -58,11 +60,11 @@ object VueJour {
         val marques = j.fetes.mapNotNull { Libelles.res("fete_$it")?.let(c::getString) } +
             listOfNotNull(
                 j.paracha?.let { c.getString(R.string.zmanim_paracha, it) },
-                j.omer.takeIf { it > 0 }?.let { c.getString(R.string.zmanim_omer, it) },
+                omerCeSoir.takeIf { it > 0 }?.let { c.getString(R.string.zmanim_omer_ce_soir, it) },
             )
         if (marques.isNotEmpty()) carte.addView(texte(c, marques.joinToString("  ·  "), 14f, R.color.brand, gras = true, haut = 10))
         carte.addView(texte(c, c.getString(R.string.zmanim_ajouts_titre), 12f, R.color.muted, gras = true, haut = 14))
-        val ajouts = JourAffiche.ajouts(j.conditions).mapNotNull { Libelles.res(it)?.let(c::getString) }
+        val ajouts = JourAffiche.ajouts(j.conditions, Store.siddurNusah(c).cle, enIsrael).mapNotNull { Libelles.res(it)?.let(c::getString) }
         carte.addView(texte(c, ajouts.joinToString(" · ").ifBlank { c.getString(R.string.zmanim_aucun_ajout) }, 15f, R.color.ink, haut = 2))
         return carte
     }

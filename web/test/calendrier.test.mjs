@@ -175,11 +175,20 @@ test('siddour : chaque annotation désigne encore son bloc, et chaque libellé e
         assert.equal(vu, a.empreinte, `${nusah}/${id} §${a.s}/${a.b}`);
         assert.ok(TOUTES.includes(a.si.replace(/^!/, '')), a.si);
         assert.ok(chaines.includes(`name="${libelle(a.si)}"`), libelle(a.si));
+        if (a.libelle) assert.ok(chaines.includes(`name="${a.libelle}"`), a.libelle);
       }
     }
   }
   assert.equal(vrai('!tahanoun_minha', new Set(['chabbat'])), true);
   assert.equal(vrai('!tahanoun_minha', new Set(['tahanoun_minha'])), false);
+  // Anénou (Rema OC 565:3) : l'officiant dans les trois noussa'him ; le
+  // particulier à Cha'harit seulement dans le siddour Edot.
+  const anenou = (nusah, id) => annotations[nusah][id].map((a) => a.libelle).filter((l) => l?.startsWith('ajout_anenou'));
+  for (const nusah of ['edot', 'sefard', 'ashkenaz']) {
+    assert.ok(anenou(nusah, 'chaharit').includes('ajout_anenou_officiant'), nusah);
+    assert.ok(anenou(nusah, 'minha').includes('ajout_anenou_officiant') && anenou(nusah, 'minha').includes('ajout_anenou_particulier'), nusah);
+    assert.equal(anenou(nusah, 'chaharit').includes('ajout_anenou_particulier'), nusah === 'edot', nusah);
+  }
 });
 
 // --- 5. L'onglet Zmanim et le calendrier (JourAfficheTest) ---------------------------
@@ -197,9 +206,55 @@ test('JourAffiche : allumage, sortie, ajouts nommés et grille, comme Android', 
   assert.equal(rh1.allumage.methode, 'apres_tset');
   assert.ok('sortie' in parIndex(A.horaires(paris, '2026-09-13', false, 18)));
   assert.deepEqual(A.ajouts(jour('2026-10-12', false).conditions),
-    ['ajout_machiv_harouah', 'ajout_berakha', 'ajout_yaale_veyavo', 'ajout_hallel', 'ajout_sans_tahanoun']);
+    ['ajout_machiv_harouah', 'ajout_berakha', 'ajout_yaale_veyavo', 'ajout_hallel_partiel_sans_berakha', 'ajout_sans_tahanoun']);
+  // Le nusah (JourAfficheTest) : bénédiction du Hallel partiel (OC 422:2),
+  // Morid hatal ashkénaze hors d'Israël, Anénou du particulier (OC 565:3).
+  const rc = jour('2026-10-12', false).conditions;
+  assert.ok(A.ajouts(rc, 'sefard').includes('ajout_hallel_partiel_avec_berakha'));
+  assert.ok(A.ajouts(rc, 'ashkenaz').includes('ajout_hallel_partiel_avec_berakha'));
+  const ete = jour('2027-06-01', false).conditions;
+  assert.ok(A.ajouts(ete, 'edot').includes('ajout_morid_hatal'));
+  assert.ok(A.ajouts(ete, 'sefard').includes('ajout_morid_hatal'));
+  assert.ok(!A.ajouts(ete, 'ashkenaz').includes('ajout_morid_hatal'));
+  assert.ok(A.ajouts(ete, 'ashkenaz', true).includes('ajout_morid_hatal'));
+  const jeune = jour('2026-12-20', false).conditions;
+  assert.deepEqual(A.ajouts(jeune, 'edot').filter((k) => k.startsWith('ajout_anenou')), ['ajout_anenou_officiant', 'ajout_anenou_particulier_matin_minha']);
+  assert.deepEqual(A.ajouts(jeune, 'ashkenaz').filter((k) => k.startsWith('ajout_anenou')), ['ajout_anenou_officiant', 'ajout_anenou_particulier_minha']);
+  const av = jour('2027-08-12', false).conditions; // Tich'a bèAv 5787
+  assert.ok(av.has('ticha_beav'));
+  assert.deepEqual(A.ajouts(av, 'edot').filter((k) => k.startsWith('ajout_anenou')), ['ajout_anenou_officiant', 'ajout_anenou_particulier_trois']);
+  assert.deepEqual(A.ajouts(av, 'sefard').filter((k) => k.startsWith('ajout_anenou')), ['ajout_anenou_officiant', 'ajout_anenou_particulier_minha']);
+  // Jérusalem : Pourim et Al hanissim le 15 Adar II 5787 (24/03/2027).
+  assert.ok(!jour('2027-03-23', true, true).conditions.has('al_hanissim'));
+  assert.ok(jour('2027-03-24', true, true).conditions.has('pourim'));
+  assert.ok(jour('2027-03-23', true).conditions.has('al_hanissim'));
+  assert.ok(!jour('2027-03-24', true).conditions.has('al_hanissim'));
+  const chaines = readFileSync(join(ICI, '..', '..', 'android', 'app', 'src', 'main', 'res', 'values', 'strings.xml'), 'utf8');
+  for (const n of ['edot', 'sefard', 'ashkenaz']) {
+    for (const k of [...A.ajouts(rc, n), ...A.ajouts(jeune, n), ...A.ajouts(ete, n), ...A.ajouts(av, n)]) assert.ok(chaines.includes(`name="${k}"`), k);
+  }
   const s = A.semaines(2026, 10);
   assert.equal(s.length, 5);
   assert.equal(s[0][4], '2026-10-01');
   assert.equal(s.flat().filter(Boolean).length, 31);
+});
+
+// --- 6. L'algorithme de la NOAA ---------------------------------------------------------
+test('zmanim : l’algorithme de la NOAA, à deux secondes près de ses formules', () => {
+  assert.equal(Z.calculateur(LIEUX[1], '2026-10-10'), 'US National Oceanic and Atmospheric Administration Algorithm');
+  const ref = JSON.parse(readFileSync(join(ICI, '..', '..', 'android', 'app', 'src', 'test', 'resources', 'zmanim_reference_noaa.json'), 'utf8'));
+  assert.ok(ref.length >= 28);
+  for (const r of ref) {
+    const lieu = LIEUX.find((l) => l.nom === r.lieu);
+    const z = Object.fromEntries(Z.jour(lieu, r.date).map((x) => [x.cle, x]));
+    for (const cle of ['netz', 'chkia', 'alot', 'misheyakir', 'tset', 'chatsot']) {
+      const local = Z.heure(z[cle].instant, lieu.fuseau);
+      const secondes = (t) => t.split(':').map(Number).reduce((a, b) => a * 60 + b, 0);
+      const vu = new Intl.DateTimeFormat('fr-FR', { hour: '2-digit', minute: '2-digit', second: '2-digit', hourCycle: 'h23', timeZone: lieu.fuseau }).format(z[cle].instant);
+      // ’Hatsot : l'équation du temps évaluée à JD − 0,5 par l'ancien calculateur
+      // JavaScript de la NOAA, que KosherJava reprend (voir ZmanimTest).
+      const tolerance = cle === 'chatsot' ? 20 : 2;
+      assert.ok(Math.abs(secondes(vu) - secondes(r[cle])) <= tolerance, `${r.lieu} ${r.date} ${cle} : ${vu} contre ${r[cle]} (NOAA, ${local})`);
+    }
+  }
 });

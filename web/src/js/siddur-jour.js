@@ -19,6 +19,31 @@ export function libelle(condition) {
   return `ajout_${c}`;
 }
 
+/**
+ * Les conditions du jour, ajustées au nusah (SiddurJour.conditionsPour) :
+ * beaucoup d'Ashkénazes ne disent pas Morid hatal hors d'Israël.
+ */
+export function conditionsPour(nusah, enIsrael, conditions) {
+  if (nusah !== 'ashkenaz' || enIsrael) return conditions;
+  const c = new Set(conditions);
+  c.delete('morid_hatal');
+  return c;
+}
+
+/** Hallel complet, ou partiel avec ou sans bénédiction selon le nusah (OC 422:2) ; null hors Hallel. */
+export function libelleHallel(nusah, conditions) {
+  if (conditions.has('hallel_complet')) return 'ajout_hallel_complet';
+  if (!conditions.has('hallel')) return null;
+  return nusah === 'edot' ? 'ajout_hallel_partiel_sans_berakha' : 'ajout_hallel_partiel_avec_berakha';
+}
+
+/** Le libellé d'un ajout un jour donné : celui de l'annotation, sinon celui de la condition (SiddurJour.libelleJour). */
+export function libelleJour(libelleAnnotation, condition, nusah, conditions) {
+  if (libelleAnnotation) return libelleAnnotation;
+  if (condition === 'hallel') return libelleHallel(nusah, conditions) ?? libelle(condition);
+  return libelle(condition);
+}
+
 /** Comme tools/siddur_annotations.py : sans balises ni voyelles, quarante caractères. */
 export function empreinte(texte) {
   return texte.replace(/<[^>]+>/g, ' ').replace(/[֑-ׇ]/g, '').replace(/\s+/g, ' ').trim().slice(0, 40);

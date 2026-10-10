@@ -2,6 +2,7 @@ package com.myhitbodedut
 
 import com.kosherjava.zmanim.ComplexZmanimCalendar
 import com.kosherjava.zmanim.util.GeoLocation
+import com.kosherjava.zmanim.util.NOAACalculator
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
@@ -25,7 +26,7 @@ import java.util.TimeZone
  */
 object Zmanim {
 
-    const val MOTEUR = "KosherJava 2.5.0"
+    const val MOTEUR = "KosherJava 2.5.0, NOAACalculator"
 
     data class Lieu(
         val nom: String,
@@ -100,6 +101,10 @@ object Zmanim {
             }
             // Explicite, même si c'est le défaut : le profil calcule au niveau de la mer.
             isUseElevation = false
+            // L'algorithme de la NOAA (US National Oceanic and Atmospheric
+            // Administration), écrit plutôt que laissé au défaut de la
+            // bibliothèque : ZmanimTest le compare aux formules de la NOAA.
+            astronomicalCalculator = NOAACalculator()
         }
     }
 

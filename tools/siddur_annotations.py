@@ -79,6 +79,7 @@ def annoter(texte_id, sections, nusah):
     sortie = []
 
     def note(sorte, si, bi, cond, extra=None):
+        extra = dict(extra or {})
         bloc = sections[si]["blocs"][bi] if bi is not None else None
         e = {"sorte": sorte, "s": si, "si": cond}
         if bi is not None:
@@ -114,15 +115,29 @@ def annoter(texte_id, sections, nusah):
         cons = ["c" in b for b in blocs]
         pris = set()
 
-        def prend(bi, c):
+        def prend(bi, c, libelle=None):
             if bi not in pris:
                 pris.add(bi)
-                note("bloc", si, bi, c)
+                note("bloc", si, bi, c, {"libelle": libelle} if libelle else None)
 
-        def en_tete(bi, c, *mots_cles):
+        def en_tete(bi, c, *mots_cles, libelle=None):
             """La consigne juste avant un ajout, si elle l'annonce, en suit le sort."""
             if bi > 0 and cons[bi - 1] and all(m in txt[bi - 1] for m in mots_cles):
-                prend(bi - 1, c)
+                prend(bi - 1, c, libelle)
+
+        # Anénou : l'officiant le dit dans sa répétition, bénédiction à part
+        # entre « גואל ישראל » et « רפאנו » ; le particulier, dans « שומע
+        # תפלה ». On les distingue par leur place : avant ou après « רפאנו ».
+        rofe = next((k for k, y in enumerate(txt) if not cons[k] and commence(y, "רפאנו")), None)
+
+        def anenou(bi):
+            """(condition, libellé) d'un Anénou à la place bi."""
+            if rofe is not None and bi < rofe:
+                return "jeune", "ajout_anenou_officiant"
+            # Le particulier : Edot le dit à Cha'harit et à Min'ha, et le 9 Av à
+            # Arvit (« בתשעה באב יש אומרים עננו ») ; Ashkenaz et Sfard, à Min'ha
+            # seulement (Rema, OC 565:3), et leur siddour ne le donne qu'à Min'ha.
+            return ("ticha_beav" if texte_id == "arvit" else "jeune"), "ajout_anenou_particulier"
 
         n = len(blocs)
         bi = 0
@@ -157,14 +172,12 @@ def annoter(texte_id, sections, nusah):
                 bi = j
                 continue
             # Anénou, les jours de jeûne.
-            if not cons[bi] and ("עננו אבינו עננו ביום צום" in x):
-                # À Arvit, le siddour ne le dit que le 9 Av (« בתשעה באב יש
-                # אומרים עננו ») : un jeûne mineur ne commence qu'à l'aube.
-                c = "ticha_beav" if texte_id == "arvit" else "jeune"
-                en_tete(bi, c, "תענית")
-                prend(bi, c)
-            elif cons[bi] and re.fullmatch(r"\(?בתענית ציבור אומר כאן הש״ץ עננו\)?", x):
-                prend(bi, "jeune")
+            if not cons[bi] and (re.search(r"עננו (אבינו|יהוה) עננו ביום צום", x)):
+                c, libelle = anenou(bi)
+                en_tete(bi, c, "תענית", libelle=libelle)
+                prend(bi, c, libelle)
+            elif cons[bi] and re.fullmatch(r"\(?בתענית ציבור אומר כאן הש״ץ עננו ?\)?:?", x):
+                prend(bi, "jeune", "ajout_anenou_officiant")
             # Na'hem, le 9 Av.
             elif not cons[bi] and commence(x, "נחם יהוה אלהינו"):
                 en_tete(bi, "ticha_beav", "באב")
@@ -243,6 +256,7 @@ def grouper(annotations):
         if e["sorte"] != "bloc":
             continue
         if precedent and precedent["s"] == e["s"] and precedent["b"] + 1 == e["b"] \
+                and e.get("libelle") == precedent.get("libelle") \
                 and (e["si"] == precedent["racine"] or e["si"] in SOUS.get(precedent["racine"], ())):
             e["g"], e["racine"] = precedent["g"], precedent["racine"]
         else:

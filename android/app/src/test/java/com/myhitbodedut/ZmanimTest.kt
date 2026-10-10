@@ -51,6 +51,33 @@ class ZmanimTest {
     }
 
     @Test
+    fun `astronomie - l algorithme de la NOAA, a deux secondes pres de ses formules`() {
+        val c = Zmanim.calendrier(lieux.getValue("Paris"), LocalDate.parse("2026-10-10"))
+        assertTrue(c.astronomicalCalculator is com.kosherjava.zmanim.util.NOAACalculator)
+        assertEquals("US National Oceanic and Atmospheric Administration Algorithm", c.astronomicalCalculator.calculatorName)
+        // Les formules du calculateur solaire de la NOAA, dans leur traduction
+        // Python (tools/zmanim_reference_noaa.py) : indépendantes du code de
+        // KosherJava, elles doivent donner les mêmes heures.
+        val reference = JSONArray(File("src/test/resources/zmanim_reference_noaa.json").readText())
+        assertTrue(reference.length() >= 28)
+        for (i in 0 until reference.length()) {
+            val r = reference.getJSONObject(i)
+            val z = zmanim(lieux.getValue(r.getString("lieu")), r.getString("date"))
+            listOf("netz", "chkia", "alot", "misheyakir", "tset", "chatsot").forEach { cle ->
+                val attendu = LocalTime.parse(r.getString(cle))
+                val calcule = z.getValue(cle).local!!.toLocalTime()
+                val ecart = Duration.between(attendu, calcule).abs().seconds
+                // 'Hatsot : KosherJava reprend le midi solaire de l'ancien
+                // calculateur JavaScript de la NOAA, qui évalue l'équation du
+                // temps à JD − 0,5 (douze heures plus tôt) ; la traduction
+                // Python l'évalue à l'heure de midi. Écart mesuré : 15 s au plus.
+                val tolerance = if (cle == "chatsot") 20 else 2
+                assertTrue("${r.getString("lieu")} ${r.getString("date")} $cle : $calcule contre $attendu (NOAA)", ecart <= tolerance)
+            }
+        }
+    }
+
+    @Test
     fun `la journee est dans l ordre, partout et en toute saison`() {
         val ordre = listOf("alot", "misheyakir", "netz", "szks_mga", "szks_gra", "szt_mga", "szt_gra",
             "chatsot", "minha_gedola", "minha_ketana", "plag", "chkia", "tset", "tset_rt", "chatsot_layla")

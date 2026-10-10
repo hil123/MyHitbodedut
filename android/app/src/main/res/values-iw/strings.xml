@@ -649,6 +649,14 @@
     <string name="ajout_motsae_chabbat">מוצאי שבת</string>
     <string name="ajout_roch_hodech">ראש חודש</string>
     <string name="ajout_hallel_annonce">הלל</string>
+    <string name="ajout_anenou_officiant">עננו של שליח הציבור (חזרת הש״ץ)</string>
+    <string name="ajout_anenou_particulier">עננו של היחיד (שומע תפלה)</string>
+    <string name="ajout_anenou_particulier_matin_minha">עננו ליחיד, בשחרית ובמנחה</string>
+    <string name="ajout_anenou_particulier_trois">עננו ליחיד, בערבית, בשחרית ובמנחה</string>
+    <string name="ajout_anenou_particulier_minha">עננו ליחיד, במנחה בלבד</string>
+    <string name="ajout_hallel_partiel_sans_berakha">הלל בדילוג, בלי ברכה ליחיד</string>
+    <string name="ajout_hallel_partiel_avec_berakha">הלל בדילוג, בברכה</string>
+    <string name="zmanim_omer_ce_soir">ספירת העומר הלילה: %1$d</string>
     <string name="ajout_omer">ספירת העומר</string>
     <string name="siddur_aujourdhui">היום</string>
     <string name="siddur_pas_aujourdhui">לא היום · הקשה לקריאה</string>

@@ -331,6 +331,9 @@ object Store {
     /** La ville choisie dans la liste (identifiant GeoNames), ou -1 pour la position du téléphone. */
     fun lieuVille(context: Context): Long = prefs(context).getLong(KEY_LIEU_VILLE, -1L)
 
+    /** Pourim le 15 Adar : la ville des zmanim est Jérusalem (CalendrierJuif.jour). */
+    fun mukafChoma(context: Context): Boolean = lieuVille(context) == CalendrierJuif.JERUSALEM_GEONAMES
+
     /**
      * Choisir le lieu règle aussi Israël ou diaspora : le deuxième jour de
      * fête suit le lieu des zmanim. Une ville le dit ; la position du

@@ -3,9 +3,9 @@
 // méthode (ZMANIM.md). web/test compare chaque valeur à KosherJava, à une
 // seconde près, et les méthodes équivalentes à Hebcal (sans l'embarquer).
 
-import { ComplexZmanimCalendar, DateTime, GeoLocation } from '../vendor/kosher-zmanim-0.9.0.min.js';
+import { ComplexZmanimCalendar, DateTime, GeoLocation, NOAACalculator } from '../vendor/kosher-zmanim-0.9.0.min.js';
 
-export const MOTEUR = 'kosher-zmanim 0.9.0';
+export const MOTEUR = 'kosher-zmanim 0.9.0, NOAACalculator';
 
 /** [clé, méthode, paramètres, calcul] : le même ordre et les mêmes méthodes que Zmanim.PROFIL. */
 const PROFIL = [
@@ -35,8 +35,13 @@ function calendrier(lieu, iso) {
   c.setDate(DateTime.fromObject({ year, month, day, hour: 12 }, { zone: lieu.fuseau }));
   // Explicite : le profil calcule au niveau de la mer.
   c.setUseElevation(false);
+  // L'algorithme de la NOAA, écrit plutôt que laissé au défaut (Zmanim.kt).
+  c.setAstronomicalCalculator(new NOAACalculator());
   return c;
 }
+
+/** Le nom du calculateur réellement utilisé, pour les tests. */
+export const calculateur = (lieu, iso) => calendrier(lieu, iso).getAstronomicalCalculator().getCalculatorName();
 
 const lendemain = (iso) => {
   const [a, m, j] = iso.split('-').map(Number);

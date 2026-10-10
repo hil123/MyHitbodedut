@@ -24,7 +24,9 @@ l'application sous GPL. Il sert de second avis dans les tests.
 
 Une seule liste, la même sur les deux plateformes (`Zmanim.PROFIL`,
 `web/src/js/zmanim.js`). Calcul **au niveau de la mer** (`isUseElevation`
-faux), dans le fuseau IANA du lieu. Les descriptions entre guillemets sont
+faux), dans le fuseau IANA du lieu, par **l'algorithme de la NOAA**
+(`NOAACalculator`, imposé explicitement sur les deux plateformes : c'est le
+défaut de KosherJava, mais l'application ne dépend plus de ce défaut). Les descriptions entre guillemets sont
 celles de la documentation de KosherJava 2.5.0 (`zmanim-2.5.0-sources.jar`).
 
 | Zman | Méthode KosherJava | Formule |
@@ -62,7 +64,41 @@ aucune règle n'est écrite à la main :
 - Ya'alé véyavo, Al hanissim, Machiv haroua'h, Morid hatal, Tal oumatar,
   Hallel complet ou partiel, Ta'hanoun du matin et de Min'ha : `TefilaRules` ;
 - jeûne (Anénou), Tich'a bèAv, dix jours de pénitence, omer, fêtes :
-  `JewishCalendar`.
+  `JewishCalendar` (`isTaanis`, hors Kippour : les quatre jeûnes publics,
+  Tich'a bèAv compris, et le jeûne d'Esther) ;
+- Pourim à Jérusalem le 15 Adar : `JewishCalendar.setIsMukafChoma`, quand la
+  ville choisie est Jérusalem (GeoNames 281184). Les villes dont le statut
+  est douteux gardent le 14, comme le calendrier commun.
+
+### Différences de noussa'h
+
+Demande du 10/10 (« attention aux différences »). Ce que le noussa'h choisi
+change, sur la carte du jour et dans le siddour :
+
+| Point | Edot hamizra'h | Sfard | Ashkenaz | Sources |
+| --- | --- | --- | --- | --- |
+| Bénédiction du Hallel partiel (Roch 'Hodech, fin de Pessa'h) | sans bénédiction | avec | avec | Choul'han Aroukh et Rema, OC 422:2, résumés sur [OU Torah](https://outorah.org/p/211828) et [Kol Torah](https://www.koltorah.org/halachah/chatzi-hallel-by-rabbi-chaim-jachter) |
+| Morid hatal l'été | dit | dit | **hors d'Israël, pas dit** (dit en Israël) | [yeshiva.co, question 6293](https://www.yeshiva.co/ask/6293), [yeshiva.co 47759](https://yeshiva.co/midrash/47759) |
+| Anénou de l'officiant (répétition) | Cha'harit et Min'ha | idem | idem | Choul'han Aroukh, OC 565:3, résumé sur [Etzion](https://etzion.org.il/en/node/26258) |
+| Anénou du particulier (Chomea téfila) | Cha'harit et Min'ha ; à Tich'a bèAv, Arvit aussi | Min'ha seulement | Min'ha seulement | Choul'han Aroukh et Rema, OC 565:3 ([Etzion](https://etzion.org.il/en/node/26258)) ; Tich'a bèAv : Peninei Halakha ([yeshiva.co 48403](https://www.yeshiva.co/midrash/48403)) |
+
+Limites déclarées :
+
+- les Séfarades marocains (et, selon une source, turcs) disent la
+  bénédiction du Hallel partiel ; les sources ne s'accordent pas sur la
+  liste exacte ([Kol Torah](https://www.koltorah.org/halachah/chatzi-hallel-by-rabbi-chaim-jachter),
+  [JewishLink](https://jewishlink.news/a-bracha-on-chatzi-hallel-sephardic-and-ashkenazic-practices/)).
+  L'application suit la règle du Choul'han Aroukh pour Edot ;
+- Morid hatal ashkénaze : c'est une coutume répandue, pas une règle
+  unanime ; les sources ne sont que secondaires ;
+- les blocs d'Anénou sont reconnus à leur texte et à la consigne du
+  siddour (`tools/siddur_annotations.py`) : l'officiant est le bloc placé
+  entre « גואל ישראל » et « רפאנו », le particulier celui de « שומע תפלה ».
+  Le siddour Edot porte lui-même un Anénou d'Arvit « בתשעה באב », annoté
+  pour ce seul jour.
+
+Les références au Choul'han Aroukh viennent de sources secondaires
+concordantes.
 
 **Les coutumes de Ta'hanoun** sont les réglages par défaut de `TefilaRules`,
 les mêmes pour les trois noussa'him. Par exemple : Ta'hanoun le vendredi et
@@ -114,6 +150,18 @@ Le lieu reste sur l'appareil. Choisir une ville revient sur la décision du
 21/09 (« sans ville ni coucher du soleil »), à la demande du propriétaire.
 
 ## Les tests
+
+**NOAA** (`ZmanimTest`, `web/test/calendrier.test.mjs`). Le moteur rapporte
+lui-même son algorithme (« US National Oceanic and Atmospheric
+Administration Algorithm ») ; les deux tests l'exigent. Les heures sont
+comparées aux formules publiées par la NOAA
+([calcdetails](https://gml.noaa.gov/grad/solcalc/calcdetails.html)),
+recalculées sans KosherJava par `tools/zmanim_reference_noaa.py` (traduction
+Python du calculateur de la NOAA, paquet `hamsci_psws` 0.1.3, servant
+seulement à produire les valeurs) : 2 s de tolérance pour le lever, le
+coucher et les angles. `'hatsot` est toléré à 20 s : KosherJava évalue
+l'équation du temps une demi-journée plus tôt que le tableur, comme l'ancien
+calculateur JavaScript de la NOAA, d'où un écart mesuré jusqu'à 15 s.
 
 **Astronomie** (`ZmanimTest`). Le lever, le coucher, les angles et le passage
 au méridien sont comparés à PyEphem 4.2.1 (libastro, VSOP87), qui ne partage

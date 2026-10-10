@@ -9,8 +9,8 @@ import { ART_DU_MOMENT, ChizukBag, ChizukRules } from './chizuk.js';
 import { DanseMesure } from './seance.js';
 import { creeStore, memoire } from './store.js';
 import { isoLocal } from './calendrier.js';
-import { jour as jourJuif, jourDeLaPriere } from './calendrier-juif.js';
-import { index as indexAjouts, libelle as libelleAjout, vrai as ajoutVrai } from './siddur-jour.js';
+import { JERUSALEM_GEONAMES, jour as jourJuif, jourDeLaPriere } from './calendrier-juif.js';
+import { conditionsPour, index as indexAjouts, libelleJour, vrai as ajoutVrai } from './siddur-jour.js';
 import { ajouts as ajoutsDuJour, horaires, semaines } from './jour-affiche.js';
 import { ALLUMAGES, heure as heureZman } from './zmanim.js';
 
@@ -908,8 +908,10 @@ function ecranPriere() {
   const annotations = chargeAnnotations() ? annotationsSiddur[store.siddurNusah()]?.[x.id] : null;
   const idx = indexAjouts(annotations ?? []);
   const maintenant = new Date();
-  const jourDuTexte = jourJuif(jourDeLaPriere(x.id, isoLocal(maintenant), maintenant.getHours()), store.inIsrael());
-  const c = jourDuTexte.conditions;
+  const jourDuTexte = jourJuif(jourDeLaPriere(x.id, isoLocal(maintenant), maintenant.getHours()), store.inIsrael(), mukafChoma());
+  const nusah = store.siddurNusah();
+  const c = conditionsPour(nusah, store.inIsrael(), jourDuTexte.conditions);
+  const nom = (a, condition) => tr.t(libelleJour(a.libelle, condition, nusah, c));
   const paragraphe = (s, i) => {
     const b = s.blocs[i];
     return h('p', { class: b.c !== undefined ? 'consigne' : 'priere', lang: 'he', dir: 'rtl' }, riche(b.c ?? b.t));
@@ -927,7 +929,7 @@ function ecranPriere() {
       const t = plusieurs && s.titre ? h('h2', { class: 'psaume-titre', lang: 'he', dir: 'rtl' }, s.titre) : null;
       if (t) titres.push({ titre: s.titre, el: t });
       const section = idx.sections.get(si);
-      if (section) return [t, ajout(section.si, ajoutVrai(section.si, c), s.blocs.map((_, i) => paragraphe(s, i)))];
+      if (section) return [t, ajout(nom(section, section.si), ajoutVrai(section.si, c), s.blocs.map((_, i) => paragraphe(s, i)))];
       const corps = [];
       for (let i = 0; i < s.blocs.length; i++) {
         const a = idx.blocs.get(`${si}:${i}`);
@@ -942,7 +944,7 @@ function ecranPriere() {
           i++;
         }
         i--;
-        corps.push(ajout(a.racine, ajoutVrai(a.racine, c), membres));
+        corps.push(ajout(nom(a, a.racine ?? a.si), ajoutVrai(a.racine ?? a.si, c), membres));
       }
       return [t, ...corps];
     }));
@@ -965,12 +967,11 @@ function chargeAnnotations() {
 }
 
 /**
- * Un ajout lié au jour. S'il s'applique : mis en évidence, avec son nom.
- * Sinon : replié en une ligne ; la flèche l'ouvre et le referme. Rien n'est
- * jamais retiré : l'annotation n'est qu'indicative.
+ * Un ajout lié au jour, sous son [nom] déjà traduit. S'il s'applique : mis en
+ * évidence. Sinon : replié en une ligne ; la flèche l'ouvre et le referme.
+ * Rien n'est jamais retiré : l'annotation n'est qu'indicative.
  */
-function ajout(condition, applique, blocs) {
-  const nom = tr.t(libelleAjout(condition));
+function ajout(nom, applique, blocs) {
   if (applique) {
     return h('div', { class: 'ajout du-jour' }, h('p', { class: 'ajout-etiquette' }, `${tr.t('siddur_aujourdhui')} · ${nom}`), blocs);
   }
@@ -1245,22 +1246,28 @@ function choisirAllumage() {
     ALLUMAGES.indexOf(store.allumage()), (i) => { store.setAllumage(ALLUMAGES[i]); rendre(); });
 }
 
+/** Jérusalem choisie : Pourim le 15 Adar (CalendrierJuif.jour, Store.mukafChoma). */
+const mukafChoma = () => store.lieu()?.ville === JERUSALEM_GEONAMES;
+
 /** La date hébraïque d'un jour, ses fêtes, et ce qu'il change aux prières. */
 function carteJour(iso) {
-  const j = jourJuif(iso, store.inIsrael());
+  const j = jourJuif(iso, store.inIsrael(), mukafChoma());
+  // L'omer se compte le soir, pour le jour hébreu qui commence : celui de demain.
+  const [a, m, d] = iso.split('-').map(Number);
+  const omerCeSoir = jourJuif(new Date(Date.UTC(a, m - 1, d + 1, 12)).toISOString().slice(0, 10), store.inIsrael()).omer;
   const civil = new Intl.DateTimeFormat(tr.langue, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' })
     .format(new Date(`${iso}T12:00:00Z`));
   const marques = [
     ...j.fetes.map((f) => tr.t(`fete_${f}`)),
     j.paracha ? tr.t('zmanim_paracha', j.paracha) : null,
-    j.omer ? tr.t('zmanim_omer', j.omer) : null,
+    omerCeSoir ? tr.t('zmanim_omer_ce_soir', omerCeSoir) : null,
   ].filter(Boolean);
   return h('div', { class: 'carte carte-jour' },
     h('p', { class: 'jour-hebreu', lang: 'he', dir: 'rtl' }, j.dateHebraique),
     h('p', { class: 'jour-civil' }, civil),
     marques.length ? h('div', { class: 'jour-marques' }, marques.map((m) => h('span', { class: 'marque' }, m))) : null,
     h('h3', { class: 'jour-sous-titre' }, tr.t('zmanim_ajouts_titre')),
-    h('p', { class: 'jour-ajouts' }, ajoutsDuJour(j.conditions).map((k) => tr.t(k)).join(' · ')));
+    h('p', { class: 'jour-ajouts' }, ajoutsDuJour(j.conditions, store.siddurNusah(), store.inIsrael()).map((k) => tr.t(k)).join(' · ')));
 }
 
 /** Les horaires d'un jour, chacun avec sa méthode ; ou l'invitation à choisir un lieu. */
@@ -1326,7 +1333,7 @@ function ecranCalendrier() {
           initiales.map((x) => h('span', { class: 'jour-initiale', 'aria-hidden': 'true' }, x)),
           grille.flat().map((d) => {
             if (!d) return h('span', { class: 'case vide' });
-            const j = jourJuif(d, store.inIsrael());
+            const j = jourJuif(d, store.inIsrael(), mukafChoma());
             return h('button', {
               class: ['case', d === aujourdhui ? 'aujourdhui' : '', d === choisi ? 'choisi' : '', j.chome ? 'chome' : '', j.fetes.length ? 'fete' : ''].filter(Boolean).join(' '),
               'aria-pressed': String(d === choisi),
