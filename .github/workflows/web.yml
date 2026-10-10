@@ -11,6 +11,7 @@ on:
       - 'web/**'
       - 'android/app/src/main/res/**'
       - 'android/app/src/main/java/com/myhitbodedut/MusicLibrary.kt'
+      - 'android/app/src/main/java/com/myhitbodedut/Zmanim.kt'
       - '.github/workflows/web.yml'
   pull_request:
     paths:
@@ -33,6 +34,12 @@ jobs:
         with:
           node-version: '22'
 
+      # Hebcal, moteur de comparaison des tests du calendrier : dépendance de
+      # test seulement (licence GPL), jamais copiée dans le site construit.
+      - name: Test dependencies
+        working-directory: web
+        run: npm install --no-audit --no-fund
+
       - name: Unit tests (rules ported from Android)
         working-directory: web
         run: node --test test/*.test.mjs
@@ -45,7 +52,7 @@ jobs:
       # le site doit servir exactement les mêmes octets.
       - name: Verified texts are served unchanged
         run: |
-          for f in chizuk.json bibliotheque.json tikkun_haklali.json; do
+          for f in chizuk.json bibliotheque.json tikkun_haklali.json villes.json siddur_annotations.json; do
             cmp "android/app/src/main/res/raw/$f" "web/dist/data/$f"
           done
 
