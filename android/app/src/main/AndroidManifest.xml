@@ -9,6 +9,9 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <!-- Tient le processeur éveillé jusqu'au terme d'une séance minutée (SessionService). -->
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <!-- Les zmanim (10/10) : la position approximative, seulement si on choisit
+         « Ma position » plutôt qu'une ville, et demandée à ce moment-là. -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <!--
         Sans cette ligne, Android considere l'ecran tactile comme requis et
@@ -163,6 +166,16 @@
             android:name=".ProofreadActivity"
             android:exported="false"
             android:label="@string/proofread_title" />
+
+        <activity
+            android:name=".ZmanimActivity"
+            android:exported="false"
+            android:label="@string/zmanim_title" />
+
+        <activity
+            android:name=".CalendrierActivity"
+            android:exported="false"
+            android:label="@string/calendrier_title" />
 
         <activity
             android:name=".MusicActivity"

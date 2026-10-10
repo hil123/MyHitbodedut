@@ -52,7 +52,7 @@ class FinitionTest {
 
     @Test
     fun `chaque onglet a un dessin au repos et un dessin plein`() {
-        listOf("today", "texts", "journal", "settings").forEach { nom ->
+        listOf("today", "texts", "zmanim", "journal", "settings").forEach { nom ->
             val selecteur = lire("res/drawable/ic_nav_$nom.xml")
             assertTrue("$nom : pas de sélecteur", selecteur.contains("<selector"))
             assertTrue(selecteur.contains("@drawable/ic_nav_${nom}_on\" android:state_checked=\"true\""))

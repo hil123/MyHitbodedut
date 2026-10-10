@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
     Les onglets de l'accueil. Aujourd'hui et Textes changent de panneau sur
-    place ; Journal et Réglages ouvrent leurs écrans, et l'onglet actif ne
-    bouge pas : au retour, on retrouve la page qu'on avait quittée.
+    place ; Zmanim (10/10), Journal et Réglages ouvrent leurs écrans, et
+    l'onglet actif ne bouge pas : au retour, on retrouve la page qu'on avait
+    quittée.
 -->
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
@@ -13,6 +14,10 @@
         android:id="@+id/nav_texts"
         android:icon="@drawable/ic_nav_texts"
         android:title="@string/nav_texts" />
+    <item
+        android:id="@+id/nav_zmanim"
+        android:icon="@drawable/ic_nav_zmanim"
+        android:title="@string/nav_zmanim" />
     <item
         android:id="@+id/nav_journal"
         android:icon="@drawable/ic_nav_journal"

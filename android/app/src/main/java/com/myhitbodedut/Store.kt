@@ -84,6 +84,13 @@ object Store {
     private const val KEY_LECTURE_MASQUEE = "lecture_masquee"
     private const val KEY_PAUSE_SHABBAT = "pause_shabbat"
     private const val KEY_IN_ISRAEL = "in_israel"
+    private const val KEY_LIEU_NOM = "lieu_nom"
+    private const val KEY_LIEU_LAT = "lieu_latitude"
+    private const val KEY_LIEU_LON = "lieu_longitude"
+    private const val KEY_LIEU_ALT = "lieu_altitude"
+    private const val KEY_LIEU_FUSEAU = "lieu_fuseau"
+    private const val KEY_LIEU_VILLE = "lieu_ville"
+    private const val KEY_ALLUMAGE = "allumage_minutes"
     private const val KEY_PAUSED_DATES = "paused_dates"
     private const val KEY_REMINDER_ON = "reminder_on"
     private const val KEY_REMINDER_MIN = "reminder_minutes"
@@ -304,6 +311,50 @@ object Store {
 
     fun setInIsrael(context: Context, value: Boolean) {
         prefs(context).edit().putBoolean(KEY_IN_ISRAEL, value).apply()
+    }
+
+    /**
+     * Le lieu des zmanim (10/10) : une ville de la liste ou la position du
+     * téléphone ; null tant que rien n'est choisi. Il reste sur l'appareil,
+     * comme tout le reste. Les nombres sont gardés en texte :
+     * SharedPreferences n'a pas de type décimal double.
+     */
+    fun lieuZmanim(context: Context): Zmanim.Lieu? {
+        val p = prefs(context)
+        val lat = p.getString(KEY_LIEU_LAT, null)?.toDoubleOrNull() ?: return null
+        val lon = p.getString(KEY_LIEU_LON, null)?.toDoubleOrNull() ?: return null
+        val fuseau = p.getString(KEY_LIEU_FUSEAU, null) ?: return null
+        return Zmanim.Lieu(p.getString(KEY_LIEU_NOM, "").orEmpty(), lat, lon,
+            p.getString(KEY_LIEU_ALT, null)?.toDoubleOrNull() ?: 0.0, fuseau)
+    }
+
+    /** La ville choisie dans la liste (identifiant GeoNames), ou -1 pour la position du téléphone. */
+    fun lieuVille(context: Context): Long = prefs(context).getLong(KEY_LIEU_VILLE, -1L)
+
+    /**
+     * Choisir le lieu règle aussi Israël ou diaspora : le deuxième jour de
+     * fête suit le lieu des zmanim. Une ville le dit ; la position du
+     * téléphone suit son fuseau, comme la valeur par défaut
+     * (Holidays.defaultInIsrael).
+     */
+    fun setLieuZmanim(context: Context, lieu: Zmanim.Lieu, ville: Ville?) {
+        prefs(context).edit()
+            .putString(KEY_LIEU_NOM, lieu.nom)
+            .putString(KEY_LIEU_LAT, lieu.latitude.toString())
+            .putString(KEY_LIEU_LON, lieu.longitude.toString())
+            .putString(KEY_LIEU_ALT, lieu.altitude.toString())
+            .putString(KEY_LIEU_FUSEAU, lieu.fuseau)
+            .putLong(KEY_LIEU_VILLE, ville?.id ?: -1L)
+            .apply()
+        setInIsrael(context, ville?.enIsrael ?: Holidays.defaultInIsrael(lieu.fuseau))
+    }
+
+    /** Les minutes d'allumage avant la chki'a ; 18 par défaut (Zmanim.ALLUMAGES). */
+    fun allumage(context: Context): Int =
+        prefs(context).getInt(KEY_ALLUMAGE, Zmanim.ALLUMAGE_DEFAUT).takeIf { it in Zmanim.ALLUMAGES } ?: Zmanim.ALLUMAGE_DEFAUT
+
+    fun setAllumage(context: Context, minutes: Int) {
+        prefs(context).edit().putInt(KEY_ALLUMAGE, minutes).apply()
     }
 
     fun pausedDates(context: Context): Set<String> =

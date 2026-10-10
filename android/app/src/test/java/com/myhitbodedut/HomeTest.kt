@@ -146,7 +146,7 @@ class HomeTest {
         assertTrue("le hassid doit être dans la jauge", jauge.substringBefore("week_gauge_label").contains("@+id/hero_character\""))
         assertTrue(code.contains("JaugeSemaine.progression(Store.currentWeek(this))"))
         val menu = File("src/main/res/menu/nav_main.xml").readText()
-        listOf("nav_today", "nav_texts", "nav_journal", "nav_settings").forEach {
+        listOf("nav_today", "nav_texts", "nav_zmanim", "nav_journal", "nav_settings").forEach {
             assertTrue("onglet « $it » absent", menu.contains("@+id/$it\""))
             assertTrue("onglet « $it » non branché", Regex("""R\.id\.$it\b""").containsMatchIn(code))
         }

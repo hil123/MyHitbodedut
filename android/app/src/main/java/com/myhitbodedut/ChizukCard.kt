@@ -173,6 +173,22 @@ object Data {
             tehilim ?: TehilimLoader.load(context.applicationContext).also { tehilim = it }
         }
 
+    @Volatile
+    private var annotations: String? = null
+
+    @Volatile
+    private var villes: List<Ville>? = null
+
+    /** Les ajouts du jour du siddour (SiddurJour, 10/10) : le fichier est lu une fois. */
+    fun ajouts(context: Context, nusah: Nusah = Store.siddurNusah(context)): Map<String, List<SiddurJour.Annotation>> {
+        val json = annotations ?: Json.readRaw(context.applicationContext, R.raw.siddur_annotations).also { annotations = it }
+        return SiddurJour.parse(json, nusah.cle)
+    }
+
+    /** Les villes des zmanim (GeoNames), lues une fois. */
+    fun villes(context: Context): List<Ville> =
+        villes ?: Villes.parse(Json.readRaw(context.applicationContext, R.raw.villes)).also { villes = it }
+
     /** Le siddour du nusah choisi : environ 550 ko par nusah, lus une fois par processus. */
     fun siddur(context: Context, nusah: Nusah = Store.siddurNusah(context)): Siddur =
         siddurs.getOrPut(nusah) { SiddurLoader.load(context.applicationContext, nusah) }

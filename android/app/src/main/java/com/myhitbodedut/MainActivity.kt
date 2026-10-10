@@ -81,6 +81,10 @@ class MainActivity : AppCompatActivity() {
                     }
                     true
                 }
+                R.id.nav_zmanim -> {
+                    startActivity(Intent(this, ZmanimActivity::class.java))
+                    false
+                }
                 R.id.nav_journal -> {
                     startActivity(Intent(this, JournalActivity::class.java))
                     false

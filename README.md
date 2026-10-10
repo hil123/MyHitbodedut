@@ -115,6 +115,7 @@ et change le lendemain.
 | Notifications | Android impose une notification permanente aux services au premier plan |
 | Batterie sans restriction | Éviter que le système suspende la surveillance |
 | Démarrage automatique | Reprendre après un redémarrage |
+| Localisation approximative | Seulement si l'on choisit « Ma position » comme lieu des zmanim, et demandée à ce moment-là ; une ville de la liste n'en a pas besoin |
 
 Les deux premières se donnent à la main dans les Réglages, Android ne permet pas
 de les accorder par une simple boîte de dialogue. L'écran principal contient la
@@ -123,6 +124,21 @@ liste et un bouton vers chaque écran système.
 La visibilité des autres applications passe par un élément `<queries>` limité
 aux applications lançables, et non par `QUERY_ALL_PACKAGES`, dont Google Play
 réserve l'usage à une courte liste de cas approuvés.
+
+### Calendrier hébraïque, zmanim et ajouts de prière
+
+L'onglet **Zmanim** montre la date hébraïque, les fêtes, ce que le jour change
+aux prières, et tous les horaires de la journée, chacun avec sa méthode. Le
+bouton **Calendrier** ouvre la grille d'un mois ; le jour touché montre son
+détail. Le lieu est une ville de la liste (GeoNames) ou la position du
+téléphone.
+
+Dans le siddour, les ajouts du jour sont mis en évidence (Ya'alé véyavo, Al
+hanissim, Tal oumatar, Anénou, Ta'hanoun…). Les autres sont repliés derrière
+une flèche, jamais retirés.
+
+Moteurs, méthodes, sources, limites, tests et maintenance : **ZMANIM.md**. Le
+profil est à valider par un Rav.
 
 ### Aucune donnée ne sort de l'appareil
 

@@ -741,3 +741,43 @@ avec les mêmes cas de test.
 
 Pas de marque-page personnel (« reprendre où j'en étais ») : non demandé. Il
 se grefferait sur la même bande si on le veut.
+
+## Mise à jour (10/10, suite) : calendrier hébraïque, zmanim, ajouts du siddour
+
+**Décision du 21/09 revue, à la demande du propriétaire** : « sans ville ni
+coucher du soleil » ne tient plus. L'application a désormais un lieu, une
+ville de la liste ou la position du téléphone, qui reste sur l'appareil.
+L'idée n° 7 (« selon le moment de la journée ») peut donc s'appuyer sur les
+vrais zmanim ; ce n'est pas encore fait, `SiddurMoment` garde ses heures
+fixes.
+
+**Décisions du propriétaire (10/10)** :
+
+1. Hebcal sert de second avis dans les tests seulement. L'application
+   s'appuie sur KosherJava (Android) et kosher-zmanim (web), sous licence
+   LGPL : la GPL de Hebcal obligerait à publier toute l'application.
+2. Le lieu : une ville choisie à la main, plus un GPS facultatif.
+3. Le siddour met en évidence les ajouts du jour et replie les autres
+   derrière une flèche.
+4. Le profil des zmanim et les coutumes de Ta'hanoun sont marqués « à
+   valider par un Rav ».
+
+**Construit** :
+
+- un onglet Zmanim : la date hébraïque, les ajouts du jour, tous les horaires
+  avec leur méthode, l'entrée et la sortie de Chabbat et des fêtes ;
+- un calendrier, avec le détail du jour touché ;
+- les ajouts du jour dans les trois siddourim.
+
+Tout est décrit dans `ZMANIM.md`.
+
+**Un écart consigné** : le 15 Adar I, KosherJava ne dit pas Ta'hanoun,
+Hebcal le fait dire partout. Le résultat de KosherJava est gardé ; voir
+`ZMANIM.md`.
+
+**Encore deux demandes du même jour** :
+
+- l'accueil, sur un téléphone haut (vidéo du 07/10), tient de nouveau dans
+  l'écran ;
+- l'onglet Réglages ne porte plus de pastille quand une autorisation
+  manque.

@@ -8,6 +8,11 @@ import { Anneaux, CycleTehilim, DureeSeance, JaugeSemaine, LibraryRules, Plaque,
 import { ART_DU_MOMENT, ChizukBag, ChizukRules } from './chizuk.js';
 import { DanseMesure } from './seance.js';
 import { creeStore, memoire } from './store.js';
+import { isoLocal } from './calendrier.js';
+import { jour as jourJuif, jourDeLaPriere } from './calendrier-juif.js';
+import { index as indexAjouts, libelle as libelleAjout, vrai as ajoutVrai } from './siddur-jour.js';
+import { ajouts as ajoutsDuJour, horaires, semaines } from './jour-affiche.js';
+import { ALLUMAGES, heure as heureZman } from './zmanim.js';
 
 // --- Stockage ---------------------------------------------------------------
 function stockageDuNavigateur() {
@@ -899,17 +904,86 @@ function ecranPriere() {
   const plusieurs = x.sections.length > 1;
   const sousTitre = [titreTexte(x.titre) !== x.titre.he ? titreTexte(x.titre) : null, titreTexte(x.nusah ?? siddur._meta.nusah)].filter(Boolean).join(' · ');
   const titres = [];
+  // Les ajouts du jour (10/10) : mis en évidence ; les autres, repliés.
+  const annotations = chargeAnnotations() ? annotationsSiddur[store.siddurNusah()]?.[x.id] : null;
+  const idx = indexAjouts(annotations ?? []);
+  const maintenant = new Date();
+  const jourDuTexte = jourJuif(jourDeLaPriere(x.id, isoLocal(maintenant), maintenant.getHours()), store.inIsrael());
+  const c = jourDuTexte.conditions;
+  const paragraphe = (s, i) => {
+    const b = s.blocs[i];
+    return h('p', { class: b.c !== undefined ? 'consigne' : 'priere', lang: 'he', dir: 'rtl' }, riche(b.c ?? b.t));
+  };
+  const avecIndices = (si, i, p) => {
+    const du = (idx.indices.get(`${si}:${i}`) ?? []).filter((a) => ajoutVrai(a.si, c));
+    return [p, ...du.map((a) => h('p', { class: 'indice-jour' },
+      h('span', {}, `${tr.t('siddur_aujourdhui')} : `), h('span', { lang: 'he', dir: 'rtl' }, a.texte)))];
+  };
   const contenu = h('div', { class: 'contenu lecture siddour' },
     h('p', { class: 'indice' }, sousTitre),
-    ...x.sections.flatMap((s) => {
+    annotations ? h('p', { class: 'indice note-ajouts' }, tr.t('siddur_jour_ajouts', jourDuTexte.dateHebraique,
+      tr.t(store.inIsrael() ? 'region_israel' : 'region_diaspora'))) : null,
+    ...x.sections.flatMap((s, si) => {
       const t = plusieurs && s.titre ? h('h2', { class: 'psaume-titre', lang: 'he', dir: 'rtl' }, s.titre) : null;
       if (t) titres.push({ titre: s.titre, el: t });
-      return [t, ...s.blocs.map((b) => h('p', { class: b.c !== undefined ? 'consigne' : 'priere', lang: 'he', dir: 'rtl' }, riche(b.c ?? b.t)))];
+      const section = idx.sections.get(si);
+      if (section) return [t, ajout(section.si, ajoutVrai(section.si, c), s.blocs.map((_, i) => paragraphe(s, i)))];
+      const corps = [];
+      for (let i = 0; i < s.blocs.length; i++) {
+        const a = idx.blocs.get(`${si}:${i}`);
+        if (!a) { corps.push(...avecIndices(si, i, paragraphe(s, i))); continue; }
+        // Le groupe : les blocs suivants de même groupe, variantes comprises.
+        const membres = [];
+        while (i < s.blocs.length && idx.blocs.get(`${si}:${i}`)?.g === a.g) {
+          const m = idx.blocs.get(`${si}:${i}`);
+          const p = paragraphe(s, i);
+          if (!ajoutVrai(m.si, c)) p.classList.add('hors-jour');
+          membres.push(p);
+          i++;
+        }
+        i--;
+        corps.push(ajout(a.racine, ajoutVrai(a.racine, c), membres));
+      }
+      return [t, ...corps];
     }));
   const bande = titres.length > 1 ? bandeSignets(titres) : null;
   const ecran = ecranLu(x.titre.he, contenu, { avecNusah: true, bande: bande?.nav });
   bande?.suivre(ecran.querySelector('.defile'));
   return ecran;
+}
+
+// Les annotations des ajouts (tools/siddur_annotations.py), chargées une fois.
+let annotationsSiddur = null;
+let annotationsDemandees = false;
+function chargeAnnotations() {
+  if (annotationsSiddur) return true;
+  if (!annotationsDemandees) {
+    annotationsDemandees = true;
+    fetch('data/siddur_annotations.json').then((r) => r.json()).then((d) => { annotationsSiddur = d; rendre(); }).catch(() => {});
+  }
+  return false;
+}
+
+/**
+ * Un ajout lié au jour. S'il s'applique : mis en évidence, avec son nom.
+ * Sinon : replié en une ligne ; la flèche l'ouvre et le referme. Rien n'est
+ * jamais retiré : l'annotation n'est qu'indicative.
+ */
+function ajout(condition, applique, blocs) {
+  const nom = tr.t(libelleAjout(condition));
+  if (applique) {
+    return h('div', { class: 'ajout du-jour' }, h('p', { class: 'ajout-etiquette' }, `${tr.t('siddur_aujourdhui')} · ${nom}`), blocs);
+  }
+  const corps = h('div', { class: 'ajout-corps', hidden: true }, blocs);
+  const bouton = h('button', { type: 'button', class: 'replie-bouton', 'aria-expanded': 'false' },
+    h('span', { class: 'replie-nom' }, nom), h('span', { class: 'replie-etat' }, tr.t('siddur_pas_aujourdhui')));
+  bouton.addEventListener('click', () => {
+    const ouvert = corps.hidden;
+    corps.hidden = !ouvert;
+    bouton.setAttribute('aria-expanded', String(ouvert));
+    bouton.querySelector('.replie-etat').textContent = tr.t(ouvert ? 'siddur_replier' : 'siddur_pas_aujourdhui');
+  });
+  return h('div', { class: 'ajout replie' }, bouton, corps);
 }
 
 /**
@@ -1062,7 +1136,7 @@ function onglets() {
   // Le journal n'existe pas encore sur le web : son onglet est masqué
   // plutôt que montré grisé (finition du 04/10).
   const items = [
-    ['aujourdhui', 'nav_today'], ['textes', 'nav_texts'], ['reglages', 'settings_title'],
+    ['aujourdhui', 'nav_today'], ['textes', 'nav_texts'], ['zmanim', 'nav_zmanim'], ['reglages', 'settings_title'],
   ];
   return h('nav', { class: 'onglets' }, items.map(([cle, nom]) => h('button', {
     class: 'onglet',
@@ -1070,7 +1144,7 @@ function onglets() {
     'aria-current': cle === onglet ? 'page' : null,
     onclick: () => {
       // Journal et Réglages ouvrent leur écran ; l'onglet actif ne bouge pas (MainActivity.wireTabs).
-      if (cle === 'reglages') ouvrir('reglages');
+      if (cle === 'reglages' || cle === 'zmanim') ouvrir(cle);
       else { onglet = cle; rendre(); }
     },
   }, h('span', { class: 'icone', 'aria-hidden': 'true' }), tr.t(nom))));
@@ -1114,6 +1188,158 @@ function ecranMusique() {
         }, tr.t('music_preview'))))))));
 }
 
+// --- Zmanim et calendrier (ZmanimActivity, CalendrierActivity, 10/10) ----------------
+let villes = null;
+let villesDemandees = false;
+function chargeVilles() {
+  if (villes) return true;
+  if (!villesDemandees) {
+    villesDemandees = true;
+    fetch('data/villes.json').then((r) => r.json()).then((d) => { villes = d.villes; rendre(); }).catch(() => {});
+  }
+  return false;
+}
+let jourCalendrier = null;
+let moisCalendrier = null;
+
+/** « 16.1 » → « 16,1 » en français : les paramètres des méthodes, à la locale. */
+const parametre = (p) => (p !== '' && !Number.isNaN(Number(p)) ? Number(p).toLocaleString(tr.langue) : p);
+
+/** Choisir le lieu : la position du téléphone, ou une ville de la liste (GeoNames). */
+function choisirLieu() {
+  chargeVilles();
+  feuille(tr.t('zmanim_choisir_lieu'), (f, fermer) => {
+    const etat = h('p', { class: 'message', 'aria-live': 'polite' });
+    f.append(h('button', {
+      class: 'choix',
+      onclick: () => {
+        if (!navigator.geolocation) { etat.textContent = tr.t('zmanim_position_refusee'); return; }
+        etat.textContent = tr.t('zmanim_position_attente');
+        navigator.geolocation.getCurrentPosition((p) => {
+          store.setLieu({
+            nom: tr.t('zmanim_position'), latitude: p.coords.latitude, longitude: p.coords.longitude,
+            altitude: 0, fuseau: Intl.DateTimeFormat().resolvedOptions().timeZone,
+          });
+          fermer();
+          rendre();
+        }, () => { etat.textContent = tr.t('zmanim_position_refusee'); }, { maximumAge: 3_600_000, timeout: 20_000 });
+      },
+    }, tr.t('zmanim_position')), etat);
+    const courant = store.lieu()?.ville;
+    for (const v of villes ?? []) {
+      f.append(h('button', {
+        class: 'choix', role: 'menuitemradio', 'aria-checked': String(v.id === courant),
+        onclick: () => {
+          store.setLieu({ nom: titreTexte(v.nom), latitude: v.latitude, longitude: v.longitude, altitude: v.altitude, fuseau: v.fuseau }, v);
+          fermer();
+          rendre();
+        },
+      }, titreTexte(v.nom)));
+    }
+    f.append(h('p', { class: 'indice sources' }, tr.t('zmanim_source_villes')));
+  });
+}
+
+function choisirAllumage() {
+  choisirDans(tr.t('reglage_allumage'), ALLUMAGES.map((m) => tr.t('reglage_allumage_valeur', m)),
+    ALLUMAGES.indexOf(store.allumage()), (i) => { store.setAllumage(ALLUMAGES[i]); rendre(); });
+}
+
+/** La date hébraïque d'un jour, ses fêtes, et ce qu'il change aux prières. */
+function carteJour(iso) {
+  const j = jourJuif(iso, store.inIsrael());
+  const civil = new Intl.DateTimeFormat(tr.langue, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' })
+    .format(new Date(`${iso}T12:00:00Z`));
+  const marques = [
+    ...j.fetes.map((f) => tr.t(`fete_${f}`)),
+    j.paracha ? tr.t('zmanim_paracha', j.paracha) : null,
+    j.omer ? tr.t('zmanim_omer', j.omer) : null,
+  ].filter(Boolean);
+  return h('div', { class: 'carte carte-jour' },
+    h('p', { class: 'jour-hebreu', lang: 'he', dir: 'rtl' }, j.dateHebraique),
+    h('p', { class: 'jour-civil' }, civil),
+    marques.length ? h('div', { class: 'jour-marques' }, marques.map((m) => h('span', { class: 'marque' }, m))) : null,
+    h('h3', { class: 'jour-sous-titre' }, tr.t('zmanim_ajouts_titre')),
+    h('p', { class: 'jour-ajouts' }, ajoutsDuJour(j.conditions).map((k) => tr.t(k)).join(' · ')));
+}
+
+/** Les horaires d'un jour, chacun avec sa méthode ; ou l'invitation à choisir un lieu. */
+function listeZmanim(iso) {
+  const lieu = store.lieu();
+  if (!lieu) {
+    return h('div', { class: 'carte carte-texte' }, h('p', { class: 'message' }, tr.t('zmanim_sans_lieu')),
+      h('button', { class: 'principal', onclick: choisirLieu }, tr.t('zmanim_choisir_lieu')));
+  }
+  return h('div', { class: 'carte carte-zmanim' }, horaires(lieu, iso, store.inIsrael(), store.allumage()).map((z) =>
+    h('div', { class: `zman${z.cle === 'allumage' || z.cle === 'sortie' ? ' zman-chabbat' : ''}` },
+      h('div', { class: 'zman-tete' },
+        h('span', { class: 'zman-nom' }, tr.t(`zman_${z.cle}`)),
+        h('span', { class: 'zman-heure', dir: 'ltr' }, z.statut === 'ok' ? heureZman(z.instant, lieu.fuseau) : '—')),
+      h('div', { class: 'zman-methode' }, z.statut === 'ok'
+        ? tr.t(`zman_methode_${z.methode}`, parametre(z.parametres))
+        : tr.t(z.statut === 'absent' ? 'zmanim_absent' : 'zmanim_erreur')))));
+}
+
+const piedZmanim = () => [h('p', { class: 'indice sources' }, tr.t('zmanim_a_valider')),
+  h('p', { class: 'indice sources' }, tr.t('zmanim_source_villes'))];
+
+function ecranZmanim() {
+  chargeVilles();
+  const iso = isoLocal(new Date());
+  const lieu = store.lieu();
+  const puce = h('button', {
+    type: 'button', class: 'puce-bandeau', 'aria-haspopup': 'dialog', onclick: choisirLieu,
+    'aria-label': `${tr.t('reglage_lieu')} : ${lieu ? lieu.nom : tr.t('reglage_lieu_aucun')}`,
+  }, h('span', {}, lieu ? tr.t('zmanim_lieu_detail', lieu.nom, tr.t(store.inIsrael() ? 'region_israel' : 'region_diaspora')) : tr.t('zmanim_choisir_lieu')), icone('replier'));
+  return h('div', { class: 'ecran avec-bandeau' }, bandeau(tr.t('zmanim_title'), { puce, dessin: 'char_reading_seated' }),
+    h('div', { class: 'defile' }, h('div', { class: 'contenu' },
+      carteJour(iso),
+      h('button', { class: 'secondaire bouton-calendrier', onclick: () => { jourCalendrier = iso; moisCalendrier = null; ouvrir('calendrier'); } },
+        tr.t('zmanim_calendrier')),
+      listeZmanim(iso),
+      ...piedZmanim())));
+}
+
+/** Le calendrier : un mois, du dimanche au samedi ; un jour touché montre son détail. */
+function ecranCalendrier() {
+  const aujourdhui = isoLocal(new Date());
+  const choisi = jourCalendrier ?? aujourdhui;
+  const [a, m] = moisCalendrier ?? choisi.split('-').map(Number);
+  const grille = semaines(a, m);
+  const jours = grille.flat().filter(Boolean);
+  const premier = jourJuif(jours[0], store.inIsrael());
+  const dernier = jourJuif(jours.at(-1), store.inIsrael());
+  const hebreu = premier.moisEtAnnee === dernier.moisEtAnnee ? premier.moisEtAnnee : `${premier.moisEtAnnee} – ${dernier.moisEtAnnee}`;
+  const titre = new Intl.DateTimeFormat(tr.langue, { month: 'long', year: 'numeric', timeZone: 'UTC' }).format(new Date(Date.UTC(a, m - 1, 15)));
+  const decale = (n) => { const d = new Date(Date.UTC(a, m - 1 + n, 1)); moisCalendrier = [d.getUTCFullYear(), d.getUTCMonth() + 1]; rendre(); };
+  // Les initiales des jours, du dimanche (4/10/2026) au samedi.
+  const initiales = Array.from({ length: 7 }, (_, i) => new Intl.DateTimeFormat(tr.langue, { weekday: 'narrow', timeZone: 'UTC' })
+    .format(new Date(Date.UTC(2026, 9, 4 + i, 12))));
+  return h('div', { class: 'ecran' }, barre(tr.t('calendrier_title')),
+    h('div', { class: 'defile' }, h('div', { class: 'contenu' },
+      h('div', { class: 'carte carte-calendrier' },
+        h('div', { class: 'mois-tete' },
+          h('button', { class: 'icone-bouton mois-precedent', 'aria-label': tr.t('calendrier_precedent'), onclick: () => decale(-1) }, tr.rtl ? '›' : '‹'),
+          h('div', { class: 'mois-titres' }, h('p', { class: 'mois-civil' }, titre), h('p', { class: 'mois-hebreu', lang: 'he', dir: 'rtl' }, hebreu)),
+          h('button', { class: 'icone-bouton mois-suivant', 'aria-label': tr.t('calendrier_suivant'), onclick: () => decale(1) }, tr.rtl ? '‹' : '›')),
+        h('div', { class: 'grille-jours', role: 'grid' },
+          initiales.map((x) => h('span', { class: 'jour-initiale', 'aria-hidden': 'true' }, x)),
+          grille.flat().map((d) => {
+            if (!d) return h('span', { class: 'case vide' });
+            const j = jourJuif(d, store.inIsrael());
+            return h('button', {
+              class: ['case', d === aujourdhui ? 'aujourdhui' : '', d === choisi ? 'choisi' : '', j.chome ? 'chome' : '', j.fetes.length ? 'fete' : ''].filter(Boolean).join(' '),
+              'aria-pressed': String(d === choisi),
+              'aria-label': `${d} · ${j.dateHebraique}${j.fetes.length ? ` · ${j.fetes.map((f) => tr.t(`fete_${f}`)).join(', ')}` : ''}`,
+              onclick: () => { jourCalendrier = d; moisCalendrier = [a, m]; rendre(); },
+            }, h('span', { class: 'case-civil' }, String(Number(d.slice(8)))), h('span', { class: 'case-hebreu', lang: 'he', dir: 'rtl' }, j.jourEnLettres));
+          })),
+        h('button', { class: 'lien-aujourdhui', onclick: () => { jourCalendrier = aujourdhui; moisCalendrier = null; rendre(); } }, tr.t('calendrier_aujourdhui'))),
+      carteJour(choisi),
+      listeZmanim(choisi),
+      ...piedZmanim())));
+}
+
 function ecranReglages() {
   const courante = LANGUES.find((l) => l.code === tr.langue);
   return h('div', { class: 'ecran' }, barre(tr.t('settings_title')),
@@ -1128,7 +1354,9 @@ function ecranReglages() {
               appliqueApparence();
               rendre();
             }),
-        })))));
+        }),
+        ligne({ nom: tr.t('reglage_lieu'), etat: store.lieu()?.nom ?? tr.t('reglage_lieu_aucun'), onclick: choisirLieu }),
+        ligne({ nom: tr.t('reglage_allumage'), etat: tr.t('reglage_allumage_valeur', store.allumage()), onclick: choisirAllumage })))));
 }
 
 // --- Boîtes de dialogue ---------------------------------------------------------------
@@ -1475,7 +1703,7 @@ function arreteDanse() {
 // et le geste de retour ramènent à l'accueil, sur l'onglet quitté.
 function ecranCourant() {
   const e = location.hash.slice(1);
-  return ['musique', 'reglages', 'seance', 'bravo', 'tehilim', 'lecture', 'siddur', 'priere', 'tikkun', 'bibliotheque', 'source'].includes(e) ? e : 'accueil';
+  return ['musique', 'reglages', 'seance', 'bravo', 'tehilim', 'lecture', 'siddur', 'priere', 'tikkun', 'bibliotheque', 'source', 'zmanim', 'calendrier'].includes(e) ? e : 'accueil';
 }
 function ouvrir(ecran) {
   // L'entrée sur l'écran de séance tire le mot d'ouverture (SessionActivity.onCreate).
@@ -1515,6 +1743,8 @@ function rendre() {
   app.replaceChildren();
   if (ecran === 'musique') app.append(ecranMusique());
   else if (ecran === 'reglages') app.append(ecranReglages());
+  else if (ecran === 'zmanim') app.append(ecranZmanim());
+  else if (ecran === 'calendrier') app.append(ecranCalendrier());
   else if (ecran === 'seance') app.append(ecranSeance());
   else if (ecran === 'bravo') app.append(ecranBravo());
   else if (ecran === 'tehilim') app.append(ecranTehilim());
