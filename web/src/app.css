@@ -303,6 +303,9 @@ input[type="range"] { width: 100%; accent-color: var(--brand); }
   .seance-actions .principal { order: -1; margin-top: 0; }
   .seance-actions .chizuk, .seance-actions .blocage { order: 2; }
   .seance-actions .durees { margin-top: 12px; }
+
+  /* Le bravo : la scène de danse se resserre pour laisser voir « Continuer ». */
+  .bravo .scene.danse { min-height: 150px; }
 }
 
 /* --- Feuille de choix (les AlertDialog d'Android) --------------------------------------- */

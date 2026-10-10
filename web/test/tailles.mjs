@@ -10,6 +10,7 @@
 // séance en cours, journée faite.
 //
 //   node web/test/tailles.mjs [chromium|webkit] [dossier de sortie]
+//   FILTRE=couche-bravo node web/test/tailles.mjs   → seulement les cas dont le nom contient ce motif
 //
 // Le site doit être construit (node web/build.mjs).
 
@@ -96,6 +97,7 @@ const ECRANS = [
 let verifies = 0;
 async function verifie(langue, mode, [taille, largeur, hauteur], e) {
   const id = `${langue}-${mode}-${taille}-${e.nom}`;
+  if (process.env.FILTRE && !new RegExp(process.env.FILTRE).test(id)) return;
   verifies++;
   const contexte = await navigateur.newContext({
     viewport: { width: largeur, height: hauteur }, serviceWorkers: 'block', reducedMotion: 'reduce',
