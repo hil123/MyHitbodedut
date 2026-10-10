@@ -63,6 +63,10 @@ if [ -n "$IPAD" ]; then
   echo "iPad : $(xcrun simctl list devices available | grep "$UDID" | sed -E 's/^ *//; s/ \(.*//')" | tee -a "$SORTIE/iphone-rapport.txt"
   xcrun simctl boot "$UDID" || true
   xcrun simctl bootstatus "$UDID" -b
+  # Tout juste démarré, le simulateur reste parfois sur la page de départ de
+  # Safari : une première ouverture pour rien.
+  xcrun simctl openurl "$UDID" "$URL" || true
+  sleep 15
   capture "$URL" ipad-accueil 20
   capture "$URL#siddur" ipad-siddur
   capture "$URL#seance" ipad-seance
