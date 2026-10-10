@@ -233,6 +233,8 @@ test('JourAffiche : allumage, sortie, ajouts nommés et grille, comme Android', 
   assert.ok(!conditionsPour('edot', true, fin).has('tahanoun_chaharit'));
   assert.ok(!A.ajouts(fin, 'edot').includes('ajout_tahanoun'));
   assert.ok(A.ajouts(fin, 'ashkenaz').includes('ajout_tahanoun'));
+  assert.ok(A.ajouts(fin, 'sefard', true).includes('ajout_tahanoun'));
+  assert.ok(!A.ajouts(fin, 'sefard', true, true).includes('ajout_tahanoun'));
   assert.ok(conditionsPour('edot', true, jour('2026-10-13', true).conditions).has('tahanoun_chaharit'));
   // Jérusalem : Pourim et Al hanissim le 15 Adar II 5787 (24/03/2027).
   assert.ok(!jour('2027-03-23', true, true).conditions.has('al_hanissim'));
@@ -270,4 +272,25 @@ test('zmanim : l’algorithme de la NOAA, à deux secondes près de ses formules
       assert.ok(Math.abs(secondes(vu) - secondes(r[cle])) <= tolerance, `${r.lieu} ${r.date} ${cle} : ${vu} contre ${r[cle]} (NOAA, ${local})`);
     }
   }
+});
+
+// --- 7. Le moment du siddour selon les zmanim (JourAfficheTest) ----------------------
+test('siddour : la suggestion suit les zmanim du lieu, rien dans les creux', async () => {
+  const A = await import('../src/js/jour-affiche.js');
+  const { SiddurMoment } = await import('../src/js/regles.js');
+  const jer = { nom: 'J', latitude: 31.76904, longitude: 35.21633, altitude: 0, fuseau: 'Asia/Jerusalem' };
+  const z = Object.fromEntries(Z.jour(jer, '2026-10-16').map((x) => [x.cle, x.instant]));
+  const d = (cle, s) => new Date(+z[cle] + s * 1000);
+  assert.equal(A.momentDuSiddour(jer, d('alot', 60)), 'birkot_hachahar');
+  assert.equal(A.momentDuSiddour(jer, d('misheyakir', 60)), 'chaharit');
+  assert.equal(A.momentDuSiddour(jer, d('chatsot', -60)), 'chaharit');
+  assert.equal(A.momentDuSiddour(jer, d('chatsot', 60)), null);
+  assert.equal(A.momentDuSiddour(jer, d('minha_gedola', 60)), 'minha');
+  assert.equal(A.momentDuSiddour(jer, d('chkia', -60)), 'minha');
+  assert.equal(A.momentDuSiddour(jer, d('chkia', 60)), null);
+  assert.equal(A.momentDuSiddour(jer, d('tset', 60)), 'arvit');
+  assert.equal(A.momentDuSiddour(jer, new Date('2026-10-16T22:45:00+03:00')), 'chema_coucher');
+  assert.equal(A.momentDuSiddour(jer, new Date('2026-10-16T02:00:00+03:00')), 'tikoun_hatsot');
+  const tromso = { nom: 'T', latitude: 69.6492, longitude: 18.9553, altitude: 0, fuseau: 'Europe/Oslo' };
+  assert.equal(A.momentDuSiddour(tromso, new Date('2026-06-21T14:00:00+02:00')), SiddurMoment.suggestion(14, 0));
 });

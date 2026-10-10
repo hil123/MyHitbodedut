@@ -79,6 +79,7 @@ object Store {
     private const val KEY_DAILY_GOAL = "daily_goal_minutes"
     private const val KEY_ANNEAUX_FETES = "anneaux_fetes"
     private const val KEY_SIDDUR_NUSAH = "siddur_nusah"
+    private const val KEY_TAHANOUN_TICHRI_SFARD = "sans_tahanoun_fin_tichri_sfard"
     private const val KEY_LECTURE_ECHELLE = "lecture_echelle"
     private const val KEY_LECTURE_SOMBRE = "lecture_sombre"
     private const val KEY_LECTURE_MASQUEE = "lecture_masquee"
@@ -358,6 +359,20 @@ object Store {
 
     fun setAllumage(context: Context, minutes: Int) {
         prefs(context).edit().putInt(KEY_ALLUMAGE, minutes).apply()
+    }
+
+    /**
+     * Pas de Ta'hanoun du 22 Tichri à la fin du mois : toujours en Edot,
+     * jamais en Ashkenaz, au choix en Sfard (10/10 ; faux par défaut).
+     */
+    fun sansTahanounFinTichri(context: Context): Boolean = when (siddurNusah(context).cle) {
+        "edot" -> true
+        "sefard" -> prefs(context).getBoolean(KEY_TAHANOUN_TICHRI_SFARD, false)
+        else -> false
+    }
+
+    fun setSansTahanounFinTichriSfard(context: Context, sans: Boolean) {
+        prefs(context).edit().putBoolean(KEY_TAHANOUN_TICHRI_SFARD, sans).apply()
     }
 
     fun pausedDates(context: Context): Set<String> =

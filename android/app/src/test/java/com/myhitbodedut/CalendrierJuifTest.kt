@@ -123,6 +123,9 @@ class CalendrierJuifTest {
         assertFalse(C.LUNDI_JEUDI in SiddurJour.conditionsPour("edot", true, c))
         assertTrue(C.TAHANOUN_CHAHARIT in SiddurJour.conditionsPour("ashkenaz", true, c))
         assertTrue(C.TAHANOUN_CHAHARIT in SiddurJour.conditionsPour("sefard", false, c))
+        // Sfard : au choix de l'utilisateur.
+        assertFalse(C.TAHANOUN_CHAHARIT in SiddurJour.conditionsPour("sefard", false, c, sansTahanounFinTichri = true))
+        assertFalse("ajout_tahanoun" in JourAffiche.ajouts(c, "sefard", true, sansTahanounFinTichri = true))
         // 3 'Hechvan (13/10/2026) : de nouveau Ta'hanoun pour tous.
         val apres = CalendrierJuif.jour(LocalDate.parse("2026-10-13"), true).conditions
         assertTrue(C.TAHANOUN_CHAHARIT in SiddurJour.conditionsPour("edot", true, apres))

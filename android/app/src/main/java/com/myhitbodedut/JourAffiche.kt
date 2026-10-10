@@ -20,8 +20,13 @@ object JourAffiche {
      * Sfard : à Min'ha seulement, Rema OC 565:3 ; Edot : à Cha'harit et à Min'ha,
      * et à Arvit le soir de Tich'a bèAv).
      */
-    fun ajouts(c0: Set<String>, nusah: String = "edot", enIsrael: Boolean = false): List<String> = buildList {
-        val c = SiddurJour.conditionsPour(nusah, enIsrael, c0)
+    fun ajouts(
+        c0: Set<String>,
+        nusah: String = "edot",
+        enIsrael: Boolean = false,
+        sansTahanounFinTichri: Boolean = nusah == "edot",
+    ): List<String> = buildList {
+        val c = SiddurJour.conditionsPour(nusah, enIsrael, c0, sansTahanounFinTichri)
         if (C.ASSERET_YEMEI_TECHOUVA in c) add("ajout_asseret_yemei_techouva")
         if (C.MACHIV_HAROUAH in c) add("ajout_machiv_harouah") else if (C.MORID_HATAL in c) add("ajout_morid_hatal")
         add(if (C.TAL_OUMATAR in c) "ajout_tal_oumatar" else "ajout_berakha")
@@ -68,6 +73,39 @@ object JourAffiche {
             }
         }
         return sortie
+    }
+
+    /**
+     * Le texte du siddour que suggère l'instant [maintenant], d'après les
+     * zmanim du [lieu] (demande du 10/10) : Tikoun 'hatsot de 'hatsot de la
+     * nuit à l'aube ; Birkot hacha'har de l'aube à michéyakir ; Cha'harit
+     * jusqu'à 'hatsot ; Min'ha de min'ha guedola à la chki'a ; Arvit dès tsét,
+     * puis le Chema du coucher après 22 h 30 (repère d'usage, pas un zman).
+     * null dans les deux creux, de 'hatsot à min'ha guedola et de la chki'a
+     * à tsét : aucune de ces prières n'y a sa place à priori. Sans les
+     * zmanim du jour (soleil de minuit), les heures fixes de SiddurMoment.
+     */
+    fun momentDuSiddour(lieu: Zmanim.Lieu, maintenant: java.time.Instant): String? {
+        val zone = java.time.ZoneId.of(lieu.fuseau)
+        val local = maintenant.atZone(zone)
+        val date = local.toLocalDate()
+        fun instants(d: LocalDate) = Zmanim.jour(lieu, d).associate { it.cle to it.instant }
+        val z = instants(date)
+        val hier = instants(date.minusDays(1))
+        val cles = listOf("alot", "misheyakir", "chatsot", "minha_gedola", "chkia", "tset", "chatsot_layla")
+        if (cles.any { z[it] == null } || hier["chatsot_layla"] == null) return SiddurMoment.suggestion(local.toLocalTime())
+        fun avant(cle: String) = maintenant < z.getValue(cle)!!
+        val soir = if (local.toLocalTime() < java.time.LocalTime.of(22, 30) && local.toLocalTime() > java.time.LocalTime.NOON) "arvit" else "chema_coucher"
+        return when {
+            avant("alot") -> if (maintenant >= hier.getValue("chatsot_layla")!!) "tikoun_hatsot" else "chema_coucher"
+            avant("misheyakir") -> "birkot_hachahar"
+            avant("chatsot") -> "chaharit"
+            avant("minha_gedola") -> null
+            avant("chkia") -> "minha"
+            avant("tset") -> null
+            avant("chatsot_layla") -> soir
+            else -> "tikoun_hatsot"
+        }
     }
 
     /**

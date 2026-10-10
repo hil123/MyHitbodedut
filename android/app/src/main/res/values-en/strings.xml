@@ -592,6 +592,11 @@
     <string name="reglage_lieu_aucun">None</string>
     <string name="reglage_allumage">Candle lighting</string>
     <string name="reglage_allumage_valeur">%1$d min before sunset</string>
+    <string name="reglage_allumage_jerusalem">%1$d min before sunset · Jerusalem custom</string>
+    <string name="reglage_allumage_proposition">In Jerusalem, the custom is to light 40 min before</string>
+    <string name="reglage_tahanoun_tichri">Tachanun at the end of Tishrei</string>
+    <string name="reglage_tahanoun_tichri_dit">Said after Isru Chag</string>
+    <string name="reglage_tahanoun_tichri_sans">Not said until Rosh Chodesh Cheshvan</string>
     <string name="zman_alot">Dawn (Alot hashachar)</string>
     <string name="zman_misheyakir">Misheyakir</string>
     <string name="zman_netz">Sunrise (Netz)</string>

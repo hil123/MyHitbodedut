@@ -50,11 +50,25 @@ class ZmanimActivity : AppCompatActivity() {
         contenu.addView(VueJour.horaires(this, aujourdhui, israel) { choixLieu.montrer() })
         contenu.addView(VueJour.carte(this).apply {
             addView(VueJour.texte(this@ZmanimActivity, getString(R.string.reglage_allumage), 15f, R.color.ink))
-            addView(VueJour.texte(this@ZmanimActivity, getString(R.string.reglage_allumage_valeur, Store.allumage(this@ZmanimActivity)),
+            addView(VueJour.texte(this@ZmanimActivity, libelleAllumage(Store.allumage(this@ZmanimActivity)),
                 13f, R.color.muted, haut = 2))
+            // À Jérusalem, l'usage est d'allumer 40 minutes avant : proposé, jamais imposé.
+            if (Store.mukafChoma(this@ZmanimActivity) && Store.allumage(this@ZmanimActivity) != ALLUMAGE_JERUSALEM) {
+                addView(VueJour.texte(this@ZmanimActivity, getString(R.string.reglage_allumage_proposition), 13f, R.color.brand, haut = 2))
+            }
             foreground = getDrawable(android.R.drawable.list_selector_background)
             setOnClickListener { choisirAllumage() }
         })
+        // Ta'hanoun en fin de Tichri : au choix en Sfard seulement.
+        if (Store.siddurNusah(this).cle == "sefard") {
+            contenu.addView(VueJour.carte(this).apply {
+                addView(VueJour.texte(this@ZmanimActivity, getString(R.string.reglage_tahanoun_tichri), 15f, R.color.ink))
+                addView(VueJour.texte(this@ZmanimActivity, getString(if (Store.sansTahanounFinTichri(this@ZmanimActivity))
+                    R.string.reglage_tahanoun_tichri_sans else R.string.reglage_tahanoun_tichri_dit), 13f, R.color.muted, haut = 2))
+                foreground = getDrawable(android.R.drawable.list_selector_background)
+                setOnClickListener { choisirTahanounTichri() }
+            })
+        }
         contenu.addView(VueJour.pied(this))
     }
 
@@ -62,7 +76,7 @@ class ZmanimActivity : AppCompatActivity() {
         val options = Zmanim.ALLUMAGES
         MaterialAlertDialogBuilder(this)
             .setTitle(R.string.reglage_allumage)
-            .setSingleChoiceItems(options.map { getString(R.string.reglage_allumage_valeur, it) }.toTypedArray(),
+            .setSingleChoiceItems(options.map { libelleAllumage(it) }.toTypedArray(),
                 options.indexOf(Store.allumage(this))) { d, i ->
                 Store.setAllumage(this, options[i])
                 d.dismiss()
@@ -71,5 +85,27 @@ class ZmanimActivity : AppCompatActivity() {
             .show()
     }
 
+    /** « 40 min avant la chki'a · coutume de Jérusalem », quand Jérusalem est choisie. */
+    private fun libelleAllumage(minutes: Int): String =
+        if (minutes == ALLUMAGE_JERUSALEM && Store.mukafChoma(this)) getString(R.string.reglage_allumage_jerusalem, minutes)
+        else getString(R.string.reglage_allumage_valeur, minutes)
+
+    private fun choisirTahanounTichri() {
+        val sans = Store.sansTahanounFinTichri(this)
+        MaterialAlertDialogBuilder(this)
+            .setTitle(R.string.reglage_tahanoun_tichri)
+            .setSingleChoiceItems(arrayOf(getString(R.string.reglage_tahanoun_tichri_dit), getString(R.string.reglage_tahanoun_tichri_sans)),
+                if (sans) 1 else 0) { d, i ->
+                Store.setSansTahanounFinTichriSfard(this, i == 1)
+                d.dismiss()
+                afficher()
+            }
+            .show()
+    }
+
     private fun dp(v: Int) = (v * resources.displayMetrics.density).toInt()
+
+    private companion object {
+        const val ALLUMAGE_JERUSALEM = 40
+    }
 }

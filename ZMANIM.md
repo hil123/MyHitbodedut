@@ -117,6 +117,18 @@ Roch Hachana, de Kippour et de Pessa'h chéni. Restent des coutumes qui
 divergent entre communautés, Sfard et Ashkenaz surtout (fin de Tichri, 13
 Sivan hors d'Israël).
 
+**Le siddour, « Pour cette heure »** (`JourAffiche.momentDuSiddour`) : avec
+un lieu, la prière proposée suit ses zmanim. Tikoun 'hatsot de 'hatsot de la
+nuit à l'aube ; Birkot hacha'har de l'aube à michéyakir ; Cha'harit jusqu'à
+'hatsot ; Min'ha de min'ha guedola à la chki'a ; Arvit dès tsét, puis le
+Chema du coucher après 22 h 30 (repère d'usage, pas un zman). Rien n'est
+proposé de 'hatsot à min'ha guedola ni de la chki'a à tsét. Sans lieu, ou
+sans zmanim (soleil de minuit), les heures fixes d'avant.
+
+**Réglages** : en noussa'h Sfard, Ta'hanoun de fin de Tichri au choix (dit
+après Isrou 'hag par défaut) ; à Jérusalem, l'allumage 40 minutes avant la
+chki'a est proposé, sans être imposé.
+
 **Le soir** : Arvit et le Chema du coucher relèvent du jour hébreu suivant à
 partir de midi (`jourDeLaPriere`). Midi plutôt que la chki'a, qui demanderait
 un lieu ; aucun Arvit ne se dit le matin. Les bénédictions du repas suivent

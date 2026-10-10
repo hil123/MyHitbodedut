@@ -11,7 +11,7 @@ import { creeStore, memoire } from './store.js';
 import { isoLocal } from './calendrier.js';
 import { JERUSALEM_GEONAMES, jour as jourJuif, jourDeLaPriere } from './calendrier-juif.js';
 import { conditionsPour, index as indexAjouts, libelleJour, vrai as ajoutVrai } from './siddur-jour.js';
-import { ajouts as ajoutsDuJour, horaires, semaines } from './jour-affiche.js';
+import { ajouts as ajoutsDuJour, horaires, momentDuSiddour, semaines } from './jour-affiche.js';
 import { ALLUMAGES, heure as heureZman } from './zmanim.js';
 
 // --- Stockage ---------------------------------------------------------------
@@ -874,7 +874,9 @@ function ecranSiddur() {
   const pret = chargeSiddur();
   const nomNusah = pret ? titreTexte(siddur._meta.nusah) : tr.t(NUSAH.find(([c]) => c === store.siddurNusah())?.[1] ?? 'siddur_nusah');
   const heure = new Date();
-  const suggere = pret ? siddur.textes.find((x) => x.id === SiddurMoment.suggestion(heure.getHours(), heure.getMinutes())) : null;
+  // Avec un lieu, la suggestion suit ses zmanim ; sans lieu, les heures fixes.
+  const moment = store.lieu() ? momentDuSiddour(store.lieu(), heure) : SiddurMoment.suggestion(heure.getHours(), heure.getMinutes());
+  const suggere = pret && moment ? siddur.textes.find((x) => x.id === moment) : null;
   const puce = h('button', {
     type: 'button', class: 'puce-bandeau', 'aria-haspopup': 'dialog', 'aria-label': `${tr.t('siddur_choose')} : ${nomNusah}`, onclick: choisirNusah,
   }, h('span', {}, nomNusah), icone('replier'));
@@ -910,7 +912,7 @@ function ecranPriere() {
   const maintenant = new Date();
   const jourDuTexte = jourJuif(jourDeLaPriere(x.id, isoLocal(maintenant), maintenant.getHours()), store.inIsrael(), mukafChoma());
   const nusah = store.siddurNusah();
-  const c = conditionsPour(nusah, store.inIsrael(), jourDuTexte.conditions);
+  const c = conditionsPour(nusah, store.inIsrael(), jourDuTexte.conditions, store.sansTahanounFinTichri());
   const nom = (a, condition) => tr.t(libelleJour(a.libelle, condition, nusah, c));
   const paragraphe = (s, i) => {
     const b = s.blocs[i];
@@ -1241,8 +1243,16 @@ function choisirLieu() {
   });
 }
 
+/** « 40 min avant la chki'a · coutume de Jérusalem », quand Jérusalem est choisie. */
+const libelleAllumage = (m) => tr.t(m === 40 && mukafChoma() ? 'reglage_allumage_jerusalem' : 'reglage_allumage_valeur', m);
+
+function choisirTahanounTichri() {
+  choisirDans(tr.t('reglage_tahanoun_tichri'), [tr.t('reglage_tahanoun_tichri_dit'), tr.t('reglage_tahanoun_tichri_sans')],
+    store.sansTahanounFinTichri() ? 1 : 0, (i) => { store.setSansTahanounFinTichriSfard(i === 1); rendre(); });
+}
+
 function choisirAllumage() {
-  choisirDans(tr.t('reglage_allumage'), ALLUMAGES.map((m) => tr.t('reglage_allumage_valeur', m)),
+  choisirDans(tr.t('reglage_allumage'), ALLUMAGES.map(libelleAllumage),
     ALLUMAGES.indexOf(store.allumage()), (i) => { store.setAllumage(ALLUMAGES[i]); rendre(); });
 }
 
@@ -1267,7 +1277,7 @@ function carteJour(iso) {
     h('p', { class: 'jour-civil' }, civil),
     marques.length ? h('div', { class: 'jour-marques' }, marques.map((m) => h('span', { class: 'marque' }, m))) : null,
     h('h3', { class: 'jour-sous-titre' }, tr.t('zmanim_ajouts_titre')),
-    h('p', { class: 'jour-ajouts' }, ajoutsDuJour(j.conditions, store.siddurNusah(), store.inIsrael()).map((k) => tr.t(k)).join(' · ')));
+    h('p', { class: 'jour-ajouts' }, ajoutsDuJour(j.conditions, store.siddurNusah(), store.inIsrael(), store.sansTahanounFinTichri()).map((k) => tr.t(k)).join(' · ')));
 }
 
 /** Les horaires d'un jour, chacun avec sa méthode ; ou l'invitation à choisir un lieu. */
@@ -1363,7 +1373,11 @@ function ecranReglages() {
             }),
         }),
         ligne({ nom: tr.t('reglage_lieu'), etat: store.lieu()?.nom ?? tr.t('reglage_lieu_aucun'), onclick: choisirLieu }),
-        ligne({ nom: tr.t('reglage_allumage'), etat: tr.t('reglage_allumage_valeur', store.allumage()), onclick: choisirAllumage })))));
+        // À Jérusalem, l'usage des 40 minutes est proposé, jamais imposé.
+        ligne({ nom: tr.t('reglage_allumage'), onclick: choisirAllumage,
+          etat: [libelleAllumage(store.allumage()), mukafChoma() && store.allumage() !== 40 ? tr.t('reglage_allumage_proposition') : null].filter(Boolean).join(' · ') }),
+        store.siddurNusah() === 'sefard' ? ligne({ nom: tr.t('reglage_tahanoun_tichri'), onclick: choisirTahanounTichri,
+          etat: tr.t(store.sansTahanounFinTichri() ? 'reglage_tahanoun_tichri_sans' : 'reglage_tahanoun_tichri_dit') }) : null))));
 }
 
 // --- Boîtes de dialogue ---------------------------------------------------------------

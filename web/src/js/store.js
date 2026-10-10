@@ -139,6 +139,9 @@ export function creeStore(stockage, { maintenant = () => new Date(), fuseau } = 
     /** Les minutes d'allumage avant la chki'a ; 18 par défaut. */
     allumage: () => ([18, 20, 22, 30, 40].includes(get('allumage_minutes', 18)) ? get('allumage_minutes', 18) : 18),
     setAllumage: (m) => set('allumage_minutes', m),
+    /** Pas de Ta'hanoun en fin de Tichri : toujours en Edot, au choix en Sfard (Store.sansTahanounFinTichri). */
+    sansTahanounFinTichri: () => ({ edot: true, sefard: get('sans_tahanoun_fin_tichri_sfard', false) === true }[store.siddurNusah()] ?? false),
+    setSansTahanounFinTichriSfard: (v) => set('sans_tahanoun_fin_tichri_sfard', v),
     pausedDates: () => new Set(get('paused_dates', [])),
     isExempt(date) {
       if (store.pausedDates().has(date)) return true;

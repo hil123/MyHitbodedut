@@ -91,4 +91,27 @@ class JourAfficheTest {
         assertEquals(31, s.flatten().count { it != null })
         assertEquals(5, s.size)
     }
+
+    @Test
+    fun `le siddour suit les zmanim du lieu`() {
+        val jer = Zmanim.Lieu("Jérusalem", 31.76904, 35.21633, 0.0, "Asia/Jerusalem")
+        fun a(h: String) = java.time.ZonedDateTime.parse("2026-10-16T$h+03:00[Asia/Jerusalem]").toInstant()
+        val z = Zmanim.jour(jer, LocalDate.parse("2026-10-16")).associate { it.cle to it.instant!! }
+        fun juste(cle: String, secondes: Long) = z.getValue(cle).plusSeconds(secondes)
+        assertEquals("birkot_hachahar", JourAffiche.momentDuSiddour(jer, juste("alot", 60)))
+        assertEquals("chaharit", JourAffiche.momentDuSiddour(jer, juste("misheyakir", 60)))
+        assertEquals("chaharit", JourAffiche.momentDuSiddour(jer, juste("chatsot", -60)))
+        assertEquals(null, JourAffiche.momentDuSiddour(jer, juste("chatsot", 60)))
+        assertEquals("minha", JourAffiche.momentDuSiddour(jer, juste("minha_gedola", 60)))
+        assertEquals("minha", JourAffiche.momentDuSiddour(jer, juste("chkia", -60)))
+        assertEquals(null, JourAffiche.momentDuSiddour(jer, juste("chkia", 60)))
+        assertEquals("arvit", JourAffiche.momentDuSiddour(jer, juste("tset", 60)))
+        assertEquals("chema_coucher", JourAffiche.momentDuSiddour(jer, a("22:45:00")))
+        assertEquals("tikoun_hatsot", JourAffiche.momentDuSiddour(jer, a("02:00:00")))
+        // Soleil de minuit à Tromsø : les heures fixes.
+        val tromso = Zmanim.Lieu("Tromsø", 69.6492, 18.9553, 0.0, "Europe/Oslo")
+        val juin = java.time.ZonedDateTime.parse("2026-06-21T14:00:00+02:00[Europe/Oslo]").toInstant()
+        assertEquals(SiddurMoment.suggestion(java.time.LocalTime.of(14, 0)), JourAffiche.momentDuSiddour(tromso, juin))
+    }
+
 }

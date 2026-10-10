@@ -195,3 +195,14 @@ test('le sac de ’hizouk survit d’un tirage à l’autre', () => {
   for (let i = 0; i < n; i++) vus.add(ChizukBag.tirer(s, chizuk, 'ouverture').id);
   assert.equal(vus.size, n, 'un texte est revenu avant la fin du cycle');
 });
+
+test('Ta’hanoun en fin de Tichri : toujours en Edot, au choix en Sfard, jamais en Ashkenaz', () => {
+  const s = creeStore(memoire());
+  assert.equal(s.sansTahanounFinTichri(), true); // Edot par défaut
+  s.setSiddurNusah('sefard');
+  assert.equal(s.sansTahanounFinTichri(), false);
+  s.setSansTahanounFinTichriSfard(true);
+  assert.equal(s.sansTahanounFinTichri(), true);
+  s.setSiddurNusah('ashkenaz');
+  assert.equal(s.sansTahanounFinTichri(), false);
+});

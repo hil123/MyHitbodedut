@@ -605,6 +605,11 @@
     <string name="reglage_lieu_aucun">לא נבחר</string>
     <string name="reglage_allumage">הדלקת נרות</string>
     <string name="reglage_allumage_valeur">%1$d דקות לפני השקיעה</string>
+    <string name="reglage_allumage_jerusalem">%1$d דקות לפני השקיעה · מנהג ירושלים</string>
+    <string name="reglage_allumage_proposition">בירושלים נוהגים להדליק 40 דקות לפני השקיעה</string>
+    <string name="reglage_tahanoun_tichri">תחנון בסוף תשרי</string>
+    <string name="reglage_tahanoun_tichri_dit">אומרים אחרי אסרו חג</string>
+    <string name="reglage_tahanoun_tichri_sans">אין אומרים עד ראש חודש חשון</string>
     <string name="zman_alot">עלות השחר</string>
     <string name="zman_misheyakir">משיכיר</string>
     <string name="zman_netz">הנץ החמה</string>
