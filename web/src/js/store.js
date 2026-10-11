@@ -103,6 +103,11 @@ export function creeStore(stockage, { maintenant = () => new Date(), fuseau } = 
     joursFaits: () => new Set(Object.values(days()).filter((r) => r.faite).map((r) => r.date)),
     aDejaPratique: () => Object.values(days()).some((r) => r.faite),
     totalMinutes: () => Object.values(days()).reduce((s, r) => s + r.minutes, 0),
+    /** Les minutes des jours faits, par date (Store.bilan, paliers du 11/10). */
+    minutesParJour: () => Object.fromEntries(Object.values(days()).filter((r) => r.faite).map((r) => [r.date, r.minutes])),
+    /** null tant que les paliers n'ont jamais été regardés : le premier passage ne fête rien. */
+    paliersVus: () => { const v = get('paliers_vus', null); return Array.isArray(v) ? new Set(v) : null; },
+    setPaliersVus: (marques) => set('paliers_vus', [...marques]),
 
     /** La note d'un jour. Sur un jour sans hitbodedout, elle ne le valide pas. */
     setNote(date, note) {

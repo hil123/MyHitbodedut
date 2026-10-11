@@ -749,4 +749,29 @@
     <string name="hilloula_lien">Les sages du jour sur hyomi.org.il</string>
     <string name="halakha_yomit_titre">Halakha yomit</string>
     <string name="halakha_yomit_lien">La halakha du jour sur halachayomit.co.il</string>
+    <!-- Les paliers d'objectifs (11/10) -->
+    <string name="paliers_title">Mes paliers</string>
+    <string name="paliers_sous_titre">Après chaque palier, le suivant</string>
+    <string name="palier_serie">Jours d’affilée</string>
+    <string name="palier_jour">Aujourd’hui</string>
+    <string name="palier_semaine">Cette semaine</string>
+    <string name="palier_mois">Ce mois-ci · %1$s</string>
+    <string name="palier_cumul">Temps cumulé</string>
+    <string name="palier_jours">Jours de pratique</string>
+    <string name="palier_prochain">Prochain palier : %1$s · encore %2$s</string>
+    <string name="palier_atteints">Paliers atteints : %1$d</string>
+    <string name="palier_nouveau">Palier atteint : %1$s — %2$s !</string>
+    <string name="palier_une_serie">Encore %1$s pour %2$s d’affilée</string>
+    <string name="palier_une_jour">Encore %1$s pour %2$s aujourd’hui</string>
+    <string name="palier_une_semaine">Encore %1$s pour %2$s cette semaine</string>
+    <string name="palier_une_mois">Encore %1$s pour %2$s ce mois-ci</string>
+    <string name="paliers_records">Records</string>
+    <string name="record_serie">Plus longue série : %1$s</string>
+    <string name="record_jour">Meilleure journée : %1$s</string>
+    <string name="record_semaine">Meilleure semaine : %1$s</string>
+    <string name="record_mois">Meilleur mois : %1$s</string>
+    <plurals name="palier_n_jours">
+        <item quantity="one">%1$d jour</item>
+        <item quantity="other">%1$d jours</item>
+    </plurals>
 </resources>

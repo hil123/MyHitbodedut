@@ -9,6 +9,7 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -114,6 +115,7 @@ class MainActivity : AppCompatActivity() {
         SessionService.reconcilier(this)
         applyServiceState()
         refresh()
+        renderPaliers()
         // Chaque retour sur l'accueil : le hassid au centre, les anneaux se
         // remplissent, puis il salue ou fête l'anneau qui vient de se fermer (04/10).
         findViewById<View>(R.id.hero_plate).apply {
@@ -504,6 +506,28 @@ class MainActivity : AppCompatActivity() {
             addUpdateListener { valeur.text = texte(it.animatedValue as Int) }
             start()
         }
+    }
+
+    /**
+     * Le palier le plus proche, sous les anneaux (11/10), et la fête d'un
+     * palier atteint depuis la dernière visite : une fois par palier (et par
+     * jour, semaine ou mois pour les paliers de durée).
+     */
+    private fun renderPaliers() {
+        val bilan = Store.bilan(this)
+        val etats = Paliers.etats(bilan)
+        findViewById<TextView>(R.id.paliers_line).apply {
+            text = PaliersVue.aLaUne(this@MainActivity, Paliers.aLaUne(etats)) + "  ›"
+            setOnClickListener { startActivity(Intent(this@MainActivity, PaliersActivity::class.java)) }
+        }
+        val vus = Store.paliersVus(this)
+        if (vus != null) {
+            Paliers.nouveaux(etats, bilan, vus).maxByOrNull { it.rang }?.let { e ->
+                Toast.makeText(this, getString(R.string.palier_nouveau,
+                    PaliersVue.libelle(this, e.piste, bilan), PaliersVue.valeur(this, e.piste, e.atteint)), Toast.LENGTH_LONG).show()
+            }
+        }
+        Store.setPaliersVus(this, Paliers.marques(etats, bilan))
     }
 
     /** Le compteur qui fait monter le chiffre de la face ; arrêté quand la face change. */

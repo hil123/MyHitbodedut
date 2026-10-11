@@ -539,3 +539,23 @@ test('carte du jour : illustration, hilloula et liens', async () => {
     assert.ok(readFileSync(join(RES, 'drawable-nodpi', `${img}.webp`)).length > 0, img);
   }
 });
+
+// Les paliers d'objectifs (11/10), comme PaliersTest.
+test('paliers : après chaque palier, le suivant', async () => {
+  const P = await import('../src/js/paliers.js');
+  const e = P.etat('serie', 7);
+  assert.deepEqual([e.atteint, e.prochain, e.reste, e.rang], [7, 14, 7, 2]);
+  assert.equal(P.etat('serie', 400).prochain, 730);
+  assert.equal(P.etat('cumul', 61000).prochain, 72000);
+  assert.equal(P.etat('jour', 21, 25).prochain, 25);
+  const bilan = { aujourdhui: '2026-10-14', minutes: { '2026-10-10': 20, '2026-10-12': 30, '2026-10-14': 15 }, serie: 2, debutMoisHebreu: '2026-10-12', objectifJour: 20 };
+  const l = Object.fromEntries(P.etats(bilan).map((x) => [x.piste, x.valeur]));
+  assert.deepEqual(l, { serie: 2, jour: 15, semaine: 45, mois: 45, cumul: 65, jours: 3 });
+  const m = P.marques(P.etats(bilan), bilan);
+  assert.ok(m.has('jour:2026-10-14:15'));
+  assert.deepEqual(P.nouveaux(P.etats(bilan), bilan, new Set()).map((x) => x.piste).sort(), ['cumul', 'jour', 'jours', 'semaine']);
+  assert.deepEqual(P.nouveaux(P.etats(bilan), bilan, m), []);
+  const r = P.records({ '2026-10-04': 30, '2026-10-05': 40, '2026-10-12': 20 }, (d) => (d < '2026-10-12' ? 't' : 'h'));
+  assert.deepEqual(r, { jour: 40, semaine: 70, mois: 70 });
+  assert.equal(P.aLaUne([P.etat('serie', 6), P.etat('jour', 5)]).piste, 'serie');
+});

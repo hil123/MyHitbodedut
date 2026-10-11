@@ -717,4 +717,30 @@
     <string name="hilloula_lien">חכמי היום ב„החכם היומי”</string>
     <string name="halakha_yomit_titre">הלכה יומית</string>
     <string name="halakha_yomit_lien">ההלכה היומית באתר „הלכה יומית”</string>
+    <!-- Les paliers d'objectifs (11/10) -->
+    <string name="paliers_title">היעדים שלי</string>
+    <string name="paliers_sous_titre">אחרי כל יעד – היעד הבא</string>
+    <string name="palier_serie">ימים ברצף</string>
+    <string name="palier_jour">היום</string>
+    <string name="palier_semaine">השבוע</string>
+    <string name="palier_mois">החודש · %1$s</string>
+    <string name="palier_cumul">זמן מצטבר</string>
+    <string name="palier_jours">ימי התבודדות</string>
+    <string name="palier_prochain">היעד הבא: %1$s · עוד %2$s</string>
+    <string name="palier_atteints">יעדים שהושגו: %1$d</string>
+    <string name="palier_nouveau">הושג יעד: %1$s – %2$s!</string>
+    <string name="palier_une_serie">עוד %1$s ל־%2$s ברצף</string>
+    <string name="palier_une_jour">עוד %1$s ל־%2$s היום</string>
+    <string name="palier_une_semaine">עוד %1$s ל־%2$s השבוע</string>
+    <string name="palier_une_mois">עוד %1$s ל־%2$s החודש</string>
+    <string name="paliers_records">שיאים</string>
+    <string name="record_serie">הרצף הארוך ביותר: %1$s</string>
+    <string name="record_jour">היום הטוב ביותר: %1$s</string>
+    <string name="record_semaine">השבוע הטוב ביותר: %1$s</string>
+    <string name="record_mois">החודש הטוב ביותר: %1$s</string>
+    <plurals name="palier_n_jours">
+        <item quantity="one">יום אחד</item>
+        <item quantity="two">יומיים</item>
+        <item quantity="other">%1$d ימים</item>
+    </plurals>
 </resources>

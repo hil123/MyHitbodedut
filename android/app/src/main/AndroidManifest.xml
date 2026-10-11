@@ -178,6 +178,11 @@
             android:label="@string/calendrier_title" />
 
         <activity
+            android:name=".PaliersActivity"
+            android:exported="false"
+            android:label="@string/paliers_title" />
+
+        <activity
             android:name=".MusicActivity"
             android:exported="false"
             android:label="@string/music_title" />

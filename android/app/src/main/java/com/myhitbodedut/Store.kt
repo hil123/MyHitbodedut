@@ -78,6 +78,7 @@ object Store {
     private const val KEY_TARGET = "target_minutes"
     private const val KEY_DAILY_GOAL = "daily_goal_minutes"
     private const val KEY_ANNEAUX_FETES = "anneaux_fetes"
+    private const val KEY_PALIERS_VUS = "paliers_vus"
     private const val KEY_SIDDUR_NUSAH = "siddur_nusah"
     private const val KEY_TAHANOUN_TICHRI_SFARD = "sans_tahanoun_fin_tichri_sfard"
     private const val KEY_CALENDRIER_CIVIL = "calendrier_civil"
@@ -552,6 +553,25 @@ object Store {
 
     fun setAnneauxFetes(context: Context, marques: Set<String>) {
         prefs(context).edit().putStringSet(KEY_ANNEAUX_FETES, marques.toSet()).apply()
+    }
+
+    // --- Paliers d'objectifs (11/10) -------------------------------------------
+
+    /** La pratique vue par les paliers : minutes des jours faits, série, mois hébreu en cours. */
+    fun bilan(context: Context): Paliers.Bilan {
+        val aujourdhui = LocalDate.now()
+        val minutes = days(context).values.filter { it.faite }
+            .mapNotNull { r -> dateValide(r.date)?.let { it to r.minutes } }.toMap()
+        return Paliers.Bilan(aujourdhui, minutes, streak(context), JourAffiche.debutMoisHebreu(aujourdhui), dailyGoal(context))
+    }
+
+    /** null tant que les paliers n'ont jamais été regardés : le premier passage ne fête rien. */
+    fun paliersVus(context: Context): Set<String>? =
+        prefs(context).getStringSet(KEY_PALIERS_VUS, null)?.toSet()
+
+    /** Seules restent les marques d'une période encore en cours ou sans période : la liste ne grossit pas. */
+    fun setPaliersVus(context: Context, marques: Set<String>) {
+        prefs(context).edit().putStringSet(KEY_PALIERS_VUS, marques.toSet()).apply()
     }
 
     fun setDailyGoal(context: Context, minutes: Int) {

@@ -11,6 +11,7 @@ import { creeStore, memoire } from './store.js';
 import { isoLocal } from './calendrier.js';
 import { JERUSALEM_GEONAMES, jour as jourJuif, jourDeLaPriere } from './calendrier-juif.js';
 import { conditionsPour, index as indexAjouts, libelleJour, vrai as ajoutVrai } from './siddur-jour.js';
+import * as Paliers from './paliers.js';
 import { ajouts as ajoutsDuJour, debutMoisHebreu, hilloulotPour, horaires, illustration as illustrationDuJour, lienHalakha, lienHyomi, momentDuSiddour, moisHebreuVoisin, semaines, semainesHebreu } from './jour-affiche.js';
 import { ALLUMAGES, heure as heureZman } from './zmanim.js';
 
@@ -453,7 +454,8 @@ function panneauAujourdhui() {
       tr.duree(etat.jour.fait), tr.duree(etat.jour.objectif), etat.semaine.fait, etat.semaine.objectif, etat.serie.fait, etat.serie.objectif) },
     anneaux(etat),
     plaqueAccueil()),
-    h('div', { class: `jauge-legende${anneauEnAvant ? ` legende-${anneauEnAvant}` : ''}` }, legendeAnneaux(etat, progression))),
+    h('div', { class: `jauge-legende${anneauEnAvant ? ` legende-${anneauEnAvant}` : ''}` }, legendeAnneaux(etat, progression)),
+    lignePaliers()),
 
     h('div', { class: 'accueil-actions' }, h('button', { class: 'principal', onclick: () => ouvrir('seance') }, bouton),
 
@@ -1362,6 +1364,57 @@ function ecranZmanim() {
  * Le mois hébreu est la vue principale, le mois civil au choix ; chaque case porte
  * toujours les deux quantièmes, le principal en haut.
  */
+// --- Les paliers d'objectifs (PaliersActivity, 11/10) --------------------------------
+function bilanPaliers() {
+  const aujourdhui = isoLocal(new Date());
+  return { aujourdhui, minutes: store.minutesParJour(), serie: store.streak(), debutMoisHebreu: debutMoisHebreu(aujourdhui), objectifJour: store.dailyGoal() };
+}
+
+function libellePalier(piste, bilan) {
+  return piste === 'mois' ? tr.t('palier_mois', `\u2068${jourJuif(bilan.aujourdhui, false).moisEtAnnee}\u2069`) : tr.t(`palier_${piste}`);
+}
+
+/** Des jours pour la série et les jours de pratique, une durée pour le reste. */
+const valeurPalier = (piste, v) => (piste === 'serie' || piste === 'jours' ? tr.p('palier_n_jours', v) : tr.duree(v));
+
+/** Le palier le plus proche, sous les anneaux, et la fête d'un palier atteint depuis la dernière visite. */
+function lignePaliers() {
+  const bilan = bilanPaliers();
+  const etats = Paliers.etats(bilan);
+  const une = Paliers.aLaUne(etats);
+  const vus = store.paliersVus();
+  if (vus) {
+    const neuf = Paliers.nouveaux(etats, bilan, vus).sort((a, b) => b.rang - a.rang)[0];
+    if (neuf) setTimeout(() => signale(tr.t('palier_nouveau', libellePalier(neuf.piste, bilan), valeurPalier(neuf.piste, neuf.atteint))), 600);
+  }
+  store.setPaliersVus(Paliers.marques(etats, bilan));
+  const cle = { serie: 'palier_une_serie', jour: 'palier_une_jour', semaine: 'palier_une_semaine' }[une.piste] ?? 'palier_une_mois';
+  return h('button', { class: 'ligne-paliers', onclick: () => ouvrir('paliers') },
+    `${tr.t(cle, valeurPalier(une.piste, une.reste), valeurPalier(une.piste, une.prochain))}  ›`);
+}
+
+function ecranPaliers() {
+  const bilan = bilanPaliers();
+  const etats = Paliers.etats(bilan);
+  store.setPaliersVus(Paliers.marques(etats, bilan));
+  const r = Paliers.records(bilan.minutes, (d) => { const j = jourJuif(d, false); return `${j.anneeHebraique}-${j.moisHebreu}`; });
+  const carte = (e) => h('div', { class: 'carte carte-palier' },
+    h('p', { class: 'palier-nom' }, libellePalier(e.piste, bilan)),
+    h('p', { class: 'palier-valeur' }, valeurPalier(e.piste, e.valeur)),
+    h('div', { class: 'palier-barre', role: 'progressbar', 'aria-valuemin': '0', 'aria-valuemax': '100', 'aria-valuenow': String(Math.round(e.avancee * 100)) },
+      h('span', { style: `width:${Math.round(e.avancee * 100)}%` })),
+    h('p', { class: 'palier-prochain' }, tr.t('palier_prochain', valeurPalier(e.piste, e.prochain), valeurPalier(e.piste, e.reste))),
+    e.rang > 0 ? h('p', { class: 'palier-atteints' }, tr.t('palier_atteints', e.rang)) : null,
+    e.rang > 0 ? h('div', { class: 'palier-pastilles' }, Paliers.echelle(e.piste, e.valeur, bilan.objectifJour).filter((x) => x <= e.valeur)
+      .reverse().slice(0, 8).map((x) => h('span', { class: 'palier-pastille' }, valeurPalier(e.piste, x)))) : null);
+  return h('div', { class: 'ecran avec-bandeau' }, bandeau(tr.t('paliers_title'), { puce: h('p', { class: 'bandeau-sous-titre' }, tr.t('paliers_sous_titre')), dessin: 'char_arms_raised' }),
+    h('div', { class: 'defile' }, h('div', { class: 'contenu' },
+      ...etats.map(carte),
+      h('div', { class: 'carte carte-palier' }, h('p', { class: 'palier-nom' }, tr.t('paliers_records')),
+        ...[tr.t('record_serie', valeurPalier('serie', store.meilleureSerie())), tr.t('record_jour', tr.duree(r.jour)),
+          tr.t('record_semaine', tr.duree(r.semaine)), tr.t('record_mois', tr.duree(r.mois))].map((x) => h('p', { class: 'palier-record' }, x))))));
+}
+
 function ecranCalendrier() {
   const aujourdhui = isoLocal(new Date());
   const choisi = jourCalendrier ?? aujourdhui;
@@ -1804,7 +1857,7 @@ function arreteDanse() {
 // et le geste de retour ramènent à l'accueil, sur l'onglet quitté.
 function ecranCourant() {
   const e = location.hash.slice(1);
-  return ['musique', 'reglages', 'seance', 'bravo', 'tehilim', 'lecture', 'siddur', 'priere', 'tikkun', 'bibliotheque', 'source', 'zmanim', 'calendrier'].includes(e) ? e : 'accueil';
+  return ['musique', 'reglages', 'seance', 'bravo', 'tehilim', 'lecture', 'siddur', 'priere', 'tikkun', 'bibliotheque', 'source', 'zmanim', 'calendrier', 'paliers'].includes(e) ? e : 'accueil';
 }
 function ouvrir(ecran) {
   // L'entrée sur l'écran de séance tire le mot d'ouverture (SessionActivity.onCreate).
@@ -1846,6 +1899,7 @@ function rendre() {
   else if (ecran === 'reglages') app.append(ecranReglages());
   else if (ecran === 'zmanim') app.append(ecranZmanim());
   else if (ecran === 'calendrier') app.append(ecranCalendrier());
+  else if (ecran === 'paliers') app.append(ecranPaliers());
   else if (ecran === 'seance') app.append(ecranSeance());
   else if (ecran === 'bravo') app.append(ecranBravo());
   else if (ecran === 'tehilim') app.append(ecranTehilim());

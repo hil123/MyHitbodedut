@@ -704,3 +704,15 @@ input[type="range"] { width: 100%; accent-color: var(--brand); }
 .jour-illustration { display: block; height: 150px; max-width: 100%; margin: 0 auto 10px; object-fit: contain; border-radius: 12px; }
 .jour-hilloula { margin: 2px 0 0; font-size: 15px; }
 .jour-lien { display: inline-block; margin-top: 6px; padding: 6px 0; color: var(--brand); font-weight: 700; text-decoration: none; }
+
+/* Les paliers d'objectifs (11/10). */
+.ligne-paliers { display: block; width: 100%; margin: 4px 0 0; padding: 6px 8px; background: none; border: 0; color: var(--brand); font: inherit; font-size: 15px; font-weight: 700; text-align: center; cursor: pointer; }
+.carte-palier .palier-nom { margin: 0; color: var(--muted); font-size: 14px; font-weight: 700; }
+.carte-palier .palier-valeur { margin: 2px 0 0; font-size: 26px; font-weight: 800; }
+.palier-barre { height: 10px; margin-top: 8px; border-radius: 999px; background: color-mix(in srgb, var(--brand) 19%, transparent); overflow: hidden; }
+.palier-barre > span { display: block; height: 100%; border-radius: 999px; background: var(--brand); }
+.palier-prochain { margin: 8px 0 0; color: var(--brand); font-weight: 700; }
+.palier-atteints { margin: 10px 0 0; color: var(--muted); font-size: 13px; }
+.palier-pastilles { display: flex; gap: 6px; margin-top: 6px; overflow-x: auto; }
+.palier-pastille { flex: none; padding: 5px 12px; border-radius: 999px; background: var(--brand); color: var(--on-brand); font-size: 13px; font-weight: 700; }
+.palier-record { margin: 6px 0 0; }

@@ -703,4 +703,29 @@
     <string name="hilloula_lien">Sages of the day on hyomi.org.il</string>
     <string name="halakha_yomit_titre">Halacha Yomit</string>
     <string name="halakha_yomit_lien">Today’s halacha on halachayomit.co.il</string>
+    <!-- Les paliers d'objectifs (11/10) -->
+    <string name="paliers_title">My milestones</string>
+    <string name="paliers_sous_titre">Each milestone leads to the next</string>
+    <string name="palier_serie">Days in a row</string>
+    <string name="palier_jour">Today</string>
+    <string name="palier_semaine">This week</string>
+    <string name="palier_mois">This month · %1$s</string>
+    <string name="palier_cumul">Total time</string>
+    <string name="palier_jours">Days of practice</string>
+    <string name="palier_prochain">Next milestone: %1$s · %2$s to go</string>
+    <string name="palier_atteints">Milestones reached: %1$d</string>
+    <string name="palier_nouveau">Milestone reached: %1$s — %2$s!</string>
+    <string name="palier_une_serie">%1$s more for %2$s in a row</string>
+    <string name="palier_une_jour">%1$s more for %2$s today</string>
+    <string name="palier_une_semaine">%1$s more for %2$s this week</string>
+    <string name="palier_une_mois">%1$s more for %2$s this month</string>
+    <string name="paliers_records">Records</string>
+    <string name="record_serie">Longest streak: %1$s</string>
+    <string name="record_jour">Best day: %1$s</string>
+    <string name="record_semaine">Best week: %1$s</string>
+    <string name="record_mois">Best month: %1$s</string>
+    <plurals name="palier_n_jours">
+        <item quantity="one">%1$d day</item>
+        <item quantity="other">%1$d days</item>
+    </plurals>
 </resources>
