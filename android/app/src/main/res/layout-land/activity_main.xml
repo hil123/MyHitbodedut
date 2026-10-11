@@ -132,14 +132,7 @@
                     android:layout_weight="1"
                     android:orientation="vertical">
 
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:letterSpacing="0.08"
-                        android:text="@string/app_name"
-                        android:textColor="?attr/mhMuted"
-                        android:textSize="13sp" />
+                    <!-- Couché, sans la ligne « MyHitbodedut » : la hauteur manque pour « Commencer ». -->
 
                     <TextView
                         android:id="@+id/hero_greeting"
