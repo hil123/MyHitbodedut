@@ -50,7 +50,9 @@ class SiddurTest {
             val c = blocs[i]
             listOf("ניסן: <b>יהו״ה</b>", "תשרי: <b>והי״ה</b>", "אדר: <b>ההי״ו</b>", "אלול: <b>ההו״י</b>")
                 .forEach { assertTrue("$n : $it", c.texte.contains(it)) }
-            assertEquals("$n", 12, Regex("<br>").findAll(c.texte).count())
+            // Les צירופים se pensent, ne se prononcent pas : dit avant la liste.
+            assertTrue("$n : avertissement", c.texte.contains("אין להוציא צירופים אלו בפה כלל"))
+            assertEquals("$n", 13, Regex("<br>").findAll(c.texte).count())
         }
     }
 

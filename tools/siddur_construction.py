@@ -199,9 +199,13 @@ GROUPES = [
 # Les douze צירופי הוי״ה des mois (demande du 11/10), relevés dans le Bnei
 # Yissaschar, Piotrkow 1883 (export Sefaria, NLI 001763733), en tête de
 # chaque mois : le צירוף et les mots du verset tels que l'auteur les écrit,
-# sans vocalisation ajoutée. Selon kinuim.web.app, le Ramak (Pardès) échange
-# Adar et Eloul (non vérifié dans le Pardès) : on suit le Bnei Yissaschar.
-# La phrase citée est au début des maamarim de Nisan (maamar 1, 2).
+# sans vocalisation ajoutée. La phrase citée est au début des maamarim de
+# Nisan (maamar 1, 2). Recoupé le 11/10 (export Sefaria) : les Tikounei Zohar
+# (hakdama, 9b) donnent les mêmes douze צירופים et versets, sans les mois ;
+# le Pardès Rimonim (21:14 et 21:16) range ההי״ו en Eloul et ההו״י en Adar
+# (déduit de l'ordre par trimestres, les mois n'y sont pas nommés) et cite
+# « הסכת ושמע ישראל היום » pour הוי״ה ; le Pri Etz 'Haïm (Roch 'Hodech 6:20)
+# donne הוה״י pour Adar. On suit le Bnei Yissaschar, et on ne prononce pas.
 TSEROUFIM = [
     ("ניסן", "יהו״ה", "ר״ת ישמחו השמים ותגל הארץ"),
     ("אייר", "יהה״ו", "ר״ת יתהלל המתהלל השכל וידוע"),
@@ -223,7 +227,10 @@ def tseroufim():
     lignes = [f"{mois}: <b>{t}</b> ({verset})" for mois, t, verset in TSEROUFIM]
     return {"c": NFC("<b>צירוף שם הוי״ה של החודש</b> – בני יששכר, מאמרי חודש ניסן: "
                      "„ידוע מכתבי מרן האריז״ל אשר בכל ראש חדש צריכין לכוין במוסף בסיום הברכה "
-                     "האמצעית צירוף הוי״ה השולטת באותו החדש”.<br>" + "<br>".join(lignes))}
+                     "האמצעית צירוף הוי״ה השולטת באותו החדש”.<br>"
+                     # Précision demandée par le propriétaire (11/10) : en tête de liste, en gras.
+                     "<b>אין להוציא צירופים אלו בפה כלל, אלא רק לכוון בהם במחשבה, לאחר סיום הברכה.</b><br>"
+                     + "<br>".join(lignes))}
 
 
 def avec_tseroufim(sections):
