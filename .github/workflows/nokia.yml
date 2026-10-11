@@ -1,0 +1,91 @@
+# L'application pour téléphone à touches (Java ME, nokia/) : construite,
+# testée, puis publiée dans son propre dépôt, hil123/myhitbodedut-nokia,
+# comme le site iPhone l'est dans hil123/myhitbodedut-web. C'est un
+# produit à part : rien n'est ajouté à la release Android.
+name: Nokia (Java ME)
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'nokia/**'
+      # Les textes et les règles qu'elle relit à chaque construction.
+      - 'android/app/src/main/res/raw/chizuk.json'
+      - 'android/app/src/main/res/values/strings.xml'
+      - 'web/src/js/**'
+      - '.github/workflows/nokia.yml'
+  pull_request:
+    paths:
+      - 'nokia/**'
+      - '.github/workflows/nokia.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  nokia:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # La version du .jar compte les commits (build.sh).
+          fetch-depth: 0
+
+      # Un JDK 8, dont javac vise encore Java 1.3 (CLDC), et un Java récent
+      # pour ProGuard.
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: |
+            8
+            21
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install xvfb for the on-screen run
+        run: sudo apt-get install -y -q xvfb >/dev/null
+
+      - name: Build MyHitbodedut.jar
+        run: JDK8="$JAVA_HOME_8_X64" JAVA_RECENT="$JAVA_HOME_21_X64/bin/java" bash nokia/app/build.sh
+
+      - name: Test (rules, texts, 19 screens at 240x320)
+        run: JDK8="$JAVA_HOME_8_X64" bash nokia/app/test.sh
+
+      - name: Prepare the published folder
+        run: |
+          mkdir -p publie/captures
+          cp nokia/dist/MyHitbodedut.jar publie/
+          cp nokia/depot/README.md publie/
+          cp nokia/app/build/captures/*.png publie/captures/ 2>/dev/null || true
+          v=$(unzip -p nokia/dist/MyHitbodedut.jar META-INF/MANIFEST.MF | sed -n 's/^MIDlet-Version: *//p' | tr -d '\r')
+          printf '%s\n%s\n' "$v" "$GITHUB_SHA" > publie/version.txt
+          cat publie/version.txt
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: MyHitbodedut-nokia
+          path: publie
+
+      - name: Publish to hil123/myhitbodedut-nokia
+        if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+        env:
+          TOKEN: ${{ secrets.NOKIA_DEPLOY_TOKEN }}
+          CIBLE: hil123/myhitbodedut-nokia
+        run: |
+          if [ -z "$TOKEN" ]; then
+            echo "Pas de secret NOKIA_DEPLOY_TOKEN : .jar construit et testé (artefact), non publié."
+            exit 0
+          fi
+          cd publie
+          git init -q -b main
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -q -m "MyHitbodedut.jar $(head -1 version.txt), construit depuis ${GITHUB_SHA}"
+          # Un seul commit, remplacé à chaque fois, comme pour le site.
+          git push -q --force "https://x-access-token:${TOKEN}@github.com/${CIBLE}.git" main
+          echo "Publié : https://github.com/${CIBLE}"

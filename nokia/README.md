@@ -1,5 +1,7 @@
 # MyHitbodedut pour téléphone à touches
 
+Un produit à part de l'application Android : construit et testé par `.github/workflows/nokia.yml`, puis publié dans son propre dépôt, [hil123/myhitbodedut-nokia](https://github.com/hil123/myhitbodedut-nokia) (fichier `depot/README.md`), comme le site iPhone l'est dans hil123/myhitbodedut-web.
+
 Une vraie application, en un seul fichier : `MyHitbodedut.jar` (environ 600 Ko, dont 510 Ko pour le niggoun d'essai), en français, sans Internet, dans les couleurs de l'application et avec son personnage. Elle s'installe sur les téléphones à touches qui acceptent les applications Java (Java ME : MIDP 2.0, CLDC 1.1), dont le Nokia 3310 3G de 2017.
 
 | Dans l'application Android | Dans MyHitbodedut.jar |
