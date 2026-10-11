@@ -111,6 +111,9 @@ export function creeStore(stockage, { maintenant = () => new Date(), fuseau } = 
     /** La hilloula du jour sur la carte du jour (11/10) : affichée par défaut. */
     hilloulotAffichees: () => get('hilloulot_affichees', true) !== false,
     setHilloulotAffichees: (v) => set('hilloulot_affichees', !!v),
+    /** La halakha du jour (Ben Ish 'Haï) sur la carte du jour (11/10) : affichée par défaut. */
+    halakhaAffichee: () => get('halakha_affichee', true) !== false,
+    setHalakhaAffichee: (v) => set('halakha_affichee', !!v),
 
     /** La note d'un jour. Sur un jour sans hitbodedout, elle ne le valide pas. */
     setNote(date, note) {

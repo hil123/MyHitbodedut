@@ -2,7 +2,6 @@ package com.myhitbodedut
 
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.widget.ImageView
 import android.graphics.Typeface
 import android.view.Gravity
@@ -98,22 +97,26 @@ object VueJour {
                 }
             })
         }
-        // La halakha du jour : la page du site, seulement aujourd'hui (le site n'a pas d'archive par date).
-        if (date == LocalDate.now()) {
-            carte.addView(texte(c, c.getString(R.string.halakha_yomit_titre), 12f, R.color.muted, gras = true, haut = 14))
-            carte.addView(lien(c, c.getString(R.string.halakha_yomit_lien), Hilloulot.lienHalakha(langue)))
+        // La halakha du jour, hors ligne (Ben Ish 'Haï) : la première, puis l'écran de la halakha.
+        val halakhot = if (Store.halakhaAffichee(c)) Halakha.pour(Halakha.livre(c), date, enIsrael) else emptyList()
+        if (halakhot.isNotEmpty()) {
+            carte.addView(texte(c, c.getString(R.string.halakha_yomit_titre) + " · " + c.getString(R.string.halakha_livre), 12f, R.color.muted, gras = true, haut = 14))
+            carte.addView(texte(c, halakhot.first().texte, 16f, R.color.ink, haut = 2).apply {
+                textDirection = View.TEXT_DIRECTION_RTL
+                PoliceHebraique.appliquer(this)
+                maxLines = 4
+                ellipsize = android.text.TextUtils.TruncateAt.END
+            })
+            carte.addView(texte(c, c.getString(R.string.halakha_tout), 15f, R.color.brand, gras = true, haut = 4).apply {
+                setPadding(0, dp(c, 6), 0, dp(c, 6))
+                foreground = c.getDrawable(android.R.drawable.list_selector_background)
+                setOnClickListener {
+                    c.startActivity(Intent(c, HalakhaActivity::class.java).putExtra(HalakhaActivity.EXTRA_DATE, date.toString()))
+                }
+            })
         }
         return carte
     }
-
-    private fun lien(c: Context, libelle: String, url: String) =
-        texte(c, "$libelle ↗", 15f, R.color.brand, gras = true, haut = 4).apply {
-            setPadding(0, dp(c, 6), 0, dp(c, 6))
-            foreground = c.getDrawable(android.R.drawable.list_selector_background)
-            setOnClickListener {
-                runCatching { c.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url))) }
-            }
-        }
 
     private fun illustration(nom: String): Int = when (nom) {
         "scene_sukkot" -> R.drawable.scene_sukkot

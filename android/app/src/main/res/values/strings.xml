@@ -784,4 +784,12 @@
     <string name="hilloula_source_wiki">Wikipédia (CC BY-SA)</string>
     <string name="hilloula_source_hyomi">החכם היומי</string>
     <string name="hilloulot_tout">Toutes les hilloulot ›</string>
+    <!-- La halakha du jour hors ligne : le Ben Ish 'Haï (11/10) -->
+    <string name="halakha_title">Halakha du jour</string>
+    <string name="halakha_afficher">Afficher la halakha du jour</string>
+    <string name="halakha_recherche">Rechercher dans le Ben Ish \'Haï</string>
+    <string name="halakha_aucune">Pas de halakha pour ce jour</string>
+    <string name="halakha_tout">Toute la halakha du jour ›</string>
+    <string name="halakha_livre">Ben Ish \'Haï, paracha de la semaine</string>
+    <string name="halakha_note">Texte original en hébreu, verbatim (Wikisource, domaine public, via Sefaria). Pour la pratique, consultez un rav.</string>
 </resources>

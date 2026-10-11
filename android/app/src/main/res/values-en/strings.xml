@@ -738,4 +738,12 @@
     <string name="hilloula_source_wiki">Wikipedia (CC BY-SA)</string>
     <string name="hilloula_source_hyomi">HaChacham HaYomi</string>
     <string name="hilloulot_tout">All hillulot ›</string>
+    <!-- La halakha du jour hors ligne : le Ben Ish 'Haï (11/10) -->
+    <string name="halakha_title">Halacha of the day</string>
+    <string name="halakha_afficher">Show the halacha of the day</string>
+    <string name="halakha_recherche">Search the Ben Ish Chai</string>
+    <string name="halakha_aucune">No halacha for this day</string>
+    <string name="halakha_tout">The whole halacha of the day ›</string>
+    <string name="halakha_livre">Ben Ish Chai, weekly portion</string>
+    <string name="halakha_note">Original Hebrew text, verbatim (Wikisource, public domain, via Sefaria). For practice, ask a rabbi.</string>
 </resources>

@@ -753,4 +753,12 @@
     <string name="hilloula_source_wiki">ויקיפדיה (CC BY-SA)</string>
     <string name="hilloula_source_hyomi">החכם היומי</string>
     <string name="hilloulot_tout">כל ההילולות ›</string>
+    <!-- La halakha du jour hors ligne : le Ben Ish 'Haï (11/10) -->
+    <string name="halakha_title">הלכה יומית</string>
+    <string name="halakha_afficher">הצג הלכה יומית</string>
+    <string name="halakha_recherche">חיפוש בבן איש חי</string>
+    <string name="halakha_aucune">אין הלכה ליום זה</string>
+    <string name="halakha_tout">כל ההלכה היומית ›</string>
+    <string name="halakha_livre">בן איש חי, פרשת השבוע</string>
+    <string name="halakha_note">לשון המקור (ויקיטקסט, נחלת הכלל, דרך ספריא). להלכה למעשה יש לשאול רב.</string>
 </resources>

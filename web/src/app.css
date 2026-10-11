@@ -727,3 +727,9 @@ input[type="range"] { width: 100%; accent-color: var(--brand); }
 .carte-hilloula .hilloula-annee { margin: 4px 0 0; color: var(--muted); font-size: 14px; }
 .carte-hilloula .hilloula-description { margin: 8px 0 0; font-size: 16px; line-height: 1.5; }
 .carte-hilloula .hilloula-source { display: block; margin: 8px 0 0; color: var(--brand); font-size: 13px; text-decoration: none; }
+
+/* La halakha du jour (Ben Ish 'Haï, 11/10) */
+.jour-halakha { margin: 2px 0 0; font-size: 16px; line-height: 1.6; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+.carte-hilloula .halakha-source { margin: 0; font-size: 13px; font-weight: 700; color: var(--brand); }
+.carte-hilloula .halakha-texte { margin: 8px 0 0; font-size: 18px; line-height: 1.7; white-space: pre-line; }
+.note-halakha { margin: 14px 4px 0; font-size: 12px; color: var(--muted); text-align: center; }

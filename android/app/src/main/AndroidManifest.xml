@@ -183,6 +183,11 @@
             android:label="@string/hilloulot_title" />
 
         <activity
+            android:name=".HalakhaActivity"
+            android:exported="false"
+            android:label="@string/halakha_title" />
+
+        <activity
             android:name=".PaliersActivity"
             android:exported="false"
             android:label="@string/paliers_title" />

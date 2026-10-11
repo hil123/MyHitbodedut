@@ -44,7 +44,7 @@ export const FETES = new Map([
 const FORMAT = new HebrewDateFormatter();
 FORMAT.setHebrewFormat(true);
 
-function calendrier(iso, enIsrael, modernes, mukafChoma) {
+export function calendrier(iso, enIsrael, modernes, mukafChoma) {
   const [year, month, day] = iso.split('-').map(Number);
   const jc = new JewishCalendar(DateTime.fromObject({ year, month, day }));
   jc.setInIsrael(enIsrael);

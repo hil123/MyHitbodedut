@@ -12,6 +12,7 @@ import { isoLocal } from './calendrier.js';
 import { JERUSALEM_GEONAMES, jour as jourJuif, jourDeLaPriere } from './calendrier-juif.js';
 import { conditionsPour, index as indexAjouts, libelleJour, vrai as ajoutVrai } from './siddur-jour.js';
 import * as Paliers from './paliers.js';
+import { pour as halakhotPour, recherche as rechercheHalakha, source as sourceHalakha } from './halakha.js';
 import { ajouts as ajoutsDuJour, dateHilloula, debutMoisHebreu, hilloulotPour, lienArticle, rechercheHilloula, horaires, illustration as illustrationDuJour, lienHalakha, lienHyomi, momentDuSiddour, moisHebreuVoisin, semaines, semainesHebreu } from './jour-affiche.js';
 import { ALLUMAGES, heure as heureZman } from './zmanim.js';
 
@@ -1277,6 +1278,17 @@ function tableHilloulot() {
   return hilloulots;
 }
 
+// La halakha du jour (11/10) : ben_ish_hai.json, chargé à la première carte.
+let livreHalakha = null;
+let livreHalakhaDemande = false;
+function livreDuJour() {
+  if (!livreHalakhaDemande) {
+    livreHalakhaDemande = true;
+    fetch('data/ben_ish_hai.json').then((r) => r.json()).then((d) => { livreHalakha = d; rendre(); }).catch(() => {});
+  }
+  return livreHalakha;
+}
+
 function lienExterne(libelle, url) {
   return h('a', { class: 'jour-lien', href: url, target: '_blank', rel: 'noopener' }, `${libelle} ↗`);
 }
@@ -1302,9 +1314,61 @@ function carteJour(iso) {
     h('h3', { class: 'jour-sous-titre' }, tr.t('zmanim_ajouts_titre')),
     h('p', { class: 'jour-ajouts' }, ajoutsDuJour(j.conditions, store.siddurNusah(), store.inIsrael(), store.sansTahanounFinTichri()).map((k) => tr.t(k)).join(' · ')),
     ...blocHilloula(iso),
-    ...(iso === isoLocal(new Date())
-      ? [h('h3', { class: 'jour-sous-titre' }, tr.t('halakha_yomit_titre')), lienExterne(tr.t('halakha_yomit_lien'), lienHalakha(tr.langue))]
-      : []));
+    ...blocHalakha(iso));
+}
+
+/** La halakha du jour, hors ligne (Ben Ish 'Haï) : la première, puis l'écran de la halakha. */
+function blocHalakha(iso) {
+  const livre = livreDuJour();
+  if (!livre || !store.halakhaAffichee()) return [];
+  const liste = halakhotPour(livre, iso, store.inIsrael());
+  if (!liste.length) return [];
+  return [
+    h('h3', { class: 'jour-sous-titre' }, `${tr.t('halakha_yomit_titre')} · ${tr.t('halakha_livre')}`),
+    h('p', { class: 'jour-halakha', lang: 'he', dir: 'rtl' }, liste[0].texte),
+    h('button', { class: 'jour-lien lien-bouton', onclick: () => { jourHalakha = iso; rechercheHalakhaTexte = ''; ouvrir('halakha'); } }, tr.t('halakha_tout')),
+  ];
+}
+
+// --- L'écran de la halakha du jour (HalakhaActivity, 11/10) -----------------------
+let jourHalakha = null;
+let rechercheHalakhaTexte = '';
+
+function ecranHalakha() {
+  const livre = livreDuJour() ?? { annees: {} };
+  const iso = jourHalakha ?? isoLocal(new Date());
+  const carte = (x) => h('div', { class: 'carte carte-hilloula' },
+    h('p', { class: 'halakha-source', lang: 'he', dir: 'rtl' }, sourceHalakha(x, (n) => Reference.lettres(n))),
+    h('p', { class: 'halakha-texte', lang: 'he', dir: 'rtl' }, x.texte));
+  const champ = h('input', { type: 'search', class: 'champ-recherche', placeholder: tr.t('halakha_recherche'), value: rechercheHalakhaTexte,
+    oninput: (e) => { rechercheHalakhaTexte = e.target.value; rendre(); setTimeout(() => { const c = app.querySelector('.champ-recherche'); c?.focus(); c?.setSelectionRange(c.value.length, c.value.length); }, 0); } });
+  let corps;
+  if (rechercheHalakhaTexte.trim().length >= 2) {
+    const trouves = rechercheHalakha(livre, rechercheHalakhaTexte);
+    corps = [h('p', { class: 'jour-sous-titre' }, tr.t('hilloulot_resultats', trouves.length)), ...trouves.slice(0, 40).map(carte)];
+  } else {
+    const j = jourJuif(iso, store.inIsrael());
+    const decale = (n) => { const [a, m, d] = iso.split('-').map(Number); jourHalakha = new Date(Date.UTC(a, m - 1, d + n, 12)).toISOString().slice(0, 10); rendre(); };
+    const liste = livreHalakha ? halakhotPour(livre, iso, store.inIsrael()) : [];
+    corps = [
+      h('div', { class: 'mois-tete' },
+        h('button', { class: 'icone-bouton mois-precedent', dir: 'ltr', 'aria-label': tr.t('calendrier_precedent'), onclick: () => decale(-1) }, tr.rtl ? '›' : '‹'),
+        h('div', { class: 'mois-titres' }, h('p', { class: 'mois-principal mois-hebreu', lang: 'he', dir: 'rtl' }, j.dateHebraique), h('p', { class: 'mois-second' }, iso)),
+        h('button', { class: 'icone-bouton mois-suivant', dir: 'ltr', 'aria-label': tr.t('calendrier_suivant'), onclick: () => decale(1) }, tr.rtl ? '‹' : '›')),
+      ...(liste.length ? liste.map(carte) : [h('p', { class: 'message' }, tr.t('halakha_aucune'))]),
+      h('p', { class: 'note-halakha' }, tr.t('halakha_note')),
+      // Le site de Rav Ovadia Yossef : un lien seulement (tous droits réservés sur ses textes).
+      lienExterne(tr.t('halakha_yomit_lien'), lienHalakha(tr.langue)),
+    ];
+  }
+  return h('div', { class: 'ecran avec-bandeau' }, bandeau(tr.t('halakha_title'), { dessin: 'char_reading_seated' }),
+    h('div', { class: 'defile' }, h('div', { class: 'contenu' },
+      h('div', { class: 'carte' },
+        h('label', { class: 'ligne' }, h('span', { class: 'corps' }, h('div', { class: 'nom' }, tr.t('halakha_afficher'))),
+          h('input', { type: 'checkbox', role: 'switch', class: 'interrupteur', checked: store.halakhaAffichee(), 'aria-label': tr.t('halakha_afficher'),
+            onchange: (e) => { store.setHalakhaAffichee(e.target.checked); rendre(); } })),
+        champ),
+      ...corps)));
 }
 
 /** La hilloula du jour (comme CalJ) : les noms, cinq au plus, puis l'écran des hilloulot. */
@@ -1903,7 +1967,7 @@ function arreteDanse() {
 // et le geste de retour ramènent à l'accueil, sur l'onglet quitté.
 function ecranCourant() {
   const e = location.hash.slice(1);
-  return ['musique', 'reglages', 'seance', 'bravo', 'tehilim', 'lecture', 'siddur', 'priere', 'tikkun', 'bibliotheque', 'source', 'zmanim', 'calendrier', 'paliers', 'hilloulot'].includes(e) ? e : 'accueil';
+  return ['musique', 'reglages', 'seance', 'bravo', 'tehilim', 'lecture', 'siddur', 'priere', 'tikkun', 'bibliotheque', 'source', 'zmanim', 'calendrier', 'paliers', 'hilloulot', 'halakha'].includes(e) ? e : 'accueil';
 }
 function ouvrir(ecran) {
   // L'entrée sur l'écran de séance tire le mot d'ouverture (SessionActivity.onCreate).
@@ -1947,6 +2011,7 @@ function rendre() {
   else if (ecran === 'calendrier') app.append(ecranCalendrier());
   else if (ecran === 'paliers') app.append(ecranPaliers());
   else if (ecran === 'hilloulot') app.append(ecranHilloulot());
+  else if (ecran === 'halakha') app.append(ecranHalakha());
   else if (ecran === 'seance') app.append(ecranSeance());
   else if (ecran === 'bravo') app.append(ecranBravo());
   else if (ecran === 'tehilim') app.append(ecranTehilim());
