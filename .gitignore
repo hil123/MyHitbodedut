@@ -2,3 +2,7 @@
 node_modules/
 web/dist/
 web/captures/
+nokia/dist/
+nokia/app/build/
+nokia/app/outils/
+.attach_pid*
