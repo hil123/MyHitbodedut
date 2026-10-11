@@ -127,12 +127,11 @@ class CalendrierActivity : AppCompatActivity() {
                     addView(case().apply {
                         if (d == null) return@apply
                         val j = CalendrierJuif.jour(d, israel, Store.mukafChoma(this@CalendrierActivity))
-                        val point = if (j.fetes.isNotEmpty()) " •" else ""
                         // Le 1er d'un mois civil porte le nom du mois, pour qu'on lise où il bascule.
                         val quantieme = if (!civil && d.dayOfMonth == 1)
                             "1 " + d.format(DateTimeFormatter.ofPattern("LLL", locale)) else d.dayOfMonth.toString()
                         val haut = TextView(context).apply {
-                            text = (if (civil) quantieme else j.jourEnLettres) + point
+                            text = if (civil) quantieme else j.jourEnLettres
                             textSize = if (civil) 15f else 17f
                             gravity = Gravity.CENTER
                             setTextColor(Apparence.couleur(context, if (d == aujourdhui) R.color.brand else R.color.ink))
@@ -148,6 +147,11 @@ class CalendrierActivity : AppCompatActivity() {
                             if (civil) PoliceHebraique.appliquer(this)
                         }
                         addView(haut)
+                        // Comme sur le web : la fête est un point sous le quantième principal.
+                        if (j.fetes.isNotEmpty()) addView(View(context).apply {
+                            layoutParams = LinearLayout.LayoutParams(dp(5), dp(5)).apply { topMargin = dp(1) }
+                            background = GradientDrawable().apply { shape = GradientDrawable.OVAL; setColor(brand) }
+                        })
                         addView(bas)
                         background = GradientDrawable().apply {
                             cornerRadius = dp(10).toFloat()
