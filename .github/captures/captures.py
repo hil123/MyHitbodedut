@@ -630,11 +630,20 @@ def tailles():
         capture(f"20-{nom}-accueil-suite")
         onglet_textes()
         capture(f"20-{nom}-textes")
-        # Tous les autres ecrans de l'application, ouverts directement.
-        for classe, extras in ECRANS_APP:
+        # Tous les autres ecrans de l'application, ouverts directement. Sur
+        # tablette, en passage court, seulement la seance et les reglages :
+        # l'emulateur et le runner lachent apres une demi-heure de grandes
+        # captures, et rien n'est alors publie.
+        ecrans = ECRANS_APP
+        if nom.startswith("tablette") and os.environ.get("CAPTURES_TAILLES_SEULES") == "1":
+            ecrans = [e for e in ECRANS_APP if e[0] in ("SettingsActivity", "SessionActivity")]
+        for classe, extras in ecrans:
             arreter()
             if activite(classe, extras):
-                if classe == "SessionActivity" and "session_primary" not in visibles(dump(), {"session_primary"}):
+                # Comme sur le web (tailles.mjs, seulCouche) : debout, la seance
+                # defile jusqu'a son bouton ; couchee, il doit se voir d'emblee.
+                if (classe == "SessionActivity" and couche
+                        and "session_primary" not in visibles(dump(), {"session_primary"})):
                     faute(f"{nom} seance : « Commencer » hors de l'ecran")
                 capture(f"20-{nom}-{classe.replace('Activity', '').lower()}", attente=0.8)
         if nom in ("petit", "petit-couche", "pixel6-couche"):
