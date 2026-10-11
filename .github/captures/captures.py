@@ -529,11 +529,25 @@ TAILLES = [
 
 def appliquer_taille(taille, densite, couche):
     global W, H
-    sh("wm size " + (taille or "reset"))
-    sh("wm density " + (str(densite) if densite else "reset"))
     sh("settings put system accelerometer_rotation 0")
     sh(f"settings put system user_rotation {1 if couche else 0}")
+    sh("wm size " + (taille or "reset"))
+    sh("wm density " + (str(densite) if densite else "reset"))
     pause(2.5)
+    # Apres un ecran couche, le retour debout ne prenait pas toujours : les
+    # captures « debout » du petit telephone et du Pixel 6 sortaient en
+    # paysage. On regarde l'ecran lui-meme, et on insiste.
+    for essai in range(4):
+        png = adb("exec-out", "screencap", "-p", binary=True)
+        if len(png) > 24 and png[:8] == b"\x89PNG\r\n\x1a\n":
+            larg, haut = int.from_bytes(png[16:20], "big"), int.from_bytes(png[20:24], "big")
+            if (larg > haut) == couche:
+                break
+            log(f"  orientation {larg}x{haut} inattendue, essai {essai + 1}")
+        sh(f"settings put system user_rotation {0 if couche else 1}")
+        pause(1.5)
+        sh(f"settings put system user_rotation {1 if couche else 0}")
+        pause(2.5)
     m = re.search(r"Override size: (\d+)x(\d+)", sh("wm size")) or re.search(r"(\d+)x(\d+)", sh("wm size"))
     w, h = (int(m.group(1)), int(m.group(2))) if m else (1080, 2400)
     W, H = (max(w, h), min(w, h)) if couche else (min(w, h), max(w, h))
