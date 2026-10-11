@@ -60,8 +60,14 @@
     <dimen name="onboarding_next_gap">12dp</dimen>
     <dimen name="onboarding_next_pad">10dp</dimen>
 
-    <!-- La jauge de l'accueil et le hassid en son creux. -->
-    <dimen name="gauge_size">236dp</dimen>
+    <!--
+        La jauge de l'accueil et le hassid en son creux. Le défaut vise
+        l'écran court : debout sur un 480x854, il reste environ 420dp entre
+        la barre d'état et les onglets, et à 236dp la jauge repoussait
+        « Commencer » sous les onglets dès que le titre prenait deux lignes.
+        values-h640dp rend 236dp, values-h720dp 268dp.
+    -->
+    <dimen name="gauge_size">168dp</dimen>
     <!--
         La même jauge, posée à côté de l'en-tête (layout-land/activity_main.xml).
         Couché sur un 480x854, il reste 216dp sous la barre d'état et au-dessus

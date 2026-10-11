@@ -9,4 +9,5 @@
     <dimen name="onboarding_body_gap">8dp</dimen>
     <dimen name="onboarding_next_gap">16dp</dimen>
     <dimen name="onboarding_next_pad">14dp</dimen>
+    <dimen name="gauge_size">236dp</dimen>
 </resources>

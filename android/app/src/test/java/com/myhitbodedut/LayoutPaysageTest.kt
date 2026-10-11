@@ -106,4 +106,18 @@ class LayoutPaysageTest {
             }
         }
     }
+
+    /**
+     * Debout sur un 480x854, il ne reste qu'environ 420dp entre la barre
+     * d'état et les onglets : à 236dp, la jauge repoussait « Commencer »
+     * sous les onglets. Le défaut reste petit, les paliers hauts grandissent.
+     */
+    @Test
+    fun `la jauge reste petite sur un ecran court`() {
+        val court = dimen("values", "gauge_size")!!
+        val moyen = dimen("values-h640dp", "gauge_size")!!
+        val haut = dimen("values-h720dp", "gauge_size")!!
+        assertTrue("défaut $court dp : trop grand pour un 480x854", court <= 180)
+        assertTrue(court < moyen && moyen < haut)
+    }
 }
