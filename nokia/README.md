@@ -6,7 +6,7 @@ Une vraie application, en un seul fichier : `MyHitbodedut.jar` (environ 600 Ko, 
 | --- | --- |
 | Hitbodedout minutée : 5, 10, 15, 30 min, 1 h, 1 h 30, au choix | pareil ; pause à la touche centrale, sonnerie et vibration à la fin |
 | Texte « Pour commencer », « Je n'arrive pas à parler », texte « Pour finir » | pareil |
-| ’Hizouk par moment | les 46 textes publiés, en français |
+| ’Hizouk par moment | les textes publiés, en français (85 au 11/10, relus à chaque construction) |
 | Accueil | le personnage du jour, « À faire » ou « Faite : 20 min », la série et la semaine en carrés |
 | Journal | minutes du jour, série, 7 derniers jours en barres, total |
 | Musique | un niggoun d'essai (Niggoun 33), en boucle, qui continue pendant la hitbodedout |
