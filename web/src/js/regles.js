@@ -53,6 +53,7 @@ const LIVRES = [
   ['Chmouel I ', 'I Samuel ', 'שמואל א '],
   ['Yechayahou ', 'Isaiah ', 'ישעיהו '],
   ['Hochéa ', 'Hosea ', 'הושע '],
+  ['Bisdei Yaar, chap. ', 'Bisdei Yaar, ch. ', 'בשדי יער, פרק '],
 ].map(([fr, en, he]) => ({ fr, en, he }));
 
 const UNITES = ' אבגדהוזחט';

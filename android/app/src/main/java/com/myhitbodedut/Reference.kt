@@ -38,6 +38,7 @@ object Reference {
         Livre("Chmouel I ", "I Samuel ", "שמואל א "),
         Livre("Yechayahou ", "Isaiah ", "ישעיהו "),
         Livre("Hochéa ", "Hosea ", "הושע "),
+        Livre("Bisdei Yaar, chap. ", "Bisdei Yaar, ch. ", "בשדי יער, פרק "),
     )
 
     /** La langue est passée plutôt que lue, pour que la règle se teste sans appareil. */
