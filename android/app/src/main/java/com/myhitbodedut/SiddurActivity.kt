@@ -73,12 +73,12 @@ class SiddurActivity : AppCompatActivity() {
                 ligne(texte.titre.he, detail) { SiddurLectureActivity.ouvrir(this, texte.id) }
             }))
         }
-        // Les sources, comme la licence CC-BY du siddour Metsudah le demande.
-        liste.addView(TextView(this).apply {
+        // Les seules mentions que les licences demandent (CC-BY du siddour Metsudah, Wikipédia).
+        if (siddur.mentions.isNotEmpty()) liste.addView(TextView(this).apply {
             layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
                 .apply { topMargin = dp(20) }
             setPadding(dp(20), 0, dp(20), 0)
-            text = getString(R.string.siddur_sources, siddur.sources.joinToString(" ; "))
+            text = getString(R.string.siddur_sources, siddur.mentions.joinToString(" ; "))
             textSize = 12f
             setTextColor(Apparence.couleur(context, R.color.muted))
         })

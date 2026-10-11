@@ -21,6 +21,15 @@ class SiddurTest {
     )
 
     @Test
+    fun `seules les mentions imposees par les licences restent, sans Sefaria`() {
+        assertTrue(nusah.getValue(Nusah.EDOT).mentions.isEmpty())
+        nusah.forEach { (n, siddur) ->
+            assertTrue("$n", siddur.mentions.all { "CC-BY" in it && "Sefaria" !in it && "Public Domain" !in it })
+            assertEquals("$n", siddur.sources.count { "CC-BY" in it }, siddur.mentions.size)
+        }
+    }
+
+    @Test
     fun `chaque nusah a les textes demandes`() {
         nusah.forEach { (n, siddur) ->
             assertEquals("$n", attendus, siddur.textes.map { it.id })

@@ -83,18 +83,23 @@ object VueJour {
         if (hilloulot.isNotEmpty()) {
             carte.addView(texte(c, c.getString(R.string.hilloula_titre), 12f, R.color.muted, gras = true, haut = 14))
             val reste = hilloulot.size - 5
-            val noms = hilloulot.take(5).joinToString("\n") { it.he } +
-                (if (reste > 0) "\n" + c.resources.getQuantityString(R.plurals.hilloula_autres, reste, reste) else "")
-            carte.addView(texte(c, noms, 16f, R.color.ink, haut = 2).apply {
+            val ouvrirHilloulot = View.OnClickListener {
+                c.startActivity(Intent(c, HilloulotActivity::class.java).putExtra(HilloulotActivity.EXTRA_DATE, date.toString()))
+            }
+            carte.addView(texte(c, hilloulot.take(5).joinToString("\n") { it.he }, 16f, R.color.ink, haut = 2).apply {
                 textDirection = View.TEXT_DIRECTION_RTL
                 PoliceHebraique.appliquer(this)
+            })
+            // « ועוד אחד › » : plus petit, plus discret, et la flèche mène aux autres.
+            if (reste > 0) carte.addView(texte(c, c.resources.getQuantityString(R.plurals.hilloula_autres, reste, reste) + " ›", 13f, R.color.muted, haut = 2).apply {
+                textDirection = View.TEXT_DIRECTION_RTL
+                PoliceHebraique.appliquer(this)
+                setOnClickListener(ouvrirHilloulot)
             })
             carte.addView(texte(c, c.getString(R.string.hilloulot_tout), 15f, R.color.brand, gras = true, haut = 4).apply {
                 setPadding(0, dp(c, 6), 0, dp(c, 6))
                 foreground = c.getDrawable(android.R.drawable.list_selector_background)
-                setOnClickListener {
-                    c.startActivity(Intent(c, HilloulotActivity::class.java).putExtra(HilloulotActivity.EXTRA_DATE, date.toString()))
-                }
+                setOnClickListener(ouvrirHilloulot)
             })
         }
         // La halakha du jour, hors ligne (Ben Ish 'Haï) : la première, puis l'écran de la halakha.

@@ -51,6 +51,19 @@ class Siddur(
 ) {
     fun texte(id: String): SiddurTexte? = textes.firstOrNull { it.id == id }
     fun du(groupe: String): List<SiddurTexte> = textes.filter { it.groupe == groupe }
+
+    /**
+     * Les seules mentions que les licences imposent (CC-BY, CC-BY-SA), sans
+     * le nom de Sefaria (demande du 11/10) ; domaine public et CC0 n'en
+     * demandent aucune.
+     */
+    val mentions: List<String>
+        get() = mentionsObligatoires(sources)
+
+    companion object {
+        fun mentionsObligatoires(sources: List<String>): List<String> =
+            sources.filter { it.contains("CC-BY") }.map { it.replace("Sefaria / ", "").replace("Sefaria, ", "") }
+    }
 }
 
 object SiddurLoader {

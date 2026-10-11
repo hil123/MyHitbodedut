@@ -902,8 +902,9 @@ function ecranSiddur() {
           ligneHebreu(x.titre.he, [titreTexte(x.titre) !== x.titre.he ? titreTexte(x.titre) : null, x.nusah ? titreTexte(x.nusah) : null].filter(Boolean).join(' · '),
             () => { priere = x.id; ouvrir('priere'); }))),
       ]) : []),
-      // Les sources, comme la licence CC-BY du siddour Metsudah le demande.
-      pret ? h('p', { class: 'indice sources' }, tr.t('siddur_sources', siddur._meta.sources.join(' ; '))) : null)));
+      // Les seules mentions que les licences demandent (CC-BY du siddour Metsudah, Wikipédia), sans Sefaria.
+      pret && mentionsObligatoires(siddur._meta.sources).length
+        ? h('p', { class: 'indice sources' }, tr.t('siddur_sources', mentionsObligatoires(siddur._meta.sources).join(' ; '))) : null)));
 }
 
 function ecranPriere() {
@@ -1375,17 +1376,23 @@ function ecranHalakha() {
 }
 
 /** La hilloula du jour (comme CalJ) : les noms, cinq au plus, puis l'écran des hilloulot. */
+/** Domaine public et CC0 ne demandent aucune mention ; CC-BY et CC-BY-SA, si (sans le nom de Sefaria). */
+function mentionsObligatoires(sources) {
+  return (sources || []).filter((x) => x.includes('CC-BY')).map((x) => x.replace('Sefaria / ', '').replace('Sefaria, ', ''));
+}
+
 function blocHilloula(iso) {
   const table = tableHilloulot();
   if (!table || !store.hilloulotAffichees()) return [];
   const liste = hilloulotPour(table, iso, store.inIsrael());
   if (!liste.length) return [];
   const reste = liste.length - 5;
+  const versHilloulot = () => { jourHilloulot = iso; rechercheHilloulot = ''; ouvrir('hilloulot'); };
   return [
     h('h3', { class: 'jour-sous-titre' }, tr.t('hilloula_titre')),
     h('div', { class: 'jour-hilloula', lang: 'he', dir: 'rtl' }, ...liste.slice(0, 5).map((x) => h('div', {}, x.he)),
-      reste > 0 ? h('div', { class: 'jour-hilloula-reste' }, tr.p('hilloula_autres', reste)) : null),
-    h('button', { class: 'jour-lien lien-bouton', onclick: () => { jourHilloulot = iso; rechercheHilloulot = ''; ouvrir('hilloulot'); } }, tr.t('hilloulot_tout')),
+      reste > 0 ? h('button', { class: 'jour-hilloula-reste lien-bouton', onclick: versHilloulot }, `${tr.p('hilloula_autres', reste)} ›`) : null),
+    h('button', { class: 'jour-lien lien-bouton', onclick: versHilloulot }, tr.t('hilloulot_tout')),
   ];
 }
 

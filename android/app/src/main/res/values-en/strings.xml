@@ -745,7 +745,7 @@
     <string name="halakha_aucune">No halacha for this day</string>
     <string name="halakha_tout">The whole halacha of the day ›</string>
     <string name="halakha_livre">Ben Ish Chai, weekly portion</string>
-    <string name="halakha_note">Original Hebrew text, verbatim (Wikisource, public domain, via Sefaria). For practice, ask a rabbi.</string>
+    <string name="halakha_note">Original Hebrew text, verbatim. For practice, ask a rabbi.</string>
     <!-- Les trophées et la fête (11/10) -->
     <string name="celebration_titre">Mazal tov!</string>
     <string name="trophee_gagne">Trophy won: %1$s!</string>

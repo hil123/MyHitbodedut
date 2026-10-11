@@ -719,7 +719,7 @@ input[type="range"] { width: 100%; accent-color: var(--brand); }
 
 /* L'écran des hilloulot (11/10). */
 .jour-hilloula { margin: 2px 0 0; font-size: 16px; line-height: 1.6; }
-.jour-hilloula-reste { color: var(--muted); font-size: 14px; }
+.jour-hilloula-reste { display: block; color: var(--muted); font-size: 13px; }
 .lien-bouton { background: none; border: 0; font: inherit; font-weight: 700; cursor: pointer; padding-inline: 0; }
 .champ-recherche { width: 100%; box-sizing: border-box; margin-top: 10px; padding: 10px 12px; border: 1px solid var(--line, #ccd); border-radius: 12px; font: inherit; background: transparent; color: inherit; }
 .carte-hilloula .hilloula-nom { margin: 0; font-size: 22px; font-weight: 700; }
