@@ -2,7 +2,7 @@
 // pour toutes, à côté des paliers. Mêmes règles que l'application Android.
 
 export const TROPHEES = [
-  ['premier_pas', '🌱'], ['une_heure', '⏳'], ['deux_heures', '🔥'], ['semaine_pleine', '📅'],
+  ['premier_pas', '🌱'], ['une_heure', '⏳'], ['deux_heures', '🔥'], ['semaine_pleine', '🏅'],
   ['erev_chabbat', '🕯️'], ['retour', '🔄'], ['chai', 'חי'], ['quarante', '⛰️'], ['dix_heures', '⭐'],
   ['cent_heures', '🌟'], ['plume', '✍️'], ['plume_fidele', '📖'], ['taryag', '👑'],
 ].map(([cle, icone]) => ({ cle, icone }));

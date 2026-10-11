@@ -19,7 +19,7 @@ object Trophees {
         PREMIER_PAS("premier_pas", "🌱"),
         UNE_HEURE("une_heure", "⏳"),
         DEUX_HEURES("deux_heures", "🔥"),
-        SEMAINE_PLEINE("semaine_pleine", "📅"),
+        SEMAINE_PLEINE("semaine_pleine", "🏅"),
         EREV_CHABBAT("erev_chabbat", "🕯️"),
         RETOUR("retour", "🔄"),
         CHAI("chai", "חי"),
