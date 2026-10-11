@@ -122,6 +122,19 @@
                         android:gravity="center"
                         android:textColor="?attr/mhMuted"
                         android:textSize="16sp" />
+
+                    <!-- Le palier le plus proche (11/10) : touché, il ouvre les trophées et paliers. -->
+                    <TextView
+                        android:id="@+id/paliers_line"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:background="?attr/selectableItemBackground"
+                        android:gravity="center"
+                        android:paddingVertical="6dp"
+                        android:textColor="?attr/mhBrand"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
                 </LinearLayout>
 
                 <!-- L'en-tête, puis « Commencer » et ce qui l'accompagne. -->
@@ -303,6 +316,16 @@
                         android:layout_marginTop="6dp"
                         android:text="@string/action_done_offline"
                         android:visibility="gone" />
+
+                    <!-- Les trophées et les paliers, en bas de la page (11/10). -->
+                    <Button
+                        android:id="@+id/trophees_paliers"
+                        style="@style/Widget.Material3.Button.OutlinedButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="14dp"
+                        android:layout_marginBottom="8dp"
+                        android:text="@string/trophees_paliers" />
                 </LinearLayout>
             </LinearLayout>
         </ScrollView>
