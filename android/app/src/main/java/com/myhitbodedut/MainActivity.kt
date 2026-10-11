@@ -114,6 +114,7 @@ class MainActivity : AppCompatActivity() {
         SessionService.reconcilier(this)
         applyServiceState()
         refresh()
+        renderPaliers()
         // Chaque retour sur l'accueil : le hassid au centre, les anneaux se
         // remplissent, puis il salue ou fête l'anneau qui vient de se fermer (04/10).
         findViewById<View>(R.id.hero_plate).apply {
@@ -151,6 +152,7 @@ class MainActivity : AppCompatActivity() {
             )
         }
         findViewById<Button>(R.id.today_offline).setOnClickListener { declarerHorsTelephone() }
+        findViewById<Button>(R.id.trophees_paliers).setOnClickListener { startActivity(Intent(this, PaliersActivity::class.java)) }
         findViewById<View>(R.id.start_duration).setOnClickListener {
             pickDuration()
         }
@@ -244,6 +246,7 @@ class MainActivity : AppCompatActivity() {
         DureeSeance.choisir(this, R.string.offline_how_long) { minutes ->
             // Sans sujet : celui des puces est celui de la PROCHAINE séance.
             Store.addSession(this, minutes, theme = null, date = date)
+            Celebrations.notification(this)
             if (date == Store.today()) Store.setPendingCelebration(this, minutes, date)
             refresh()
             StreakWidget.refresh(this)
@@ -504,6 +507,22 @@ class MainActivity : AppCompatActivity() {
             addUpdateListener { valeur.text = texte(it.animatedValue as Int) }
             start()
         }
+    }
+
+    /**
+     * Le palier le plus proche, sous les anneaux (11/10), et la fête d'un
+     * palier atteint depuis la dernière visite : une fois par palier (et par
+     * jour, semaine ou mois pour les paliers de durée).
+     */
+    private fun renderPaliers() {
+        val bilan = Store.bilan(this)
+        val etats = Paliers.etats(bilan)
+        findViewById<TextView>(R.id.paliers_line).apply {
+            text = PaliersVue.aLaUne(this@MainActivity, Paliers.aLaUne(etats)) + "  ›"
+            setOnClickListener { startActivity(Intent(this@MainActivity, PaliersActivity::class.java)) }
+        }
+        // Un palier ou un trophée neuf : les confettis (11/10).
+        Celebrations.ecran(this)
     }
 
     /** Le compteur qui fait monter le chiffre de la face ; arrêté quand la face change. */

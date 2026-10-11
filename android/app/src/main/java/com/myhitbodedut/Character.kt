@@ -77,8 +77,8 @@ object Character {
         Moment.RELANCE -> R.drawable.char_walking
         // La séance s'achève : on remercie.
         Moment.CLOTURE -> R.drawable.char_praise
-        // Le lieu et le moment : seul, dos tourné, dans les champs.
-        Moment.LIEU -> R.drawable.char_standing_back
+        // Le lieu et le moment : seul, assis face au paysage (planche du 11/10).
+        Moment.LIEU -> R.drawable.scene_nature
     }
 
     fun greeting(done: Boolean): Int = if (done) ofDay(JOY, 3) else ofDay(GREETING, 0)

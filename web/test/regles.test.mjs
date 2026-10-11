@@ -458,8 +458,8 @@ test('le siddour suggère le texte de l’heure, aux bornes d’Android', () => 
     [6, 30, 'chaharit'], [12, 29, 'chaharit'], [12, 30, 'minha'], [18, 29, 'minha'], [18, 30, 'arvit'],
     [22, 29, 'arvit'], [22, 30, 'chema_coucher'], [23, 59, 'chema_coucher']];
   for (const [h, m, id] of cas) assert.equal(SiddurMoment.suggestion(h, m), id, `${h}:${m}`);
-  assert.equal(SiddurMoment.illustration('chaharit'), 'char_praying');
-  assert.equal(SiddurMoment.illustration('chema_coucher'), 'char_thinking');
+  assert.equal(SiddurMoment.illustration('chaharit'), 'char_tefillin');
+  assert.equal(SiddurMoment.illustration('chema_coucher'), 'scene_sleeping');
   // Chaque suggestion existe dans chacun des trois siddourim, et son hassid aussi.
   for (const n of ['edot', 'sefard', 'ashkenaz']) {
     const ids = new Set(JSON.parse(readFileSync(join(RES, 'raw', `siddur_${n}.json`), 'utf8')).textes.map((t) => t.id));
@@ -504,4 +504,83 @@ test('le Tikoun dit d’un trait marque les dix psaumes, pour le jour seulement'
   assert.deepEqual([...s.tikkunDone()].sort((a, b) => a - b), [16, 150]);
   horloge.t += 86400000;
   assert.equal(s.tikkunDone().size, 0);
+});
+
+// La carte du jour (11/10) : l'illustration de fête, la hilloula, les liens.
+test('carte du jour : illustration, hilloula et liens', async () => {
+  const J = await import('../src/js/jour-affiche.js');
+  assert.equal(J.illustration(['soukkot'], '2026-09-26'), 'scene_sukkot');
+  assert.equal(J.illustration(['hanouka'], '2026-12-05'), 'scene_hanukkah');
+  assert.equal(J.illustration([], '2026-10-10'), 'char_shabbat');
+  assert.equal(J.illustration([], '2026-10-11'), null);
+  // 5784 et 5787 sont embolismiques, 5786 ne l'est pas.
+  assert.deepEqual([5784, 5786, 5787].map(J.embolismique), [true, false, true]);
+  assert.deepEqual(J.clesHilloula(12, 7, false, false), ['adar-7', 'adar1-7', 'adar2-7']);
+  assert.deepEqual(J.clesHilloula(12, 7, true, false), ['adar1-7']);
+  assert.deepEqual(J.clesHilloula(13, 7, true, false), ['adar-7', 'adar2-7']);
+  assert.deepEqual(J.clesHilloula(8, 29, false, true), ['8-29', '8-30']);
+  const table = JSON.parse(readFileSync(join(RES, 'raw', 'hilloulot.json'), 'utf8')).jours;
+  // Chaque jour d'une année simple (5786) a au moins une hilloula ; en année
+  // embolismique, Adar I n'a que les hilloulot dites « Adar I ».
+  let iso = '2025-09-23';
+  while (iso < '2026-09-12') {
+    assert.ok(J.hilloulotPour(table, iso, false).length > 0, iso);
+    const [a, m, d] = iso.split('-').map(Number);
+    iso = new Date(Date.UTC(a, m - 1, d + 1, 12)).toISOString().slice(0, 10);
+  }
+  // 7 Adar II 5787 (16/03/2027) : les hilloulot d'Adar sans précision.
+  assert.ok(J.hilloulotPour(table, '2027-03-16', false).length > 10);
+  // 30 Tichri 5787 (11/10/2026) : Rabbi Tsvi Hirsch Chajes, donné par Wikipédia.
+  assert.ok(J.hilloulotPour(table, '2026-10-11', false).some((x) => x.he.includes('צבי הירש חיות')));
+  assert.equal(J.lienHyomi('2026-10-11'), 'https://hyomi.org.il/day.php?month1=0&dd=11&mm=10&yy=2026');
+  assert.equal(J.lienHalakha('iw'), 'https://halachayomit.co.il/he/default.aspx');
+  assert.equal(J.lienHalakha('fr'), 'https://halachayomit.co.il/fr/default.aspx');
+  for (const img of ['scene_sukkot', 'char_matsa', 'scene_hanukkah', 'char_purim', 'char_shabbat', 'scene_nature', 'scene_sleeping', 'char_tefillin']) {
+    assert.ok(readFileSync(join(RES, 'drawable-nodpi', `${img}.webp`)).length > 0, img);
+  }
+});
+
+// Les paliers d'objectifs (11/10), comme PaliersTest.
+test('paliers : après chaque palier, le suivant', async () => {
+  const P = await import('../src/js/paliers.js');
+  const e = P.etat('serie', 7);
+  assert.deepEqual([e.atteint, e.prochain, e.reste, e.rang], [7, 14, 7, 2]);
+  assert.equal(P.etat('serie', 400).prochain, 730);
+  assert.equal(P.etat('cumul', 61000).prochain, 72000);
+  assert.equal(P.etat('jour', 21, 25).prochain, 25);
+  const bilan = { aujourdhui: '2026-10-14', minutes: { '2026-10-10': 20, '2026-10-12': 30, '2026-10-14': 15 }, serie: 2, debutMoisHebreu: '2026-10-12', objectifJour: 20 };
+  const l = Object.fromEntries(P.etats(bilan).map((x) => [x.piste, x.valeur]));
+  assert.deepEqual(l, { serie: 2, jour: 15, semaine: 45, mois: 45, cumul: 65, jours: 3 });
+  const m = P.marques(P.etats(bilan), bilan);
+  assert.ok(m.has('jour:2026-10-14:15'));
+  assert.deepEqual(P.nouveaux(P.etats(bilan), bilan, new Set()).map((x) => x.piste).sort(), ['cumul', 'jour', 'jours', 'semaine']);
+  assert.deepEqual(P.nouveaux(P.etats(bilan), bilan, m), []);
+  const r = P.records({ '2026-10-04': 30, '2026-10-05': 40, '2026-10-12': 20 }, (d) => (d < '2026-10-12' ? 't' : 'h'));
+  assert.deepEqual(r, { jour: 40, semaine: 70, mois: 70 });
+  assert.equal(P.aLaUne([P.etat('serie', 6), P.etat('jour', 5)]).piste, 'serie');
+});
+
+test('hilloulot : date lisible et recherche par nom', async () => {
+  const J = await import('../src/js/jour-affiche.js');
+  assert.equal(J.dateHilloula('7-30', (n) => Reference.lettres(n)), 'ל׳ תשרי');
+  assert.equal(J.dateHilloula('adar2-7', (n) => Reference.lettres(n)), 'ז׳ אדר ב׳');
+  const table = JSON.parse(readFileSync(join(RES, 'raw', 'hilloulot.json'), 'utf8')).jours;
+  assert.ok(J.rechercheHilloula(table, 'צבי הירש חיות').some(([cle]) => cle === '7-30'));
+  assert.deepEqual(J.rechercheHilloula(table, 'א'), []);
+});
+
+// --- Trophées (Trophees.kt, 11/10) ---
+import * as Trophees from '../src/js/trophees.js';
+test('trophées : mêmes règles que TropheesTest', () => {
+  assert.equal(Trophees.gagnes({ minutes: {}, notes: 0, meilleureSerie: 0 }).size, 0);
+  assert.ok(Trophees.semainePleine(['2026-10-11', '2026-10-12', '2026-10-13', '2026-10-14', '2026-10-15', '2026-10-16']));
+  assert.ok(!Trophees.semainePleine(['2026-10-12', '2026-10-13', '2026-10-14', '2026-10-15', '2026-10-16', '2026-10-17']));
+  assert.ok(!Trophees.retour(['2026-10-11', '2026-10-18']));
+  assert.ok(Trophees.retour(['2026-10-11', '2026-10-19']));
+  const minutes = { '2026-10-11': 125 };
+  for (let k = 1; k <= 17; k++) minutes[new Date(Date.UTC(2026, 9, 11 + 2 * k, 12)).toISOString().slice(0, 10)] = 30;
+  const g = Trophees.gagnes({ minutes, notes: 10, meilleureSerie: 40 });
+  for (const c of ['une_heure', 'deux_heures', 'chai', 'quarante', 'plume', 'dix_heures']) assert.ok(g.has(c), c);
+  assert.ok(!g.has('cent_heures'));
+  assert.deepEqual(Trophees.nouveaux(g, null), []);
 });

@@ -11,7 +11,10 @@ import { creeStore, memoire } from './store.js';
 import { isoLocal } from './calendrier.js';
 import { JERUSALEM_GEONAMES, jour as jourJuif, jourDeLaPriere } from './calendrier-juif.js';
 import { conditionsPour, index as indexAjouts, libelleJour, vrai as ajoutVrai } from './siddur-jour.js';
-import { ajouts as ajoutsDuJour, debutMoisHebreu, horaires, momentDuSiddour, moisHebreuVoisin, semaines, semainesHebreu } from './jour-affiche.js';
+import * as Paliers from './paliers.js';
+import * as Trophees from './trophees.js';
+import { pour as halakhotPour, recherche as rechercheHalakha, source as sourceHalakha } from './halakha.js';
+import { ajouts as ajoutsDuJour, dateHilloula, debutMoisHebreu, hilloulotPour, lienArticle, rechercheHilloula, horaires, illustration as illustrationDuJour, lienHalakha, lienHyomi, momentDuSiddour, moisHebreuVoisin, semaines, semainesHebreu } from './jour-affiche.js';
 import { ALLUMAGES, heure as heureZman } from './zmanim.js';
 
 // --- Stockage ---------------------------------------------------------------
@@ -453,7 +456,8 @@ function panneauAujourdhui() {
       tr.duree(etat.jour.fait), tr.duree(etat.jour.objectif), etat.semaine.fait, etat.semaine.objectif, etat.serie.fait, etat.serie.objectif) },
     anneaux(etat),
     plaqueAccueil()),
-    h('div', { class: `jauge-legende${anneauEnAvant ? ` legende-${anneauEnAvant}` : ''}` }, legendeAnneaux(etat, progression))),
+    h('div', { class: `jauge-legende${anneauEnAvant ? ` legende-${anneauEnAvant}` : ''}` }, legendeAnneaux(etat, progression)),
+    lignePaliers()),
 
     h('div', { class: 'accueil-actions' }, h('button', { class: 'principal', onclick: () => ouvrir('seance') }, bouton),
 
@@ -477,7 +481,9 @@ function panneauAujourdhui() {
         h('span', { class: 'marque-jour', 'aria-hidden': 'true' }, marque));
     })),
 
-    fait ? h('button', { class: 'texte-bouton', onclick: () => ecrireNote(store.today(), rendre) }, tr.t('action_write_note')) : null));
+    fait ? h('button', { class: 'texte-bouton', onclick: () => ecrireNote(store.today(), rendre) }, tr.t('action_write_note')) : null,
+    // Les trophées et les paliers, en bas de la page (11/10).
+    h('button', { class: 'bouton-trophees', onclick: () => ouvrir('paliers') }, tr.t('trophees_paliers'))));
 }
 
 function pastille(libelle, valeur, onclick) {
@@ -1264,6 +1270,32 @@ function choisirAllumage() {
 const mukafChoma = () => store.lieu()?.ville === JERUSALEM_GEONAMES;
 
 /** La date hébraïque d'un jour, ses fêtes, et ce qu'il change aux prières. */
+// La hilloula du jour (11/10) : hilloulot.json, chargé à la première carte.
+let hilloulots = null;
+let hilloulotsDemandees = false;
+function tableHilloulot() {
+  if (!hilloulotsDemandees) {
+    hilloulotsDemandees = true;
+    fetch('data/hilloulot.json').then((r) => r.json()).then((d) => { hilloulots = d.jours; rendre(); }).catch(() => {});
+  }
+  return hilloulots;
+}
+
+// La halakha du jour (11/10) : ben_ish_hai.json, chargé à la première carte.
+let livreHalakha = null;
+let livreHalakhaDemande = false;
+function livreDuJour() {
+  if (!livreHalakhaDemande) {
+    livreHalakhaDemande = true;
+    fetch('data/ben_ish_hai.json').then((r) => r.json()).then((d) => { livreHalakha = d; rendre(); }).catch(() => {});
+  }
+  return livreHalakha;
+}
+
+function lienExterne(libelle, url) {
+  return h('a', { class: 'jour-lien', href: url, target: '_blank', rel: 'noopener' }, `${libelle} ↗`);
+}
+
 function carteJour(iso) {
   const j = jourJuif(iso, store.inIsrael(), mukafChoma());
   // L'omer se compte le soir, pour le jour hébreu qui commence : celui de demain.
@@ -1276,12 +1308,131 @@ function carteJour(iso) {
     j.paracha ? tr.t('zmanim_paracha', j.paracha) : null,
     omerCeSoir ? tr.t('zmanim_omer_ce_soir', omerCeSoir) : null,
   ].filter(Boolean);
+  const dessin = illustrationDuJour(j.fetes, iso);
   return h('div', { class: 'carte carte-jour' },
+    dessin ? h('img', { class: 'jour-illustration', src: `img/${dessin}.webp`, alt: '' }) : null,
     h('p', { class: 'jour-hebreu', lang: 'he', dir: 'rtl' }, j.dateHebraique),
     h('p', { class: 'jour-civil' }, civil),
     marques.length ? h('div', { class: 'jour-marques' }, marques.map((m) => h('span', { class: 'marque' }, m))) : null,
     h('h3', { class: 'jour-sous-titre' }, tr.t('zmanim_ajouts_titre')),
-    h('p', { class: 'jour-ajouts' }, ajoutsDuJour(j.conditions, store.siddurNusah(), store.inIsrael(), store.sansTahanounFinTichri()).map((k) => tr.t(k)).join(' · ')));
+    h('p', { class: 'jour-ajouts' }, ajoutsDuJour(j.conditions, store.siddurNusah(), store.inIsrael(), store.sansTahanounFinTichri()).map((k) => tr.t(k)).join(' · ')),
+    ...blocHilloula(iso),
+    ...blocHalakha(iso));
+}
+
+/** La halakha du jour, hors ligne (Ben Ish 'Haï) : la première, puis l'écran de la halakha. */
+function blocHalakha(iso) {
+  const livre = livreDuJour();
+  if (!livre || !store.halakhaAffichee()) return [];
+  const liste = halakhotPour(livre, iso, store.inIsrael());
+  if (!liste.length) return [];
+  return [
+    h('h3', { class: 'jour-sous-titre' }, `${tr.t('halakha_yomit_titre')} · ${tr.t('halakha_livre')}`),
+    h('p', { class: 'jour-halakha', lang: 'he', dir: 'rtl' }, liste[0].texte),
+    h('button', { class: 'jour-lien lien-bouton', onclick: () => { jourHalakha = iso; rechercheHalakhaTexte = ''; ouvrir('halakha'); } }, tr.t('halakha_tout')),
+  ];
+}
+
+// --- L'écran de la halakha du jour (HalakhaActivity, 11/10) -----------------------
+let jourHalakha = null;
+let rechercheHalakhaTexte = '';
+
+function ecranHalakha() {
+  const livre = livreDuJour() ?? { annees: {} };
+  const iso = jourHalakha ?? isoLocal(new Date());
+  const carte = (x) => h('div', { class: 'carte carte-hilloula' },
+    h('p', { class: 'halakha-source', lang: 'he', dir: 'rtl' }, sourceHalakha(x, (n) => Reference.lettres(n))),
+    h('p', { class: 'halakha-texte', lang: 'he', dir: 'rtl' }, x.texte));
+  const champ = h('input', { type: 'search', class: 'champ-recherche', placeholder: tr.t('halakha_recherche'), value: rechercheHalakhaTexte,
+    oninput: (e) => { rechercheHalakhaTexte = e.target.value; rendre(); setTimeout(() => { const c = app.querySelector('.champ-recherche'); c?.focus(); c?.setSelectionRange(c.value.length, c.value.length); }, 0); } });
+  let corps;
+  if (rechercheHalakhaTexte.trim().length >= 2) {
+    const trouves = rechercheHalakha(livre, rechercheHalakhaTexte);
+    corps = [h('p', { class: 'jour-sous-titre' }, tr.t('hilloulot_resultats', trouves.length)), ...trouves.slice(0, 40).map(carte)];
+  } else {
+    const j = jourJuif(iso, store.inIsrael());
+    const decale = (n) => { const [a, m, d] = iso.split('-').map(Number); jourHalakha = new Date(Date.UTC(a, m - 1, d + n, 12)).toISOString().slice(0, 10); rendre(); };
+    const liste = livreHalakha ? halakhotPour(livre, iso, store.inIsrael()) : [];
+    corps = [
+      h('div', { class: 'mois-tete' },
+        h('button', { class: 'icone-bouton mois-precedent', dir: 'ltr', 'aria-label': tr.t('calendrier_precedent'), onclick: () => decale(-1) }, tr.rtl ? '›' : '‹'),
+        h('div', { class: 'mois-titres' }, h('p', { class: 'mois-principal mois-hebreu', lang: 'he', dir: 'rtl' }, j.dateHebraique), h('p', { class: 'mois-second' }, iso)),
+        h('button', { class: 'icone-bouton mois-suivant', dir: 'ltr', 'aria-label': tr.t('calendrier_suivant'), onclick: () => decale(1) }, tr.rtl ? '‹' : '›')),
+      ...(liste.length ? liste.map(carte) : [h('p', { class: 'message' }, tr.t('halakha_aucune'))]),
+      h('p', { class: 'note-halakha' }, tr.t('halakha_note')),
+      // Le site de Rav Ovadia Yossef : un lien seulement (tous droits réservés sur ses textes).
+      lienExterne(tr.t('halakha_yomit_lien'), lienHalakha(tr.langue)),
+    ];
+  }
+  return h('div', { class: 'ecran avec-bandeau' }, bandeau(tr.t('halakha_title'), { dessin: 'char_reading_seated' }),
+    h('div', { class: 'defile' }, h('div', { class: 'contenu' },
+      h('div', { class: 'carte' },
+        h('label', { class: 'ligne' }, h('span', { class: 'corps' }, h('div', { class: 'nom' }, tr.t('halakha_afficher'))),
+          h('input', { type: 'checkbox', role: 'switch', class: 'interrupteur', checked: store.halakhaAffichee(), 'aria-label': tr.t('halakha_afficher'),
+            onchange: (e) => { store.setHalakhaAffichee(e.target.checked); rendre(); } })),
+        champ),
+      ...corps)));
+}
+
+/** La hilloula du jour (comme CalJ) : les noms, cinq au plus, puis l'écran des hilloulot. */
+function blocHilloula(iso) {
+  const table = tableHilloulot();
+  if (!table || !store.hilloulotAffichees()) return [];
+  const liste = hilloulotPour(table, iso, store.inIsrael());
+  if (!liste.length) return [];
+  const reste = liste.length - 5;
+  return [
+    h('h3', { class: 'jour-sous-titre' }, tr.t('hilloula_titre')),
+    h('div', { class: 'jour-hilloula', lang: 'he', dir: 'rtl' }, ...liste.slice(0, 5).map((x) => h('div', {}, x.he)),
+      reste > 0 ? h('div', { class: 'jour-hilloula-reste' }, tr.p('hilloula_autres', reste)) : null),
+    h('button', { class: 'jour-lien lien-bouton', onclick: () => { jourHilloulot = iso; rechercheHilloulot = ''; ouvrir('hilloulot'); } }, tr.t('hilloulot_tout')),
+  ];
+}
+
+// --- L'écran des hilloulot (HilloulotActivity, 11/10) --------------------------------
+let jourHilloulot = null;
+let rechercheHilloulot = '';
+
+function ecranHilloulot() {
+  const table = tableHilloulot() ?? {};
+  const iso = jourHilloulot ?? isoLocal(new Date());
+  const carte = (x, date) => h('div', { class: 'carte carte-hilloula' },
+    h('p', { class: 'hilloula-nom', lang: 'he', dir: 'rtl' }, x.he),
+    (tr.langue === 'fr' ? x.fr : tr.langue === 'en' ? x.en : null) ? h('p', { class: 'hilloula-traduit' }, tr.langue === 'fr' ? x.fr : x.en) : null,
+    // Isolés (FSI … PDI) : la date et l'année hébraïques ne renversent pas la ligne.
+    [date, x.a].some(Boolean)
+      ? h('p', { class: 'hilloula-annee' }, [date ? `\u2068${date}\u2069` : null, x.a ? tr.t('hilloula_annee', `\u2068${x.a}\u2069`) : null].filter(Boolean).join(' · ')) : null,
+    x.t ? h('p', { class: 'hilloula-description', lang: 'he', dir: 'rtl' }, x.t) : null,
+    x.s.includes('w') ? (x.w ? h('a', { class: 'hilloula-source', href: lienArticle(x.w), target: '_blank', rel: 'noopener' }, tr.t('hilloula_source_wiki'))
+      : h('p', { class: 'hilloula-source' }, tr.t('hilloula_source_wiki'))) : null,
+    x.s.includes('h') ? h('p', { class: 'hilloula-source' }, tr.t('hilloula_source_hyomi')) : null);
+  const champ = h('input', { type: 'search', class: 'champ-recherche', placeholder: tr.t('hilloulot_recherche'), value: rechercheHilloulot,
+    oninput: (e) => { rechercheHilloulot = e.target.value; rendre(); setTimeout(() => { const c = app.querySelector('.champ-recherche'); c?.focus(); c?.setSelectionRange(c.value.length, c.value.length); }, 0); } });
+  let corps;
+  if (rechercheHilloulot.trim().length >= 2) {
+    const trouves = rechercheHilloula(table, rechercheHilloulot);
+    corps = [h('p', { class: 'jour-sous-titre' }, tr.t('hilloulot_resultats', trouves.length)), ...trouves.slice(0, 60).map(([cle, x]) => carte(x, dateHilloula(cle, (n) => Reference.lettres(n))))];
+  } else {
+    const j = jourJuif(iso, store.inIsrael());
+    const decale = (n) => { const [a, m, d] = iso.split('-').map(Number); jourHilloulot = new Date(Date.UTC(a, m - 1, d + n, 12)).toISOString().slice(0, 10); rendre(); };
+    const liste = hilloulotPour(table, iso, store.inIsrael());
+    corps = [
+      h('div', { class: 'mois-tete' },
+        h('button', { class: 'icone-bouton mois-precedent', dir: 'ltr', 'aria-label': tr.t('calendrier_precedent'), onclick: () => decale(-1) }, tr.rtl ? '›' : '‹'),
+        h('div', { class: 'mois-titres' }, h('p', { class: 'mois-principal mois-hebreu', lang: 'he', dir: 'rtl' }, j.dateHebraique), h('p', { class: 'mois-second' }, iso)),
+        h('button', { class: 'icone-bouton mois-suivant', dir: 'ltr', 'aria-label': tr.t('calendrier_suivant'), onclick: () => decale(1) }, tr.rtl ? '‹' : '›')),
+      ...(liste.length ? liste.map((x) => carte(x, null)) : [h('p', { class: 'message' }, tr.t('hilloulot_aucune'))]),
+      lienExterne(tr.t('hilloula_lien'), lienHyomi(iso)),
+    ];
+  }
+  return h('div', { class: 'ecran avec-bandeau' }, bandeau(tr.t('hilloulot_title'), { dessin: 'char_torah' }),
+    h('div', { class: 'defile' }, h('div', { class: 'contenu' },
+      h('div', { class: 'carte' },
+        h('label', { class: 'ligne' }, h('span', { class: 'corps' }, h('div', { class: 'nom' }, tr.t('hilloulot_afficher'))),
+          h('input', { type: 'checkbox', role: 'switch', class: 'interrupteur', checked: store.hilloulotAffichees(), 'aria-label': tr.t('hilloulot_afficher'),
+            onchange: (e) => { store.setHilloulotAffichees(e.target.checked); rendre(); } })),
+        champ),
+      ...corps)));
 }
 
 /** Les horaires d'un jour, chacun avec sa méthode ; ou l'invitation à choisir un lieu. */
@@ -1326,6 +1477,110 @@ function ecranZmanim() {
  * Le mois hébreu est la vue principale, le mois civil au choix ; chaque case porte
  * toujours les deux quantièmes, le principal en haut.
  */
+// --- Les paliers d'objectifs (PaliersActivity, 11/10) --------------------------------
+function bilanPaliers() {
+  const aujourdhui = isoLocal(new Date());
+  return { aujourdhui, minutes: store.minutesParJour(), serie: store.streak(), debutMoisHebreu: debutMoisHebreu(aujourdhui), objectifJour: store.dailyGoal() };
+}
+
+function libellePalier(piste, bilan) {
+  return piste === 'mois' ? tr.t('palier_mois', `\u2068${jourJuif(bilan.aujourdhui, false).moisEtAnnee}\u2069`) : tr.t(`palier_${piste}`);
+}
+
+/** Des jours pour la série et les jours de pratique, une durée pour le reste. */
+const valeurPalier = (piste, v) => (piste === 'serie' || piste === 'jours' ? tr.p('palier_n_jours', v) : tr.duree(v));
+
+/** Le palier le plus proche, sous les anneaux, et la fête d'un palier atteint depuis la dernière visite. */
+function lignePaliers() {
+  const bilan = bilanPaliers();
+  const etats = Paliers.etats(bilan);
+  const une = Paliers.aLaUne(etats);
+  const vus = store.paliersVus();
+  // Un trophée neuf d'abord, sinon le plus haut palier neuf : les confettis (11/10).
+  const gagnes = Trophees.gagnes(pratique());
+  const trophee = Trophees.nouveaux(gagnes, store.tropheesVus())[0];
+  const neuf = vus ? Paliers.nouveaux(etats, bilan, vus).sort((a, b) => b.rang - a.rang)[0] : null;
+  const message = trophee ? tr.t('trophee_gagne', tr.t(`trophee_${trophee.cle}`))
+    : neuf ? tr.t('palier_nouveau', libellePalier(neuf.piste, bilan), valeurPalier(neuf.piste, neuf.atteint)) : null;
+  if (message) setTimeout(() => { signale(message); confettis(); }, 600);
+  store.setPaliersVus(Paliers.marques(etats, bilan));
+  store.setTropheesVus(new Set(gagnes));
+  const cle = { serie: 'palier_une_serie', jour: 'palier_une_jour', semaine: 'palier_une_semaine' }[une.piste] ?? 'palier_une_mois';
+  return h('button', { class: 'ligne-paliers', onclick: () => ouvrir('paliers') },
+    `${tr.t(cle, valeurPalier(une.piste, une.reste), valeurPalier(une.piste, une.prochain))}  ›`);
+}
+
+const pratique = () => ({ minutes: store.minutesParJour(), notes: store.nombreNotes(), meilleureSerie: store.meilleureSerie() });
+
+/** Des confettis par-dessus l'écran, 2,8 s ; rien si l'on a demandé moins d'animations. */
+function confettis() {
+  if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return;
+  const c = h('canvas', { class: 'confettis', 'aria-hidden': 'true' });
+  document.body.append(c);
+  const ctx = c.getContext('2d');
+  if (!ctx) { c.remove(); return; }
+  const dpr = window.devicePixelRatio || 1;
+  c.width = innerWidth * dpr; c.height = innerHeight * dpr;
+  const couleurs = ['#C99A2E', '#1F6F5C', '#E05A47', '#3B6EC4', '#F2C94C', '#8E4FB5'];
+  const pieces = Array.from({ length: 140 }, () => ({ x: Math.random(), vx: (Math.random() - 0.5) * 0.25, vy: 0.55 + Math.random() * 0.6,
+    tour: (Math.random() - 0.5) * 8 * Math.PI, s: (6 + Math.random() * 8) * dpr, c: couleurs[Math.floor(Math.random() * couleurs.length)],
+    rond: Math.random() < 0.25, retard: Math.random() * 0.35 }));
+  const debut = performance.now();
+  const image = (t) => {
+    const u0 = Math.min(1, (t - debut) / 2800);
+    ctx.clearRect(0, 0, c.width, c.height);
+    for (const p of pieces) {
+      const u = Math.max(0, Math.min(1, (u0 - p.retard) / (1 - p.retard)));
+      if (u <= 0) continue;
+      const x = (p.x + p.vx * u) * c.width; const y = (-0.05 + p.vy * u + 0.6 * u * u) * c.height;
+      ctx.save(); ctx.globalAlpha = Math.min(1, (1 - u) * 2); ctx.fillStyle = p.c; ctx.translate(x, y); ctx.rotate(p.tour * u);
+      if (p.rond) { ctx.beginPath(); ctx.arc(0, 0, p.s / 2, 0, 2 * Math.PI); ctx.fill(); } else ctx.fillRect(-p.s / 2, -p.s / 4, p.s, p.s / 2);
+      ctx.restore();
+    }
+    if (u0 < 1) requestAnimationFrame(image); else c.remove();
+  };
+  requestAnimationFrame(image);
+}
+
+/** La vitrine : les trophées gagnés en couleur, les autres en attente, avec ce qu'il faut pour les gagner. */
+function vitrineTrophees() {
+  const g = Trophees.gagnes(pratique());
+  store.setTropheesVus(new Set(g));
+  const tries = [...Trophees.TROPHEES].sort((a, b) => Number(!g.has(a.cle)) - Number(!g.has(b.cle)));
+  return h('div', { class: 'carte carte-palier' },
+    h('div', { class: 'trophees-tete' }, h('p', { class: 'palier-nom' }, tr.t('trophees_titre')),
+      h('p', { class: 'trophees-compte' }, tr.t('trophees_compte', g.size, Trophees.TROPHEES.length))),
+    h('div', { class: 'trophees-grille' }, ...tries.map((t) => h('div', { class: `trophee${g.has(t.cle) ? ' gagne' : ''}` },
+      h('span', { class: 'trophee-icone', 'aria-hidden': 'true' }, t.icone),
+      h('span', { class: 'trophee-nom' }, tr.t(`trophee_${t.cle}`)),
+      h('span', { class: 'trophee-desc' }, tr.t(`trophee_${t.cle}_desc`))))));
+}
+
+function ecranPaliers() {
+  const bilan = bilanPaliers();
+  const etats = Paliers.etats(bilan);
+  store.setPaliersVus(Paliers.marques(etats, bilan));
+  const r = Paliers.records(bilan.minutes, (d) => { const j = jourJuif(d, false); return `${j.anneeHebraique}-${j.moisHebreu}`; });
+  const carte = (e) => h('div', { class: 'carte carte-palier' },
+    h('p', { class: 'palier-nom' }, libellePalier(e.piste, bilan)),
+    h('p', { class: 'palier-valeur' }, valeurPalier(e.piste, e.valeur)),
+    h('div', { class: 'palier-barre', role: 'progressbar', 'aria-valuemin': '0', 'aria-valuemax': '100', 'aria-valuenow': String(Math.round(e.avancee * 100)) },
+      h('span', { style: `width:${Math.round(e.avancee * 100)}%` })),
+    h('p', { class: 'palier-prochain' }, tr.t('palier_prochain', valeurPalier(e.piste, e.prochain), valeurPalier(e.piste, e.reste))),
+    e.rang > 0 ? h('p', { class: 'palier-atteints' }, tr.t('palier_atteints', e.rang)) : null,
+    e.rang > 0 ? h('div', { class: 'palier-pastilles' }, Paliers.echelle(e.piste, e.valeur, bilan.objectifJour).filter((x) => x <= e.valeur)
+      .reverse().slice(0, 8).map((x) => h('span', { class: 'palier-pastille' }, valeurPalier(e.piste, x)))) : null);
+  return h('div', { class: 'ecran avec-bandeau' }, bandeau(tr.t('trophees_paliers_titre'), { dessin: 'char_arms_raised' }),
+    h('div', { class: 'defile' }, h('div', { class: 'contenu' },
+      vitrineTrophees(),
+      h('h2', { class: 'paliers-titre' }, tr.t('paliers_title')),
+      h('p', { class: 'paliers-sous-titre' }, tr.t('paliers_sous_titre')),
+      ...etats.map(carte),
+      h('div', { class: 'carte carte-palier' }, h('p', { class: 'palier-nom' }, tr.t('paliers_records')),
+        ...[tr.t('record_serie', valeurPalier('serie', store.meilleureSerie())), tr.t('record_jour', tr.duree(r.jour)),
+          tr.t('record_semaine', tr.duree(r.semaine)), tr.t('record_mois', tr.duree(r.mois))].map((x) => h('p', { class: 'palier-record' }, x))))));
+}
+
 function ecranCalendrier() {
   const aujourdhui = isoLocal(new Date());
   const choisi = jourCalendrier ?? aujourdhui;
@@ -1768,7 +2023,7 @@ function arreteDanse() {
 // et le geste de retour ramènent à l'accueil, sur l'onglet quitté.
 function ecranCourant() {
   const e = location.hash.slice(1);
-  return ['musique', 'reglages', 'seance', 'bravo', 'tehilim', 'lecture', 'siddur', 'priere', 'tikkun', 'bibliotheque', 'source', 'zmanim', 'calendrier'].includes(e) ? e : 'accueil';
+  return ['musique', 'reglages', 'seance', 'bravo', 'tehilim', 'lecture', 'siddur', 'priere', 'tikkun', 'bibliotheque', 'source', 'zmanim', 'calendrier', 'paliers', 'hilloulot', 'halakha'].includes(e) ? e : 'accueil';
 }
 function ouvrir(ecran) {
   // L'entrée sur l'écran de séance tire le mot d'ouverture (SessionActivity.onCreate).
@@ -1810,6 +2065,9 @@ function rendre() {
   else if (ecran === 'reglages') app.append(ecranReglages());
   else if (ecran === 'zmanim') app.append(ecranZmanim());
   else if (ecran === 'calendrier') app.append(ecranCalendrier());
+  else if (ecran === 'paliers') app.append(ecranPaliers());
+  else if (ecran === 'hilloulot') app.append(ecranHilloulot());
+  else if (ecran === 'halakha') app.append(ecranHalakha());
   else if (ecran === 'seance') app.append(ecranSeance());
   else if (ecran === 'bravo') app.append(ecranBravo());
   else if (ecran === 'tehilim') app.append(ecranTehilim());

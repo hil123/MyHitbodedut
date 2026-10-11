@@ -6,8 +6,9 @@ import org.junit.Test
 import java.io.File
 
 /**
- * Le siddour (demande du 04/10) : les seize textes de la liste CalJ, dans
- * les trois nusah, leur balisage, et le partage entre prière et consigne.
+ * Le siddour (demande du 04/10) : les seize textes de la liste CalJ, et le
+ * Moussaf de Roch 'Hodech (11/10), dans les trois nusah, leur balisage, et
+ * le partage entre prière et consigne.
  */
 class SiddurTest {
 
@@ -16,11 +17,11 @@ class SiddurTest {
     private val attendus = listOf(
         "birkot_hachahar", "chaharit", "minha", "arvit", "chema_coucher", "tikoun_hatsot",
         "acher_yatsar", "birkat_hamazon", "meen_chaloch", "bore_nefachot", "tefilat_haderekh",
-        "birkat_halevana", "cheva_berakhot", "parachat_haman", "kaddich", "hachkavot",
+        "birkat_halevana", "moussaf_rosh_hodech", "cheva_berakhot", "parachat_haman", "kaddich", "hachkavot",
     )
 
     @Test
-    fun `chaque nusah a les seize textes demandes`() {
+    fun `chaque nusah a les textes demandes`() {
         nusah.forEach { (n, siddur) ->
             assertEquals("$n", attendus, siddur.textes.map { it.id })
             assertTrue("$n sans nom", siddur.nusah.he.isNotBlank() && siddur.sources.isNotEmpty())
@@ -30,6 +31,48 @@ class SiddurTest {
                 assertTrue("$n/${t.id} : groupe inconnu", siddur.groupes.any { it.cle == t.groupe })
                 assertTrue("$n/${t.id} sans source", t.source.isNotBlank())
             }
+        }
+    }
+
+    /**
+     * Le Moussaf de Roch 'Hodech (11/10) : la bénédiction du milieu, puis la
+     * consigne du Bnei Yissaschar et les douze צירופי הוי״ה des mois.
+     */
+    @Test
+    fun `le moussaf de roch hodech porte les tseroufim du bnei yissaschar`() {
+        nusah.forEach { (n, siddur) ->
+            val blocs = siddur.texte("moussaf_rosh_hodech")!!.sections.flatMap { it.blocs }
+            val nu = { s: String -> s.replace(Regex("<[^>]+>"), "").replace(Regex("[\\u0591-\\u05C7]"), "") }
+            val i = blocs.indexOfFirst { it.consigne && it.texte.contains("בני יששכר") }
+            assertTrue("$n : consigne", i > 0)
+            // Juste après la fin de la bénédiction du milieu.
+            assertTrue("$n : placement", nu(blocs[i - 1].texte).contains("מקדש ישראל וראשי חדשים"))
+            val c = blocs[i]
+            listOf("ניסן: <b>יהו״ה</b>", "תשרי: <b>והי״ה</b>", "אדר: <b>ההי״ו</b>", "אלול: <b>ההו״י</b>")
+                .forEach { assertTrue("$n : $it", c.texte.contains(it)) }
+            // Les צירופים se pensent, ne se prononcent pas : dit avant la liste.
+            assertTrue("$n : avertissement", c.texte.contains("אין להוציא צירופים אלו בפה כלל"))
+            assertEquals("$n", 13, Regex("<br>").findAll(c.texte).count())
+        }
+    }
+
+    /**
+     * Le nikkoud des kavanot sur le Nom des 'hatimot de la Amida (11/10) :
+     * celui d'Edot, reporté sur Sfard (tools/noms_kavanot.py), recoupé avec
+     * le Chaar HaKavanot (drouch 6) et le Pri Etz 'Haïm (Chaar HaAmida).
+     */
+    @Test
+    fun `les hatimot de la amida sfard portent le nikkoud des kavanot`() {
+        val sfard = nusah.getValue(Nusah.SEFARD)
+        listOf("chaharit", "minha", "arvit").forEach { id ->
+            val texte = sfard.texte(id)!!.sections.filter { it.titre.contains("עמידה") }
+                .flatMap { it.blocs }.joinToString(" ") { it.texte }.replace(Regex("<[^>]+>"), "")
+            // Avot et Da'at en patah, Refoua en holam, Michpat, Tsadikim et Chalom en chourouq.
+            assertTrue("$id : patah", Regex("יַהַוַהַ").findAll(texte).count() >= 2)
+            assertTrue("$id : holam", texte.contains("יֹהֹוֹהֹ"))
+            assertTrue("$id : chourouq", Regex("יוּהוּווּהוּ").findAll(texte).count() >= 3)
+            val nu = texte.replace(Regex("[\\u0591-\\u05AF\\u05BD]"), "")
+            assertTrue("$id : plus de יְהֹוָה avant « מגן אברהם »", !Regex("יְהֹוָה[,.]?\\s*מָגֵן").containsMatchIn(nu))
         }
     }
 

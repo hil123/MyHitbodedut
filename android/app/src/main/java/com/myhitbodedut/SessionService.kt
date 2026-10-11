@@ -327,6 +327,7 @@ class SessionService : Service() {
         /** Inscrit une séance close : la journée de son début, et le bravo. */
         fun inscrire(context: Context, close: SeanceClose, theme: Theme?) {
             Store.addSession(context, close.minutes, theme = theme, date = close.date)
+            Celebrations.notification(context)
             Store.setPendingCelebration(context, close.minutes, close.date)
         }
 

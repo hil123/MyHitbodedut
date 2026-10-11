@@ -13,6 +13,20 @@ import java.time.YearMonth
 object JourAffiche {
 
     /**
+     * L'illustration d'un jour de fête ou de Chabbat (11/10), par son nom de
+     * ressource ; null un jour ordinaire. La fête passe avant Chabbat.
+     */
+    fun illustration(fetes: List<String>, date: LocalDate): String? = when {
+        fetes.any { it in setOf("erev_soukkot", "soukkot", "hol_hamoed_soukkot", "hochaana_rabba") } -> "scene_sukkot"
+        fetes.any { it in setOf("erev_pessah", "pessah", "hol_hamoed_pessah") } -> "char_matsa"
+        "hanouka" in fetes -> "scene_hanukkah"
+        fetes.any { it in setOf("pourim", "chouchan_pourim", "pourim_ailleurs", "pourim_jerusalem") } -> "char_purim"
+        date.dayOfWeek == java.time.DayOfWeek.SATURDAY -> "char_shabbat"
+        else -> null
+    }
+
+
+    /**
      * Les ajouts du jour, dans l'ordre de l'Amida : des clés de libellé
      * (Libelles). Le nusah change trois choses (ZMANIM.md, « Différences de
      * nusah ») : Morid hatal hors d'Israël chez beaucoup d'Ashkénazes, la

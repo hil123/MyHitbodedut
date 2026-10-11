@@ -740,4 +740,91 @@
     <string name="fete_lag_baomer">Lag baOmer</string>
     <string name="fete_chouchan_pourim_katan">Chouchan Pourim katan</string>
     <string name="fete_isrou_hag">Isrou ’hag</string>
+    <!-- La hilloula et la halakha du jour (11/10) -->
+    <string name="hilloula_titre">Hilloula du jour</string>
+    <plurals name="hilloula_autres">
+        <item quantity="one">et %1$d autre</item>
+        <item quantity="other">et %1$d autres</item>
+    </plurals>
+    <string name="hilloula_lien">Les sages du jour sur hyomi.org.il</string>
+    <string name="halakha_yomit_titre">Halakha yomit</string>
+    <string name="halakha_yomit_lien">La halakha du jour sur halachayomit.co.il</string>
+    <!-- Les paliers d'objectifs (11/10) -->
+    <string name="paliers_title">Mes paliers</string>
+    <string name="paliers_sous_titre">Après chaque palier, le suivant</string>
+    <string name="palier_serie">Jours d’affilée</string>
+    <string name="palier_jour">Aujourd’hui</string>
+    <string name="palier_semaine">Cette semaine</string>
+    <string name="palier_mois">Ce mois-ci · %1$s</string>
+    <string name="palier_cumul">Temps cumulé</string>
+    <string name="palier_jours">Jours de pratique</string>
+    <string name="palier_prochain">Prochain palier : %1$s · encore %2$s</string>
+    <string name="palier_atteints">Paliers atteints : %1$d</string>
+    <string name="palier_nouveau">Palier atteint : %1$s — %2$s !</string>
+    <string name="palier_une_serie">Encore %1$s pour %2$s d’affilée</string>
+    <string name="palier_une_jour">Encore %1$s pour %2$s aujourd’hui</string>
+    <string name="palier_une_semaine">Encore %1$s pour %2$s cette semaine</string>
+    <string name="palier_une_mois">Encore %1$s pour %2$s ce mois-ci</string>
+    <string name="paliers_records">Records</string>
+    <string name="record_serie">Plus longue série : %1$s</string>
+    <string name="record_jour">Meilleure journée : %1$s</string>
+    <string name="record_semaine">Meilleure semaine : %1$s</string>
+    <string name="record_mois">Meilleur mois : %1$s</string>
+    <plurals name="palier_n_jours">
+        <item quantity="one">%1$d jour</item>
+        <item quantity="other">%1$d jours</item>
+    </plurals>
+    <!-- L'écran des hilloulot (11/10) -->
+    <string name="hilloulot_title">Hilloulot</string>
+    <string name="hilloulot_afficher">Afficher les hilloulot</string>
+    <string name="hilloulot_recherche">Rechercher un tsadik</string>
+    <string name="hilloula_annee">Décès : %1$s</string>
+    <string name="hilloulot_aucune">Aucune hilloula ce jour</string>
+    <string name="hilloulot_resultats">Résultats : %1$d</string>
+    <string name="hilloula_source_wiki">Wikipédia (CC BY-SA)</string>
+    <string name="hilloula_source_hyomi">החכם היומי</string>
+    <string name="hilloulot_tout">Toutes les hilloulot ›</string>
+    <!-- La halakha du jour hors ligne : le Ben Ish 'Haï (11/10) -->
+    <string name="halakha_title">Halakha du jour</string>
+    <string name="halakha_afficher">Afficher la halakha du jour</string>
+    <string name="halakha_recherche">Rechercher dans le Ben Ish \'Haï</string>
+    <string name="halakha_aucune">Pas de halakha pour ce jour</string>
+    <string name="halakha_tout">Toute la halakha du jour ›</string>
+    <string name="halakha_livre">Ben Ish \'Haï, paracha de la semaine</string>
+    <string name="halakha_note">Texte original en hébreu, verbatim (Wikisource, domaine public, via Sefaria). Pour la pratique, consultez un rav.</string>
+    <!-- Les trophées et la fête (11/10) -->
+    <string name="celebration_titre">Mazal tov !</string>
+    <string name="trophee_gagne">Trophée gagné : %1$s !</string>
+    <string name="trophees_paliers_titre">Trophées et paliers</string>
+    <string name="trophees_titre">Trophées</string>
+    <string name="trophees_compte">%1$d sur %2$d</string>
+    <string name="trophees_paliers">🏆  Trophées et paliers</string>
+    <string name="channel_celebration">Paliers et trophées</string>
+    <string name="channel_celebration_description">Une fête quand un palier ou un trophée est atteint</string>
+    <string name="trophee_premier_pas">Premier pas</string>
+    <string name="trophee_premier_pas_desc">Une première hitbodedout</string>
+    <string name="trophee_une_heure">Une heure</string>
+    <string name="trophee_une_heure_desc">Une heure en un jour</string>
+    <string name="trophee_deux_heures">Deux heures</string>
+    <string name="trophee_deux_heures_desc">Deux heures en un jour</string>
+    <string name="trophee_semaine_pleine">Semaine pleine</string>
+    <string name="trophee_semaine_pleine_desc">Les six jours, du dimanche au vendredi</string>
+    <string name="trophee_erev_chabbat">Erev Chabbat</string>
+    <string name="trophee_erev_chabbat_desc">Quatre vendredis de hitbodedout</string>
+    <string name="trophee_retour">Le retour</string>
+    <string name="trophee_retour_desc">Reprendre après une pause d\'une semaine</string>
+    <string name="trophee_chai">Chaï</string>
+    <string name="trophee_chai_desc">18 jours de pratique</string>
+    <string name="trophee_quarante">Quarante jours</string>
+    <string name="trophee_quarante_desc">40 jours d\'affilée</string>
+    <string name="trophee_dix_heures">Dix heures</string>
+    <string name="trophee_dix_heures_desc">10 heures en tout</string>
+    <string name="trophee_cent_heures">Cent heures</string>
+    <string name="trophee_cent_heures_desc">100 heures en tout</string>
+    <string name="trophee_plume">La plume</string>
+    <string name="trophee_plume_desc">10 notes au journal</string>
+    <string name="trophee_plume_fidele">Plume fidèle</string>
+    <string name="trophee_plume_fidele_desc">50 notes au journal</string>
+    <string name="trophee_taryag">Taryag</string>
+    <string name="trophee_taryag_desc">613 jours de pratique</string>
 </resources>

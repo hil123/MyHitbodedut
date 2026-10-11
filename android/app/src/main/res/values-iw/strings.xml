@@ -707,4 +707,93 @@
     <string name="fete_lag_baomer">ל״ג בעומר</string>
     <string name="fete_chouchan_pourim_katan">שושן פורים קטן</string>
     <string name="fete_isrou_hag">אסרו חג</string>
+    <!-- La hilloula et la halakha du jour (11/10) -->
+    <string name="hilloula_titre">הילולא</string>
+    <plurals name="hilloula_autres">
+        <item quantity="one">ועוד אחד</item>
+        <item quantity="two">ועוד %1$d</item>
+        <item quantity="other">ועוד %1$d</item>
+    </plurals>
+    <string name="hilloula_lien">חכמי היום ב„החכם היומי”</string>
+    <string name="halakha_yomit_titre">הלכה יומית</string>
+    <string name="halakha_yomit_lien">ההלכה היומית באתר „הלכה יומית”</string>
+    <!-- Les paliers d'objectifs (11/10) -->
+    <string name="paliers_title">היעדים שלי</string>
+    <string name="paliers_sous_titre">אחרי כל יעד – היעד הבא</string>
+    <string name="palier_serie">ימים ברצף</string>
+    <string name="palier_jour">היום</string>
+    <string name="palier_semaine">השבוע</string>
+    <string name="palier_mois">החודש · %1$s</string>
+    <string name="palier_cumul">זמן מצטבר</string>
+    <string name="palier_jours">ימי התבודדות</string>
+    <string name="palier_prochain">היעד הבא: %1$s · עוד %2$s</string>
+    <string name="palier_atteints">יעדים שהושגו: %1$d</string>
+    <string name="palier_nouveau">הושג יעד: %1$s – %2$s!</string>
+    <string name="palier_une_serie">עוד %1$s ל־%2$s ברצף</string>
+    <string name="palier_une_jour">עוד %1$s ל־%2$s היום</string>
+    <string name="palier_une_semaine">עוד %1$s ל־%2$s השבוע</string>
+    <string name="palier_une_mois">עוד %1$s ל־%2$s החודש</string>
+    <string name="paliers_records">שיאים</string>
+    <string name="record_serie">הרצף הארוך ביותר: %1$s</string>
+    <string name="record_jour">היום הטוב ביותר: %1$s</string>
+    <string name="record_semaine">השבוע הטוב ביותר: %1$s</string>
+    <string name="record_mois">החודש הטוב ביותר: %1$s</string>
+    <plurals name="palier_n_jours">
+        <item quantity="one">יום אחד</item>
+        <item quantity="two">יומיים</item>
+        <item quantity="other">%1$d ימים</item>
+    </plurals>
+    <!-- L'écran des hilloulot (11/10) -->
+    <string name="hilloulot_title">הילולות</string>
+    <string name="hilloulot_afficher">הצג הילולות</string>
+    <string name="hilloulot_recherche">חיפוש צדיק</string>
+    <string name="hilloula_annee">נפטר בשנת %1$s</string>
+    <string name="hilloulot_aucune">אין הילולה ביום זה</string>
+    <string name="hilloulot_resultats">תוצאות: %1$d</string>
+    <string name="hilloula_source_wiki">ויקיפדיה (CC BY-SA)</string>
+    <string name="hilloula_source_hyomi">החכם היומי</string>
+    <string name="hilloulot_tout">כל ההילולות ›</string>
+    <!-- La halakha du jour hors ligne : le Ben Ish 'Haï (11/10) -->
+    <string name="halakha_title">הלכה יומית</string>
+    <string name="halakha_afficher">הצג הלכה יומית</string>
+    <string name="halakha_recherche">חיפוש בבן איש חי</string>
+    <string name="halakha_aucune">אין הלכה ליום זה</string>
+    <string name="halakha_tout">כל ההלכה היומית ›</string>
+    <string name="halakha_livre">בן איש חי, פרשת השבוע</string>
+    <string name="halakha_note">לשון המקור (ויקיטקסט, נחלת הכלל, דרך ספריא). להלכה למעשה יש לשאול רב.</string>
+    <!-- Les trophées et la fête (11/10) -->
+    <string name="celebration_titre">מזל טוב!</string>
+    <string name="trophee_gagne">זכית בגביע: %1$s!</string>
+    <string name="trophees_paliers_titre">גביעים ויעדים</string>
+    <string name="trophees_titre">גביעים</string>
+    <string name="trophees_compte">%1$d מתוך %2$d</string>
+    <string name="trophees_paliers">🏆  גביעים ויעדים</string>
+    <string name="channel_celebration">יעדים וגביעים</string>
+    <string name="channel_celebration_description">חגיגה כשמגיעים ליעד או לגביע</string>
+    <string name="trophee_premier_pas">צעד ראשון</string>
+    <string name="trophee_premier_pas_desc">התבודדות ראשונה</string>
+    <string name="trophee_une_heure">שעה אחת</string>
+    <string name="trophee_une_heure_desc">שעה ביום אחד</string>
+    <string name="trophee_deux_heures">שעתיים</string>
+    <string name="trophee_deux_heures_desc">שעתיים ביום אחד</string>
+    <string name="trophee_semaine_pleine">שבוע מלא</string>
+    <string name="trophee_semaine_pleine_desc">ששת הימים, מראשון עד שישי</string>
+    <string name="trophee_erev_chabbat">ערב שבת</string>
+    <string name="trophee_erev_chabbat_desc">ארבעה ימי שישי של התבודדות</string>
+    <string name="trophee_retour">החזרה</string>
+    <string name="trophee_retour_desc">לחזור אחרי הפסקה של שבוע</string>
+    <string name="trophee_chai">ח״י</string>
+    <string name="trophee_chai_desc">18 ימי התבודדות</string>
+    <string name="trophee_quarante">ארבעים יום</string>
+    <string name="trophee_quarante_desc">40 ימים ברציפות</string>
+    <string name="trophee_dix_heures">עשר שעות</string>
+    <string name="trophee_dix_heures_desc">10 שעות בסך הכול</string>
+    <string name="trophee_cent_heures">מאה שעות</string>
+    <string name="trophee_cent_heures_desc">100 שעות בסך הכול</string>
+    <string name="trophee_plume">העט</string>
+    <string name="trophee_plume_desc">10 רשומות ביומן</string>
+    <string name="trophee_plume_fidele">עט נאמן</string>
+    <string name="trophee_plume_fidele_desc">50 רשומות ביומן</string>
+    <string name="trophee_taryag">תרי״ג</string>
+    <string name="trophee_taryag_desc">613 ימי התבודדות</string>
 </resources>

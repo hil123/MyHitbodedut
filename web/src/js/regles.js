@@ -53,6 +53,7 @@ const LIVRES = [
   ['Chmouel I ', 'I Samuel ', 'שמואל א '],
   ['Yechayahou ', 'Isaiah ', 'ישעיהו '],
   ['Hochéa ', 'Hosea ', 'הושע '],
+  ['Bisdei Yaar, chap. ', 'Bisdei Yaar, ch. ', 'בשדי יער, פרק '],
 ].map(([fr, en, he]) => ({ fr, en, he }));
 
 const UNITES = ' אבגדהוזחט';
@@ -276,9 +277,11 @@ export const SiddurMoment = {
     return {
       tikoun_hatsot: 'char_sitting_low',
       birkot_hachahar: 'char_welcome',
-      chaharit: 'char_praying',
+      chaharit: 'char_tefillin',
       minha: 'char_standing_back',
       arvit: 'char_reading_seated',
+      chema_coucher: 'scene_sleeping',
+      tefilat_haderekh: 'scene_airport',
     }[id] ?? 'char_thinking';
   },
 };

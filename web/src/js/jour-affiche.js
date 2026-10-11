@@ -134,3 +134,75 @@ function grille(jours) {
   }
   return s;
 }
+
+// --- La carte du jour : illustration, hilloula, halakha (11/10) -------------------
+// Comme JourAffiche.illustration et Hilloulot.kt.
+
+/** L'illustration d'un jour de fête ou de Chabbat, ou null ; la fête passe avant Chabbat. */
+export function illustration(fetes, iso) {
+  const a = (liste) => fetes.some((f) => liste.includes(f));
+  if (a(['erev_soukkot', 'soukkot', 'hol_hamoed_soukkot', 'hochaana_rabba'])) return 'scene_sukkot';
+  if (a(['erev_pessah', 'pessah', 'hol_hamoed_pessah'])) return 'char_matsa';
+  if (fetes.includes('hanouka')) return 'scene_hanukkah';
+  if (a(['pourim', 'chouchan_pourim', 'pourim_ailleurs', 'pourim_jerusalem'])) return 'char_purim';
+  return new Date(`${iso}T12:00:00Z`).getUTCDay() === 6 ? 'char_shabbat' : null;
+}
+
+/** Cycle de Méton : 7 années embolismiques sur 19. */
+export const embolismique = (annee) => (7 * annee + 1) % 19 < 7;
+
+/**
+ * Les clés de hilloulot.json pour un jour hébreu (mois de KosherJava,
+ * NISSAN = 1 … ADAR_II = 13). « adar » sans précision : Adar II les années
+ * embolismiques (OH 568:7) ; un 30 absent cette année, le 29.
+ */
+export function clesHilloula(mois, jourH, emb, dernierJour) {
+  const m = mois === 12 && !emb ? ['adar', 'adar1', 'adar2'] : mois === 12 ? ['adar1'] : mois === 13 ? ['adar', 'adar2'] : [String(mois)];
+  const jours = jourH === 29 && dernierJour ? [29, 30] : [jourH];
+  return m.flatMap((k) => jours.map((j) => `${k}-${j}`));
+}
+
+/** D'abord ceux que les deux sources donnent, puis ceux sans doute relevé. */
+export function hilloulotDuJour(table, cles) {
+  const rang = (h) => (h.s.length === 2 ? 0 : 2) + (h.d ? 1 : 0);
+  return cles.flatMap((k) => table[k] ?? []).map((h, i) => [h, i])
+    .sort((x, y) => rang(x[0]) - rang(y[0]) || x[1] - y[1]).map(([h]) => h);
+}
+
+export function hilloulotPour(table, iso, enIsrael) {
+  const j = jour(iso, enIsrael);
+  const [a, m, d] = iso.split('-').map(Number);
+  const demain = new Date(Date.UTC(a, m - 1, d + 1, 12)).toISOString().slice(0, 10);
+  return hilloulotDuJour(table, clesHilloula(j.moisHebreu, j.jourHebreu, embolismique(j.anneeHebraique), jour(demain, enIsrael).jourHebreu === 1));
+}
+
+/** La page du jour de החכם היומי, qui prend la date civile. */
+export function lienHyomi(iso) {
+  const [a, m, d] = iso.split('-').map(Number);
+  return `https://hyomi.org.il/day.php?month1=0&dd=${d}&mm=${m}&yy=${a}`;
+}
+
+/** La halakha du jour, dans la langue de l'application. */
+export function lienHalakha(langue) {
+  const code = /^(he|iw)/.test(langue) ? 'he' : /^en/.test(langue) ? 'en' : 'fr';
+  return `https://halachayomit.co.il/${code}/default.aspx`;
+}
+
+const MOIS_HILLOULA = { 1: 'ניסן', 2: 'אייר', 3: 'סיון', 4: 'תמוז', 5: 'אב', 6: 'אלול', 7: 'תשרי', 8: 'חשון', 9: 'כסלו', 10: 'טבת', 11: 'שבט', adar: 'אדר', adar1: 'אדר א׳', adar2: 'אדר ב׳' };
+
+/** « 7-30 » → « ל׳ תשרי » (Hilloulot.dateDe). */
+export function dateHilloula(cle, lettres) {
+  const [m, j] = cle.split('-');
+  return `${lettres(Number(j))} ${MOIS_HILLOULA[m] ?? m}`;
+}
+
+/** La recherche par nom, sans voyelles ni guillemets, dans toute l'année. */
+export function rechercheHilloula(table, texte) {
+  const nu = (t) => t.replace(/[\u0591-\u05C7"'״׳]/g, '').toLowerCase();
+  const q = nu(texte.trim());
+  if (q.length < 2) return [];
+  return Object.entries(table).flatMap(([cle, l]) => l.map((x) => [cle, x]))
+    .filter(([, x]) => nu(x.he).includes(q) || (x.fr && nu(x.fr).includes(q)) || (x.en && nu(x.en).includes(q)));
+}
+
+export const lienArticle = (titre) => `https://he.wikipedia.org/wiki/${encodeURIComponent(titre.replace(/ /g, '_'))}`;

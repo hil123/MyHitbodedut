@@ -78,6 +78,12 @@ object Store {
     private const val KEY_TARGET = "target_minutes"
     private const val KEY_DAILY_GOAL = "daily_goal_minutes"
     private const val KEY_ANNEAUX_FETES = "anneaux_fetes"
+    private const val KEY_PALIERS_VUS = "paliers_vus"
+    private const val KEY_PALIERS_NOTIFIES = "paliers_notifies"
+    private const val KEY_TROPHEES_VUS = "trophees_vus"
+    private const val KEY_TROPHEES_NOTIFIES = "trophees_notifies"
+    private const val KEY_HILLOULOT = "hilloulot_affichees"
+    private const val KEY_HALAKHA = "halakha_affichee"
     private const val KEY_SIDDUR_NUSAH = "siddur_nusah"
     private const val KEY_TAHANOUN_TICHRI_SFARD = "sans_tahanoun_fin_tichri_sfard"
     private const val KEY_CALENDRIER_CIVIL = "calendrier_civil"
@@ -552,6 +558,68 @@ object Store {
 
     fun setAnneauxFetes(context: Context, marques: Set<String>) {
         prefs(context).edit().putStringSet(KEY_ANNEAUX_FETES, marques.toSet()).apply()
+    }
+
+    /** La hilloula du jour sur la carte du jour (11/10) : affichée par défaut. */
+    fun hilloulotAffichees(context: Context): Boolean = prefs(context).getBoolean(KEY_HILLOULOT, true)
+
+    fun setHilloulotAffichees(context: Context, v: Boolean) {
+        prefs(context).edit().putBoolean(KEY_HILLOULOT, v).apply()
+    }
+
+    /** La halakha du jour (Ben Ish 'Haï) sur la carte du jour (11/10) : affichée par défaut. */
+    fun halakhaAffichee(context: Context): Boolean = prefs(context).getBoolean(KEY_HALAKHA, true)
+
+    fun setHalakhaAffichee(context: Context, v: Boolean) {
+        prefs(context).edit().putBoolean(KEY_HALAKHA, v).apply()
+    }
+
+    // --- Paliers d'objectifs (11/10) -------------------------------------------
+
+    /** La pratique vue par les paliers : minutes des jours faits, série, mois hébreu en cours. */
+    fun bilan(context: Context): Paliers.Bilan {
+        val aujourdhui = LocalDate.now()
+        val minutes = days(context).values.filter { it.faite }
+            .mapNotNull { r -> dateValide(r.date)?.let { it to r.minutes } }.toMap()
+        return Paliers.Bilan(aujourdhui, minutes, streak(context), JourAffiche.debutMoisHebreu(aujourdhui), dailyGoal(context))
+    }
+
+    /** null tant que les paliers n'ont jamais été regardés : le premier passage ne fête rien. */
+    fun paliersVus(context: Context): Set<String>? =
+        prefs(context).getStringSet(KEY_PALIERS_VUS, null)?.toSet()
+
+    /** Seules restent les marques d'une période encore en cours ou sans période : la liste ne grossit pas. */
+    fun setPaliersVus(context: Context, marques: Set<String>) {
+        prefs(context).edit().putStringSet(KEY_PALIERS_VUS, marques.toSet()).apply()
+    }
+
+    /** Les paliers déjà annoncés par notification (null : jamais encore regardés). */
+    fun paliersNotifies(context: Context): Set<String>? =
+        prefs(context).getStringSet(KEY_PALIERS_NOTIFIES, null)?.toSet()
+
+    fun setPaliersNotifies(context: Context, marques: Set<String>) {
+        prefs(context).edit().putStringSet(KEY_PALIERS_NOTIFIES, marques.toSet()).apply()
+    }
+
+    // --- Trophées (11/10) ----------------------------------------------------
+
+    fun pratique(context: Context): Trophees.Pratique {
+        val tous = days(context).values
+        val minutes = tous.filter { it.faite }.mapNotNull { r -> dateValide(r.date)?.let { it to r.minutes } }.toMap()
+        return Trophees.Pratique(minutes, tous.count { it.note.isNotBlank() }, meilleureSerie(context))
+    }
+
+    /** Les trophées déjà fêtés à l'écran (null : jamais encore regardés, le premier passage ne fête rien). */
+    fun tropheesVus(context: Context): Set<String>? = prefs(context).getStringSet(KEY_TROPHEES_VUS, null)?.toSet()
+
+    fun setTropheesVus(context: Context, cles: Set<String>) {
+        prefs(context).edit().putStringSet(KEY_TROPHEES_VUS, cles.toSet()).apply()
+    }
+
+    fun tropheesNotifies(context: Context): Set<String>? = prefs(context).getStringSet(KEY_TROPHEES_NOTIFIES, null)?.toSet()
+
+    fun setTropheesNotifies(context: Context, cles: Set<String>) {
+        prefs(context).edit().putStringSet(KEY_TROPHEES_NOTIFIES, cles.toSet()).apply()
     }
 
     fun setDailyGoal(context: Context, minutes: Int) {

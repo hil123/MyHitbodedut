@@ -178,6 +178,21 @@
             android:label="@string/calendrier_title" />
 
         <activity
+            android:name=".HilloulotActivity"
+            android:exported="false"
+            android:label="@string/hilloulot_title" />
+
+        <activity
+            android:name=".HalakhaActivity"
+            android:exported="false"
+            android:label="@string/halakha_title" />
+
+        <activity
+            android:name=".PaliersActivity"
+            android:exported="false"
+            android:label="@string/trophees_paliers_titre" />
+
+        <activity
             android:name=".MusicActivity"
             android:exported="false"
             android:label="@string/music_title" />
