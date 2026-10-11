@@ -79,6 +79,7 @@ object Store {
     private const val KEY_DAILY_GOAL = "daily_goal_minutes"
     private const val KEY_ANNEAUX_FETES = "anneaux_fetes"
     private const val KEY_PALIERS_VUS = "paliers_vus"
+    private const val KEY_HILLOULOT = "hilloulot_affichees"
     private const val KEY_SIDDUR_NUSAH = "siddur_nusah"
     private const val KEY_TAHANOUN_TICHRI_SFARD = "sans_tahanoun_fin_tichri_sfard"
     private const val KEY_CALENDRIER_CIVIL = "calendrier_civil"
@@ -553,6 +554,13 @@ object Store {
 
     fun setAnneauxFetes(context: Context, marques: Set<String>) {
         prefs(context).edit().putStringSet(KEY_ANNEAUX_FETES, marques.toSet()).apply()
+    }
+
+    /** La hilloula du jour sur la carte du jour (11/10) : affichée par défaut. */
+    fun hilloulotAffichees(context: Context): Boolean = prefs(context).getBoolean(KEY_HILLOULOT, true)
+
+    fun setHilloulotAffichees(context: Context, v: Boolean) {
+        prefs(context).edit().putBoolean(KEY_HILLOULOT, v).apply()
     }
 
     // --- Paliers d'objectifs (11/10) -------------------------------------------

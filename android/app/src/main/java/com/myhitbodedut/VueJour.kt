@@ -79,16 +79,24 @@ object VueJour {
         carte.addView(texte(c, c.getString(R.string.zmanim_ajouts_titre), 12f, R.color.muted, gras = true, haut = 14))
         val ajouts = JourAffiche.ajouts(j.conditions, Store.siddurNusah(c).cle, enIsrael, Store.sansTahanounFinTichri(c)).mapNotNull { Libelles.res(it)?.let(c::getString) }
         carte.addView(texte(c, ajouts.joinToString(" · ").ifBlank { c.getString(R.string.zmanim_aucun_ajout) }, 15f, R.color.ink, haut = 2))
-        // La hilloula du jour : trois noms au plus, et la page du jour de החכם היומי.
-        val hilloulot = Hilloulot.pour(Hilloulot.table(c), date, enIsrael)
+        // La hilloula du jour (comme CalJ) : les noms, cinq au plus, puis l'écran des hilloulot.
+        val hilloulot = if (Store.hilloulotAffichees(c)) Hilloulot.pour(Hilloulot.table(c), date, enIsrael) else emptyList()
         if (hilloulot.isNotEmpty()) {
             carte.addView(texte(c, c.getString(R.string.hilloula_titre), 12f, R.color.muted, gras = true, haut = 14))
-            val noms = hilloulot.take(3).joinToString(" · ") { h -> if (h.annee.isNotBlank()) "${h.he} (${h.annee})" else h.he }
-            val reste = hilloulot.size - 3
-            carte.addView(texte(c, if (reste > 0) "$noms · " + c.resources.getQuantityString(R.plurals.hilloula_autres, reste, reste) else noms, 15f, R.color.ink, haut = 2).apply {
+            val reste = hilloulot.size - 5
+            val noms = hilloulot.take(5).joinToString("\n") { it.he } +
+                (if (reste > 0) "\n" + c.resources.getQuantityString(R.plurals.hilloula_autres, reste, reste) else "")
+            carte.addView(texte(c, noms, 16f, R.color.ink, haut = 2).apply {
+                textDirection = View.TEXT_DIRECTION_RTL
                 PoliceHebraique.appliquer(this)
             })
-            carte.addView(lien(c, c.getString(R.string.hilloula_lien), Hilloulot.lienHyomi(date)))
+            carte.addView(texte(c, c.getString(R.string.hilloulot_tout), 15f, R.color.brand, gras = true, haut = 4).apply {
+                setPadding(0, dp(c, 6), 0, dp(c, 6))
+                foreground = c.getDrawable(android.R.drawable.list_selector_background)
+                setOnClickListener {
+                    c.startActivity(Intent(c, HilloulotActivity::class.java).putExtra(HilloulotActivity.EXTRA_DATE, date.toString()))
+                }
+            })
         }
         // La halakha du jour : la page du site, seulement aujourd'hui (le site n'a pas d'archive par date).
         if (date == LocalDate.now()) {

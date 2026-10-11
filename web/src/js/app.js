@@ -12,7 +12,7 @@ import { isoLocal } from './calendrier.js';
 import { JERUSALEM_GEONAMES, jour as jourJuif, jourDeLaPriere } from './calendrier-juif.js';
 import { conditionsPour, index as indexAjouts, libelleJour, vrai as ajoutVrai } from './siddur-jour.js';
 import * as Paliers from './paliers.js';
-import { ajouts as ajoutsDuJour, debutMoisHebreu, hilloulotPour, horaires, illustration as illustrationDuJour, lienHalakha, lienHyomi, momentDuSiddour, moisHebreuVoisin, semaines, semainesHebreu } from './jour-affiche.js';
+import { ajouts as ajoutsDuJour, dateHilloula, debutMoisHebreu, hilloulotPour, lienArticle, rechercheHilloula, horaires, illustration as illustrationDuJour, lienHalakha, lienHyomi, momentDuSiddour, moisHebreuVoisin, semaines, semainesHebreu } from './jour-affiche.js';
 import { ALLUMAGES, heure as heureZman } from './zmanim.js';
 
 // --- Stockage ---------------------------------------------------------------
@@ -1307,19 +1307,65 @@ function carteJour(iso) {
       : []));
 }
 
-/** Trois noms au plus, puis la page du jour de החכם היומי. */
+/** La hilloula du jour (comme CalJ) : les noms, cinq au plus, puis l'écran des hilloulot. */
 function blocHilloula(iso) {
   const table = tableHilloulot();
-  if (!table) return [];
+  if (!table || !store.hilloulotAffichees()) return [];
   const liste = hilloulotPour(table, iso, store.inIsrael());
   if (!liste.length) return [];
-  const noms = liste.slice(0, 3).map((x) => (x.a ? `${x.he} (${x.a})` : x.he)).join(' · ');
-  const reste = liste.length - 3;
+  const reste = liste.length - 5;
   return [
     h('h3', { class: 'jour-sous-titre' }, tr.t('hilloula_titre')),
-    h('p', { class: 'jour-hilloula', lang: 'he', dir: 'rtl' }, reste > 0 ? `${noms} · ${tr.p('hilloula_autres', reste)}` : noms),
-    lienExterne(tr.t('hilloula_lien'), lienHyomi(iso)),
+    h('div', { class: 'jour-hilloula', lang: 'he', dir: 'rtl' }, ...liste.slice(0, 5).map((x) => h('div', {}, x.he)),
+      reste > 0 ? h('div', { class: 'jour-hilloula-reste' }, tr.p('hilloula_autres', reste)) : null),
+    h('button', { class: 'jour-lien lien-bouton', onclick: () => { jourHilloulot = iso; rechercheHilloulot = ''; ouvrir('hilloulot'); } }, tr.t('hilloulot_tout')),
   ];
+}
+
+// --- L'écran des hilloulot (HilloulotActivity, 11/10) --------------------------------
+let jourHilloulot = null;
+let rechercheHilloulot = '';
+
+function ecranHilloulot() {
+  const table = tableHilloulot() ?? {};
+  const iso = jourHilloulot ?? isoLocal(new Date());
+  const carte = (x, date) => h('div', { class: 'carte carte-hilloula' },
+    h('p', { class: 'hilloula-nom', lang: 'he', dir: 'rtl' }, x.he),
+    (tr.langue === 'fr' ? x.fr : tr.langue === 'en' ? x.en : null) ? h('p', { class: 'hilloula-traduit' }, tr.langue === 'fr' ? x.fr : x.en) : null,
+    // Isolés (FSI … PDI) : la date et l'année hébraïques ne renversent pas la ligne.
+    [date, x.a].some(Boolean)
+      ? h('p', { class: 'hilloula-annee' }, [date ? `\u2068${date}\u2069` : null, x.a ? tr.t('hilloula_annee', `\u2068${x.a}\u2069`) : null].filter(Boolean).join(' · ')) : null,
+    x.t ? h('p', { class: 'hilloula-description', lang: 'he', dir: 'rtl' }, x.t) : null,
+    x.s.includes('w') ? (x.w ? h('a', { class: 'hilloula-source', href: lienArticle(x.w), target: '_blank', rel: 'noopener' }, tr.t('hilloula_source_wiki'))
+      : h('p', { class: 'hilloula-source' }, tr.t('hilloula_source_wiki'))) : null,
+    x.s.includes('h') ? h('p', { class: 'hilloula-source' }, tr.t('hilloula_source_hyomi')) : null);
+  const champ = h('input', { type: 'search', class: 'champ-recherche', placeholder: tr.t('hilloulot_recherche'), value: rechercheHilloulot,
+    oninput: (e) => { rechercheHilloulot = e.target.value; rendre(); setTimeout(() => { const c = app.querySelector('.champ-recherche'); c?.focus(); c?.setSelectionRange(c.value.length, c.value.length); }, 0); } });
+  let corps;
+  if (rechercheHilloulot.trim().length >= 2) {
+    const trouves = rechercheHilloula(table, rechercheHilloulot);
+    corps = [h('p', { class: 'jour-sous-titre' }, tr.t('hilloulot_resultats', trouves.length)), ...trouves.slice(0, 60).map(([cle, x]) => carte(x, dateHilloula(cle, (n) => Reference.lettres(n))))];
+  } else {
+    const j = jourJuif(iso, store.inIsrael());
+    const decale = (n) => { const [a, m, d] = iso.split('-').map(Number); jourHilloulot = new Date(Date.UTC(a, m - 1, d + n, 12)).toISOString().slice(0, 10); rendre(); };
+    const liste = hilloulotPour(table, iso, store.inIsrael());
+    corps = [
+      h('div', { class: 'mois-tete' },
+        h('button', { class: 'icone-bouton mois-precedent', dir: 'ltr', 'aria-label': tr.t('calendrier_precedent'), onclick: () => decale(-1) }, tr.rtl ? '›' : '‹'),
+        h('div', { class: 'mois-titres' }, h('p', { class: 'mois-principal mois-hebreu', lang: 'he', dir: 'rtl' }, j.dateHebraique), h('p', { class: 'mois-second' }, iso)),
+        h('button', { class: 'icone-bouton mois-suivant', dir: 'ltr', 'aria-label': tr.t('calendrier_suivant'), onclick: () => decale(1) }, tr.rtl ? '‹' : '›')),
+      ...(liste.length ? liste.map((x) => carte(x, null)) : [h('p', { class: 'message' }, tr.t('hilloulot_aucune'))]),
+      lienExterne(tr.t('hilloula_lien'), lienHyomi(iso)),
+    ];
+  }
+  return h('div', { class: 'ecran avec-bandeau' }, bandeau(tr.t('hilloulot_title'), { dessin: 'char_torah' }),
+    h('div', { class: 'defile' }, h('div', { class: 'contenu' },
+      h('div', { class: 'carte' },
+        h('label', { class: 'ligne' }, h('span', { class: 'corps' }, h('div', { class: 'nom' }, tr.t('hilloulot_afficher'))),
+          h('input', { type: 'checkbox', role: 'switch', class: 'interrupteur', checked: store.hilloulotAffichees(), 'aria-label': tr.t('hilloulot_afficher'),
+            onchange: (e) => { store.setHilloulotAffichees(e.target.checked); rendre(); } })),
+        champ),
+      ...corps)));
 }
 
 /** Les horaires d'un jour, chacun avec sa méthode ; ou l'invitation à choisir un lieu. */
@@ -1857,7 +1903,7 @@ function arreteDanse() {
 // et le geste de retour ramènent à l'accueil, sur l'onglet quitté.
 function ecranCourant() {
   const e = location.hash.slice(1);
-  return ['musique', 'reglages', 'seance', 'bravo', 'tehilim', 'lecture', 'siddur', 'priere', 'tikkun', 'bibliotheque', 'source', 'zmanim', 'calendrier', 'paliers'].includes(e) ? e : 'accueil';
+  return ['musique', 'reglages', 'seance', 'bravo', 'tehilim', 'lecture', 'siddur', 'priere', 'tikkun', 'bibliotheque', 'source', 'zmanim', 'calendrier', 'paliers', 'hilloulot'].includes(e) ? e : 'accueil';
 }
 function ouvrir(ecran) {
   // L'entrée sur l'écran de séance tire le mot d'ouverture (SessionActivity.onCreate).
@@ -1900,6 +1946,7 @@ function rendre() {
   else if (ecran === 'zmanim') app.append(ecranZmanim());
   else if (ecran === 'calendrier') app.append(ecranCalendrier());
   else if (ecran === 'paliers') app.append(ecranPaliers());
+  else if (ecran === 'hilloulot') app.append(ecranHilloulot());
   else if (ecran === 'seance') app.append(ecranSeance());
   else if (ecran === 'bravo') app.append(ecranBravo());
   else if (ecran === 'tehilim') app.append(ecranTehilim());

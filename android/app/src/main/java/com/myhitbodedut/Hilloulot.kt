@@ -20,6 +20,10 @@ object Hilloulot {
         /** « w » Wikipédia, « h » החכם היומי, « hw » les deux. */
         val sources: String,
         val doute: String?,
+        /** La première phrase de l'article de Wikipédia hébreu (CC BY-SA), s'il existe. */
+        val description: String? = null,
+        /** Le titre de cet article. */
+        val article: String? = null,
     )
 
     fun parse(json: String): Map<String, List<Hilloula>> {
@@ -33,6 +37,8 @@ object Hilloulot {
                     annee = o.optString("a", ""),
                     sources = o.optString("s", ""),
                     doute = Json.nullable(o, "d"),
+                    description = Json.nullable(o, "t"),
+                    article = Json.nullable(o, "w"),
                 )
             }
         }
@@ -68,6 +74,30 @@ object Hilloulot {
         val dernier = CalendrierJuif.jour(date.plusDays(1), enIsrael).jourHebreu == 1
         return duJour(table, cles(j.moisHebreu, j.jourHebreu, embolismique(j.anneeHebraique), dernier))
     }
+
+    private val MOIS = mapOf(
+        "1" to "ניסן", "2" to "אייר", "3" to "סיון", "4" to "תמוז", "5" to "אב", "6" to "אלול",
+        "7" to "תשרי", "8" to "חשון", "9" to "כסלו", "10" to "טבת", "11" to "שבט",
+        "adar" to "אדר", "adar1" to "אדר א׳", "adar2" to "אדר ב׳",
+    )
+
+    /** « 7-30 » → « ל׳ תשרי ». */
+    fun dateDe(cle: String): String {
+        val (m, j) = cle.split("-")
+        return "${Reference.lettres(j.toInt())} ${MOIS[m] ?: m}"
+    }
+
+    /** La recherche par nom, sans voyelles ni guillemets, dans toute l'année. */
+    fun recherche(table: Map<String, List<Hilloula>>, texte: String): List<Pair<String, Hilloula>> {
+        val nu = { t: String -> t.replace(Regex("[\u0591-\u05C7\"'״׳]"), "").lowercase() }
+        val q = nu(texte.trim())
+        if (q.length < 2) return emptyList()
+        return table.entries.flatMap { (cle, l) -> l.map { cle to it } }
+            .filter { (_, h) -> nu(h.he).contains(q) || (h.fr?.let { nu(it).contains(q) } ?: false) || (h.en?.let { nu(it).contains(q) } ?: false) }
+    }
+
+    /** L'article de Wikipédia hébreu. */
+    fun lienArticle(titre: String): String = "https://he.wikipedia.org/wiki/" + java.net.URLEncoder.encode(titre.replace(' ', '_'), "UTF-8")
 
     /** La page du jour de החכם היומי, qui prend la date civile. */
     fun lienHyomi(date: LocalDate): String =

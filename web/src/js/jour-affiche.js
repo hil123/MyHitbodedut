@@ -187,3 +187,22 @@ export function lienHalakha(langue) {
   const code = /^(he|iw)/.test(langue) ? 'he' : /^en/.test(langue) ? 'en' : 'fr';
   return `https://halachayomit.co.il/${code}/default.aspx`;
 }
+
+const MOIS_HILLOULA = { 1: 'ניסן', 2: 'אייר', 3: 'סיון', 4: 'תמוז', 5: 'אב', 6: 'אלול', 7: 'תשרי', 8: 'חשון', 9: 'כסלו', 10: 'טבת', 11: 'שבט', adar: 'אדר', adar1: 'אדר א׳', adar2: 'אדר ב׳' };
+
+/** « 7-30 » → « ל׳ תשרי » (Hilloulot.dateDe). */
+export function dateHilloula(cle, lettres) {
+  const [m, j] = cle.split('-');
+  return `${lettres(Number(j))} ${MOIS_HILLOULA[m] ?? m}`;
+}
+
+/** La recherche par nom, sans voyelles ni guillemets, dans toute l'année. */
+export function rechercheHilloula(table, texte) {
+  const nu = (t) => t.replace(/[\u0591-\u05C7"'״׳]/g, '').toLowerCase();
+  const q = nu(texte.trim());
+  if (q.length < 2) return [];
+  return Object.entries(table).flatMap(([cle, l]) => l.map((x) => [cle, x]))
+    .filter(([, x]) => nu(x.he).includes(q) || (x.fr && nu(x.fr).includes(q)) || (x.en && nu(x.en).includes(q)));
+}
+
+export const lienArticle = (titre) => `https://he.wikipedia.org/wiki/${encodeURIComponent(titre.replace(/ /g, '_'))}`;

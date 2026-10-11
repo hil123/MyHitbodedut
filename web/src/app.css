@@ -716,3 +716,14 @@ input[type="range"] { width: 100%; accent-color: var(--brand); }
 .palier-pastilles { display: flex; gap: 6px; margin-top: 6px; overflow-x: auto; }
 .palier-pastille { flex: none; padding: 5px 12px; border-radius: 999px; background: var(--brand); color: var(--on-brand); font-size: 13px; font-weight: 700; }
 .palier-record { margin: 6px 0 0; }
+
+/* L'écran des hilloulot (11/10). */
+.jour-hilloula { margin: 2px 0 0; font-size: 16px; line-height: 1.6; }
+.jour-hilloula-reste { color: var(--muted); font-size: 14px; }
+.lien-bouton { background: none; border: 0; font: inherit; font-weight: 700; cursor: pointer; padding-inline: 0; }
+.champ-recherche { width: 100%; box-sizing: border-box; margin-top: 10px; padding: 10px 12px; border: 1px solid var(--line, #ccd); border-radius: 12px; font: inherit; background: transparent; color: inherit; }
+.carte-hilloula .hilloula-nom { margin: 0; font-size: 22px; font-weight: 700; }
+.carte-hilloula .hilloula-traduit { margin: 2px 0 0; color: var(--muted); }
+.carte-hilloula .hilloula-annee { margin: 4px 0 0; color: var(--muted); font-size: 14px; }
+.carte-hilloula .hilloula-description { margin: 8px 0 0; font-size: 16px; line-height: 1.5; }
+.carte-hilloula .hilloula-source { display: block; margin: 8px 0 0; color: var(--brand); font-size: 13px; text-decoration: none; }

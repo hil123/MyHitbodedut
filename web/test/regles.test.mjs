@@ -559,3 +559,12 @@ test('paliers : après chaque palier, le suivant', async () => {
   assert.deepEqual(r, { jour: 40, semaine: 70, mois: 70 });
   assert.equal(P.aLaUne([P.etat('serie', 6), P.etat('jour', 5)]).piste, 'serie');
 });
+
+test('hilloulot : date lisible et recherche par nom', async () => {
+  const J = await import('../src/js/jour-affiche.js');
+  assert.equal(J.dateHilloula('7-30', (n) => Reference.lettres(n)), 'ל׳ תשרי');
+  assert.equal(J.dateHilloula('adar2-7', (n) => Reference.lettres(n)), 'ז׳ אדר ב׳');
+  const table = JSON.parse(readFileSync(join(RES, 'raw', 'hilloulot.json'), 'utf8')).jours;
+  assert.ok(J.rechercheHilloula(table, 'צבי הירש חיות').some(([cle]) => cle === '7-30'));
+  assert.deepEqual(J.rechercheHilloula(table, 'א'), []);
+});

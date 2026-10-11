@@ -728,4 +728,14 @@
         <item quantity="one">%1$d day</item>
         <item quantity="other">%1$d days</item>
     </plurals>
+    <!-- L'écran des hilloulot (11/10) -->
+    <string name="hilloulot_title">Hillulot</string>
+    <string name="hilloulot_afficher">Show hillulot</string>
+    <string name="hilloulot_recherche">Search a tzaddik</string>
+    <string name="hilloula_annee">Passed away: %1$s</string>
+    <string name="hilloulot_aucune">No hillula on this day</string>
+    <string name="hilloulot_resultats">Results: %1$d</string>
+    <string name="hilloula_source_wiki">Wikipedia (CC BY-SA)</string>
+    <string name="hilloula_source_hyomi">HaChacham HaYomi</string>
+    <string name="hilloulot_tout">All hillulot ›</string>
 </resources>

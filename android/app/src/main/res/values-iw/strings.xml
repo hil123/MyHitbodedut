@@ -743,4 +743,14 @@
         <item quantity="two">יומיים</item>
         <item quantity="other">%1$d ימים</item>
     </plurals>
+    <!-- L'écran des hilloulot (11/10) -->
+    <string name="hilloulot_title">הילולות</string>
+    <string name="hilloulot_afficher">הצג הילולות</string>
+    <string name="hilloulot_recherche">חיפוש צדיק</string>
+    <string name="hilloula_annee">נפטר בשנת %1$s</string>
+    <string name="hilloulot_aucune">אין הילולה ביום זה</string>
+    <string name="hilloulot_resultats">תוצאות: %1$d</string>
+    <string name="hilloula_source_wiki">ויקיפדיה (CC BY-SA)</string>
+    <string name="hilloula_source_hyomi">החכם היומי</string>
+    <string name="hilloulot_tout">כל ההילולות ›</string>
 </resources>

@@ -54,4 +54,12 @@ class HilloulotTest {
         assertEquals("char_shabbat", JourAffiche.illustration(emptyList(), LocalDate.of(2026, 10, 10)))
         assertEquals(null, JourAffiche.illustration(emptyList(), LocalDate.of(2026, 10, 11)))
     }
+
+    @Test
+    fun `date lisible et recherche par nom`() {
+        assertEquals("ל׳ תשרי", Hilloulot.dateDe("7-30"))
+        assertEquals("ז׳ אדר ב׳", Hilloulot.dateDe("adar2-7"))
+        assertTrue(Hilloulot.recherche(table, "צבי הירש חיות").any { it.first == "7-30" })
+        assertTrue(Hilloulot.recherche(table, "א").isEmpty())
+    }
 }

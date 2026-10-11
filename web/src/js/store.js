@@ -108,6 +108,9 @@ export function creeStore(stockage, { maintenant = () => new Date(), fuseau } = 
     /** null tant que les paliers n'ont jamais été regardés : le premier passage ne fête rien. */
     paliersVus: () => { const v = get('paliers_vus', null); return Array.isArray(v) ? new Set(v) : null; },
     setPaliersVus: (marques) => set('paliers_vus', [...marques]),
+    /** La hilloula du jour sur la carte du jour (11/10) : affichée par défaut. */
+    hilloulotAffichees: () => get('hilloulot_affichees', true) !== false,
+    setHilloulotAffichees: (v) => set('hilloulot_affichees', !!v),
 
     /** La note d'un jour. Sur un jour sans hitbodedout, elle ne le valide pas. */
     setNote(date, note) {
