@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Onglet Zmanim (10/10) : au trait au repos, plein quand l'onglet est actif. -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/ic_nav_zmanim_on" android:state_checked="true" />
+    <item android:drawable="@drawable/ic_nav_zmanim_off" />
+</selector>

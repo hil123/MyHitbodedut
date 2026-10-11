@@ -10,8 +10,11 @@
 /* La police des textes saints en hébreu (res/font/hebreu_serif.xml) : Noto Serif Hebrew,
    SIL Open Font License 1.1 (polices/OFL-NotoSerifHebrew.txt). */
 @font-face { font-family: "Hebreu Serif"; font-weight: 400; font-display: swap; src: url(polices/hebreu_serif_regular.woff2) format("woff2"); }
+/* Les lignes d'état de l'accueil (10/10) : Varela Round, fichier d'origine, OFL (polices/OFL-VarelaRound.txt). */
+@font-face { font-family: "Varela Round"; font-weight: 400; font-display: swap; src: url(polices/varela_round.ttf) format("truetype"); }
 @font-face { font-family: "Hebreu Serif"; font-weight: 700; font-display: swap; src: url(polices/hebreu_serif_bold.woff2) format("woff2"); }
-.chizuk-he, .lecture .psaume, .lecture .psaume-titre, .siddour .priere, .siddour .consigne, .nom-he { font-family: "Hebreu Serif", "Noto Serif Hebrew", "Times New Roman", serif; }
+.statut:not(.titre), .serie, .detail { font-family: "Varela Round", system-ui, sans-serif; }
+.chizuk-he, .lecture .psaume, .lecture .psaume-titre, .siddour .priere, .siddour .consigne, .nom-he, .signet { font-family: "Hebreu Serif", "Noto Serif Hebrew", "Times New Roman", serif; }
 
 * { box-sizing: border-box; }
 
@@ -72,13 +75,13 @@ button { font: inherit; color: inherit; }
 /* --- Accueil -------------------------------------------------------------------- */
 .marque { color: var(--muted); font-size: 13px; letter-spacing: 0.08em; }
 .salut { margin-top: 8px; font-size: 26px; font-weight: 700; }
-.statut { margin-top: 4px; color: var(--muted); font-size: 15px; }
+.statut { margin-top: 4px; color: var(--muted); font-size: 17px; }
 .statut.titre { color: var(--ink); font-size: 24px; font-weight: 700; }
-.serie { display: flex; gap: 10px; color: var(--muted); font-size: 15px; }
+.serie { display: flex; gap: 10px; color: var(--muted); font-size: 17px; }
 .serie { font-variant-numeric: tabular-nums; }
 .serie .separateur { flex: none; }
 .serie .total { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.detail { margin-top: 4px; color: var(--brand); font-size: 14px; }
+.detail { margin-top: 4px; color: var(--brand); font-size: 16px; }
 
 .jauge { position: relative; width: 236px; height: 236px; margin: 18px auto 0; }
 /* Écran haut : les anneaux prennent la place libre (values-h720dp). */
@@ -131,7 +134,7 @@ button { font: inherit; color: inherit; }
   100% { transform: none; }
 }
 @media (prefers-reduced-motion: reduce) { .plaque img.salut { animation: none; } }
-.jauge-legende { margin-top: 6px; text-align: center; color: var(--muted); font-size: 13px; }
+.jauge-legende { margin-top: 6px; text-align: center; color: var(--muted); font-size: 16px; }
 .jauge-legende.legende-jour { color: var(--brand); }
 .jauge-legende.legende-semaine { color: var(--ring-week); }
 .jauge-legende.legende-serie { color: var(--ring-streak); }
@@ -257,6 +260,7 @@ input[type="range"] { width: 100%; accent-color: var(--brand); }
 .onglet[data-onglet="textes"] { --icone: url(icones/ic_nav_texts_off.svg); }
 .onglet[data-onglet="journal"] { --icone: url(icones/ic_nav_journal_off.svg); }
 .onglet[data-onglet="reglages"] { --icone: url(icones/ic_nav_settings_off.svg); }
+.onglet[data-onglet="zmanim"] { --icone: url(icones/ic_nav_zmanim_off.svg); }
 /* L'onglet actif : le dessin plein (ic_nav_*_on), comme sur Android. */
 .onglet[aria-current="page"][data-onglet="aujourdhui"] { --icone: url(icones/ic_nav_today_on.svg); }
 .onglet[aria-current="page"][data-onglet="textes"] { --icone: url(icones/ic_nav_texts_on.svg); }
@@ -591,6 +595,51 @@ input[type="range"] { width: 100%; accent-color: var(--brand); }
 }
 
 /* --- La lecture de nuit : fond noir, lettres claires ------------------------------------ */
+/* La bande de signets du siddour (10/10) : discrète, du ton de la page, un
+   trait fin dessous ; seule la section en cours se marque d'une pastille pâle. */
+.signets {
+  position: relative; flex: none; display: flex; gap: 2px; overflow-x: auto; padding: 3px 8px;
+  background: var(--paper); border-bottom: 1px solid color-mix(in srgb, var(--muted) 25%, transparent);
+  scrollbar-width: none; -webkit-overflow-scrolling: touch;
+}
+.signets::-webkit-scrollbar { display: none; }
+.signet {
+  flex: none; margin: 0; padding: 4px 10px; border: 0; border-radius: 999px; background: none;
+  color: var(--muted); font-size: 14px; line-height: 1.4; white-space: nowrap; cursor: pointer;
+}
+.signet[aria-current="true"] { color: var(--brand); background: color-mix(in srgb, var(--brand) 14%, transparent); }
+.ecran.lu.nuit .signets { background: var(--lecture-nuit-fond, #000); border-bottom-color: color-mix(in srgb, var(--lecture-nuit-discret, #A3A8A5) 25%, transparent); }
+.ecran.lu.nuit .signet { color: var(--lecture-nuit-discret, #A3A8A5); }
+.ecran.lu.nuit .signet[aria-current="true"] { color: var(--lecture-nuit-titre, #D6C28C); background: color-mix(in srgb, var(--lecture-nuit-titre, #D6C28C) 15%, transparent); }
+/* Les ajouts du jour (10/10) : en évidence ; les autres, repliés derrière une flèche. */
+.lecture .note-ajouts { margin-top: -4px; }
+.ajout.du-jour {
+  margin: 6px -10px 10px; padding: 4px 10px 2px; border-radius: 12px;
+  border-inline-start: 3px solid var(--brand); background: color-mix(in srgb, var(--brand) 8%, transparent);
+}
+.ajout-etiquette { margin: 4px 0 2px; color: var(--brand); font-size: 12px; font-weight: 600; letter-spacing: .02em; }
+.ajout.replie { margin: 6px 0 10px; }
+.replie-bouton {
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; width: 100%; margin: 0; padding: 8px 12px;
+  border: 1px dashed color-mix(in srgb, var(--muted) 45%, transparent); border-radius: 12px;
+  background: none; color: var(--muted); font-size: 14px; text-align: start; cursor: pointer;
+}
+.replie-bouton::before { content: "▸"; color: var(--brand); }
+:root[dir="rtl"] .replie-bouton::before { content: "◂"; }
+.replie-bouton[aria-expanded="true"]::before { content: "▾"; }
+.replie-nom { color: var(--ink); font-weight: 600; }
+.replie-etat { font-size: 13px; }
+.ajout-corps { padding-top: 6px; }
+.hors-jour { opacity: .55; }
+.indice-jour {
+  display: inline-block; margin: -2px 0 10px; padding: 3px 12px; border-radius: 999px;
+  background: color-mix(in srgb, var(--brand) 14%, transparent); color: var(--brand); font-size: 14px;
+}
+.ecran.lu.nuit .ajout.du-jour { border-inline-start-color: var(--lecture-nuit-titre, #D6C28C); background: color-mix(in srgb, var(--lecture-nuit-titre, #D6C28C) 10%, transparent); }
+.ecran.lu.nuit .ajout-etiquette, .ecran.lu.nuit .replie-bouton::before { color: var(--lecture-nuit-titre, #D6C28C); }
+.ecran.lu.nuit .replie-bouton { color: var(--lecture-nuit-discret, #A3A8A5); border-color: color-mix(in srgb, var(--lecture-nuit-discret, #A3A8A5) 40%, transparent); }
+.ecran.lu.nuit .replie-nom { color: var(--lecture-nuit-texte, #F2F0EA); }
+.ecran.lu.nuit .indice-jour { color: var(--lecture-nuit-titre, #D6C28C); background: color-mix(in srgb, var(--lecture-nuit-titre, #D6C28C) 15%, transparent); }
 .ecran.lu.nuit { background: var(--lecture-nuit-fond, #000); color: var(--lecture-nuit-texte, #F2F0EA); }
 .ecran.lu.nuit .barre h1 { color: var(--lecture-nuit-texte, #F2F0EA); }
 .ecran.lu.nuit .lecture .verset, .ecran.lu.nuit .siddour .priere { color: var(--lecture-nuit-texte, #F2F0EA); }
@@ -601,3 +650,47 @@ input[type="range"] { width: 100%; accent-color: var(--brand); }
 /* Sur le noir, la couleur de l'utilisateur s'éclaircit pour rester lisible. */
 .ecran.lu.nuit .retour, .ecran.lu.nuit .lecture-nav .secondaire { color: color-mix(in srgb, var(--brand) 55%, var(--lecture-nuit-texte, #F2F0EA)); }
 .ecran.lu.nuit .carte-texte { background: none; border-color: color-mix(in srgb, var(--lecture-nuit-texte, #F2F0EA) 18%, transparent); }
+
+/* --- Zmanim et calendrier (10/10) --------------------------------------------- */
+.carte-jour { padding: 16px; }
+.jour-hebreu { margin: 0; font-family: "Hebreu Serif", "Noto Serif Hebrew", serif; font-size: 26px; font-weight: 700; color: var(--brand); text-align: start; }
+.jour-civil { margin: 2px 0 0; color: var(--muted); font-size: 14px; }
+.jour-marques { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.marque { padding: 3px 10px; border-radius: 999px; background: color-mix(in srgb, var(--brand) 12%, transparent); color: var(--brand); font-size: 13px; }
+.jour-sous-titre { margin: 14px 0 2px; font-size: 12px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); }
+.jour-ajouts { margin: 0; color: var(--ink); font-size: 15px; line-height: 1.5; }
+.bouton-calendrier { margin: 12px 0; }
+.carte-zmanim { padding: 4px 16px; }
+.zman { padding: 10px 0; border-bottom: 1px solid var(--line); }
+.zman:last-child { border-bottom: 0; }
+.zman-tete { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+.zman-nom { color: var(--ink); font-size: 15px; }
+.zman-heure { color: var(--ink); font-size: 17px; font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.zman-methode { margin-top: 2px; color: var(--muted); font-size: 12px; }
+.zman-chabbat .zman-nom, .zman-chabbat .zman-heure { color: var(--brand); }
+.carte-calendrier { padding: 12px; }
+.mois-tete { display: flex; align-items: center; gap: 8px; }
+.mois-titres { flex: 1; text-align: center; }
+.vue-calendrier { display: flex; gap: 4px; margin: 0 auto 10px; padding: 3px; width: fit-content; border-radius: 999px; background: color-mix(in srgb, var(--brand) 9%, transparent); }
+.vue-calendrier button { padding: 6px 16px; border: 0; border-radius: 999px; background: none; color: var(--brand); font-size: 14px; cursor: pointer; }
+.vue-calendrier button.actif { background: var(--brand); color: var(--on-brand); font-weight: 600; }
+.mois-principal { margin: 0; font-weight: 700; font-size: 17px; text-transform: capitalize; }
+.mois-second { margin: 2px 0 0; color: var(--brand); font-size: 14px; }
+.mois-hebreu { font-family: "Hebreu Serif", "Noto Serif Hebrew", serif; text-align: center; }
+.mois-principal.mois-hebreu { font-size: 20px; color: var(--ink); }
+.mois-second.mois-hebreu { font-size: 15px; }
+.mois-tete .icone-bouton { width: 40px; height: 40px; border: 0; border-radius: 999px; background: none; color: var(--brand); font-size: 26px; line-height: 1; cursor: pointer; }
+.grille-jours { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px; margin-top: 10px; }
+.jour-initiale { text-align: center; color: var(--muted); font-size: 12px; padding-bottom: 2px; }
+.case { display: flex; flex-direction: column; align-items: center; justify-content: center; min-width: 0; aspect-ratio: 1 / 1.1;
+  margin: 0; padding: 2px 0; border: 0; border-radius: 10px; background: none; color: var(--ink); cursor: pointer; }
+.case.vide { cursor: default; }
+.case-haut { font-size: 15px; font-variant-numeric: tabular-nums; }
+.case-haut.case-hebreu { font-size: 17px; }
+.case-bas { font-size: 11px; color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.case-hebreu { font-family: "Hebreu Serif", "Noto Serif Hebrew", serif; }
+.case.chome { background: color-mix(in srgb, var(--brand) 9%, transparent); }
+.case.fete .case-haut::after { content: ""; display: block; width: 5px; height: 5px; margin: 1px auto 0; border-radius: 50%; background: var(--brand); }
+.case.aujourdhui .case-haut { font-weight: 700; color: var(--brand); }
+.case.choisi { outline: 2px solid var(--brand); outline-offset: -2px; }
+.lien-aujourdhui { display: block; margin: 10px auto 0; padding: 6px 14px; border: 0; background: none; color: var(--brand); font-weight: 600; cursor: pointer; }

@@ -46,7 +46,10 @@ class SiddurActivity : AppCompatActivity() {
         val liste = findViewById<LinearLayout>(R.id.siddur_list)
         liste.removeAllViews()
 
-        siddur.texte(SiddurMoment.suggestion(LocalTime.now()))?.let { liste.addView(maintenant(it, langue)) }
+        // Avec un lieu, la suggestion suit ses zmanim ; sans lieu, les heures fixes.
+        val lieu = Store.lieuZmanim(this)
+        val moment = if (lieu != null) JourAffiche.momentDuSiddour(lieu, java.time.Instant.now()) else SiddurMoment.suggestion(LocalTime.now())
+        moment?.let(siddur::texte)?.let { liste.addView(maintenant(it, langue)) }
 
         liste.addView(entete(getString(R.string.siddur_books), null))
         liste.addView(LinearLayout(this).apply {

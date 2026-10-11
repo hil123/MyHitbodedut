@@ -74,12 +74,13 @@ class RelectureTest {
 
     /**
      * La regle du point 3 tient toujours sur les textes de 'hizouk : 37, plus
-     * les 9 textes sur le desespoir choisis par le proprietaire le 28/09.
+     * les 9 textes sur le desespoir choisis par le proprietaire le 28/09, plus
+     * les 39 ajouts du 10/10 qu'il a relus le jour meme.
      */
     @Test
-    fun `les quarante-six textes de hizouk restent publiables`() {
+    fun `les textes de hizouk restent publiables`() {
         val items = chizuk.getJSONArray("items")
-        assertEquals(46, items.length())
+        assertEquals(85, items.length())
         (0 until items.length()).forEach { i ->
             val item = items.getJSONObject(i)
             val id = item.optString("id", "#$i")

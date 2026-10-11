@@ -1,0 +1,3663 @@
+{
+ "_meta": {
+  "outil": "tools/siddur_annotations.py",
+  "conditions": "clés de CalendrierJuif.C (KosherJava) ; « ! » : la clé fausse",
+  "regle": "les textes ne sont pas modifiés ; un ajout hors du jour est replié, jamais retiré",
+  "a_valider": "indicatif : le texte et ses consignes font foi ; relecture par un Rav souhaitée"
+ },
+ "edot": {
+  "chaharit": [
+   {
+    "sorte": "bloc",
+    "s": 7,
+    "si": "asseret_yemei_techouva",
+    "b": 18,
+    "empreinte": "בעשרת ימי תשובה מוסיפים",
+    "g": 0,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 7,
+    "si": "asseret_yemei_techouva",
+    "b": 19,
+    "empreinte": "שיר המעלות (תהילים ק״ל:א׳-ב׳) ממעמקים קר",
+    "g": 0,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "indice",
+    "s": 9,
+    "si": "asseret_yemei_techouva",
+    "b": 1,
+    "empreinte": "ברוך אתה יהוה, אלהינו ואלהי אבותינו, אלה",
+    "texte": "זכרנו לחיים, מלך חפץ בחיים, כתבנו בספר חיים, למענך אלהים חיים. מלך עוזר ומושיע ומגן"
+   },
+   {
+    "sorte": "indice",
+    "s": 9,
+    "si": "morid_hatal",
+    "b": 3,
+    "empreinte": "בקיץ: מוריד הטל. בחורף: משיב הרוח ומוריד",
+    "texte": "מוריד הטל"
+   },
+   {
+    "sorte": "indice",
+    "s": 9,
+    "si": "machiv_harouah",
+    "b": 3,
+    "empreinte": "בקיץ: מוריד הטל. בחורף: משיב הרוח ומוריד",
+    "texte": "משיב הרוח ומוריד הגשם"
+   },
+   {
+    "sorte": "indice",
+    "s": 9,
+    "si": "asseret_yemei_techouva",
+    "b": 4,
+    "empreinte": "מכלכל חיים בחסד, מחיה מתים ברחמים רבים, ",
+    "texte": "מי כמוך אב הרחמן, זוכר יצוריו ברחמים לחיים. ונאמן אתה להחיות מתים"
+   },
+   {
+    "sorte": "indice",
+    "s": 9,
+    "si": "asseret_yemei_techouva",
+    "b": 8,
+    "empreinte": "אתה קדוש ושמך קדוש, וקדושים בכליום יהללו",
+    "texte": "המלך הקדוש"
+   },
+   {
+    "sorte": "bloc",
+    "s": 9,
+    "si": "jeune",
+    "b": 13,
+    "empreinte": "בתענית ציבור השליח ציבור אומר בחזרה",
+    "libelle": "ajout_anenou_officiant",
+    "g": 1,
+    "racine": "jeune"
+   },
+   {
+    "sorte": "bloc",
+    "s": 9,
+    "si": "jeune",
+    "b": 14,
+    "empreinte": "עננו אבינו עננו ביום צום התענית הזה, כי ",
+    "libelle": "ajout_anenou_officiant",
+    "g": 1,
+    "racine": "jeune"
+   },
+   {
+    "sorte": "bloc",
+    "s": 9,
+    "si": "berakha",
+    "b": 17,
+    "empreinte": "בקיץ:",
+    "g": 2,
+    "racine": "berakha"
+   },
+   {
+    "sorte": "bloc",
+    "s": 9,
+    "si": "berakha",
+    "b": 18,
+    "empreinte": "ברכנו יהוה אלהינו בכלמעשי ידינו, וברך שנ",
+    "g": 2,
+    "racine": "berakha"
+   },
+   {
+    "sorte": "bloc",
+    "s": 9,
+    "si": "tal_oumatar",
+    "b": 19,
+    "empreinte": "בחורף:",
+    "g": 3,
+    "racine": "tal_oumatar"
+   },
+   {
+    "sorte": "bloc",
+    "s": 9,
+    "si": "tal_oumatar",
+    "b": 20,
+    "empreinte": "ברך עלינו יהוה אלהינו אתהשנה הזאת ואתכלמ",
+    "g": 3,
+    "racine": "tal_oumatar"
+   },
+   {
+    "sorte": "indice",
+    "s": 9,
+    "si": "asseret_yemei_techouva",
+    "b": 22,
+    "empreinte": "השיבה שופטינו כבראשונה, ויועצינו כבתחלה,",
+    "texte": "המלך המשפט"
+   },
+   {
+    "sorte": "bloc",
+    "s": 9,
+    "si": "jeune",
+    "b": 28,
+    "empreinte": "בתענית אומר היחיד עננו, וכן שליח ציבור ש",
+    "libelle": "ajout_anenou_particulier",
+    "g": 4,
+    "racine": "jeune"
+   },
+   {
+    "sorte": "bloc",
+    "s": 9,
+    "si": "jeune",
+    "b": 29,
+    "empreinte": "נוסח עננו בג׳ צומות (סנסן ליעיר ג:ט) עננ",
+    "libelle": "ajout_anenou_particulier",
+    "g": 4,
+    "racine": "jeune"
+   },
+   {
+    "sorte": "bloc",
+    "s": 9,
+    "si": "yaale_veyavo",
+    "b": 32,
+    "empreinte": "בראש חודש ובחול המועד אומרים:",
+    "g": 5,
+    "racine": "yaale_veyavo"
+   },
+   {
+    "sorte": "bloc",
+    "s": 9,
+    "si": "yaale_veyavo",
+    "b": 33,
+    "empreinte": "אלהינו ואלהי אבותינו, יעלה ויבא, ויגיע ו",
+    "g": 5,
+    "racine": "yaale_veyavo"
+   },
+   {
+    "sorte": "bloc",
+    "s": 9,
+    "si": "roch_hodech",
+    "b": 34,
+    "empreinte": "בראש חדש: ראש חדש הזה,",
+    "g": 5,
+    "racine": "yaale_veyavo"
+   },
+   {
+    "sorte": "bloc",
+    "s": 9,
+    "si": "pessah",
+    "b": 35,
+    "empreinte": "בחוה״מ פסח: חג המצות הזה, ביום מקרא קדש ",
+    "g": 5,
+    "racine": "yaale_veyavo"
+   },
+   {
+    "sorte": "bloc",
+    "s": 9,
+    "si": "soukkot",
+    "b": 36,
+    "empreinte": "בחוה״מ סוכות: חג הסכות הזה, ביום מקרא קד",
+    "g": 5,
+    "racine": "yaale_veyavo"
+   },
+   {
+    "sorte": "bloc",
+    "s": 9,
+    "si": "yaale_veyavo",
+    "b": 37,
+    "empreinte": "לרחם בו עלינו ולהושיענו. זכרנו יהוה אלהי",
+    "g": 5,
+    "racine": "yaale_veyavo"
+   },
+   {
+    "sorte": "bloc",
+    "s": 9,
+    "si": "al_hanissim",
+    "b": 44,
+    "empreinte": "בחנוכה ופורים אומרים:",
+    "g": 6,
+    "racine": "al_hanissim"
+   },
+   {
+    "sorte": "bloc",
+    "s": 9,
+    "si": "al_hanissim",
+    "b": 45,
+    "empreinte": "על הנסים ועל הפרקן ועל הגבורות ועל התשוע",
+    "g": 6,
+    "racine": "al_hanissim"
+   },
+   {
+    "sorte": "bloc",
+    "s": 9,
+    "si": "hanouka",
+    "b": 46,
+    "empreinte": "בחנוכה אומרים: בימי מתתיה בןיוחנן כהן גד",
+    "g": 6,
+    "racine": "al_hanissim"
+   },
+   {
+    "sorte": "bloc",
+    "s": 9,
+    "si": "pourim",
+    "b": 47,
+    "empreinte": "בפורים אומרים בימי מרדכי ואסתר בשושן הבי",
+    "g": 6,
+    "racine": "al_hanissim"
+   },
+   {
+    "sorte": "indice",
+    "s": 9,
+    "si": "asseret_yemei_techouva",
+    "b": 48,
+    "empreinte": "ועל כלם יתברך, ויתרומם, ויתנשא, תמיד, שמ",
+    "texte": "וכתב לחיים טובים כל בני בריתך. ויהללו ויברכו אתשמך הגדול באמת לעולם כי טוב, האל ישועתנו ועזרתנו סלה, האל הטוב"
+   },
+   {
+    "sorte": "indice",
+    "s": 9,
+    "si": "asseret_yemei_techouva",
+    "b": 64,
+    "empreinte": "שים שלום טובה וברכה, חיים חן וחסד ורחמים",
+    "texte": "ובספר חיים, ברכה ושלום, ופרנסה טובה וישועה ונחמה, וגזרות טובות, נזכר ונכתב לפניך, אנחנו וכל עמך בית ישראל, לחיים טובים ולשלום. ברוך אתה יוהוווהו, המברך את עמו ישראל בשלום. אמן"
+   },
+   {
+    "sorte": "indice",
+    "s": 9,
+    "si": "asseret_yemei_techouva",
+    "b": 69,
+    "empreinte": "עשה שלום בעשרת ימי תשובה אומר: השלום במר",
+    "texte": "השלום במרומיו, הוא ברחמיו יעשה שלום עלינו, ועל כלעמו ישראל, ואמרו אמן"
+   },
+   {
+    "sorte": "bloc",
+    "s": 9,
+    "si": "hallel",
+    "b": 71,
+    "empreinte": "בראש חודש אומרים כאן הלל",
+    "g": 7,
+    "racine": "hallel"
+   },
+   {
+    "sorte": "bloc",
+    "s": 9,
+    "si": "asseret_yemei_techouva",
+    "b": 72,
+    "empreinte": "בעשרת ימי תשובה אומרים:",
+    "g": 8,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 9,
+    "si": "asseret_yemei_techouva",
+    "b": 73,
+    "empreinte": "אבינו מלכנו חטאנו לפניך רחם עלינו:",
+    "g": 8,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 9,
+    "si": "asseret_yemei_techouva",
+    "b": 74,
+    "empreinte": "אבינו מלכנו אין לנו מלך אלא אתה:",
+    "g": 8,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 9,
+    "si": "asseret_yemei_techouva",
+    "b": 75,
+    "empreinte": "אבינו מלכנו עשה עמנו למען שמך:",
+    "g": 8,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 9,
+    "si": "asseret_yemei_techouva",
+    "b": 76,
+    "empreinte": "אבינו מלכנו חדש עלינו שנה טובה:",
+    "g": 8,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 9,
+    "si": "asseret_yemei_techouva",
+    "b": 77,
+    "empreinte": "אבינו מלכנו בטל מעלינו כלגזרות קשות ורעו",
+    "g": 8,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 9,
+    "si": "asseret_yemei_techouva",
+    "b": 78,
+    "empreinte": "אבינו מלכנו בטל מחשבות שנאינו:",
+    "g": 8,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 9,
+    "si": "asseret_yemei_techouva",
+    "b": 79,
+    "empreinte": "אבינו מלכנו הפר עצת אויבינו:",
+    "g": 8,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 9,
+    "si": "asseret_yemei_techouva",
+    "b": 80,
+    "empreinte": "אבינו מלכנו כלה כל צר ומשטין מעלינו:",
+    "g": 8,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 9,
+    "si": "asseret_yemei_techouva",
+    "b": 81,
+    "empreinte": "אבינו מלכנו כלה דבר וחרב ורעה ורעב ושבי ",
+    "g": 8,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 9,
+    "si": "asseret_yemei_techouva",
+    "b": 82,
+    "empreinte": "אבינו מלכנו שלח רפואה שלמה לכל חולי עמך:",
+    "g": 8,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 9,
+    "si": "asseret_yemei_techouva",
+    "b": 83,
+    "empreinte": "אבינו מלכנו מנע מגפה מנחלתך:",
+    "g": 8,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 9,
+    "si": "asseret_yemei_techouva",
+    "b": 84,
+    "empreinte": "אבינו מלכנו זכור כי עפר אנחנו:",
+    "g": 8,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 9,
+    "si": "asseret_yemei_techouva",
+    "b": 85,
+    "empreinte": "אבינו מלכנו מחול וסלח לכל עונותינו:",
+    "g": 8,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 9,
+    "si": "asseret_yemei_techouva",
+    "b": 86,
+    "empreinte": "אבינו מלכנו קרע רוע גזר דיננו: (יכוין בש",
+    "g": 8,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 9,
+    "si": "asseret_yemei_techouva",
+    "b": 87,
+    "empreinte": "אבינו מלכנו מחוק ברחמיך הרבים כל שטרי חו",
+    "g": 8,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 9,
+    "si": "asseret_yemei_techouva",
+    "b": 88,
+    "empreinte": "אבינו מלכנו מחה והעבר פשעינו מנגד עיניך:",
+    "g": 8,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 9,
+    "si": "asseret_yemei_techouva",
+    "b": 89,
+    "empreinte": "אבינו מלכנו כתבנו בספר חיים טובים:",
+    "g": 8,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 9,
+    "si": "asseret_yemei_techouva",
+    "b": 90,
+    "empreinte": "אבינו מלכנו כתבנו בספר צדיקים וחסידים:",
+    "g": 8,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 9,
+    "si": "asseret_yemei_techouva",
+    "b": 91,
+    "empreinte": "אבינו מלכנו כתבנו בספר ישרים ותמימים:",
+    "g": 8,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 9,
+    "si": "asseret_yemei_techouva",
+    "b": 92,
+    "empreinte": "אבינו מלכנו כתבנו בספר פרנסה וכלכלה טובה",
+    "g": 8,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 9,
+    "si": "asseret_yemei_techouva",
+    "b": 93,
+    "empreinte": "אבינו מלכנו כתבנו בספר מחילה וסליחה וכפר",
+    "g": 8,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 9,
+    "si": "asseret_yemei_techouva",
+    "b": 94,
+    "empreinte": "אבינו מלכנו כתבנו בספר גאלה וישועה:",
+    "g": 8,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 9,
+    "si": "asseret_yemei_techouva",
+    "b": 95,
+    "empreinte": "אבינו מלכנו זכרנו בזכרון טוב מלפניך:",
+    "g": 8,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 9,
+    "si": "asseret_yemei_techouva",
+    "b": 96,
+    "empreinte": "אבינו מלכנו הצמח לנו ישועה בקרוב:",
+    "g": 8,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 9,
+    "si": "asseret_yemei_techouva",
+    "b": 97,
+    "empreinte": "אבינו מלכנו הרם קרן ישראל עמך:",
+    "g": 8,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 9,
+    "si": "asseret_yemei_techouva",
+    "b": 98,
+    "empreinte": "אבינו מלכנו והרם קרן משיחך:",
+    "g": 8,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 9,
+    "si": "asseret_yemei_techouva",
+    "b": 99,
+    "empreinte": "אבינו מלכנו חננו ועננו:",
+    "g": 8,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 9,
+    "si": "asseret_yemei_techouva",
+    "b": 100,
+    "empreinte": "אבינו מלכנו החזירנו בתשובה שלמה לפניך:",
+    "g": 8,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 9,
+    "si": "asseret_yemei_techouva",
+    "b": 101,
+    "empreinte": "אבינו מלכנו שמע קולנו חוס ורחם עלינו:",
+    "g": 8,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 9,
+    "si": "asseret_yemei_techouva",
+    "b": 102,
+    "empreinte": "אבינו מלכנו עשה למענך אם לא למעננו:",
+    "g": 8,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 9,
+    "si": "asseret_yemei_techouva",
+    "b": 103,
+    "empreinte": "אבינו מלכנו קבל ברחמים וברצון את תפלתנו:",
+    "g": 8,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 9,
+    "si": "asseret_yemei_techouva",
+    "b": 104,
+    "empreinte": "אבינו מלכנו אל תשיבנו ריקם מלפניך:",
+    "g": 8,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 9,
+    "si": "!tahanoun_chaharit",
+    "b": 105,
+    "empreinte": "בימים שאין בהם תחנון אומרים",
+    "g": 9,
+    "racine": "!tahanoun_chaharit"
+   },
+   {
+    "sorte": "bloc",
+    "s": 9,
+    "si": "!tahanoun_chaharit",
+    "b": 106,
+    "empreinte": "יהי שם יהוה מברך מעתה ועדעולם ממזרחשמש ע",
+    "g": 9,
+    "racine": "!tahanoun_chaharit"
+   },
+   {
+    "sorte": "section",
+    "s": 10,
+    "si": "tahanoun_chaharit",
+    "empreinte": "וידוי"
+   }
+  ],
+  "minha": [
+   {
+    "sorte": "indice",
+    "s": 1,
+    "si": "asseret_yemei_techouva",
+    "b": 1,
+    "empreinte": "ברוך אתה יהוה, אלהינו ואלהי אבותינו, אלה",
+    "texte": "זכרנו לחיים, מלך חפץ בחיים, כתבנו בספר חיים, למענך אלהים חיים. מלך עוזר ומושיע ומגן"
+   },
+   {
+    "sorte": "indice",
+    "s": 1,
+    "si": "morid_hatal",
+    "b": 3,
+    "empreinte": "בקיץ: מוריד הטל. בחורף: משיב הרוח ומוריד",
+    "texte": "מוריד הטל"
+   },
+   {
+    "sorte": "indice",
+    "s": 1,
+    "si": "machiv_harouah",
+    "b": 3,
+    "empreinte": "בקיץ: מוריד הטל. בחורף: משיב הרוח ומוריד",
+    "texte": "משיב הרוח ומוריד הגשם"
+   },
+   {
+    "sorte": "indice",
+    "s": 1,
+    "si": "asseret_yemei_techouva",
+    "b": 4,
+    "empreinte": "מכלכל חיים בחסד, מחיה מתים ברחמים רבים, ",
+    "texte": "מי כמוך אב הרחמן, זוכר יצוריו ברחמים לחיים. ונאמן אתה להחיות מתים"
+   },
+   {
+    "sorte": "indice",
+    "s": 1,
+    "si": "asseret_yemei_techouva",
+    "b": 7,
+    "empreinte": "אתה קדוש ושמך קדוש, וקדושים בכליום יהללו",
+    "texte": "המלך הקדוש"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "jeune",
+    "b": 12,
+    "empreinte": "בתענית ציבור השליח ציבור אומר בחזרה",
+    "libelle": "ajout_anenou_officiant",
+    "g": 0,
+    "racine": "jeune"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "jeune",
+    "b": 13,
+    "empreinte": "עננו אבינו עננו ביום צום התענית הזה, כי ",
+    "libelle": "ajout_anenou_officiant",
+    "g": 0,
+    "racine": "jeune"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "berakha",
+    "b": 16,
+    "empreinte": "בקיץ:",
+    "g": 1,
+    "racine": "berakha"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "berakha",
+    "b": 17,
+    "empreinte": "ברכנו יהוה אלהינו בכלמעשי ידינו, וברך שנ",
+    "g": 1,
+    "racine": "berakha"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "tal_oumatar",
+    "b": 18,
+    "empreinte": "בחורף:",
+    "g": 2,
+    "racine": "tal_oumatar"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "tal_oumatar",
+    "b": 19,
+    "empreinte": "ברך עלינו יהוה אלהינו אתהשנה הזאת ואתכלמ",
+    "g": 2,
+    "racine": "tal_oumatar"
+   },
+   {
+    "sorte": "indice",
+    "s": 1,
+    "si": "asseret_yemei_techouva",
+    "b": 21,
+    "empreinte": "השיבה שופטינו כבראשונה, ויועצינו כבתחלה,",
+    "texte": "המלך המשפט"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "jeune",
+    "b": 30,
+    "empreinte": "בתענית אומר היחיד עננו, וכן שליח ציבור ש",
+    "libelle": "ajout_anenou_particulier",
+    "g": 3,
+    "racine": "jeune"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "jeune",
+    "b": 31,
+    "empreinte": "נוסח עננו בג׳ צומות (סנסן ליעיר ג:ט) עננ",
+    "libelle": "ajout_anenou_particulier",
+    "g": 3,
+    "racine": "jeune"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "yaale_veyavo",
+    "b": 34,
+    "empreinte": "בראש חודש ובחול המועד אומרים:",
+    "g": 4,
+    "racine": "yaale_veyavo"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "yaale_veyavo",
+    "b": 35,
+    "empreinte": "אלהינו ואלהי אבותינו, יעלה ויבא, ויגיע ו",
+    "g": 4,
+    "racine": "yaale_veyavo"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "roch_hodech",
+    "b": 36,
+    "empreinte": "בראש חדש: ראש חדש הזה,",
+    "g": 4,
+    "racine": "yaale_veyavo"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "pessah",
+    "b": 37,
+    "empreinte": "בחוה״מ פסח: חג המצות הזה, ביום מקרא קדש ",
+    "g": 4,
+    "racine": "yaale_veyavo"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "soukkot",
+    "b": 38,
+    "empreinte": "בחוה״מ סוכות: חג הסכות הזה, ביום מקרא קד",
+    "g": 4,
+    "racine": "yaale_veyavo"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "yaale_veyavo",
+    "b": 39,
+    "empreinte": "לרחם בו עלינו ולהושיענו. זכרנו יהוה אלהי",
+    "g": 4,
+    "racine": "yaale_veyavo"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "al_hanissim",
+    "b": 44,
+    "empreinte": "בחנוכה ופורים אומרים:",
+    "g": 5,
+    "racine": "al_hanissim"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "al_hanissim",
+    "b": 45,
+    "empreinte": "על הנסים ועל הפרקן ועל הגבורות ועל התשוע",
+    "g": 5,
+    "racine": "al_hanissim"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "hanouka",
+    "b": 46,
+    "empreinte": "בחנוכה אומרים: בימי מתתיה בןיוחנן כהן גד",
+    "g": 5,
+    "racine": "al_hanissim"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "pourim",
+    "b": 47,
+    "empreinte": "בפורים אומרים בימי מרדכי ואסתר בשושן הבי",
+    "g": 5,
+    "racine": "al_hanissim"
+   },
+   {
+    "sorte": "indice",
+    "s": 1,
+    "si": "asseret_yemei_techouva",
+    "b": 48,
+    "empreinte": "ועל כלם יתברך, ויתרומם, ויתנשא, תמיד, שמ",
+    "texte": "וכתב לחיים טובים כל בני בריתך. ויהללו ויברכו אתשמך הגדול באמת לעולם כי טוב, האל ישועתנו ועזרתנו סלה, האל הטוב"
+   },
+   {
+    "sorte": "indice",
+    "s": 1,
+    "si": "asseret_yemei_techouva",
+    "b": 62,
+    "empreinte": "שים שלום טובה וברכה, חיים חן וחסד ורחמים",
+    "texte": "ובספר חיים, ברכה ושלום, ופרנסה טובה וישועה ונחמה, וגזרות טובות, נזכר ונכתב לפניך, אנחנו וכל עמך בית ישראל, לחיים טובים ולשלום. ברוך אתה יוהוווהו, המברך את עמו ישראל בשלום. אמן"
+   },
+   {
+    "sorte": "indice",
+    "s": 1,
+    "si": "asseret_yemei_techouva",
+    "b": 69,
+    "empreinte": "עשה שלום בעשרת ימי תשובה אומר: השלום במר",
+    "texte": "השלום במרומיו, הוא ברחמיו יעשה שלום עלינו, ועל כלעמו ישראל, ואמרו אמן"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "asseret_yemei_techouva",
+    "b": 71,
+    "empreinte": "בעשרת ימי תשובה אומרים:",
+    "g": 6,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "asseret_yemei_techouva",
+    "b": 72,
+    "empreinte": "אבינו מלכנו חטאנו לפניך רחם עלינו:",
+    "g": 6,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "asseret_yemei_techouva",
+    "b": 73,
+    "empreinte": "אבינו מלכנו אין לנו מלך אלא אתה:",
+    "g": 6,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "asseret_yemei_techouva",
+    "b": 74,
+    "empreinte": "אבינו מלכנו עשה עמנו למען שמך:",
+    "g": 6,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "asseret_yemei_techouva",
+    "b": 75,
+    "empreinte": "אבינו מלכנו חדש עלינו שנה טובה:",
+    "g": 6,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "asseret_yemei_techouva",
+    "b": 76,
+    "empreinte": "אבינו מלכנו בטל מעלינו כל גזרות קשות ורע",
+    "g": 6,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "asseret_yemei_techouva",
+    "b": 77,
+    "empreinte": "אבינו מלכנו בטל מחשבות שנאינו:",
+    "g": 6,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "asseret_yemei_techouva",
+    "b": 78,
+    "empreinte": "אבינו מלכנו הפר עצת אויבינו:",
+    "g": 6,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "asseret_yemei_techouva",
+    "b": 79,
+    "empreinte": "אבינו מלכנו כלה כל צר ומשטין מעלינו:",
+    "g": 6,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "asseret_yemei_techouva",
+    "b": 80,
+    "empreinte": "אבינו מלכנו כלה דבר וחרב ורעה ורעב ושבי ",
+    "g": 6,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "asseret_yemei_techouva",
+    "b": 81,
+    "empreinte": "אבינו מלכנו שלח רפואה שלמה לכל חולי עמך:",
+    "g": 6,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "asseret_yemei_techouva",
+    "b": 82,
+    "empreinte": "אבינו מלכנו מנע מגפה מנחלתך:",
+    "g": 6,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "asseret_yemei_techouva",
+    "b": 83,
+    "empreinte": "אבינו מלכנו זכור כי עפר אנחנו:",
+    "g": 6,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "asseret_yemei_techouva",
+    "b": 84,
+    "empreinte": "אבינו מלכנו מחול וסלח לכל עונותינו:",
+    "g": 6,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "asseret_yemei_techouva",
+    "b": 85,
+    "empreinte": "אבינו מלכנו קרע רוע גזר דיננו: (יכוין בש",
+    "g": 6,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "asseret_yemei_techouva",
+    "b": 86,
+    "empreinte": "אבינו מלכנו מחוק ברחמיך הרבים כל שטרי חו",
+    "g": 6,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "asseret_yemei_techouva",
+    "b": 87,
+    "empreinte": "אבינו מלכנו מחה והעבר פשעינו מנגד עיניך:",
+    "g": 6,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "asseret_yemei_techouva",
+    "b": 88,
+    "empreinte": "אבינו מלכנו כתבנו בספר חיים טובים:",
+    "g": 6,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "asseret_yemei_techouva",
+    "b": 89,
+    "empreinte": "אבינו מלכנו כתבנו בספר צדיקים וחסידים:",
+    "g": 6,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "asseret_yemei_techouva",
+    "b": 90,
+    "empreinte": "אבינו מלכנו כתבנו בספר ישרים ותמימים:",
+    "g": 6,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "asseret_yemei_techouva",
+    "b": 91,
+    "empreinte": "אבינו מלכנו כתבנו בספר פרנסה וכלכלה טובה",
+    "g": 6,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "asseret_yemei_techouva",
+    "b": 92,
+    "empreinte": "אבינו מלכנו כתבנו בספר מחילה וסליחה וכפר",
+    "g": 6,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "asseret_yemei_techouva",
+    "b": 93,
+    "empreinte": "אבינו מלכנו כתבנו בספר גאלה וישועה:",
+    "g": 6,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "asseret_yemei_techouva",
+    "b": 94,
+    "empreinte": "אבינו מלכנו זכרנו בזכרון טוב מלפניך:",
+    "g": 6,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "asseret_yemei_techouva",
+    "b": 95,
+    "empreinte": "אבינו מלכנו הצמח לנו ישועה בקרוב:",
+    "g": 6,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "asseret_yemei_techouva",
+    "b": 96,
+    "empreinte": "אבינו מלכנו הרם קרן ישראל עמך:",
+    "g": 6,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "asseret_yemei_techouva",
+    "b": 97,
+    "empreinte": "אבינו מלכנו והרם קרן משיחך:",
+    "g": 6,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "asseret_yemei_techouva",
+    "b": 98,
+    "empreinte": "אבינו מלכנו חננו ועננו:",
+    "g": 6,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "asseret_yemei_techouva",
+    "b": 99,
+    "empreinte": "אבינו מלכנו החזירנו בתשובה שלמה לפניך:",
+    "g": 6,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "asseret_yemei_techouva",
+    "b": 100,
+    "empreinte": "אבינו מלכנו שמע קולנו חוס ורחם עלינו:",
+    "g": 6,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "asseret_yemei_techouva",
+    "b": 101,
+    "empreinte": "אבינו מלכנו עשה למענך אם לא למעננו:",
+    "g": 6,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "asseret_yemei_techouva",
+    "b": 102,
+    "empreinte": "אבינו מלכנו קבל ברחמים וברצון את תפלתנו:",
+    "g": 6,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "asseret_yemei_techouva",
+    "b": 103,
+    "empreinte": "אבינו מלכנו אל תשיבנו ריקם מלפניך:",
+    "g": 6,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "!tahanoun_minha",
+    "b": 104,
+    "empreinte": "בימים שאין בהם תחנון אומרים",
+    "g": 7,
+    "racine": "!tahanoun_minha"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "!tahanoun_minha",
+    "b": 105,
+    "empreinte": "יהי שם יהוה מברך מעתה ועדעולם ממזרחשמש ע",
+    "g": 7,
+    "racine": "!tahanoun_minha"
+   },
+   {
+    "sorte": "section",
+    "s": 2,
+    "si": "tahanoun_minha",
+    "empreinte": "וידוי"
+   }
+  ],
+  "arvit": [
+   {
+    "sorte": "indice",
+    "s": 2,
+    "si": "asseret_yemei_techouva",
+    "b": 1,
+    "empreinte": "ברוך אתה יהוה, אלהינו ואלהי אבותינו, אלה",
+    "texte": "זכרנו לחיים, מלך חפץ בחיים, כתבנו בספר חיים, למענך אלהים חיים. מלך עוזר ומושיע ומגן"
+   },
+   {
+    "sorte": "indice",
+    "s": 2,
+    "si": "morid_hatal",
+    "b": 3,
+    "empreinte": "בקיץ: מוריד הטל. בחורף: משיב הרוח ומוריד",
+    "texte": "מוריד הטל"
+   },
+   {
+    "sorte": "indice",
+    "s": 2,
+    "si": "machiv_harouah",
+    "b": 3,
+    "empreinte": "בקיץ: מוריד הטל. בחורף: משיב הרוח ומוריד",
+    "texte": "משיב הרוח ומוריד הגשם"
+   },
+   {
+    "sorte": "indice",
+    "s": 2,
+    "si": "asseret_yemei_techouva",
+    "b": 4,
+    "empreinte": "מכלכל חיים בחסד, מחיה מתים ברחמים רבים, ",
+    "texte": "מי כמוך אב הרחמן, זוכר יצוריו ברחמים לחיים. ונאמן אתה להחיות מתים"
+   },
+   {
+    "sorte": "indice",
+    "s": 2,
+    "si": "asseret_yemei_techouva",
+    "b": 5,
+    "empreinte": "אתה קדוש ושמך קדוש, וקדושים בכליום יהללו",
+    "texte": "המלך הקדוש"
+   },
+   {
+    "sorte": "bloc",
+    "s": 2,
+    "si": "berakha",
+    "b": 14,
+    "empreinte": "בקיץ:",
+    "g": 0,
+    "racine": "berakha"
+   },
+   {
+    "sorte": "bloc",
+    "s": 2,
+    "si": "berakha",
+    "b": 15,
+    "empreinte": "ברכנו יהוה אלהינו בכלמעשי ידינו, וברך שנ",
+    "g": 0,
+    "racine": "berakha"
+   },
+   {
+    "sorte": "bloc",
+    "s": 2,
+    "si": "tal_oumatar",
+    "b": 16,
+    "empreinte": "בחורף:",
+    "g": 1,
+    "racine": "tal_oumatar"
+   },
+   {
+    "sorte": "bloc",
+    "s": 2,
+    "si": "tal_oumatar",
+    "b": 17,
+    "empreinte": "ברך עלינו יהוה אלהינו אתהשנה הזאת ואתכלמ",
+    "g": 1,
+    "racine": "tal_oumatar"
+   },
+   {
+    "sorte": "indice",
+    "s": 2,
+    "si": "asseret_yemei_techouva",
+    "b": 19,
+    "empreinte": "השיבה שופטינו כבראשונה, ויועצינו כבתחלה,",
+    "texte": "המלך המשפט"
+   },
+   {
+    "sorte": "bloc",
+    "s": 2,
+    "si": "ticha_beav",
+    "b": 25,
+    "empreinte": "בתשעה באב יש אומרים עננו אבינו עננו ביום",
+    "libelle": "ajout_anenou_particulier",
+    "g": 2,
+    "racine": "ticha_beav"
+   },
+   {
+    "sorte": "bloc",
+    "s": 2,
+    "si": "ticha_beav",
+    "b": 26,
+    "empreinte": "נוסח עננו בג׳ צומות (סנסן ליעיר ג:ט) עננ",
+    "libelle": "ajout_anenou_particulier",
+    "g": 2,
+    "racine": "ticha_beav"
+   },
+   {
+    "sorte": "bloc",
+    "s": 2,
+    "si": "yaale_veyavo",
+    "b": 29,
+    "empreinte": "בראש חודש ובחול המועד אומרים:",
+    "g": 3,
+    "racine": "yaale_veyavo"
+   },
+   {
+    "sorte": "bloc",
+    "s": 2,
+    "si": "yaale_veyavo",
+    "b": 30,
+    "empreinte": "אלהינו ואלהי אבותינו, יעלה ויבא, ויגיע ו",
+    "g": 3,
+    "racine": "yaale_veyavo"
+   },
+   {
+    "sorte": "bloc",
+    "s": 2,
+    "si": "roch_hodech",
+    "b": 31,
+    "empreinte": "בראש חדש: ראש חדש הזה,",
+    "g": 3,
+    "racine": "yaale_veyavo"
+   },
+   {
+    "sorte": "bloc",
+    "s": 2,
+    "si": "pessah",
+    "b": 32,
+    "empreinte": "בחוה״מ פסח: חג המצות הזה, ביום מקרא קדש ",
+    "g": 3,
+    "racine": "yaale_veyavo"
+   },
+   {
+    "sorte": "bloc",
+    "s": 2,
+    "si": "soukkot",
+    "b": 33,
+    "empreinte": "בחוה״מ סוכות: חג הסכות הזה, ביום מקרא קד",
+    "g": 3,
+    "racine": "yaale_veyavo"
+   },
+   {
+    "sorte": "bloc",
+    "s": 2,
+    "si": "yaale_veyavo",
+    "b": 34,
+    "empreinte": "לרחם בו עלינו ולהושיענו. זכרנו יהוה אלהי",
+    "g": 3,
+    "racine": "yaale_veyavo"
+   },
+   {
+    "sorte": "bloc",
+    "s": 2,
+    "si": "al_hanissim",
+    "b": 38,
+    "empreinte": "בחנוכה ופורים אומרים:",
+    "g": 4,
+    "racine": "al_hanissim"
+   },
+   {
+    "sorte": "bloc",
+    "s": 2,
+    "si": "al_hanissim",
+    "b": 39,
+    "empreinte": "על הנסים ועל הפרקן ועל הגבורות ועל התשוע",
+    "g": 4,
+    "racine": "al_hanissim"
+   },
+   {
+    "sorte": "bloc",
+    "s": 2,
+    "si": "hanouka",
+    "b": 40,
+    "empreinte": "בחנוכה אומרים: בימי מתתיה בןיוחנן כהן גד",
+    "g": 4,
+    "racine": "al_hanissim"
+   },
+   {
+    "sorte": "bloc",
+    "s": 2,
+    "si": "pourim",
+    "b": 41,
+    "empreinte": "בפורים אומרים בימי מרדכי ואסתר בשושן הבי",
+    "g": 4,
+    "racine": "al_hanissim"
+   },
+   {
+    "sorte": "indice",
+    "s": 2,
+    "si": "asseret_yemei_techouva",
+    "b": 42,
+    "empreinte": "ועל כלם יתברך, ויתרומם, ויתנשא, תמיד, שמ",
+    "texte": "וכתב לחיים טובים כל בני בריתך. ויהללו ויברכו אתשמך הגדול באמת לעולם כי טוב, האל ישועתנו ועזרתנו סלה, האל הטוב"
+   },
+   {
+    "sorte": "indice",
+    "s": 2,
+    "si": "asseret_yemei_techouva",
+    "b": 43,
+    "empreinte": "שים שלום טובה וברכה, חיים חן וחסד ורחמים",
+    "texte": "ובספר חיים, ברכה ושלום, ופרנסה טובה וישועה ונחמה, וגזרות טובות, נזכר ונכתב לפניך, אנחנו וכל עמך בית ישראל, לחיים טובים ולשלום. ברוך אתה יוהוווהו, המברך את עמו ישראל בשלום. אמן"
+   },
+   {
+    "sorte": "indice",
+    "s": 2,
+    "si": "asseret_yemei_techouva",
+    "b": 48,
+    "empreinte": "עשה שלום בעשרת ימי תשובה אומר: השלום במר",
+    "texte": "השלום במרומיו, הוא ברחמיו יעשה שלום עלינו, ועל כלעמו ישראל, ואמרו אמן"
+   }
+  ],
+  "birkat_hamazon": [
+   {
+    "sorte": "bloc",
+    "s": 0,
+    "si": "al_hanissim",
+    "b": 16,
+    "empreinte": "בחנוכה ופורים אומרים",
+    "g": 0,
+    "racine": "al_hanissim"
+   },
+   {
+    "sorte": "bloc",
+    "s": 0,
+    "si": "al_hanissim",
+    "b": 17,
+    "empreinte": "על הנסים ועל הפרקן ועל הגבורות ועל התשוע",
+    "g": 0,
+    "racine": "al_hanissim"
+   },
+   {
+    "sorte": "bloc",
+    "s": 0,
+    "si": "hanouka",
+    "b": 18,
+    "empreinte": "בחנוכה אומרים בימי מתתיה בןיוחנן כהן גדו",
+    "g": 0,
+    "racine": "al_hanissim"
+   },
+   {
+    "sorte": "bloc",
+    "s": 0,
+    "si": "pourim",
+    "b": 19,
+    "empreinte": "בפורים אומרים בימי מרדכי ואסתר בשושן הבי",
+    "g": 0,
+    "racine": "al_hanissim"
+   },
+   {
+    "sorte": "bloc",
+    "s": 0,
+    "si": "chabbat",
+    "b": 22,
+    "empreinte": "בשבת אומרים",
+    "g": 1,
+    "racine": "chabbat"
+   },
+   {
+    "sorte": "bloc",
+    "s": 0,
+    "si": "chabbat",
+    "b": 23,
+    "empreinte": "רצה והחליצנו יהוה אלהינו במצותיך ובמצות ",
+    "g": 1,
+    "racine": "chabbat"
+   },
+   {
+    "sorte": "bloc",
+    "s": 0,
+    "si": "yaale_veyavo",
+    "b": 24,
+    "empreinte": "בראש חודש ביום טוב ובחול המועד אומרים",
+    "g": 2,
+    "racine": "yaale_veyavo"
+   },
+   {
+    "sorte": "bloc",
+    "s": 0,
+    "si": "yaale_veyavo",
+    "b": 25,
+    "empreinte": "אלהינו ואלהי אבותינו, יעלה ויבא, ויגיע ו",
+    "g": 2,
+    "racine": "yaale_veyavo"
+   },
+   {
+    "sorte": "bloc",
+    "s": 0,
+    "si": "roch_hodech",
+    "b": 26,
+    "empreinte": "בראש חדש: ראש חדש הזה,",
+    "g": 2,
+    "racine": "yaale_veyavo"
+   },
+   {
+    "sorte": "bloc",
+    "s": 0,
+    "si": "pessah",
+    "b": 27,
+    "empreinte": "בפסח: חג המצות הזה, ביום ביום טוב מוסיפי",
+    "g": 2,
+    "racine": "yaale_veyavo"
+   },
+   {
+    "sorte": "bloc",
+    "s": 0,
+    "si": "chavouot",
+    "b": 28,
+    "empreinte": "בשבועות: חג השבועות הזה, ביום טוב מקרא ק",
+    "g": 2,
+    "racine": "yaale_veyavo"
+   },
+   {
+    "sorte": "bloc",
+    "s": 0,
+    "si": "roch_hachana",
+    "b": 29,
+    "empreinte": "בראש השנה: הזכרון הזה, ביום טוב מקרא קדש",
+    "g": 2,
+    "racine": "yaale_veyavo"
+   },
+   {
+    "sorte": "bloc",
+    "s": 0,
+    "si": "soukkot",
+    "b": 30,
+    "empreinte": "בסוכות: חג הסכות הזה, ביום ביום טוב מוסי",
+    "g": 2,
+    "racine": "yaale_veyavo"
+   },
+   {
+    "sorte": "bloc",
+    "s": 0,
+    "si": "chemini_atseret",
+    "b": 31,
+    "empreinte": "בשמיני עצרת: שמיני חג עצרת הזה, ביום טוב",
+    "g": 2,
+    "racine": "yaale_veyavo"
+   },
+   {
+    "sorte": "bloc",
+    "s": 0,
+    "si": "yaale_veyavo",
+    "b": 32,
+    "empreinte": "לרחם בו עלינו ולהושיענו. זכרנו יהוה אלהי",
+    "g": 2,
+    "racine": "yaale_veyavo"
+   }
+  ]
+ },
+ "sefard": {
+  "chaharit": [
+   {
+    "sorte": "bloc",
+    "s": 8,
+    "si": "asseret_yemei_techouva",
+    "b": 3,
+    "empreinte": "בעשי״ת:",
+    "g": 0,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 8,
+    "si": "asseret_yemei_techouva",
+    "b": 4,
+    "empreinte": "זכרנו לחיים מלך חפץ בחיים וכתבנו בספר הח",
+    "g": 0,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 8,
+    "si": "morid_hatal",
+    "b": 9,
+    "empreinte": "בקיץ:",
+    "g": 1,
+    "racine": "morid_hatal"
+   },
+   {
+    "sorte": "bloc",
+    "s": 8,
+    "si": "morid_hatal",
+    "b": 10,
+    "empreinte": "מוריד הטל",
+    "g": 1,
+    "racine": "morid_hatal"
+   },
+   {
+    "sorte": "bloc",
+    "s": 8,
+    "si": "machiv_harouah",
+    "b": 11,
+    "empreinte": "בחורף:",
+    "g": 2,
+    "racine": "machiv_harouah"
+   },
+   {
+    "sorte": "bloc",
+    "s": 8,
+    "si": "machiv_harouah",
+    "b": 12,
+    "empreinte": "משיב הרוח ומוריד הגשם:",
+    "g": 2,
+    "racine": "machiv_harouah"
+   },
+   {
+    "sorte": "bloc",
+    "s": 8,
+    "si": "asseret_yemei_techouva",
+    "b": 15,
+    "empreinte": "בעשי״ת:",
+    "g": 3,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 8,
+    "si": "asseret_yemei_techouva",
+    "b": 16,
+    "empreinte": "מי כמוך אב הרחמן זוכר יצוריו לחיים ברחמי",
+    "g": 3,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 8,
+    "si": "asseret_yemei_techouva",
+    "b": 36,
+    "empreinte": "בעשי״ת מסיים:",
+    "g": 4,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 8,
+    "si": "asseret_yemei_techouva",
+    "b": 37,
+    "empreinte": "ברוך אתה יהוה המלך הקדוש:",
+    "g": 4,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 8,
+    "si": "jeune",
+    "b": 47,
+    "empreinte": "(בתענית ציבור אומר כאן הש״ץ עננו )",
+    "libelle": "ajout_anenou_officiant",
+    "g": 5,
+    "racine": "jeune"
+   },
+   {
+    "sorte": "bloc",
+    "s": 8,
+    "si": "berakha",
+    "b": 55,
+    "empreinte": "בימות החמה:",
+    "g": 6,
+    "racine": "berakha"
+   },
+   {
+    "sorte": "bloc",
+    "s": 8,
+    "si": "berakha",
+    "b": 56,
+    "empreinte": "ברכה",
+    "g": 6,
+    "racine": "berakha"
+   },
+   {
+    "sorte": "bloc",
+    "s": 8,
+    "si": "tal_oumatar",
+    "b": 57,
+    "empreinte": "בימות הגשמים:",
+    "g": 7,
+    "racine": "tal_oumatar"
+   },
+   {
+    "sorte": "bloc",
+    "s": 8,
+    "si": "tal_oumatar",
+    "b": 58,
+    "empreinte": "טל ומטר לברכה",
+    "g": 7,
+    "racine": "tal_oumatar"
+   },
+   {
+    "sorte": "bloc",
+    "s": 8,
+    "si": "asseret_yemei_techouva",
+    "b": 66,
+    "empreinte": "בעשי״ת יסיים:",
+    "g": 8,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 8,
+    "si": "asseret_yemei_techouva",
+    "b": 67,
+    "empreinte": "ברוך אתה יהוה המלך המשפט:",
+    "g": 8,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 8,
+    "si": "yaale_veyavo",
+    "b": 83,
+    "empreinte": "בראש חדש ובחול המועד אומרים זה:",
+    "g": 9,
+    "racine": "yaale_veyavo"
+   },
+   {
+    "sorte": "bloc",
+    "s": 8,
+    "si": "yaale_veyavo",
+    "b": 84,
+    "empreinte": "אלהינו ואלהי אבותינו יעלה ויבא ויגיע ויר",
+    "g": 9,
+    "racine": "yaale_veyavo"
+   },
+   {
+    "sorte": "bloc",
+    "s": 8,
+    "si": "roch_hodech",
+    "b": 85,
+    "empreinte": "לר״ח: ראש החדש הזה",
+    "g": 9,
+    "racine": "yaale_veyavo"
+   },
+   {
+    "sorte": "bloc",
+    "s": 8,
+    "si": "pessah",
+    "b": 86,
+    "empreinte": "לפסח: חג המצות הזה",
+    "g": 9,
+    "racine": "yaale_veyavo"
+   },
+   {
+    "sorte": "bloc",
+    "s": 8,
+    "si": "soukkot",
+    "b": 87,
+    "empreinte": "לסכות: חג הסכות הזה",
+    "g": 9,
+    "racine": "yaale_veyavo"
+   },
+   {
+    "sorte": "bloc",
+    "s": 8,
+    "si": "yaale_veyavo",
+    "b": 88,
+    "empreinte": "זכרנו יהוה אלהינו בו לטובה, ופקדנו בו לב",
+    "g": 9,
+    "racine": "yaale_veyavo"
+   },
+   {
+    "sorte": "bloc",
+    "s": 8,
+    "si": "al_hanissim",
+    "b": 96,
+    "empreinte": "בחנוכה ופורים אומרים על הנסים. שכח לומר ",
+    "g": 10,
+    "racine": "al_hanissim"
+   },
+   {
+    "sorte": "bloc",
+    "s": 8,
+    "si": "al_hanissim",
+    "b": 97,
+    "empreinte": "ועל הנסים ועל הפרקן ועל הגבורות ועל התשו",
+    "g": 10,
+    "racine": "al_hanissim"
+   },
+   {
+    "sorte": "bloc",
+    "s": 8,
+    "si": "hanouka",
+    "b": 98,
+    "empreinte": "בחנוכה:",
+    "g": 10,
+    "racine": "al_hanissim"
+   },
+   {
+    "sorte": "bloc",
+    "s": 8,
+    "si": "hanouka",
+    "b": 99,
+    "empreinte": "בימי מתתיהו בן יוחנן כהן גדול חשמונאי וב",
+    "g": 10,
+    "racine": "al_hanissim"
+   },
+   {
+    "sorte": "bloc",
+    "s": 8,
+    "si": "pourim",
+    "b": 100,
+    "empreinte": "בפורים:",
+    "g": 10,
+    "racine": "al_hanissim"
+   },
+   {
+    "sorte": "bloc",
+    "s": 8,
+    "si": "pourim",
+    "b": 101,
+    "empreinte": "בימי מרדכי ואסתר בשושן הבירה כשעמד עליהם",
+    "g": 10,
+    "racine": "al_hanissim"
+   },
+   {
+    "sorte": "bloc",
+    "s": 8,
+    "si": "asseret_yemei_techouva",
+    "b": 103,
+    "empreinte": "בעשי״ת:",
+    "g": 11,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 8,
+    "si": "asseret_yemei_techouva",
+    "b": 104,
+    "empreinte": "וכתוב לחיים טובים כל בני בריתך:",
+    "g": 11,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 8,
+    "si": "asseret_yemei_techouva",
+    "b": 117,
+    "empreinte": "בעשי״ת:",
+    "g": 12,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 8,
+    "si": "asseret_yemei_techouva",
+    "b": 118,
+    "empreinte": "בספר חיים ברכה ושלום ופרנסה טובה וגזרות ",
+    "g": 12,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "section",
+    "s": 9,
+    "si": "tahanoun_chaharit",
+    "empreinte": "תחנון"
+   },
+   {
+    "sorte": "bloc",
+    "s": 10,
+    "si": "asseret_yemei_techouva",
+    "b": 4,
+    "empreinte": "בעשי״ת:",
+    "g": 13,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 10,
+    "si": "asseret_yemei_techouva",
+    "b": 5,
+    "empreinte": "אבינו מלכנו חדש עלינו שנה טובה:",
+    "g": 13,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 10,
+    "si": "asseret_yemei_techouva",
+    "b": 22,
+    "empreinte": "בעשרת ימי תשובה:",
+    "g": 14,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 10,
+    "si": "asseret_yemei_techouva",
+    "b": 23,
+    "empreinte": "אבינו מלכנו כתבנו בספר חיים טובים:",
+    "g": 14,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 10,
+    "si": "asseret_yemei_techouva",
+    "b": 24,
+    "empreinte": "אבינו מלכנו כתבנו בספר גאלה וישועה:",
+    "g": 14,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 10,
+    "si": "asseret_yemei_techouva",
+    "b": 25,
+    "empreinte": "אבינו מלכנו כתבנו בספר פרנסה וכלכלה:",
+    "g": 14,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 10,
+    "si": "asseret_yemei_techouva",
+    "b": 26,
+    "empreinte": "אבינו מלכנו כתבנו בספר זכיות:",
+    "g": 14,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 10,
+    "si": "asseret_yemei_techouva",
+    "b": 27,
+    "empreinte": "אבינו מלכנו כתבנו בספר סליחה ומחילה:",
+    "g": 14,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "section",
+    "s": 11,
+    "si": "lundi_jeudi",
+    "empreinte": "לשני וחמישי"
+   },
+   {
+    "sorte": "section",
+    "s": 16,
+    "si": "roch_hodech",
+    "empreinte": "ברכי נפשי"
+   }
+  ],
+  "minha": [
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "asseret_yemei_techouva",
+    "b": 3,
+    "empreinte": "בעשי״ת:",
+    "g": 0,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "asseret_yemei_techouva",
+    "b": 4,
+    "empreinte": "זכרנו לחיים מלך חפץ בחיים וכתבנו בספר הח",
+    "g": 0,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "morid_hatal",
+    "b": 9,
+    "empreinte": "בקיץ:",
+    "g": 1,
+    "racine": "morid_hatal"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "morid_hatal",
+    "b": 10,
+    "empreinte": "מוריד הטל",
+    "g": 1,
+    "racine": "morid_hatal"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "machiv_harouah",
+    "b": 11,
+    "empreinte": "בחורף:",
+    "g": 2,
+    "racine": "machiv_harouah"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "machiv_harouah",
+    "b": 12,
+    "empreinte": "משיב הרוח ומוריד הגשם:",
+    "g": 2,
+    "racine": "machiv_harouah"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "asseret_yemei_techouva",
+    "b": 15,
+    "empreinte": "בעשי״ת:",
+    "g": 3,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "asseret_yemei_techouva",
+    "b": 16,
+    "empreinte": "מי כמוך אב הרחמן זוכר יצוריו לחיים ברחמי",
+    "g": 3,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "asseret_yemei_techouva",
+    "b": 36,
+    "empreinte": "בעשי״ת מסיים:",
+    "g": 4,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "asseret_yemei_techouva",
+    "b": 37,
+    "empreinte": "ברוך אתה יהוה המלך הקדוש:",
+    "g": 4,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "jeune",
+    "b": 47,
+    "empreinte": "בתענית ציבור אומר כאן הש״ץ עננו:",
+    "libelle": "ajout_anenou_officiant",
+    "g": 5,
+    "racine": "jeune"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "jeune",
+    "b": 48,
+    "empreinte": "עננו יהוה עננו ביום צום תעניתנו. כי בצרה",
+    "libelle": "ajout_anenou_officiant",
+    "g": 5,
+    "racine": "jeune"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "berakha",
+    "b": 53,
+    "empreinte": "בימות החמה:",
+    "g": 6,
+    "racine": "berakha"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "berakha",
+    "b": 54,
+    "empreinte": "ברכה",
+    "g": 6,
+    "racine": "berakha"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "tal_oumatar",
+    "b": 55,
+    "empreinte": "בימות הגשמים:",
+    "g": 7,
+    "racine": "tal_oumatar"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "tal_oumatar",
+    "b": 56,
+    "empreinte": "טל ומטר לברכה",
+    "g": 7,
+    "racine": "tal_oumatar"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "asseret_yemei_techouva",
+    "b": 63,
+    "empreinte": "בעשי״ת יסיים:",
+    "g": 8,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "asseret_yemei_techouva",
+    "b": 64,
+    "empreinte": "ברוך אתה יהוה המלך המשפט:",
+    "g": 8,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "ticha_beav",
+    "b": 72,
+    "empreinte": "במנחת תשעה באב:",
+    "g": 9,
+    "racine": "ticha_beav"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "ticha_beav",
+    "b": 73,
+    "empreinte": "נחם יהוה אלהינו את אבלי ציון ואת אבלי יר",
+    "g": 9,
+    "racine": "ticha_beav"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "jeune",
+    "b": 80,
+    "empreinte": "בתענית ציבור אומרים כאן עננו בתפילת הלחש",
+    "libelle": "ajout_anenou_particulier",
+    "g": 10,
+    "racine": "jeune"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "jeune",
+    "b": 81,
+    "empreinte": "עננו יהוה עננו ביום צום תעניתנו. כי בצרה",
+    "libelle": "ajout_anenou_particulier",
+    "g": 10,
+    "racine": "jeune"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "yaale_veyavo",
+    "b": 85,
+    "empreinte": "בראש חדש ובחול המועד אומרים זה:",
+    "g": 11,
+    "racine": "yaale_veyavo"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "yaale_veyavo",
+    "b": 86,
+    "empreinte": "אלהינו ואלהי אבותינו יעלה ויבא ויגיע ויר",
+    "g": 11,
+    "racine": "yaale_veyavo"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "roch_hodech",
+    "b": 87,
+    "empreinte": "לר״ח: ראש החדש הזה",
+    "g": 11,
+    "racine": "yaale_veyavo"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "pessah",
+    "b": 88,
+    "empreinte": "לפסח: חג המצות הזה",
+    "g": 11,
+    "racine": "yaale_veyavo"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "soukkot",
+    "b": 89,
+    "empreinte": "לסכות: חג הסכות הזה",
+    "g": 11,
+    "racine": "yaale_veyavo"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "yaale_veyavo",
+    "b": 90,
+    "empreinte": "זכרנו יהוה אלהינו בו לטובה, ופקדנו בו לב",
+    "g": 11,
+    "racine": "yaale_veyavo"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "al_hanissim",
+    "b": 98,
+    "empreinte": "בחנוכה ופורים אומרים על הנסים. שכח לומר ",
+    "g": 12,
+    "racine": "al_hanissim"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "al_hanissim",
+    "b": 99,
+    "empreinte": "ועל הנסים ועל הפרקן ועל הגבורות ועל התשו",
+    "g": 12,
+    "racine": "al_hanissim"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "hanouka",
+    "b": 100,
+    "empreinte": "בחנוכה:",
+    "g": 12,
+    "racine": "al_hanissim"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "hanouka",
+    "b": 101,
+    "empreinte": "בימי מתתיהו בן יוחנן כהן גדול חשמונאי וב",
+    "g": 12,
+    "racine": "al_hanissim"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "pourim",
+    "b": 102,
+    "empreinte": "בפורים:",
+    "g": 12,
+    "racine": "al_hanissim"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "pourim",
+    "b": 103,
+    "empreinte": "בימי מרדכי ואסתר בשושן הבירה כשעמד עליהם",
+    "g": 12,
+    "racine": "al_hanissim"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "asseret_yemei_techouva",
+    "b": 105,
+    "empreinte": "בעשי״ת:",
+    "g": 13,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "asseret_yemei_techouva",
+    "b": 106,
+    "empreinte": "וכתוב לחיים טובים כל בני בריתך:",
+    "g": 13,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "asseret_yemei_techouva",
+    "b": 119,
+    "empreinte": "בעשי״ת:",
+    "g": 14,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "asseret_yemei_techouva",
+    "b": 120,
+    "empreinte": "בספר חיים ברכה ושלום ופרנסה טובה וגזרות ",
+    "g": 14,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "section",
+    "s": 2,
+    "si": "tahanoun_minha",
+    "empreinte": "תחנון"
+   },
+   {
+    "sorte": "bloc",
+    "s": 3,
+    "si": "asseret_yemei_techouva",
+    "b": 4,
+    "empreinte": "בעשי״ת:",
+    "g": 15,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 3,
+    "si": "asseret_yemei_techouva",
+    "b": 5,
+    "empreinte": "אבינו מלכנו חדש עלינו שנה טובה:",
+    "g": 15,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 3,
+    "si": "asseret_yemei_techouva",
+    "b": 22,
+    "empreinte": "בעשרת ימי תשובה:",
+    "g": 16,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 3,
+    "si": "asseret_yemei_techouva",
+    "b": 23,
+    "empreinte": "אבינו מלכנו כתבנו בספר חיים טובים:",
+    "g": 16,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 3,
+    "si": "asseret_yemei_techouva",
+    "b": 24,
+    "empreinte": "אבינו מלכנו כתבנו בספר גאלה וישועה:",
+    "g": 16,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 3,
+    "si": "asseret_yemei_techouva",
+    "b": 25,
+    "empreinte": "אבינו מלכנו כתבנו בספר פרנסה וכלכלה:",
+    "g": 16,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 3,
+    "si": "asseret_yemei_techouva",
+    "b": 26,
+    "empreinte": "אבינו מלכנו כתבנו בספר זכיות:",
+    "g": 16,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 3,
+    "si": "asseret_yemei_techouva",
+    "b": 27,
+    "empreinte": "אבינו מלכנו כתבנו בספר סליחה ומחילה:",
+    "g": 16,
+    "racine": "asseret_yemei_techouva"
+   }
+  ],
+  "arvit": [
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "asseret_yemei_techouva",
+    "b": 3,
+    "empreinte": "בעשי״ת:",
+    "g": 0,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "asseret_yemei_techouva",
+    "b": 4,
+    "empreinte": "זכרנו לחיים מלך חפץ בחיים וכתבנו בספר הח",
+    "g": 0,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "morid_hatal",
+    "b": 9,
+    "empreinte": "בקיץ:",
+    "g": 1,
+    "racine": "morid_hatal"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "morid_hatal",
+    "b": 10,
+    "empreinte": "מוריד הטל",
+    "g": 1,
+    "racine": "morid_hatal"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "machiv_harouah",
+    "b": 11,
+    "empreinte": "בחורף:",
+    "g": 2,
+    "racine": "machiv_harouah"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "machiv_harouah",
+    "b": 12,
+    "empreinte": "משיב הרוח ומוריד הגשם:",
+    "g": 2,
+    "racine": "machiv_harouah"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "asseret_yemei_techouva",
+    "b": 15,
+    "empreinte": "בעשי״ת:",
+    "g": 3,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "asseret_yemei_techouva",
+    "b": 16,
+    "empreinte": "מי כמוך אב הרחמן זוכר יצוריו לחיים ברחמי",
+    "g": 3,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "asseret_yemei_techouva",
+    "b": 22,
+    "empreinte": "בעשי״ת:",
+    "g": 4,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "asseret_yemei_techouva",
+    "b": 23,
+    "empreinte": "ברוך אתה יהוה המלך הקדוש:",
+    "g": 4,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "berakha",
+    "b": 39,
+    "empreinte": "בימות החמה:",
+    "g": 5,
+    "racine": "berakha"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "berakha",
+    "b": 40,
+    "empreinte": "ברכה",
+    "g": 5,
+    "racine": "berakha"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "tal_oumatar",
+    "b": 41,
+    "empreinte": "בימות הגשמים:",
+    "g": 6,
+    "racine": "tal_oumatar"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "tal_oumatar",
+    "b": 42,
+    "empreinte": "טל ומטר לברכה",
+    "g": 6,
+    "racine": "tal_oumatar"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "asseret_yemei_techouva",
+    "b": 50,
+    "empreinte": "בעשי״ת יסיים:",
+    "g": 7,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "asseret_yemei_techouva",
+    "b": 51,
+    "empreinte": "ברוך אתה יהוה המלך המשפט:",
+    "g": 7,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "yaale_veyavo",
+    "b": 65,
+    "empreinte": "בראש חדש ובחול המועד אומרים זה:",
+    "g": 8,
+    "racine": "yaale_veyavo"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "yaale_veyavo",
+    "b": 66,
+    "empreinte": "אלהינו ואלהי אבותינו יעלה ויבא ויגיע ויר",
+    "g": 8,
+    "racine": "yaale_veyavo"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "roch_hodech",
+    "b": 67,
+    "empreinte": "לר״ח: ראש החדש הזה",
+    "g": 8,
+    "racine": "yaale_veyavo"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "pessah",
+    "b": 68,
+    "empreinte": "לפסח: חג המצות הזה",
+    "g": 8,
+    "racine": "yaale_veyavo"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "soukkot",
+    "b": 69,
+    "empreinte": "לסכות: חג הסכות הזה",
+    "g": 8,
+    "racine": "yaale_veyavo"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "yaale_veyavo",
+    "b": 70,
+    "empreinte": "זכרנו יהוה אלהינו בו לטובה, ופקדנו בו לב",
+    "g": 8,
+    "racine": "yaale_veyavo"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "al_hanissim",
+    "b": 75,
+    "empreinte": "בחנוכה ופורים אומרים על הנסים. שכח לומר ",
+    "g": 9,
+    "racine": "al_hanissim"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "al_hanissim",
+    "b": 76,
+    "empreinte": "ועל הנסים ועל הפרקן ועל הגבורות ועל התשו",
+    "g": 9,
+    "racine": "al_hanissim"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "hanouka",
+    "b": 77,
+    "empreinte": "בחנוכה:",
+    "g": 9,
+    "racine": "al_hanissim"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "hanouka",
+    "b": 78,
+    "empreinte": "בימי מתתיהו בן יוחנן כהן גדול חשמונאי וב",
+    "g": 9,
+    "racine": "al_hanissim"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "pourim",
+    "b": 79,
+    "empreinte": "בפורים:",
+    "g": 9,
+    "racine": "al_hanissim"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "pourim",
+    "b": 80,
+    "empreinte": "בימי מרדכי ואסתר בשושן הבירה כשעמד עליהם",
+    "g": 9,
+    "racine": "al_hanissim"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "asseret_yemei_techouva",
+    "b": 82,
+    "empreinte": "בעשי״ת:",
+    "g": 10,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "asseret_yemei_techouva",
+    "b": 83,
+    "empreinte": "וכתוב לחיים טובים כל בני בריתך:",
+    "g": 10,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "asseret_yemei_techouva",
+    "b": 88,
+    "empreinte": "בעשי״ת:",
+    "g": 11,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "asseret_yemei_techouva",
+    "b": 89,
+    "empreinte": "בספר חיים ברכה ושלום ופרנסה טובה וגזרות ",
+    "g": 11,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "section",
+    "s": 2,
+    "si": "motsae_chabbat",
+    "empreinte": "ערבית למוצאי שבת"
+   },
+   {
+    "sorte": "section",
+    "s": 3,
+    "si": "omer",
+    "empreinte": "ספירת העומר"
+   }
+  ],
+  "birkat_hamazon": [
+   {
+    "sorte": "bloc",
+    "s": 0,
+    "si": "al_hanissim",
+    "b": 37,
+    "empreinte": "ועל הנסים ועל הפרקן ועל הגבורות ועל התשו",
+    "g": 0,
+    "racine": "al_hanissim"
+   },
+   {
+    "sorte": "bloc",
+    "s": 0,
+    "si": "hanouka",
+    "b": 38,
+    "empreinte": "בחנוכה אומרים:",
+    "g": 0,
+    "racine": "al_hanissim"
+   },
+   {
+    "sorte": "bloc",
+    "s": 0,
+    "si": "hanouka",
+    "b": 39,
+    "empreinte": "בימי מתתיהו בן יוחנן כהן גדול חשמונאי וב",
+    "g": 0,
+    "racine": "al_hanissim"
+   },
+   {
+    "sorte": "bloc",
+    "s": 0,
+    "si": "pourim",
+    "b": 40,
+    "empreinte": "בפורים אומרים:",
+    "g": 0,
+    "racine": "al_hanissim"
+   },
+   {
+    "sorte": "bloc",
+    "s": 0,
+    "si": "pourim",
+    "b": 41,
+    "empreinte": "בימי מרדכי ואסתר בשושן הבירה כשעמד עליהם",
+    "g": 0,
+    "racine": "al_hanissim"
+   },
+   {
+    "sorte": "bloc",
+    "s": 0,
+    "si": "chabbat",
+    "b": 44,
+    "empreinte": "בשבת מוסיפים:",
+    "g": 1,
+    "racine": "chabbat"
+   },
+   {
+    "sorte": "bloc",
+    "s": 0,
+    "si": "chabbat",
+    "b": 45,
+    "empreinte": "רצה והחליצנו יהוה אלהינו במצותיך ובמצות ",
+    "g": 1,
+    "racine": "chabbat"
+   },
+   {
+    "sorte": "bloc",
+    "s": 0,
+    "si": "yaale_veyavo",
+    "b": 46,
+    "empreinte": "בראש חודש ובחול המועד אומרים כאן \"יעלה ו",
+    "g": 2,
+    "racine": "yaale_veyavo"
+   },
+   {
+    "sorte": "bloc",
+    "s": 0,
+    "si": "yaale_veyavo",
+    "b": 47,
+    "empreinte": "אלהינו ואלהי אבותינו, יעלה ויבא, ויגיע ו",
+    "g": 2,
+    "racine": "yaale_veyavo"
+   },
+   {
+    "sorte": "bloc",
+    "s": 0,
+    "si": "roch_hodech",
+    "b": 48,
+    "empreinte": "בראש חדש: ראש החדש",
+    "g": 2,
+    "racine": "yaale_veyavo"
+   },
+   {
+    "sorte": "bloc",
+    "s": 0,
+    "si": "pessah",
+    "b": 49,
+    "empreinte": "בפסח: חג המצות",
+    "g": 2,
+    "racine": "yaale_veyavo"
+   },
+   {
+    "sorte": "bloc",
+    "s": 0,
+    "si": "chavouot",
+    "b": 50,
+    "empreinte": "בשבועות: חג השבעות",
+    "g": 2,
+    "racine": "yaale_veyavo"
+   },
+   {
+    "sorte": "bloc",
+    "s": 0,
+    "si": "soukkot",
+    "b": 51,
+    "empreinte": "בסוכות: חג הסכות",
+    "g": 2,
+    "racine": "yaale_veyavo"
+   },
+   {
+    "sorte": "bloc",
+    "s": 0,
+    "si": "chemini_atseret",
+    "b": 52,
+    "empreinte": "בשמ״ע ובש״ת: שמיני עצרת החג",
+    "g": 2,
+    "racine": "yaale_veyavo"
+   },
+   {
+    "sorte": "bloc",
+    "s": 0,
+    "si": "roch_hachana",
+    "b": 53,
+    "empreinte": "בר״ה: הזכרון",
+    "g": 2,
+    "racine": "yaale_veyavo"
+   },
+   {
+    "sorte": "bloc",
+    "s": 0,
+    "si": "kippour",
+    "b": 54,
+    "empreinte": "ילדים האוכלים ביו״כ: הכפורים",
+    "g": 2,
+    "racine": "yaale_veyavo"
+   },
+   {
+    "sorte": "bloc",
+    "s": 0,
+    "si": "yaale_veyavo",
+    "b": 55,
+    "empreinte": "הזה. זכרנו יהוה אלהינו בו לטובה, ופקדנו ",
+    "g": 2,
+    "racine": "yaale_veyavo"
+   }
+  ]
+ },
+ "ashkenaz": {
+  "chaharit": [
+   {
+    "sorte": "bloc",
+    "s": 3,
+    "si": "asseret_yemei_techouva",
+    "b": 3,
+    "empreinte": "בעשי״ת: זכרנו לחיים מלך חפץ בחיים וכתבנו",
+    "g": 0,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 3,
+    "si": "morid_hatal",
+    "b": 7,
+    "empreinte": "בקיץ:",
+    "g": 1,
+    "racine": "morid_hatal"
+   },
+   {
+    "sorte": "bloc",
+    "s": 3,
+    "si": "morid_hatal",
+    "b": 8,
+    "empreinte": "מוריד הטל",
+    "g": 1,
+    "racine": "morid_hatal"
+   },
+   {
+    "sorte": "bloc",
+    "s": 3,
+    "si": "machiv_harouah",
+    "b": 9,
+    "empreinte": "בחורף:",
+    "g": 2,
+    "racine": "machiv_harouah"
+   },
+   {
+    "sorte": "bloc",
+    "s": 3,
+    "si": "machiv_harouah",
+    "b": 10,
+    "empreinte": "משיב הרוח ומוריד הגשם:",
+    "g": 2,
+    "racine": "machiv_harouah"
+   },
+   {
+    "sorte": "bloc",
+    "s": 3,
+    "si": "asseret_yemei_techouva",
+    "b": 13,
+    "empreinte": "בעשי״ת: מי כמוך אב הרחמים זוכר יצוריו לח",
+    "g": 3,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 3,
+    "si": "asseret_yemei_techouva",
+    "b": 19,
+    "empreinte": "בעשי״ת מסיים: ברוך אתה יהוה המלך הקדוש:",
+    "g": 4,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 3,
+    "si": "jeune",
+    "b": 39,
+    "empreinte": "(בתענית ציבור אומר כאן הש״ץ עננו )",
+    "libelle": "ajout_anenou_officiant",
+    "g": 5,
+    "racine": "jeune"
+   },
+   {
+    "sorte": "bloc",
+    "s": 3,
+    "si": "berakha",
+    "b": 45,
+    "empreinte": "בימות החמה:",
+    "g": 6,
+    "racine": "berakha"
+   },
+   {
+    "sorte": "bloc",
+    "s": 3,
+    "si": "berakha",
+    "b": 46,
+    "empreinte": "ברכה",
+    "g": 6,
+    "racine": "berakha"
+   },
+   {
+    "sorte": "bloc",
+    "s": 3,
+    "si": "tal_oumatar",
+    "b": 47,
+    "empreinte": "בימות הגשמים:",
+    "g": 7,
+    "racine": "tal_oumatar"
+   },
+   {
+    "sorte": "bloc",
+    "s": 3,
+    "si": "tal_oumatar",
+    "b": 48,
+    "empreinte": "טל ומטר לברכה",
+    "g": 7,
+    "racine": "tal_oumatar"
+   },
+   {
+    "sorte": "bloc",
+    "s": 3,
+    "si": "asseret_yemei_techouva",
+    "b": 54,
+    "empreinte": "בעשי״ת יסיים: המלך המשפט:",
+    "g": 8,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 3,
+    "si": "yaale_veyavo",
+    "b": 62,
+    "empreinte": "בראש חדש ובחול המועד אומרים זה:",
+    "g": 9,
+    "racine": "yaale_veyavo"
+   },
+   {
+    "sorte": "bloc",
+    "s": 3,
+    "si": "yaale_veyavo",
+    "b": 63,
+    "empreinte": "אלהינו ואלהי אבותינו יעלה ויבא ויגיע ויר",
+    "g": 9,
+    "racine": "yaale_veyavo"
+   },
+   {
+    "sorte": "bloc",
+    "s": 3,
+    "si": "al_hanissim",
+    "b": 70,
+    "empreinte": "בחנוכה ופורים אומרים על הנסים. שכח לומר ",
+    "g": 10,
+    "racine": "al_hanissim"
+   },
+   {
+    "sorte": "bloc",
+    "s": 3,
+    "si": "al_hanissim",
+    "b": 71,
+    "empreinte": "על הנסים ועל הפרקן ועל הגבורות ועל התשוע",
+    "g": 10,
+    "racine": "al_hanissim"
+   },
+   {
+    "sorte": "bloc",
+    "s": 3,
+    "si": "hanouka",
+    "b": 72,
+    "empreinte": "בחנוכה: בימי מתתיהו בן יוחנן כהן גדול חש",
+    "g": 10,
+    "racine": "al_hanissim"
+   },
+   {
+    "sorte": "bloc",
+    "s": 3,
+    "si": "pourim",
+    "b": 73,
+    "empreinte": "בפורים: בימי מרדכי ואסתר בשושן הבירה כשע",
+    "g": 10,
+    "racine": "al_hanissim"
+   },
+   {
+    "sorte": "bloc",
+    "s": 3,
+    "si": "asseret_yemei_techouva",
+    "b": 75,
+    "empreinte": "בעשי״ת: וכתוב לחיים טובים כל בני בריתך:",
+    "g": 11,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 3,
+    "si": "asseret_yemei_techouva",
+    "b": 85,
+    "empreinte": "בעשי״ת: בספר חיים ברכה ושלום ופרנסה טובה",
+    "g": 12,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 3,
+    "si": "hallel",
+    "b": 92,
+    "empreinte": "בר״ח וחולו של מועד וחנוכה אומרים כאן הלל",
+    "g": 13,
+    "racine": "hallel"
+   },
+   {
+    "sorte": "bloc",
+    "s": 4,
+    "si": "asseret_yemei_techouva",
+    "b": 13,
+    "empreinte": "בעשי״ת: אבינו מלכנו חדש עלינו שנה טובה:",
+    "g": 14,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 4,
+    "si": "asseret_yemei_techouva",
+    "b": 29,
+    "empreinte": "בעשרת ימי תשובה:",
+    "g": 15,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 4,
+    "si": "asseret_yemei_techouva",
+    "b": 30,
+    "empreinte": "אבינו מלכנו כתבנו בספר חיים טובים:",
+    "g": 15,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 4,
+    "si": "asseret_yemei_techouva",
+    "b": 31,
+    "empreinte": "אבינו מלכנו כתבנו בספר גאלה וישועה:",
+    "g": 15,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 4,
+    "si": "asseret_yemei_techouva",
+    "b": 32,
+    "empreinte": "אבינו מלכנו כתבנו בספר פרנסה וכלכלה:",
+    "g": 15,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 4,
+    "si": "asseret_yemei_techouva",
+    "b": 33,
+    "empreinte": "אבינו מלכנו כתבנו בספר זכיות:",
+    "g": 15,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 4,
+    "si": "asseret_yemei_techouva",
+    "b": 34,
+    "empreinte": "אבינו מלכנו כתבנו בספר סליחה ומחילה:",
+    "g": 15,
+    "racine": "asseret_yemei_techouva"
+   }
+  ],
+  "minha": [
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "asseret_yemei_techouva",
+    "b": 4,
+    "empreinte": "בעשי״ת: זכרנו לחיים מלך חפץ בחיים וכתבנו",
+    "g": 0,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "morid_hatal",
+    "b": 8,
+    "empreinte": "בקיץ:",
+    "g": 1,
+    "racine": "morid_hatal"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "morid_hatal",
+    "b": 9,
+    "empreinte": "מוריד הטל",
+    "g": 1,
+    "racine": "morid_hatal"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "machiv_harouah",
+    "b": 10,
+    "empreinte": "בחורף:",
+    "g": 2,
+    "racine": "machiv_harouah"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "machiv_harouah",
+    "b": 11,
+    "empreinte": "משיב הרוח ומוריד הגשם:",
+    "g": 2,
+    "racine": "machiv_harouah"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "asseret_yemei_techouva",
+    "b": 14,
+    "empreinte": "בעשי״ת: מי כמוך אב הרחמים זוכר יצוריו לח",
+    "g": 3,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "asseret_yemei_techouva",
+    "b": 20,
+    "empreinte": "בעשי״ת מסיים: ברוך אתה יהוה המלך הקדוש:",
+    "g": 4,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "jeune",
+    "b": 40,
+    "empreinte": "(בתענית ציבור אומר כאן הש״ץ עננו )",
+    "libelle": "ajout_anenou_officiant",
+    "g": 5,
+    "racine": "jeune"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "berakha",
+    "b": 46,
+    "empreinte": "בימות החמה:",
+    "g": 6,
+    "racine": "berakha"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "berakha",
+    "b": 47,
+    "empreinte": "ברכה",
+    "g": 6,
+    "racine": "berakha"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "tal_oumatar",
+    "b": 48,
+    "empreinte": "בימות הגשמים:",
+    "g": 7,
+    "racine": "tal_oumatar"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "tal_oumatar",
+    "b": 49,
+    "empreinte": "טל ומטר לברכה",
+    "g": 7,
+    "racine": "tal_oumatar"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "asseret_yemei_techouva",
+    "b": 55,
+    "empreinte": "בעשי״ת יסיים: המלך המשפט:",
+    "g": 8,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "ticha_beav",
+    "b": 60,
+    "empreinte": "במנחת תשעה באב:",
+    "g": 9,
+    "racine": "ticha_beav"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "ticha_beav",
+    "b": 61,
+    "empreinte": "נחם יהוה אלהינו את אבלי ציון ואת אבלי יר",
+    "g": 9,
+    "racine": "ticha_beav"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "jeune",
+    "b": 65,
+    "empreinte": "בתענית ציבור אומרים כאן עננו בתפילת הלחש",
+    "libelle": "ajout_anenou_particulier",
+    "g": 10,
+    "racine": "jeune"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "jeune",
+    "b": 66,
+    "empreinte": "עננו יהוה עננו ביום צום תעניתנו. כי בצרה",
+    "libelle": "ajout_anenou_particulier",
+    "g": 10,
+    "racine": "jeune"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "yaale_veyavo",
+    "b": 69,
+    "empreinte": "בראש חדש ובחול המועד אומרים זה:",
+    "g": 11,
+    "racine": "yaale_veyavo"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "yaale_veyavo",
+    "b": 70,
+    "empreinte": "אלהינו ואלהי אבותינו יעלה ויבא ויגיע ויר",
+    "g": 11,
+    "racine": "yaale_veyavo"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "al_hanissim",
+    "b": 77,
+    "empreinte": "בחנוכה ופורים אומרים על הנסים. שכח לומר ",
+    "g": 12,
+    "racine": "al_hanissim"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "al_hanissim",
+    "b": 78,
+    "empreinte": "על הנסים ועל הפרקן ועל הגבורות ועל התשוע",
+    "g": 12,
+    "racine": "al_hanissim"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "hanouka",
+    "b": 79,
+    "empreinte": "בחנוכה: בימי מתתיהו בן יוחנן כהן גדול חש",
+    "g": 12,
+    "racine": "al_hanissim"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "pourim",
+    "b": 80,
+    "empreinte": "בפורים: בימי מרדכי ואסתר בשושן הבירה כשע",
+    "g": 12,
+    "racine": "al_hanissim"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "asseret_yemei_techouva",
+    "b": 82,
+    "empreinte": "בעשי״ת: וכתוב לחיים טובים כל בני בריתך:",
+    "g": 13,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "asseret_yemei_techouva",
+    "b": 90,
+    "empreinte": "בעשי״ת: בספר חיים ברכה ושלום ופרנסה טובה",
+    "g": 14,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 2,
+    "si": "asseret_yemei_techouva",
+    "b": 4,
+    "empreinte": "בעשי״ת: אבינו מלכנו חדש עלינו שנה טובה:",
+    "g": 15,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 2,
+    "si": "asseret_yemei_techouva",
+    "b": 20,
+    "empreinte": "בעשרת ימי תשובה:",
+    "g": 16,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 2,
+    "si": "asseret_yemei_techouva",
+    "b": 21,
+    "empreinte": "אבינו מלכנו כתבנו בספר חיים טובים:",
+    "g": 16,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 2,
+    "si": "asseret_yemei_techouva",
+    "b": 22,
+    "empreinte": "אבינו מלכנו כתבנו בספר גאלה וישועה:",
+    "g": 16,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 2,
+    "si": "asseret_yemei_techouva",
+    "b": 23,
+    "empreinte": "אבינו מלכנו כתבנו בספר פרנסה וכלכלה:",
+    "g": 16,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 2,
+    "si": "asseret_yemei_techouva",
+    "b": 24,
+    "empreinte": "אבינו מלכנו כתבנו בספר זכיות:",
+    "g": 16,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 2,
+    "si": "asseret_yemei_techouva",
+    "b": 25,
+    "empreinte": "אבינו מלכנו כתבנו בספר סליחה ומחילה:",
+    "g": 16,
+    "racine": "asseret_yemei_techouva"
+   }
+  ],
+  "arvit": [
+   {
+    "sorte": "bloc",
+    "s": 3,
+    "si": "asseret_yemei_techouva",
+    "b": 3,
+    "empreinte": "בעשי״ת: זכרנו לחיים מלך חפץ בחיים וכתבנו",
+    "g": 0,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 3,
+    "si": "morid_hatal",
+    "b": 7,
+    "empreinte": "בקיץ:",
+    "g": 1,
+    "racine": "morid_hatal"
+   },
+   {
+    "sorte": "bloc",
+    "s": 3,
+    "si": "morid_hatal",
+    "b": 8,
+    "empreinte": "מוריד הטל",
+    "g": 1,
+    "racine": "morid_hatal"
+   },
+   {
+    "sorte": "bloc",
+    "s": 3,
+    "si": "machiv_harouah",
+    "b": 9,
+    "empreinte": "בחורף:",
+    "g": 2,
+    "racine": "machiv_harouah"
+   },
+   {
+    "sorte": "bloc",
+    "s": 3,
+    "si": "machiv_harouah",
+    "b": 10,
+    "empreinte": "משיב הרוח ומוריד הגשם:",
+    "g": 2,
+    "racine": "machiv_harouah"
+   },
+   {
+    "sorte": "bloc",
+    "s": 3,
+    "si": "asseret_yemei_techouva",
+    "b": 13,
+    "empreinte": "בעשי״ת: מי כמוך אב הרחמים זוכר יצוריו לח",
+    "g": 3,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 3,
+    "si": "asseret_yemei_techouva",
+    "b": 19,
+    "empreinte": "בעשי״ת מסיים: ברוך אתה יהוה המלך הקדוש:",
+    "g": 4,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 3,
+    "si": "asseret_yemei_techouva",
+    "b": 36,
+    "empreinte": "בעשי״ת יסיים: ברוך אתה יהוה המלך המשפט:",
+    "g": 5,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 3,
+    "si": "yaale_veyavo",
+    "b": 44,
+    "empreinte": "בראש חדש ובחול המועד אומרים זה:",
+    "g": 6,
+    "racine": "yaale_veyavo"
+   },
+   {
+    "sorte": "bloc",
+    "s": 3,
+    "si": "yaale_veyavo",
+    "b": 45,
+    "empreinte": "אלהינו ואלהי אבותינו. יעלה ויבא ויגיע וי",
+    "g": 6,
+    "racine": "yaale_veyavo"
+   },
+   {
+    "sorte": "bloc",
+    "s": 3,
+    "si": "al_hanissim",
+    "b": 49,
+    "empreinte": "בחנוכה ופורים אומרים על הנסים. שכח לומר ",
+    "g": 7,
+    "racine": "al_hanissim"
+   },
+   {
+    "sorte": "bloc",
+    "s": 3,
+    "si": "al_hanissim",
+    "b": 50,
+    "empreinte": "על הנסים ועל הפרקן ועל הגבורות ועל התשוע",
+    "g": 7,
+    "racine": "al_hanissim"
+   },
+   {
+    "sorte": "bloc",
+    "s": 3,
+    "si": "hanouka",
+    "b": 51,
+    "empreinte": "בחנוכה: בימי מתתיהו בן יוחנן כהן גדול חש",
+    "g": 7,
+    "racine": "al_hanissim"
+   },
+   {
+    "sorte": "bloc",
+    "s": 3,
+    "si": "pourim",
+    "b": 52,
+    "empreinte": "בפורים: בימי מרדכי ואסתר בשושן הבירה כשע",
+    "g": 7,
+    "racine": "al_hanissim"
+   },
+   {
+    "sorte": "bloc",
+    "s": 3,
+    "si": "asseret_yemei_techouva",
+    "b": 54,
+    "empreinte": "בעשי״ת: וכתוב לחיים טובים כל בני בריתך:",
+    "g": 8,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "bloc",
+    "s": 3,
+    "si": "asseret_yemei_techouva",
+    "b": 58,
+    "empreinte": "בעשי״ת: בספר חיים ברכה ושלום ופרנסה טובה",
+    "g": 9,
+    "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "section",
+    "s": 5,
+    "si": "motsae_chabbat",
+    "empreinte": "תוספות למוצאי שבת"
+   },
+   {
+    "sorte": "section",
+    "s": 6,
+    "si": "omer",
+    "empreinte": "ספירת העומר"
+   }
+  ],
+  "birkat_hamazon": [
+   {
+    "sorte": "bloc",
+    "s": 0,
+    "si": "al_hanissim",
+    "b": 25,
+    "empreinte": "ועל הנסים ועל הפרקן ועל הגבורות ועל התשו",
+    "g": 0,
+    "racine": "al_hanissim"
+   },
+   {
+    "sorte": "bloc",
+    "s": 0,
+    "si": "hanouka",
+    "b": 26,
+    "empreinte": "בחנוכה אומרים:",
+    "g": 0,
+    "racine": "al_hanissim"
+   },
+   {
+    "sorte": "bloc",
+    "s": 0,
+    "si": "hanouka",
+    "b": 27,
+    "empreinte": "בימי מתתיהו בןיוחנן כהן גדול חשמונאי ובנ",
+    "g": 0,
+    "racine": "al_hanissim"
+   },
+   {
+    "sorte": "bloc",
+    "s": 0,
+    "si": "pourim",
+    "b": 28,
+    "empreinte": "בפורים אומרים:",
+    "g": 0,
+    "racine": "al_hanissim"
+   },
+   {
+    "sorte": "bloc",
+    "s": 0,
+    "si": "pourim",
+    "b": 29,
+    "empreinte": "בימי מרדכי ואסתר בשושן הבירה כשעמד עליהם",
+    "g": 0,
+    "racine": "al_hanissim"
+   },
+   {
+    "sorte": "bloc",
+    "s": 0,
+    "si": "chabbat",
+    "b": 33,
+    "empreinte": "בשבת מוסיפים:",
+    "g": 1,
+    "racine": "chabbat"
+   },
+   {
+    "sorte": "bloc",
+    "s": 0,
+    "si": "chabbat",
+    "b": 34,
+    "empreinte": "רצה והחליצנו יהוה אלהינו במצותיך ובמצות ",
+    "g": 1,
+    "racine": "chabbat"
+   },
+   {
+    "sorte": "bloc",
+    "s": 0,
+    "si": "yaale_veyavo",
+    "b": 35,
+    "empreinte": "בראש חודש ובחול המועד אומרים כאן \"יעלה ו",
+    "g": 2,
+    "racine": "yaale_veyavo"
+   },
+   {
+    "sorte": "bloc",
+    "s": 0,
+    "si": "yaale_veyavo",
+    "b": 36,
+    "empreinte": "אלהינו ואלהי אבותינו יעלה ויבא ויגיע ויר",
+    "g": 2,
+    "racine": "yaale_veyavo"
+   },
+   {
+    "sorte": "bloc",
+    "s": 0,
+    "si": "roch_hodech",
+    "b": 37,
+    "empreinte": "לר״ח: ראש החדש הזה",
+    "g": 2,
+    "racine": "yaale_veyavo"
+   },
+   {
+    "sorte": "bloc",
+    "s": 0,
+    "si": "pessah",
+    "b": 38,
+    "empreinte": "לפסח: חג המצות הזה",
+    "g": 2,
+    "racine": "yaale_veyavo"
+   },
+   {
+    "sorte": "bloc",
+    "s": 0,
+    "si": "chavouot",
+    "b": 39,
+    "empreinte": "בשבועות: חג השבעות",
+    "g": 2,
+    "racine": "yaale_veyavo"
+   },
+   {
+    "sorte": "bloc",
+    "s": 0,
+    "si": "soukkot",
+    "b": 40,
+    "empreinte": "לסכות: חג הסכות הזה",
+    "g": 2,
+    "racine": "yaale_veyavo"
+   },
+   {
+    "sorte": "bloc",
+    "s": 0,
+    "si": "chemini_atseret",
+    "b": 41,
+    "empreinte": "לש״ע וש״ת: שמיני עצרת החג הזה",
+    "g": 2,
+    "racine": "yaale_veyavo"
+   },
+   {
+    "sorte": "bloc",
+    "s": 0,
+    "si": "roch_hachana",
+    "b": 42,
+    "empreinte": "לר״ה: הזכרון הזה",
+    "g": 2,
+    "racine": "yaale_veyavo"
+   },
+   {
+    "sorte": "bloc",
+    "s": 0,
+    "si": "kippour",
+    "b": 43,
+    "empreinte": "ילדים האוכלים ביו״כ: הכפורים",
+    "g": 2,
+    "racine": "yaale_veyavo"
+   },
+   {
+    "sorte": "bloc",
+    "s": 0,
+    "si": "yaale_veyavo",
+    "b": 44,
+    "empreinte": "זכרנו יהוה אלהינו בו לטובה, ופקדנו בו לב",
+    "g": 2,
+    "racine": "yaale_veyavo"
+   }
+  ]
+ }
+}

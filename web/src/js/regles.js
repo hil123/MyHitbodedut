@@ -37,6 +37,8 @@ export const RegleLangue = {
 // Du plus long au plus court : « Likoutei Moharan II » avant « … I ».
 const LIVRES = [
   ["Likoutei Etsot, Hit'hazkout ", 'Likutei Etsot, Strengthening ', 'ליקוטי עצות, התחזקות '],
+  ['Likoutei Etsot, Hitbodedout ', 'Likutei Etsot, Hitbodedut ', 'ליקוטי עצות, התבודדות '],
+  ['Likoutei Etsot, Téfila ', 'Likutei Etsot, Prayer ', 'ליקוטי עצות, תפילה '],
   ['Rambam, Hilkhot Tefila ', 'Rambam, Hilkhot Tefillah ', 'רמב״ם, הלכות תפילה '],
   ['Likoutei Moharan II, ', 'Likutei Moharan II, ', 'ליקוטי מוהר״ן תניינא, '],
   ['Likoutei Moharan I, ', 'Likutei Moharan I, ', 'ליקוטי מוהר״ן, '],
@@ -48,6 +50,9 @@ const LIVRES = [
   ['Tehilim ', 'Tehillim ', 'תהילים '],
   ['Michlé ', 'Mishlei ', 'משלי '],
   ['Eikha ', 'Eikha ', 'איכה '],
+  ['Chmouel I ', 'I Samuel ', 'שמואל א '],
+  ['Yechayahou ', 'Isaiah ', 'ישעיהו '],
+  ['Hochéa ', 'Hosea ', 'הושע '],
 ].map(([fr, en, he]) => ({ fr, en, he }));
 
 const UNITES = ' אבגדהוזחט';
@@ -275,6 +280,23 @@ export const SiddurMoment = {
       minha: 'char_standing_back',
       arvit: 'char_reading_seated',
     }[id] ?? 'char_thinking';
+  },
+};
+
+// --- SignetsSiddur (Siddur.kt) ---------------------------------------------------
+// La bande de signets en tête de la lecture (10/10). Les débuts et les bornes
+// sont des positions croissantes : lignes de liste sur Android, pixels ici.
+export const SignetsSiddur = {
+  /**
+   * L'indice du signet de la section qu'on lit : la dernière commencée à
+   * la première ligne visible ; tout en bas, à la dernière ligne visible, sans
+   * quoi une section courte de fin ne serait jamais marquée.
+   */
+  courant(debuts, premiere, derniere, enBas) {
+    const borne = enBas ? derniere : premiere;
+    let i = -1;
+    debuts.forEach((d, k) => { if (d <= borne) i = k; });
+    return Math.max(i, 0);
   },
 };
 

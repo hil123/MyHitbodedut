@@ -58,7 +58,7 @@ writeFileSync(join(DIST, 'palettes.css'), palettesCss({
 // texte qui les porte (currentColor), comme la teinte des onglets. Chaque
 // onglet a deux dessins : au trait au repos (_off), plein quand il est actif (_on).
 mkdirSync(join(DIST, 'icones'), { recursive: true });
-const onglets = ['ic_nav_today', 'ic_nav_texts', 'ic_nav_journal', 'ic_nav_settings'];
+const onglets = ['ic_nav_today', 'ic_nav_texts', 'ic_nav_zmanim', 'ic_nav_journal', 'ic_nav_settings'];
 for (const nom of [...onglets.flatMap((n) => [`${n}_off`, `${n}_on`]), 'ic_chevron']) {
   const xml = readFileSync(join(RES, 'drawable', `${nom}.xml`), 'utf8');
   const vue = xml.match(/android:viewportWidth="([\d.]+)"[\s\S]*?android:viewportHeight="([\d.]+)"/);
@@ -77,7 +77,7 @@ for (const nom of [...onglets.flatMap((n) => [`${n}_off`, `${n}_on`]), 'ic_chevr
 }
 
 // --- Les textes vérifiés, tels quels ---------------------------------------
-for (const nom of ['chizuk.json', 'bibliotheque.json', 'tikkun_haklali.json', 'tehilim.json', 'siddur_edot.json', 'siddur_sefard.json', 'siddur_ashkenaz.json']) {
+for (const nom of ['chizuk.json', 'bibliotheque.json', 'tikkun_haklali.json', 'tehilim.json', 'siddur_edot.json', 'siddur_sefard.json', 'siddur_ashkenaz.json', 'villes.json', 'siddur_annotations.json']) {
   cpSync(join(RES, 'raw', nom), join(DIST, 'data', nom));
 }
 

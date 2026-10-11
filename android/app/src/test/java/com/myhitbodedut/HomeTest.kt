@@ -146,15 +146,17 @@ class HomeTest {
         assertTrue("le hassid doit être dans la jauge", jauge.substringBefore("week_gauge_label").contains("@+id/hero_character\""))
         assertTrue(code.contains("JaugeSemaine.progression(Store.currentWeek(this))"))
         val menu = File("src/main/res/menu/nav_main.xml").readText()
-        listOf("nav_today", "nav_texts", "nav_journal", "nav_settings").forEach {
+        listOf("nav_today", "nav_texts", "nav_zmanim", "nav_journal", "nav_settings").forEach {
             assertTrue("onglet « $it » absent", menu.contains("@+id/$it\""))
             assertTrue("onglet « $it » non branché", Regex("""R\.id\.$it\b""").containsMatchIn(code))
         }
         assertTrue(code.contains("JournalActivity::class.java"))
         // Les réglages : l'onglet seul (la ligne en double est retirée le 29/09),
-        // et les autorisations manquantes en pastille sur cet onglet.
+        // Plus de pastille sur cet onglet quand des autorisations manquent
+        // (demande du 10/10) : elles se lisent dans les Réglages.
         assertTrue(!layout.contains("@+id/settings_button\""))
-        assertTrue(code.contains("getOrCreateBadge(R.id.nav_settings)"))
+        assertTrue(!code.contains("getOrCreateBadge("))
+        assertTrue(code.contains("removeBadge(R.id.nav_settings)"))
         assertTrue("l'onglet doit survivre à une rotation", code.contains("ETAT_ONGLET"))
     }
 

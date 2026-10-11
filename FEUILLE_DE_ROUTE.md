@@ -720,3 +720,80 @@ texte (pour Likoutei Tefilot II 39 : le livre imprimé du propriétaire, qui a
 confirmé le texte). Détail dans chizuk.json,
 _meta.verification.ajouts_2026_09_28. Le moment « relance » passe de 7 à 16
 textes.
+
+## Mise à jour (10/10) : la bande de signets du siddour
+
+**Demande du propriétaire, d'après la capture d'une autre application** : une
+bande de marque-pages en haut de la lecture, pratique mais discrète. Un
+signet par section titrée (פתיחת אליהו, ציצית, תפילין…), de droite à gauche
+comme le texte ; on touche, on y est ; la section qu'on lit se marque
+d'elle-même d'une pastille pâle, et la bande la garde en vue. La bande est du
+ton de la page (fond noir en lecture de nuit), en petits caractères, avec un
+trait fin dessous : 34 px de haut sur le web. Un texte d'une seule section
+(Acher yatsar, Kaddich…) n'en a pas.
+
+Une règle tranche le cas des sections courtes de fin (עלינו) : elles ne
+montent jamais jusqu'en haut de l'écran, donc tout en bas de la page c'est
+la dernière section commencée à l'écran qui se marque, et un signet touché
+reste marqué tant que le doigt ne reprend pas la page. La règle est la même
+sur Android et sur le web (`SignetsSiddur`, `Siddur.kt` et `regles.js`),
+avec les mêmes cas de test.
+
+Pas de marque-page personnel (« reprendre où j'en étais ») : non demandé. Il
+se grefferait sur la même bande si on le veut.
+
+## Mise à jour (10/10, suite) : calendrier hébraïque, zmanim, ajouts du siddour
+
+**Décision du 21/09 revue, à la demande du propriétaire** : « sans ville ni
+coucher du soleil » ne tient plus. L'application a désormais un lieu, une
+ville de la liste ou la position du téléphone, qui reste sur l'appareil.
+L'idée n° 7 (« selon le moment de la journée ») peut donc s'appuyer sur les
+vrais zmanim ; ce n'est pas encore fait, `SiddurMoment` garde ses heures
+fixes.
+
+**Décisions du propriétaire (10/10)** :
+
+1. Hebcal sert de second avis dans les tests seulement. L'application
+   s'appuie sur KosherJava (Android) et kosher-zmanim (web), sous licence
+   LGPL : la GPL de Hebcal obligerait à publier toute l'application.
+2. Le lieu : une ville choisie à la main, plus un GPS facultatif.
+3. Le siddour met en évidence les ajouts du jour et replie les autres
+   derrière une flèche.
+4. Le profil des zmanim et les coutumes de Ta'hanoun sont marqués « à
+   valider par un Rav ».
+
+**Construit** :
+
+- un onglet Zmanim : la date hébraïque, les ajouts du jour, tous les horaires
+  avec leur méthode, l'entrée et la sortie de Chabbat et des fêtes ;
+- un calendrier, avec le détail du jour touché ;
+- les ajouts du jour dans les trois siddourim.
+
+Tout est décrit dans `ZMANIM.md`.
+
+**Un écart consigné** : le 15 Adar I, KosherJava ne dit pas Ta'hanoun,
+Hebcal le fait dire partout. Le résultat de KosherJava est gardé ; voir
+`ZMANIM.md`.
+
+**Encore deux demandes du même jour** :
+
+- l'accueil, sur un téléphone haut (vidéo du 07/10), tient de nouveau dans
+  l'écran ;
+- l'onglet Réglages ne porte plus de pastille quand une autorisation
+  manque.
+
+**Suite du 10/10** :
+
+- l'algorithme de la NOAA est imposé explicitement (`NOAACalculator`) sur
+  Android et sur le web, et vérifié contre les formules publiées par la NOAA ;
+- Anénou : deux mentions distinctes, l'officiant (répétition) et le
+  particulier (Chomea téfila), pour tous les jeûnes publics, Tich'a bèAv
+  compris ;
+- le noussa'h compte : bénédiction du Hallel partiel (Edot sans, Sfard et
+  Ashkenaz avec), Morid hatal ashkénaze hors d'Israël, Anénou du particulier ;
+- Pourim le 15 Adar quand la ville choisie est Jérusalem ;
+- l'omer affiché est celui qu'on compte le soir même.
+- Ta'hanoun : plus de Ta'hanoun le matin de la veille de Roch Hachana
+  (OC 581:3), ni, pour les Edot, du 22 Tichri à la fin du mois.
+
+Détail et sources : `ZMANIM.md`, « Différences de noussa'h ».

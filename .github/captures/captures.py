@@ -483,6 +483,43 @@ def main():
 
     etape("17b vitrine en violet", lambda: vitrine("17b-vitrine-vignettes-violet"))
 
+    def s18():
+        # Calendrier hébraïque (10/10) : un lieu connu, Paris, sans passer par le dialogue.
+        regler({
+            "lieu_nom": ("string", "Paris"), "lieu_latitude": ("string", "48.85341"),
+            "lieu_longitude": ("string", "2.3488"), "lieu_altitude": ("string", "0.0"),
+            "lieu_fuseau": ("string", "Europe/Paris"), "lieu_ville": ("long", "2988507"),
+            "in_israel": ("boolean", "false"),
+        })
+        lancer()
+        ok = toucher(rid="nav_zmanim", attente=2.5)
+        capture("18a-zmanim", ok=ok)
+        defiler(True)
+        capture("18b-zmanim-horaires", ok=ok)
+        defiler(True)
+        capture("18c-zmanim-fin", ok=ok)
+        ok2 = toucher(text="Calendrier", defilements=0, attente=2.5) or activite("CalendrierActivity")
+        if not ok2:
+            defiler(False)
+            defiler(False)
+            ok2 = toucher(text="Calendrier", attente=2.5)
+        capture("18d-calendrier", ok=ok2)
+        defiler(True)
+        capture("18e-calendrier-jour", ok=ok2)
+        # Le calendrier reste au-dessus de l'accueil : on en sort avant d'ouvrir le siddour.
+        retour(2)
+        ok4 = ouvrir_siddour()
+        capture("18f-siddour-pour-cette-heure", ok=ok4)
+        # Le soir de la CI (heure de Paris), c'est Arvit qui porte les ajouts du jour.
+        ok3 = toucher(text="Arvit", defilements=3, attente=3.0) or activite("SiddurLectureActivity", "--es id arvit")
+        for i in range(12):
+            defiler(True)
+        capture("18g-priere-ajouts", ok=ok3)
+        for i in range(4):
+            defiler(True)
+        capture("18h-priere-ajouts-suite", ok=ok3)
+    etape("18 zmanim, calendrier, ajouts", s18)
+
     def s16():
         regler({"apparence_accent": ("string", "vert")})
         langue("he")
@@ -582,6 +619,8 @@ ECRANS_APP = [
     ("PsalmActivity", "--ei psalm_numero 16"),
     ("LibraryActivity", ""),
     ("LibraryEntryActivity", "--es entry_id src-lm2-25"),
+    ("ZmanimActivity", ""),
+    ("CalendrierActivity", ""),
 ]
 
 

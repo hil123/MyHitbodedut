@@ -55,6 +55,33 @@ class SiddurTest {
         }
     }
 
+    /** La bande de signets (10/10) : la section qu'on lit, en haut de page comme tout en bas. */
+    @Test
+    fun `le signet suit la section qu on lit`() {
+        val debuts = listOf(0, 11, 14, 40)
+        assertEquals(0, SignetsSiddur.courant(debuts, 0, 6, enBas = false))
+        assertEquals(0, SignetsSiddur.courant(debuts, 10, 13, enBas = false))
+        assertEquals(1, SignetsSiddur.courant(debuts, 11, 16, enBas = false))
+        assertEquals(2, SignetsSiddur.courant(debuts, 39, 45, enBas = false))
+        assertEquals(3, SignetsSiddur.courant(debuts, 40, 45, enBas = false))
+        // Tout en bas, la dernière section, trop courte pour monter en haut, se marque quand même.
+        assertEquals(3, SignetsSiddur.courant(debuts, 35, 45, enBas = true))
+        // Avant le premier titre, le premier signet plutôt que rien.
+        assertEquals(0, SignetsSiddur.courant(listOf(3, 9), 1, 4, enBas = false))
+    }
+
+    /** Les trois offices ont plusieurs sections titrées dans chaque nusah : leur bande existe. */
+    @Test
+    fun `les offices ont leur bande de signets`() {
+        nusah.forEach { (n, siddur) ->
+            listOf("chaharit", "minha", "arvit").forEach { id ->
+                assertTrue("$n/$id", siddur.texte(id)!!.sections.count { it.titre.isNotBlank() } > 1)
+            }
+        }
+        val source = File("src/main/java/com/myhitbodedut/SiddurLectureActivity.kt").readText()
+        assertTrue(source.contains("SignetsSiddur.courant") && source.contains("R.string.siddur_signets"))
+    }
+
     /** Sfard (Ari z"l) n'est pas Sefarad : le libellé dit lequel, dans les trois langues. */
     @Test
     fun `sfard et sefarad ne se confondent pas`() {

@@ -121,6 +121,30 @@ export function creeStore(stockage, { maintenant = () => new Date(), fuseau } = 
     setShabbatMode: (v) => set('pause_shabbat', !!v),
     inIsrael: () => get('in_israel', israelParDefaut(fuseau ?? Intl.DateTimeFormat().resolvedOptions().timeZone)),
     setInIsrael: (v) => set('in_israel', !!v),
+    /**
+     * Le lieu des zmanim (10/10) : { nom, latitude, longitude, altitude,
+     * fuseau, ville } ; null tant que rien n'est choisi. Il reste dans le
+     * navigateur. Il règle aussi Israël ou diaspora (deuxième jour de fête).
+     */
+    lieu: () => {
+      const l = get('lieu_zmanim', null);
+      return l && Number.isFinite(l.latitude) && Number.isFinite(l.longitude) && l.fuseau ? l : null;
+    },
+    setLieu(lieu, ville = null) {
+      set('lieu_zmanim', { ...lieu, ville: ville?.id ?? null });
+      // Une ville dit Israël ou diaspora ; la position, elle, suit le fuseau du
+      // téléphone, comme la valeur par défaut (israelParDefaut).
+      set('in_israel', ville ? ville.pays === 'IL' : israelParDefaut(lieu.fuseau));
+    },
+    /** Les minutes d'allumage avant la chki'a ; 18 par défaut. */
+    allumage: () => ([18, 20, 22, 30, 40].includes(get('allumage_minutes', 18)) ? get('allumage_minutes', 18) : 18),
+    setAllumage: (m) => set('allumage_minutes', m),
+    /** Pas de Ta'hanoun en fin de Tichri : toujours en Edot, au choix en Sfard (Store.sansTahanounFinTichri). */
+    sansTahanounFinTichri: () => ({ edot: true, sefard: get('sans_tahanoun_fin_tichri_sfard', false) === true }[store.siddurNusah()] ?? false),
+    setSansTahanounFinTichriSfard: (v) => set('sans_tahanoun_fin_tichri_sfard', v),
+    /** Le calendrier s'ouvre sur le mois hébreu ; le mois civil est au choix (Store.calendrierCivil). */
+    calendrierCivil: () => get('calendrier_civil', false) === true,
+    setCalendrierCivil: (v) => set('calendrier_civil', v),
     pausedDates: () => new Set(get('paused_dates', [])),
     isExempt(date) {
       if (store.pausedDates().has(date)) return true;

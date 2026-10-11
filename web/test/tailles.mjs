@@ -92,6 +92,9 @@ const ECRANS = [
   { nom: 'tikkun', ecran: 'tikkun' },
   { nom: 'bibliotheque', ecran: 'bibliotheque' },
   { nom: 'source', ecran: 'bibliotheque', actions: clic('.carte-sections .ligne') },
+  { nom: 'zmanim', ecran: 'zmanim' },
+  { nom: 'calendrier', ecran: 'calendrier' },
+  { nom: 'calendrier-civil', ecran: 'calendrier', actions: clic('.vue-calendrier button:nth-child(2)') },
 ];
 
 let verifies = 0;

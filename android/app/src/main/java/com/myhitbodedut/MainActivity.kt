@@ -81,6 +81,10 @@ class MainActivity : AppCompatActivity() {
                     }
                     true
                 }
+                R.id.nav_zmanim -> {
+                    startActivity(Intent(this, ZmanimActivity::class.java))
+                    false
+                }
                 R.id.nav_journal -> {
                     startActivity(Intent(this, JournalActivity::class.java))
                     false
@@ -334,8 +338,9 @@ class MainActivity : AppCompatActivity() {
         }
         findViewById<TextView>(R.id.status_title).apply {
             val titre = prenom.isBlank()
-            textSize = if (titre) 24f else 15f
-            setTypeface(null, if (titre) Typeface.BOLD else Typeface.NORMAL)
+            textSize = if (titre) 24f else 17f
+            // Titre : la police système en gras ; ligne d'état : Varela Round, comme sous le titre.
+            typeface = if (titre) Typeface.DEFAULT_BOLD else androidx.core.content.res.ResourcesCompat.getFont(this@MainActivity, R.font.varela_round)
             setTextColor(Apparence.couleur(this@MainActivity, if (titre) R.color.ink else R.color.muted))
         }
     }
@@ -565,21 +570,14 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
-     * Ce que l'onglet « Réglages » annonce : le nombre d'autorisations qui
-     * manquent, en pastille. Ce qui manque doit se voir sans l'ouvrir :
-     * sinon personne ne va chercher une autorisation avant que quelque
-     * chose ait déjà cessé de marcher. (La ligne Réglages de l'onglet
-     * Hitbodedout faisait doublon avec l'onglet ; retirée le 29/09.)
+     * L'onglet « Réglages » ne porte plus de pastille (demande du 10/10) :
+     * les autorisations manquantes se lisent dans les Réglages eux-mêmes, et
+     * le chiffre rouge sur l'accueil était de trop. removeBadge reste, pour
+     * effacer celle qu'une version précédente aurait posée pendant que
+     * l'application tournait.
      */
     private fun renderSettingsEntry() {
-        val manquantes = Permissions.missing(this).size
-        findViewById<BottomNavigationView>(R.id.bottom_nav).apply {
-            if (manquantes == 0) {
-                removeBadge(R.id.nav_settings)
-            } else {
-                getOrCreateBadge(R.id.nav_settings).number = manquantes
-            }
-        }
+        findViewById<BottomNavigationView>(R.id.bottom_nav).removeBadge(R.id.nav_settings)
     }
 
     /** L'état de la musique, sur la carte qui lui est consacrée. */
