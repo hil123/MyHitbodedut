@@ -1,5 +1,5 @@
 # L'application pour téléphone à touches (Java ME, nokia/) : construite,
-# testée, puis publiée dans son propre dépôt, hil123/myhitbodedut-nokia,
+# testée, puis publiée dans son propre dépôt, hil123/Nokia-my-hitbodedut-app,
 # comme le site iPhone l'est dans hil123/myhitbodedut-web. C'est un
 # produit à part : rien n'est ajouté à la release Android.
 name: Nokia (Java ME)
@@ -70,11 +70,11 @@ jobs:
           name: MyHitbodedut-nokia
           path: publie
 
-      - name: Publish to hil123/myhitbodedut-nokia
+      - name: Publish to hil123/Nokia-my-hitbodedut-app
         if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
         env:
           TOKEN: ${{ secrets.NOKIA_DEPLOY_TOKEN }}
-          CIBLE: hil123/myhitbodedut-nokia
+          CIBLE: hil123/Nokia-my-hitbodedut-app
         run: |
           if [ -z "$TOKEN" ]; then
             echo "Pas de secret NOKIA_DEPLOY_TOKEN : .jar construit et testé (artefact), non publié."
