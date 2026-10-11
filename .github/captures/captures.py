@@ -623,8 +623,20 @@ def tailles():
         appliquer_taille(taille, densite, couche)
         presentation(nom)
         lancer()
-        if "start_session" not in visibles(dump(), {"start_session"}):
-            faute(f"{nom} accueil : « Commencer » hors de l'ecran")
+        # « Commencer » doit finir au-dessus des onglets, pas seulement de l'ecran.
+        racine = dump()
+        bouton = onglets = None
+        for n in (racine.iter("node") if racine is not None else []):
+            rid = (n.get("resource-id", "") or "").split("/")[-1]
+            if rid == "start_session":
+                bouton = bornes(n)
+            elif rid == "bottom_nav":
+                onglets = bornes(n)
+        # uiautomator rogne les bornes a la partie visible : un bouton coupe
+        # par les onglets finit pile sur leur bord. On exige un peu d'air.
+        limite = onglets[1] if onglets else H
+        if not bouton or bouton[3] >= limite - 2 or bouton[1] < 0:
+            faute(f"{nom} accueil : « Commencer » cache (bouton {bouton}, onglets a {limite})")
         capture(f"20-{nom}-accueil")
         defiler(True)
         capture(f"20-{nom}-accueil-suite")
