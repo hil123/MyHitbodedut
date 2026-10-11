@@ -56,6 +56,26 @@ class SiddurTest {
         }
     }
 
+    /**
+     * Le nikkoud des kavanot sur le Nom des 'hatimot de la Amida (11/10) :
+     * celui d'Edot, reporté sur Sfard (tools/noms_kavanot.py), recoupé avec
+     * le Chaar HaKavanot (drouch 6) et le Pri Etz 'Haïm (Chaar HaAmida).
+     */
+    @Test
+    fun `les hatimot de la amida sfard portent le nikkoud des kavanot`() {
+        val sfard = nusah.getValue(Nusah.SEFARD)
+        listOf("chaharit", "minha", "arvit").forEach { id ->
+            val texte = sfard.texte(id)!!.sections.filter { it.titre.contains("עמידה") }
+                .flatMap { it.blocs }.joinToString(" ") { it.texte }.replace(Regex("<[^>]+>"), "")
+            // Avot et Da'at en patah, Refoua en holam, Michpat, Tsadikim et Chalom en chourouq.
+            assertTrue("$id : patah", Regex("יַהַוַהַ").findAll(texte).count() >= 2)
+            assertTrue("$id : holam", texte.contains("יֹהֹוֹהֹ"))
+            assertTrue("$id : chourouq", Regex("יוּהוּווּהוּ").findAll(texte).count() >= 3)
+            val nu = texte.replace(Regex("[\\u0591-\\u05AF\\u05BD]"), "")
+            assertTrue("$id : plus de יְהֹוָה avant « מגן אברהם »", !Regex("יְהֹוָה[,.]?\\s*מָגֵן").containsMatchIn(nu))
+        }
+    }
+
     /** Ce qui manque aux sources libres d'un nusah est emprunté à un autre, et le dit. */
     @Test
     fun `les emprunts sont marques`() {
