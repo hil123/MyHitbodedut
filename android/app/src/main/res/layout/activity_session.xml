@@ -66,31 +66,27 @@
             android:textSize="13sp"
             android:visibility="gone" />
 
-        <!-- Point 4 : ouverture au début de la séance, blocage pendant. -->
-        <include
-            android:id="@+id/session_chizuk"
-            layout="@layout/view_chizuk"
+        <!--
+            Le bouton principal juste sous le minuteur (demande du 11/10) :
+            « Commencer » ou « Terminer » se voit sans défiler, même sur un
+            480x854. Le sujet et les durées suivent, le mot de 'hizouk en
+            dernier.
+        -->
+        <Button
+            android:id="@+id/session_primary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="18dp" />
-
-        <!-- La hitbodedout guidée, quand elle est demandée. -->
-        <include
-            android:id="@+id/session_hitbodedut"
-            layout="@layout/view_hitbodedut"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp" />
+            android:layout_marginTop="20dp"
+            android:paddingVertical="14dp"
+            android:textSize="16sp" />
 
         <Button
-            android:id="@+id/session_stuck"
+            android:id="@+id/session_secondary"
             style="@style/Widget.Material3.Button.TextButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
-            android:text="@string/chizuk_stuck"
-            android:textColor="?attr/mhMint"
-            android:visibility="gone" />
+            android:layout_marginTop="4dp"
+            android:textColor="?attr/mhMint" />
 
         <!--
             Le sujet de la séance. Facultatif : « Aucun » est la valeur de
@@ -183,20 +179,31 @@
             android:text="@string/session_open"
             android:textColor="?attr/mhMint" />
 
-        <Button
-            android:id="@+id/session_primary"
+        <!-- Point 4 : ouverture au début de la séance, blocage pendant. -->
+        <include
+            android:id="@+id/session_chizuk"
+            layout="@layout/view_chizuk"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="22dp"
-            android:paddingVertical="14dp"
-            android:textSize="16sp" />
+            android:layout_marginTop="18dp" />
+
+        <!-- La hitbodedout guidée, quand elle est demandée. -->
+        <include
+            android:id="@+id/session_hitbodedut"
+            layout="@layout/view_hitbodedut"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp" />
 
         <Button
-            android:id="@+id/session_secondary"
+            android:id="@+id/session_stuck"
             style="@style/Widget.Material3.Button.TextButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:textColor="?attr/mhMint" />
+            android:layout_marginTop="2dp"
+            android:text="@string/chizuk_stuck"
+            android:textColor="?attr/mhMint"
+            android:visibility="gone" />
+
     </LinearLayout>
 </ScrollView>

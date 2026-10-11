@@ -120,4 +120,19 @@ class LayoutPaysageTest {
         assertTrue("défaut $court dp : trop grand pour un 480x854", court <= 180)
         assertTrue(court < moyen && moyen < haut)
     }
+
+    /**
+     * Debout aussi, « Commencer » se voit sans défiler (demande du 11/10) :
+     * le bouton principal vient juste sous le minuteur, avant le sujet, les
+     * durées et le mot de 'hizouk.
+     */
+    @Test
+    fun `debout la seance met le bouton principal sous le minuteur`() {
+        val xml = res("layout/activity_session.xml").readText()
+        val bouton = xml.indexOf("@+id/session_primary")
+        assertTrue(xml.indexOf("@+id/session_countdown") < bouton)
+        listOf("session_theme", "session_durations", "session_chizuk", "session_hitbodedut").forEach {
+            assertTrue("$it doit venir après le bouton principal", bouton < xml.indexOf("@+id/$it"))
+        }
+    }
 }

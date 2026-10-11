@@ -691,10 +691,8 @@ def tailles():
         for classe, extras in ecrans:
             arreter()
             if activite(classe, extras):
-                # Comme sur le web (tailles.mjs, seulCouche) : debout, la seance
-                # defile jusqu'a son bouton ; couchee, il doit se voir d'emblee.
-                if (classe == "SessionActivity" and couche
-                        and "session_primary" not in visibles(dump(), {"session_primary"})):
+                # Debout comme couchee, « Commencer » se voit sans defiler.
+                if classe == "SessionActivity" and "session_primary" not in visibles(dump(), {"session_primary"}):
                     faute(f"{nom} seance : « Commencer » hors de l'ecran")
                 capture(f"20-{nom}-{classe.replace('Activity', '').lower()}", attente=0.8)
         if nom in ("petit", "petit-couche", "pixel6-couche"):

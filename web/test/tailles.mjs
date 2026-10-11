@@ -5,7 +5,7 @@
 // en bas sur téléphone et tablette debout, sur le côté à partir de 900 px
 // et sur le téléphone couché. Le bouton principal de l'accueil et du bravo
 // doit se voir sans faire défiler (sauf sur le plus petit des téléphones),
-// et celui de la séance sur le téléphone couché. Le téléphone couché est
+// et celui de la séance partout, le plus petit compris. Le téléphone couché est
 // vérifié dans tous les modes : trois langues, clair et sombre, avec prénom,
 // séance en cours, journée faite.
 //
@@ -80,8 +80,8 @@ const ECRANS = [
   { nom: 'textes', onglets: true, actions: clic('[data-onglet="textes"]') },
   { nom: 'musique', ecran: 'musique' },
   { nom: 'reglages', ecran: 'reglages' },
-  { nom: 'seance', ecran: 'seance', bouton: '.seance .principal', seulCouche: true },
-  { nom: 'seance-en-cours', ecran: 'seance', actions: clic('.duree'), bouton: '.seance .principal', seulCouche: true },
+  { nom: 'seance', ecran: 'seance', bouton: '.seance .principal', petitAussi: true },
+  { nom: 'seance-en-cours', ecran: 'seance', actions: clic('.duree'), bouton: '.seance .principal', petitAussi: true },
   { nom: 'bravo', ecran: 'seance', actions: finDeSeance, bouton: '.bravo .principal' },
   { nom: 'tehilim', ecran: 'tehilim' },
   { nom: 'tehilim-lecture', ecran: 'tehilim', actions: clic('.carte .ligne') },
@@ -161,9 +161,9 @@ async function verifie(langue, mode, [taille, largeur, hauteur], e) {
       }
     }
     // Le bouton principal se voit sans faire défiler : partout pour l'accueil
-    // et le bravo (sauf le plus petit des téléphones), et sur le téléphone
-    // couché pour la séance.
-    const exige = e.bouton && taille !== 'petit-telephone' && (!e.seulCouche || couche(largeur, hauteur));
+    // et le bravo (sauf le plus petit des téléphones), et partout, le plus
+    // petit compris, pour la séance.
+    const exige = e.bouton && (taille !== 'petit-telephone' || e.petitAussi);
     if (exige) {
       const limite = n && !ontLaColonne(largeur, hauteur) ? n.haut : hauteur;
       if (!(mesure.bouton !== null && mesure.bouton <= limite + 0.5)) {

@@ -303,9 +303,8 @@ input[type="range"] { width: 100%; accent-color: var(--brand); }
   /* La séance : la scène et le minuteur à gauche ; à droite, le bouton
      principal d'abord, puis les durées, et le mot de chizuk en dernier. */
   .seance .contenu { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: 24px; align-items: start; }
-  .seance-actions { display: flex; flex-direction: column; padding-top: 16px; }
-  .seance-actions .principal { order: -1; margin-top: 0; }
-  .seance-actions .chizuk, .seance-actions .blocage { order: 2; }
+  .seance-actions { padding-top: 16px; }
+  .seance-actions .principal { margin-top: 0; }
   .seance-actions .durees { margin-top: 12px; }
 
   /* Le bravo : la scène de danse se resserre pour laisser voir « Continuer ». */
@@ -359,6 +358,12 @@ input[type="range"] { width: 100%; accent-color: var(--brand); }
   background: none; color: var(--mint); font-size: 13px; font-weight: 600; cursor: pointer; white-space: nowrap;
 }
 .seance .principal { margin-top: 22px; padding: 14px 16px; font-size: 16px; }
+/* Le bouton principal juste sous le minuteur, debout comme couché (demande
+   du 11/10) : « Commencer » ou « Terminer » se voit sans défiler. Le sujet
+   et les durées suivent, le mot de 'hizouk en dernier. */
+.seance-actions { display: flex; flex-direction: column; }
+.seance-actions .principal { order: -1; }
+.seance-actions .chizuk, .seance-actions .blocage { order: 2; }
 
 /* --- Carte de ’hizouk (view_chizuk.xml) ---------------------------------------------- */
 .chizuk {
