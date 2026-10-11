@@ -19,6 +19,16 @@ sont gardées (les miettes isolées partent). char_walking garde l'alpha
 d'origine sur ses 25 premières lignes : le masque rognait le haut de la
 kippa (tools/verifie_illustrations.py le signalait).
 
+Reprise du même jour, après relecture du propriétaire (taches blanches entre
+les péot et le cou) : les 16 personnages de images/1.webp sont refaits depuis
+la planche d'origine (fond blanc vrai, comme la planche du 11/10), plus depuis
+leur version déjà détourée, où ce fond était devenu opaque ; pour les quatre
+autres (sans planche d'origine) et six des seize, blanc_pur() retire les
+plages d'un blanc pur et plat (fond d'origine) collées aux cheveux dans la
+zone de la tête, et les miettes blanches collées au contour. Un passage de
+tools/nettoie_detourage.py ôte enfin le liseré blanc du bord (sauf
+arms_raised, dancing_joy, open_arms : il y détachait les franges du tsitsit).
+
     python3 -m pip install "rembg[cpu]"   # télécharge isnet-anime.onnx (176 Mo)
     python3 tools/detourage_modele.py <image.webp|png> [...]   (réécrit en place)
 """
@@ -26,6 +36,36 @@ import sys
 import numpy as np
 from PIL import Image
 from scipy import ndimage
+
+
+def blanc_pur(A):
+    """Le fond blanc resté opaque : plages blanches pures et plates près des cheveux, miettes au bord."""
+    rgb=A[...,:3].astype(np.int32); a=A[...,3]
+    lum=rgb.mean(-1); mn=rgb.min(-1); sat=rgb.max(-1)-mn
+    std=ndimage.generic_filter(lum,np.std,size=5)
+    blanc=(a>20)&(mn>=246)&(sat<12)&(std<2.0)
+    sombre=(a>200)&(lum<90)
+    ys=np.where(a.max(1)>20)[0]; h=ys[-1]-ys[0]
+    zone=np.zeros_like(blanc); zone[int(ys[0]+0.08*h):int(ys[0]+0.35*h)]=True
+    lab,k=ndimage.label(blanc&zone)
+    ids=np.unique(lab[blanc&zone&ndimage.binary_dilation(sombre,iterations=10)]); ids=ids[ids>0]
+    retire=np.isin(lab,ids)
+    # partout : petits îlots blancs plats collés au transparent et au sombre
+    lab2,k2=ndimage.label(blanc)
+    if k2:
+        sz=np.bincount(lab2.ravel())
+        transp=ndimage.binary_dilation(a<20,iterations=2); pres=ndimage.binary_dilation(sombre,iterations=4)
+        ok=np.unique(lab2[blanc&transp&pres]); ok=ok[(ok>0)]
+        ok=ok[sz[ok]<300]
+        retire|=np.isin(lab2,ok)
+    return retire
+def retire_blanc_pur(A):
+    r=blanc_pur(A); A=A.copy()
+    al=A[...,3].astype(np.float32); al[r]=0
+    # bord adouci autour des zones retirees
+    bord=ndimage.binary_dilation(r,iterations=1)&~r
+    al[bord]*=0.55
+    A[...,3]=al.astype(np.uint8); return A,r.sum()
 
 
 def detoure(im, session):
