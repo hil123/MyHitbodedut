@@ -511,7 +511,7 @@ test('carte du jour : illustration, hilloula et liens', async () => {
   const J = await import('../src/js/jour-affiche.js');
   assert.equal(J.illustration(['soukkot'], '2026-09-26'), 'scene_sukkot');
   assert.equal(J.illustration(['hanouka'], '2026-12-05'), 'scene_hanukkah');
-  assert.equal(J.illustration([], '2026-10-10'), 'scene_shabbat');
+  assert.equal(J.illustration([], '2026-10-10'), 'char_shabbat');
   assert.equal(J.illustration([], '2026-10-11'), null);
   // 5784 et 5787 sont embolismiques, 5786 ne l'est pas.
   assert.deepEqual([5784, 5786, 5787].map(J.embolismique), [true, false, true]);
@@ -535,7 +535,7 @@ test('carte du jour : illustration, hilloula et liens', async () => {
   assert.equal(J.lienHyomi('2026-10-11'), 'https://hyomi.org.il/day.php?month1=0&dd=11&mm=10&yy=2026');
   assert.equal(J.lienHalakha('iw'), 'https://halachayomit.co.il/he/default.aspx');
   assert.equal(J.lienHalakha('fr'), 'https://halachayomit.co.il/fr/default.aspx');
-  for (const img of ['scene_sukkot', 'char_matsa', 'scene_hanukkah', 'char_purim', 'scene_shabbat', 'scene_nature', 'scene_sleeping', 'char_tefillin']) {
+  for (const img of ['scene_sukkot', 'char_matsa', 'scene_hanukkah', 'char_purim', 'char_shabbat', 'scene_nature', 'scene_sleeping', 'char_tefillin']) {
     assert.ok(readFileSync(join(RES, 'drawable-nodpi', `${img}.webp`)).length > 0, img);
   }
 });

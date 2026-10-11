@@ -21,7 +21,7 @@ object JourAffiche {
         fetes.any { it in setOf("erev_pessah", "pessah", "hol_hamoed_pessah") } -> "char_matsa"
         "hanouka" in fetes -> "scene_hanukkah"
         fetes.any { it in setOf("pourim", "chouchan_pourim", "pourim_ailleurs", "pourim_jerusalem") } -> "char_purim"
-        date.dayOfWeek == java.time.DayOfWeek.SATURDAY -> "scene_shabbat"
+        date.dayOfWeek == java.time.DayOfWeek.SATURDAY -> "char_shabbat"
         else -> null
     }
 

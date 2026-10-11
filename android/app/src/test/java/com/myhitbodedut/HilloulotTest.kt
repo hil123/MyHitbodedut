@@ -51,7 +51,7 @@ class HilloulotTest {
     fun `l illustration du jour de fete ou de chabbat`() {
         assertEquals("scene_sukkot", JourAffiche.illustration(listOf("soukkot"), LocalDate.of(2026, 9, 26)))
         assertEquals("char_matsa", JourAffiche.illustration(listOf("pessah"), LocalDate.of(2027, 4, 22)))
-        assertEquals("scene_shabbat", JourAffiche.illustration(emptyList(), LocalDate.of(2026, 10, 10)))
+        assertEquals("char_shabbat", JourAffiche.illustration(emptyList(), LocalDate.of(2026, 10, 10)))
         assertEquals(null, JourAffiche.illustration(emptyList(), LocalDate.of(2026, 10, 11)))
     }
 }

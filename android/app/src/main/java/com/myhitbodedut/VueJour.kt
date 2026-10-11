@@ -112,7 +112,7 @@ object VueJour {
         "char_matsa" -> R.drawable.char_matsa
         "scene_hanukkah" -> R.drawable.scene_hanukkah
         "char_purim" -> R.drawable.char_purim
-        else -> R.drawable.scene_shabbat
+        else -> R.drawable.char_shabbat
     }
 
     /** Les horaires d'un jour ; sans lieu, l'invitation à en choisir un. */

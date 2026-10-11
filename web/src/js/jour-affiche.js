@@ -145,7 +145,7 @@ export function illustration(fetes, iso) {
   if (a(['erev_pessah', 'pessah', 'hol_hamoed_pessah'])) return 'char_matsa';
   if (fetes.includes('hanouka')) return 'scene_hanukkah';
   if (a(['pourim', 'chouchan_pourim', 'pourim_ailleurs', 'pourim_jerusalem'])) return 'char_purim';
-  return new Date(`${iso}T12:00:00Z`).getUTCDay() === 6 ? 'scene_shabbat' : null;
+  return new Date(`${iso}T12:00:00Z`).getUTCDay() === 6 ? 'char_shabbat' : null;
 }
 
 /** Cycle de Méton : 7 années embolismiques sur 19. */

@@ -19,12 +19,13 @@ NOMS = [
     "char_purim", "char_tefillin", "char_studying", "char_backpack",
     "scene_cooking", "char_board_game", "scene_nature", "char_child",
     "char_headphones", "scene_tallit_torah", "char_sport", "scene_airport",
-    "char_guitar_seated", "scene_shabbat", "char_open_hands", "char_portrait",
+    "char_guitar_seated", "char_shabbat", "char_open_hands", "char_portrait",
 ]
-# La ménora de 'Hanouka a le décor d'une pièce ; à la table de Chabbat, le
-# détourage emportait la flamme des bougies avec le fond blanc.
+# La ménora de 'Hanouka a le décor d'une pièce. Les images détourées ont
+# ensuite été reprises par tools/detourage_modele.py (table de Chabbat comprise :
+# le seuil emportait la flamme des bougies, le modèle la garde).
 SCENES = {"scene_sleeping", "scene_sukkot", "scene_cooking", "scene_nature", "scene_tallit_torah", "scene_airport",
-          "scene_hanukkah", "scene_shabbat"}
+          "scene_hanukkah"}
 
 
 def cases(sheet, cols=4, rows=5):
