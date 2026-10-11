@@ -73,11 +73,13 @@ jobs:
       - name: Publish to hil123/Nokia-my-hitbodedut-app
         if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
         env:
-          TOKEN: ${{ secrets.NOKIA_DEPLOY_TOKEN }}
+          # Le jeton propre au dépôt Nokia s'il existe ; sinon celui du site,
+          # s'il a aussi accès à ce dépôt (jeton classique « repo »).
+          TOKEN: ${{ secrets.NOKIA_DEPLOY_TOKEN || secrets.WEB_DEPLOY_TOKEN }}
           CIBLE: hil123/Nokia-my-hitbodedut-app
         run: |
           if [ -z "$TOKEN" ]; then
-            echo "Pas de secret NOKIA_DEPLOY_TOKEN : .jar construit et testé (artefact), non publié."
+            echo "Ni NOKIA_DEPLOY_TOKEN ni WEB_DEPLOY_TOKEN : .jar construit et testé (artefact), non publié."
             exit 0
           fi
           cd publie
@@ -87,5 +89,8 @@ jobs:
           git add -A
           git commit -q -m "MyHitbodedut.jar $(head -1 version.txt), construit depuis ${GITHUB_SHA}"
           # Un seul commit, remplacé à chaque fois, comme pour le site.
-          git push -q --force "https://x-access-token:${TOKEN}@github.com/${CIBLE}.git" main
-          echo "Publié : https://github.com/${CIBLE}"
+          if git push -q --force "https://x-access-token:${TOKEN}@github.com/${CIBLE}.git" main; then
+            echo "Publié : https://github.com/${CIBLE}"
+          else
+            echo "::warning::Le jeton n'a pas accès à ${CIBLE} : .jar construit et testé (artefact), non publié. Ajouter le secret NOKIA_DEPLOY_TOKEN."
+          fi
