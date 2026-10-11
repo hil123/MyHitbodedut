@@ -740,4 +740,13 @@
     <string name="fete_lag_baomer">Lag baOmer</string>
     <string name="fete_chouchan_pourim_katan">Chouchan Pourim katan</string>
     <string name="fete_isrou_hag">Isrou ’hag</string>
+    <!-- La hilloula et la halakha du jour (11/10) -->
+    <string name="hilloula_titre">Hilloula du jour</string>
+    <plurals name="hilloula_autres">
+        <item quantity="one">et %1$d autre</item>
+        <item quantity="other">et %1$d autres</item>
+    </plurals>
+    <string name="hilloula_lien">Les sages du jour sur hyomi.org.il</string>
+    <string name="halakha_yomit_titre">Halakha yomit</string>
+    <string name="halakha_yomit_lien">La halakha du jour sur halachayomit.co.il</string>
 </resources>

@@ -11,7 +11,7 @@ import { creeStore, memoire } from './store.js';
 import { isoLocal } from './calendrier.js';
 import { JERUSALEM_GEONAMES, jour as jourJuif, jourDeLaPriere } from './calendrier-juif.js';
 import { conditionsPour, index as indexAjouts, libelleJour, vrai as ajoutVrai } from './siddur-jour.js';
-import { ajouts as ajoutsDuJour, debutMoisHebreu, horaires, momentDuSiddour, moisHebreuVoisin, semaines, semainesHebreu } from './jour-affiche.js';
+import { ajouts as ajoutsDuJour, debutMoisHebreu, hilloulotPour, horaires, illustration as illustrationDuJour, lienHalakha, lienHyomi, momentDuSiddour, moisHebreuVoisin, semaines, semainesHebreu } from './jour-affiche.js';
 import { ALLUMAGES, heure as heureZman } from './zmanim.js';
 
 // --- Stockage ---------------------------------------------------------------
@@ -1264,6 +1264,21 @@ function choisirAllumage() {
 const mukafChoma = () => store.lieu()?.ville === JERUSALEM_GEONAMES;
 
 /** La date hébraïque d'un jour, ses fêtes, et ce qu'il change aux prières. */
+// La hilloula du jour (11/10) : hilloulot.json, chargé à la première carte.
+let hilloulots = null;
+let hilloulotsDemandees = false;
+function tableHilloulot() {
+  if (!hilloulotsDemandees) {
+    hilloulotsDemandees = true;
+    fetch('data/hilloulot.json').then((r) => r.json()).then((d) => { hilloulots = d.jours; rendre(); }).catch(() => {});
+  }
+  return hilloulots;
+}
+
+function lienExterne(libelle, url) {
+  return h('a', { class: 'jour-lien', href: url, target: '_blank', rel: 'noopener' }, `${libelle} ↗`);
+}
+
 function carteJour(iso) {
   const j = jourJuif(iso, store.inIsrael(), mukafChoma());
   // L'omer se compte le soir, pour le jour hébreu qui commence : celui de demain.
@@ -1276,12 +1291,33 @@ function carteJour(iso) {
     j.paracha ? tr.t('zmanim_paracha', j.paracha) : null,
     omerCeSoir ? tr.t('zmanim_omer_ce_soir', omerCeSoir) : null,
   ].filter(Boolean);
+  const dessin = illustrationDuJour(j.fetes, iso);
   return h('div', { class: 'carte carte-jour' },
+    dessin ? h('img', { class: 'jour-illustration', src: `img/${dessin}.webp`, alt: '' }) : null,
     h('p', { class: 'jour-hebreu', lang: 'he', dir: 'rtl' }, j.dateHebraique),
     h('p', { class: 'jour-civil' }, civil),
     marques.length ? h('div', { class: 'jour-marques' }, marques.map((m) => h('span', { class: 'marque' }, m))) : null,
     h('h3', { class: 'jour-sous-titre' }, tr.t('zmanim_ajouts_titre')),
-    h('p', { class: 'jour-ajouts' }, ajoutsDuJour(j.conditions, store.siddurNusah(), store.inIsrael(), store.sansTahanounFinTichri()).map((k) => tr.t(k)).join(' · ')));
+    h('p', { class: 'jour-ajouts' }, ajoutsDuJour(j.conditions, store.siddurNusah(), store.inIsrael(), store.sansTahanounFinTichri()).map((k) => tr.t(k)).join(' · ')),
+    ...blocHilloula(iso),
+    ...(iso === isoLocal(new Date())
+      ? [h('h3', { class: 'jour-sous-titre' }, tr.t('halakha_yomit_titre')), lienExterne(tr.t('halakha_yomit_lien'), lienHalakha(tr.langue))]
+      : []));
+}
+
+/** Trois noms au plus, puis la page du jour de החכם היומי. */
+function blocHilloula(iso) {
+  const table = tableHilloulot();
+  if (!table) return [];
+  const liste = hilloulotPour(table, iso, store.inIsrael());
+  if (!liste.length) return [];
+  const noms = liste.slice(0, 3).map((x) => (x.a ? `${x.he} (${x.a})` : x.he)).join(' · ');
+  const reste = liste.length - 3;
+  return [
+    h('h3', { class: 'jour-sous-titre' }, tr.t('hilloula_titre')),
+    h('p', { class: 'jour-hilloula', lang: 'he', dir: 'rtl' }, reste > 0 ? `${noms} · ${tr.p('hilloula_autres', reste)}` : noms),
+    lienExterne(tr.t('hilloula_lien'), lienHyomi(iso)),
+  ];
 }
 
 /** Les horaires d'un jour, chacun avec sa méthode ; ou l'invitation à choisir un lieu. */

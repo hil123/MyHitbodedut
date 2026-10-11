@@ -14,7 +14,7 @@ export const ART_DU_MOMENT = {
   porte: 'char_pointing',
   relance: 'char_walking',
   cloture: 'char_praise',
-  lieu: 'char_standing_back',
+  lieu: 'scene_nature',
 };
 
 export const ChizukRules = {

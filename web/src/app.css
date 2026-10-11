@@ -699,3 +699,8 @@ input[type="range"] { width: 100%; accent-color: var(--brand); }
 .case.aujourdhui .case-haut { font-weight: 700; color: var(--brand); }
 .case.choisi { outline: 2px solid var(--brand); outline-offset: -2px; }
 .lien-aujourdhui { display: block; margin: 10px auto 0; padding: 6px 14px; border: 0; background: none; color: var(--brand); font-weight: 600; cursor: pointer; }
+
+/* La carte du jour (11/10) : l'illustration de fête, la hilloula, les liens. */
+.jour-illustration { display: block; height: 150px; max-width: 100%; margin: 0 auto 10px; object-fit: contain; border-radius: 12px; }
+.jour-hilloula { margin: 2px 0 0; font-size: 15px; }
+.jour-lien { display: inline-block; margin-top: 6px; padding: 6px 0; color: var(--brand); font-weight: 700; text-decoration: none; }

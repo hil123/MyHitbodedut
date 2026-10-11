@@ -1,6 +1,9 @@
 package com.myhitbodedut
 
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
+import android.widget.ImageView
 import android.graphics.Typeface
 import android.view.Gravity
 import android.view.View
@@ -50,6 +53,16 @@ object VueJour {
         val omerCeSoir = CalendrierJuif.jour(date.plusDays(1), enIsrael).omer
         val langue = ChizukCard.language(c)
         val carte = carte(c)
+        // Fête ou Chabbat : l'illustration du jour (11/10).
+        JourAffiche.illustration(j.fetes, date)?.let { nom ->
+            carte.addView(ImageView(c).apply {
+                setImageResource(illustration(nom))
+                adjustViewBounds = true
+                contentDescription = null
+                layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, dp(c, 150))
+                    .apply { gravity = Gravity.CENTER_HORIZONTAL; bottomMargin = dp(c, 10) }
+            })
+        }
         carte.addView(texte(c, j.dateHebraique, 26f, R.color.brand, gras = true).apply {
             textDirection = View.TEXT_DIRECTION_RTL
             PoliceHebraique.appliquer(this)
@@ -66,7 +79,40 @@ object VueJour {
         carte.addView(texte(c, c.getString(R.string.zmanim_ajouts_titre), 12f, R.color.muted, gras = true, haut = 14))
         val ajouts = JourAffiche.ajouts(j.conditions, Store.siddurNusah(c).cle, enIsrael, Store.sansTahanounFinTichri(c)).mapNotNull { Libelles.res(it)?.let(c::getString) }
         carte.addView(texte(c, ajouts.joinToString(" · ").ifBlank { c.getString(R.string.zmanim_aucun_ajout) }, 15f, R.color.ink, haut = 2))
+        // La hilloula du jour : trois noms au plus, et la page du jour de החכם היומי.
+        val hilloulot = Hilloulot.pour(Hilloulot.table(c), date, enIsrael)
+        if (hilloulot.isNotEmpty()) {
+            carte.addView(texte(c, c.getString(R.string.hilloula_titre), 12f, R.color.muted, gras = true, haut = 14))
+            val noms = hilloulot.take(3).joinToString(" · ") { h -> if (h.annee.isNotBlank()) "${h.he} (${h.annee})" else h.he }
+            val reste = hilloulot.size - 3
+            carte.addView(texte(c, if (reste > 0) "$noms · " + c.resources.getQuantityString(R.plurals.hilloula_autres, reste, reste) else noms, 15f, R.color.ink, haut = 2).apply {
+                PoliceHebraique.appliquer(this)
+            })
+            carte.addView(lien(c, c.getString(R.string.hilloula_lien), Hilloulot.lienHyomi(date)))
+        }
+        // La halakha du jour : la page du site, seulement aujourd'hui (le site n'a pas d'archive par date).
+        if (date == LocalDate.now()) {
+            carte.addView(texte(c, c.getString(R.string.halakha_yomit_titre), 12f, R.color.muted, gras = true, haut = 14))
+            carte.addView(lien(c, c.getString(R.string.halakha_yomit_lien), Hilloulot.lienHalakha(langue)))
+        }
         return carte
+    }
+
+    private fun lien(c: Context, libelle: String, url: String) =
+        texte(c, "$libelle ↗", 15f, R.color.brand, gras = true, haut = 4).apply {
+            setPadding(0, dp(c, 6), 0, dp(c, 6))
+            foreground = c.getDrawable(android.R.drawable.list_selector_background)
+            setOnClickListener {
+                runCatching { c.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url))) }
+            }
+        }
+
+    private fun illustration(nom: String): Int = when (nom) {
+        "scene_sukkot" -> R.drawable.scene_sukkot
+        "char_matsa" -> R.drawable.char_matsa
+        "scene_hanukkah" -> R.drawable.scene_hanukkah
+        "char_purim" -> R.drawable.char_purim
+        else -> R.drawable.scene_shabbat
     }
 
     /** Les horaires d'un jour ; sans lieu, l'invitation à en choisir un. */

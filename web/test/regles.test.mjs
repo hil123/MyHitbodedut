@@ -458,8 +458,8 @@ test('le siddour suggère le texte de l’heure, aux bornes d’Android', () => 
     [6, 30, 'chaharit'], [12, 29, 'chaharit'], [12, 30, 'minha'], [18, 29, 'minha'], [18, 30, 'arvit'],
     [22, 29, 'arvit'], [22, 30, 'chema_coucher'], [23, 59, 'chema_coucher']];
   for (const [h, m, id] of cas) assert.equal(SiddurMoment.suggestion(h, m), id, `${h}:${m}`);
-  assert.equal(SiddurMoment.illustration('chaharit'), 'char_praying');
-  assert.equal(SiddurMoment.illustration('chema_coucher'), 'char_thinking');
+  assert.equal(SiddurMoment.illustration('chaharit'), 'char_tefillin');
+  assert.equal(SiddurMoment.illustration('chema_coucher'), 'scene_sleeping');
   // Chaque suggestion existe dans chacun des trois siddourim, et son hassid aussi.
   for (const n of ['edot', 'sefard', 'ashkenaz']) {
     const ids = new Set(JSON.parse(readFileSync(join(RES, 'raw', `siddur_${n}.json`), 'utf8')).textes.map((t) => t.id));
@@ -504,4 +504,38 @@ test('le Tikoun dit d’un trait marque les dix psaumes, pour le jour seulement'
   assert.deepEqual([...s.tikkunDone()].sort((a, b) => a - b), [16, 150]);
   horloge.t += 86400000;
   assert.equal(s.tikkunDone().size, 0);
+});
+
+// La carte du jour (11/10) : l'illustration de fête, la hilloula, les liens.
+test('carte du jour : illustration, hilloula et liens', async () => {
+  const J = await import('../src/js/jour-affiche.js');
+  assert.equal(J.illustration(['soukkot'], '2026-09-26'), 'scene_sukkot');
+  assert.equal(J.illustration(['hanouka'], '2026-12-05'), 'scene_hanukkah');
+  assert.equal(J.illustration([], '2026-10-10'), 'scene_shabbat');
+  assert.equal(J.illustration([], '2026-10-11'), null);
+  // 5784 et 5787 sont embolismiques, 5786 ne l'est pas.
+  assert.deepEqual([5784, 5786, 5787].map(J.embolismique), [true, false, true]);
+  assert.deepEqual(J.clesHilloula(12, 7, false, false), ['adar-7', 'adar1-7', 'adar2-7']);
+  assert.deepEqual(J.clesHilloula(12, 7, true, false), ['adar1-7']);
+  assert.deepEqual(J.clesHilloula(13, 7, true, false), ['adar-7', 'adar2-7']);
+  assert.deepEqual(J.clesHilloula(8, 29, false, true), ['8-29', '8-30']);
+  const table = JSON.parse(readFileSync(join(RES, 'raw', 'hilloulot.json'), 'utf8')).jours;
+  // Chaque jour d'une année simple (5786) a au moins une hilloula ; en année
+  // embolismique, Adar I n'a que les hilloulot dites « Adar I ».
+  let iso = '2025-09-23';
+  while (iso < '2026-09-12') {
+    assert.ok(J.hilloulotPour(table, iso, false).length > 0, iso);
+    const [a, m, d] = iso.split('-').map(Number);
+    iso = new Date(Date.UTC(a, m - 1, d + 1, 12)).toISOString().slice(0, 10);
+  }
+  // 7 Adar II 5787 (16/03/2027) : les hilloulot d'Adar sans précision.
+  assert.ok(J.hilloulotPour(table, '2027-03-16', false).length > 10);
+  // 30 Tichri 5787 (11/10/2026) : Rabbi Tsvi Hirsch Chajes, donné par Wikipédia.
+  assert.ok(J.hilloulotPour(table, '2026-10-11', false).some((x) => x.he.includes('צבי הירש חיות')));
+  assert.equal(J.lienHyomi('2026-10-11'), 'https://hyomi.org.il/day.php?month1=0&dd=11&mm=10&yy=2026');
+  assert.equal(J.lienHalakha('iw'), 'https://halachayomit.co.il/he/default.aspx');
+  assert.equal(J.lienHalakha('fr'), 'https://halachayomit.co.il/fr/default.aspx');
+  for (const img of ['scene_sukkot', 'char_matsa', 'scene_hanukkah', 'char_purim', 'scene_shabbat', 'scene_nature', 'scene_sleeping', 'char_tefillin']) {
+    assert.ok(readFileSync(join(RES, 'drawable-nodpi', `${img}.webp`)).length > 0, img);
+  }
 });

@@ -707,4 +707,14 @@
     <string name="fete_lag_baomer">ל״ג בעומר</string>
     <string name="fete_chouchan_pourim_katan">שושן פורים קטן</string>
     <string name="fete_isrou_hag">אסרו חג</string>
+    <!-- La hilloula et la halakha du jour (11/10) -->
+    <string name="hilloula_titre">הילולא</string>
+    <plurals name="hilloula_autres">
+        <item quantity="one">ועוד אחד</item>
+        <item quantity="two">ועוד %1$d</item>
+        <item quantity="other">ועוד %1$d</item>
+    </plurals>
+    <string name="hilloula_lien">חכמי היום ב„החכם היומי”</string>
+    <string name="halakha_yomit_titre">הלכה יומית</string>
+    <string name="halakha_yomit_lien">ההלכה היומית באתר „הלכה יומית”</string>
 </resources>
