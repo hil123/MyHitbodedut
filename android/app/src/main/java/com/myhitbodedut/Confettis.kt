@@ -168,7 +168,7 @@ object Celebrations {
     /** Après une séance enregistrée : la notification, même l'application fermée. */
     fun notification(context: Context) {
         val r = neuf(context, Store.paliersNotifies(context), Store.tropheesNotifies(context))
-        if (r.message.isNotEmpty()) Confettis.notifier(context, context.getString(R.string.fete_titre), r.message, r.icone)
+        if (r.message.isNotEmpty()) Confettis.notifier(context, context.getString(R.string.celebration_titre), r.message, r.icone)
         Store.setPaliersNotifies(context, r.marques)
         Store.setTropheesNotifies(context, r.trophees)
     }

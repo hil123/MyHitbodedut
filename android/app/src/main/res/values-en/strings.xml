@@ -747,7 +747,7 @@
     <string name="halakha_livre">Ben Ish Chai, weekly portion</string>
     <string name="halakha_note">Original Hebrew text, verbatim (Wikisource, public domain, via Sefaria). For practice, ask a rabbi.</string>
     <!-- Les trophées et la fête (11/10) -->
-    <string name="fete_titre">Mazal tov!</string>
+    <string name="celebration_titre">Mazal tov!</string>
     <string name="trophee_gagne">Trophy won: %1$s!</string>
     <string name="trophees_paliers_titre">Trophies and milestones</string>
     <string name="trophees_titre">Trophies</string>

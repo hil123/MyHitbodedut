@@ -12,10 +12,6 @@
     <!-- Les zmanim (10/10) : la position approximative, seulement si on choisit
          « Ma position » plutôt qu'une ville, et demandée à ce moment-là. -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <!-- Aucun accès à Internet (choix du propriétaire, 11/10) : hilloulot, halakha
-         du jour, siddour et zmanim sont embarqués ; les liens s'ouvrent dans le
-         navigateur. Retirée même si une bibliothèque la demandait. -->
-    <uses-permission android:name="android.permission.INTERNET" tools:node="remove" />
 
     <!--
         Sans cette ligne, Android considere l'ecran tactile comme requis et
