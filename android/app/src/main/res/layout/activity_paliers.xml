@@ -25,7 +25,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/paliers_title"
+                android:text="@string/trophees_paliers_titre"
                 android:textColor="@color/white"
                 android:textSize="24sp"
                 android:textStyle="bold" />

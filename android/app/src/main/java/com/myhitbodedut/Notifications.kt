@@ -4,17 +4,19 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 
-/** Les quatre canaux de notification, créés une fois pour toutes. */
+/** Les canaux de notification, créés une fois pour toutes. */
 object Notifications {
 
     const val CHANNEL_GATE = "gate"
     const val CHANNEL_SESSION = "session"
     const val CHANNEL_REMINDER = "reminder"
+    const val CHANNEL_CELEBRATION = "celebration"
 
     const val ID_GATE = 1
     const val ID_SESSION = 2
     const val ID_REMINDER = 3
     const val ID_COMPLETED = 4
+    const val ID_CELEBRATION = 5
 
     fun ensureChannels(context: Context) {
         val manager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
@@ -41,6 +43,14 @@ object Notifications {
                 context.getString(R.string.channel_reminder),
                 NotificationManager.IMPORTANCE_DEFAULT
             ).apply { description = context.getString(R.string.channel_reminder_description) }
+        )
+
+        manager.createNotificationChannel(
+            NotificationChannel(
+                CHANNEL_CELEBRATION,
+                context.getString(R.string.channel_celebration),
+                NotificationManager.IMPORTANCE_DEFAULT
+            ).apply { description = context.getString(R.string.channel_celebration_description) }
         )
     }
 }

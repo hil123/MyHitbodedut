@@ -79,6 +79,9 @@ object Store {
     private const val KEY_DAILY_GOAL = "daily_goal_minutes"
     private const val KEY_ANNEAUX_FETES = "anneaux_fetes"
     private const val KEY_PALIERS_VUS = "paliers_vus"
+    private const val KEY_PALIERS_NOTIFIES = "paliers_notifies"
+    private const val KEY_TROPHEES_VUS = "trophees_vus"
+    private const val KEY_TROPHEES_NOTIFIES = "trophees_notifies"
     private const val KEY_HILLOULOT = "hilloulot_affichees"
     private const val KEY_HALAKHA = "halakha_affichee"
     private const val KEY_SIDDUR_NUSAH = "siddur_nusah"
@@ -588,6 +591,35 @@ object Store {
     /** Seules restent les marques d'une période encore en cours ou sans période : la liste ne grossit pas. */
     fun setPaliersVus(context: Context, marques: Set<String>) {
         prefs(context).edit().putStringSet(KEY_PALIERS_VUS, marques.toSet()).apply()
+    }
+
+    /** Les paliers déjà annoncés par notification (null : jamais encore regardés). */
+    fun paliersNotifies(context: Context): Set<String>? =
+        prefs(context).getStringSet(KEY_PALIERS_NOTIFIES, null)?.toSet()
+
+    fun setPaliersNotifies(context: Context, marques: Set<String>) {
+        prefs(context).edit().putStringSet(KEY_PALIERS_NOTIFIES, marques.toSet()).apply()
+    }
+
+    // --- Trophées (11/10) ----------------------------------------------------
+
+    fun pratique(context: Context): Trophees.Pratique {
+        val tous = days(context).values
+        val minutes = tous.filter { it.faite }.mapNotNull { r -> dateValide(r.date)?.let { it to r.minutes } }.toMap()
+        return Trophees.Pratique(minutes, tous.count { it.note.isNotBlank() }, meilleureSerie(context))
+    }
+
+    /** Les trophées déjà fêtés à l'écran (null : jamais encore regardés, le premier passage ne fête rien). */
+    fun tropheesVus(context: Context): Set<String>? = prefs(context).getStringSet(KEY_TROPHEES_VUS, null)?.toSet()
+
+    fun setTropheesVus(context: Context, cles: Set<String>) {
+        prefs(context).edit().putStringSet(KEY_TROPHEES_VUS, cles.toSet()).apply()
+    }
+
+    fun tropheesNotifies(context: Context): Set<String>? = prefs(context).getStringSet(KEY_TROPHEES_NOTIFIES, null)?.toSet()
+
+    fun setTropheesNotifies(context: Context, cles: Set<String>) {
+        prefs(context).edit().putStringSet(KEY_TROPHEES_NOTIFIES, cles.toSet()).apply()
     }
 
     fun setDailyGoal(context: Context, minutes: Int) {

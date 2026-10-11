@@ -9,7 +9,6 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -153,6 +152,7 @@ class MainActivity : AppCompatActivity() {
             )
         }
         findViewById<Button>(R.id.today_offline).setOnClickListener { declarerHorsTelephone() }
+        findViewById<Button>(R.id.trophees_paliers).setOnClickListener { startActivity(Intent(this, PaliersActivity::class.java)) }
         findViewById<View>(R.id.start_duration).setOnClickListener {
             pickDuration()
         }
@@ -246,6 +246,7 @@ class MainActivity : AppCompatActivity() {
         DureeSeance.choisir(this, R.string.offline_how_long) { minutes ->
             // Sans sujet : celui des puces est celui de la PROCHAINE séance.
             Store.addSession(this, minutes, theme = null, date = date)
+            Celebrations.notification(this)
             if (date == Store.today()) Store.setPendingCelebration(this, minutes, date)
             refresh()
             StreakWidget.refresh(this)
@@ -520,14 +521,8 @@ class MainActivity : AppCompatActivity() {
             text = PaliersVue.aLaUne(this@MainActivity, Paliers.aLaUne(etats)) + "  ›"
             setOnClickListener { startActivity(Intent(this@MainActivity, PaliersActivity::class.java)) }
         }
-        val vus = Store.paliersVus(this)
-        if (vus != null) {
-            Paliers.nouveaux(etats, bilan, vus).maxByOrNull { it.rang }?.let { e ->
-                Toast.makeText(this, getString(R.string.palier_nouveau,
-                    PaliersVue.libelle(this, e.piste, bilan), PaliersVue.valeur(this, e.piste, e.atteint)), Toast.LENGTH_LONG).show()
-            }
-        }
-        Store.setPaliersVus(this, Paliers.marques(etats, bilan))
+        // Un palier ou un trophée neuf : les confettis (11/10).
+        Celebrations.ecran(this)
     }
 
     /** Le compteur qui fait monter le chiffre de la face ; arrêté quand la face change. */

@@ -35,7 +35,11 @@ class PaliersActivity : AppCompatActivity() {
         contenu.removeAllViews()
         val bilan = Store.bilan(this)
         val etats = Paliers.etats(bilan)
-        contenu.addView(VueJour.texte(this, getString(R.string.paliers_sous_titre), 15f, R.color.muted, haut = 14).apply {
+        contenu.addView(trophees())
+        contenu.addView(VueJour.texte(this, getString(R.string.paliers_title), 20f, R.color.ink, gras = true, haut = 22).apply {
+            gravity = Gravity.CENTER
+        })
+        contenu.addView(VueJour.texte(this, getString(R.string.paliers_sous_titre), 15f, R.color.muted, haut = 4).apply {
             gravity = Gravity.CENTER
         })
         etats.forEach { contenu.addView(carte(it, bilan)) }
@@ -53,6 +57,57 @@ class PaliersActivity : AppCompatActivity() {
         })
         // Ce qui est vu ici est acquis : l'accueil ne le refête pas.
         Store.setPaliersVus(this, Paliers.marques(etats, bilan))
+        Store.setTropheesVus(this, Trophees.gagnes(Store.pratique(this)).map { it.cle }.toSet())
+    }
+
+    /** La vitrine : les trophées gagnés en couleur, les autres en attente, avec ce qu'il faut pour les gagner. */
+    private fun trophees() = VueJour.carte(this).apply {
+        val gagnes = Trophees.gagnes(Store.pratique(context))
+        val tous = Trophees.Trophee.values()
+        addView(LinearLayout(context).apply {
+            orientation = LinearLayout.HORIZONTAL
+            gravity = Gravity.CENTER_VERTICAL
+            addView(VueJour.texte(context, getString(R.string.trophees_titre), 18f, R.color.ink, gras = true).apply {
+                layoutParams = LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f)
+            })
+            addView(VueJour.texte(context, getString(R.string.trophees_compte, gagnes.size, tous.size), 14f, R.color.brand, gras = true).apply {
+                layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+            })
+        })
+        val grille = android.widget.GridLayout(context).apply {
+            columnCount = 3
+            layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply { topMargin = dp(10) }
+        }
+        // Les gagnés d'abord, dans l'ordre de la liste.
+        tous.sortedBy { if (it in gagnes) 0 else 1 }.forEach { t -> grille.addView(trophee(t, t in gagnes)) }
+        addView(grille)
+    }
+
+    private fun trophee(t: Trophees.Trophee, gagne: Boolean) = LinearLayout(this).apply {
+        orientation = LinearLayout.VERTICAL
+        gravity = Gravity.CENTER_HORIZONTAL
+        setPadding(dp(4), dp(8), dp(4), dp(8))
+        alpha = if (gagne) 1f else 0.38f
+        layoutParams = android.widget.GridLayout.LayoutParams(
+            android.widget.GridLayout.spec(android.widget.GridLayout.UNDEFINED, 1f),
+            android.widget.GridLayout.spec(android.widget.GridLayout.UNDEFINED, 1f)
+        ).apply { width = 0 }
+        addView(TextView(context).apply {
+            text = t.icone
+            textSize = 30f
+            gravity = Gravity.CENTER
+            val brand = Apparence.couleur(context, R.color.brand)
+            setTextColor(brand)
+            val d = dp(58)
+            layoutParams = LinearLayout.LayoutParams(d, d)
+            background = GradientDrawable().apply {
+                shape = GradientDrawable.OVAL
+                if (gagne) setColor(ColorUtils.setAlphaComponent(brand, 0x26)) else setStroke(dp(1), brand)
+            }
+        })
+        addView(VueJour.texte(context, TropheesVue.nom(context, t), 13f, R.color.ink, gras = true, haut = 6).apply { gravity = Gravity.CENTER })
+        addView(VueJour.texte(context, TropheesVue.description(context, t), 11f, R.color.muted, haut = 2).apply { gravity = Gravity.CENTER })
+        contentDescription = TropheesVue.nom(context, t) + ", " + TropheesVue.description(context, t)
     }
 
     private fun carte(e: Paliers.Etat, bilan: Paliers.Bilan) = VueJour.carte(this).apply {
@@ -130,4 +185,39 @@ object PaliersVue {
         }
         return c.getString(id, valeur(c, e.piste, e.reste), valeur(c, e.piste, e.prochain))
     }
+}
+
+/** Les noms et les conditions des trophées (écrits ici, pas par getIdentifier : la réduction des ressources les retirerait). */
+object TropheesVue {
+    fun nom(c: Context, t: Trophees.Trophee): String = c.getString(when (t) {
+        Trophees.Trophee.PREMIER_PAS -> R.string.trophee_premier_pas
+        Trophees.Trophee.UNE_HEURE -> R.string.trophee_une_heure
+        Trophees.Trophee.DEUX_HEURES -> R.string.trophee_deux_heures
+        Trophees.Trophee.SEMAINE_PLEINE -> R.string.trophee_semaine_pleine
+        Trophees.Trophee.EREV_CHABBAT -> R.string.trophee_erev_chabbat
+        Trophees.Trophee.RETOUR -> R.string.trophee_retour
+        Trophees.Trophee.CHAI -> R.string.trophee_chai
+        Trophees.Trophee.QUARANTE -> R.string.trophee_quarante
+        Trophees.Trophee.DIX_HEURES -> R.string.trophee_dix_heures
+        Trophees.Trophee.CENT_HEURES -> R.string.trophee_cent_heures
+        Trophees.Trophee.PLUME -> R.string.trophee_plume
+        Trophees.Trophee.PLUME_FIDELE -> R.string.trophee_plume_fidele
+        Trophees.Trophee.TARYAG -> R.string.trophee_taryag
+    })
+
+    fun description(c: Context, t: Trophees.Trophee): String = c.getString(when (t) {
+        Trophees.Trophee.PREMIER_PAS -> R.string.trophee_premier_pas_desc
+        Trophees.Trophee.UNE_HEURE -> R.string.trophee_une_heure_desc
+        Trophees.Trophee.DEUX_HEURES -> R.string.trophee_deux_heures_desc
+        Trophees.Trophee.SEMAINE_PLEINE -> R.string.trophee_semaine_pleine_desc
+        Trophees.Trophee.EREV_CHABBAT -> R.string.trophee_erev_chabbat_desc
+        Trophees.Trophee.RETOUR -> R.string.trophee_retour_desc
+        Trophees.Trophee.CHAI -> R.string.trophee_chai_desc
+        Trophees.Trophee.QUARANTE -> R.string.trophee_quarante_desc
+        Trophees.Trophee.DIX_HEURES -> R.string.trophee_dix_heures_desc
+        Trophees.Trophee.CENT_HEURES -> R.string.trophee_cent_heures_desc
+        Trophees.Trophee.PLUME -> R.string.trophee_plume_desc
+        Trophees.Trophee.PLUME_FIDELE -> R.string.trophee_plume_fidele_desc
+        Trophees.Trophee.TARYAG -> R.string.trophee_taryag_desc
+    })
 }
