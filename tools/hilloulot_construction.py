@@ -6,7 +6,8 @@ les hilloulot (jours de décès de tsadikim et de 'hakhamim), par jour hébreu.
 Sources, lues le 11/10/2026 et gardées dans tools/hilloulot/ (lots 1 à 4) :
   - Wikipédia hébreu, section « נפטרו » des pages de date (CC BY-SA 4.0) ;
   - החכם היומי (hyomi.org.il, Kol Israël 'Haverim), pages par mois.
-Seuls des faits sont repris : nom, jour, année, lien. Aucun texte.
+De החכם היומי, seuls des faits : nom, jour, année. De Wikipédia, en plus,
+la première phrase de l'article (CC BY-SA 4.0, attribution à l'écran).
 Les figures non rabbiniques ont été écartées à la lecture ; les cas
 douteux gardent leur raison dans « d ».
 
@@ -59,6 +60,16 @@ def main():
                 item["d"] = e["doute"].strip(" ;")
             jours.setdefault(cle, []).append(item)
             total += 1
+    # La première phrase de l'article de Wikipédia hébreu (CC BY-SA 4.0), relevée
+    # mot pour mot le 11/10/2026 (tools/hilloulot/descriptions.json : la raison
+    # de chaque absence, de chaque coupe ou retouche est dans « note »).
+    decrits = 0
+    for e in json.load(open(os.path.join(ICI, "hilloulot", "descriptions.json"), encoding="utf-8")):
+        item = jours[e["cle"]][e["index"]]
+        assert item["he"] == e["he"], (e["cle"], e["index"], e["he"])
+        if e.get("article") and e.get("description"):
+            item["t"], item["w"] = e["description"], e["article"]
+            decrits += 1
     sortie = {
         "_meta": {
             "date": "2026-10-11",
@@ -68,11 +79,13 @@ def main():
             "regles": "Désaccord : החכם היומי l'emporte. « adar » : Adar II les années embolismiques (OH 568:7). "
                       "Un 30 absent cette année se dit le 29.",
             "d": "raison d'un doute (personne, date ou année) relevée à la lecture",
+            "t": "première phrase de l'article de Wikipédia hébreu (CC BY-SA 4.0) ; w : son titre",
         },
         "jours": dict(sorted(jours.items())),
     }
     chemin = os.path.join(ICI, "..", "android", "app", "src", "main", "res", "raw", "hilloulot.json")
     json.dump(sortie, open(chemin, "w", encoding="utf-8"), ensure_ascii=False, separators=(",", ":"))
+    print(f"{decrits} descriptions ;", end=" ")
     print(f"{total} hilloulot, {len(jours)} jours, {retires} entrées Wikipédia retirées ; {os.path.getsize(chemin)//1024} Ko")
 
 
