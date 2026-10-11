@@ -37,7 +37,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:paddingHorizontal="@dimen/edge_inner"
-                android:paddingTop="12dp"
+                android:paddingTop="6dp"
                 android:paddingBottom="16dp">
 
                 <!-- Les anneaux à part, au début de la ligne (à droite en hébreu). -->
@@ -209,8 +209,8 @@
                         android:id="@+id/start_session"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
-                        android:paddingVertical="14dp"
+                        android:layout_marginTop="10dp"
+                        android:paddingVertical="12dp"
                         android:textSize="17sp" />
 
                     <!--
