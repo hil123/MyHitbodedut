@@ -568,3 +568,19 @@ test('hilloulot : date lisible et recherche par nom', async () => {
   assert.ok(J.rechercheHilloula(table, 'צבי הירש חיות').some(([cle]) => cle === '7-30'));
   assert.deepEqual(J.rechercheHilloula(table, 'א'), []);
 });
+
+// --- Trophées (Trophees.kt, 11/10) ---
+import * as Trophees from '../src/js/trophees.js';
+test('trophées : mêmes règles que TropheesTest', () => {
+  assert.equal(Trophees.gagnes({ minutes: {}, notes: 0, meilleureSerie: 0 }).size, 0);
+  assert.ok(Trophees.semainePleine(['2026-10-11', '2026-10-12', '2026-10-13', '2026-10-14', '2026-10-15', '2026-10-16']));
+  assert.ok(!Trophees.semainePleine(['2026-10-12', '2026-10-13', '2026-10-14', '2026-10-15', '2026-10-16', '2026-10-17']));
+  assert.ok(!Trophees.retour(['2026-10-11', '2026-10-18']));
+  assert.ok(Trophees.retour(['2026-10-11', '2026-10-19']));
+  const minutes = { '2026-10-11': 125 };
+  for (let k = 1; k <= 17; k++) minutes[new Date(Date.UTC(2026, 9, 11 + 2 * k, 12)).toISOString().slice(0, 10)] = 30;
+  const g = Trophees.gagnes({ minutes, notes: 10, meilleureSerie: 40 });
+  for (const c of ['une_heure', 'deux_heures', 'chai', 'quarante', 'plume', 'dix_heures']) assert.ok(g.has(c), c);
+  assert.ok(!g.has('cent_heures'));
+  assert.deepEqual(Trophees.nouveaux(g, null), []);
+});

@@ -12,6 +12,7 @@ import { isoLocal } from './calendrier.js';
 import { JERUSALEM_GEONAMES, jour as jourJuif, jourDeLaPriere } from './calendrier-juif.js';
 import { conditionsPour, index as indexAjouts, libelleJour, vrai as ajoutVrai } from './siddur-jour.js';
 import * as Paliers from './paliers.js';
+import * as Trophees from './trophees.js';
 import { pour as halakhotPour, recherche as rechercheHalakha, source as sourceHalakha } from './halakha.js';
 import { ajouts as ajoutsDuJour, dateHilloula, debutMoisHebreu, hilloulotPour, lienArticle, rechercheHilloula, horaires, illustration as illustrationDuJour, lienHalakha, lienHyomi, momentDuSiddour, moisHebreuVoisin, semaines, semainesHebreu } from './jour-affiche.js';
 import { ALLUMAGES, heure as heureZman } from './zmanim.js';
@@ -480,7 +481,9 @@ function panneauAujourdhui() {
         h('span', { class: 'marque-jour', 'aria-hidden': 'true' }, marque));
     })),
 
-    fait ? h('button', { class: 'texte-bouton', onclick: () => ecrireNote(store.today(), rendre) }, tr.t('action_write_note')) : null));
+    fait ? h('button', { class: 'texte-bouton', onclick: () => ecrireNote(store.today(), rendre) }, tr.t('action_write_note')) : null,
+    // Les trophées et les paliers, en bas de la page (11/10).
+    h('button', { class: 'bouton-trophees', onclick: () => ouvrir('paliers') }, tr.t('trophees_paliers'))));
 }
 
 function pastille(libelle, valeur, onclick) {
@@ -1493,14 +1496,64 @@ function lignePaliers() {
   const etats = Paliers.etats(bilan);
   const une = Paliers.aLaUne(etats);
   const vus = store.paliersVus();
-  if (vus) {
-    const neuf = Paliers.nouveaux(etats, bilan, vus).sort((a, b) => b.rang - a.rang)[0];
-    if (neuf) setTimeout(() => signale(tr.t('palier_nouveau', libellePalier(neuf.piste, bilan), valeurPalier(neuf.piste, neuf.atteint))), 600);
-  }
+  // Un trophée neuf d'abord, sinon le plus haut palier neuf : les confettis (11/10).
+  const gagnes = Trophees.gagnes(pratique());
+  const trophee = Trophees.nouveaux(gagnes, store.tropheesVus())[0];
+  const neuf = vus ? Paliers.nouveaux(etats, bilan, vus).sort((a, b) => b.rang - a.rang)[0] : null;
+  const message = trophee ? tr.t('trophee_gagne', tr.t(`trophee_${trophee.cle}`))
+    : neuf ? tr.t('palier_nouveau', libellePalier(neuf.piste, bilan), valeurPalier(neuf.piste, neuf.atteint)) : null;
+  if (message) setTimeout(() => { signale(message); confettis(); }, 600);
   store.setPaliersVus(Paliers.marques(etats, bilan));
+  store.setTropheesVus(new Set(gagnes));
   const cle = { serie: 'palier_une_serie', jour: 'palier_une_jour', semaine: 'palier_une_semaine' }[une.piste] ?? 'palier_une_mois';
   return h('button', { class: 'ligne-paliers', onclick: () => ouvrir('paliers') },
     `${tr.t(cle, valeurPalier(une.piste, une.reste), valeurPalier(une.piste, une.prochain))}  ›`);
+}
+
+const pratique = () => ({ minutes: store.minutesParJour(), notes: store.nombreNotes(), meilleureSerie: store.meilleureSerie() });
+
+/** Des confettis par-dessus l'écran, 2,8 s ; rien si l'on a demandé moins d'animations. */
+function confettis() {
+  if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return;
+  const c = h('canvas', { class: 'confettis', 'aria-hidden': 'true' });
+  document.body.append(c);
+  const ctx = c.getContext('2d');
+  if (!ctx) { c.remove(); return; }
+  const dpr = window.devicePixelRatio || 1;
+  c.width = innerWidth * dpr; c.height = innerHeight * dpr;
+  const couleurs = ['#C99A2E', '#1F6F5C', '#E05A47', '#3B6EC4', '#F2C94C', '#8E4FB5'];
+  const pieces = Array.from({ length: 140 }, () => ({ x: Math.random(), vx: (Math.random() - 0.5) * 0.25, vy: 0.55 + Math.random() * 0.6,
+    tour: (Math.random() - 0.5) * 8 * Math.PI, s: (6 + Math.random() * 8) * dpr, c: couleurs[Math.floor(Math.random() * couleurs.length)],
+    rond: Math.random() < 0.25, retard: Math.random() * 0.35 }));
+  const debut = performance.now();
+  const image = (t) => {
+    const u0 = Math.min(1, (t - debut) / 2800);
+    ctx.clearRect(0, 0, c.width, c.height);
+    for (const p of pieces) {
+      const u = Math.max(0, Math.min(1, (u0 - p.retard) / (1 - p.retard)));
+      if (u <= 0) continue;
+      const x = (p.x + p.vx * u) * c.width; const y = (-0.05 + p.vy * u + 0.6 * u * u) * c.height;
+      ctx.save(); ctx.globalAlpha = Math.min(1, (1 - u) * 2); ctx.fillStyle = p.c; ctx.translate(x, y); ctx.rotate(p.tour * u);
+      if (p.rond) { ctx.beginPath(); ctx.arc(0, 0, p.s / 2, 0, 2 * Math.PI); ctx.fill(); } else ctx.fillRect(-p.s / 2, -p.s / 4, p.s, p.s / 2);
+      ctx.restore();
+    }
+    if (u0 < 1) requestAnimationFrame(image); else c.remove();
+  };
+  requestAnimationFrame(image);
+}
+
+/** La vitrine : les trophées gagnés en couleur, les autres en attente, avec ce qu'il faut pour les gagner. */
+function vitrineTrophees() {
+  const g = Trophees.gagnes(pratique());
+  store.setTropheesVus(new Set(g));
+  const tries = [...Trophees.TROPHEES].sort((a, b) => Number(!g.has(a.cle)) - Number(!g.has(b.cle)));
+  return h('div', { class: 'carte carte-palier' },
+    h('div', { class: 'trophees-tete' }, h('p', { class: 'palier-nom' }, tr.t('trophees_titre')),
+      h('p', { class: 'trophees-compte' }, tr.t('trophees_compte', g.size, Trophees.TROPHEES.length))),
+    h('div', { class: 'trophees-grille' }, ...tries.map((t) => h('div', { class: `trophee${g.has(t.cle) ? ' gagne' : ''}` },
+      h('span', { class: 'trophee-icone', 'aria-hidden': 'true' }, t.icone),
+      h('span', { class: 'trophee-nom' }, tr.t(`trophee_${t.cle}`)),
+      h('span', { class: 'trophee-desc' }, tr.t(`trophee_${t.cle}_desc`))))));
 }
 
 function ecranPaliers() {
@@ -1517,8 +1570,11 @@ function ecranPaliers() {
     e.rang > 0 ? h('p', { class: 'palier-atteints' }, tr.t('palier_atteints', e.rang)) : null,
     e.rang > 0 ? h('div', { class: 'palier-pastilles' }, Paliers.echelle(e.piste, e.valeur, bilan.objectifJour).filter((x) => x <= e.valeur)
       .reverse().slice(0, 8).map((x) => h('span', { class: 'palier-pastille' }, valeurPalier(e.piste, x)))) : null);
-  return h('div', { class: 'ecran avec-bandeau' }, bandeau(tr.t('paliers_title'), { puce: h('p', { class: 'bandeau-sous-titre' }, tr.t('paliers_sous_titre')), dessin: 'char_arms_raised' }),
+  return h('div', { class: 'ecran avec-bandeau' }, bandeau(tr.t('trophees_paliers_titre'), { dessin: 'char_arms_raised' }),
     h('div', { class: 'defile' }, h('div', { class: 'contenu' },
+      vitrineTrophees(),
+      h('h2', { class: 'paliers-titre' }, tr.t('paliers_title')),
+      h('p', { class: 'paliers-sous-titre' }, tr.t('paliers_sous_titre')),
       ...etats.map(carte),
       h('div', { class: 'carte carte-palier' }, h('p', { class: 'palier-nom' }, tr.t('paliers_records')),
         ...[tr.t('record_serie', valeurPalier('serie', store.meilleureSerie())), tr.t('record_jour', tr.duree(r.jour)),

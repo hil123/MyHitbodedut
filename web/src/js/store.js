@@ -108,6 +108,10 @@ export function creeStore(stockage, { maintenant = () => new Date(), fuseau } = 
     /** null tant que les paliers n'ont jamais été regardés : le premier passage ne fête rien. */
     paliersVus: () => { const v = get('paliers_vus', null); return Array.isArray(v) ? new Set(v) : null; },
     setPaliersVus: (marques) => set('paliers_vus', [...marques]),
+    /** Les trophées déjà fêtés (null : jamais regardés, le premier passage ne fête rien). */
+    tropheesVus: () => { const v = get('trophees_vus', null); return Array.isArray(v) ? new Set(v) : null; },
+    setTropheesVus: (cles) => set('trophees_vus', [...cles]),
+    nombreNotes: () => Object.values(days()).filter((r) => (r.note ?? '').trim()).length,
     /** La hilloula du jour sur la carte du jour (11/10) : affichée par défaut. */
     hilloulotAffichees: () => get('hilloulot_affichees', true) !== false,
     setHilloulotAffichees: (v) => set('hilloulot_affichees', !!v),
