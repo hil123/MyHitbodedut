@@ -1,0 +1,9 @@
+{
+  // Codespace de secours (11/10/2026) : quand GitHub Actions ne démarre plus,
+  // le Codespace compile les deux éditions signées et publie la release tout
+  // seul, une fois, à sa création (tools/apk_codespace.sh ; il ne fait rien si
+  // la release de ce numéro existe déjà). Journal : /tmp/apk.log.
+  "name": "MyHitbodedut",
+  "image": "mcr.microsoft.com/devcontainers/universal:2",
+  "postCreateCommand": "bash tools/apk_codespace.sh 2>&1 | tee /tmp/apk.log"
+}

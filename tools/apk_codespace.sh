@@ -13,6 +13,12 @@ NUM="${1:-224}"
 RACINE="$(cd "$(dirname "$0")/.." && pwd)"
 SDK="$HOME/android-sdk"
 
+# Une seule fois : la release de ce numéro existe déjà, rien à faire.
+if gh release view "v1.$NUM" >/dev/null 2>&1; then
+  echo "La release v1.$NUM existe déjà : rien à faire."
+  exit 0
+fi
+
 echo "== JDK 17"
 if ! java -version 2>&1 | grep -q '"17'; then
   sudo apt-get update -qq && sudo apt-get install -y -qq openjdk-17-jdk-headless >/dev/null
