@@ -177,6 +177,7 @@ TITRES = {
     "bore_nefachot": ("brakhot", T("בּוֹרֵא נְפָשׁוֹת", "Boré néfachot", "Borei Nefashot")),
     "tefilat_haderekh": ("brakhot", T("תְּפִלַּת הַדֶּרֶךְ", "Téfilat hadérekh", "Traveler’s prayer")),
     "birkat_halevana": ("moments", T("בִּרְכַּת הַלְּבָנָה", "Birkat halévana", "Blessing of the moon")),
+    "moussaf_rosh_hodech": ("moments", T("מוּסָף לְרֹאשׁ חֹדֶשׁ", "Moussaf de Roch ’Hodech", "Musaf for Rosh Chodesh")),
     "cheva_berakhot": ("moments", T("שֶׁבַע בְּרָכוֹת", "Chéva bérakhot", "Sheva Berakhot")),
     "parachat_haman": ("moments", T("פָּרָשַׁת הַמָּן", "Parachat hamane", "Parashat HaMan")),
     "kaddich": ("moments", T("קַדִּישׁ", "Kaddich", "Kaddish")),
@@ -193,6 +194,62 @@ GROUPES = [
     {"cle": "brakhot", "titre": T("בְּרָכוֹת", "Bénédictions", "Blessings")},
     {"cle": "moments", "titre": T("לְעִתִּים", "Pour certains moments", "For particular times")},
 ]
+
+
+# Les douze צירופי הוי״ה des mois (demande du 11/10), relevés dans le Bnei
+# Yissaschar, Piotrkow 1883 (export Sefaria, NLI 001763733), en tête de
+# chaque mois : le צירוף et les mots du verset tels que l'auteur les écrit,
+# sans vocalisation ajoutée. Selon kinuim.web.app, le Ramak (Pardès) échange
+# Adar et Eloul (non vérifié dans le Pardès) : on suit le Bnei Yissaschar.
+# La phrase citée est au début des maamarim de Nisan (maamar 1, 2).
+TSEROUFIM = [
+    ("ניסן", "יהו״ה", "ר״ת ישמחו השמים ותגל הארץ"),
+    ("אייר", "יהה״ו", "ר״ת יתהלל המתהלל השכל וידוע"),
+    ("סיון", "יוה״ה", "ר״ת ידות ולצלע המשכן השנית"),
+    ("תמוז", "הוה״י", "ס״ת וכל זה איננו שוה לי"),
+    ("אב", "הוי״ה", "הנה יד ה׳ הויה"),
+    ("אלול", "ההו״י", "ס״ת וצדקה תהיה לנו כי"),
+    ("תשרי", "והי״ה", "ס״ת ויראו אתה שרי פרעה"),
+    ("מרחשון", "וה״הי", "ר״ת ודבש היום הזה ה׳"),
+    ("כסלו", "ויה״ה", "ר״ת וירא יושב הארץ הכנעני"),
+    ("טבת", "היה״ו", "ס״ת גדלו לה׳ אתי ונרוממה שמו"),
+    ("שבט", "היו״ה", "ר״ת המר ימירנו והיה הוא"),
+    ("אדר", "ההי״ו", "ס״ת עירה ולשרקה בני אתונו"),
+]
+
+
+def tseroufim():
+    """La consigne du Bnei Yissaschar, placée à la fin de la bénédiction du milieu."""
+    lignes = [f"{mois}: <b>{t}</b> ({verset})" for mois, t, verset in TSEROUFIM]
+    return {"c": NFC("<b>צירוף שם הוי״ה של החודש</b> – בני יששכר, מאמרי חודש ניסן: "
+                     "„ידוע מכתבי מרן האריז״ל אשר בכל ראש חדש צריכין לכוין במוסף בסיום הברכה "
+                     "האמצעית צירוף הוי״ה השולטת באותו החדש”.<br>" + "<br>".join(lignes))}
+
+
+def avec_tseroufim(sections):
+    """
+    Après la fin de la bénédiction du milieu (« מקדש ישראל וראשי חדשים »),
+    qui suit « חדש עלינו » dans le même paragraphe (Edot, Sfard) ou dans un
+    paragraphe à part (Ashkenaz, Daat).
+    """
+    nu = lambda b: re.sub(r"[\u0591-\u05C7]", "", re.sub(r"<[^>]+>", "", b.get("t", "")))
+    for s in sections:
+        debut = next((i for i, b in enumerate(s["blocs"]) if "חדש עלינו" in nu(b)), None)
+        if debut is None:
+            continue
+        for j in range(debut, len(s["blocs"])):
+            if "מקדש ישראל וראשי חדשים" in nu(s["blocs"][j]):
+                s["blocs"].insert(j + 1, tseroufim())
+                return sections
+        if debut + 1 < len(s["blocs"]) or s is sections[-1]:
+            break
+        # La chatima ouvre la section suivante.
+        k = sections.index(s) + 1
+        for j, b in enumerate(sections[k]["blocs"]):
+            if "מקדש ישראל וראשי חדשים" in nu(b):
+                sections[k]["blocs"].insert(j + 1, tseroufim())
+                return sections
+    raise SystemExit("moussaf de Roch 'Hodech : fin de la bénédiction du milieu introuvable")
 
 
 def main(dossier):
@@ -221,6 +278,7 @@ def main(dossier):
         "bore_nefachot": (EM, EM.extrait(["Blessings on Enjoyments"], 11, 13, "בורא נפשות")),
         "tefilat_haderekh": (EM, EM.sections(["Assorted Blessings and Prayers", "Traveler's Prayer"])),
         "birkat_halevana": (EM, EM.sections(["Blessing of the Moon"])),
+        "moussaf_rosh_hodech": (EM, avec_tseroufim(EM.sections(["Rosh Hodesh", "Mussaf"]))),
         "cheva_berakhot": (EM, EM.sections(["Assorted Blessings and Prayers", "Sheva Berachot"])),
         "parachat_haman": (TN, haman),
         "kaddich": (EM, EM.extrait(["Weekday Shacharit", "Kaveh"], 13, 16, "קדיש על ישראל")),
@@ -249,6 +307,7 @@ def main(dossier):
         "bore_nefachot": (ST, ST.sections(["Blessings", "Borei Nefashot"])),
         "tefilat_haderekh": (ST, ST.sections(["Blessings", "Traveler's Prayer"])),
         "birkat_halevana": (ST, ST.sections(["Kiddush Levanah"])),
+        "moussaf_rosh_hodech": (ST, avec_tseroufim(ST.sections(["Rosh Chodesh", "Mussaf"]))),
         "cheva_berakhot": (ST, ST.sections(["Various Blessings", "Sheva Berachot"])),
         "parachat_haman": (TN, haman),
         "kaddich": (SM, SM.extrait(["Weekday Shacharit", "Aleinu"], 5, 9, "קדיש יתום")),
@@ -268,6 +327,7 @@ def main(dossier):
         "bore_nefachot": (AD, AD.sections(["Berachot", "Birkat Hanehenin", "Eating", "Brachot Achronot", "Borei Nefashot"])),
         "tefilat_haderekh": (AD, AD.sections(["Berachot", "Tefillat HaDerech"])),
         "birkat_halevana": (AM, AM.sections(["Weekday", "Maariv", "Birkat HaLevana"])),
+        "moussaf_rosh_hodech": (AD, avec_tseroufim(AD.sections(["Festivals", "Rosh Chodesh", "Musaf Amidah for Rosh Chodesh"]))),
         "cheva_berakhot": (SB, sheva_ashkenaz),
         "parachat_haman": (TN, haman),
         "kaddich": (AD, AD.sections(["Kaddish", "Mourner's Kaddish"])),
