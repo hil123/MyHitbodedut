@@ -133,6 +133,8 @@ object SiddurMoment {
         // Les tefillin et le lit (planche du 11/10).
         "chaharit" -> R.drawable.char_tefillin
         "chema_coucher" -> R.drawable.scene_sleeping
+        // L'aéroport, décor gardé (demande du 11/10).
+        "tefilat_haderekh" -> R.drawable.scene_airport
         "minha" -> R.drawable.char_standing_back
         "arvit" -> R.drawable.char_reading_seated
         else -> R.drawable.char_thinking

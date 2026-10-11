@@ -281,6 +281,7 @@ export const SiddurMoment = {
       minha: 'char_standing_back',
       arvit: 'char_reading_seated',
       chema_coucher: 'scene_sleeping',
+      tefilat_haderekh: 'scene_airport',
     }[id] ?? 'char_thinking';
   },
 };
