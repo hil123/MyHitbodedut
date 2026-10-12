@@ -46,9 +46,6 @@ object Hilloulot {
                     doute = Json.nullable(o, "d"),
                     description = Json.nullable(o, "t"),
                     article = Json.nullable(o, "w"),
-                    bios = o.optJSONArray("b")?.let { b ->
-                        (0 until b.length()).map { i -> b.getJSONArray(i).let { x -> Bio(x.getString(0), x.getString(1), x.optString(2).ifBlank { null }) } }
-                    } ?: emptyList(),
                     hidabroot = Json.nullable(o, "i"),
                 )
             }
@@ -125,4 +122,25 @@ object Hilloulot {
 
     fun table(context: Context): Map<String, List<Hilloula>> =
         cache ?: parse(Json.readRaw(context, R.raw.hilloulot)).also { cache = it }
+
+    /**
+     * Les biographies d'autres sources (res/raw/hilloulot_bios.json), à part pour que la
+     * carte du jour reste légère : par jour, une entrée par hilloula, dans le même ordre.
+     */
+    fun avecBios(table: Map<String, List<Hilloula>>, json: String): Map<String, List<Hilloula>> {
+        val bios = JSONObject(json)
+        return table.mapValues { (cle, liste) ->
+            val b = bios.optJSONArray(cle) ?: return@mapValues liste
+            liste.mapIndexed { i, h ->
+                val x = b.optJSONArray(i) ?: return@mapIndexed h
+                h.copy(bios = (0 until x.length()).map { j -> x.getJSONArray(j).let { y -> Bio(y.getString(0), y.getString(1), y.optString(2).ifBlank { null }) } })
+            }
+        }
+    }
+
+    @Volatile private var complete: Map<String, List<Hilloula>>? = null
+
+    /** La table avec les biographies, pour l'écran des hilloulot seulement. */
+    fun tableComplete(context: Context): Map<String, List<Hilloula>> =
+        complete ?: avecBios(table(context), Json.readRaw(context, R.raw.hilloulot_bios)).also { complete = it }
 }

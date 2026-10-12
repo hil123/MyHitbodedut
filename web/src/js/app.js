@@ -1316,9 +1316,24 @@ let hilloulotsDemandees = false;
 function tableHilloulot() {
   if (!hilloulotsDemandees) {
     hilloulotsDemandees = true;
-    fetch('data/hilloulot.json').then((r) => r.json()).then((d) => { hilloulots = d.jours; rendre(); }).catch(() => {});
+    fetch('data/hilloulot.json').then((r) => r.json()).then((d) => { hilloulots = hilloulots ?? d.jours; rendre(); }).catch(() => {});
   }
   return hilloulots;
+}
+
+// Les biographies d'autres sources (hilloulot_bios.json, 12/10), à part pour que la carte du
+// jour reste légère : lues à l'écran des hilloulot ; par jour, une entrée par hilloula, dans le même ordre.
+let biosDemandees = false;
+function chargeBiosHilloulot() {
+  if (biosDemandees) return;
+  biosDemandees = true;
+  Promise.all([fetch('data/hilloulot.json').then((r) => r.json()), fetch('data/hilloulot_bios.json').then((r) => r.json())])
+    .then(([d, bios]) => {
+      hilloulots = hilloulots ?? d.jours;
+      hilloulotsDemandees = true;
+      for (const [cle, ligne] of Object.entries(bios)) ligne.forEach((b, i) => { if (b && hilloulots[cle]?.[i]) hilloulots[cle][i].b = b; });
+      rendre();
+    }).catch(() => { biosDemandees = false; });
 }
 
 // La halakha du jour (11/10) : ben_ish_hai.json, chargé à la première carte.
@@ -1450,6 +1465,7 @@ let jourHilloulot = null;
 let rechercheHilloulot = '';
 
 function ecranHilloulot() {
+  chargeBiosHilloulot();
   const table = tableHilloulot() ?? {};
   const iso = jourHilloulot ?? isoLocal(new Date());
   const carte = (x, date) => h('div', { class: 'carte carte-hilloula' },

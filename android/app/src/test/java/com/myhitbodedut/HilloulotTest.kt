@@ -62,4 +62,17 @@ class HilloulotTest {
         assertTrue(Hilloulot.recherche(table, "צבי הירש חיות").any { it.first == "7-30" })
         assertTrue(Hilloulot.recherche(table, "א").isEmpty())
     }
+
+    @Test
+    fun `les biographies d autres sources, a part, avec leur source`() {
+        val complete = Hilloulot.avecBios(table, File("src/main/res/raw/hilloulot_bios.json").readText())
+        assertEquals(table.keys, complete.keys)
+        table.forEach { (cle, liste) -> assertEquals(cle, liste.map { it.he }, complete.getValue(cle).map { it.he }) }
+        val bios = complete.values.flatten().flatMap { it.bios }
+        assertTrue(bios.size > 2000)
+        assertTrue(bios.all { it.source in setOf("m", "l") && it.texte.isNotBlank() })
+        // La source est dite : chaque biographie de MyTzadik ou de המאיר לארץ garde le lien vers sa page.
+        assertTrue(bios.all { it.lien?.startsWith("https://") == true })
+        assertTrue(table.values.flatten().all { it.bios.isEmpty() })
+    }
 }

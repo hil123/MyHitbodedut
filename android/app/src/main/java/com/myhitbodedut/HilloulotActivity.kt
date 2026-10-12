@@ -76,7 +76,7 @@ class HilloulotActivity : AppCompatActivity() {
 
     private fun remplir() {
         liste.removeAllViews()
-        val table = Hilloulot.table(this)
+        val table = Hilloulot.tableComplete(this)
         if (recherche.trim().length >= 2) {
             val trouves = Hilloulot.recherche(table, recherche)
             liste.addView(VueJour.texte(this, getString(R.string.hilloulot_resultats, trouves.size), 14f, R.color.muted, gras = true, haut = 14))

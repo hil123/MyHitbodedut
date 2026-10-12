@@ -157,20 +157,13 @@ def sources_autorisees(jours):
         return len(c) + len(rares) if len(c) >= 2 or (rares and m and m[-1] in rares) else 0
 
     def apparier(nom, cle):
-        """Le même jour d'abord ; sinon, un rapprochement net (deux mots rares) un autre
-        jour : c'est la même personne, notre date est gardée."""
+        """Le même jour seulement. Un rapprochement d'un jour à l'autre confondait des
+        homonymes d'une même dynastie (12/10) : un tsaddik dont la date diffère de la
+        nôtre est ajouté à sa date, avec sa source."""
         a = set(mots(nom))
         meilleur = max(((score(a, x), x) for x in candidats(cle)), key=lambda t: t[0], default=(0, None))
-        if meilleur[0]:
-            return meilleur[1], False
-        def net(x):
-            b = set(mots(x["he"]))
-            c = a & b
-            return score(a, x) if len(c) >= 2 and len(c) / len(a) >= 0.6 and len(c) / len(b) >= 0.6 else 0
-        ailleurs = max(((net(x), x) for v in jours.values() for x in v), key=lambda t: t[0], default=(0, None))
-        return (ailleurs[1], True) if ailleurs[0] >= 4 else (None, False)
+        return (meilleur[1], False) if meilleur[0] else (None, False)
 
-    autres_jours = []
     for code, fichier in (("l", "hameir.json"), ("m", "mytzadik.json")):
         chemin = os.path.join(ICI, "hilloulot", fichier)
         if not os.path.exists(chemin):
@@ -181,9 +174,7 @@ def sources_autorisees(jours):
             if not cle:
                 continue
             bio = sans_balisage(e.get("bio") or "")
-            x, autre_jour = apparier(e["nom"], cle)
-            if autre_jour:
-                autres_jours.append(f"{code} {cle} {e['nom']} → {x['he']}")
+            x, _ = apparier(e["nom"], cle)
             if x is None:
                 x = {"he": e["nom"].strip(), "a": "", "s": ""}
                 jours.setdefault(cle, []).append(x)
@@ -195,8 +186,6 @@ def sources_autorisees(jours):
             if bio and not any(b[0] == code for b in x.get("b", [])):
                 x.setdefault("b", []).append([code, bio, e.get("url") or ""])
         print(f"{fichier} : {lies} rapprochés, {ajoutes} ajoutés ;", end=" ")
-    with open(os.path.join(ICI, "hilloulot", "autres_jours.txt"), "w", encoding="utf-8") as f:
-        f.write("# Même personne, date différente de la nôtre : notre date est gardée.\n" + "\n".join(autres_jours) + "\n")
 
 
 def main():
@@ -257,7 +246,7 @@ def main():
                         "המאיר לארץ, hameir-laarets.org.il : reprise autorisée avec mention, accord reçu par le propriétaire de l'app le 12/10/2026"],
             "s": "w = Wikipédia, h = החכם היומי, i = Hidabroot, e = תורת אמת, m = MyTzadik, l = המאיר לארץ",
             "i": "lien vers l'article de Hidabroot",
-            "b": "biographies d'autres sources, mot pour mot : [source, texte, lien]",
+            "b": "hilloulot_bios.json : par jour et dans le même ordre, les biographies d'autres sources, mot pour mot : [source, texte, lien], ou 0",
             "regles": "Désaccord : החכם היומי l'emporte. « adar » : Adar II les années embolismiques (OH 568:7). "
                       "Un 30 absent cette année se dit le 29.",
             "d": "raison d'un doute (personne, date ou année) relevée à la lecture",
@@ -265,7 +254,17 @@ def main():
         },
         "jours": dict(sorted(jours.items())),
     }
-    chemin = os.path.join(ICI, "..", "android", "app", "src", "main", "res", "raw", "hilloulot.json")
+    # Les biographies longues (MyTzadik, המאיר לארץ) à part : hilloulot.json reste léger pour la
+    # carte du jour ; hilloulot_bios.json n'est lu qu'à l'écran des hilloulot. Par jour, une
+    # entrée par hilloula, dans le même ordre : ses biographies, ou 0.
+    bios = {}
+    for cle, liste in sortie["jours"].items():
+        ligne = [x.pop("b", 0) for x in liste]
+        if any(ligne):
+            bios[cle] = ligne
+    raw = os.path.join(ICI, "..", "android", "app", "src", "main", "res", "raw")
+    json.dump(bios, open(os.path.join(raw, "hilloulot_bios.json"), "w", encoding="utf-8"), ensure_ascii=False, separators=(",", ":"))
+    chemin = os.path.join(raw, "hilloulot.json")
     json.dump(sortie, open(chemin, "w", encoding="utf-8"), ensure_ascii=False, separators=(",", ":"))
     print(f"{decrits} descriptions ;", end=" ")
     total = sum(len(v) for v in jours.values())
