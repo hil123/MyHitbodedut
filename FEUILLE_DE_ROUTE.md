@@ -821,9 +821,39 @@ Détail et sources : `ZMANIM.md`, « Différences de noussa'h ».
 
 - les propositions 2, 3/15, 5, 6, 7 (sur les vrais zmanim), 9, 10, 11 et 12
   ci-dessus, inchangées ;
-- les hilloulot : le paragraphe d'introduction de Wikipédia plutôt que la
-  première phrase (en attente : crédits Firecrawl) ;
 - les icônes signalées le 12/10 : lesquelles, à préciser ;
 - l'APK : essayer sur un vrai téléphone la barrière du matin (proposition
   12), jamais éprouvée ;
 - Kokhvei Or : toujours pas fourni.
+
+## Mise à jour (12/10, suite)
+
+**Fait** :
+
+- Réinitialiser l'app (fin des réglages) ; partager une hitbodedout avec le
+  lien de la version web.
+- Trophées : étagère d'objets variés en 3D (coupe, écusson, étoile, rosette,
+  médaille, pièces, cristal, gemme), avatar, 9 familles et 113 niveaux, avec
+  des paliers à chaque dizaine et quinzaine pour les six premières.
+- Espacement des textes sur tous les écrans de lecture ; barre de lecture
+  (taille, police) sur les écrans halakha et hilloulot du web.
+- Hilloulot : 4 049 (au lieu de 2 595), avec leur source à l'écran.
+  - Wikipédia hébreu : le début de l'article, jusqu'à six phrases.
+  - MyTzadik et המאיר לארץ : biographies mot pour mot, reprises avec
+    l'accord reçu par le propriétaire de l'app (12/10), mention et lien.
+  - Hidabroot : faits seuls et lien vers ses articles ; 15 ajouts confirmés
+    par Wikipédia.
+  - תורת אמת (סדר הדורות, CC BY-NC-SA 2.5) : dates des fils de Jacob.
+  - Rav Shmouel Birnbaum : 28 Tevet (et non 28 Chevat).
+  - Les biographies longues dans hilloulot_bios.json, lues à l'écran des
+    hilloulot seulement ; repli « Lire la suite ».
+
+**Reste** :
+
+- breslev.co.il et « ימי הילולא דצדיקיא » (site שטייגן) : pas sans accord
+  écrit ;
+- « יד מאיר » : site à préciser ;
+- quand deux sources donnent des jours différents, le tsaddik paraît aux
+  deux dates, chacune avec sa source (ex. Rabbi Akiva, 9 Tichri chez
+  המאיר לארץ) ;
+- les icônes signalées le 12/10 : lesquelles, à préciser.
