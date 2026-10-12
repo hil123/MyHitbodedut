@@ -1,0 +1,136 @@
+# -*- coding: utf-8 -*-
+"""
+Les objets des trophées (12/10, d'après les planches d'inspiration
+envoyées par le propriétaire) : coupe à anses, écusson aux lauriers, étoile
+sur pied, rosette crantée, médaille à ruban, pile de pièces, trophée de
+cristal, diamant. Une seule description, en tracés SVG dans une boîte de
+100 × 100, avec la matière de chaque partie :
+
+  m  métal (dégradé en diagonale, clair → foncé)
+  mr métal bombé (dégradé radial, éclairé en haut à gauche)
+  md métal sombre (tranches, anses, bords)
+  v  verre ; vc verre clair (facette éclairée)
+  r  ruban rouge
+  w  reflet blanc translucide
+
+Le même fichier sert à Android (res/raw/trophees_formes.json, dessiné par
+TropheeDessin) et au web (web/src/js/trophees-formes.js).
+
+  python3 tools/trophees_formes.py
+"""
+import json, math, os
+
+RACINE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
+
+
+def cercle(cx, cy, r):
+    return f"M{cx - r:.2f} {cy:.2f} A{r} {r} 0 1 0 {cx + r:.2f} {cy:.2f} A{r} {r} 0 1 0 {cx - r:.2f} {cy:.2f} Z"
+
+
+def polygone(points):
+    return "M" + " L".join(f"{x:.2f} {y:.2f}" for x, y in points) + " Z"
+
+
+def etoile():
+    cx, cy, R, r, n = 50, 38, 34, 15, 8
+    pts = []
+    for i in range(2 * n):
+        a = -math.pi / 2 + i * math.pi / n
+        rr = R if i % 2 == 0 else r
+        pts.append((cx + rr * math.cos(a), cy + rr * math.sin(a)))
+    parts = []
+    for i in range(2 * n):
+        a, b = pts[i], pts[(i + 1) % (2 * n)]
+        parts.append(["m" if i % 2 == 0 else "md", polygone([(cx, cy), a, b])])
+    return parts
+
+
+def rosette():
+    cx, cy = 50, 46
+    pts = []
+    for i in range(48):
+        a = i * 2 * math.pi / 48
+        rr = 40 if i % 2 == 0 else 36
+        pts.append((cx + rr * math.cos(a), cy + rr * math.sin(a)))
+    return [
+        ["r", "M38 72 L28 97 L37 91 L44 98 L49 76 Z"],
+        ["r", "M62 72 L72 97 L63 91 L56 98 L51 76 Z"],
+        ["md", polygone(pts)],
+        ["m", cercle(cx, cy, 31)],
+        ["mr", cercle(cx, cy, 25)],
+        ["w", "M27 40 C30 28 40 20 52 19 C42 24 34 32 31 44 Z"],
+    ]
+
+
+def pieces():
+    parts = []
+    for i, y in enumerate([84, 75, 66, 57, 48]):
+        parts.append(["md", f"M20 {y} H80 V{y + 8} A30 7 0 0 1 20 {y + 8} Z"])
+        parts.append(["m" if i < 4 else "mr", f"M20 {y} A30 7 0 0 1 80 {y} A30 7 0 0 1 20 {y} Z"])
+    parts.append(["md", cercle(70, 30, 15)])
+    parts.append(["mr", cercle(70, 30, 12)])
+    return parts
+
+
+FORMES = {
+    "coupe": {"embleme": [50, 34, 20], "parts": [
+        ["md", "M26 20 C6 20 6 52 32 56 L34 50 C16 46 15 28 27 27 Z"],
+        ["md", "M74 20 C94 20 94 52 68 56 L66 50 C84 46 85 28 73 27 Z"],
+        ["m", "M21 13 H79 C79 44 67 60 50 63 C33 60 21 44 21 13 Z"],
+        ["md", "M19 10 H81 V17 H19 Z"],
+        ["m", "M46 63 H54 L56 76 H44 Z"],
+        ["md", "M39 76 H61 V81 H39 Z"],
+        ["mr", "M31 81 H69 L73 93 H27 Z"],
+        ["w", "M27 18 C29 36 35 49 44 55 C35 47 32 34 33 18 Z"],
+    ]},
+    "ecusson": {"embleme": [50, 46, 22], "parts": [
+        ["md", "M31 86 C14 74 8 52 13 26 C19 30 21 38 21 44 C17 40 15 36 15 32 C15 50 21 64 33 76 Z"],
+        ["md", "M69 86 C86 74 92 52 87 26 C81 30 79 38 79 44 C83 40 85 36 85 32 C85 50 79 64 67 76 Z"],
+        ["m", "M50 9 L81 19 V47 C81 66 67 80 50 89 C33 80 19 66 19 47 V19 Z"],
+        ["mr", "M50 16 L74 24 V47 C74 62 63 74 50 81 C37 74 26 62 26 47 V24 Z"],
+        ["w", "M26 24 L50 16 V38 C40 38 32 43 26 50 Z"],
+    ]},
+    "etoile": {"embleme": [50, 38, 14], "parts": etoile() + [
+        ["md", "M47 62 H53 L55 86 H45 Z"],
+        ["m", "M34 86 H66 L68 93 H32 Z"],
+    ]},
+    "rosette": {"embleme": [50, 46, 22], "parts": rosette()},
+    "medaille": {"embleme": [50, 62, 20], "parts": [
+        ["r", "M28 3 H44 L57 40 H41 Z"],
+        ["r", "M72 3 H56 L43 40 H59 Z"],
+        ["md", cercle(50, 62, 31)],
+        ["m", cercle(50, 62, 27)],
+        ["mr", cercle(50, 62, 21)],
+        ["w", "M30 56 C33 44 42 37 54 36 C44 41 37 48 34 60 Z"],
+    ]},
+    "pieces": {"embleme": [70, 30, 12], "parts": pieces()},
+    "cristal": {"embleme": [50, 46, 20], "parts": [
+        ["v", "M33 7 L68 19 L61 88 H39 Z"],
+        ["vc", "M33 7 L50 13 L50 88 H39 Z"],
+        ["w", "M37 14 L44 16 L42 70 L39 72 Z"],
+    ]},
+    "gemme": {"embleme": [50, 40, 14], "parts": [
+        ["m", "M22 34 H78 L50 84 Z"],
+        ["md", "M22 34 L50 84 L39 34 Z"],
+        ["mr", "M61 34 L50 84 L78 34 Z"],
+        ["mr", "M22 34 L35 17 H65 L78 34 Z"],
+        ["w", "M35 17 L42 34 H22 Z"],
+        ["md", "M50 34 L65 17 L57 34 Z"],
+    ]},
+}
+
+
+def main():
+    donnees = {"_meta": {"outil": "tools/trophees_formes.py", "boite": 100,
+                         "matieres": "m métal, mr métal bombé, md métal sombre, v verre, vc verre clair, r ruban, w reflet"},
+               "formes": FORMES}
+    json.dump(donnees, open(os.path.join(RACINE, "android/app/src/main/res/raw/trophees_formes.json"), "w", encoding="utf-8"),
+              ensure_ascii=False, separators=(",", ":"))
+    with open(os.path.join(RACINE, "web/src/js/trophees-formes.js"), "w", encoding="utf-8") as f:
+        f.write("// Généré par tools/trophees_formes.py : les objets des trophées, en tracés SVG (boîte 100 × 100).\n")
+        f.write("export const FORMES = " + json.dumps(FORMES, ensure_ascii=False) + ";\n")
+    print({k: len(v["parts"]) for k, v in FORMES.items()})
+
+
+if __name__ == "__main__":
+    main()

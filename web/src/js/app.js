@@ -13,6 +13,7 @@ import { JERUSALEM_GEONAMES, jour as jourJuif, jourDeLaPriere } from './calendri
 import { conditionsPour, index as indexAjouts, libelleJour, vrai as ajoutVrai } from './siddur-jour.js';
 import * as Paliers from './paliers.js';
 import * as Trophees from './trophees.js';
+import { FORMES } from './trophees-formes.js';
 import { pour as halakhotPour, recherche as rechercheHalakha, source as sourceHalakha } from './halakha.js';
 import { ajouts as ajoutsDuJour, dateHilloula, debutMoisHebreu, hilloulotPour, lienArticle, rechercheHilloula, horaires, illustration as illustrationDuJour, lienHalakha, lienHyomi, momentDuSiddour, moisHebreuVoisin, semaines, semainesHebreu } from './jour-affiche.js';
 import { ALLUMAGES, heure as heureZman } from './zmanim.js';
@@ -704,7 +705,7 @@ function ramenerLecture() {
   rendreEtViser('.lecture-barre button');
 }
 
-function reglagesLecture({ avecNusah }) {
+function reglagesLecture({ avecNusah, sansNuit = false }) {
   if (store.lectureMasquee()) return null;
   if (!reglagesOuverts) {
     return h('div', { class: 'lecture-ctrl' },
@@ -739,7 +740,7 @@ function reglagesLecture({ avecNusah }) {
       // « אב » : la police suivante (hébraïque à empattements, sans, arrondie), pour tous les textes.
       bouton({ class: 'lecture-police', lang: 'he', dir: 'rtl', 'aria-label': `${tl('lecture_police')} : ${tl(`police_${store.lecturePolice()}`)}`, title: tl(`police_${store.lecturePolice()}`),
         onclick: () => { const l = ['serif', 'sans', 'arrondie']; store.setLecturePolice(l[(l.indexOf(store.lecturePolice()) + 1) % l.length]); appliquerPolice(); rendreEtViser('.lecture-police'); } }, 'אב'),
-      bouton({ class: 'icone-bouton', 'aria-label': tl('lecture_nuit'), 'aria-pressed': String(nuit), onclick: () => { store.setLectureSombre(!nuit); rendreEtViser('.lecture-barre [aria-pressed]'); } }, icone('lune')),
+      sansNuit ? null : bouton({ class: 'icone-bouton', 'aria-label': tl('lecture_nuit'), 'aria-pressed': String(nuit), onclick: () => { store.setLectureSombre(!nuit); rendreEtViser('.lecture-barre [aria-pressed]'); } }, icone('lune')),
       avecNusah ? bouton({
         class: 'lecture-nusah-bouton', 'aria-haspopup': 'menu', 'aria-expanded': String(choixNusahOuvert),
         onclick: () => { choixNusahOuvert = !choixNusahOuvert; rendreEtViser(choixNusahOuvert ? '.lecture-nusah [aria-checked="true"]' : '.lecture-nusah-bouton'); },
@@ -1376,6 +1377,16 @@ function blocHalakha(iso) {
 let jourHalakha = null;
 let rechercheHalakhaTexte = '';
 
+/**
+ * Un écran à bandeau dont le texte se règle (halakha, hilloulot) : la même
+ * barre de lecture que les textes saints, taille et police ; la nuit reste aux textes saints.
+ */
+function zoneReglable(contenu) {
+  const defile = h('div', { class: 'defile' }, contenu);
+  appuiLongPourRamener(defile);
+  return h('div', { class: 'lu-zone sans-pied reglable' }, defile, reglagesLecture({ avecNusah: false, sansNuit: true }));
+}
+
 function ecranHalakha() {
   const livre = livreDuJour() ?? { annees: {} };
   const iso = jourHalakha ?? isoLocal(new Date());
@@ -1404,7 +1415,7 @@ function ecranHalakha() {
     ];
   }
   return h('div', { class: 'ecran avec-bandeau' }, bandeau(tr.t('halakha_title'), { dessin: 'char_reading_seated' }),
-    h('div', { class: 'defile' }, h('div', { class: 'contenu' },
+    zoneReglable(h('div', { class: 'contenu' },
       h('div', { class: 'carte' },
         h('label', { class: 'ligne' }, h('span', { class: 'corps' }, h('div', { class: 'nom' }, tr.t('halakha_afficher'))),
           h('input', { type: 'checkbox', role: 'switch', class: 'interrupteur', checked: store.halakhaAffichee(), 'aria-label': tr.t('halakha_afficher'),
@@ -1471,7 +1482,7 @@ function ecranHilloulot() {
     ];
   }
   return h('div', { class: 'ecran avec-bandeau' }, bandeau(tr.t('hilloulot_title'), { dessin: 'char_torah' }),
-    h('div', { class: 'defile' }, h('div', { class: 'contenu' },
+    zoneReglable(h('div', { class: 'contenu' },
       h('div', { class: 'carte' },
         h('label', { class: 'ligne' }, h('span', { class: 'corps' }, h('div', { class: 'nom' }, tr.t('hilloulot_afficher'))),
           h('input', { type: 'checkbox', role: 'switch', class: 'interrupteur', checked: store.hilloulotAffichees(), 'aria-label': tr.t('hilloulot_afficher'),
@@ -1588,6 +1599,29 @@ function confettis() {
 }
 
 /** La vitrine : les trophées gagnés en couleur, les autres en attente, avec ce qu'il faut pour les gagner. */
+// Les couleurs des métaux : clair, foncé, sombre (la tranche, le socle). Gris pour ce qui reste à gagner.
+const TEINTES = {
+  bronze: ['#F3C49A', '#A0602E', '#6E3E1C'], argent: ['#F4F6F8', '#9AA3AC', '#5E6770'],
+  or: ['#FFE48A', '#C9961A', '#8A6206'], platine: ['#F7FAFF', '#8CA2C4', '#55688A'], aucun: ['#E3E5E7', '#B6BABE', '#8E9398'],
+};
+let numeroSvg = 0;
+/** Un objet de trophée (tools/trophees_formes.py), au métal donné, avec l'icône de la famille en emblème. */
+function objetTrophee(forme, metal, icone, taille) {
+  const [clair, fonce, sombre] = TEINTES[metal ?? 'aucun'];
+  const id = `t${++numeroSvg}`;
+  const f = FORMES[forme];
+  const remplis = { m: `url(#${id}m)`, mr: `url(#${id}r)`, md: sombre, v: 'rgba(170,215,255,.75)', vc: 'rgba(235,247,255,.9)', r: metal ? '#D43B3B' : '#B9BDC1', w: 'rgba(255,255,255,.5)' };
+  const NS = 'http://www.w3.org/2000/svg';
+  const el = (nom, attrs, ...enfants) => { const e = document.createElementNS(NS, nom); for (const [k, v] of Object.entries(attrs)) e.setAttribute(k, v); e.append(...enfants); return e; };
+  const [ex, ey, et] = f.embleme;
+  return el('svg', { viewBox: '0 0 100 100', width: taille, height: taille, class: 'objet-svg', 'aria-hidden': 'true' },
+    el('defs', {},
+      el('linearGradient', { id: `${id}m`, x1: '0', y1: '0', x2: '1', y2: '1' }, el('stop', { offset: '0', 'stop-color': clair }), el('stop', { offset: '1', 'stop-color': fonce })),
+      el('radialGradient', { id: `${id}r`, cx: '.35', cy: '.3', r: '.75' }, el('stop', { offset: '0', 'stop-color': '#FFFFFF' }), el('stop', { offset: '.35', 'stop-color': clair }), el('stop', { offset: '1', 'stop-color': fonce }))),
+    ...f.parts.map(([matiere, d]) => el('path', { d, fill: remplis[matiere] })),
+    el('text', { x: ex, y: ey, 'font-size': et, 'text-anchor': 'middle', 'dominant-baseline': 'central', opacity: metal ? '1' : '.45' }, icone));
+}
+
 function vitrineTrophees() {
   const p = pratique();
   store.setTropheesVus(Trophees.gagnes(p));
@@ -1599,41 +1633,51 @@ function vitrineTrophees() {
   const barre = (fraction, classe) => h('div', { class: `trophee-barre ${classe}`, 'aria-hidden': 'true' },
     h('span', { style: `width: ${Math.round(Math.min(1, Math.max(0, fraction)) * 100)}%` }));
   const desc = (f, seuil) => tr.p(`trophee_${f.cle}_desc`, seuil);
-  // La scène (12/10) : l'avatar, de plus en plus joyeux à mesure que le métal monte, et la plus belle
-  // médaille sur son piédestal, qui tourne doucement.
+  // La scène : l'avatar, de plus en plus joyeux à mesure que le métal monte, et le plus beau trophée sur son socle.
   const meilleure = tries[0] && Trophees.rang(p, tries[0]) ? tries[0] : null;
   const mMeilleure = meilleure ? Trophees.metal(meilleure, Trophees.rang(p, meilleure)) : null;
   const avatar = { bronze: 'char_thumbs_up', argent: 'char_open_arms', or: 'char_arms_raised', platine: 'char_dancing_joy' }[mMeilleure] ?? 'char_thinking';
+  const socle = (metal, nom, grand) => h('div', { class: `trophee-socle ${metal ?? 'aucun'}${grand ? ' grand' : ''}` }, h('span', { class: 'socle-plaque' }, nom));
   const scene = h('div', { class: `trophees-scene ${mMeilleure ?? 'aucune'}` },
     h('img', { class: 'scene-avatar', src: `img/${avatar}.webp`, alt: '' }),
     h('div', { class: 'scene-podium' },
-      h('div', { class: `trophee vedette ${meilleure?.forme ?? 'coupe'} ${mMeilleure ?? ''}${meilleure ? ' gagne' : ''}`, 'aria-hidden': 'true' },
-        meilleure?.forme === 'medaille' ? h('span', { class: 'ruban' }) : null,
-        h('span', { class: 'objet' }, h('span', { class: 'trophee-icone' }, meilleure?.icone ?? '🏆', h('span', { class: 'eclat' })))),
-      h('div', { class: 'piedestal', 'aria-hidden': 'true' }),
-      h('p', { class: 'scene-titre' }, meilleure ? tr.t('trophee_vedette') : tr.t('trophee_vedette_aucune')),
-      meilleure ? h('p', { class: 'scene-nom' }, `${tr.t(`trophee_${meilleure.cle}`)} · ${tr.t(`metal_${mMeilleure}`)}`) : null));
+      h('span', { class: `bulle ${mMeilleure ?? 'aucun'}` }, meilleure ? tr.t(`metal_${mMeilleure}`) : tr.t('trophee_a_venir')),
+      h('div', { class: `objet vedette${meilleure ? ' gagne' : ''}` }, objetTrophee(meilleure?.forme ?? 'coupe', mMeilleure, meilleure?.icone ?? '🏆', 116)),
+      socle(mMeilleure, meilleure ? tr.t(`trophee_${meilleure.cle}`) : tr.t('trophees_titre'), true),
+      h('p', { class: 'scene-titre' }, meilleure ? tr.t('trophee_vedette') : tr.t('trophee_vedette_aucune'))));
+  const carte = (f) => {
+    const r = Trophees.rang(p, f);
+    const m = r ? Trophees.metal(f, r) : null;
+    const pr = Trophees.progres(p, f);
+    const sommet = r >= f.seuils.length;
+    const niveau = m ? tr.t('trophee_niveau', r, f.seuils.length, tr.t(`metal_${m}`)) : tr.t('trophee_a_venir');
+    return h('div', { class: `trophee ${m ?? ''}${m ? ' gagne' : ''}`,
+      'aria-label': [tr.t(`trophee_${f.cle}`), niveau, sommet ? tr.t('trophee_sommet') : tr.t('trophee_prochain', desc(f, pr.cible))].join(', ') },
+      h('span', { class: `bulle ${m ?? 'aucun'}`, 'aria-hidden': 'true' }, m ? `${tr.t(`metal_${m}`)} · ${r}/${f.seuils.length}` : tr.t('trophee_a_venir')),
+      h('div', { class: `objet${m ? ' gagne' : ''}`, 'aria-hidden': 'true' }, objetTrophee(f.forme, m, f.icone, 78), m ? h('span', { class: 'eclat' }) : null),
+      socle(m, tr.t(`trophee_${f.cle}`)));
+  };
+  const details = (f) => {
+    const r = Trophees.rang(p, f);
+    const pr = Trophees.progres(p, f);
+    const sommet = r >= f.seuils.length;
+    return h('div', { class: 'trophee-details' },
+      h('span', { class: 'trophee-desc' }, desc(f, f.seuils[Math.max(0, r - 1)])),
+      sommet ? h('span', { class: 'trophee-progres' }, tr.t('trophee_sommet')) : barre(pr.fraction, 'petite'),
+      sommet ? null : h('span', { class: 'trophee-progres' }, tr.t('trophee_progres', Math.min(pr.valeur, pr.cible), pr.cible)));
+  };
+  // Les étagères : trois trophées par planche de verre, leurs détails dessous.
+  const rangees = [];
+  for (let k = 0; k < tries.length; k += 3) rangees.push(tries.slice(k, k + 3));
   return h('div', { class: 'carte carte-palier' },
     h('div', { class: 'trophees-tete' }, h('p', { class: 'palier-nom' }, tr.t('trophees_titre')),
       h('p', { class: 'trophees-compte' }, tr.t('trophees_compte', atteints, total))),
     scene,
     barre(atteints / total, 'globale'),
-    h('div', { class: 'trophees-grille' }, ...tries.map((f) => {
-      const r = Trophees.rang(p, f);
-      const m = r ? Trophees.metal(f, r) : null;
-      const pr = Trophees.progres(p, f);
-      const sommet = r >= f.seuils.length;
-      const niveau = m ? tr.t('trophee_niveau', r, f.seuils.length, tr.t(`metal_${m}`)) : tr.t('trophee_a_venir');
-      return h('div', { class: `trophee ${f.forme} ${m ?? ''}${m ? ' gagne' : ''}`,
-        'aria-label': [tr.t(`trophee_${f.cle}`), niveau, sommet ? tr.t('trophee_sommet') : tr.t('trophee_prochain', desc(f, pr.cible))].join(', ') },
-        m && f.forme === 'medaille' ? h('span', { class: 'ruban', 'aria-hidden': 'true' }) : null,
-        h('span', { class: 'objet', 'aria-hidden': 'true' }, h('span', { class: 'trophee-icone' }, f.icone, m ? h('span', { class: 'eclat' }) : null)),
-        h('span', { class: 'trophee-nom' }, tr.t(`trophee_${f.cle}`)),
-        h('span', { class: 'trophee-niveau' }, niveau),
-        h('span', { class: 'trophee-desc' }, desc(f, f.seuils[Math.max(0, r - 1)])),
-        sommet ? null : barre(pr.fraction, 'petite'),
-        sommet ? null : h('span', { class: 'trophee-progres' }, tr.t('trophee_progres', Math.min(pr.valeur, pr.cible), pr.cible)));
-    })));
+    ...rangees.map((rangee) => h('div', { class: 'etagere' },
+      h('div', { class: 'etagere-objets' }, ...rangee.map(carte)),
+      h('div', { class: 'planche', 'aria-hidden': 'true' }),
+      h('div', { class: 'etagere-details' }, ...rangee.map(details)))));
 }
 
 function ecranPaliers() {

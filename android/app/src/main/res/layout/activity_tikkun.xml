@@ -12,8 +12,8 @@
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:paddingHorizontal="@dimen/edge"
-        android:paddingTop="24dp"
-        android:paddingBottom="20dp">
+        android:paddingTop="@dimen/hero_pad_top"
+        android:paddingBottom="@dimen/hero_pad_bottom">
 
         <LinearLayout
             android:layout_width="0dp"

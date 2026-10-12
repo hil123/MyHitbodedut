@@ -79,7 +79,7 @@ class TehilimLectureActivity : AppCompatActivity() {
             ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT,
         ).apply {
             topMargin = if (premier) 0 else dp(26)
-            bottomMargin = dp(6)
+            bottomMargin = dp(12)
             marginStart = dp(20)
             marginEnd = dp(20)
         }
@@ -116,7 +116,7 @@ class TehilimLectureActivity : AppCompatActivity() {
         layoutDirection = View.LAYOUT_DIRECTION_RTL
         textAlignment = View.TEXT_ALIGNMENT_VIEW_START
         textSize = 19f * rendu.echelle
-        setLineSpacing(dp(8).toFloat() * rendu.echelle, 1f)
+        setLineSpacing(dp(10).toFloat() * rendu.echelle, 1f)
         setTextColor(rendu.texte)
         setTextIsSelectable(false)
         PoliceHebraique.appliquer(this)

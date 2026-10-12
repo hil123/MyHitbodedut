@@ -2,17 +2,17 @@
 // familles qui montent par niveaux, la médaille passant du bronze à
 // l'argent, à l'or puis au platine. Mêmes règles que l'application Android.
 
-// La forme de l'objet (12/10) : médaille, coupe, écusson ou gemme — pas que des pièces.
+// L'objet (12/10) : coupe, écusson, étoile, rosette, médaille, pièces, cristal, gemme (tools/trophees_formes.py).
 export const FAMILLES = [
-  ['premier_pas', '🌱', [1], 'ecusson'],
+  ['premier_pas', '🌱', [1], 'rosette'],
   ['seance_longue', '⏳', [15, 30, 45, 60, 90, 120, 180], 'coupe'],
   ['jours', '🌳', [7, 18, 40, 70, 100, 180, 365, 613], 'medaille'],
-  ['serie', '🔥', [3, 7, 18, 30, 40, 70, 100], 'gemme'],
-  ['heures', '⭐', [1, 5, 10, 25, 50, 100, 200, 300], 'coupe'],
+  ['serie', '🔥', [3, 7, 18, 30, 40, 70, 100], 'etoile'],
+  ['heures', '⭐', [1, 5, 10, 25, 50, 100, 200, 300], 'pieces'],
   ['semaines', '🏅', [1, 2, 4, 8, 12, 26, 52], 'ecusson'],
-  ['erev_chabbat', '🕯️', [1, 4, 12, 26, 52], 'medaille'],
+  ['erev_chabbat', '🕯️', [1, 4, 12, 26, 52], 'cristal'],
   ['retour', '🔄', [1, 3, 5, 10], 'gemme'],
-  ['plume', '✍️', [1, 10, 25, 50, 100, 150], 'ecusson'],
+  ['plume', '✍️', [1, 10, 25, 50, 100, 150], 'coupe'],
 ].map(([cle, icone, seuils, forme]) => ({ cle, icone, seuils, forme }));
 
 export const METAUX = ['bronze', 'argent', 'or', 'platine'];

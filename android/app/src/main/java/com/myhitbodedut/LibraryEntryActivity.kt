@@ -89,7 +89,7 @@ class LibraryEntryActivity : AppCompatActivity() {
             layoutDirection = View.LAYOUT_DIRECTION_RTL
             textAlignment = View.TEXT_ALIGNMENT_VIEW_START
             textSize = 17f
-            setLineSpacing(dp(4).toFloat(), 1f)
+            setLineSpacing(dp(8).toFloat(), 1f)
             setTextColor(Apparence.couleur(context, R.color.ink))
             PoliceHebraique.appliquer(this)
         }, ReglagesLecture.Role.TEXTE)
@@ -153,7 +153,7 @@ class LibraryEntryActivity : AppCompatActivity() {
                 ).apply { topMargin = dp(4) }
                 this.text = value
                 textSize = 15f
-                setLineSpacing(dp(3).toFloat(), 1f)
+                setLineSpacing(dp(6).toFloat(), 1f)
                 setTextColor(Apparence.couleur(context, R.color.ink))
             }
         )
@@ -163,7 +163,7 @@ class LibraryEntryActivity : AppCompatActivity() {
         layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, dp(1))
             .apply {
                 topMargin = dp(14)
-                bottomMargin = dp(14)
+                bottomMargin = dp(18)
             }
         setBackgroundColor(Apparence.couleur(context, R.color.line))
     }

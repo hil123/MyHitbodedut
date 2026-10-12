@@ -26,8 +26,8 @@
             android:background="@drawable/bg_hero"
             android:orientation="vertical"
             android:paddingHorizontal="@dimen/edge_inner"
-            android:paddingTop="28dp"
-            android:paddingBottom="24dp">
+            android:paddingTop="@dimen/hero_pad_top"
+            android:paddingBottom="@dimen/hero_pad_bottom">
 
             <TextView
                 android:layout_width="wrap_content"
