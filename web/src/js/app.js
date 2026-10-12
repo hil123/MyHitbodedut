@@ -1461,7 +1461,15 @@ function ecranHilloulot() {
     x.t ? h('p', { class: 'hilloula-description', lang: 'he', dir: 'rtl' }, x.t) : null,
     x.s.includes('w') ? (x.w ? h('a', { class: 'hilloula-source', href: lienArticle(x.w), target: '_blank', rel: 'noopener' }, tr.t('hilloula_source_wiki'))
       : h('p', { class: 'hilloula-source' }, tr.t('hilloula_source_wiki'))) : null,
-    x.s.includes('h') ? h('p', { class: 'hilloula-source' }, tr.t('hilloula_source_hyomi')) : null);
+    x.s.includes('h') ? h('p', { class: 'hilloula-source' }, tr.t('hilloula_source_hyomi')) : null,
+    x.s.includes('e') ? h('p', { class: 'hilloula-source' }, tr.t('hilloula_source_toratemet')) : null,
+    // Les autres biographies (MyTzadik, המאיר לארץ), chacune suivie de sa source, comme le demande l'accord (12/10).
+    ...(x.b ?? []).flatMap(([src, texte, lien]) => {
+      const nom = tr.t(src === 'm' ? 'hilloula_source_mytzadik' : 'hilloula_source_hameir');
+      return [h('p', { class: 'hilloula-description', lang: 'he', dir: 'rtl' }, texte),
+        lien ? h('a', { class: 'hilloula-source', href: lien, target: '_blank', rel: 'noopener' }, `${nom} ↗`) : h('p', { class: 'hilloula-source' }, nom)];
+    }),
+    x.i ? h('a', { class: 'hilloula-source', href: x.i, target: '_blank', rel: 'noopener' }, `${tr.t('hilloula_source_hidabroot')} ↗`) : null);
   const champ = h('input', { type: 'search', class: 'champ-recherche', placeholder: tr.t('hilloulot_recherche'), value: rechercheHilloulot,
     oninput: (e) => { rechercheHilloulot = e.target.value; rendre(); setTimeout(() => { const c = app.querySelector('.champ-recherche'); c?.focus(); c?.setSelectionRange(c.value.length, c.value.length); }, 0); } });
   let corps;

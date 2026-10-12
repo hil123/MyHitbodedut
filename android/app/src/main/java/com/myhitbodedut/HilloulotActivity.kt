@@ -132,6 +132,20 @@ class HilloulotActivity : AppCompatActivity() {
             h.article?.let { a -> setOnClickListener { ouvrir(Hilloulot.lienArticle(a)) } }
         })
         if ('h' in h.sources) addView(VueJour.texte(context, getString(R.string.hilloula_source_hyomi), 13f, R.color.brand, haut = 2))
+        if ('e' in h.sources) addView(VueJour.texte(context, getString(R.string.hilloula_source_toratemet), 13f, R.color.brand, haut = 2))
+        // Les autres biographies (MyTzadik, המאיר לארץ), chacune suivie de sa source, comme le demande l'accord.
+        h.bios.forEach { b ->
+            addView(VueJour.texte(context, b.texte, 16f, R.color.ink, haut = 14).apply {
+                textDirection = View.TEXT_DIRECTION_RTL; PoliceHebraique.appliquer(this)
+            })
+            val nom = getString(if (b.source == "m") R.string.hilloula_source_mytzadik else R.string.hilloula_source_hameir)
+            addView(VueJour.texte(context, if (b.lien != null) "$nom ↗" else nom, 13f, R.color.brand, haut = 6).apply {
+                b.lien?.let { l -> setOnClickListener { ouvrir(l) } }
+            })
+        }
+        h.hidabroot?.let { l ->
+            addView(VueJour.texte(context, getString(R.string.hilloula_source_hidabroot) + " ↗", 13f, R.color.brand, haut = 8).apply { setOnClickListener { ouvrir(l) } })
+        }
     }
 
     private fun fleche(signe: String, action: () -> Unit) = VueJour.texte(this, signe, 26f, R.color.brand).apply {

@@ -17,14 +17,21 @@ object Hilloulot {
         val fr: String?,
         val en: String?,
         val annee: String,
-        /** « w » Wikipédia, « h » החכם היומי, « hw » les deux. */
+        /** « w » Wikipédia, « h » החכם היומי, « m » MyTzadik, « l » המאיר לארץ, « i » Hidabroot, « e » תורת אמת. */
         val sources: String,
         val doute: String?,
         /** La première phrase de l'article de Wikipédia hébreu (CC BY-SA), s'il existe. */
         val description: String? = null,
         /** Le titre de cet article. */
         val article: String? = null,
+        /** Les biographies d'autres sources, reprises avec leur accord (12/10). */
+        val bios: List<Bio> = emptyList(),
+        /** L'article de Hidabroot sur ce tsaddik : un lien seulement. */
+        val hidabroot: String? = null,
     )
+
+    /** Une biographie, mot pour mot, et sa source : « m » MyTzadik, « l » המאיר לארץ. */
+    data class Bio(val source: String, val texte: String, val lien: String?)
 
     fun parse(json: String): Map<String, List<Hilloula>> {
         val jours = JSONObject(json).getJSONObject("jours")
@@ -39,6 +46,10 @@ object Hilloulot {
                     doute = Json.nullable(o, "d"),
                     description = Json.nullable(o, "t"),
                     article = Json.nullable(o, "w"),
+                    bios = o.optJSONArray("b")?.let { b ->
+                        (0 until b.length()).map { i -> b.getJSONArray(i).let { x -> Bio(x.getString(0), x.getString(1), x.optString(2).ifBlank { null }) } }
+                    } ?: emptyList(),
+                    hidabroot = Json.nullable(o, "i"),
                 )
             }
         }

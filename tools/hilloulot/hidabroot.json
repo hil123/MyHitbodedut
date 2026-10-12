@@ -1,0 +1,2468 @@
+{
+ "correspondances": [
+  {
+   "hida_nom": "ה\"מגן אברהם\", מגדולי הפרשנים של ה\"שולחן ערוך\"",
+   "cle": "7-3",
+   "url": null,
+   "notre_cle": "7-3",
+   "notre_index": 0,
+   "notre_he": "הרב אברהם אבלי הלוי"
+  },
+  {
+   "hida_nom": "הרב אברהם דנציג",
+   "cle": "7-4",
+   "url": null,
+   "notre_cle": "7-4",
+   "notre_index": 0,
+   "notre_he": "הרב אברהם דנציגר"
+  },
+  {
+   "hida_nom": "נפתלי בן יעקב",
+   "cle": "7-5",
+   "url": null,
+   "notre_cle": "7-5",
+   "notre_index": 6,
+   "notre_he": "נפתלי"
+  },
+  {
+   "hida_nom": "זבולון בן יעקב אבינו",
+   "cle": "7-7",
+   "url": null,
+   "notre_cle": "7-7",
+   "notre_index": 2,
+   "notre_he": "זבולון"
+  },
+  {
+   "hida_nom": "רבי יוסף ברבי",
+   "cle": "7-7",
+   "url": null,
+   "notre_cle": "7-7",
+   "notre_index": 3,
+   "notre_he": "חכם יוסף ברבי"
+  },
+  {
+   "hida_nom": "רבי שלמה בכור חוצ'ין",
+   "cle": "7-8",
+   "url": null,
+   "notre_cle": "7-8",
+   "notre_index": 5,
+   "notre_he": "ר' שלמה בכור חוצין"
+  },
+  {
+   "hida_nom": "רבי יצחק זאב סולובייצ'יק (הגרי\"ז מבריסק)",
+   "cle": "7-9",
+   "url": null,
+   "notre_cle": "7-9",
+   "notre_index": 3,
+   "notre_he": "הרב יצחק זאב סולובייצ'יק"
+  },
+  {
+   "hida_nom": "זכריה הנביא",
+   "cle": "7-10",
+   "url": null,
+   "notre_cle": "7-10",
+   "notre_index": 4,
+   "notre_he": "זכריה בן יהוידע",
+   "note": "Hidabroot dit « זכריה הנביא » ; notre entrée est זכריה בן יהוידע (le prophète tué au Temple, cf. 2 Ch 24), pas Zacharie fils de Berekhia — identification probable, à confirmer"
+  },
+  {
+   "hida_nom": "התנא רבי עקיבא",
+   "cle": "7-10",
+   "url": "https://www.hidabroot.org/%D7%A8%D7%91%D7%99-%D7%A2%D7%A7%D7%99%D7%91%D7%90",
+   "notre_cle": "7-10",
+   "notre_index": 7,
+   "notre_he": "רבי עקיבא בן יוסף"
+  },
+  {
+   "hida_nom": "רבי יהודה לייב הלוי אשלג",
+   "cle": "7-10",
+   "url": "https://www.hidabroot.org/article/47",
+   "notre_cle": "7-10",
+   "notre_index": 6,
+   "notre_he": "רבי יהודה לייב הלוי אשלג"
+  },
+  {
+   "hida_nom": "רבי אברהם המלאך",
+   "cle": "7-12",
+   "url": null,
+   "notre_cle": "7-12",
+   "notre_index": 1,
+   "notre_he": "ר' אברהם המלאך"
+  },
+  {
+   "hida_nom": "רבי עקיבא איגר",
+   "cle": "7-13",
+   "url": null,
+   "notre_cle": "7-13",
+   "notre_index": 6,
+   "notre_he": "רבי עקיבא איגר"
+  },
+  {
+   "hida_nom": "רבי חיים ברלין",
+   "cle": "7-13",
+   "url": null,
+   "notre_cle": "7-13",
+   "notre_index": 4,
+   "notre_he": "רבי חיים ברלין"
+  },
+  {
+   "hida_nom": "יעקב אבינו",
+   "cle": "7-15",
+   "url": "https://www.hidabroot.org/article/227758",
+   "notre_cle": "7-15",
+   "notre_index": 9,
+   "notre_he": "יעקב אבינו"
+  },
+  {
+   "hida_nom": "הרב אברהם אלקנה שפירא זצ\"ל – הרב הראשי לישראל וראש ישיבת \"מרכז הרב\"",
+   "cle": "7-15",
+   "url": null,
+   "notre_cle": "7-15",
+   "notre_index": 0,
+   "notre_he": "הרב אברהם אלקנה כהנא שפירא"
+  },
+  {
+   "hida_nom": "הרבנית בת שבע אסתר קנייבסקי",
+   "cle": "7-17",
+   "url": "https://www.hidabroot.org/article/227608",
+   "notre_cle": "7-17",
+   "notre_index": 0,
+   "notre_he": "בת שבע קניבסקי"
+  },
+  {
+   "hida_nom": "רבי נחמן מברסלב",
+   "cle": "7-18",
+   "url": "https://www.hidabroot.org/article/80183",
+   "notre_cle": "7-18",
+   "notre_index": 6,
+   "notre_he": "רבי נחמן מברסלב"
+  },
+  {
+   "hida_nom": "הגאון מוילנא",
+   "cle": "7-19",
+   "url": "https://www.hidabroot.org/article/1130048",
+   "notre_cle": "7-19",
+   "notre_index": 0,
+   "notre_he": "הגר\"א מווילנא"
+  },
+  {
+   "hida_nom": "רבי אליעזר פאפו בעל ה\"פלא יועץ\"",
+   "cle": "7-20",
+   "url": "https://www.hidabroot.org/article/1201814",
+   "notre_cle": "7-20",
+   "notre_index": 3,
+   "notre_he": "רבי אליעזר פאפו"
+  },
+  {
+   "hida_nom": "הרב שלום עמאר, חמיו של רבי רפאל ברוך טולדנו",
+   "cle": "7-22",
+   "url": null,
+   "notre_cle": "7-22",
+   "notre_index": 6,
+   "notre_he": "חכם שלום עמאר"
+  },
+  {
+   "hida_nom": "רבי ניסים קרליץ",
+   "cle": "7-23",
+   "url": "https://www.hidabroot.org/article/1130148",
+   "notre_cle": "7-23",
+   "notre_index": 1,
+   "notre_he": "הרב נסים קרליץ"
+  },
+  {
+   "hida_nom": "החת\"ם סופר",
+   "cle": "7-25",
+   "url": "https://www.hidabroot.org/article/1201959",
+   "notre_cle": "7-25",
+   "notre_index": 0,
+   "notre_he": "החת\"ם סופר"
+  },
+  {
+   "hida_nom": "הרב לוי יצחק מברדיטשוב",
+   "cle": "7-25",
+   "url": "https://www.hidabroot.org/article/235165",
+   "notre_cle": "7-25",
+   "notre_index": 8,
+   "notre_he": "רבי לוי יצחק מברדיצ'ב"
+  },
+  {
+   "hida_nom": "הרב אברהם גניחובסקי",
+   "cle": "7-25",
+   "url": "https://www.hidabroot.org/article/237314",
+   "notre_cle": "7-25",
+   "notre_index": 6,
+   "notre_he": "רבי אברהם גנחובסקי"
+  },
+  {
+   "hida_nom": "הרב יורם אברג'ל",
+   "cle": "7-27",
+   "url": null,
+   "notre_cle": "7-27",
+   "notre_index": 1,
+   "notre_he": "הרב יורם אברג'ל"
+  },
+  {
+   "hida_nom": "שמעון הצדיק",
+   "cle": "7-29",
+   "url": "https://www.hidabroot.org/article/213559",
+   "notre_cle": "7-29",
+   "notre_index": 8,
+   "notre_he": "שמעון הצדיק"
+  },
+  {
+   "hida_nom": "דון יצחק אברבנאל",
+   "cle": "7-29",
+   "url": null,
+   "notre_cle": "7-29",
+   "notre_index": 0,
+   "notre_he": "דון יצחק אברבנאל"
+  },
+  {
+   "hida_nom": "הרב עובדיה יוסף",
+   "cle": "8-3",
+   "url": "https://www.hidabroot.org/article/213674",
+   "notre_cle": "8-3",
+   "notre_index": 0,
+   "notre_he": "הרב עובדיה יוסף"
+  },
+  {
+   "hida_nom": "רבי ישראל מרוזין",
+   "cle": "8-3",
+   "url": null,
+   "notre_cle": "8-3",
+   "notre_index": 6,
+   "notre_he": "רבי ישראל פרידמן מרוז'ין"
+  },
+  {
+   "hida_nom": "רבי מאיר שפירא מלובלין",
+   "cle": "8-7",
+   "url": "https://www.hidabroot.org/article/1130583",
+   "notre_cle": "8-7",
+   "notre_index": 2,
+   "notre_he": "הרב מאיר שפירא"
+  },
+  {
+   "hida_nom": "הרא\"ש",
+   "cle": "8-9",
+   "url": null,
+   "notre_cle": "8-9",
+   "notre_index": 7,
+   "notre_he": "רבי אשר בן יחיאל"
+  },
+  {
+   "hida_nom": "הרב שמעון שקופ",
+   "cle": "8-9",
+   "url": "https://www.hidabroot.org/article/1130747",
+   "notre_cle": "8-9",
+   "notre_index": 5,
+   "notre_he": "הרב שמעון שקופ"
+  },
+  {
+   "hida_nom": "גד בן יעקב",
+   "cle": "8-10",
+   "url": null,
+   "notre_cle": "8-10",
+   "notre_index": 0,
+   "notre_he": "גד"
+  },
+  {
+   "hida_nom": "רחל אמנו",
+   "cle": "8-11",
+   "url": "https://www.hidabroot.org/video/96830",
+   "notre_cle": "8-11",
+   "notre_index": 12,
+   "notre_he": "רחל אמנו"
+  },
+  {
+   "hida_nom": "הרב נתן צבי פינקל",
+   "cle": "8-11",
+   "url": "https://www.hidabroot.org/article/1130736",
+   "notre_cle": "8-11",
+   "notre_index": 11,
+   "notre_he": "רבי נתן צבי פינקל",
+   "note": "8-11 : le Rosh Yeshiva de Mir (2011), distinct du Saba de Slabodka (29 Shevat, hida n°142)"
+  },
+  {
+   "hida_nom": "הרב יהודה צדקה",
+   "cle": "8-12",
+   "url": "https://www.hidabroot.org/article/1130867",
+   "notre_cle": "8-12",
+   "notre_index": 0,
+   "notre_he": "הרב יהודה צדקה"
+  },
+  {
+   "hida_nom": "מתתיהו בן יוחנן כהן גדול",
+   "cle": "8-15",
+   "url": null,
+   "notre_cle": "8-15",
+   "notre_index": 2,
+   "notre_he": "מתתיהו בן יוחנן"
+  },
+  {
+   "hida_nom": "החזון איש",
+   "cle": "8-15",
+   "url": "https://www.hidabroot.org/article/214064",
+   "notre_cle": "8-15",
+   "notre_index": 0,
+   "notre_he": "הרב אברהם ישעיהו קרליץ"
+  },
+  {
+   "hida_nom": "הרב אלעזר מנחם שך",
+   "cle": "8-16",
+   "url": "https://www.hidabroot.org/article/214189",
+   "notre_cle": "8-16",
+   "notre_index": 2,
+   "notre_he": "הרב אלעזר מנחם מן שך"
+  },
+  {
+   "hida_nom": "הרב גבריאל טולדנו",
+   "cle": "8-16",
+   "url": "https://www.hidabroot.org/article/214552",
+   "notre_cle": "8-16",
+   "notre_index": 5,
+   "notre_he": "הרב גבריאל טולדנו"
+  },
+  {
+   "hida_nom": "הרב אברהם צוקרמן",
+   "cle": "8-16",
+   "url": null,
+   "notre_cle": "8-16",
+   "notre_index": 0,
+   "notre_he": "הרב אברהם צוקרמן"
+  },
+  {
+   "hida_nom": "הרב רפאל ברוך טולדנו",
+   "cle": "8-18",
+   "url": "https://www.hidabroot.org/article/1118835",
+   "notre_cle": "8-18",
+   "notre_index": 8,
+   "notre_he": "רבי רפאל ברוך טולדנו"
+  },
+  {
+   "hida_nom": "הרב ישועה עטיה",
+   "cle": "8-19",
+   "url": null,
+   "notre_cle": "8-19",
+   "notre_index": 4,
+   "notre_he": "חכם ישועה עטיה"
+  },
+  {
+   "hida_nom": "הרב דב יפה",
+   "cle": "8-19",
+   "url": "https://www.hidabroot.org/article/227915",
+   "notre_cle": "8-19",
+   "notre_index": 0,
+   "notre_he": "הרב דב יפה"
+  },
+  {
+   "hida_nom": "הרב מרדכי שרעבי",
+   "cle": "8-20",
+   "url": null,
+   "notre_cle": "8-20",
+   "notre_index": 1,
+   "notre_he": "הרב מרדכי שרעבי"
+  },
+  {
+   "hida_nom": "רבי דוד בן זמרא (הרדב\"ז)",
+   "cle": "8-21",
+   "url": null,
+   "notre_cle": "8-21",
+   "notre_index": 3,
+   "notre_he": "חכם דוד בן זמרה"
+  },
+  {
+   "hida_nom": "רבי אברהם אזולאי (אבי סב החיד\"א, בעל ה\"חסד לאברהם\")",
+   "cle": "8-24",
+   "url": null,
+   "notre_cle": "8-24",
+   "notre_index": 4,
+   "notre_he": "רבי אברהם אזולאי"
+  },
+  {
+   "hida_nom": "הרב גדליהו משה מזוועהיל",
+   "cle": "8-24",
+   "url": "https://www.hidabroot.org/article/240825",
+   "notre_cle": "8-24",
+   "notre_index": 5,
+   "notre_he": "רבי גדליה משה גולדמן"
+  },
+  {
+   "hida_nom": "רבנו יונה מגירונדי",
+   "cle": "8-28",
+   "url": "https://www.hidabroot.org/article/214600",
+   "notre_cle": "8-28",
+   "notre_index": 4,
+   "notre_he": "רבי יונה גירונדי"
+  },
+  {
+   "hida_nom": "הרב אור שרגא",
+   "cle": "8-28",
+   "url": null,
+   "notre_cle": "8-28",
+   "notre_index": 1,
+   "notre_he": "הרב מולא אור שרגא"
+  },
+  {
+   "hida_nom": "הרב אהרן קוטלר",
+   "cle": "9-2",
+   "url": "https://www.hidabroot.org/article/224231",
+   "notre_cle": "9-2",
+   "notre_index": 0,
+   "notre_he": "הרב אהרן קוטלר"
+  },
+  {
+   "hida_nom": "הרב שילה רפאל",
+   "cle": "9-3",
+   "url": null,
+   "notre_cle": "9-3",
+   "notre_index": 2,
+   "notre_he": "הרב שילה רפאל"
+  },
+  {
+   "hida_nom": "רבי שמואל אליעזר הלוי איידלס (המהרש\"א)",
+   "cle": "9-5",
+   "url": null,
+   "notre_cle": "9-5",
+   "notre_index": 8,
+   "notre_he": "רבי שמואל אליעזר הלוי איידלס"
+  },
+  {
+   "hida_nom": "הרב איסר זלמן מלצר",
+   "cle": "9-10",
+   "url": "https://www.hidabroot.org/article/234397",
+   "notre_cle": "9-10",
+   "notre_index": 1,
+   "notre_he": "הרב איסר זלמן מלצר"
+  },
+  {
+   "hida_nom": "רבי שלמה לוריא (המהרש\"ל)",
+   "cle": "9-12",
+   "url": null,
+   "notre_cle": "9-12",
+   "notre_index": 6,
+   "notre_he": "רבי שלמה לוריא"
+  },
+  {
+   "hida_nom": "ראובן בן יעקב",
+   "cle": "9-14",
+   "url": null,
+   "notre_cle": "9-14",
+   "notre_index": 6,
+   "notre_he": "ראובן"
+  },
+  {
+   "hida_nom": "רבי דוד אבוחצירא",
+   "cle": "9-14",
+   "url": null,
+   "notre_cle": "9-14",
+   "notre_index": 7,
+   "notre_he": "רבי דוד אבוחצירא"
+  },
+  {
+   "hida_nom": "רבי יהודה הנשיא",
+   "cle": "9-15",
+   "url": "https://www.hidabroot.org/%D7%A8%D7%91%D7%99-%D7%99%D7%94%D7%95%D7%93%D7%94-%D7%94%D7%A0%D7%A9%D7%99%D7%90",
+   "notre_cle": "9-15",
+   "notre_index": 5,
+   "notre_he": "רבי יהודה הנשיא"
+  },
+  {
+   "hida_nom": "הסבא מנובהרדוק",
+   "cle": "9-17",
+   "url": "https://www.hidabroot.org/article/1132340",
+   "notre_cle": "9-17",
+   "notre_index": 0,
+   "notre_he": "הסבא מנובהרדוק"
+  },
+  {
+   "hida_nom": "רבי אברהם בן הרמב\"ם",
+   "cle": "9-18",
+   "url": "https://www.hidabroot.org/article/209",
+   "notre_cle": "9-18",
+   "notre_index": 7,
+   "notre_he": "רבי אברהם בן הרמב\"ם"
+  },
+  {
+   "hida_nom": "רבי ברוך ממזיבוז",
+   "cle": "9-18",
+   "url": null,
+   "notre_cle": "9-18",
+   "notre_index": 8,
+   "notre_he": "רבי ברוך ממז'יבוז'"
+  },
+  {
+   "hida_nom": "המגיד ממזריטש",
+   "cle": "9-19",
+   "url": "https://www.hidabroot.org/%D7%94%D7%9E%D7%92%D7%99%D7%93-%D7%9E%D7%9E%D7%96%D7%A8%D7%99%D7%98%D7%A9",
+   "notre_cle": "9-19",
+   "notre_index": 6,
+   "notre_he": "רבי דב בער"
+  },
+  {
+   "hida_nom": "הרב יצחק הוטנר",
+   "cle": "9-20",
+   "url": "https://www.hidabroot.org/article/212308",
+   "notre_cle": "9-20",
+   "notre_index": 1,
+   "notre_he": "הרב יצחק הוטנר"
+  },
+  {
+   "hida_nom": "רבי חיים חזקיהו מדיני",
+   "cle": "9-24",
+   "url": null,
+   "notre_cle": "9-24",
+   "notre_index": 5,
+   "notre_he": "רבי חיים חזקיהו מדיני"
+  },
+  {
+   "hida_nom": "הרב אהרן יהודה לייב שטיינמן",
+   "cle": "9-24",
+   "url": "https://www.hidabroot.org/article/227352",
+   "notre_cle": "9-24",
+   "notre_index": 0,
+   "notre_he": "הרב אהרן לייב שטיינמן"
+  },
+  {
+   "hida_nom": "רבי חזקיהו די סלוא ה\"פרי חדש\"",
+   "cle": "9-28",
+   "url": null,
+   "notre_cle": "9-28",
+   "notre_index": 4,
+   "notre_he": "חכם חזקיה די סילוה"
+  },
+  {
+   "hida_nom": "רבי רפאל מסעוד אלפסי",
+   "cle": "10-1",
+   "url": null,
+   "notre_cle": "10-1",
+   "notre_index": 5,
+   "notre_he": "חכם מסעוד רפאל אלפסי"
+  },
+  {
+   "hida_nom": "הרב חיים שמואלביץ, ראש ישיבת מיר",
+   "cle": "10-3",
+   "url": "https://www.hidabroot.org/article/1118797",
+   "notre_cle": "10-3",
+   "notre_index": 2,
+   "notre_he": "הרב חיים שמואלביץ"
+  },
+  {
+   "hida_nom": "הרב חיים שאול הכהן דוויק",
+   "cle": "10-4",
+   "url": null,
+   "notre_cle": "10-4",
+   "notre_index": 4,
+   "notre_he": "רבי חיים שאול הכהן דוויק"
+  },
+  {
+   "hida_nom": "עזרא הסופר בן שריה",
+   "cle": "10-9",
+   "url": "https://www.hidabroot.org/article/180809",
+   "notre_cle": "10-9",
+   "notre_index": 0,
+   "notre_he": "עזרא הסופר",
+   "note": "notre table a aussi עזרא הסופר au 10-10[0] (doublon interne)"
+  },
+  {
+   "hida_nom": "נחמיה בן חכליה",
+   "cle": "10-9",
+   "url": null,
+   "notre_cle": "10-9",
+   "notre_index": 1,
+   "notre_he": "נחמיה"
+  },
+  {
+   "hida_nom": "הרב נתן מברסלב",
+   "cle": "10-10",
+   "url": "https://www.hidabroot.org/article/1133308",
+   "notre_cle": "10-10",
+   "notre_index": 1,
+   "notre_he": "רבי נתן מברסלב"
+  },
+  {
+   "hida_nom": "הרב חיים קרייזווירט",
+   "cle": "10-16",
+   "url": "https://www.hidabroot.org/article/1133521",
+   "notre_cle": "10-16",
+   "notre_index": 2,
+   "notre_he": "הרב חיים קרייזווירטה"
+  },
+  {
+   "hida_nom": "המגיד מדובנא",
+   "cle": "10-17",
+   "url": "https://www.hidabroot.org/article/216509",
+   "notre_cle": "10-17",
+   "notre_index": 0,
+   "notre_he": "רבי יעקב קרנץ, המגיד מדובנא"
+  },
+  {
+   "hida_nom": "הרב סלמן מוצפי",
+   "cle": "10-17",
+   "url": "https://www.hidabroot.org/video/119342",
+   "notre_cle": "10-17",
+   "notre_index": 5,
+   "notre_he": "הרב סלמן מוצפי"
+  },
+  {
+   "hida_nom": "רבי צבי אלימלך שפירא מדינוב",
+   "cle": "10-18",
+   "url": "https://www.hidabroot.org/article/182966",
+   "notre_cle": "10-18",
+   "notre_index": 2,
+   "notre_he": "רבי צבי אלימלך שפירא מדינוב"
+  },
+  {
+   "hida_nom": "הרב שמעון בעדני",
+   "cle": "10-18",
+   "url": "https://www.hidabroot.org/article/1125808",
+   "notre_cle": "10-18",
+   "notre_index": 6,
+   "notre_he": "הרב שמעון בעדני"
+  },
+  {
+   "hida_nom": "קצות החושן",
+   "cle": "10-19",
+   "url": "https://www.hidabroot.org/article/216587",
+   "notre_cle": "10-19",
+   "notre_index": 0,
+   "notre_he": "ר' אריה ליב הלר"
+  },
+  {
+   "hida_nom": "הרב אברהם שמואל בנימין סופר ה\"דעת סופר\", בנו של החת\"ם סופר",
+   "cle": "10-19",
+   "url": null,
+   "notre_cle": "10-19",
+   "notre_index": 3,
+   "notre_he": "הרב אברהם שמואל בנימין סופר"
+  },
+  {
+   "hida_nom": "הרמב\"ם",
+   "cle": "10-20",
+   "url": "https://www.hidabroot.org/article/216649",
+   "notre_cle": "10-20",
+   "notre_index": 0,
+   "notre_he": "רבי משה בן מימון (הרמב\"ם)"
+  },
+  {
+   "hida_nom": "רבי יעקב אבוחצירא \"אביר יעקב\"",
+   "cle": "10-20",
+   "url": null,
+   "notre_cle": "10-20",
+   "notre_index": 1,
+   "notre_he": "רבי יעקב אבוחצירא"
+  },
+  {
+   "hida_nom": "בעל התניא",
+   "cle": "10-24",
+   "url": "https://www.hidabroot.org/%D7%91%D7%A2%D7%9C-%D7%94%D7%AA%D7%A0%D7%99%D7%90",
+   "notre_cle": "10-24",
+   "notre_index": 2,
+   "notre_he": "רבי שניאור זלמן מלאדי (האדמו\"ר הזקן)"
+  },
+  {
+   "hida_nom": "ה\"שם משמואל\"",
+   "cle": "10-24",
+   "url": null,
+   "notre_cle": "10-24",
+   "notre_index": 5,
+   "notre_he": "רבי שמואל בורנשטיין (שם משמואל)"
+  },
+  {
+   "hida_nom": "רבי אליהו אליעזר דסלר",
+   "cle": "10-24",
+   "url": "https://www.hidabroot.org/article/221370",
+   "notre_cle": "10-24",
+   "notre_index": 6,
+   "notre_he": "הרב אליהו אליעזר דסלר"
+  },
+  {
+   "hida_nom": "הרב שמשון רפאל הירש",
+   "cle": "10-27",
+   "url": "https://www.hidabroot.org/article/216948",
+   "notre_cle": "10-27",
+   "notre_index": 0,
+   "notre_he": "הרב שמשון רפאל הירש"
+  },
+  {
+   "hida_nom": "הרב יצחק כדורי",
+   "cle": "10-29",
+   "url": "https://www.hidabroot.org/article/1119881",
+   "notre_cle": "10-29",
+   "notre_index": 6,
+   "notre_he": "הרב יצחק כדורי"
+  },
+  {
+   "hida_nom": "הרב מאיר חדש, משגיח בישיבות חברון, עטרת ישראל ואור אלחנן",
+   "cle": "10-29",
+   "url": null,
+   "notre_cle": "10-29",
+   "notre_index": 5,
+   "notre_he": "רבי מאיר חדש"
+  },
+  {
+   "hida_nom": "רבי משולם זושא מאניפולי",
+   "cle": "11-2",
+   "url": null,
+   "notre_cle": "11-2",
+   "notre_index": 1,
+   "notre_he": "רבי משולם זושא מאניפולי"
+  },
+  {
+   "hida_nom": "הרב יצחק יחיאל יעקבוביץ",
+   "cle": "11-3",
+   "url": null,
+   "notre_cle": "11-3",
+   "notre_index": 5,
+   "notre_he": "הרב יצחק יחיאל יעקבוביץ"
+  },
+  {
+   "hida_nom": "הבבא סאלי",
+   "cle": "11-4",
+   "url": "https://www.hidabroot.org/article/185676",
+   "notre_cle": "11-4",
+   "notre_index": 6,
+   "notre_he": "רבי ישראל אבוחצירא (באבא סאלי)"
+  },
+  {
+   "hida_nom": "ה\"שפת אמת\"",
+   "cle": "11-5",
+   "url": "https://www.hidabroot.org/article/217185",
+   "notre_cle": "11-5",
+   "notre_index": 2,
+   "notre_he": "רבי יהודה אריה ליב אלתר (שפת אמת)"
+  },
+  {
+   "hida_nom": "הרב ניסים מויאל",
+   "cle": "11-6",
+   "url": "https://www.hidabroot.org/article/1120261",
+   "notre_cle": "11-6",
+   "notre_index": 8,
+   "notre_he": "חכם ניסים מויאל"
+  },
+  {
+   "hida_nom": "הרב רפאל שמואלביץ",
+   "cle": "11-9",
+   "url": "https://www.hidabroot.org/article/193597",
+   "notre_cle": "11-9",
+   "notre_index": 3,
+   "notre_he": "הרב רפאל שמואלביץ"
+  },
+  {
+   "hida_nom": "הרב שלום שרעבי",
+   "cle": "11-10",
+   "url": "https://www.hidabroot.org/article/186878",
+   "notre_cle": "11-10",
+   "notre_index": 1,
+   "notre_he": "רבי שלום שרעבי (הרש\"ש)"
+  },
+  {
+   "hida_nom": "הרב יוסף יצחק שניאורסון, האדמו\"ר השישי לשושלת חב\"ד",
+   "cle": "11-10",
+   "url": null,
+   "notre_cle": "11-10",
+   "notre_index": 3,
+   "notre_he": "רבי יוסף יצחק שניאורסון"
+  },
+  {
+   "hida_nom": "הרב ישראל נח וינברג , ראש ישיבת אש התורה",
+   "cle": "11-11",
+   "url": "https://www.hidabroot.org/article/1120275",
+   "notre_cle": "11-11",
+   "notre_index": 0,
+   "notre_he": "הרב נח וינברג"
+  },
+  {
+   "hida_nom": "הרב יצחק אבוחצירא",
+   "cle": "11-14",
+   "url": "https://www.hidabroot.org/%D7%90%D7%A2%D7%95%D7%A4%D7%94-%D7%90%D7%A9%D7%9B%D7%95%D7%A0%D7%94",
+   "notre_cle": "11-14",
+   "notre_index": 2,
+   "notre_he": "רבי יצחק אבוחצירא (הראשון)"
+  },
+  {
+   "hida_nom": "ה\"פני יהושע\"",
+   "cle": "11-14",
+   "url": "https://www.hidabroot.org/article/217539",
+   "notre_cle": "11-14",
+   "notre_index": 0,
+   "notre_he": "רבי יעקב יהושע פאלק (פני יהושע)"
+  },
+  {
+   "hida_nom": "הרב ינון חורי",
+   "cle": "11-15",
+   "url": null,
+   "notre_cle": "11-15",
+   "notre_index": 4,
+   "notre_he": "חכם ינון חורי"
+  },
+  {
+   "hida_nom": "הרב שלום מרדכי הכהן שבדרון (המהרש\"ם מבערזן)",
+   "cle": "11-16",
+   "url": null,
+   "notre_cle": "11-16",
+   "notre_index": 4,
+   "notre_he": "רבי שלום מרדכי שבדרון",
+   "note": "Hidabroot mélange les noms : « הרב שלום מרדכי הכהן שבדרון (המהרש\"ם מבערזן) » ; le 16 Shevat est la date du Maharsham (hewiki : ט\"ז בשבט תרע\"א), c'est lui que porte notre entrée"
+  },
+  {
+   "hida_nom": "רבי חיים פלאג'י",
+   "cle": "11-17",
+   "url": "https://www.hidabroot.org/article/1134824",
+   "notre_cle": "11-17",
+   "notre_index": 1,
+   "notre_he": "רבי חיים פלאג'י"
+  },
+  {
+   "hida_nom": "הצדיק מיבנאל",
+   "cle": "11-17",
+   "url": "https://www.hidabroot.org/article/217423",
+   "notre_cle": "11-17",
+   "notre_index": 2,
+   "notre_he": "הרב אליעזר שלמה שיק",
+   "note": "« הצדיק מיבנאל » = הרב אליעזר שלמה שיק (hewiki 'אליעזר שלמה שיק' : « הצדיק מיבנאל ... י\"ז בשבט ה'תשע\"ה »)"
+  },
+  {
+   "hida_nom": "הרב עובדיה הדאיה",
+   "cle": "11-20",
+   "url": null,
+   "notre_cle": "11-20",
+   "notre_index": 2,
+   "notre_he": "הרב עובדיה הדאיה"
+  },
+  {
+   "hida_nom": "הרבי מקוצק",
+   "cle": "11-22",
+   "url": "https://www.hidabroot.org/article/217812",
+   "notre_cle": "11-22",
+   "notre_index": 1,
+   "notre_he": "רבי מנחם מנדל מקוצק"
+  },
+  {
+   "hida_nom": "הרב יעקב יצחק גלינסקי",
+   "cle": "11-22",
+   "url": "https://www.hidabroot.org/article/1134929",
+   "notre_cle": "11-22",
+   "notre_index": 6,
+   "notre_he": "הרב יעקב גלינסקי"
+  },
+  {
+   "hida_nom": "הרב ישראל מסלנט",
+   "cle": "11-25",
+   "url": "https://www.hidabroot.org/article/217900",
+   "notre_cle": "11-25",
+   "notre_index": 2,
+   "notre_he": "רבי ישראל מסלנט"
+  },
+  {
+   "hida_nom": "הרב דוד סגל (הט\"ז)",
+   "cle": "11-26",
+   "url": "https://www.hidabroot.org/article/1134434",
+   "notre_cle": "11-26",
+   "notre_index": 0,
+   "notre_he": "הרב דוד הלוי סגל (הט\"ז)"
+  },
+  {
+   "hida_nom": "הרב יעקב אדלשטיין",
+   "cle": "11-27",
+   "url": "https://www.hidabroot.org/article/218660",
+   "notre_cle": "11-27",
+   "notre_index": 5,
+   "notre_he": "הרב יעקב אדלשטיין"
+  },
+  {
+   "hida_nom": "הסבא מסלבודקה",
+   "cle": "11-29",
+   "url": "https://www.hidabroot.org/article/190676",
+   "notre_cle": "11-29",
+   "notre_index": 2,
+   "notre_he": "רבי נתן צבי פינקל",
+   "note": "הסבא מסלבודקה = רבי נתן צבי פינקל"
+  },
+  {
+   "hida_nom": "ה\"אבן עזרא\"",
+   "cle": "adar-1",
+   "url": "https://www.hidabroot.org/article/1121166",
+   "notre_cle": "adar1-1",
+   "notre_index": 0,
+   "notre_he": "אברהם אבן עזרא"
+  },
+  {
+   "hida_nom": "ה\"בית ישראל\"",
+   "cle": "adar-2",
+   "url": "https://www.hidabroot.org/article/191154",
+   "notre_cle": "adar-2",
+   "notre_index": 2,
+   "notre_he": "רבי ישראל אלתר"
+  },
+  {
+   "hida_nom": "הרב נפתלי אמסטרדם",
+   "cle": "adar-6",
+   "url": null,
+   "notre_cle": "adar-6",
+   "notre_index": 2,
+   "notre_he": "רבי נפתלי אמסטרדם"
+  },
+  {
+   "hida_nom": "משה רבנו",
+   "cle": "adar-7",
+   "url": "https://www.hidabroot.org/article/218320",
+   "notre_cle": "adar-7",
+   "notre_index": 0,
+   "notre_he": "משה רבנו"
+  },
+  {
+   "hida_nom": "הרב שמואל אוירבך",
+   "cle": "adar-9",
+   "url": "https://www.hidabroot.org/article/231988",
+   "notre_cle": "adar-9",
+   "notre_index": 4,
+   "notre_he": "הרב שמואל אוירבך"
+  },
+  {
+   "hida_nom": "החיד\"א",
+   "cle": "adar-11",
+   "url": "https://www.hidabroot.org/article/1122872",
+   "notre_cle": "adar-11",
+   "notre_index": 1,
+   "notre_he": "הרב חיים יוסף דוד אזולאי (החיד\"א)"
+  },
+  {
+   "hida_nom": "רבי יהודה החסיד",
+   "cle": "adar-13",
+   "url": null,
+   "notre_cle": "adar-13",
+   "notre_index": 0,
+   "notre_he": "רבי יהודה החסיד"
+  },
+  {
+   "hida_nom": "הרב משה פיינשטיין",
+   "cle": "adar-13",
+   "url": "https://www.hidabroot.org/article/193348",
+   "notre_cle": "adar2-13",
+   "notre_index": 0,
+   "notre_he": "רבי משה פיינשטיין"
+  },
+  {
+   "hida_nom": "הרב חיים קנייבסקי",
+   "cle": "adar-15",
+   "url": "https://www.hidabroot.org/%D7%94%D7%A8%D7%91-%D7%A7%D7%A0%D7%99%D7%99%D7%91%D7%A1%D7%A7%D7%99",
+   "notre_cle": "adar2-15",
+   "notre_index": 1,
+   "notre_he": "הרב חיים קניבסקי"
+  },
+  {
+   "hida_nom": "רבי יצחק אבולעפיא",
+   "cle": "adar-15",
+   "url": null,
+   "notre_cle": "adar-15",
+   "notre_index": 1,
+   "notre_he": "חכם יצחק אבולעפיה"
+  },
+  {
+   "hida_nom": "הרב אלכסנדר זיסקינד",
+   "cle": "adar-18",
+   "url": "https://www.hidabroot.org/article/218703",
+   "notre_cle": "adar2-18",
+   "notre_index": 0,
+   "notre_he": "רבי אלכסנדר זיסקינד מהוראדנא"
+  },
+  {
+   "hida_nom": "רבי יוסף חיים זוננפלד",
+   "cle": "adar-19",
+   "url": null,
+   "notre_cle": "adar2-19",
+   "notre_index": 1,
+   "notre_he": "הרב יוסף חיים זוננפלד"
+  },
+  {
+   "hida_nom": "הרב שלמה זלמן אוירבך",
+   "cle": "adar-20",
+   "url": "https://www.hidabroot.org/article/194354",
+   "notre_cle": "adar1-20",
+   "notre_index": 0,
+   "notre_he": "הרב שלמה זלמן אוירבך"
+  },
+  {
+   "hida_nom": "רבי אלימלך מליזנסק",
+   "cle": "adar-21",
+   "url": "https://www.hidabroot.org/%D7%A0%D7%95%D7%A2%D7%9D-%D7%90%D7%9C%D7%99%D7%9E%D7%9C%D7%9A",
+   "notre_cle": "adar-21",
+   "notre_index": 2,
+   "notre_he": "רבי אלימלך מליז'נסק"
+  },
+  {
+   "hida_nom": "רבי חיים סינוואני",
+   "cle": "adar-27",
+   "url": null,
+   "notre_cle": "adar-27",
+   "notre_index": 2,
+   "notre_he": "רבי חיים סינואני"
+  },
+  {
+   "hida_nom": "הרב חיים פנחס שיינברג",
+   "cle": "adar-27",
+   "url": "https://www.hidabroot.org/article/221990",
+   "notre_cle": "adar-27",
+   "notre_index": 3,
+   "notre_he": "רבי חיים פינחס שיינברג"
+  },
+  {
+   "hida_nom": "הרב מאיר ועקנין",
+   "cle": "adar-29",
+   "url": null,
+   "notre_cle": "adar-29",
+   "notre_index": 5,
+   "notre_he": "חכם מאיר ואעקנין"
+  },
+  {
+   "hida_nom": "נדב ואביהו בני אהרן הכהן",
+   "cle": "1-1",
+   "url": null,
+   "notre_cle": "1-1",
+   "notre_index": 0,
+   "notre_he": "נדב ואביהוא"
+  },
+  {
+   "hida_nom": "רבי שלום דובער שניאורסון (האדמו\"ר הרש\"ב)",
+   "cle": "1-2",
+   "url": null,
+   "notre_cle": "1-2",
+   "notre_index": 0,
+   "notre_he": "רבי שלום דובער שניאורסון"
+  },
+  {
+   "hida_nom": "רבי אהרן ראטה",
+   "cle": "1-6",
+   "url": "https://www.hidabroot.org/article/77389",
+   "notre_cle": "1-6",
+   "notre_index": 5,
+   "notre_he": "רבי אהרן ראטה"
+  },
+  {
+   "hida_nom": "רבי אריה לוין",
+   "cle": "1-9",
+   "url": "https://www.hidabroot.org/article/210192",
+   "notre_cle": "1-9",
+   "notre_index": 2,
+   "notre_he": "הרב אריה לוין"
+  },
+  {
+   "hida_nom": "מרים הנביאה",
+   "cle": "1-10",
+   "url": "https://www.hidabroot.org/article/182708",
+   "notre_cle": "1-10",
+   "notre_index": 0,
+   "notre_he": "מרים אחות משה רבנו"
+  },
+  {
+   "hida_nom": "הרב נתן בוקובזה",
+   "cle": "1-10",
+   "url": "https://www.hidabroot.org/article/219469",
+   "notre_cle": "1-10",
+   "notre_index": 5,
+   "notre_he": "הרב נתן בוקובזה"
+  },
+  {
+   "hida_nom": "הרב שלום משאש",
+   "cle": "1-10",
+   "url": null,
+   "notre_cle": "1-10",
+   "notre_index": 3,
+   "notre_he": "הרב שלום משאש"
+  },
+  {
+   "hida_nom": "רבי ישעיה הלוי הורביץ \"השל\"ה הקדוש\"",
+   "cle": "1-11",
+   "url": "https://www.hidabroot.org/article/121952",
+   "notre_cle": "1-11",
+   "notre_index": 0,
+   "notre_he": "ר' ישעיה הלוי הורוביץ"
+  },
+  {
+   "hida_nom": "הרב משה אלשיך",
+   "cle": "1-13",
+   "url": null,
+   "notre_cle": "1-13",
+   "notre_index": 1,
+   "notre_he": "הרב משה אלשיך"
+  },
+  {
+   "hida_nom": "רבי יוסף קארו",
+   "cle": "1-13",
+   "url": "https://www.hidabroot.org/article/77402",
+   "notre_cle": "1-13",
+   "notre_index": 0,
+   "notre_he": "רבי יוסף קארו"
+  },
+  {
+   "hida_nom": "הרב שמואל הלוי וואזנר",
+   "cle": "1-15",
+   "url": "https://www.hidabroot.org/article/213732",
+   "notre_cle": "1-15",
+   "notre_index": 2,
+   "notre_he": "הרב שמואל הלוי ואזנר"
+  },
+  {
+   "hida_nom": "לוי בן יעקב",
+   "cle": "1-16",
+   "url": null,
+   "notre_cle": "1-16",
+   "notre_index": 0,
+   "notre_he": "לוי"
+  },
+  {
+   "hida_nom": "הרב יוסף דב סולובייצ'יק",
+   "cle": "1-18",
+   "url": null,
+   "notre_cle": "1-18",
+   "notre_index": 2,
+   "notre_he": "הרב יוסף דוב הלוי סולובייצ'יק"
+  },
+  {
+   "hida_nom": "רבי אהרן מקרלין",
+   "cle": "1-19",
+   "url": "https://www.hidabroot.org/article/77405",
+   "notre_cle": "1-19",
+   "notre_index": 1,
+   "notre_he": "רבי אהרן הגדול מקרלין"
+  },
+  {
+   "hida_nom": "הרב מאיר מזוז, ראש ישיבת כסא רחמים",
+   "cle": "1-21",
+   "url": null,
+   "notre_cle": "1-21",
+   "notre_index": 7,
+   "notre_he": "הרב מאיר מאזוז"
+  },
+  {
+   "hida_nom": "רבי משה די טראני המבי\"ט",
+   "cle": "1-23",
+   "url": null,
+   "notre_cle": "1-23",
+   "notre_index": 0,
+   "notre_he": "רבי משה מטראני"
+  },
+  {
+   "hida_nom": "יהושע בן נון",
+   "cle": "1-26",
+   "url": "https://www.hidabroot.org/%D7%99%D7%94%D7%95%D7%A9%D7%A2-%D7%91%D7%9F-%D7%A0%D7%95%D7%9F",
+   "notre_cle": "1-26",
+   "notre_index": 0,
+   "notre_he": "יהושע בן נון",
+   "note": "notre table a aussi יהושע בן נון au 1-28[0] et 2-18[0] (doublons internes)"
+  },
+  {
+   "hida_nom": "רבי חיים ויטאל",
+   "cle": "1-30",
+   "url": "https://www.hidabroot.org/article/208262",
+   "notre_cle": "1-30",
+   "notre_index": 6,
+   "notre_he": "רבי חיים ויטאל"
+  },
+  {
+   "hida_nom": "רבי מנחם מנדל מויטבסק",
+   "cle": "2-1",
+   "url": "https://www.hidabroot.org/article/208517",
+   "notre_cle": "2-1",
+   "notre_index": 3,
+   "notre_he": "רבי מנחם מנדל מויטבסק"
+  },
+  {
+   "hida_nom": "הרב משה שמואל שפירא",
+   "cle": "2-1",
+   "url": null,
+   "notre_cle": "2-1",
+   "notre_index": 10,
+   "notre_he": "הרב משה שמואל שפירא"
+  },
+  {
+   "hida_nom": "הרב יעקב יוסף",
+   "cle": "2-2",
+   "url": "https://www.hidabroot.org/article/234744",
+   "notre_cle": "2-2",
+   "notre_index": 2,
+   "notre_he": "הרב יעקב יוסף"
+  },
+  {
+   "hida_nom": "רבי ישעיה מקרעסטיר",
+   "cle": "2-3",
+   "url": null,
+   "notre_cle": "2-3",
+   "notre_index": 5,
+   "notre_he": "רבי ישעיה שטיינר",
+   "note": "רבי ישעיה מקרעסטיר = רבי ישעיה שטיינר"
+  },
+  {
+   "hida_nom": "ה\"בית הלוי\" מבריסק",
+   "cle": "2-4",
+   "url": null,
+   "notre_cle": "2-4",
+   "notre_index": 1,
+   "notre_he": "רבי יוסף דוב הלוי סולובייצ'יק"
+  },
+  {
+   "hida_nom": "רבי יוסף תאומים, ה\"פרי מגדים\"",
+   "cle": "2-10",
+   "url": "https://www.hidabroot.org/article/209494",
+   "notre_cle": "2-10",
+   "notre_index": 3,
+   "notre_he": "רבי יוסף תאומים"
+  },
+  {
+   "hida_nom": "ה\"נודע ביהודה\"",
+   "cle": "2-17",
+   "url": "https://www.hidabroot.org/article/209626",
+   "notre_cle": "2-17",
+   "notre_index": 1,
+   "notre_he": "רבי יחזקאל לנדא"
+  },
+  {
+   "hida_nom": "רבי שמעון בר יוחאי",
+   "cle": "2-18",
+   "url": "https://www.hidabroot.org/article/209585",
+   "notre_cle": "2-18",
+   "notre_index": 1,
+   "notre_he": "רבי שמעון בר יוחאי"
+  },
+  {
+   "hida_nom": "רבי משה איסרליש הרמ\"א",
+   "cle": "2-18",
+   "url": "https://www.hidabroot.org/article/76032",
+   "notre_cle": "2-18",
+   "notre_index": 2,
+   "notre_he": "רבי משה בן ישראל איסרלישׂ"
+  },
+  {
+   "hida_nom": "רבי מנחם מנדל מרימנוב",
+   "cle": "2-19",
+   "url": "https://www.hidabroot.org/article/209711",
+   "notre_cle": "2-19",
+   "notre_index": 1,
+   "notre_he": "רבי מנחם מנדל מרימנוב"
+  },
+  {
+   "hida_nom": "המהר\"ם מרוטנבורג",
+   "cle": "2-19",
+   "url": null,
+   "notre_cle": "2-19",
+   "notre_index": 0,
+   "notre_he": "רבי מאיר (מהר\"ם) מרוטנבורג"
+  },
+  {
+   "hida_nom": "רבי עזרא עטייה",
+   "cle": "2-19",
+   "url": null,
+   "notre_cle": "2-19",
+   "notre_index": 2,
+   "notre_he": "הרב עזרא עטייה"
+  },
+  {
+   "hida_nom": "רבי סעדיה גאון",
+   "cle": "2-26",
+   "url": null,
+   "notre_cle": "2-26",
+   "notre_index": 0,
+   "notre_he": "רב סעדיה גאון"
+  },
+  {
+   "hida_nom": "הרמח\"ל",
+   "cle": "2-26",
+   "url": "https://www.hidabroot.org/article/1125515",
+   "notre_cle": "2-26",
+   "notre_index": 7,
+   "notre_he": "חכם משה חיים לוצאטו"
+  },
+  {
+   "hida_nom": "רבי שלמה מזווהיל",
+   "cle": "2-26",
+   "url": "https://www.hidabroot.org/article/209879",
+   "notre_cle": "2-26",
+   "notre_index": 6,
+   "notre_he": "רבי שלמה גולדמן מזוועהיל (ר' שלומק'ע)"
+  },
+  {
+   "hida_nom": "שמואל הנביא",
+   "cle": "2-28",
+   "url": "https://www.hidabroot.org/%D7%A9%D7%9E%D7%95%D7%90%D7%9C-%D7%94%D7%A0%D7%91%D7%99%D7%90",
+   "notre_cle": "2-28",
+   "notre_index": 0,
+   "notre_he": "שמואל הנביא",
+   "note": "notre table a aussi שמואל הנביא au 2-29[0] (doublon interne)"
+  },
+  {
+   "hida_nom": "רבי מאיר מפרמישלאן",
+   "cle": "2-29",
+   "url": "https://www.hidabroot.org/article/210009",
+   "notre_cle": "2-29",
+   "notre_index": 1,
+   "notre_he": "רבי מאיר (השני) מפרמישלאן"
+  },
+  {
+   "hida_nom": "דוד המלך",
+   "cle": "3-6",
+   "url": "https://www.hidabroot.org/%D7%93%D7%95%D7%93-%D7%94%D7%9E%D7%9C%D7%9A",
+   "notre_cle": "3-6",
+   "notre_index": 0,
+   "notre_he": "דוד מלך ישראל"
+  },
+  {
+   "hida_nom": "הבעל שם טוב",
+   "cle": "3-6",
+   "url": "https://www.hidabroot.org/article/1119994",
+   "notre_cle": "3-6",
+   "notre_index": 1,
+   "notre_he": "הבעל שם טוב (רבי ישראל בן אליעזר)"
+  },
+  {
+   "hida_nom": "רבי ישראל ה\"בעל שם טוב\"",
+   "cle": "3-6",
+   "url": "https://www.hidabroot.org/article/1119994",
+   "notre_cle": "3-6",
+   "notre_index": 1,
+   "notre_he": "הבעל שם טוב (רבי ישראל בן אליעזר)",
+   "note": "doublon Hidabroot de l'entrée n°219"
+  },
+  {
+   "hida_nom": "הגרף פוטוצקי",
+   "cle": "3-7",
+   "url": "https://www.hidabroot.org/article/209978",
+   "notre_cle": "3-7",
+   "notre_index": 0,
+   "notre_he": "אברהם בן אברהם",
+   "note": "הגר צדק פוטוצקי = אברהם בן אברהם"
+  },
+  {
+   "hida_nom": "רבי ישראל משקלוב",
+   "cle": "3-9",
+   "url": null,
+   "notre_cle": "3-9",
+   "notre_index": 1,
+   "notre_he": "רבי ישראל בן שמואל אשכנזי משקלוב"
+  },
+  {
+   "hida_nom": "רבי חיים מוולוזין",
+   "cle": "3-14",
+   "url": "https://www.hidabroot.org/article/219135",
+   "notre_cle": "3-14",
+   "notre_index": 0,
+   "notre_he": "רבי חיים מוולוז'ין"
+  },
+  {
+   "hida_nom": "הרב ניסים יגן",
+   "cle": "3-14",
+   "url": "https://www.hidabroot.org/article/235251",
+   "notre_cle": "3-14",
+   "notre_index": 3,
+   "notre_he": "רבי ניסים יגן"
+  },
+  {
+   "hida_nom": "יהודה בן יעקב",
+   "cle": "3-15",
+   "url": "https://www.hidabroot.org/article/221990",
+   "notre_cle": "3-15",
+   "notre_index": 0,
+   "notre_he": "יהודה בן יעקב"
+  },
+  {
+   "hida_nom": "התנא רבן שמעון בן גמליאל, מעשרה הרוגי מלכות",
+   "cle": "3-25",
+   "url": null,
+   "notre_cle": "3-25",
+   "notre_index": 0,
+   "notre_he": "רבן שמעון בן גמליאל הזקן"
+  },
+  {
+   "hida_nom": "רבי ישמעאל כהן גדול, מעשרה הרוגי מלכות",
+   "cle": "3-25",
+   "url": null,
+   "notre_cle": "3-25",
+   "notre_index": 1,
+   "notre_he": "רבי ישמעאל כהן גדול"
+  },
+  {
+   "hida_nom": "התנא רבי חנינא סגן הכהנים, מעשרה הרוגי מלכות",
+   "cle": "3-25",
+   "url": null,
+   "notre_cle": "3-25",
+   "notre_index": 2,
+   "notre_he": "רבי חנניה סגן הכהנים"
+  },
+  {
+   "hida_nom": "הרב מרדכי אליהו",
+   "cle": "3-25",
+   "url": "https://www.hidabroot.org/article/210522",
+   "notre_cle": "3-25",
+   "notre_index": 9,
+   "notre_he": "הרב מרדכי אליהו"
+  },
+  {
+   "hida_nom": "הרב מיכל יהודה לפקוביץ",
+   "cle": "3-26",
+   "url": "https://www.hidabroot.org/article/222059",
+   "notre_cle": "3-26",
+   "notre_index": 4,
+   "notre_he": "הרב מיכל יהודה ליפקוביץ"
+  },
+  {
+   "hida_nom": "התנא רבי חנינא בן תרדיון, מעשרה הרוגי מלכות",
+   "cle": "3-27",
+   "url": null,
+   "notre_cle": "3-27",
+   "notre_index": 0,
+   "notre_he": "רבי חנינא בן תרדיון"
+  },
+  {
+   "hida_nom": "יוסף הצדיק בן יעקב",
+   "cle": "4-1",
+   "url": "https://www.hidabroot.org/%D7%99%D7%95%D7%A1%D7%A3",
+   "notre_cle": "4-1",
+   "notre_index": 0,
+   "notre_he": "יוסף בן יעקב"
+  },
+  {
+   "hida_nom": "ה\"מאור ושמש\"",
+   "cle": "4-1",
+   "url": null,
+   "notre_cle": "4-1",
+   "notre_index": 2,
+   "notre_he": "רבי קלונימוס קלמן אפשטיין",
+   "note": "מאור ושמש = רבי קלונימוס קלמן אפשטיין"
+  },
+  {
+   "hida_nom": "רבי נחמן מהורודנקא",
+   "cle": "4-2",
+   "url": "https://www.hidabroot.org/article/82110",
+   "notre_cle": "4-2",
+   "notre_index": 0,
+   "notre_he": "רבי נחמן מהורדנקא"
+  },
+  {
+   "hida_nom": "הרב מנחם מנדל שניאורסון, הרבי מלובביץ",
+   "cle": "4-3",
+   "url": "https://www.hidabroot.org/article/222341",
+   "notre_cle": "4-3",
+   "notre_index": 3,
+   "notre_he": "רבי מנחם מנדל שניאורסון"
+  },
+  {
+   "hida_nom": "הרב יהושע ישעיה נויבירט",
+   "cle": "4-3",
+   "url": null,
+   "notre_cle": "4-3",
+   "notre_index": 4,
+   "notre_he": "הרב יהושע ישעיה נויבירט"
+  },
+  {
+   "hida_nom": "רבנו תם מבעלי התוספות",
+   "cle": "4-4",
+   "url": null,
+   "notre_cle": "4-4",
+   "notre_index": 0,
+   "notre_he": "רבנו תם"
+  },
+  {
+   "hida_nom": "רבי עזריאל מאיר מלובלין",
+   "cle": "4-5",
+   "url": "https://www.hidabroot.org/article/82134",
+   "notre_cle": "4-5",
+   "notre_index": 1,
+   "notre_he": "רבי עזריאל מאיר בן רבי יהודה לייב איגר"
+  },
+  {
+   "hida_nom": "ה\"לב שמחה\" מגור",
+   "cle": "4-7",
+   "url": "https://www.hidabroot.org/article/82135",
+   "notre_cle": "4-7",
+   "notre_index": 4,
+   "notre_he": "רבי שמחה בונם אלתר (הלב שמחה)"
+  },
+  {
+   "hida_nom": "האמרי נועם",
+   "cle": "4-8",
+   "url": "https://www.hidabroot.org/article/82115",
+   "notre_cle": "4-8",
+   "notre_index": 0,
+   "notre_he": "רבי מאיר הורוביץ (האמרי נועם)"
+  },
+  {
+   "hida_nom": "האדמו\"ר מצאנז",
+   "cle": "4-9",
+   "url": "https://www.hidabroot.org/article/235920",
+   "notre_cle": "4-9",
+   "notre_index": 4,
+   "notre_he": "רבי יקותיאל יהודה הלברשטאם (השפע חיים)",
+   "note": "article Hidabroot 235920 : « האדמו\"ר מצאנז – קלויזנבורג, רבי יקותיאל יהודה הלברשטאם »"
+  },
+  {
+   "hida_nom": "הרב אלחנן וסרמן",
+   "cle": "4-11",
+   "url": "https://www.hidabroot.org/article/210914",
+   "notre_cle": "4-11",
+   "notre_index": 5,
+   "notre_he": "הרב אלחנן וסרמן"
+  },
+  {
+   "hida_nom": "בעל הטורים",
+   "cle": "4-12",
+   "url": "https://www.hidabroot.org/article/210947",
+   "notre_cle": "4-12",
+   "notre_index": 0,
+   "notre_he": "הרב יעקב בן אשר (בעל הטורים)"
+  },
+  {
+   "hida_nom": "ה\"אור החיים\"",
+   "cle": "4-15",
+   "url": "https://www.hidabroot.org/article/211087",
+   "notre_cle": "4-15",
+   "notre_index": 0,
+   "notre_he": "רבי חיים בן עטר"
+  },
+  {
+   "hida_nom": "רבי בן ציון אבא שאול, ראש ישיבת פורת יוסף",
+   "cle": "4-19",
+   "url": "https://www.hidabroot.org/article/213739",
+   "notre_cle": "4-19",
+   "notre_index": 4,
+   "notre_he": "הרב בן ציון אבא שאול"
+  },
+  {
+   "hida_nom": "הצדיק משטפנשט",
+   "cle": "4-21",
+   "url": "https://www.hidabroot.org/article/211308",
+   "notre_cle": "4-21",
+   "notre_index": 1,
+   "notre_he": "רבי אברהם מתתיהו פרידמן (הצדיק משטפנשט)"
+  },
+  {
+   "hida_nom": "רבי שלמה מקרלין",
+   "cle": "4-22",
+   "url": "https://www.hidabroot.org/article/139485",
+   "notre_cle": "4-22",
+   "notre_index": 2,
+   "notre_he": "רבי שלמה מקרלין"
+  },
+  {
+   "hida_nom": "רבי משה קורדובירו הרמ\"ק",
+   "cle": "4-23",
+   "url": "https://www.hidabroot.org/article/1141968",
+   "notre_cle": "4-23",
+   "notre_index": 0,
+   "notre_he": "רבי משה קורדובירו"
+  },
+  {
+   "hida_nom": "רבי מאיר הלוי מאפטא",
+   "cle": "4-25",
+   "url": "https://www.hidabroot.org/article/223246",
+   "notre_cle": "4-25",
+   "notre_index": 0,
+   "notre_he": "רבי מאיר הלוי מאפטא"
+  },
+  {
+   "hida_nom": "רבי יעקב עדס",
+   "cle": "4-27",
+   "url": null,
+   "notre_cle": "4-27",
+   "notre_index": 5,
+   "notre_he": "חכם יעקב ציון חי עדס"
+  },
+  {
+   "hida_nom": "רבי אלעזר אבוחצירא",
+   "cle": "4-27",
+   "url": "https://www.hidabroot.org/article/211419",
+   "notre_cle": "4-27",
+   "notre_index": 2,
+   "notre_he": "הרב אלעזר אבוחצירה"
+  },
+  {
+   "hida_nom": "רבי שלמה גאנצפריד",
+   "cle": "4-28",
+   "url": null,
+   "notre_cle": "4-28",
+   "notre_index": 2,
+   "notre_he": "רבי שלמה גאנצפריד"
+  },
+  {
+   "hida_nom": "הרב יוסף שלום אלישיב",
+   "cle": "4-28",
+   "url": "https://www.hidabroot.org/article/211451",
+   "notre_cle": "4-28",
+   "notre_index": 5,
+   "notre_he": "הרב יוסף שלום אלישיב"
+  },
+  {
+   "hida_nom": "רש\"י",
+   "cle": "4-29",
+   "url": "https://www.hidabroot.org/article/141730",
+   "notre_cle": "4-29",
+   "notre_index": 0,
+   "notre_he": "רש\"י"
+  },
+  {
+   "hida_nom": "אהרן הכהן",
+   "cle": "5-1",
+   "url": "https://www.hidabroot.org/article/141605",
+   "notre_cle": "5-1",
+   "notre_index": 0,
+   "notre_he": "אהרן הכהן"
+  },
+  {
+   "hida_nom": "האר\"י הקדוש",
+   "cle": "5-5",
+   "url": "https://www.hidabroot.org/%D7%94%D7%90%D7%A8%22%D7%99-%D7%94%D7%A7%D7%93%D7%95%D7%A9",
+   "notre_cle": "5-5",
+   "notre_index": 0,
+   "notre_he": "רבי יצחק לוריא"
+  },
+  {
+   "hida_nom": "רבי חיים עוזר גרודזינסקי",
+   "cle": "5-5",
+   "url": "https://www.hidabroot.org/video/143215",
+   "notre_cle": "5-5",
+   "notre_index": 2,
+   "notre_he": "רבי חיים עוזר גרודזנסקי"
+  },
+  {
+   "hida_nom": "הרב אריה פינקל",
+   "cle": "5-6",
+   "url": "https://www.hidabroot.org/article/224411",
+   "notre_cle": "5-6",
+   "notre_index": 4,
+   "notre_he": "הרב אריה פינקל"
+  },
+  {
+   "hida_nom": "ה\"נתיבות שלום\" מסלונים",
+   "cle": "5-7",
+   "url": "https://www.hidabroot.org/article/1201831",
+   "notre_cle": "5-7",
+   "notre_index": 4,
+   "notre_he": "רבי שלום נח ברזובסקי"
+  },
+  {
+   "hida_nom": "החוזה מלובלין",
+   "cle": "5-9",
+   "url": null,
+   "notre_cle": "5-9",
+   "notre_index": 0,
+   "notre_he": "רבי יעקב יצחק הורוביץ"
+  },
+  {
+   "hida_nom": "יששכר בן יעקב",
+   "cle": "5-10",
+   "url": null,
+   "notre_cle": "5-10",
+   "notre_index": 0,
+   "notre_he": "יששכר"
+  },
+  {
+   "hida_nom": "הרב יצחק בלאזר",
+   "cle": "5-11",
+   "url": null,
+   "notre_cle": "5-11",
+   "notre_index": 2,
+   "notre_he": "רבי יצחק בלאזר"
+  },
+  {
+   "hida_nom": "המגלה עמוקות",
+   "cle": "5-13",
+   "url": "https://www.hidabroot.org/article/185947",
+   "notre_cle": "5-13",
+   "notre_index": 0,
+   "notre_he": "רבי נתן נטע שפירא",
+   "note": "מגלה עמוקות = רבי נתן נטע שפירא"
+  },
+  {
+   "hida_nom": "הרב יעקב כולי \"ילקוט מעם לועז\"",
+   "cle": "5-19",
+   "url": null,
+   "notre_cle": "5-19",
+   "notre_index": 0,
+   "notre_he": "רבי יעקב כולי"
+  },
+  {
+   "hida_nom": "רבי אהרן מבעלזא",
+   "cle": "5-21",
+   "url": "https://www.hidabroot.org/article/1128379",
+   "notre_cle": "5-21",
+   "notre_index": 3,
+   "notre_he": "הרב אהרן רוקח"
+  },
+  {
+   "hida_nom": "רבי חיים הלוי סולובייציק",
+   "cle": "5-21",
+   "url": null,
+   "notre_cle": "5-21",
+   "notre_index": 2,
+   "notre_he": "הרב חיים סולובייצ'יק"
+  },
+  {
+   "hida_nom": "הרב יעקב ישראל קנייבסקי",
+   "cle": "5-23",
+   "url": "https://www.hidabroot.org/article/212140",
+   "notre_cle": "5-23",
+   "notre_index": 1,
+   "notre_he": "הרב יעקב ישראל קניבסקי"
+  },
+  {
+   "hida_nom": "הרב שלום כהן, נשיא מועצת חכמי התורה וראש ישיבת פורת יוסף",
+   "cle": "5-25",
+   "url": "https://www.hidabroot.org/article/1223042",
+   "notre_cle": "5-25",
+   "notre_index": 3,
+   "notre_he": "הרב שלום כהן"
+  },
+  {
+   "hida_nom": "חכם יהודה פתיה",
+   "cle": "5-27",
+   "url": "https://www.hidabroot.org/article/212268",
+   "notre_cle": "5-27",
+   "notre_index": 2,
+   "notre_he": "ר' יהודה פתייה"
+  },
+  {
+   "hida_nom": "הרבי מסקולען",
+   "cle": "5-29",
+   "url": "https://www.hidabroot.org/article/1128591",
+   "notre_cle": "5-29",
+   "notre_index": 4,
+   "notre_he": "רבי אליעזר זוסיא פורטוגל",
+   "note": "הרבי מסקולען = רבי אליעזר זוסיא פורטוגל"
+  },
+  {
+   "hida_nom": "הרב יצחק בר ששת הריב\"ש",
+   "cle": "6-2",
+   "url": null,
+   "notre_cle": "6-2",
+   "notre_index": 4,
+   "notre_he": "חכם יצחק בר שֵׁשֶׁת בֶּרְפֶת"
+  },
+  {
+   "hida_nom": "רבי מאיר שמחה הכהן",
+   "cle": "6-4",
+   "url": null,
+   "notre_cle": "6-4",
+   "notre_index": 2,
+   "notre_he": "רבי מאיר שמחה הכהן"
+  },
+  {
+   "hida_nom": "הרב שמשון חיים בן נחמן מיכאל, ה\"זרע שמשון\"",
+   "cle": "6-6",
+   "url": "https://www.hidabroot.org/article/1200364",
+   "notre_cle": "6-6",
+   "notre_index": 1,
+   "notre_he": "הרב שמשון חיים נחמני"
+  },
+  {
+   "hida_nom": "רבי יחזקאל סרנא",
+   "cle": "6-6",
+   "url": "https://www.hidabroot.org/article/77531",
+   "notre_cle": "6-6",
+   "notre_index": 4,
+   "notre_he": "הרב יחזקאל סרנא"
+  },
+  {
+   "hida_nom": "רבי יום טוב ליפא הלר",
+   "cle": "6-6",
+   "url": "https://www.hidabroot.org/article/77531",
+   "notre_cle": "6-6",
+   "notre_index": 0,
+   "notre_he": "רבי יום-טוב ליפמן הלר הלוי"
+  },
+  {
+   "hida_nom": "רבי צדוק הכהן מלובלי ן",
+   "cle": "6-9",
+   "url": "https://www.hidabroot.org/article/225023",
+   "notre_cle": "6-9",
+   "notre_index": 2,
+   "notre_he": "רבי צדוק הכהן מלובלין"
+  },
+  {
+   "hida_nom": "החכם מנחם מנשה",
+   "cle": "6-12",
+   "url": null,
+   "notre_cle": "6-12",
+   "notre_index": 6,
+   "notre_he": "חכם מנחם מנשה"
+  },
+  {
+   "hida_nom": "ה\"בן איש חי\"",
+   "cle": "6-13",
+   "url": "https://www.hidabroot.org/%D7%91%D7%9F-%D7%90%D7%99%D7%A9-%D7%97%D7%99",
+   "notre_cle": "6-13",
+   "notre_index": 2,
+   "notre_he": "רבי יוסף חיים מבגדאד"
+  },
+  {
+   "hida_nom": "הרב עבדאללה סומך",
+   "cle": "6-18",
+   "url": "https://www.hidabroot.org/article/212870",
+   "notre_cle": "6-18",
+   "notre_index": 1,
+   "notre_he": "רבי עובדיה עבדאללה סומך"
+  },
+  {
+   "hida_nom": "המהר\"ל מפראג",
+   "cle": "6-18",
+   "url": "https://www.hidabroot.org/article/238979",
+   "notre_cle": "6-18",
+   "notre_index": 0,
+   "notre_he": "מהר\"ל מפראג (רבי יהודה ליווא בן בצלאל)"
+  },
+  {
+   "hida_nom": "רבי סלימאן מנחם מני",
+   "cle": "6-19",
+   "url": null,
+   "notre_cle": "6-19",
+   "notre_index": 5,
+   "notre_he": "רבי סלימאן מנחם מני"
+  },
+  {
+   "hida_nom": "רבי יהונתן אייבשיץ",
+   "cle": "6-21",
+   "url": null,
+   "notre_cle": "6-21",
+   "notre_index": 0,
+   "notre_he": "רבי יהונתן אייבשיץ"
+  },
+  {
+   "hida_nom": "הרב יוסף שלמה כהנמן",
+   "cle": "6-20",
+   "url": "https://www.hidabroot.org/article/239024",
+   "notre_cle": "6-20",
+   "notre_index": 2,
+   "notre_he": "רבי יוסף שלמה כהנמן"
+  },
+  {
+   "hida_nom": "ה\"חפץ חיים\"",
+   "cle": "6-24",
+   "url": "https://www.hidabroot.org/%D7%94%D7%97%D7%A4%D7%A5-%D7%97%D7%99%D7%99%D7%9D",
+   "notre_cle": "6-24",
+   "notre_index": 1,
+   "notre_he": "רבי ישראל מאיר הכהן מראדין (ה\"חפץ חיים\")"
+  },
+  {
+   "hida_nom": "הרב יחזקאל אברמסקי",
+   "cle": "6-24",
+   "url": "https://www.hidabroot.org/article/226482",
+   "notre_cle": "6-24",
+   "notre_index": 3,
+   "notre_he": "רבי יחזקאל אברמסקי"
+  }
+ ],
+ "conflits_de_date": [
+  {
+   "hida_nom": "גדליה בן אחיקם",
+   "hida_cle": "7-3",
+   "url": "https://www.hidabroot.org/article/1124517",
+   "notre_cle": "7-1",
+   "notre_index": 0,
+   "notre_he": "גדליהו בן אחיקם",
+   "source2_date": "hewiki 'גדליהו בן אחיקם' : « נרצח ... בא' בתשרי או בג' בתשרי »",
+   "note": "les deux dates sont citées par Wikipédia"
+  },
+  {
+   "hida_nom": "רבי חיים ברלין",
+   "hida_cle": "7-3",
+   "url": null,
+   "notre_cle": "7-13",
+   "notre_index": 4,
+   "notre_he": "רבי חיים ברלין",
+   "source2_date": "hewiki 'חיים ברלין' : « י\"ג בתשרי ה'תרע\"ג »",
+   "note": "Hidabroot le liste deux fois (3 et 13 Tishrei) ; le 13 correspond (hida n°15)"
+  },
+  {
+   "hida_nom": "רבי יעקב יוסף מפולנאה",
+   "hida_cle": "7-20",
+   "url": "https://www.hidabroot.org/article/1130193",
+   "notre_cle": "7-24",
+   "notre_index": 7,
+   "notre_he": "רבי יעקב יוסף מפולנאה",
+   "source2_date": "hewiki 'יעקב יוסף כ\"ץ' : « כ\"ד בתשרי תקמ\"ב »",
+   "note": "Hidabroot : 20 Tishrei « ויש אומרים כ\"ד תשרי » ; notre 7-20[5] est un autre homme (יעקב יוסף מאוסטראה)"
+  },
+  {
+   "hida_nom": "האדמו\"ר מפיסאצנה",
+   "hida_cle": "8-4",
+   "url": "https://www.hidabroot.org/article/240185",
+   "notre_cle": "8-5",
+   "notre_index": 7,
+   "notre_he": "רבי קלונימוס קלמיש שפירא מפיאסצנה",
+   "source2_date": "hewiki 'קלונימוס קלמיש שפירא' : « ה' בחשוון ה'תש\"ד »"
+  },
+  {
+   "hida_nom": "הרב יצחק חי טייב",
+   "hida_cle": "8-19",
+   "url": null,
+   "notre_cle": "2-16",
+   "notre_index": 4,
+   "notre_he": "חכם יצחק חי טייב",
+   "source2_date": "hewiki 'יצחק חי טייב' : « ט\"ז באייר ה'תקצ\"ז »",
+   "note": "peut-être un homonyme chez Hidabroot (19 Heshvan) ; identité non certaine"
+  },
+  {
+   "hida_nom": "בנימין בן יעקב",
+   "hida_cle": "8-24",
+   "url": null,
+   "notre_cle": "8-11",
+   "notre_index": 0,
+   "notre_he": "בנימין",
+   "note": "biblique ; Hidabroot : 24 Heshvan « ויש אומרים י\"א חשוון »"
+  },
+  {
+   "hida_nom": "הרב משה כלפון הכהן",
+   "hida_cle": "10-17",
+   "url": null,
+   "notre_cle": "10-18",
+   "notre_index": 4,
+   "notre_he": "הרב כלפון משה הכהן",
+   "source2_date": "hewiki 'כלפון משה הכהן' : « י\"ח בטבת ה'תש\"י »"
+  },
+  {
+   "hida_nom": "הרב שמואל בירנבוים",
+   "hida_cle": "10-29",
+   "url": null,
+   "notre_cle": "11-28",
+   "notre_index": 1,
+   "notre_he": "הרב שמואל ברנבוים",
+   "source2_date": "hewiki 'שמואל ברנבוים' : « כ\"ח בטבת תשס\"ח, 6 בינואר 2008 »",
+   "note": "ATTENTION : notre table le met au 28 SHEVAT, Wikipédia dit 28 Tevet, Hidabroot 29 Tevet — notre mois semble faux"
+  },
+  {
+   "hida_nom": "אשר בן יעקב",
+   "hida_cle": "11-4",
+   "url": null,
+   "notre_cle": "11-20",
+   "notre_index": 0,
+   "notre_he": "אשר בן יעקב",
+   "note": "biblique"
+  },
+  {
+   "hida_nom": "רבי חיים אבולעפיה",
+   "hida_cle": "1-6",
+   "url": null,
+   "notre_cle": "1-7",
+   "notre_index": 5,
+   "notre_he": "חכם חיים אבולעפיה",
+   "source2_date": "hewiki 'חיים אבולעפיה (השני)' : « ו' בניסן ה'תק\"ד »",
+   "note": "notre 1-7[5] « חכם חיים אבולעפיה » (source h, sans article) est probablement lui ; Wikipédia confirme Hidabroot (6 Nisan)"
+  },
+  {
+   "hida_nom": "הרב שלמה וולבה",
+   "hida_cle": "1-17",
+   "url": null,
+   "notre_cle": "1-16",
+   "notre_index": 4,
+   "notre_he": "הרב שלמה וולבה",
+   "source2_date": "hewiki 'שלמה וולבה' : « ט\"ז בניסן ה'תשס\"ה »",
+   "note": "Wikipédia confirme notre date, pas celle de Hidabroot (17)"
+  },
+  {
+   "hida_nom": "רבי ישראל מרוזין",
+   "hida_cle": "3-2",
+   "url": null,
+   "notre_cle": "8-3",
+   "notre_index": 6,
+   "notre_he": "רבי ישראל פרידמן מרוז'ין",
+   "source2_date": "hewiki 'ישראל פרידמן (רוז'ין)' : « ג' בחשוון ה'תרי\"א »",
+   "note": "Hidabroot le liste aussi au 3 Heshvan (n°34, correspondance) ; le 2 Sivan est une erreur probable"
+  },
+  {
+   "hida_nom": "רבי חיים אבולעפיא",
+   "hida_cle": "3-6",
+   "url": null,
+   "notre_cle": "1-7",
+   "notre_index": 5,
+   "notre_he": "חכם חיים אבולעפיה",
+   "source2_date": "hewiki 'חיים אבולעפיה (השני)' : « ו' בניסן ה'תק\"ד »",
+   "note": "doublon Hidabroot (6 Nisan n°173 et 6 Sivan) ; le 6 Sivan est probablement une erreur"
+  },
+  {
+   "hida_nom": "רבי שמואל סלנט",
+   "hida_cle": "4-29",
+   "url": null,
+   "notre_cle": "5-29",
+   "notre_index": 0,
+   "notre_he": "רבי שמואל סלנט",
+   "source2_date": "hewiki 'שמואל סלנט' : « כ\"ט באב ה'תרס\"ט »",
+   "note": "Hidabroot dit 29 Tammuz ; Wikipédia confirme notre date"
+  },
+  {
+   "hida_nom": "הרב שמואל רוזובסקי",
+   "hida_cle": "4-29",
+   "url": "https://www.hidabroot.org/article/226809",
+   "notre_cle": "4-27",
+   "notre_index": 0,
+   "notre_he": "הרב שמואל רוזובסקי",
+   "source2_date": "hewiki 'שמואל רוזובסקי' : « כ\"ז בתמוז ה'תשל\"ט »",
+   "note": "Wikipédia confirme notre date"
+  },
+  {
+   "hida_nom": "רבי אליהו לופיאן",
+   "hida_cle": "6-19",
+   "url": null,
+   "notre_cle": "6-20",
+   "notre_index": 3,
+   "notre_he": "רבי אליהו לאפיאן",
+   "source2_date": "hewiki 'אליהו לופיאן' : « כ' באלול תש\"ל »",
+   "note": "Wikipédia confirme notre date"
+  },
+  {
+   "hida_nom": "המהרי\"ל דיסקין",
+   "hida_cle": "6-22",
+   "url": null,
+   "notre_cle": "10-29",
+   "notre_index": 2,
+   "notre_he": "רבי יהושע לייב דיסקין",
+   "source2_date": "hewiki 'משה יהושע יהודה לייב דיסקין' : « ליל כ\"ט בטבת ה'תרנ\"ח » ; hewiki 'מהרי\"ל' (מולין) : « בכ\"ב באלול ה'קפ\"ז »",
+   "note": "Hidabroot confond le Maharil Diskin avec le Maharil (Molin), dont le 22 Elul est déjà dans notre table (6-22[0])"
+  }
+ ],
+ "absents": [
+  {
+   "hida_nom": "שרה אמנו",
+   "cle": "7-1",
+   "url": "https://www.hidabroot.org/article/1144353",
+   "statut": "biblique",
+   "note": "absent de notre table à tout jour"
+  },
+  {
+   "hida_nom": "רבי דוד חדד",
+   "cle": "7-23",
+   "url": null,
+   "statut": "non vérifié",
+   "note": "aucun article hewiki trouvé"
+  },
+  {
+   "hida_nom": "רבי דוד ומשה",
+   "cle": "8-1",
+   "url": "https://www.hidabroot.org/article/240105",
+   "statut": "non vérifié",
+   "wiki_article": "דוד ומשה",
+   "wiki_date": "« נפטר בשנת 1171 » (pas de jour)",
+   "note": "Hidabroot 240105 : décès en 4922 (1171) selon l'article"
+  },
+  {
+   "hida_nom": "מתושלח בן חנוך",
+   "cle": "8-10",
+   "url": null,
+   "statut": "biblique"
+  },
+  {
+   "hida_nom": "הרב בן ציון חזן",
+   "cle": "8-12",
+   "url": null,
+   "statut": "confirmé",
+   "wiki_article": "בן ציון חזן",
+   "wiki_date": "י\"ב בחשוון ה'תשי\"ב, 11 בנובמבר 1951",
+   "annee": "ה'תשי\"ב (hewiki)"
+  },
+  {
+   "hida_nom": "הרב נתן סאלם",
+   "cle": "9-9",
+   "url": null,
+   "statut": "non vérifié",
+   "note": "pas d'article ; mentionné dans hewiki 'ישיבת מאור התורה' sans date"
+  },
+  {
+   "hida_nom": "הרב אריה שכטר",
+   "cle": "9-14",
+   "url": "https://www.hidabroot.org/article/1147685",
+   "statut": "confirmé",
+   "wiki_article": "אריה שכטר",
+   "wiki_date": "י\"ד בכסלו תש\"ף 11 בדצמבר 2019",
+   "annee": "תש\"ף (hewiki)"
+  },
+  {
+   "hida_nom": "הרב עזרא עדס",
+   "cle": "9-20",
+   "url": null,
+   "statut": "non vérifié",
+   "note": "aucun article hewiki trouvé"
+  },
+  {
+   "hida_nom": "רבי אברהם בן החפץ חיים",
+   "cle": "9-20",
+   "url": "https://www.hidabroot.org/article/215490",
+   "statut": "non vérifié",
+   "note": "identité (fils du Hafetz Haïm) non vérifiée, pas d'article"
+  },
+  {
+   "hida_nom": "הרב שלום מרדכי הכהן שבדרון",
+   "cle": "9-22",
+   "url": null,
+   "statut": "confirmé",
+   "wiki_article": "שלום שבדרון",
+   "wiki_date": "כ\"ב בכסלו ה'תשנ\"ח, 21 בדצמבר 1997",
+   "annee": "ה'תשנ\"ח (hewiki)",
+   "note": "le maggid de Jérusalem ; à ne pas confondre avec le Maharsham (11-16)"
+  },
+  {
+   "hida_nom": "שמען בן יעקב",
+   "cle": "9-24",
+   "url": null,
+   "statut": "biblique",
+   "note": "absent de notre table à tout jour ; Hidabroot le donne deux fois (24 Kislev « שמען » et 21 Tevet, ויש אומרים כ\"ח טבת)"
+  },
+  {
+   "hida_nom": "רבי משה תורג'מן (רבו של הבבא סאלי)",
+   "cle": "9-28",
+   "url": null,
+   "statut": "désaccord",
+   "wiki_article": "משה תורג'מן",
+   "wiki_date": "כ\"ח טבת התרצ\"ז, 11 בינואר 1937",
+   "annee": "התרצ\"ז (hewiki)",
+   "note": "Hidabroot : 28 Kislev ; Wikipédia : 28 Tevet"
+  },
+  {
+   "hida_nom": "מלאכי אחרון הנביאים",
+   "cle": "10-10",
+   "url": "https://www.hidabroot.org/article/1119128",
+   "statut": "biblique"
+  },
+  {
+   "hida_nom": "הרב ראובן קרלנשטיין",
+   "cle": "10-10",
+   "url": "https://www.hidabroot.org/article/1141212",
+   "statut": "confirmé",
+   "wiki_article": "ראובן קרלנשטיין",
+   "wiki_date": "י' בטבת תשע\"ד, 13 בדצמבר 2013",
+   "annee": "תשע\"ד (hewiki)"
+  },
+  {
+   "hida_nom": "שמעון בן יעקב",
+   "cle": "10-21",
+   "url": null,
+   "statut": "biblique",
+   "note": "absent de notre table à tout jour ; Hidabroot le donne deux fois (24 Kislev « שמען » et 21 Tevet, ויש אומרים כ\"ח טבת)"
+  },
+  {
+   "hida_nom": "הרב יששכר מאיר, ראש ישיבת הנגב",
+   "cle": "10-25",
+   "url": null,
+   "statut": "confirmé",
+   "wiki_article": "יששכר מאיר",
+   "wiki_date": "31 בדצמבר 2010, כ\"ה בטבת ה'תשע\"א",
+   "annee": "ה'תשע\"א (hewiki)"
+  },
+  {
+   "hida_nom": "הרב שלמה ברוודה",
+   "cle": "10-26",
+   "url": null,
+   "statut": "confirmé",
+   "wiki_article": "שלמה ברוודה",
+   "wiki_date": "כ\"ו בטבת תשע\"ג, 9 בינואר 2013",
+   "annee": "תשע\"ג (hewiki)"
+  },
+  {
+   "hida_nom": "הרב אליהו מאיר בלוך",
+   "cle": "10-29",
+   "url": null,
+   "statut": "désaccord",
+   "wiki_article": "אליהו מאיר בלוך",
+   "wiki_date": "כ\"ח בטבת תשט\"ו, 22 בינואר 1955",
+   "annee": "תשט\"ו (hewiki)",
+   "note": "Hidabroot : 29 Tevet ; Wikipédia : 28 Tevet"
+  },
+  {
+   "hida_nom": "הרב אברהם חזן",
+   "cle": "10-29",
+   "url": null,
+   "statut": "non vérifié",
+   "note": "homonymes : notre table a « חכם אברהם חזן » (1-23) et « אברהם חזן (ברסלב) » (9-30 ; hewiki : ל' בכסלו תרע\"ח) ; aucun ne tombe le 29 Tevet, identité Hidabroot inconnue"
+  },
+  {
+   "hida_nom": "הרב שלום שבזי, מרבני ומשוררי תימן",
+   "cle": "11-9",
+   "url": null,
+   "statut": "non vérifié",
+   "wiki_article": "שלום שבזי",
+   "wiki_date": "« ה'תמ\"ו או ה'ת\"ף, 1686 או 1720 » (pas de jour)"
+  },
+  {
+   "hida_nom": "הרב שלום בן ציון פלמן",
+   "cle": "11-12",
+   "url": "https://www.hidabroot.org/article/1134511",
+   "statut": "confirmé",
+   "wiki_article": "בן ציון פלמן",
+   "wiki_date": "י\"ב בשבט תשע\"ה, 1 בפברואר 2015",
+   "annee": "תשע\"ה (hewiki)"
+  },
+  {
+   "hida_nom": "הרב יהודה זאב סגל מלונדון",
+   "cle": "11-22",
+   "url": null,
+   "statut": "non vérifié",
+   "note": "aucun article hewiki trouvé"
+  },
+  {
+   "hida_nom": "הרב מרדכי פוגרמנסקי",
+   "cle": "11-25",
+   "url": "https://www.hidabroot.org/article/217949",
+   "statut": "confirmé",
+   "wiki_article": "מרדכי פוגרמנסקי",
+   "wiki_date": "כ\"ה בשבט ה'תש\"י, 12 בפברואר 1950",
+   "annee": "ה'תש\"י (hewiki)"
+  },
+  {
+   "hida_nom": "הרב מרדכי גולדמן, האדמור מזווהיל",
+   "cle": "11-28",
+   "url": null,
+   "statut": "non vérifié",
+   "note": "pas d'article ; cité comme 6e admour de Zvhil dans hewiki 'אברהם גולדמן', sans date"
+  },
+  {
+   "hida_nom": "הרב ברוך רוזנברג, ראש ישיבת סלבודקה",
+   "cle": "adar-1",
+   "url": null,
+   "statut": "confirmé",
+   "wiki_article": "ברוך רוזנברג",
+   "wiki_date": "א' באדר ה'תשס\"ד, 23 בפברואר 2004",
+   "annee": "ה'תשס\"ד (hewiki)"
+  },
+  {
+   "hida_nom": "הרב מרדכי מן",
+   "cle": "adar-4",
+   "url": null,
+   "statut": "confirmé",
+   "wiki_article": "מרדכי מן",
+   "wiki_date": "ד' באדר ב' ה'תשנ\"ז, 13 במרץ 1997",
+   "annee": "ה'תשנ\"ז (hewiki)",
+   "note": "Adar II -> clé adar2-4"
+  },
+  {
+   "hida_nom": "רבי ישעיה אזולאי (סבו של החיד\"א)",
+   "cle": "adar-6",
+   "url": null,
+   "statut": "non vérifié",
+   "wiki_date": "hewiki 'אברהם אזולאי' : « נפטר תצ\"ב 1732 » (pas de jour)"
+  },
+  {
+   "hida_nom": "הרב יעקב טולדנו",
+   "cle": "adar-7",
+   "url": null,
+   "statut": "non vérifié",
+   "note": "homonyme : notre table a הרב יעקב משה טולידאנו au 7-24 (hewiki : כ\"ד בתשרי ה'תשכ\"א) ; le « הרב יעקב טולדנו » du 7 Adar n'est pas identifié"
+  },
+  {
+   "hida_nom": "הרב משה פדרו",
+   "cle": "adar-11",
+   "url": null,
+   "statut": "non vérifié",
+   "note": "aucun article hewiki trouvé"
+  },
+  {
+   "hida_nom": "יחזקאל הנביא",
+   "cle": "adar-15",
+   "url": "https://www.hidabroot.org/article/1119992",
+   "statut": "biblique"
+  },
+  {
+   "hida_nom": "רבי חיים קמיל",
+   "cle": "adar-15",
+   "url": null,
+   "statut": "confirmé",
+   "wiki_article": "חיים קמיל",
+   "wiki_date": "ט\"ו באדר ב' חג הפורים ה'תשס\"ה, 26 במרץ 2005",
+   "annee": "ה'תשס\"ה (hewiki)",
+   "note": "Adar II -> clé adar2-15"
+  },
+  {
+   "hida_nom": "הרב אברהם חיים ברים",
+   "cle": "adar-26",
+   "url": null,
+   "statut": "confirmé",
+   "wiki_article": "חיים ברים",
+   "wiki_date": "ליל כ\"ו באדר ה'תשס\"ב, 9 במרץ 2002",
+   "annee": "ה'תשס\"ב (hewiki)"
+  },
+  {
+   "hida_nom": "רבי שלמה אלישיב",
+   "cle": "adar-27",
+   "url": null,
+   "statut": "confirmé",
+   "wiki_article": "שלמה אלישיב",
+   "wiki_date": "כ\"ז באדר ה'תרפ\"ו, 13 במרץ 1926",
+   "annee": "ה'תרפ\"ו (hewiki)",
+   "note": "le Leshem"
+  },
+  {
+   "hida_nom": "עובדיה הנביא",
+   "cle": "1-1",
+   "url": "https://www.hidabroot.org/article/1119992",
+   "statut": "biblique"
+  },
+  {
+   "hida_nom": "ה\"אוהב ישראל\" מאפטא",
+   "cle": "1-6",
+   "url": null,
+   "statut": "désaccord",
+   "wiki_article": "אברהם יהושע השיל מאפטא",
+   "wiki_date": "ה' בניסן תקפ\"ה, 1825",
+   "annee": "תקפ\"ה (hewiki)",
+   "note": "Hidabroot : 6 Nisan ; Wikipédia : 5 Nisan"
+  },
+  {
+   "hida_nom": "רבי משה בן נחמן, הרמב\"ן",
+   "cle": "1-11",
+   "url": "https://www.hidabroot.org/%D7%90%D7%92%D7%A8%D7%AA-%D7%94%D7%A8%D7%9E%D7%91%22%D7%9F",
+   "statut": "non vérifié",
+   "wiki_article": "רמב\"ן",
+   "wiki_date": "« ה'ל' 1270 בערך » (pas de jour)"
+  },
+  {
+   "hida_nom": "הרב שמשון דוד פינקוס",
+   "cle": "1-12",
+   "url": "https://www.hidabroot.org/article/236173",
+   "statut": "confirmé",
+   "wiki_article": "שמשון דוד פינקוס",
+   "wiki_date": "י\"ב בניסן ה'תשס\"א, 5 באפריל 2001",
+   "annee": "ה'תשס\"א (hewiki)"
+  },
+  {
+   "hida_nom": "יצחק אבינו",
+   "cle": "1-15",
+   "url": null,
+   "statut": "biblique"
+  },
+  {
+   "hida_nom": "הרב מסעוד חי בן שמעון",
+   "cle": "1-20",
+   "url": null,
+   "statut": "non vérifié",
+   "wiki_article": "מסעוד חי בן שמעון",
+   "wiki_date": "תרפ\"ה, 14 באפריל 1925",
+   "annee": "תרפ\"ה (hewiki)",
+   "note": "Wikipédia ne donne pas le jour hébreu ; 14 avril 1925 tomberait vers le 20 Nisan (calcul, non lu)"
+  },
+  {
+   "hida_nom": "האדמו\"ר מקאליב",
+   "cle": "1-23",
+   "url": "https://www.hidabroot.org/article/1124221",
+   "statut": "confirmé",
+   "wiki_article": "מנחם מנדל טאוב",
+   "wiki_date": "כ\"ג בניסן ה'תשע\"ט; 1923 – 28 באפריל 2019",
+   "annee": "ה'תשע\"ט (hewiki)",
+   "note": "article Hidabroot 1124221 : רבי מנחם מנדל טאוב"
+  },
+  {
+   "hida_nom": "חוני המעגל",
+   "cle": "2-3",
+   "url": "https://www.hidabroot.org/%D7%97%D7%95%D7%A0%D7%99-%D7%94%D7%9E%D7%A2%D7%92%D7%9C",
+   "statut": "non vérifié",
+   "wiki_article": "חוני המעגל",
+   "note": "aucune date de décès dans l'intro"
+  },
+  {
+   "hida_nom": "התנא רבי מאיר בעל הנס",
+   "cle": "2-14",
+   "url": "https://www.hidabroot.org/%D7%A8%D7%91%D7%99-%D7%9E%D7%90%D7%99%D7%A8-%D7%91%D7%A2%D7%9C-%D7%94%D7%A0%D7%A1",
+   "statut": "non vérifié",
+   "wiki_article": "רבי מאיר",
+   "note": "aucune date de décès dans l'intro"
+  },
+  {
+   "hida_nom": "התנא רבי יהודה בר אילעי",
+   "cle": "2-14",
+   "url": null,
+   "statut": "non vérifié",
+   "wiki_article": "רבי יהודה",
+   "note": "aucune date de décès dans l'intro"
+  },
+  {
+   "hida_nom": "רבי עובדיה מברטנורא",
+   "cle": "3-3",
+   "url": null,
+   "statut": "non vérifié",
+   "wiki_article": "עובדיה מברטנורא",
+   "wiki_date": "« נפטר לפני שנת 1518 » (pas de jour)"
+  },
+  {
+   "hida_nom": "הושע בן בארי",
+   "cle": "3-7",
+   "url": "https://www.hidabroot.org/article/209973",
+   "statut": "biblique"
+  },
+  {
+   "hida_nom": "התנא יונתן בן עוזיאל",
+   "cle": "3-26",
+   "url": "https://www.hidabroot.org/article/235351",
+   "statut": "non vérifié",
+   "wiki_article": "יונתן בן עוזיאל",
+   "note": "aucune date de décès dans l'intro"
+  },
+  {
+   "hida_nom": "התנא רבי יוסי בן קיסמא",
+   "cle": "3-26",
+   "url": null,
+   "statut": "non vérifié",
+   "wiki_article": "רבי יוסי בן קיסמא",
+   "note": "aucune date de décès dans l'intro"
+  },
+  {
+   "hida_nom": "רבי אריה לייבוש מטרינגרד",
+   "cle": "4-15",
+   "url": "https://www.hidabroot.org/article/82127",
+   "statut": "non vérifié",
+   "note": "aucun article hewiki ; notre 4-15[1] « אריה לייב גינצבורג » est un autre homme"
+  },
+  {
+   "hida_nom": "חור בנו של כלב ומרים הנביאה",
+   "cle": "4-16",
+   "url": null,
+   "statut": "biblique"
+  },
+  {
+   "hida_nom": "התנא רבי יוחנן הסנדלר",
+   "cle": "4-29",
+   "url": null,
+   "statut": "non vérifié",
+   "wiki_article": "רבי יוחנן הסנדלר",
+   "note": "aucune date de décès dans l'intro"
+  },
+  {
+   "hida_nom": "אלעזר הכהן בן אהרן הכהן",
+   "cle": "5-1",
+   "url": null,
+   "statut": "biblique"
+  },
+  {
+   "hida_nom": "התנא נחום איש גמזו",
+   "cle": "5-15",
+   "url": null,
+   "statut": "non vérifié",
+   "wiki_article": "נחום איש גמזו",
+   "note": "aucune date de décès dans l'intro"
+  },
+  {
+   "hida_nom": "דן בן יעקב",
+   "cle": "6-9",
+   "url": null,
+   "statut": "biblique"
+  },
+  {
+   "hida_nom": "חבקוק הנביא",
+   "cle": "6-24",
+   "url": "https://www.hidabroot.org/article/1119185",
+   "statut": "biblique"
+  },
+  {
+   "hida_nom": "התנא אלעזר בן רשב\"י",
+   "cle": "6-25",
+   "url": null,
+   "statut": "non vérifié",
+   "wiki_article": "רבי אלעזר ברבי שמעון",
+   "note": "aucune date de décès dans l'intro"
+  }
+ ],
+ "non_personnes": [
+  {
+   "hida_nom": "יום הקדיש הכללי",
+   "cle": "10-10",
+   "url": "https://www.hidabroot.org/article/1119013"
+  },
+  {
+   "hida_nom": "אליהו הנביא עלה לשמים",
+   "cle": "5-10",
+   "url": "https://www.hidabroot.org/%D7%90%D7%9C%D7%99%D7%94%D7%95-%D7%94%D7%A0%D7%91%D7%99%D7%90"
+  }
+ ]
+}

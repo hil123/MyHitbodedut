@@ -39,6 +39,71 @@ ANNEES = {("תשרי", 20, "רבי אליעזר פאפו"): 'תקפ"ח', ("אל�
           ("אלול", 9, "רבי רפאל טריוויש"): 'תקל"ג', ("אלול", 23, "הרב רחמים אריה אברהם ארייאש"): "1893"}
 
 
+G = {c: i for i, c in enumerate("אבגדהוזחט", 1)} | {"י": 10, "כ": 20, "ל": 30}
+
+
+def jour_hebreu(s):
+    """« כ''ח » → 28 ; None si ce n'est pas un jour."""
+    s = re.sub("[\"'״׳]", "", s)
+    return sum(G[c] for c in s) if s and all(c in G for c in s) and 1 <= sum(G[c] for c in s) <= 30 else None
+
+
+def complements(jours):
+    """Hidabroot et תורת אמת (12/10) : les liens, les ajouts confirmés, une date corrigée."""
+    # Hidabroot (hidabroot.org/article/1132443) : des faits seuls (nom, jour), et le
+    # lien vers son article. Rapprochement fait à la lecture : tools/hilloulot/hidabroot.json.
+    hida = json.load(open(os.path.join(ICI, "hilloulot", "hidabroot.json"), encoding="utf-8"))
+    liens = 0
+    for c in hida["correspondances"]:
+        item = jours[c["notre_cle"]][c["notre_index"]]
+        assert item["he"] == c["notre_he"], c
+        if c.get("url"):
+            item["i"] = c["url"]
+            liens += 1
+        if "i" not in item["s"]:
+            item["s"] += "i"
+    # Ajouts : absents de notre table, date confirmée par Wikipédia hébreu (deux sources).
+    fichier = os.path.join(ICI, "hilloulot", "extraits_wiki_ajouts.json")
+    extraits = json.load(open(fichier, encoding="utf-8")) if os.path.exists(fichier) else {}
+    ajouts = 0
+    for a in hida["absents"]:
+        if a["statut"] != "confirmé":
+            continue
+        item = {"he": a["hida_nom"], "a": (a.get("annee") or "").replace(" (hewiki)", ""), "s": "iw", "w": a["wiki_article"]}
+        if a["wiki_article"] in extraits:
+            item["t"] = extraits[a["wiki_article"]]["texte"].strip()
+        if a.get("url"):
+            item["i"] = a["url"]
+        jours.setdefault(a["cle"], []).append(item)
+        ajouts += 1
+    # Rav Shmouel Birnbaum : 28 Tevet (Wikipédia « כ"ח בטבת תשס"ח, 6 בינואר 2008 » ;
+    # Hidabroot 29 Tevet) ; la page de date l'avait rangé au 28 Chevat.
+    for i, item in enumerate(jours.get("11-28", [])):
+        if item["he"] == "הרב שמואל ברנבוים":
+            item["d"] = "date corrigée le 12/10 : 28 Tevet selon son article (la page du 28 Chevat le donnait)"
+            jours.setdefault("10-28", []).append(jours["11-28"].pop(i))
+            break
+    # תורת אמת, « סדר הדורות המקוצר » (CC BY-NC-SA 2.5) : les fils de Jacob, datés.
+    # Confirme nos entrées, ou ajoute celles que Hidabroot donne aussi au même jour.
+    te = 0
+    hida_jour = {(a["hida_nom"], a["cle"]) for a in hida["absents"]}
+    for e in json.load(open(os.path.join(ICI, "hilloulot", "toratemet.json"), encoding="utf-8")):
+        parties = e["date"].replace("ב", "", 1).split() if e["date"].startswith("ב") else e["date"].split()
+        if len(parties) != 2 or parties[1] not in MOIS or jour_hebreu(parties[0]) is None:
+            continue
+        cle = f"{MOIS[parties[1]]}-{jour_hebreu(parties[0])}"
+        nom = e["nom"]
+        trouve = [x for x in jours.get(cle, []) if nom.split()[0] in x["he"]]
+        for x in trouve:
+            if "e" not in x["s"]:
+                x["s"] += "e"
+                te += 1
+        if not trouve and any(n.startswith(nom.split()[0]) and k == cle for n, k in hida_jour):
+            jours.setdefault(cle, []).append({"he": nom, "a": "", "s": "ie", "d": "figure biblique ; date de תורת אמת et de Hidabroot"})
+            te += 1
+    print(f"Hidabroot : {liens} liens, {ajouts} ajouts ; תורת אמת : {te} ;", end=" ")
+
+
 def main():
     jours, total, retires = {}, 0, 0
     for lot in (1, 2, 3, 4):
@@ -84,22 +149,30 @@ def main():
                 item["t"] = x["texte"].strip()
                 allonges += 1
     print(f"{allonges} descriptions allongées ;", end=" ")
+    complements(jours)
     sortie = {
         "_meta": {
-            "date": "2026-10-11",
+            "date": "2026-10-12",
             "sources": ["Wikipédia hébreu, pages de date, section נפטרו (CC BY-SA 4.0)",
-                        "החכם היומי, hyomi.org.il (Kol Israël 'Haverim) : faits seuls (nom, date)"],
-            "s": "w = Wikipédia, h = החכם היומי",
+                        "החכם היומי, hyomi.org.il (Kol Israël 'Haverim) : faits seuls (nom, date)",
+                        "Hidabroot, hidabroot.org/article/1132443 : faits seuls (nom, date) et lien vers ses articles",
+                        "תורת אמת, סדר הדורות המקוצר (CC BY-NC-SA 2.5)",
+                        "MyTzadik, mytzadik.com (YETEV 4 LTD) : reprise autorisée avec mention, accord reçu par le propriétaire de l'app le 12/10/2026",
+                        "המאיר לארץ, hameir-laarets.org.il : reprise autorisée avec mention, accord reçu par le propriétaire de l'app le 12/10/2026"],
+            "s": "w = Wikipédia, h = החכם היומי, i = Hidabroot, e = תורת אמת, m = MyTzadik, l = המאיר לארץ",
+            "i": "lien vers l'article de Hidabroot",
+            "b": "biographies d'autres sources, mot pour mot : [source, texte, lien]",
             "regles": "Désaccord : החכם היומי l'emporte. « adar » : Adar II les années embolismiques (OH 568:7). "
                       "Un 30 absent cette année se dit le 29.",
             "d": "raison d'un doute (personne, date ou année) relevée à la lecture",
-            "t": "première phrase de l'article de Wikipédia hébreu (CC BY-SA 4.0) ; w : son titre",
+            "t": "début de l'article de Wikipédia hébreu (CC BY-SA 4.0), jusqu'à six phrases ; w : son titre",
         },
         "jours": dict(sorted(jours.items())),
     }
     chemin = os.path.join(ICI, "..", "android", "app", "src", "main", "res", "raw", "hilloulot.json")
     json.dump(sortie, open(chemin, "w", encoding="utf-8"), ensure_ascii=False, separators=(",", ":"))
     print(f"{decrits} descriptions ;", end=" ")
+    total = sum(len(v) for v in jours.values())
     print(f"{total} hilloulot, {len(jours)} jours, {retires} entrées Wikipédia retirées ; {os.path.getsize(chemin)//1024} Ko")
 
 
