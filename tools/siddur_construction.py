@@ -214,9 +214,10 @@ GROUPES = [
 # prend la voyelle de la première lettre du mot correspondant, le chourouk
 # s'écrivant avec un ו ajouté (הוּ, יוּ). Recalculé ici depuis le texte
 # massorétique (Tanach with Nikkud, Sefaria) et comparé lettre à lettre à
-# la photo : accord pour neuf mois ; Tamouz (ligne הוי״ה), Chevat et Adar,
-# illisibles ou divergents sur la photo, suivent le verset — à confirmer
-# sur le livre. Av suit le verset de ce livre (הסכת ושמע ישראל היום, comme
+# la photo : accord pour neuf mois. Puis, le même jour, comparé aux douze
+# colonnes du tableau d'un second siddour (« מוסף לראש חודש », p. 637,
+# photographié mois par mois par le propriétaire) : accord pour les douze
+# mois et les deux lignes, Tamouz, Chevat et Adar compris. Av suit le verset de ce livre (הסכת ושמע ישראל היום, comme
 # le Pardès Rimonim), non « הנה יד ה׳ הויה » du Bnei Yissaschar : mêmes lettres.
 TSEROUFIM = [
     ("ניסן", "יִהַוְהָ", "אִהַיְהָ", "יִשְׂמְחוּ הַשָּׁמַיִם וְתָגֵל הָאָרֶץ"),
