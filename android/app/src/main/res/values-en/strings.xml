@@ -763,10 +763,10 @@
     <string name="channel_celebration">Milestones and trophies</string>
     <string name="channel_celebration_description">A celebration when a milestone or trophy is reached</string>
     <string name="reset_title">Reset the app</string>
-    <string name="reset_hint">Erases everything the app keeps on this phone: journal, sessions, streaks, trophies, settings and reminders. Export your data first if you want to keep it.</string>
+    <string name="reset_hint">Erases everything the app keeps on this phone: journal, hitbodedut days, streaks, trophies, settings and reminders. Export your data first if you want to keep it.</string>
     <string name="reset_action">Reset the app</string>
     <string name="reset_confirm_title">Erase everything?</string>
-    <string name="reset_confirm_text">The journal, sessions, streaks, trophies, settings and reminders will be erased from this phone. This cannot be undone.</string>
+    <string name="reset_confirm_text">The journal, hitbodedut days, streaks, trophies, settings and reminders will be erased from this phone. This cannot be undone.</string>
     <string name="reset_confirm_yes">Erase everything</string>
     <string name="reset_confirm_no">Cancel</string>
     <string name="partage_action">Share my hitbodedut</string>

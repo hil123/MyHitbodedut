@@ -809,10 +809,10 @@
     <string name="channel_celebration">Paliers et trophées</string>
     <string name="channel_celebration_description">Une fête quand un palier ou un trophée est atteint</string>
     <string name="reset_title">Réinitialiser l’application</string>
-    <string name="reset_hint">Efface tout ce que l’application garde sur ce téléphone : journal, séances, séries, trophées, réglages et rappels. Exportez d’abord vos données si vous voulez les garder.</string>
+    <string name="reset_hint">Efface tout ce que l’application garde sur ce téléphone : journal, hitbodedouts, séries, trophées, réglages et rappels. Exportez d’abord vos données si vous voulez les garder.</string>
     <string name="reset_action">Réinitialiser l’application</string>
     <string name="reset_confirm_title">Tout effacer ?</string>
-    <string name="reset_confirm_text">Le journal, les séances, les séries, les trophées, les réglages et les rappels seront effacés de ce téléphone. Cela ne peut pas être annulé.</string>
+    <string name="reset_confirm_text">Le journal, les hitbodedouts, les séries, les trophées, les réglages et les rappels seront effacés de ce téléphone. Cela ne peut pas être annulé.</string>
     <string name="reset_confirm_yes">Tout effacer</string>
     <string name="reset_confirm_no">Annuler</string>
     <string name="partage_action">Partager ma hitbodedout</string>
