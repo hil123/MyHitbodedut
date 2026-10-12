@@ -21,14 +21,15 @@ class TropheesTest {
     @Test
     fun `chaque niveau atteint est gagne, et les rangs suivent les seuils`() {
         val p = Trophees.Pratique(jours(41) + (dimanche.plusDays(60) to 130), 26, 41)
-        assertEquals(3, Trophees.rang(p, Trophees.Famille.JOURS))        // 42 jours : 7, 18, 40
-        assertEquals(5, Trophees.rang(p, Trophees.Famille.SERIE))        // 41 : 3, 7, 18, 30, 40
-        assertEquals(6, Trophees.rang(p, Trophees.Famille.SEANCE_LONGUE)) // 130 min : jusqu'à 120
+        assertEquals(7, Trophees.rang(p, Trophees.Famille.JOURS))        // 42 jours : 7, 10, 15, 18, 20, 30, 40
+        assertEquals(9, Trophees.rang(p, Trophees.Famille.SERIE))        // 41 : 3, 5, 7, 10, 15, 18, 20, 30, 40
+        assertEquals(12, Trophees.rang(p, Trophees.Famille.SEANCE_LONGUE)) // 130 min : de 10 à 120
         assertEquals(3, Trophees.rang(p, Trophees.Famille.PLUME))        // 26 notes : 1, 10, 25
         assertEquals(1, Trophees.rang(p, Trophees.Famille.RETOUR))
         assertEquals(6, Trophees.semainesPleines(jours(41).keys)) // du 4/10 au vendredi 13/11
         val g = Trophees.gagnes(p)
-        assertTrue((1..3).all { Trophees.Niveau(Trophees.Famille.JOURS, it) in g })
+        assertTrue((1..7).all { Trophees.Niveau(Trophees.Famille.JOURS, it) in g })
+        assertEquals(5, Trophees.rang(p, Trophees.Famille.PREMIER_PAS))  // 42 jours : les cinq premiers
     }
 
     @Test

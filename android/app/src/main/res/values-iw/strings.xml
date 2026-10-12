@@ -810,8 +810,8 @@
     <string name="trophee_plume">העט</string>
     <plurals name="trophee_premier_pas_desc">
         <item quantity="one">התבודדות ראשונה</item>
-        <item quantity="two">התבודדות ראשונה</item>
-        <item quantity="other">התבודדות ראשונה</item>
+        <item quantity="two">%1$d התבודדויות ראשונות</item>
+        <item quantity="other">%1$d התבודדויות ראשונות</item>
     </plurals>
     <plurals name="trophee_seance_longue_desc">
         <item quantity="one">דקה אחת ביום אחד</item>

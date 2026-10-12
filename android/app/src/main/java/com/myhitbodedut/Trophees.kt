@@ -10,7 +10,8 @@ import java.time.LocalDate
  * retours après une pause, le journal. Chacune monte par niveaux, et la
  * médaille change de métal en montant : bronze, argent, or, platine. Les
  * seuils reprennent des nombres qui parlent d'eux-mêmes (7, 18, 40, 70, 100,
- * 613) ; choix de l'application, sans source à citer.
+ * 613), avec des paliers intermédiaires à chaque dizaine et quinzaine (12/10) ;
+ * choix de l'application, sans source à citer.
  *
  * Rien d'Android ici.
  */
@@ -23,12 +24,12 @@ object Trophees {
     enum class Forme(val cle: String) { COUPE("coupe"), ECUSSON("ecusson"), ETOILE("etoile"), ROSETTE("rosette"), MEDAILLE("medaille"), PIECES("pieces"), CRISTAL("cristal"), GEMME("gemme") }
 
     enum class Famille(val cle: String, val icone: String, val seuils: IntArray, val forme: Forme) {
-        PREMIER_PAS("premier_pas", "🌱", intArrayOf(1), Forme.ROSETTE),
-        SEANCE_LONGUE("seance_longue", "⏳", intArrayOf(15, 30, 45, 60, 90, 120, 180), Forme.COUPE),
-        JOURS("jours", "🌳", intArrayOf(7, 18, 40, 70, 100, 180, 365, 613), Forme.MEDAILLE),
-        SERIE("serie", "🔥", intArrayOf(3, 7, 18, 30, 40, 70, 100), Forme.ETOILE),
-        HEURES("heures", "⭐", intArrayOf(1, 5, 10, 25, 50, 100, 200, 300), Forme.PIECES),
-        SEMAINES("semaines", "🏅", intArrayOf(1, 2, 4, 8, 12, 26, 52), Forme.ECUSSON),
+        PREMIER_PAS("premier_pas", "🌱", intArrayOf(1, 2, 3, 4, 5), Forme.ROSETTE),
+        SEANCE_LONGUE("seance_longue", "⏳", intArrayOf(10, 15, 20, 30, 40, 45, 50, 60, 75, 90, 105, 120, 150, 180), Forme.COUPE),
+        JOURS("jours", "🌳", intArrayOf(7, 10, 15, 18, 20, 30, 40, 45, 50, 60, 70, 80, 90, 100, 120, 150, 180, 200, 250, 300, 365, 400, 500, 613), Forme.MEDAILLE),
+        SERIE("serie", "🔥", intArrayOf(3, 5, 7, 10, 15, 18, 20, 30, 40, 45, 50, 60, 70, 80, 90, 100), Forme.ETOILE),
+        HEURES("heures", "⭐", intArrayOf(1, 2, 5, 10, 15, 20, 25, 30, 40, 45, 50, 60, 75, 100, 150, 200, 250, 300), Forme.PIECES),
+        SEMAINES("semaines", "🏅", intArrayOf(1, 2, 3, 4, 5, 6, 8, 10, 12, 15, 20, 26, 30, 40, 45, 52), Forme.ECUSSON),
         EREV_CHABBAT("erev_chabbat", "🕯️", intArrayOf(1, 4, 12, 26, 52), Forme.CRISTAL),
         RETOUR("retour", "🔄", intArrayOf(1, 3, 5, 10), Forme.GEMME),
         PLUME("plume", "✍️", intArrayOf(1, 10, 25, 50, 100, 150), Forme.COUPE),
@@ -63,7 +64,7 @@ object Trophees {
     fun valeur(p: Pratique, f: Famille): Int {
         val jours = p.minutes.filterValues { it > 0 }.keys
         return when (f) {
-            Famille.PREMIER_PAS -> jours.size.coerceAtMost(1)
+            Famille.PREMIER_PAS -> jours.size.coerceAtMost(5)
             Famille.SEANCE_LONGUE -> p.minutes.values.maxOrNull() ?: 0
             Famille.JOURS -> jours.size
             Famille.SERIE -> p.meilleureSerie

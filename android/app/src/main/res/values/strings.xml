@@ -839,7 +839,7 @@
     <string name="trophee_plume">La plume</string>
     <plurals name="trophee_premier_pas_desc">
         <item quantity="one">Une première hitbodedout</item>
-        <item quantity="other">Une première hitbodedout</item>
+        <item quantity="other">%1$d premières hitbodedouts</item>
     </plurals>
     <plurals name="trophee_seance_longue_desc">
         <item quantity="one">%1$d minute en un jour</item>

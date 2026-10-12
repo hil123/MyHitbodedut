@@ -576,10 +576,11 @@ test('trophées à niveaux : mêmes règles que TropheesTest (12/10)', () => {
   const F = Object.fromEntries(Trophees.FAMILLES.map((f) => [f.cle, f]));
   assert.equal(Trophees.gagnes({ minutes: {}, notes: 0, meilleureSerie: 0 }).size, 0);
   const p = { minutes: { ...jours(41), '2026-12-03': 130 }, notes: 26, meilleureSerie: 41 };
-  assert.equal(Trophees.rang(p, F.jours), 3);
-  assert.equal(Trophees.rang(p, F.serie), 5);
-  assert.equal(Trophees.rang(p, F.seance_longue), 6);
+  assert.equal(Trophees.rang(p, F.jours), 7);
+  assert.equal(Trophees.rang(p, F.serie), 9);
+  assert.equal(Trophees.rang(p, F.seance_longue), 12);
   assert.equal(Trophees.rang(p, F.plume), 3);
+  assert.equal(Trophees.rang(p, F.premier_pas), 5);
   assert.equal(Trophees.rang(p, F.retour), 1);
   assert.equal(Trophees.semainesPleines(Object.keys(jours(41))), 6);
   for (const f of Trophees.FAMILLES.filter((x) => x.seuils.length > 1)) {
@@ -598,5 +599,5 @@ test('trophées à niveaux : mêmes règles que TropheesTest (12/10)', () => {
   assert.deepEqual(Trophees.nouveaux(g, null), []);
   assert.deepEqual(Trophees.nouveaux(g, new Set(['chai'])), []);
   const n = Trophees.nouveaux(g, new Set(['premier_pas:1']));
-  assert.ok(n.some((x) => x.famille.cle === 'jours' && x.rang === 2));
+  assert.ok(n.some((x) => x.famille.cle === 'jours' && x.rang === 5));
 });

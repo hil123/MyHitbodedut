@@ -4,12 +4,12 @@
 
 // L'objet (12/10) : coupe, écusson, étoile, rosette, médaille, pièces, cristal, gemme (tools/trophees_formes.py).
 export const FAMILLES = [
-  ['premier_pas', '🌱', [1], 'rosette'],
-  ['seance_longue', '⏳', [15, 30, 45, 60, 90, 120, 180], 'coupe'],
-  ['jours', '🌳', [7, 18, 40, 70, 100, 180, 365, 613], 'medaille'],
-  ['serie', '🔥', [3, 7, 18, 30, 40, 70, 100], 'etoile'],
-  ['heures', '⭐', [1, 5, 10, 25, 50, 100, 200, 300], 'pieces'],
-  ['semaines', '🏅', [1, 2, 4, 8, 12, 26, 52], 'ecusson'],
+  ['premier_pas', '🌱', [1, 2, 3, 4, 5], 'rosette'],
+  ['seance_longue', '⏳', [10, 15, 20, 30, 40, 45, 50, 60, 75, 90, 105, 120, 150, 180], 'coupe'],
+  ['jours', '🌳', [7, 10, 15, 18, 20, 30, 40, 45, 50, 60, 70, 80, 90, 100, 120, 150, 180, 200, 250, 300, 365, 400, 500, 613], 'medaille'],
+  ['serie', '🔥', [3, 5, 7, 10, 15, 18, 20, 30, 40, 45, 50, 60, 70, 80, 90, 100], 'etoile'],
+  ['heures', '⭐', [1, 2, 5, 10, 15, 20, 25, 30, 40, 45, 50, 60, 75, 100, 150, 200, 250, 300], 'pieces'],
+  ['semaines', '🏅', [1, 2, 3, 4, 5, 6, 8, 10, 12, 15, 20, 26, 30, 40, 45, 52], 'ecusson'],
   ['erev_chabbat', '🕯️', [1, 4, 12, 26, 52], 'cristal'],
   ['retour', '🔄', [1, 3, 5, 10], 'gemme'],
   ['plume', '✍️', [1, 10, 25, 50, 100, 150], 'coupe'],
@@ -43,7 +43,7 @@ export function valeur({ minutes, notes, meilleureSerie }, cle) {
   const jours = Object.keys(minutes).filter((k) => minutes[k] > 0);
   const valeurs = Object.values(minutes);
   switch (cle) {
-    case 'premier_pas': return Math.min(jours.length, 1);
+    case 'premier_pas': return Math.min(jours.length, 5);
     case 'seance_longue': return valeurs.length ? Math.max(...valeurs) : 0;
     case 'jours': return jours.length;
     case 'serie': return meilleureSerie;
