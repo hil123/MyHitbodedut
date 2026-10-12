@@ -177,6 +177,7 @@ TITRES = {
     "bore_nefachot": ("brakhot", T("בּוֹרֵא נְפָשׁוֹת", "Boré néfachot", "Borei Nefashot")),
     "tefilat_haderekh": ("brakhot", T("תְּפִלַּת הַדֶּרֶךְ", "Téfilat hadérekh", "Traveler’s prayer")),
     "birkat_halevana": ("moments", T("בִּרְכַּת הַלְּבָנָה", "Birkat halévana", "Blessing of the moon")),
+    "hallel": ("moments", T("הַלֵּל", "Hallel", "Hallel")),
     "moussaf_rosh_hodech": ("moments", T("מוּסָף לְרֹאשׁ חֹדֶשׁ", "Moussaf de Roch ’Hodech", "Musaf for Rosh Chodesh")),
     "cheva_berakhot": ("moments", T("שֶׁבַע בְּרָכוֹת", "Chéva bérakhot", "Sheva Berakhot")),
     "parachat_haman": ("moments", T("פָּרָשַׁת הַמָּן", "Parachat hamane", "Parashat HaMan")),
@@ -259,6 +260,75 @@ def avec_tseroufim(sections):
     raise SystemExit("moussaf de Roch 'Hodech : fin de la bénédiction du milieu introuvable")
 
 
+def sans_chabbat(sections):
+    """
+    Le Moussaf de Roch 'Hodech de semaine seulement (demande du 12/10) : les
+    consignes qui renvoient au Moussaf de Chabbat Roch 'Hodech sont retirées.
+    """
+    nu = lambda b: re.sub(r"<[^>]+>", "", b.get("c", ""))
+    for s in sections:
+        s["blocs"] = [b for b in s["blocs"] if "שבת" not in nu(b)]
+    return sections
+
+
+def sans_renvois(sections):
+    """Les renvois « (תהילים קי״ג:א׳-ב׳) » de l'édition Shaliehsaboo ne sont pas du texte de prière."""
+    for s in sections:
+        for b in s["blocs"]:
+            if "t" in b:
+                b["t"] = re.sub(r"\s*<small>\([^()<]*\)</small>", "", b["t"])
+    return sections
+
+
+def jusqua(sections, debut_consigne):
+    """La section coupée avant la consigne qui commence par [debut_consigne] (le Hallel, sans la lecture de la Torah)."""
+    for s in sections:
+        i = next((i for i, b in enumerate(s["blocs"]) if b.get("c", "").startswith(debut_consigne)), None)
+        if i is not None:
+            s["blocs"] = s["blocs"][:i]
+    return sections
+
+
+# Consigne de l'application, sans source à reproduire : le demi-Hallel de Roch
+# 'Hodech omet Tehilim 115, 1-11 et 116, 1-11 (Choul'han Aroukh, Ora'h 'Haïm
+# 422, 2 ; c'est aussi ce que disent les siddourim Edot et Sfard ci-dessus).
+GUEMATRIA = {i: ("י" * (i // 10) if i < 20 else "כ") + ("" if i % 10 == 0 else "אבגדהוזחט"[i % 10 - 1]) for i in range(1, 30)}
+GUEMATRIA.update({15: "טו", 16: "טז", 20: "כ"})
+SAUT_ROSH_HODECH = {"c": NFC("בראש חודש מדלגים זה:")}
+
+
+def hallel_daat(sections):
+    """
+    Le Hallel du siddour Daat porte les numéros de versets (« א », « ב »…) :
+    retirés ; Tehilim 115 et 116 coupés au verset 12, avec la consigne du saut.
+    """
+    for s in sections:
+        sortie = []
+        for b in s["blocs"]:
+            if "t" not in b:
+                sortie.append(b)
+                continue
+            # Un numéro de verset : lettres sans voyelle, en tête ou après la fin d'un verset,
+            # suivies d'une espace ou collées au mot vocalisé qui ouvre le verset (« יבמָה »).
+            parts = re.split(r"(?:^|(?<=[.:׃] ))([\u05D0-\u05EA]{1,3})(?: |(?=[\u05D0-\u05EA][\u0591-\u05C7]))", b["t"])
+            versets = [(parts[i], parts[i + 1].strip()) for i in range(1, len(parts) - 1, 2)]
+            if not versets:
+                sortie.append(b)
+                continue
+            numeros = [n for n, _ in versets]
+            # Garde-fou : les numéros se suivent (א, ב, ג…), sinon la découpe a mordu dans le texte.
+            if numeros != [GUEMATRIA[i] for i in range(1, len(numeros) + 1)]:
+                raise SystemExit(f"Hallel (Daat), {s['titre']} : numéros de versets inattendus {numeros}")
+            texte = lambda vs: " ".join(v for _, v in vs)
+            if s["titre"] in ("תהילים קטו", "תהילים קטז") and "יב" in numeros:
+                k = numeros.index("יב")
+                sortie += [SAUT_ROSH_HODECH, {"t": texte(versets[:k])}, {"t": texte(versets[k:])}]
+            else:
+                sortie.append({"t": texte(versets)})
+        s["blocs"] = sortie
+    return sections
+
+
 def main(dossier):
     em_merged = charge(dossier, "Siddur_Edot_HaMizrach.json")
     sf_merged = charge(dossier, "Siddur_Sefard.json")
@@ -285,7 +355,8 @@ def main(dossier):
         "bore_nefachot": (EM, EM.extrait(["Blessings on Enjoyments"], 11, 13, "בורא נפשות")),
         "tefilat_haderekh": (EM, EM.sections(["Assorted Blessings and Prayers", "Traveler's Prayer"])),
         "birkat_halevana": (EM, EM.sections(["Blessing of the Moon"])),
-        "moussaf_rosh_hodech": (EM, avec_tseroufim(EM.sections(["Rosh Hodesh", "Mussaf"]))),
+        "hallel": (EM, sans_renvois(jusqua(EM.sections(["Rosh Hodesh", "Hallel"]), "קודם הוצאת ספר תורה"))),
+        "moussaf_rosh_hodech": (EM, sans_chabbat(avec_tseroufim(EM.sections(["Rosh Hodesh", "Mussaf"])))),
         "cheva_berakhot": (EM, EM.sections(["Assorted Blessings and Prayers", "Sheva Berachot"])),
         "parachat_haman": (TN, haman),
         "kaddich": (EM, EM.extrait(["Weekday Shacharit", "Kaveh"], 13, 16, "קדיש על ישראל")),
@@ -314,7 +385,8 @@ def main(dossier):
         "bore_nefachot": (ST, ST.sections(["Blessings", "Borei Nefashot"])),
         "tefilat_haderekh": (ST, ST.sections(["Blessings", "Traveler's Prayer"])),
         "birkat_halevana": (ST, ST.sections(["Kiddush Levanah"])),
-        "moussaf_rosh_hodech": (ST, avec_tseroufim(ST.sections(["Rosh Chodesh", "Mussaf"]))),
+        "hallel": (ST, ST.sections(["Rosh Chodesh", "Hallel"])),
+        "moussaf_rosh_hodech": (ST, sans_chabbat(avec_tseroufim(ST.sections(["Rosh Chodesh", "Mussaf"])))),
         "cheva_berakhot": (ST, ST.sections(["Various Blessings", "Sheva Berachot"])),
         "parachat_haman": (TN, haman),
         "kaddich": (SM, SM.extrait(["Weekday Shacharit", "Aleinu"], 5, 9, "קדיש יתום")),
@@ -334,7 +406,8 @@ def main(dossier):
         "bore_nefachot": (AD, AD.sections(["Berachot", "Birkat Hanehenin", "Eating", "Brachot Achronot", "Borei Nefashot"])),
         "tefilat_haderekh": (AD, AD.sections(["Berachot", "Tefillat HaDerech"])),
         "birkat_halevana": (AM, AM.sections(["Weekday", "Maariv", "Birkat HaLevana"])),
-        "moussaf_rosh_hodech": (AD, avec_tseroufim(AD.sections(["Festivals", "Rosh Chodesh", "Musaf Amidah for Rosh Chodesh"]))),
+        "hallel": (AD, hallel_daat(AD.sections(["Festivals", "Rosh Chodesh", "Hallel"]))),
+        "moussaf_rosh_hodech": (AD, sans_chabbat(avec_tseroufim(AD.sections(["Festivals", "Rosh Chodesh", "Musaf Amidah for Rosh Chodesh"])))),
         "cheva_berakhot": (SB, sheva_ashkenaz),
         "parachat_haman": (TN, haman),
         "kaddich": (AD, AD.sections(["Kaddish", "Mourner's Kaddish"])),

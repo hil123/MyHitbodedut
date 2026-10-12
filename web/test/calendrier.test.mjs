@@ -189,6 +189,14 @@ test('siddour : chaque annotation désigne encore son bloc, et chaque libellé e
     assert.ok(anenou(nusah, 'minha').includes('ajout_anenou_officiant') && anenou(nusah, 'minha').includes('ajout_anenou_particulier'), nusah);
     assert.equal(anenou(nusah, 'chaharit').includes('ajout_anenou_particulier'), nusah === 'edot', nusah);
   }
+  // Roch 'Hodech (12/10) : Cha'harit renvoie au Hallel puis au Moussaf, textes présents dans chaque siddour.
+  const { index } = await import('../src/js/siddur-jour.js');
+  for (const nusah of ['edot', 'sefard', 'ashkenaz']) {
+    const siddur = JSON.parse(readFileSync(join(raw, 'raw', `siddur_${nusah}.json`), 'utf8'));
+    const renvois = [...index(annotations[nusah].chaharit).renvois.values()].flat();
+    assert.deepEqual(renvois.map((a) => a.cible), ['hallel', 'moussaf_rosh_hodech'], nusah);
+    for (const a of renvois) assert.ok(siddur.textes.some((t) => t.id === a.cible), `${nusah} ${a.cible}`);
+  }
 });
 
 // --- 5. L'onglet Zmanim et le calendrier (JourAfficheTest) ---------------------------

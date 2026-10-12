@@ -265,6 +265,35 @@ def grouper(annotations):
         precedent = e
 
 
+# Les renvois de Cha'harit (demande du 12/10) : les jours de Hallel, le Hallel
+# après la Amida ; à Roch 'Hodech, le Moussaf à sa place dans l'office. La
+# place suit l'ordre de chaque siddour à Roch 'Hodech (export Sefaria) :
+# Edot, Hallel · Ouva léTsion · Chir chel yom · Moussaf ; Sfard, Hallel ·
+# Chir chel yom · Barkhi nafchi · lecture · Achré-Ouva léTsion · Moussaf ;
+# Ashkenaz (Metsudah), Hallel · lecture · Achré · Ouva léTsion · Moussaf,
+# avant le Kaddich titkabal. (section, début du bloc après lequel renvoyer ou None, condition, cible)
+RENVOIS = {
+    "edot": [("עמידה", None, "hallel", "hallel"), ("שיר של יום", None, "roch_hodech", "moussaf_rosh_hodech")],
+    "sefard": [("עמידה", None, "hallel", "hallel"), ("אשרי", None, "roch_hodech", "moussaf_rosh_hodech")],
+    "ashkenaz": [("עמידה", None, "hallel", "hallel"),
+                 ("סיום תפילה", "יהי רצון מלפניך יהוה אלהינו ואלהי אבותינו שנשמר", "roch_hodech", "moussaf_rosh_hodech")],
+}
+
+
+def renvois(sections, nusah):
+    sortie = []
+    for titre, debut, cond, cible in RENVOIS[nusah]:
+        si = next(i for i, s in enumerate(sections) if nu(s["titre"]) == titre)
+        e = {"sorte": "renvoi", "s": si, "si": cond, "cible": cible}
+        if debut is None:
+            e["empreinte"] = nu(sections[si]["titre"])
+        else:
+            bi = next(i for i, b in enumerate(sections[si]["blocs"]) if commence(nu(b.get("t") or b.get("c")), debut))
+            e["b"], e["empreinte"] = bi, nu(sections[si]["blocs"][bi].get("t"))[:40]
+        sortie.append(e)
+    return sortie
+
+
 def main():
     racine = {"_meta": {
         "outil": "tools/siddur_annotations.py",
@@ -278,6 +307,8 @@ def main():
         for t in siddur["textes"]:
             if t["id"] in TEXTES:
                 a = annoter(t["id"], t["sections"], nusah)
+                if t["id"] == "chaharit":
+                    a += renvois(t["sections"], nusah)
                 if a:
                     racine[nusah][t["id"]] = a
     cible = os.path.join(RAW, "siddur_annotations.json")

@@ -59,10 +59,13 @@ export function index(annotations = []) {
   const sections = new Map();
   const blocs = new Map();
   const indices = new Map();
+  // Les renvois (« Aujourd'hui · Hallel › ») : après la section (« s: ») ou après tel bloc (« s:b »).
+  const renvois = new Map();
   for (const a of annotations) {
     if (a.sorte === 'section') sections.set(a.s, a);
     else if (a.sorte === 'bloc') blocs.set(`${a.s}:${a.b}`, a);
+    else if (a.sorte === 'renvoi') renvois.set(`${a.s}:${a.b ?? ''}`, [...(renvois.get(`${a.s}:${a.b ?? ''}`) ?? []), a]);
     else indices.set(`${a.s}:${a.b}`, [...(indices.get(`${a.s}:${a.b}`) ?? []), a]);
   }
-  return { sections, blocs, indices };
+  return { sections, blocs, indices, renvois };
 }

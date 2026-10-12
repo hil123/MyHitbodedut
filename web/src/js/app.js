@@ -927,10 +927,16 @@ function ecranPriere() {
     const b = s.blocs[i];
     return h('p', { class: b.c !== undefined ? 'consigne' : 'priere', lang: 'he', dir: 'rtl' }, riche(b.c ?? b.t));
   };
+  // « Aujourd'hui · הַלֵּל › » : le texte à dire là ce jour-là, ouvert d'un geste ; rien hors du jour.
+  const renvois = (si, i) => (idx.renvois.get(`${si}:${i ?? ''}`) ?? []).filter((a) => ajoutVrai(a.si, c)).map((a) => {
+    const cible = siddur.textes.find((y) => y.id === a.cible);
+    return cible ? h('button', { type: 'button', class: 'renvoi-jour', lang: 'he', dir: 'rtl', onclick: () => ouvrirRenvoi(x.id, cible.id) },
+      `${tr.t('siddur_aujourdhui')} · ${cible.titre.he}  ›`) : null;
+  });
   const avecIndices = (si, i, p) => {
     const du = (idx.indices.get(`${si}:${i}`) ?? []).filter((a) => ajoutVrai(a.si, c));
     return [p, ...du.map((a) => h('p', { class: 'indice-jour' },
-      h('span', {}, `${tr.t('siddur_aujourdhui')} : `), h('span', { lang: 'he', dir: 'rtl' }, a.texte)))];
+      h('span', {}, `${tr.t('siddur_aujourdhui')} : `), h('span', { lang: 'he', dir: 'rtl' }, a.texte))), ...renvois(si, i)];
   };
   const contenu = h('div', { class: 'contenu lecture siddour' },
     h('p', { class: 'indice' }, sousTitre),
@@ -940,7 +946,7 @@ function ecranPriere() {
       const t = plusieurs && s.titre ? h('h2', { class: 'psaume-titre', lang: 'he', dir: 'rtl' }, s.titre) : null;
       if (t) titres.push({ titre: s.titre, el: t });
       const section = idx.sections.get(si);
-      if (section) return [t, ajout(nom(section, section.si), ajoutVrai(section.si, c), s.blocs.map((_, i) => paragraphe(s, i)))];
+      if (section) return [t, ajout(nom(section, section.si), ajoutVrai(section.si, c), s.blocs.map((_, i) => paragraphe(s, i))), ...renvois(si)];
       const corps = [];
       for (let i = 0; i < s.blocs.length; i++) {
         const a = idx.blocs.get(`${si}:${i}`);
@@ -957,7 +963,7 @@ function ecranPriere() {
         i--;
         corps.push(ajout(nom(a, a.racine ?? a.si), ajoutVrai(a.racine ?? a.si, c), membres));
       }
-      return [t, ...corps];
+      return [t, ...corps, ...renvois(si)];
     }));
   const bande = titres.length > 1 ? bandeSignets(titres) : null;
   const ecran = ecranLu(x.titre.he, contenu, { avecNusah: true, bande: bande?.nav });
@@ -2047,7 +2053,21 @@ function retour() {
   if (history.state?.interne) history.back();
   else { history.replaceState(null, '', location.pathname); rendre(); }
 }
-window.addEventListener('popstate', () => rendre());
+window.addEventListener('popstate', () => {
+  // Le retour d'un renvoi (« Hallel › ») rouvre la prière d'où l'on venait.
+  if (history.state?.priere) priere = history.state.priere;
+  rendre();
+});
+
+/** Un renvoi du jour : la prière [cible] en haut de page ; le retour ramène à [depuis]. */
+function ouvrirRenvoi(depuis, cible) {
+  history.replaceState({ ...(history.state ?? {}), priere: depuis }, '', location.hash);
+  history.pushState({ interne: true, priere: cible }, '', '#priere');
+  priere = cible;
+  rendre();
+  const defile = app.querySelector('.defile');
+  if (defile) defile.scrollTop = 0;
+}
 
 function rendre() {
   // Une séance arrivée à son terme pendant que le téléphone dormait.

@@ -56,6 +56,22 @@ class SiddurJourTest {
         }
     }
 
+    /** Roch 'Hodech (12/10) : dans Cha'harit, « Aujourd'hui · Hallel › » puis « Moussaf › » ; un jour ordinaire, rien. */
+    @Test
+    fun `roch hodech - chaharit renvoie au hallel puis au moussaf`() {
+        val rc = CalendrierJuif.jour(java.time.LocalDate.parse("2026-10-12"), false).conditions
+        val ordinaire = CalendrierJuif.jour(java.time.LocalDate.parse("2026-10-14"), false).conditions
+        Nusah.entries.forEach { n ->
+            val siddur = DataFiles.siddur(n)
+            val texte = siddur.texte("chaharit")!!
+            val annotations = SiddurJour.parse(json, n.cle).getValue("chaharit")
+            val renvois = SiddurJour.lignes(texte, annotations, rc, nusah = n.cle).filterIsInstance<SiddurJour.Ligne.Renvoi>()
+            assertEquals(n.cle, listOf("hallel", "moussaf_rosh_hodech"), renvois.map { it.cible })
+            renvois.forEach { assertTrue(n.cle, siddur.texte(it.cible) != null) }
+            assertTrue(n.cle, SiddurJour.lignes(texte, annotations, ordinaire, nusah = n.cle).none { it is SiddurJour.Ligne.Renvoi })
+        }
+    }
+
     @Test
     fun `roch hodech - yaale veyavo en evidence, al hanissim replie puis ouvert`() {
         val texte = DataFiles.siddur(Nusah.EDOT).texte("chaharit")!!

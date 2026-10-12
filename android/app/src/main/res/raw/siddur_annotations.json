@@ -592,6 +592,20 @@
     "s": 10,
     "si": "tahanoun_chaharit",
     "empreinte": "וידוי"
+   },
+   {
+    "sorte": "renvoi",
+    "s": 9,
+    "si": "hallel",
+    "cible": "hallel",
+    "empreinte": "עמידה"
+   },
+   {
+    "sorte": "renvoi",
+    "s": 15,
+    "si": "roch_hodech",
+    "cible": "moussaf_rosh_hodech",
+    "empreinte": "שיר של יום"
    }
   ],
   "minha": [
@@ -1902,6 +1916,20 @@
     "s": 16,
     "si": "roch_hodech",
     "empreinte": "ברכי נפשי"
+   },
+   {
+    "sorte": "renvoi",
+    "s": 8,
+    "si": "hallel",
+    "cible": "hallel",
+    "empreinte": "עמידה"
+   },
+   {
+    "sorte": "renvoi",
+    "s": 13,
+    "si": "roch_hodech",
+    "cible": "moussaf_rosh_hodech",
+    "empreinte": "אשרי"
    }
   ],
   "minha": [
@@ -3051,6 +3079,21 @@
     "empreinte": "אבינו מלכנו כתבנו בספר סליחה ומחילה:",
     "g": 15,
     "racine": "asseret_yemei_techouva"
+   },
+   {
+    "sorte": "renvoi",
+    "s": 3,
+    "si": "hallel",
+    "cible": "hallel",
+    "empreinte": "עמידה"
+   },
+   {
+    "sorte": "renvoi",
+    "s": 6,
+    "si": "roch_hodech",
+    "cible": "moussaf_rosh_hodech",
+    "b": 13,
+    "empreinte": "יהי רצון מלפניך יהוה אלהינו ואלהי אבותינ"
    }
   ],
   "minha": [

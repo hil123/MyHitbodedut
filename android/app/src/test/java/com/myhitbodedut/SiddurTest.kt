@@ -17,7 +17,7 @@ class SiddurTest {
     private val attendus = listOf(
         "birkot_hachahar", "chaharit", "minha", "arvit", "chema_coucher", "tikoun_hatsot",
         "acher_yatsar", "birkat_hamazon", "meen_chaloch", "bore_nefachot", "tefilat_haderekh",
-        "birkat_halevana", "moussaf_rosh_hodech", "cheva_berakhot", "parachat_haman", "kaddich", "hachkavot",
+        "birkat_halevana", "hallel", "moussaf_rosh_hodech", "cheva_berakhot", "parachat_haman", "kaddich", "hachkavot",
     )
 
     @Test
@@ -40,6 +40,28 @@ class SiddurTest {
                 assertTrue("$n/${t.id} : groupe inconnu", siddur.groupes.any { it.cle == t.groupe })
                 assertTrue("$n/${t.id} sans source", t.source.isNotBlank())
             }
+        }
+    }
+
+    /**
+     * Le Hallel (12/10) dans les trois nusah, avec le saut de Roch 'Hodech
+     * (Tehilim 115 et 116, 1-11) ; le Moussaf de Roch 'Hodech, celui de
+     * semaine seulement : rien sur Chabbat Roch 'Hodech.
+     */
+    @Test
+    fun `le hallel et un moussaf de roch hodech sans chabbat`() {
+        // Le maqaf (« מָה־אָשִׁיב ») sépare les mots comme une espace.
+        val nu = { s: String -> s.replace("\u05BE", " ").replace(Regex("<[^>]+>"), "").replace(Regex("[\\u0591-\\u05C7]"), "").replace(Regex("\\s+"), " ") }
+        nusah.forEach { (n, siddur) ->
+            val hallel = siddur.texte("hallel")!!.sections.flatMap { it.blocs }
+            val tout = hallel.joinToString(" ") { nu(it.texte) }
+            listOf("בצאת ישראל ממצרים", "מה אשיב", "אנא יהוה הושיעה נא", "יהללוך").forEach { assertTrue("$n : $it", it in tout) }
+            assertTrue("$n : saut de Roch 'Hodech", hallel.count { it.consigne && "מדלג" in it.texte } >= 2)
+            // Ni renvois de versets ni numéros collés au texte.
+            assertTrue("$n : renvois", hallel.none { "(תהילים" in it.texte })
+            assertTrue("$n : numéros", hallel.none { !it.consigne && Regex("(^|[.:] )[א-ת]{1,2} ").containsMatchIn(it.texte) })
+            val moussaf = siddur.texte("moussaf_rosh_hodech")!!.sections.flatMap { it.blocs }
+            assertTrue("$n : Chabbat", moussaf.none { it.consigne && "שבת" in nu(it.texte) })
         }
     }
 
