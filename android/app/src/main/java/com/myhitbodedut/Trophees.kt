@@ -19,16 +19,19 @@ object Trophees {
     /** Le métal de la médaille : où l'on en est dans la famille, à l'œil. */
     enum class Metal { BRONZE, ARGENT, OR, PLATINE }
 
-    enum class Famille(val cle: String, val icone: String, val seuils: IntArray) {
-        PREMIER_PAS("premier_pas", "🌱", intArrayOf(1)),
-        SEANCE_LONGUE("seance_longue", "⏳", intArrayOf(15, 30, 45, 60, 90, 120, 180)),
-        JOURS("jours", "🌳", intArrayOf(7, 18, 40, 70, 100, 180, 365, 613)),
-        SERIE("serie", "🔥", intArrayOf(3, 7, 18, 30, 40, 70, 100)),
-        HEURES("heures", "⭐", intArrayOf(1, 5, 10, 25, 50, 100, 200, 300)),
-        SEMAINES("semaines", "🏅", intArrayOf(1, 2, 4, 8, 12, 26, 52)),
-        EREV_CHABBAT("erev_chabbat", "🕯️", intArrayOf(1, 4, 12, 26, 52)),
-        RETOUR("retour", "🔄", intArrayOf(1, 3, 5, 10)),
-        PLUME("plume", "✍️", intArrayOf(1, 10, 25, 50, 100, 150)),
+    /** La forme de l'objet (12/10) : pas que des pièces. */
+    enum class Forme { MEDAILLE, COUPE, ECUSSON, GEMME }
+
+    enum class Famille(val cle: String, val icone: String, val seuils: IntArray, val forme: Forme) {
+        PREMIER_PAS("premier_pas", "🌱", intArrayOf(1), Forme.ECUSSON),
+        SEANCE_LONGUE("seance_longue", "⏳", intArrayOf(15, 30, 45, 60, 90, 120, 180), Forme.COUPE),
+        JOURS("jours", "🌳", intArrayOf(7, 18, 40, 70, 100, 180, 365, 613), Forme.MEDAILLE),
+        SERIE("serie", "🔥", intArrayOf(3, 7, 18, 30, 40, 70, 100), Forme.GEMME),
+        HEURES("heures", "⭐", intArrayOf(1, 5, 10, 25, 50, 100, 200, 300), Forme.COUPE),
+        SEMAINES("semaines", "🏅", intArrayOf(1, 2, 4, 8, 12, 26, 52), Forme.ECUSSON),
+        EREV_CHABBAT("erev_chabbat", "🕯️", intArrayOf(1, 4, 12, 26, 52), Forme.MEDAILLE),
+        RETOUR("retour", "🔄", intArrayOf(1, 3, 5, 10), Forme.GEMME),
+        PLUME("plume", "✍️", intArrayOf(1, 10, 25, 50, 100, 150), Forme.ECUSSON),
     }
 
     /** Un niveau atteint : [rang] de 1 au nombre de seuils de la famille. */

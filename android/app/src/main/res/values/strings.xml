@@ -882,4 +882,6 @@
     <string name="trophee_niveau_gagne">Trophée « %1$s » : niveau %2$d, %3$s !</string>
     <string name="trophee_prochain">Prochain niveau : %1$s</string>
     <string name="trophee_sommet">Niveau le plus haut atteint</string>
+    <string name="trophee_vedette">Ton plus beau trophée</string>
+    <string name="trophee_vedette_aucune">Ton premier trophée t’attend</string>
 </resources>

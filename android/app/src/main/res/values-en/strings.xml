@@ -836,4 +836,6 @@
     <string name="trophee_niveau_gagne">“%1$s” trophy: level %2$d, %3$s!</string>
     <string name="trophee_prochain">Next level: %1$s</string>
     <string name="trophee_sommet">Highest level reached</string>
+    <string name="trophee_vedette">Your finest trophy</string>
+    <string name="trophee_vedette_aucune">Your first trophy is waiting</string>
 </resources>

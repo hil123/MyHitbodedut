@@ -1599,9 +1599,24 @@ function vitrineTrophees() {
   const barre = (fraction, classe) => h('div', { class: `trophee-barre ${classe}`, 'aria-hidden': 'true' },
     h('span', { style: `width: ${Math.round(Math.min(1, Math.max(0, fraction)) * 100)}%` }));
   const desc = (f, seuil) => tr.p(`trophee_${f.cle}_desc`, seuil);
+  // La scène (12/10) : l'avatar, de plus en plus joyeux à mesure que le métal monte, et la plus belle
+  // médaille sur son piédestal, qui tourne doucement.
+  const meilleure = tries[0] && Trophees.rang(p, tries[0]) ? tries[0] : null;
+  const mMeilleure = meilleure ? Trophees.metal(meilleure, Trophees.rang(p, meilleure)) : null;
+  const avatar = { bronze: 'char_thumbs_up', argent: 'char_open_arms', or: 'char_arms_raised', platine: 'char_dancing_joy' }[mMeilleure] ?? 'char_thinking';
+  const scene = h('div', { class: `trophees-scene ${mMeilleure ?? 'aucune'}` },
+    h('img', { class: 'scene-avatar', src: `img/${avatar}.webp`, alt: '' }),
+    h('div', { class: 'scene-podium' },
+      h('div', { class: `trophee vedette ${meilleure?.forme ?? 'coupe'} ${mMeilleure ?? ''}${meilleure ? ' gagne' : ''}`, 'aria-hidden': 'true' },
+        meilleure?.forme === 'medaille' ? h('span', { class: 'ruban' }) : null,
+        h('span', { class: 'objet' }, h('span', { class: 'trophee-icone' }, meilleure?.icone ?? '🏆', h('span', { class: 'eclat' })))),
+      h('div', { class: 'piedestal', 'aria-hidden': 'true' }),
+      h('p', { class: 'scene-titre' }, meilleure ? tr.t('trophee_vedette') : tr.t('trophee_vedette_aucune')),
+      meilleure ? h('p', { class: 'scene-nom' }, `${tr.t(`trophee_${meilleure.cle}`)} · ${tr.t(`metal_${mMeilleure}`)}`) : null));
   return h('div', { class: 'carte carte-palier' },
     h('div', { class: 'trophees-tete' }, h('p', { class: 'palier-nom' }, tr.t('trophees_titre')),
       h('p', { class: 'trophees-compte' }, tr.t('trophees_compte', atteints, total))),
+    scene,
     barre(atteints / total, 'globale'),
     h('div', { class: 'trophees-grille' }, ...tries.map((f) => {
       const r = Trophees.rang(p, f);
@@ -1609,9 +1624,10 @@ function vitrineTrophees() {
       const pr = Trophees.progres(p, f);
       const sommet = r >= f.seuils.length;
       const niveau = m ? tr.t('trophee_niveau', r, f.seuils.length, tr.t(`metal_${m}`)) : tr.t('trophee_a_venir');
-      return h('div', { class: `trophee ${m ?? ''}${m ? ' gagne' : ''}`,
+      return h('div', { class: `trophee ${f.forme} ${m ?? ''}${m ? ' gagne' : ''}`,
         'aria-label': [tr.t(`trophee_${f.cle}`), niveau, sommet ? tr.t('trophee_sommet') : tr.t('trophee_prochain', desc(f, pr.cible))].join(', ') },
-        h('span', { class: 'trophee-icone', 'aria-hidden': 'true' }, f.icone),
+        m && f.forme === 'medaille' ? h('span', { class: 'ruban', 'aria-hidden': 'true' }) : null,
+        h('span', { class: 'objet', 'aria-hidden': 'true' }, h('span', { class: 'trophee-icone' }, f.icone, m ? h('span', { class: 'eclat' }) : null)),
         h('span', { class: 'trophee-nom' }, tr.t(`trophee_${f.cle}`)),
         h('span', { class: 'trophee-niveau' }, niveau),
         h('span', { class: 'trophee-desc' }, desc(f, f.seuils[Math.max(0, r - 1)])),
