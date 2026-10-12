@@ -207,31 +207,44 @@ GROUPES = [
 # (déduit de l'ordre par trimestres, les mois n'y sont pas nommés) et cite
 # « הסכת ושמע ישראל היום » pour הוי״ה ; le Pri Etz 'Haïm (Roch 'Hodech 6:20)
 # donne הוה״י pour Adar. On suit le Bnei Yissaschar, et on ne prononce pas.
+# Le nikkoud des צירופים (demande du 12/10), avec la ligne des צירופי אהי״ה :
+# relevé sur la page « כוונות ראש חודש » photographiée par le propriétaire le
+# 12/10, qui dit que le nikkoud vient du verset de chaque mois (« מקורא
+# דנקודי », d'après l'introduction des Tikounei Zohar) : chaque lettre
+# prend la voyelle de la première lettre du mot correspondant, le chourouk
+# s'écrivant avec un ו ajouté (הוּ, יוּ). Recalculé ici depuis le texte
+# massorétique (Tanach with Nikkud, Sefaria) et comparé lettre à lettre à
+# la photo : accord pour neuf mois ; Tamouz (ligne הוי״ה), Chevat et Adar,
+# illisibles ou divergents sur la photo, suivent le verset — à confirmer
+# sur le livre. Av suit le verset de ce livre (הסכת ושמע ישראל היום, comme
+# le Pardès Rimonim), non « הנה יד ה׳ הויה » du Bnei Yissaschar : mêmes lettres.
 TSEROUFIM = [
-    ("ניסן", "יהו״ה", "ר״ת ישמחו השמים ותגל הארץ"),
-    ("אייר", "יהה״ו", "ר״ת יתהלל המתהלל השכל וידוע"),
-    ("סיון", "יוה״ה", "ר״ת ידות ולצלע המשכן השנית"),
-    ("תמוז", "הוה״י", "ס״ת וכל זה איננו שוה לי"),
-    ("אב", "הוי״ה", "הנה יד ה׳ הויה"),
-    ("אלול", "ההו״י", "ס״ת וצדקה תהיה לנו כי"),
-    ("תשרי", "והי״ה", "ס״ת ויראו אתה שרי פרעה"),
-    ("מרחשון", "וה״הי", "ר״ת ודבש היום הזה ה׳"),
-    ("כסלו", "ויה״ה", "ר״ת וירא יושב הארץ הכנעני"),
-    ("טבת", "היה״ו", "ס״ת גדלו לה׳ אתי ונרוממה שמו"),
-    ("שבט", "היו״ה", "ר״ת המר ימירנו והיה הוא"),
-    ("אדר", "ההי״ו", "ס״ת עירה ולשרקה בני אתונו"),
+    ("ניסן", "יִהַוְהָ", "אִהַיְהָ", "יִשְׂמְחוּ הַשָּׁמַיִם וְתָגֵל הָאָרֶץ"),
+    ("אייר", "יִהַהַוְ", "אִהַהַיְ", "יִתְהַלֵּל הַמִּתְהַלֵּל הַשְׂכֵּל וְיָדֹעַ"),
+    ("סיון", "יְוּהַהַ", "אְיוּהַהַ", "יְדֹתָיו וּלְצֶלַע הַמִּשְׁכָּן הַשֵּׁנִית"),
+    ("תמוז", "הֶוֵהֹיִ", "הֶיֵהֹאִ", "זֶה אֵינֶנּוּ שֹׁוֶה לִי"),
+    ("אב", "הַוּיִהַ", "הַיוּאִהַ", "הַסְכֵּת וּשְׁמַע יִשְׂרָאֵל הַיּוֹם"),
+    ("אלול", "הוּהִוָיִ", "הוּהִיָאִ", "וּצְדָקָה תִּהְיֶה לָּנוּ כִּי"),
+    ("תשרי", "וַהֹיָהַ", "יַהֹאָהַ", "וַיִּרְאוּ אֹתָהּ שָׂרֵי פַרְעֹה"),
+    ("חשון", "וּהַהַיְ", "יוּהַהַאְ", "וּדְבָשׁ הַיּוֹם הַזֶּה ה׳"),
+    ("כסלו", "וַיֹהָהַ", "יַאֹהָהַ", "וַיַּרְא יוֹשֵׁב הָאָרֶץ הַכְּנַעֲנִי"),
+    ("טבת", "הַיִהוּוְ", "הַאִהוּיְ", "לַה׳ אִתִּי וּנְרוֹמְמָה שְׁמוֹ"),
+    ("שבט", "הָיְוְהוּ", "הָאְיְהוּ", "הָמֵר יְמִירֶנּוּ וְהָיָה הוּא"),
+    ("אדר", "הִהְיְוֲ", "הִהְאְיֲ", "עִירֹה וְלַשֹּׂרֵקָה בְּנִי אֲתֹנוֹ"),
 ]
 
 
 def tseroufim():
-    """La consigne du Bnei Yissaschar, placée à la fin de la bénédiction du milieu."""
-    lignes = [f"{mois}: <b>{t}</b> ({verset})" for mois, t, verset in TSEROUFIM]
-    return {"c": NFC("<b>צירוף שם הוי״ה של החודש</b> – בני יששכר, מאמרי חודש ניסן: "
+    """La consigne du Bnei Yissaschar, placée à la fin de la bénédiction du milieu, avec le nikkoud des צירופים."""
+    lignes = [f"{mois}: <b>{h}</b> · <b>{a}</b> ({verset})" for mois, h, a, verset in TSEROUFIM]
+    return {"c": NFC("<b>צירוף שם הוי״ה ואהי״ה של החודש</b> – בני יששכר, מאמרי חודש ניסן: "
                      "„ידוע מכתבי מרן האריז״ל אשר בכל ראש חדש צריכין לכוין במוסף בסיום הברכה "
                      "האמצעית צירוף הוי״ה השולטת באותו החדש”.<br>"
                      # Précision demandée par le propriétaire (11/10) : en tête de liste, en gras.
                      "<b>אין להוציא צירופים אלו בפה כלל, אלא רק לכוון בהם במחשבה, לאחר סיום הברכה.</b><br>"
-                     + "<br>".join(lignes))}
+                     + "<br>".join(lignes)
+                     + "<br>באדר ב׳ יכוון בכללות כל י״ב הצירופים."
+                     + "<br>הניקוד לפי כוונות ראש חודש, מנקודות הפסוקים (מקורא דנקודי).")}
 
 
 def avec_tseroufim(sections):

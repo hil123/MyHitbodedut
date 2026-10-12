@@ -79,11 +79,13 @@ class SiddurTest {
             // Juste après la fin de la bénédiction du milieu.
             assertTrue("$n : placement", nu(blocs[i - 1].texte).contains("מקדש ישראל וראשי חדשים"))
             val c = blocs[i]
-            listOf("ניסן: <b>יהו״ה</b>", "תשרי: <b>והי״ה</b>", "אדר: <b>ההי״ו</b>", "אלול: <b>ההו״י</b>")
-                .forEach { assertTrue("$n : $it", c.texte.contains(it)) }
+            // Avec leur nikkoud et la ligne אהי״ה (12/10, tools/siddur_construction.py).
+            listOf("ניסן: <b>יִהַוְהָ</b> · <b>אִהַיְהָ</b>", "תשרי: <b>וַהֹיָהַ</b> · <b>יַהֹאָהַ</b>",
+                "אדר: <b>הִהְיְוֲ</b>", "אלול: <b>הוּהִוָיִ</b>", "באדר ב׳ יכוון בכללות כל י״ב הצירופים")
+                .forEach { assertTrue("$n : $it", c.texte.contains(java.text.Normalizer.normalize(it, java.text.Normalizer.Form.NFC))) }
             // Les צירופים se pensent, ne se prononcent pas : dit avant la liste.
             assertTrue("$n : avertissement", c.texte.contains("אין להוציא צירופים אלו בפה כלל"))
-            assertEquals("$n", 13, Regex("<br>").findAll(c.texte).count())
+            assertEquals("$n", 15, Regex("<br>").findAll(c.texte).count())
         }
     }
 
@@ -196,6 +198,8 @@ class SiddurTest {
         nusah.forEach { (n, siddur) ->
             siddur.textes.forEach { t ->
                 t.sections.flatMap { it.blocs }.forEach { b ->
+                    // Seule exception : la consigne des צירופים, dont les Noms et les versets portent leur nikkoud (12/10).
+                    if (b.consigne && "צירוף שם הוי״ה ואהי״ה" in b.texte) return@forEach
                     if (b.consigne) assertTrue("$n/${t.id} : consigne vocalisée", proportion(b.texte) < 0.2)
                     else assertTrue("$n/${t.id} : prière non vocalisée « ${b.texte.take(40)} »", proportion(b.texte) >= 0.2)
                 }
