@@ -571,16 +571,32 @@ test('hilloulot : date lisible et recherche par nom', async () => {
 
 // --- Trophées (Trophees.kt, 11/10) ---
 import * as Trophees from '../src/js/trophees.js';
-test('trophées : mêmes règles que TropheesTest', () => {
+test('trophées à niveaux : mêmes règles que TropheesTest (12/10)', () => {
+  const jours = (n, pas = 1, min = 20) => Object.fromEntries(Array.from({ length: n }, (_, i) => [new Date(Date.UTC(2026, 9, 4 + i * pas)).toISOString().slice(0, 10), min]));
+  const F = Object.fromEntries(Trophees.FAMILLES.map((f) => [f.cle, f]));
   assert.equal(Trophees.gagnes({ minutes: {}, notes: 0, meilleureSerie: 0 }).size, 0);
-  assert.ok(Trophees.semainePleine(['2026-10-11', '2026-10-12', '2026-10-13', '2026-10-14', '2026-10-15', '2026-10-16']));
-  assert.ok(!Trophees.semainePleine(['2026-10-12', '2026-10-13', '2026-10-14', '2026-10-15', '2026-10-16', '2026-10-17']));
-  assert.ok(!Trophees.retour(['2026-10-11', '2026-10-18']));
-  assert.ok(Trophees.retour(['2026-10-11', '2026-10-19']));
-  const minutes = { '2026-10-11': 125 };
-  for (let k = 1; k <= 17; k++) minutes[new Date(Date.UTC(2026, 9, 11 + 2 * k, 12)).toISOString().slice(0, 10)] = 30;
-  const g = Trophees.gagnes({ minutes, notes: 10, meilleureSerie: 40 });
-  for (const c of ['une_heure', 'deux_heures', 'chai', 'quarante', 'plume', 'dix_heures']) assert.ok(g.has(c), c);
-  assert.ok(!g.has('cent_heures'));
+  const p = { minutes: { ...jours(41), '2026-12-03': 130 }, notes: 26, meilleureSerie: 41 };
+  assert.equal(Trophees.rang(p, F.jours), 3);
+  assert.equal(Trophees.rang(p, F.serie), 5);
+  assert.equal(Trophees.rang(p, F.seance_longue), 6);
+  assert.equal(Trophees.rang(p, F.plume), 3);
+  assert.equal(Trophees.rang(p, F.retour), 1);
+  assert.equal(Trophees.semainesPleines(Object.keys(jours(41))), 6);
+  for (const f of Trophees.FAMILLES.filter((x) => x.seuils.length > 1)) {
+    const m = f.seuils.map((_, i) => Trophees.METAUX.indexOf(Trophees.metal(f, i + 1)));
+    assert.equal(m[0], 0, f.cle); assert.equal(m.at(-1), 3, f.cle);
+    assert.ok(m.every((v, i) => i === 0 || v - m[i - 1] <= 1), f.cle);
+  }
+  assert.equal(Trophees.metal(F.premier_pas, 1), 'bronze');
+  for (const q of [{ minutes: {}, notes: 0, meilleureSerie: 0 }, { minutes: jours(6, 1, 70), notes: 12, meilleureSerie: 6 }, { minutes: jours(700, 1, 200), notes: 200, meilleureSerie: 700 }]) {
+    for (const f of Trophees.FAMILLES) {
+      const r = Trophees.rang(q, f); const pr = Trophees.progres(q, f);
+      if (r < f.seuils.length) { assert.equal(pr.cible, f.seuils[r]); assert.ok(pr.valeur < pr.cible); } else assert.equal(pr.cible, f.seuils.at(-1));
+    }
+  }
+  const g = Trophees.gagnes({ minutes: jours(20), notes: 0, meilleureSerie: 20 });
   assert.deepEqual(Trophees.nouveaux(g, null), []);
+  assert.deepEqual(Trophees.nouveaux(g, new Set(['chai'])), []);
+  const n = Trophees.nouveaux(g, new Set(['premier_pas:1']));
+  assert.ok(n.some((x) => x.famille.cle === 'jours' && x.rang === 2));
 });

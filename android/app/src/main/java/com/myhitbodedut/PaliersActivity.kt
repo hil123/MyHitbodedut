@@ -2,9 +2,11 @@ package com.myhitbodedut
 
 import android.content.Context
 import android.graphics.Typeface
+import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.view.Gravity
+import android.view.View
 import android.view.ViewGroup
 import android.widget.HorizontalScrollView
 import android.widget.LinearLayout
@@ -60,54 +62,124 @@ class PaliersActivity : AppCompatActivity() {
         Store.setTropheesVus(this, Trophees.gagnes(Store.pratique(this)).map { it.cle }.toSet())
     }
 
-    /** La vitrine : les trophées gagnés en couleur, les autres en attente, avec ce qu'il faut pour les gagner. */
+    /**
+     * La vitrine (refaite le 12/10) : une médaille par famille, au métal du
+     * niveau atteint (bronze, argent, or, platine), en relief ; le niveau,
+     * ce qu'il a fallu, et la barre vers le niveau suivant.
+     */
     private fun trophees() = VueJour.carte(this).apply {
-        val gagnes = Trophees.gagnes(Store.pratique(context))
-        val tous = Trophees.Trophee.values()
+        val pratique = Store.pratique(context)
+        val familles = Trophees.Famille.entries
+        val atteints = familles.sumOf { Trophees.rang(pratique, it) }
+        val total = familles.sumOf { it.seuils.size }
         addView(LinearLayout(context).apply {
             orientation = LinearLayout.HORIZONTAL
             gravity = Gravity.CENTER_VERTICAL
             addView(VueJour.texte(context, getString(R.string.trophees_titre), 18f, R.color.ink, gras = true).apply {
                 layoutParams = LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f)
             })
-            addView(VueJour.texte(context, getString(R.string.trophees_compte, gagnes.size, tous.size), 14f, R.color.brand, gras = true).apply {
+            addView(VueJour.texte(context, getString(R.string.trophees_compte, atteints, total), 14f, R.color.brand, gras = true).apply {
                 layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
             })
         })
+        addView(barre(atteints.toFloat() / total, dp(8)).apply {
+            (layoutParams as LinearLayout.LayoutParams).topMargin = dp(8)
+        })
         val grille = android.widget.GridLayout(context).apply {
             columnCount = 3
-            layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply { topMargin = dp(10) }
+            layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply { topMargin = dp(12) }
         }
-        // Les gagnés d'abord, dans l'ordre de la liste.
-        tous.sortedBy { if (it in gagnes) 0 else 1 }.forEach { t -> grille.addView(trophee(t, t in gagnes)) }
+        // Les plus hauts métaux d'abord ; à égalité, les plus proches du niveau suivant.
+        familles.sortedWith(compareByDescending<Trophees.Famille> { Trophees.rang(pratique, it).let { r -> if (r == 0) -1 else Trophees.metal(it, r).ordinal } }
+            .thenByDescending { Trophees.progres(pratique, it).fraction })
+            .forEach { f -> grille.addView(trophee(f, Trophees.rang(pratique, f), Trophees.progres(pratique, f))) }
         addView(grille)
     }
 
-    private fun trophee(t: Trophees.Trophee, gagne: Boolean) = LinearLayout(this).apply {
+    /** Les deux tons d'un métal : le clair au centre, le foncé au bord. */
+    private fun tons(m: Trophees.Metal): Pair<Int, Int> = when (m) {
+        Trophees.Metal.PLATINE -> Color.rgb(0xF4, 0xF7, 0xFF) to Color.rgb(0x6F, 0x86, 0xA8)
+        Trophees.Metal.OR -> Color.rgb(0xF6, 0xD8, 0x6B) to Color.rgb(0xB8, 0x86, 0x0B)
+        Trophees.Metal.ARGENT -> Color.rgb(0xEE, 0xF1, 0xF4) to Color.rgb(0x8C, 0x96, 0xA0)
+        Trophees.Metal.BRONZE -> Color.rgb(0xF0, 0xB9, 0x86) to Color.rgb(0x9C, 0x5A, 0x2B)
+    }
+
+    private fun barre(fraction: Float, hauteur: Int) = android.widget.ProgressBar(this, null, android.R.attr.progressBarStyleHorizontal).apply {
+        max = 1000
+        progress = (fraction.coerceIn(0f, 1f) * 1000).toInt()
+        progressTintList = android.content.res.ColorStateList.valueOf(Apparence.couleur(context, R.color.brand))
+        progressBackgroundTintList = android.content.res.ColorStateList.valueOf(Apparence.couleur(context, R.color.muted))
+        layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, hauteur)
+        importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO
+    }
+
+    /**
+     * La médaille en relief : une tranche (anneau foncé puis clair), une face
+     * bombée (dégradé radial éclairé en haut à gauche), un reflet, et
+     * l'ombre portée de l'élévation. À gagner : la même, en gris.
+     */
+    private fun medaille(metal: Trophees.Metal?, taille: Int): android.graphics.drawable.Drawable {
+        val gris = Apparence.couleur(this, R.color.muted)
+        val (clair, fonce) = metal?.let { tons(it) } ?: (ColorUtils.blendARGB(gris, Color.WHITE, 0.75f) to ColorUtils.blendARGB(gris, Color.WHITE, 0.25f))
+        fun disque(couleurs: IntArray, radial: Boolean = false) = GradientDrawable().apply {
+            shape = GradientDrawable.OVAL
+            if (radial) {
+                gradientType = GradientDrawable.RADIAL_GRADIENT
+                gradientRadius = taille * 0.62f
+                setGradientCenter(0.35f, 0.3f)
+            } else orientation = GradientDrawable.Orientation.TL_BR
+            colors = couleurs
+        }
+        val couches = android.graphics.drawable.LayerDrawable(arrayOf(
+            disque(intArrayOf(clair, fonce)),                                  // la tranche, éclairée en haut à gauche
+            disque(intArrayOf(fonce, clair)),                                  // le biseau, inversé
+            disque(intArrayOf(Color.WHITE, clair, fonce), radial = true),      // la face bombée
+            disque(intArrayOf(ColorUtils.setAlphaComponent(Color.WHITE, 0x8C), Color.TRANSPARENT)), // le reflet
+        ))
+        val e1 = taille / 22; val e2 = taille / 11
+        couches.setLayerInset(1, e1, e1, e1, e1)
+        couches.setLayerInset(2, e2, e2, e2, e2)
+        couches.setLayerInset(3, e2 + 1, e2 + 1, taille / 3, taille / 3)
+        return couches
+    }
+
+    private fun trophee(f: Trophees.Famille, rang: Int, pr: Trophees.Progres) = LinearLayout(this).apply {
         orientation = LinearLayout.VERTICAL
         gravity = Gravity.CENTER_HORIZONTAL
-        setPadding(dp(4), dp(8), dp(4), dp(8))
-        alpha = if (gagne) 1f else 0.38f
+        setPadding(dp(4), dp(10), dp(4), dp(10))
         layoutParams = android.widget.GridLayout.LayoutParams(
             android.widget.GridLayout.spec(android.widget.GridLayout.UNDEFINED, 1f),
             android.widget.GridLayout.spec(android.widget.GridLayout.UNDEFINED, 1f)
         ).apply { width = 0 }
+        val metal = if (rang > 0) Trophees.metal(f, rang) else null
+        val d = dp(70)
         addView(TextView(context).apply {
-            text = t.icone
+            text = f.icone
             textSize = 30f
             gravity = Gravity.CENTER
-            val brand = Apparence.couleur(context, R.color.brand)
-            setTextColor(brand)
-            val d = dp(58)
+            setTextColor(metal?.let { tons(it).second } ?: Apparence.couleur(context, R.color.muted))
             layoutParams = LinearLayout.LayoutParams(d, d)
-            background = GradientDrawable().apply {
-                shape = GradientDrawable.OVAL
-                if (gagne) setColor(ColorUtils.setAlphaComponent(brand, 0x26)) else setStroke(dp(1), brand)
-            }
+            background = medaille(metal, d)
+            outlineProvider = android.view.ViewOutlineProvider.BACKGROUND
+            if (metal != null) { elevation = dp(6).toFloat(); setShadowLayer(2f, 0f, 1f, Color.argb(0x60, 0, 0, 0)) } else alpha = 0.55f
         })
-        addView(VueJour.texte(context, TropheesVue.nom(context, t), 13f, R.color.ink, gras = true, haut = 6).apply { gravity = Gravity.CENTER })
-        addView(VueJour.texte(context, TropheesVue.description(context, t), 11f, R.color.muted, haut = 2).apply { gravity = Gravity.CENTER })
-        contentDescription = TropheesVue.nom(context, t) + ", " + TropheesVue.description(context, t)
+        addView(VueJour.texte(context, TropheesVue.nom(context, f), 13f, if (metal != null) R.color.ink else R.color.muted, gras = true, haut = 8).apply { gravity = Gravity.CENTER })
+        addView(VueJour.texte(context,
+            if (metal != null) getString(R.string.trophee_niveau, rang, f.seuils.size, TropheesVue.metal(context, metal)) else getString(R.string.trophee_a_venir),
+            11f, R.color.brand, gras = true, haut = 2).apply { gravity = Gravity.CENTER })
+        // Ce qu'a demandé le niveau atteint ; ou, avant le premier, ce qu'il demande.
+        addView(VueJour.texte(context, TropheesVue.description(context, f, f.seuils[(rang - 1).coerceAtLeast(0)]), 11f, R.color.muted, haut = 2).apply { gravity = Gravity.CENTER })
+        val sommet = rang >= f.seuils.size
+        if (!sommet) {
+            addView(barre(pr.fraction, dp(4)).apply {
+                (layoutParams as LinearLayout.LayoutParams).apply { topMargin = dp(6); marginStart = dp(10); marginEnd = dp(10) }
+            })
+            addView(VueJour.texte(context, getString(R.string.trophee_progres, pr.valeur.coerceAtMost(pr.cible), pr.cible), 11f, R.color.muted, haut = 2).apply { gravity = Gravity.CENTER })
+        }
+        contentDescription = listOfNotNull(TropheesVue.nom(context, f),
+            metal?.let { getString(R.string.trophee_niveau, rang, f.seuils.size, TropheesVue.metal(context, it)) },
+            if (sommet) getString(R.string.trophee_sommet) else getString(R.string.trophee_prochain, TropheesVue.description(context, f, pr.cible)),
+        ).joinToString(", ")
     }
 
     private fun carte(e: Paliers.Etat, bilan: Paliers.Bilan) = VueJour.carte(this).apply {
@@ -189,35 +261,35 @@ object PaliersVue {
 
 /** Les noms et les conditions des trophées (écrits ici, pas par getIdentifier : la réduction des ressources les retirerait). */
 object TropheesVue {
-    fun nom(c: Context, t: Trophees.Trophee): String = c.getString(when (t) {
-        Trophees.Trophee.PREMIER_PAS -> R.string.trophee_premier_pas
-        Trophees.Trophee.UNE_HEURE -> R.string.trophee_une_heure
-        Trophees.Trophee.DEUX_HEURES -> R.string.trophee_deux_heures
-        Trophees.Trophee.SEMAINE_PLEINE -> R.string.trophee_semaine_pleine
-        Trophees.Trophee.EREV_CHABBAT -> R.string.trophee_erev_chabbat
-        Trophees.Trophee.RETOUR -> R.string.trophee_retour
-        Trophees.Trophee.CHAI -> R.string.trophee_chai
-        Trophees.Trophee.QUARANTE -> R.string.trophee_quarante
-        Trophees.Trophee.DIX_HEURES -> R.string.trophee_dix_heures
-        Trophees.Trophee.CENT_HEURES -> R.string.trophee_cent_heures
-        Trophees.Trophee.PLUME -> R.string.trophee_plume
-        Trophees.Trophee.PLUME_FIDELE -> R.string.trophee_plume_fidele
-        Trophees.Trophee.TARYAG -> R.string.trophee_taryag
+    fun nom(c: Context, f: Trophees.Famille): String = c.getString(when (f) {
+        Trophees.Famille.PREMIER_PAS -> R.string.trophee_premier_pas
+        Trophees.Famille.SEANCE_LONGUE -> R.string.trophee_seance_longue
+        Trophees.Famille.JOURS -> R.string.trophee_jours
+        Trophees.Famille.SERIE -> R.string.trophee_serie
+        Trophees.Famille.HEURES -> R.string.trophee_heures
+        Trophees.Famille.SEMAINES -> R.string.trophee_semaines
+        Trophees.Famille.EREV_CHABBAT -> R.string.trophee_erev_chabbat
+        Trophees.Famille.RETOUR -> R.string.trophee_retour
+        Trophees.Famille.PLUME -> R.string.trophee_plume
     })
 
-    fun description(c: Context, t: Trophees.Trophee): String = c.getString(when (t) {
-        Trophees.Trophee.PREMIER_PAS -> R.string.trophee_premier_pas_desc
-        Trophees.Trophee.UNE_HEURE -> R.string.trophee_une_heure_desc
-        Trophees.Trophee.DEUX_HEURES -> R.string.trophee_deux_heures_desc
-        Trophees.Trophee.SEMAINE_PLEINE -> R.string.trophee_semaine_pleine_desc
-        Trophees.Trophee.EREV_CHABBAT -> R.string.trophee_erev_chabbat_desc
-        Trophees.Trophee.RETOUR -> R.string.trophee_retour_desc
-        Trophees.Trophee.CHAI -> R.string.trophee_chai_desc
-        Trophees.Trophee.QUARANTE -> R.string.trophee_quarante_desc
-        Trophees.Trophee.DIX_HEURES -> R.string.trophee_dix_heures_desc
-        Trophees.Trophee.CENT_HEURES -> R.string.trophee_cent_heures_desc
-        Trophees.Trophee.PLUME -> R.string.trophee_plume_desc
-        Trophees.Trophee.PLUME_FIDELE -> R.string.trophee_plume_fidele_desc
-        Trophees.Trophee.TARYAG -> R.string.trophee_taryag_desc
+    /** Ce que demande un seuil de la famille (« 40 jours de pratique »). */
+    fun description(c: Context, f: Trophees.Famille, seuil: Int): String = c.resources.getQuantityString(when (f) {
+        Trophees.Famille.PREMIER_PAS -> R.plurals.trophee_premier_pas_desc
+        Trophees.Famille.SEANCE_LONGUE -> R.plurals.trophee_seance_longue_desc
+        Trophees.Famille.JOURS -> R.plurals.trophee_jours_desc
+        Trophees.Famille.SERIE -> R.plurals.trophee_serie_desc
+        Trophees.Famille.HEURES -> R.plurals.trophee_heures_desc
+        Trophees.Famille.SEMAINES -> R.plurals.trophee_semaines_desc
+        Trophees.Famille.EREV_CHABBAT -> R.plurals.trophee_erev_chabbat_desc
+        Trophees.Famille.RETOUR -> R.plurals.trophee_retour_desc
+        Trophees.Famille.PLUME -> R.plurals.trophee_plume_desc
+    }, seuil, seuil)
+
+    fun metal(c: Context, m: Trophees.Metal): String = c.getString(when (m) {
+        Trophees.Metal.BRONZE -> R.string.metal_bronze
+        Trophees.Metal.ARGENT -> R.string.metal_argent
+        Trophees.Metal.OR -> R.string.metal_or
+        Trophees.Metal.PLATINE -> R.string.metal_platine
     })
 }

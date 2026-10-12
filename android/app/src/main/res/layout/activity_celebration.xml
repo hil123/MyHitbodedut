@@ -92,5 +92,15 @@
             android:paddingVertical="14dp"
             android:text="@string/celebration_continue"
             android:textSize="16sp" />
+
+        <!-- Partager la séance faite (12/10), avec le lien de la version web. -->
+        <Button
+            android:id="@+id/celebration_share"
+            style="@style/Widget.Material3.Button.TextButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:text="@string/partage_action"
+            android:visibility="gone" />
     </LinearLayout>
 </ScrollView>

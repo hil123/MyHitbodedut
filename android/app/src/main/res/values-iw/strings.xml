@@ -772,37 +772,94 @@
     <string name="halakha_note">לשון המקור. להלכה למעשה יש לשאול רב.</string>
     <!-- Les trophées et la fête (11/10) -->
     <string name="celebration_titre">מזל טוב!</string>
-    <string name="trophee_gagne">זכית בגביע: %1$s!</string>
     <string name="trophees_paliers_titre">גביעים ויעדים</string>
     <string name="trophees_titre">גביעים</string>
     <string name="trophees_compte">%1$d מתוך %2$d</string>
     <string name="trophees_paliers">🏆  גביעים ויעדים</string>
     <string name="channel_celebration">יעדים וגביעים</string>
     <string name="channel_celebration_description">חגיגה כשמגיעים ליעד או לגביע</string>
+    <string name="reset_title">איפוס האפליקציה</string>
+    <string name="reset_hint">מוחק את כל מה שהאפליקציה שומרת בטלפון: יומן, התבודדויות, רצפים, גביעים, הגדרות ותזכורות. כדאי לייצא את הנתונים לפני כן אם רוצים לשמור אותם.</string>
+    <string name="reset_action">איפוס האפליקציה</string>
+    <string name="reset_confirm_title">למחוק הכול?</string>
+    <string name="reset_confirm_text">היומן, ההתבודדויות, הרצפים, הגביעים, ההגדרות והתזכורות יימחקו מהטלפון. אי אפשר לבטל זאת.</string>
+    <string name="reset_confirm_yes">למחוק הכול</string>
+    <string name="reset_confirm_no">ביטול</string>
+    <string name="partage_action">לשתף את ההתבודדות שלי</string>
+    <string name="partage_texte">היום עשיתי %1$s התבודדות, זמן לבד עם השם.</string>
+    <string name="partage_serie">רצף: %1$d ימים ברציפות.</string>
+    <string name="partage_lien">נסו גם אתם, בחינם: %1$s</string>
+    <string name="partage_choix">שיתוף</string>
+    <plurals name="partage_minutes">
+        <item quantity="one">דקה אחת</item>
+        <item quantity="two">%1$d דקות</item>
+        <item quantity="other">%1$d דקות</item>
+    </plurals>
+    <!-- Web : le partage sans feuille de partage du navigateur, par le presse-papiers. -->
+    <string name="partage_copie">הטקסט הועתק: אפשר להדביק אותו בכל מקום.</string>
+    <string name="trophee_progres">%1$d / %2$d</string>
+    <!-- Les trophées à niveaux (12/10). -->
     <string name="trophee_premier_pas">צעד ראשון</string>
-    <string name="trophee_premier_pas_desc">התבודדות ראשונה</string>
-    <string name="trophee_une_heure">שעה אחת</string>
-    <string name="trophee_une_heure_desc">שעה ביום אחד</string>
-    <string name="trophee_deux_heures">שעתיים</string>
-    <string name="trophee_deux_heures_desc">שעתיים ביום אחד</string>
-    <string name="trophee_semaine_pleine">שבוע מלא</string>
-    <string name="trophee_semaine_pleine_desc">ששת הימים, מראשון עד שישי</string>
+    <string name="trophee_seance_longue">התבודדות ארוכה</string>
+    <string name="trophee_jours">ימי התבודדות</string>
+    <string name="trophee_serie">הרצף</string>
+    <string name="trophee_heures">השעות</string>
+    <string name="trophee_semaines">שבועות מלאים</string>
     <string name="trophee_erev_chabbat">ערב שבת</string>
-    <string name="trophee_erev_chabbat_desc">ארבעה ימי שישי של התבודדות</string>
     <string name="trophee_retour">החזרה</string>
-    <string name="trophee_retour_desc">לחזור אחרי הפסקה של שבוע</string>
-    <string name="trophee_chai">ח״י</string>
-    <string name="trophee_chai_desc">18 ימי התבודדות</string>
-    <string name="trophee_quarante">ארבעים יום</string>
-    <string name="trophee_quarante_desc">40 ימים ברציפות</string>
-    <string name="trophee_dix_heures">עשר שעות</string>
-    <string name="trophee_dix_heures_desc">10 שעות בסך הכול</string>
-    <string name="trophee_cent_heures">מאה שעות</string>
-    <string name="trophee_cent_heures_desc">100 שעות בסך הכול</string>
     <string name="trophee_plume">העט</string>
-    <string name="trophee_plume_desc">10 רשומות ביומן</string>
-    <string name="trophee_plume_fidele">עט נאמן</string>
-    <string name="trophee_plume_fidele_desc">50 רשומות ביומן</string>
-    <string name="trophee_taryag">תרי״ג</string>
-    <string name="trophee_taryag_desc">613 ימי התבודדות</string>
+    <plurals name="trophee_premier_pas_desc">
+        <item quantity="one">התבודדות ראשונה</item>
+        <item quantity="two">התבודדות ראשונה</item>
+        <item quantity="other">התבודדות ראשונה</item>
+    </plurals>
+    <plurals name="trophee_seance_longue_desc">
+        <item quantity="one">דקה אחת ביום אחד</item>
+        <item quantity="two">%1$d דקות ביום אחד</item>
+        <item quantity="other">%1$d דקות ביום אחד</item>
+    </plurals>
+    <plurals name="trophee_jours_desc">
+        <item quantity="one">יום התבודדות אחד</item>
+        <item quantity="two">%1$d ימי התבודדות</item>
+        <item quantity="other">%1$d ימי התבודדות</item>
+    </plurals>
+    <plurals name="trophee_serie_desc">
+        <item quantity="one">יום אחד ברציפות</item>
+        <item quantity="two">%1$d ימים ברציפות</item>
+        <item quantity="other">%1$d ימים ברציפות</item>
+    </plurals>
+    <plurals name="trophee_heures_desc">
+        <item quantity="one">שעה אחת בסך הכול</item>
+        <item quantity="two">%1$d שעות בסך הכול</item>
+        <item quantity="other">%1$d שעות בסך הכול</item>
+    </plurals>
+    <plurals name="trophee_semaines_desc">
+        <item quantity="one">שבוע מלא אחד, מראשון עד שישי</item>
+        <item quantity="two">%1$d שבועות מלאים, מראשון עד שישי</item>
+        <item quantity="other">%1$d שבועות מלאים, מראשון עד שישי</item>
+    </plurals>
+    <plurals name="trophee_erev_chabbat_desc">
+        <item quantity="one">יום שישי אחד של התבודדות</item>
+        <item quantity="two">%1$d ימי שישי של התבודדות</item>
+        <item quantity="other">%1$d ימי שישי של התבודדות</item>
+    </plurals>
+    <plurals name="trophee_retour_desc">
+        <item quantity="one">לחזור פעם אחת אחרי הפסקה של שבוע</item>
+        <item quantity="two">לחזור %1$d פעמים אחרי הפסקה של שבוע</item>
+        <item quantity="other">לחזור %1$d פעמים אחרי הפסקה של שבוע</item>
+    </plurals>
+    <plurals name="trophee_plume_desc">
+        <item quantity="one">רשומה אחת ביומן</item>
+        <item quantity="two">%1$d רשומות ביומן</item>
+        <item quantity="other">%1$d רשומות ביומן</item>
+    </plurals>
+    <string name="metal_bronze">ארד</string>
+    <string name="metal_argent">כסף</string>
+    <string name="metal_or">זהב</string>
+    <string name="metal_platine">פלטינה</string>
+    <string name="trophee_niveau">דרגה %1$d מתוך %2$d · %3$s</string>
+    <string name="trophee_a_venir">עוד לא הושג</string>
+    <string name="trophee_niveau_gagne">גביע „%1$s”: דרגה %2$d, %3$s!</string>
+    <string name="trophee_prochain">הדרגה הבאה: %1$s</string>
+    <string name="trophee_sommet">הדרגה הגבוהה ביותר הושגה</string>
 </resources>

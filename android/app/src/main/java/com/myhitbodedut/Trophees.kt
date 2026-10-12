@@ -4,67 +4,101 @@ import java.time.DayOfWeek
 import java.time.LocalDate
 
 /**
- * Les trophées (demande du 11/10) : à côté des paliers, qui montent sans
- * fin, des moments qui se gagnent une fois pour toutes et restent dans la
- * vitrine. Certains reprennent un jalon des paliers qui parle de lui-même
- * (18 jours, 40 jours d'affilée, 613 jours) ; les autres regardent la forme
- * de la pratique : une heure d'un coup, une semaine pleine, le retour après
- * une pause, le journal. Choix de l'application, sans source à citer.
+ * Les trophées (demande du 11/10, à niveaux depuis le 12/10) : neuf familles
+ * qui regardent la forme de la pratique — la plus longue séance d'un jour,
+ * les jours, la série, les heures, les semaines pleines, les vendredis, les
+ * retours après une pause, le journal. Chacune monte par niveaux, et la
+ * médaille change de métal en montant : bronze, argent, or, platine. Les
+ * seuils reprennent des nombres qui parlent d'eux-mêmes (7, 18, 40, 70, 100,
+ * 613) ; choix de l'application, sans source à citer.
  *
  * Rien d'Android ici.
  */
 object Trophees {
 
-    enum class Trophee(val cle: String, val icone: String) {
-        PREMIER_PAS("premier_pas", "🌱"),
-        UNE_HEURE("une_heure", "⏳"),
-        DEUX_HEURES("deux_heures", "🔥"),
-        SEMAINE_PLEINE("semaine_pleine", "🏅"),
-        EREV_CHABBAT("erev_chabbat", "🕯️"),
-        RETOUR("retour", "🔄"),
-        CHAI("chai", "חי"),
-        QUARANTE("quarante", "⛰️"),
-        DIX_HEURES("dix_heures", "⭐"),
-        CENT_HEURES("cent_heures", "🌟"),
-        PLUME("plume", "✍️"),
-        PLUME_FIDELE("plume_fidele", "📖"),
-        TARYAG("taryag", "👑"),
+    /** Le métal de la médaille : où l'on en est dans la famille, à l'œil. */
+    enum class Metal { BRONZE, ARGENT, OR, PLATINE }
+
+    enum class Famille(val cle: String, val icone: String, val seuils: IntArray) {
+        PREMIER_PAS("premier_pas", "🌱", intArrayOf(1)),
+        SEANCE_LONGUE("seance_longue", "⏳", intArrayOf(15, 30, 45, 60, 90, 120, 180)),
+        JOURS("jours", "🌳", intArrayOf(7, 18, 40, 70, 100, 180, 365, 613)),
+        SERIE("serie", "🔥", intArrayOf(3, 7, 18, 30, 40, 70, 100)),
+        HEURES("heures", "⭐", intArrayOf(1, 5, 10, 25, 50, 100, 200, 300)),
+        SEMAINES("semaines", "🏅", intArrayOf(1, 2, 4, 8, 12, 26, 52)),
+        EREV_CHABBAT("erev_chabbat", "🕯️", intArrayOf(1, 4, 12, 26, 52)),
+        RETOUR("retour", "🔄", intArrayOf(1, 3, 5, 10)),
+        PLUME("plume", "✍️", intArrayOf(1, 10, 25, 50, 100, 150)),
+    }
+
+    /** Un niveau atteint : [rang] de 1 au nombre de seuils de la famille. */
+    data class Niveau(val famille: Famille, val rang: Int) {
+        val cle: String get() = "${famille.cle}:$rang"
+        val seuil: Int get() = famille.seuils[rang - 1]
+        val metal: Metal get() = metal(famille, rang)
+    }
+
+    /** Le métal d'un rang : un quart de la famille par métal ; une famille d'un seul niveau est de bronze. */
+    fun metal(f: Famille, rang: Int): Metal {
+        if (f.seuils.size == 1) return Metal.BRONZE
+        val i = ((rang - 1) * 4 / f.seuils.size).coerceIn(0, 3)
+        return Metal.entries[i]
     }
 
     /** Ce que les trophées regardent : les minutes par jour fait, les notes écrites, la meilleure série. */
     data class Pratique(val minutes: Map<LocalDate, Int>, val notes: Int, val meilleureSerie: Int)
 
-    /** Les six jours, du dimanche au vendredi, d'une même semaine. */
-    fun semainePleine(jours: Set<LocalDate>): Boolean = jours.any { d ->
-        d.dayOfWeek == DayOfWeek.SUNDAY && (0L..5L).all { d.plusDays(it) in jours }
-    }
+    /** Les semaines pleines : six jours faits, du dimanche au vendredi. */
+    fun semainesPleines(jours: Set<LocalDate>): Int =
+        jours.count { d -> d.dayOfWeek == DayOfWeek.SUNDAY && (0L..5L).all { d.plusDays(it) in jours } }
 
-    /** Un jour de pratique après au moins sept jours sans. */
-    fun retour(jours: Set<LocalDate>): Boolean =
-        jours.sorted().zipWithNext().any { (a, b) -> b.toEpochDay() - a.toEpochDay() > 7 }
+    /** Les retours : un jour de pratique après au moins sept jours sans. */
+    fun retours(jours: Set<LocalDate>): Int =
+        jours.sorted().zipWithNext().count { (a, b) -> b.toEpochDay() - a.toEpochDay() > 7 }
 
-    fun gagnes(p: Pratique): Set<Trophee> {
+    /** La valeur que la famille compte : minutes, jours, heures, semaines, vendredis, retours, notes. */
+    fun valeur(p: Pratique, f: Famille): Int {
         val jours = p.minutes.filterValues { it > 0 }.keys
-        val total = p.minutes.values.sum()
-        val max = p.minutes.values.maxOrNull() ?: 0
-        return buildSet {
-            if (jours.isNotEmpty()) add(Trophee.PREMIER_PAS)
-            if (max >= 60) add(Trophee.UNE_HEURE)
-            if (max >= 120) add(Trophee.DEUX_HEURES)
-            if (semainePleine(jours)) add(Trophee.SEMAINE_PLEINE)
-            if (jours.count { it.dayOfWeek == DayOfWeek.FRIDAY } >= 4) add(Trophee.EREV_CHABBAT)
-            if (retour(jours)) add(Trophee.RETOUR)
-            if (jours.size >= 18) add(Trophee.CHAI)
-            if (p.meilleureSerie >= 40) add(Trophee.QUARANTE)
-            if (total >= 600) add(Trophee.DIX_HEURES)
-            if (total >= 6000) add(Trophee.CENT_HEURES)
-            if (p.notes >= 10) add(Trophee.PLUME)
-            if (p.notes >= 50) add(Trophee.PLUME_FIDELE)
-            if (jours.size >= 613) add(Trophee.TARYAG)
+        return when (f) {
+            Famille.PREMIER_PAS -> jours.size.coerceAtMost(1)
+            Famille.SEANCE_LONGUE -> p.minutes.values.maxOrNull() ?: 0
+            Famille.JOURS -> jours.size
+            Famille.SERIE -> p.meilleureSerie
+            Famille.HEURES -> p.minutes.values.sum() / 60
+            Famille.SEMAINES -> semainesPleines(jours)
+            Famille.EREV_CHABBAT -> jours.count { it.dayOfWeek == DayOfWeek.FRIDAY }
+            Famille.RETOUR -> retours(jours)
+            Famille.PLUME -> p.notes
         }
     }
 
-    /** Les trophées gagnés depuis la dernière fois ; rien la première fois ([vus] null). */
-    fun nouveaux(gagnes: Set<Trophee>, vus: Set<String>?): List<Trophee> =
-        if (vus == null) emptyList() else gagnes.filter { it.cle !in vus }
+    /** Le rang atteint dans une famille : 0 tant que le premier seuil manque. */
+    fun rang(p: Pratique, f: Famille): Int = valeur(p, f).let { v -> f.seuils.count { v >= it } }
+
+    /** Tous les niveaux atteints, chacun pour soi (une famille au rang 3 a gagné 1, 2 et 3). */
+    fun gagnes(p: Pratique): Set<Niveau> =
+        Famille.entries.flatMap { f -> (1..rang(p, f)).map { Niveau(f, it) } }.toSet()
+
+    /** Où l'on en est vers le niveau suivant ; au sommet, le dernier seuil. */
+    data class Progres(val valeur: Int, val cible: Int) {
+        val fraction: Float get() = if (cible <= 0) 1f else (valeur.coerceAtMost(cible).toFloat() / cible)
+    }
+
+    fun progres(p: Pratique, f: Famille): Progres {
+        val r = rang(p, f)
+        return Progres(valeur(p, f), f.seuils[r.coerceAtMost(f.seuils.size - 1)])
+    }
+
+    /**
+     * Les niveaux gagnés depuis la dernière fois, le plus haut de chaque
+     * famille d'abord ; rien la première fois ([vus] null), ni quand [vus]
+     * date d'avant les niveaux (des clés sans « : ») : pas de pluie de
+     * vieux trophées.
+     */
+    fun nouveaux(gagnes: Set<Niveau>, vus: Set<String>?): List<Niveau> {
+        if (vus == null || (vus.isNotEmpty() && vus.none { ':' in it })) return emptyList()
+        return gagnes.filter { it.cle !in vus }
+            .groupBy { it.famille }.values.map { n -> n.maxBy { it.rang } }
+            .sortedByDescending { it.metal.ordinal * 100 + it.rang }
+    }
 }

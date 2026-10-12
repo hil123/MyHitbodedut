@@ -149,7 +149,8 @@ object Celebrations {
         val trophee = Trophees.nouveaux(gagnes, tropheesVus).firstOrNull()
         val palier = paliersVus?.let { vus -> Paliers.nouveaux(etats, bilan, vus).maxByOrNull { it.rang } }
         val (icone, message) = when {
-            trophee != null -> trophee.icone to c.getString(R.string.trophee_gagne, TropheesVue.nom(c, trophee))
+            trophee != null -> trophee.famille.icone to c.getString(R.string.trophee_niveau_gagne,
+                TropheesVue.nom(c, trophee.famille), trophee.rang, TropheesVue.metal(c, trophee.metal))
             palier != null -> "🎉" to c.getString(R.string.palier_nouveau,
                 PaliersVue.libelle(c, palier.piste, bilan), PaliersVue.valeur(c, palier.piste, palier.atteint))
             else -> "" to ""

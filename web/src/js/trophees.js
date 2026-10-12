@@ -1,49 +1,89 @@
-// Les trophées (Trophees.kt, 11/10) : des moments qui se gagnent une fois
-// pour toutes, à côté des paliers. Mêmes règles que l'application Android.
+// Les trophées (Trophees.kt, 11/10, à niveaux depuis le 12/10) : neuf
+// familles qui montent par niveaux, la médaille passant du bronze à
+// l'argent, à l'or puis au platine. Mêmes règles que l'application Android.
 
-export const TROPHEES = [
-  ['premier_pas', '🌱'], ['une_heure', '⏳'], ['deux_heures', '🔥'], ['semaine_pleine', '🏅'],
-  ['erev_chabbat', '🕯️'], ['retour', '🔄'], ['chai', 'חי'], ['quarante', '⛰️'], ['dix_heures', '⭐'],
-  ['cent_heures', '🌟'], ['plume', '✍️'], ['plume_fidele', '📖'], ['taryag', '👑'],
-].map(([cle, icone]) => ({ cle, icone }));
+export const FAMILLES = [
+  ['premier_pas', '🌱', [1]],
+  ['seance_longue', '⏳', [15, 30, 45, 60, 90, 120, 180]],
+  ['jours', '🌳', [7, 18, 40, 70, 100, 180, 365, 613]],
+  ['serie', '🔥', [3, 7, 18, 30, 40, 70, 100]],
+  ['heures', '⭐', [1, 5, 10, 25, 50, 100, 200, 300]],
+  ['semaines', '🏅', [1, 2, 4, 8, 12, 26, 52]],
+  ['erev_chabbat', '🕯️', [1, 4, 12, 26, 52]],
+  ['retour', '🔄', [1, 3, 5, 10]],
+  ['plume', '✍️', [1, 10, 25, 50, 100, 150]],
+].map(([cle, icone, seuils]) => ({ cle, icone, seuils }));
+
+export const METAUX = ['bronze', 'argent', 'or', 'platine'];
+
+/** Le métal d'un rang : un quart de la famille par métal ; une famille d'un seul niveau est de bronze. */
+export function metal(f, rang) {
+  if (f.seuils.length === 1) return 'bronze';
+  return METAUX[Math.min(3, Math.max(0, Math.floor(((rang - 1) * 4) / f.seuils.length)))];
+}
 
 const jourDe = (iso) => Math.round(Date.parse(`${iso}T12:00:00Z`) / 86400000);
 const semaineDe = (iso) => new Date(`${iso}T12:00:00Z`).getUTCDay(); // 0 dimanche … 6 samedi
 
-/** Les six jours, du dimanche au vendredi, d'une même semaine. */
-export function semainePleine(jours) {
+/** Les semaines pleines : six jours faits, du dimanche au vendredi. */
+export function semainesPleines(jours) {
   const n = new Set([...jours].map(jourDe));
-  return [...jours].some((iso) => semaineDe(iso) === 0 && [0, 1, 2, 3, 4, 5].every((k) => n.has(jourDe(iso) + k)));
+  return [...jours].filter((iso) => semaineDe(iso) === 0 && [0, 1, 2, 3, 4, 5].every((k) => n.has(jourDe(iso) + k))).length;
 }
 
-/** Un jour de pratique après au moins sept jours sans. */
-export function retour(jours) {
+/** Les retours : un jour de pratique après au moins sept jours sans. */
+export function retours(jours) {
   const n = [...jours].map(jourDe).sort((a, b) => a - b);
-  return n.some((v, i) => i > 0 && v - n[i - 1] > 7);
+  return n.filter((v, i) => i > 0 && v - n[i - 1] > 7).length;
 }
 
-/** { minutes: { iso: min }, notes, meilleureSerie } → l'ensemble des clés gagnées. */
-export function gagnes({ minutes, notes, meilleureSerie }) {
+/** La valeur que compte une famille. pratique = { minutes: { iso: min }, notes, meilleureSerie }. */
+export function valeur({ minutes, notes, meilleureSerie }, cle) {
   const jours = Object.keys(minutes).filter((k) => minutes[k] > 0);
   const valeurs = Object.values(minutes);
-  const total = valeurs.reduce((s, v) => s + v, 0);
-  const max = valeurs.length ? Math.max(...valeurs) : 0;
+  switch (cle) {
+    case 'premier_pas': return Math.min(jours.length, 1);
+    case 'seance_longue': return valeurs.length ? Math.max(...valeurs) : 0;
+    case 'jours': return jours.length;
+    case 'serie': return meilleureSerie;
+    case 'heures': return Math.floor(valeurs.reduce((s, v) => s + v, 0) / 60);
+    case 'semaines': return semainesPleines(jours);
+    case 'erev_chabbat': return jours.filter((iso) => semaineDe(iso) === 5).length;
+    case 'retour': return retours(jours);
+    case 'plume': return notes;
+    default: return 0;
+  }
+}
+
+export const rang = (p, f) => { const v = valeur(p, f.cle); return f.seuils.filter((s) => v >= s).length; };
+
+/** Tous les niveaux atteints, en clés « famille:rang ». */
+export function gagnes(p) {
   const g = new Set();
-  if (jours.length) g.add('premier_pas');
-  if (max >= 60) g.add('une_heure');
-  if (max >= 120) g.add('deux_heures');
-  if (semainePleine(jours)) g.add('semaine_pleine');
-  if (jours.filter((iso) => semaineDe(iso) === 5).length >= 4) g.add('erev_chabbat');
-  if (retour(jours)) g.add('retour');
-  if (jours.length >= 18) g.add('chai');
-  if (meilleureSerie >= 40) g.add('quarante');
-  if (total >= 600) g.add('dix_heures');
-  if (total >= 6000) g.add('cent_heures');
-  if (notes >= 10) g.add('plume');
-  if (notes >= 50) g.add('plume_fidele');
-  if (jours.length >= 613) g.add('taryag');
+  for (const f of FAMILLES) for (let r = 1; r <= rang(p, f); r++) g.add(`${f.cle}:${r}`);
   return g;
 }
 
-/** Les trophées gagnés depuis la dernière fois ; rien la première fois (vus null). */
-export const nouveaux = (g, vus) => (vus ? TROPHEES.filter((t) => g.has(t.cle) && !vus.has(t.cle)) : []);
+/** Vers le niveau suivant ; au sommet, le dernier seuil. */
+export function progres(p, f) {
+  const r = rang(p, f);
+  const v = valeur(p, f.cle);
+  const cible = f.seuils[Math.min(r, f.seuils.length - 1)];
+  return { valeur: v, cible, fraction: cible > 0 ? Math.min(v, cible) / cible : 1 };
+}
+
+/**
+ * Les niveaux gagnés depuis la dernière fois, le plus haut de chaque famille ;
+ * rien la première fois (vus null) ni depuis l'ancien format (clés sans « : »).
+ */
+export function nouveaux(g, vus) {
+  if (!vus || (vus.size && ![...vus].some((k) => k.includes(':')))) return [];
+  const parFamille = new Map();
+  for (const k of g) {
+    if (vus.has(k)) continue;
+    const [cle, r] = k.split(':');
+    if (!parFamille.has(cle) || parFamille.get(cle) < Number(r)) parFamille.set(cle, Number(r));
+  }
+  return [...parFamille].map(([cle, r]) => { const famille = FAMILLES.find((f) => f.cle === cle); return { famille, rang: r, metal: metal(famille, r) }; })
+    .sort((a, b) => METAUX.indexOf(b.metal) * 100 + b.rang - (METAUX.indexOf(a.metal) * 100 + a.rang));
+}

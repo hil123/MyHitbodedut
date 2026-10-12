@@ -397,6 +397,23 @@
             </LinearLayout>
         </LinearLayout>
 
+        <!-- Réinitialiser l'application (12/10) : en dernier, à l'écart, avec une confirmation. -->
+        <LinearLayout android:id="@+id/card_reset" style="@style/Card">
+
+            <TextView style="@style/CardTitle" android:text="@string/reset_title" />
+
+            <TextView style="@style/CardHint" android:text="@string/reset_hint" />
+
+            <Button
+                android:id="@+id/reset_app"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:textColor="@color/danger"
+                android:text="@string/reset_action" />
+        </LinearLayout>
+
         <TextView
             android:id="@+id/app_version"
             android:layout_width="match_parent"

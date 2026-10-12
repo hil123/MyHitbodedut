@@ -22,8 +22,8 @@ class LectureTest {
             "SiddurLectureActivity", "TehilimLectureActivity", "TikkunFlowActivity",
             "PsalmActivity", "LiturgyActivity", "LibraryEntryActivity",
         ).forEach { assertTrue("$it n'a pas le bouton de lecture", source(it).contains("ReglagesLecture.installer(")) }
-        // Le nusah ne se change que dans le siddour.
-        assertTrue(source("SiddurLectureActivity").contains("avecNusah = true"))
+        // Le nusah ne se change que dans le siddour, pas dans les livres qu'il lit aussi (12/10).
+        assertTrue(source("SiddurLectureActivity").contains("avecNusah = !livre"))
         assertFalse(source("TehilimLectureActivity").contains("avecNusah = true"))
     }
 

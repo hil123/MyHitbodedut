@@ -56,4 +56,6 @@
     <color name="lecture_nuit_texte">#F2F0EA</color>
     <color name="lecture_nuit_discret">#A3A8A5</color>
     <color name="lecture_nuit_titre">#D6C28C</color>
+    <!-- Le bouton qui efface tout (réinitialisation, 12/10). -->
+    <color name="danger">#B3261E</color>
 </resources>

@@ -3,6 +3,7 @@ package com.myhitbodedut
 import android.Manifest
 import android.app.TimePickerDialog
 import android.content.Intent
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -140,6 +141,27 @@ class SettingsActivity : AppCompatActivity() {
         findViewById<Button>(R.id.import_data).setOnClickListener {
             importFile.launch(arrayOf("application/json", "text/plain", "*/*"))
         }
+        findViewById<Button>(R.id.reset_app).setOnClickListener { confirmerReinitialisation() }
+    }
+
+    /** Tout effacer, après confirmation : séance, barrière, rappels, notifications, puis les données ; on repart de la présentation. */
+    private fun confirmerReinitialisation() {
+        MaterialAlertDialogBuilder(this)
+            .setTitle(R.string.reset_confirm_title)
+            .setMessage(R.string.reset_confirm_text)
+            .setNegativeButton(R.string.reset_confirm_no, null)
+            .setPositiveButton(R.string.reset_confirm_yes) { _, _ ->
+                stopService(Intent(this, SessionService::class.java))
+                GateService.stop(this)
+                Reminder.cancel(this)
+                (getSystemService(NOTIFICATION_SERVICE) as android.app.NotificationManager).cancelAll()
+                Store.reinitialiser(this)
+                StreakWidget.refresh(this)
+                startActivity(Intent(this, MainActivity::class.java)
+                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK))
+                finish()
+            }
+            .show()
     }
 
     /**

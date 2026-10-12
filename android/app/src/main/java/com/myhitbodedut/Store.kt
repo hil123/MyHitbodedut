@@ -152,6 +152,16 @@ object Store {
     private fun journalPrefs(context: Context): SharedPreferences =
         context.applicationContext.getSharedPreferences(PREFS_JOURNAL, Context.MODE_PRIVATE)
 
+    /**
+     * Réinitialiser l'application (12/10) : tout ce qu'elle garde sur le
+     * téléphone, réglages et journal, est effacé ; l'écran d'accueil
+     * repart de la présentation.
+     */
+    fun reinitialiser(context: Context) {
+        prefs(context).edit().clear().commit()
+        journalPrefs(context).edit().clear().commit()
+    }
+
     fun today(): String = LocalDate.now().format(FORMAT)
 
     fun parse(date: String): LocalDate = LocalDate.parse(date, FORMAT)

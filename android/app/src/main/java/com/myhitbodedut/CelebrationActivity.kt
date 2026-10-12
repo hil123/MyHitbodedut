@@ -66,6 +66,11 @@ class CelebrationActivity : AppCompatActivity() {
         // Après le bravo, la note de la séance, si elle est proposée : dans
         // cet ordre, et plus l'une sous l'autre (revue du 29/09).
         val dateNote = intent.getStringExtra(EXTRA_NOTE_DATE)
+        // Partager la séance faite (12/10) : un texte et le lien de la version web, par le choix du téléphone.
+        findViewById<Button>(R.id.celebration_share).apply {
+            visibility = if (!annulee && minutes > 0) View.VISIBLE else View.GONE
+            setOnClickListener { partager(minutes) }
+        }
         findViewById<Button>(R.id.celebration_continue).setOnClickListener {
             if (dateNote == null || annulee) {
                 finish()
@@ -162,7 +167,21 @@ class CelebrationActivity : AppCompatActivity() {
             .start()
     }
 
+    private fun partager(minutes: Int) {
+        val serie = Store.streak(this)
+        val texte = listOfNotNull(
+            getString(R.string.partage_texte, resources.getQuantityString(R.plurals.partage_minutes, minutes, minutes)),
+            if (serie >= 2) getString(R.string.partage_serie, serie) else null,
+            getString(R.string.partage_lien, LIEN_WEB),
+        ).joinToString("\n")
+        val envoi = Intent(Intent.ACTION_SEND).setType("text/plain").putExtra(Intent.EXTRA_TEXT, texte)
+        runCatching { startActivity(Intent.createChooser(envoi, getString(R.string.partage_choix))) }
+    }
+
     companion object {
+        /** La version web de l'application, jointe à chaque partage. */
+        const val LIEN_WEB = "https://hil123.github.io/myhitbodedut-web/"
+
         const val EXTRA_MINUTES = "minutes"
         const val EXTRA_ANNULEE = "annulee"
         const val EXTRA_NOTE_DATE = "note_date"

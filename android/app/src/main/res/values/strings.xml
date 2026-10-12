@@ -802,37 +802,84 @@
     <string name="halakha_note">Texte original en hébreu, verbatim. Pour la pratique, consultez un rav.</string>
     <!-- Les trophées et la fête (11/10) -->
     <string name="celebration_titre">Mazal tov !</string>
-    <string name="trophee_gagne">Trophée gagné : %1$s !</string>
     <string name="trophees_paliers_titre">Trophées et paliers</string>
     <string name="trophees_titre">Trophées</string>
     <string name="trophees_compte">%1$d sur %2$d</string>
     <string name="trophees_paliers">🏆  Trophées et paliers</string>
     <string name="channel_celebration">Paliers et trophées</string>
     <string name="channel_celebration_description">Une fête quand un palier ou un trophée est atteint</string>
+    <string name="reset_title">Réinitialiser l’application</string>
+    <string name="reset_hint">Efface tout ce que l’application garde sur ce téléphone : journal, séances, séries, trophées, réglages et rappels. Exportez d’abord vos données si vous voulez les garder.</string>
+    <string name="reset_action">Réinitialiser l’application</string>
+    <string name="reset_confirm_title">Tout effacer ?</string>
+    <string name="reset_confirm_text">Le journal, les séances, les séries, les trophées, les réglages et les rappels seront effacés de ce téléphone. Cela ne peut pas être annulé.</string>
+    <string name="reset_confirm_yes">Tout effacer</string>
+    <string name="reset_confirm_no">Annuler</string>
+    <string name="partage_action">Partager ma hitbodedout</string>
+    <string name="partage_texte">Aujourd’hui, j’ai fait %1$s de hitbodedout, un moment seul à seul avec Hachem.</string>
+    <string name="partage_serie">Série : %1$d jours d’affilée.</string>
+    <string name="partage_lien">Essaie toi aussi, gratuitement : %1$s</string>
+    <string name="partage_choix">Partager</string>
+    <plurals name="partage_minutes">
+        <item quantity="one">%1$d minute</item>
+        <item quantity="other">%1$d minutes</item>
+    </plurals>
+    <!-- Web : le partage sans feuille de partage du navigateur, par le presse-papiers. -->
+    <string name="partage_copie">Texte copié : collez-le où vous voulez.</string>
+    <string name="trophee_progres">%1$d / %2$d</string>
+    <!-- Les trophées à niveaux (12/10). -->
     <string name="trophee_premier_pas">Premier pas</string>
-    <string name="trophee_premier_pas_desc">Une première hitbodedout</string>
-    <string name="trophee_une_heure">Une heure</string>
-    <string name="trophee_une_heure_desc">Une heure en un jour</string>
-    <string name="trophee_deux_heures">Deux heures</string>
-    <string name="trophee_deux_heures_desc">Deux heures en un jour</string>
-    <string name="trophee_semaine_pleine">Semaine pleine</string>
-    <string name="trophee_semaine_pleine_desc">Les six jours, du dimanche au vendredi</string>
+    <string name="trophee_seance_longue">Longue hitbodedout</string>
+    <string name="trophee_jours">Jours de pratique</string>
+    <string name="trophee_serie">La série</string>
+    <string name="trophee_heures">Les heures</string>
+    <string name="trophee_semaines">Semaines pleines</string>
     <string name="trophee_erev_chabbat">Erev Chabbat</string>
-    <string name="trophee_erev_chabbat_desc">Quatre vendredis de hitbodedout</string>
     <string name="trophee_retour">Le retour</string>
-    <string name="trophee_retour_desc">Reprendre après une pause d\'une semaine</string>
-    <string name="trophee_chai">Chaï</string>
-    <string name="trophee_chai_desc">18 jours de pratique</string>
-    <string name="trophee_quarante">Quarante jours</string>
-    <string name="trophee_quarante_desc">40 jours d\'affilée</string>
-    <string name="trophee_dix_heures">Dix heures</string>
-    <string name="trophee_dix_heures_desc">10 heures en tout</string>
-    <string name="trophee_cent_heures">Cent heures</string>
-    <string name="trophee_cent_heures_desc">100 heures en tout</string>
     <string name="trophee_plume">La plume</string>
-    <string name="trophee_plume_desc">10 notes au journal</string>
-    <string name="trophee_plume_fidele">Plume fidèle</string>
-    <string name="trophee_plume_fidele_desc">50 notes au journal</string>
-    <string name="trophee_taryag">Taryag</string>
-    <string name="trophee_taryag_desc">613 jours de pratique</string>
+    <plurals name="trophee_premier_pas_desc">
+        <item quantity="one">Une première hitbodedout</item>
+        <item quantity="other">Une première hitbodedout</item>
+    </plurals>
+    <plurals name="trophee_seance_longue_desc">
+        <item quantity="one">%1$d minute en un jour</item>
+        <item quantity="other">%1$d minutes en un jour</item>
+    </plurals>
+    <plurals name="trophee_jours_desc">
+        <item quantity="one">%1$d jour de pratique</item>
+        <item quantity="other">%1$d jours de pratique</item>
+    </plurals>
+    <plurals name="trophee_serie_desc">
+        <item quantity="one">%1$d jour d’affilée</item>
+        <item quantity="other">%1$d jours d’affilée</item>
+    </plurals>
+    <plurals name="trophee_heures_desc">
+        <item quantity="one">%1$d heure en tout</item>
+        <item quantity="other">%1$d heures en tout</item>
+    </plurals>
+    <plurals name="trophee_semaines_desc">
+        <item quantity="one">%1$d semaine pleine, du dimanche au vendredi</item>
+        <item quantity="other">%1$d semaines pleines, du dimanche au vendredi</item>
+    </plurals>
+    <plurals name="trophee_erev_chabbat_desc">
+        <item quantity="one">%1$d vendredi de hitbodedout</item>
+        <item quantity="other">%1$d vendredis de hitbodedout</item>
+    </plurals>
+    <plurals name="trophee_retour_desc">
+        <item quantity="one">Reprendre %1$d fois après une semaine de pause</item>
+        <item quantity="other">Reprendre %1$d fois après une semaine de pause</item>
+    </plurals>
+    <plurals name="trophee_plume_desc">
+        <item quantity="one">%1$d note au journal</item>
+        <item quantity="other">%1$d notes au journal</item>
+    </plurals>
+    <string name="metal_bronze">Bronze</string>
+    <string name="metal_argent">Argent</string>
+    <string name="metal_or">Or</string>
+    <string name="metal_platine">Platine</string>
+    <string name="trophee_niveau">Niveau %1$d sur %2$d · %3$s</string>
+    <string name="trophee_a_venir">À gagner</string>
+    <string name="trophee_niveau_gagne">Trophée « %1$s » : niveau %2$d, %3$s !</string>
+    <string name="trophee_prochain">Prochain niveau : %1$s</string>
+    <string name="trophee_sommet">Niveau le plus haut atteint</string>
 </resources>

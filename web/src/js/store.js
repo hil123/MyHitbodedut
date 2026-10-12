@@ -38,6 +38,8 @@ const PREFS_JOURNAL = 'myhitbodedut-journal';
 export function memoire() {
   const m = new Map();
   return {
+    /** Réinitialiser l'application (12/10) : réglages et journal effacés de ce navigateur. */
+    reinitialiser: () => { try { stockage.removeItem(PREFS); stockage.removeItem(PREFS_JOURNAL); } catch { /* rien à effacer */ } },
     getItem: (k) => (m.has(k) ? m.get(k) : null),
     setItem: (k, v) => m.set(k, String(v)),
     removeItem: (k) => m.delete(k),

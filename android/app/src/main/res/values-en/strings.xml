@@ -756,37 +756,84 @@
     <string name="halakha_note">Original Hebrew text, verbatim. For practice, ask a rabbi.</string>
     <!-- Les trophées et la fête (11/10) -->
     <string name="celebration_titre">Mazal tov!</string>
-    <string name="trophee_gagne">Trophy won: %1$s!</string>
     <string name="trophees_paliers_titre">Trophies and milestones</string>
     <string name="trophees_titre">Trophies</string>
     <string name="trophees_compte">%1$d of %2$d</string>
     <string name="trophees_paliers">🏆  Trophies and milestones</string>
     <string name="channel_celebration">Milestones and trophies</string>
     <string name="channel_celebration_description">A celebration when a milestone or trophy is reached</string>
+    <string name="reset_title">Reset the app</string>
+    <string name="reset_hint">Erases everything the app keeps on this phone: journal, sessions, streaks, trophies, settings and reminders. Export your data first if you want to keep it.</string>
+    <string name="reset_action">Reset the app</string>
+    <string name="reset_confirm_title">Erase everything?</string>
+    <string name="reset_confirm_text">The journal, sessions, streaks, trophies, settings and reminders will be erased from this phone. This cannot be undone.</string>
+    <string name="reset_confirm_yes">Erase everything</string>
+    <string name="reset_confirm_no">Cancel</string>
+    <string name="partage_action">Share my hitbodedut</string>
+    <string name="partage_texte">Today I did %1$s of hitbodedut, time alone with Hashem.</string>
+    <string name="partage_serie">Streak: %1$d days in a row.</string>
+    <string name="partage_lien">Try it too, for free: %1$s</string>
+    <string name="partage_choix">Share</string>
+    <plurals name="partage_minutes">
+        <item quantity="one">%1$d minute</item>
+        <item quantity="other">%1$d minutes</item>
+    </plurals>
+    <!-- Web : le partage sans feuille de partage du navigateur, par le presse-papiers. -->
+    <string name="partage_copie">Text copied: paste it wherever you like.</string>
+    <string name="trophee_progres">%1$d / %2$d</string>
+    <!-- Les trophées à niveaux (12/10). -->
     <string name="trophee_premier_pas">First step</string>
-    <string name="trophee_premier_pas_desc">A first hitbodedut</string>
-    <string name="trophee_une_heure">One hour</string>
-    <string name="trophee_une_heure_desc">One hour in a day</string>
-    <string name="trophee_deux_heures">Two hours</string>
-    <string name="trophee_deux_heures_desc">Two hours in a day</string>
-    <string name="trophee_semaine_pleine">Full week</string>
-    <string name="trophee_semaine_pleine_desc">All six days, Sunday to Friday</string>
+    <string name="trophee_seance_longue">Long hitbodedut</string>
+    <string name="trophee_jours">Days of practice</string>
+    <string name="trophee_serie">The streak</string>
+    <string name="trophee_heures">The hours</string>
+    <string name="trophee_semaines">Full weeks</string>
     <string name="trophee_erev_chabbat">Erev Shabbat</string>
-    <string name="trophee_erev_chabbat_desc">Four Fridays of hitbodedut</string>
     <string name="trophee_retour">The return</string>
-    <string name="trophee_retour_desc">Coming back after a week\'s break</string>
-    <string name="trophee_chai">Chai</string>
-    <string name="trophee_chai_desc">18 days of practice</string>
-    <string name="trophee_quarante">Forty days</string>
-    <string name="trophee_quarante_desc">40 days in a row</string>
-    <string name="trophee_dix_heures">Ten hours</string>
-    <string name="trophee_dix_heures_desc">10 hours in all</string>
-    <string name="trophee_cent_heures">A hundred hours</string>
-    <string name="trophee_cent_heures_desc">100 hours in all</string>
     <string name="trophee_plume">The pen</string>
-    <string name="trophee_plume_desc">10 journal notes</string>
-    <string name="trophee_plume_fidele">Faithful pen</string>
-    <string name="trophee_plume_fidele_desc">50 journal notes</string>
-    <string name="trophee_taryag">Taryag</string>
-    <string name="trophee_taryag_desc">613 days of practice</string>
+    <plurals name="trophee_premier_pas_desc">
+        <item quantity="one">A first hitbodedut</item>
+        <item quantity="other">A first hitbodedut</item>
+    </plurals>
+    <plurals name="trophee_seance_longue_desc">
+        <item quantity="one">%1$d minute in one day</item>
+        <item quantity="other">%1$d minutes in one day</item>
+    </plurals>
+    <plurals name="trophee_jours_desc">
+        <item quantity="one">%1$d day of practice</item>
+        <item quantity="other">%1$d days of practice</item>
+    </plurals>
+    <plurals name="trophee_serie_desc">
+        <item quantity="one">%1$d day in a row</item>
+        <item quantity="other">%1$d days in a row</item>
+    </plurals>
+    <plurals name="trophee_heures_desc">
+        <item quantity="one">%1$d hour in all</item>
+        <item quantity="other">%1$d hours in all</item>
+    </plurals>
+    <plurals name="trophee_semaines_desc">
+        <item quantity="one">%1$d full week, Sunday to Friday</item>
+        <item quantity="other">%1$d full weeks, Sunday to Friday</item>
+    </plurals>
+    <plurals name="trophee_erev_chabbat_desc">
+        <item quantity="one">%1$d Friday of hitbodedut</item>
+        <item quantity="other">%1$d Fridays of hitbodedut</item>
+    </plurals>
+    <plurals name="trophee_retour_desc">
+        <item quantity="one">Coming back %1$d time after a week’s break</item>
+        <item quantity="other">Coming back %1$d times after a week’s break</item>
+    </plurals>
+    <plurals name="trophee_plume_desc">
+        <item quantity="one">%1$d journal note</item>
+        <item quantity="other">%1$d journal notes</item>
+    </plurals>
+    <string name="metal_bronze">Bronze</string>
+    <string name="metal_argent">Silver</string>
+    <string name="metal_or">Gold</string>
+    <string name="metal_platine">Platinum</string>
+    <string name="trophee_niveau">Level %1$d of %2$d · %3$s</string>
+    <string name="trophee_a_venir">To win</string>
+    <string name="trophee_niveau_gagne">“%1$s” trophy: level %2$d, %3$s!</string>
+    <string name="trophee_prochain">Next level: %1$s</string>
+    <string name="trophee_sommet">Highest level reached</string>
 </resources>

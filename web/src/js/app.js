@@ -1545,7 +1545,7 @@ function lignePaliers() {
   const gagnes = Trophees.gagnes(pratique());
   const trophee = Trophees.nouveaux(gagnes, store.tropheesVus())[0];
   const neuf = vus ? Paliers.nouveaux(etats, bilan, vus).sort((a, b) => b.rang - a.rang)[0] : null;
-  const message = trophee ? tr.t('trophee_gagne', tr.t(`trophee_${trophee.cle}`))
+  const message = trophee ? tr.t('trophee_niveau_gagne', tr.t(`trophee_${trophee.famille.cle}`), trophee.rang, tr.t(`metal_${trophee.metal}`))
     : neuf ? tr.t('palier_nouveau', libellePalier(neuf.piste, bilan), valeurPalier(neuf.piste, neuf.atteint)) : null;
   if (message) setTimeout(() => { signale(message); confettis(); }, 600);
   store.setPaliersVus(Paliers.marques(etats, bilan));
@@ -1589,16 +1589,35 @@ function confettis() {
 
 /** La vitrine : les trophées gagnés en couleur, les autres en attente, avec ce qu'il faut pour les gagner. */
 function vitrineTrophees() {
-  const g = Trophees.gagnes(pratique());
-  store.setTropheesVus(new Set(g));
-  const tries = [...Trophees.TROPHEES].sort((a, b) => Number(!g.has(a.cle)) - Number(!g.has(b.cle)));
+  const p = pratique();
+  store.setTropheesVus(Trophees.gagnes(p));
+  const atteints = Trophees.FAMILLES.reduce((n, f) => n + Trophees.rang(p, f), 0);
+  const total = Trophees.FAMILLES.reduce((n, f) => n + f.seuils.length, 0);
+  // Les plus hauts métaux d'abord ; à égalité, les plus proches du niveau suivant (12/10).
+  const ordre = (f) => { const r = Trophees.rang(p, f); return (r ? Trophees.METAUX.indexOf(Trophees.metal(f, r)) + 1 : 0) * 10 + Trophees.progres(p, f).fraction; };
+  const tries = [...Trophees.FAMILLES].sort((a, b) => ordre(b) - ordre(a));
+  const barre = (fraction, classe) => h('div', { class: `trophee-barre ${classe}`, 'aria-hidden': 'true' },
+    h('span', { style: `width: ${Math.round(Math.min(1, Math.max(0, fraction)) * 100)}%` }));
+  const desc = (f, seuil) => tr.p(`trophee_${f.cle}_desc`, seuil);
   return h('div', { class: 'carte carte-palier' },
     h('div', { class: 'trophees-tete' }, h('p', { class: 'palier-nom' }, tr.t('trophees_titre')),
-      h('p', { class: 'trophees-compte' }, tr.t('trophees_compte', g.size, Trophees.TROPHEES.length))),
-    h('div', { class: 'trophees-grille' }, ...tries.map((t) => h('div', { class: `trophee${g.has(t.cle) ? ' gagne' : ''}` },
-      h('span', { class: 'trophee-icone', 'aria-hidden': 'true' }, t.icone),
-      h('span', { class: 'trophee-nom' }, tr.t(`trophee_${t.cle}`)),
-      h('span', { class: 'trophee-desc' }, tr.t(`trophee_${t.cle}_desc`))))));
+      h('p', { class: 'trophees-compte' }, tr.t('trophees_compte', atteints, total))),
+    barre(atteints / total, 'globale'),
+    h('div', { class: 'trophees-grille' }, ...tries.map((f) => {
+      const r = Trophees.rang(p, f);
+      const m = r ? Trophees.metal(f, r) : null;
+      const pr = Trophees.progres(p, f);
+      const sommet = r >= f.seuils.length;
+      const niveau = m ? tr.t('trophee_niveau', r, f.seuils.length, tr.t(`metal_${m}`)) : tr.t('trophee_a_venir');
+      return h('div', { class: `trophee ${m ?? ''}${m ? ' gagne' : ''}`,
+        'aria-label': [tr.t(`trophee_${f.cle}`), niveau, sommet ? tr.t('trophee_sommet') : tr.t('trophee_prochain', desc(f, pr.cible))].join(', ') },
+        h('span', { class: 'trophee-icone', 'aria-hidden': 'true' }, f.icone),
+        h('span', { class: 'trophee-nom' }, tr.t(`trophee_${f.cle}`)),
+        h('span', { class: 'trophee-niveau' }, niveau),
+        h('span', { class: 'trophee-desc' }, desc(f, f.seuils[Math.max(0, r - 1)])),
+        sommet ? null : barre(pr.fraction, 'petite'),
+        sommet ? null : h('span', { class: 'trophee-progres' }, tr.t('trophee_progres', Math.min(pr.valeur, pr.cible), pr.cible)));
+    })));
 }
 
 function ecranPaliers() {
@@ -1717,7 +1736,15 @@ function ecranReglages() {
         ligne({ nom: tr.t('reglage_allumage'), onclick: choisirAllumage,
           etat: [libelleAllumage(store.allumage()), mukafChoma() && store.allumage() !== 40 ? tr.t('reglage_allumage_proposition') : null].filter(Boolean).join(' · ') }),
         store.siddurNusah() === 'sefard' ? ligne({ nom: tr.t('reglage_tahanoun_tichri'), onclick: choisirTahanounTichri,
-          etat: tr.t(store.sansTahanounFinTichri() ? 'reglage_tahanoun_tichri_sans' : 'reglage_tahanoun_tichri_dit') }) : null))));
+          etat: tr.t(store.sansTahanounFinTichri() ? 'reglage_tahanoun_tichri_sans' : 'reglage_tahanoun_tichri_dit') }) : null),
+      // Réinitialiser l'application (12/10) : en dernier, avec une confirmation.
+      h('div', { class: 'carte carte-reinit' },
+        h('h3', {}, tr.t('reset_title')),
+        h('p', { class: 'indice' }, tr.t('reset_hint')),
+        h('button', { class: 'bouton-danger', onclick: () => confirmer(tr.t('reset_confirm_title'), tr.t('reset_confirm_text'), tr.t('reset_confirm_yes'), () => {
+          store.reinitialiser();
+          location.replace(location.pathname);
+        }) }, tr.t('reset_action'))))));
 }
 
 // --- Boîtes de dialogue ---------------------------------------------------------------
@@ -2012,7 +2039,21 @@ function ecranBravo() {
       h('h1', { class: 'bravo-titre' }, titre),
       sousTitre ? h('p', { class: 'bravo-sous-titre' }, sousTitre) : null,
       annulee && chizukBravo ? carteChizuk({ moment: 'relance', item: chizukBravo }, { compacte: true }) : null,
-      h('button', { class: 'principal', onclick: continuer }, tr.t('celebration_continue')))));
+      h('button', { class: 'principal', onclick: continuer }, tr.t('celebration_continue')),
+      // Partager la séance faite (12/10), avec le lien de la version web.
+      !annulee && bravo.minutes > 0 ? h('button', { class: 'lien-bouton bravo-partage', onclick: () => partagerSeance(bravo.minutes) }, tr.t('partage_action')) : null)));
+}
+
+const LIEN_WEB = 'https://hil123.github.io/myhitbodedut-web/';
+/** Le texte d'une séance faite et le lien de la version web : le partage du téléphone, sinon le presse-papiers. */
+async function partagerSeance(minutes) {
+  const serie = store.streak?.() ?? 0;
+  const texte = [tr.t('partage_texte', tr.p('partage_minutes', minutes)), serie >= 2 ? tr.t('partage_serie', serie) : null,
+    tr.t('partage_lien', LIEN_WEB)].filter(Boolean).join('\n');
+  try {
+    if (navigator.share) { await navigator.share({ text: texte }); return; }
+  } catch (e) { if (e?.name === 'AbortError') return; }
+  try { await navigator.clipboard.writeText(texte); signale(tr.t('partage_copie')); } catch { /* rien d'autre à faire */ }
 }
 
 /**
