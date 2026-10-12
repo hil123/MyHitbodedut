@@ -13,8 +13,8 @@
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:paddingHorizontal="@dimen/edge"
-        android:paddingTop="22dp"
-        android:paddingBottom="18dp">
+        android:paddingTop="@dimen/hero_pad_top"
+        android:paddingBottom="@dimen/hero_pad_bottom">
 
         <LinearLayout
             android:layout_width="0dp"
@@ -27,13 +27,13 @@
                 android:layout_height="wrap_content"
                 android:text="@string/calendrier_title"
                 android:textColor="@color/white"
-                android:textSize="24sp"
+                android:textSize="@dimen/hero_title"
                 android:textStyle="bold" />
         </LinearLayout>
 
         <FrameLayout
-            android:layout_width="64dp"
-            android:layout_height="78dp"
+            android:layout_width="@dimen/hero_art_w"
+            android:layout_height="@dimen/hero_art_h"
             android:layout_marginStart="12dp"
             android:background="@drawable/bg_stage"
             android:padding="5dp">

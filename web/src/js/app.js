@@ -602,6 +602,14 @@ let siddur = null;
 let priere = null;
 const NUSAH = [['edot', 'siddur_nusah_edot'], ['sefard', 'siddur_nusah_sefard'], ['ashkenaz', 'siddur_nusah_ashkenaz']];
 /** Le siddour du nusah choisi, chargé au premier besoin (un fichier par nusah). */
+/** Les livres entiers de la bibliothèque (data/livres.json, au format du siddour), chargés au premier besoin. */
+let livres = null;
+function chargeLivres() {
+  if (livres) return true;
+  fetch('data/livres.json').then((r) => r.json()).then((d) => { livres = d; rendre(); }).catch(() => {});
+  return false;
+}
+
 function chargeSiddur() {
   const n = store.siddurNusah();
   if (siddurs[n]) { siddur = siddurs[n]; return true; }
@@ -923,15 +931,18 @@ function ecranSiddur() {
 }
 
 function ecranPriere() {
-  if (!chargeSiddur()) return h('div', { class: 'ecran' }, barre(tr.t('siddur_title')), h('div', { class: 'defile' }));
-  const x = siddur.textes.find((y) => y.id === priere);
+  // Un livre de la bibliothèque (« livre:likoutei_etsot », 12/10) se lit comme une prière, sans nusah ni ajouts.
+  const livre = priere?.startsWith('livre:') ?? false;
+  if (livre ? !chargeLivres() : !chargeSiddur()) return h('div', { class: 'ecran' }, barre(tr.t(livre ? 'library_title' : 'siddur_title')), h('div', { class: 'defile' }));
+  const recueil = livre ? livres : siddur;
+  const x = recueil.textes.find((y) => y.id === (livre ? priere.slice(6) : priere));
   // Rouvert directement sur #priere, sans texte choisi : la liste.
   if (!x) return ecranSiddur();
   const plusieurs = x.sections.length > 1;
-  const sousTitre = [titreTexte(x.titre) !== x.titre.he ? titreTexte(x.titre) : null, titreTexte(x.nusah ?? siddur._meta.nusah)].filter(Boolean).join(' · ');
+  const sousTitre = [titreTexte(x.titre) !== x.titre.he ? titreTexte(x.titre) : null, titreTexte(x.nusah ?? recueil._meta.nusah)].filter(Boolean).join(' · ');
   const titres = [];
   // Les ajouts du jour (10/10) : mis en évidence ; les autres, repliés.
-  const annotations = chargeAnnotations() ? annotationsSiddur[store.siddurNusah()]?.[x.id] : null;
+  const annotations = !livre && chargeAnnotations() ? annotationsSiddur[store.siddurNusah()]?.[x.id] : null;
   const idx = indexAjouts(annotations ?? []);
   const maintenant = new Date();
   const jourDuTexte = jourJuif(jourDeLaPriere(x.id, isoLocal(maintenant), maintenant.getHours()), store.inIsrael(), mukafChoma());
@@ -981,7 +992,7 @@ function ecranPriere() {
       return [t, ...corps, ...renvois(si)];
     }));
   const bande = titres.length > 1 ? bandeSignets(titres) : null;
-  const ecran = ecranLu(x.titre.he, contenu, { avecNusah: true, bande: bande?.nav });
+  const ecran = ecranLu(x.titre.he, contenu, { avecNusah: !livre, bande: bande?.nav });
   bande?.suivre(ecran.querySelector('.defile'));
   return ecran;
 }
@@ -1085,14 +1096,12 @@ function ecranTikkun() {
     }
   }
   if (tikkun.cloture) blocs.push(titre(tikkun.cloture.titre.he), ...tikkun.cloture.paragraphes.map(paragraphe));
-  const continuite = tikkun._meta.continuite;
   const fini = () => {
     // Tout dire d'un trait vaut les dix psaumes.
     for (const p of tikkun.psaumes) store.setTikkunDone(p.numero, true);
     retour();
   };
   return ecranLu(tr.t('tikkun_title'), h('div', { class: 'contenu lecture tikkun' },
-    continuite ? h('p', { class: 'indice' }, titreTexte(continuite)) : null,
     h('div', { class: 'psaume', lang: 'he', dir: 'rtl' }, blocs)), {
     pied: h('div', { class: 'lecture-nav' }, h('button', { class: 'principal', onclick: fini }, tr.t('tikkun_flow_done'))),
   });
@@ -1112,9 +1121,17 @@ function chargeBibliotheque() {
 
 function ecranBibliotheque() {
   const pret = chargeBibliotheque();
+  const livresPrets = chargeLivres();
   return h('div', { class: 'ecran avec-bandeau' },
     bandeau(tr.t('library_title'), { puce: h('p', { class: 'bandeau-sous-titre' }, tr.t('library_hint')), dessin: 'char_torah' }),
     h('div', { class: 'defile' }, h('div', { class: 'contenu liste-siddour' },
+      // Les livres entiers (12/10) : Likoutei Etsot, Sefer HaMiddot.
+      ...(livresPrets ? livres.groupes.flatMap((g) => [
+        enteteGroupe(g.titre.he, titreTexte(g.titre)),
+        h('div', { class: 'carte carte-sections' }, livres.textes.filter((x) => x.groupe === g.cle).map((x) =>
+          ligneHebreu(x.titre.he, [titreTexte(x.titre) !== x.titre.he ? titreTexte(x.titre) : null, tr.p('livre_chapitres', x.sections.length)].filter(Boolean).join(' · '),
+            () => { priere = `livre:${x.id}`; ouvrir('priere'); }))),
+      ]) : []),
       ...(pret ? LibraryRules.sources(bibliotheque).flatMap((section) => [
         enteteGroupe(section.titre.he, titreTexte(section.titre)),
         ...section.sous_sections.flatMap((sous) => [

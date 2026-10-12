@@ -293,6 +293,11 @@
     <string name="library_title">ספרייה</string>
     <string name="library_hint">מקורות ההתבודדות, ומה שנכתב עליה.</string>
     <string name="library_entries_count">%1$d ערכים</string>
+    <plurals name="livre_chapitres">
+        <item quantity="one">פרק אחד</item>
+        <item quantity="other">%1$d פרקים</item>
+        <item quantity="two">%1$d פרקים</item>
+    </plurals>
     <string name="library_kind_source">מקור</string>
     <string name="library_kind_article">מאמר</string>
     <string name="library_summary">תקציר</string>

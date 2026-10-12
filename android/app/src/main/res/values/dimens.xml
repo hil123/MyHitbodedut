@@ -74,4 +74,10 @@
         des onglets : 168dp y laissent la légende.
     -->
     <dimen name="gauge_size_side">168dp</dimen>
+    <!-- L'en-tête des écrans (12/10) : plus bas sur un petit téléphone, tel qu'avant à partir de 640dp de haut. -->
+    <dimen name="hero_pad_top">12dp</dimen>
+    <dimen name="hero_pad_bottom">10dp</dimen>
+    <dimen name="hero_art_w">50dp</dimen>
+    <dimen name="hero_art_h">60dp</dimen>
+    <dimen name="hero_title">21sp</dimen>
 </resources>

@@ -33,10 +33,10 @@ class TikkunFlowActivity : AppCompatActivity() {
         setContentView(R.layout.activity_tikkun_flow)
 
         tikkun = Data.tikkun(this)
-        val langue = ChizukCard.language(this)
 
-        findViewById<TextView>(R.id.flow_subtitle).text =
-            tikkun.continuite.forLanguage(langue).ifBlank { tikkun.continuite.he }
+        // Pas de « sans interruption » en tête (12/10) : le texte dit lui-même où s'arrêter
+        // un peu, après « אַתָּה סֵתֶר לִי », comme il le dit à cet endroit.
+        findViewById<TextView>(R.id.flow_subtitle).visibility = View.GONE
 
         val contenu = findViewById<LinearLayout>(R.id.flow_content)
         var premier = true

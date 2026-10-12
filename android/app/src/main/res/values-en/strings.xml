@@ -287,6 +287,10 @@
     <string name="library_title">Library</string>
     <string name="library_hint">The sources of hitbodedut, and what is written about it.</string>
     <string name="library_entries_count">%1$d entries</string>
+    <plurals name="livre_chapitres">
+        <item quantity="one">%1$d chapter</item>
+        <item quantity="other">%1$d chapters</item>
+    </plurals>
     <string name="library_kind_source">Source</string>
     <string name="library_kind_article">Article</string>
     <string name="library_summary">Summary</string>

@@ -24,12 +24,18 @@ class LibraryActivity : AppCompatActivity() {
     private sealed interface Row {
         data class Header(val section: Section) : Row
         data class Sub(val sub: SubSection) : Row
+
+        /** Les livres entiers (12/10) : leur titre de groupe, puis un livre par ligne. */
+        data class TitreLivres(val titre: LocalizedText) : Row
+        data class Livre(val texte: SiddurTexte) : Row
     }
 
     private val rows: List<Row> by lazy {
-        Data.library(this).sections.flatMap { section ->
-            listOf(Row.Header(section)) + section.sousSections.map { Row.Sub(it) }
-        }
+        val livres = Data.livres(this)
+        livres.groupes.flatMap { g -> listOf(Row.TitreLivres(g.titre)) + livres.du(g.cle).map { Row.Livre(it) } } +
+            Data.library(this).sections.flatMap { section ->
+                listOf(Row.Header(section)) + section.sousSections.map { Row.Sub(it) }
+            }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,7 +55,7 @@ class LibraryActivity : AppCompatActivity() {
         override fun getItemCount(): Int = rows.size
 
         override fun getItemViewType(position: Int): Int =
-            if (rows[position] is Row.Header) TYPE_HEADER else TYPE_SUB
+            if (rows[position] is Row.Header || rows[position] is Row.TitreLivres) TYPE_HEADER else TYPE_SUB
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
             val layout =
@@ -64,6 +70,11 @@ class LibraryActivity : AppCompatActivity() {
             when (val row = rows[position]) {
                 is Row.Header -> bindHeader(holder.itemView, row.section, language)
                 is Row.Sub -> bindSub(holder.itemView, row.sub, language)
+                is Row.TitreLivres -> {
+                    holder.itemView.findViewById<TextView>(R.id.section_he).text = row.titre.he
+                    bindTranslation(holder.itemView.findViewById(R.id.section_translation), row.titre, language)
+                }
+                is Row.Livre -> bindLivre(holder.itemView, row.texte, language)
             }
         }
 
@@ -91,6 +102,15 @@ class LibraryActivity : AppCompatActivity() {
                         .putExtra(LibrarySubSectionActivity.EXTRA_ID, sub.id)
                 )
             }
+        }
+
+        /** Un livre entier : son titre, le nombre de chapitres ; il s'ouvre dans le lecteur du siddour. */
+        private fun bindLivre(view: View, texte: SiddurTexte, language: String) {
+            view.findViewById<TextView>(R.id.subsection_he).text = texte.titre.he
+            bindTranslation(view.findViewById(R.id.subsection_translation), texte.titre, language)
+            view.findViewById<TextView>(R.id.subsection_count).text =
+                resources.getQuantityString(R.plurals.livre_chapitres, texte.sections.size, texte.sections.size)
+            view.setOnClickListener { SiddurLectureActivity.ouvrirLivre(this@LibraryActivity, texte.id) }
         }
 
         /** En hébreu, la traduction répéterait le titre affiché au-dessus. */

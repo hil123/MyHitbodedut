@@ -189,6 +189,15 @@ object Data {
     fun villes(context: Context): List<Ville> =
         villes ?: Villes.parse(Json.readRaw(context.applicationContext, R.raw.villes)).also { villes = it }
 
+    @Volatile
+    private var livres: Siddur? = null
+
+    /** Les livres entiers de la bibliothèque (res/raw/livres.json, au format du siddour), lus une fois. */
+    fun livres(context: Context): Siddur =
+        livres ?: synchronized(this) {
+            livres ?: SiddurLoader.parse(Json.readRaw(context.applicationContext, R.raw.livres)).also { livres = it }
+        }
+
     /** Le siddour du nusah choisi : environ 550 ko par nusah, lus une fois par processus. */
     fun siddur(context: Context, nusah: Nusah = Store.siddurNusah(context)): Siddur =
         siddurs.getOrPut(nusah) { SiddurLoader.load(context.applicationContext, nusah) }

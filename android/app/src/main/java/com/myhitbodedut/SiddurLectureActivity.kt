@@ -59,6 +59,7 @@ class SiddurLectureActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_siddur_lecture)
         id = intent.getStringExtra(ID).orEmpty()
+        livre = intent.getBooleanExtra(LIVRE, false)
         liste = findViewById<RecyclerView>(R.id.siddur_lecture_list).apply {
             layoutManager = LinearLayoutManager(this@SiddurLectureActivity)
             addOnScrollListener(object : RecyclerView.OnScrollListener() {
@@ -69,17 +70,22 @@ class SiddurLectureActivity : AppCompatActivity() {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) = suivre()
             })
         }
-        ReglagesLecture.installer(this, liste, avecNusah = true) {
+        ReglagesLecture.installer(this, liste, avecNusah = !livre) {
             // Même nusah : on garde sa place ; un autre nusah n'a pas les mêmes paragraphes.
-            afficher(garderPlace = Data.siddur(this).nusah == nusahAffiche)
+            afficher(garderPlace = recueil().nusah == nusahAffiche)
         }
         afficher(garderPlace = false)
     }
 
     private var nusahAffiche: LocalizedText? = null
 
+    /** Un livre de la bibliothèque (Likoutei Etsot, Sefer HaMiddot, 12/10), lu comme une prière, sans nusah ni ajouts du jour. */
+    private var livre = false
+
+    private fun recueil(): Siddur = if (livre) Data.livres(this) else Data.siddur(this)
+
     private fun afficher(garderPlace: Boolean) {
-        val siddur = Data.siddur(this)
+        val siddur = recueil()
         val texte = siddur.texte(id)
         if (texte == null) {
             finish()
@@ -99,7 +105,7 @@ class SiddurLectureActivity : AppCompatActivity() {
         val israel = Store.inIsrael(this)
         val jour = CalendrierJuif.jour(CalendrierJuif.jourDeLaPriere(id, LocalDate.now(), LocalTime.now()), israel,
             Store.mukafChoma(this))
-        val annotations = Data.ajouts(this)[id].orEmpty()
+        val annotations = if (livre) emptyList() else Data.ajouts(this)[id].orEmpty()
         val note = if (annotations.isEmpty()) emptyList() else listOf(Note(getString(R.string.siddur_jour_ajouts,
             jour.dateHebraique, getString(if (israel) R.string.region_israel else R.string.region_diaspora))))
         val lignes: List<Any> = note + SiddurJour.lignes(texte, annotations, jour.conditions, ouverts,
@@ -268,7 +274,7 @@ class SiddurLectureActivity : AppCompatActivity() {
                 }
                 is SiddurJour.Ligne.Renvoi -> vue.apply {
                     // « Aujourd'hui · הַלֵּל › » : le texte de ce jour, à cet endroit, ouvert d'un geste.
-                    val cible = Data.siddur(context).texte(ligne.cible)
+                    val cible = recueil().texte(ligne.cible)
                     PoliceHebraique.appliquer(this)
                     setPadding(dp(20), dp(12), dp(20), dp(12))
                     text = getString(R.string.siddur_aujourdhui) + " · " + (cible?.titre?.he ?: ligne.cible) + "  ›"
@@ -307,9 +313,14 @@ class SiddurLectureActivity : AppCompatActivity() {
 
     companion object {
         private const val ID = "id"
+        private const val LIVRE = "livre"
 
         fun ouvrir(context: Context, id: String) {
             context.startActivity(Intent(context, SiddurLectureActivity::class.java).putExtra(ID, id))
+        }
+
+        fun ouvrirLivre(context: Context, id: String) {
+            context.startActivity(Intent(context, SiddurLectureActivity::class.java).putExtra(ID, id).putExtra(LIVRE, true))
         }
     }
 }
