@@ -797,3 +797,33 @@ Hebcal le fait dire partout. Le résultat de KosherJava est gardé ; voir
   (OC 581:3), ni, pour les Edot, du 22 Tichri à la fin du mois.
 
 Détail et sources : `ZMANIM.md`, « Différences de noussa'h ».
+
+## Mise à jour (11–12/10)
+
+**Fait** :
+
+- Moussaf de Roch 'Hodech (trois noussa'h), sans Chabbat Roch 'Hodech ; les
+  צירופי הוי״ה et אהי״ה du mois avec leur nikkoud, vérifiés sur deux
+  siddourim et sur le texte massorétique des versets ; à penser, jamais à dire.
+- Hallel (trois noussa'h) ; dans Cha'harit, « Aujourd'hui · Hallel › » et
+  « Aujourd'hui · Moussaf › » les jours où ils se disent.
+- Halakha du jour (Ben Ish 'Haï, hors ligne) et hilloulot du jour, avec un
+  écran chacun.
+- Trophées, paliers, confettis et notification de fête.
+- Bibliothèque : Likoutei Etsot (sans nikkoud, licence de la vocalisation
+  non déclarée) et Sefer HaMiddot (vocalisé, domaine public).
+- Police au choix et taille pour tous les textes ; en-têtes plus bas sur
+  petit téléphone ; pas d'image pendant la lecture du siddour.
+- Mentions de sources réduites à celles qu'imposent les licences ; plus de
+  Sefaria.
+
+**Reste** :
+
+- les propositions 2, 3/15, 5, 6, 7 (sur les vrais zmanim), 9, 10, 11 et 12
+  ci-dessus, inchangées ;
+- les hilloulot : le paragraphe d'introduction de Wikipédia plutôt que la
+  première phrase (en attente : crédits Firecrawl) ;
+- les icônes signalées le 12/10 : lesquelles, à préciser ;
+- l'APK : essayer sur un vrai téléphone la barrière du matin (proposition
+  12), jamais éprouvée ;
+- Kokhvei Or : toujours pas fourni.
