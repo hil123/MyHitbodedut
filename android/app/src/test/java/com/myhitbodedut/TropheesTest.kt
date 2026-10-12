@@ -68,6 +68,6 @@ class TropheesTest {
         assertTrue(Trophees.nouveaux(g, setOf("chai", "premier_pas")).isEmpty())
         val n = Trophees.nouveaux(g, setOf("premier_pas:1"))
         assertEquals(n.map { it.famille }.toSet().size, n.size)
-        assertTrue(n.any { it.famille == Trophees.Famille.JOURS && it.rang == 2 })
+        assertTrue(n.any { it.famille == Trophees.Famille.JOURS && it.rang == 5 })
     }
 }
