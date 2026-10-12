@@ -2122,12 +2122,14 @@ function ecranBravo() {
       setTimeout(() => ecrireNote(dateNote ?? store.today(), rendre), 50);
     }
   };
+  const guitare = Math.floor(Date.now() / 86400000) % 2 === 0;
   return h('div', { class: 'ecran bravo' },
     h('div', { class: 'defile' }, h('div', { class: 'contenu' },
       h('div', { class: 'scene danse' },
         h('div', { class: 'danseur' },
-          h('img', { class: 'pose-a', src: `img/${annulee ? 'char_walking' : 'char_dancing'}.webp`, alt: '' }),
-          annulee ? null : h('img', { class: 'pose-b', src: 'img/char_dancing_joy.webp', alt: '' }))),
+          // Un jour la danse, le lendemain la guitare (12/10) : le guitariste se balance au même rythme.
+          h('img', { class: 'pose-a', src: `img/${annulee ? 'char_walking' : guitare ? 'char_guitar' : 'char_dancing'}.webp`, alt: '' }),
+          annulee ? null : h('img', { class: 'pose-b', src: `img/${guitare ? 'char_guitar' : 'char_dancing_joy'}.webp`, alt: '' }))),
       h('h1', { class: 'bravo-titre' }, titre),
       sousTitre ? h('p', { class: 'bravo-sous-titre' }, sousTitre) : null,
       annulee && chizukBravo ? carteChizuk({ moment: 'relance', item: chizukBravo }, { compacte: true }) : null,
