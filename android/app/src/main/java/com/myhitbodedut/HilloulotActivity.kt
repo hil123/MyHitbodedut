@@ -135,9 +135,22 @@ class HilloulotActivity : AppCompatActivity() {
         if ('e' in h.sources) addView(VueJour.texte(context, getString(R.string.hilloula_source_toratemet), 13f, R.color.brand, haut = 2))
         // Les autres biographies (MyTzadik, המאיר לארץ), chacune suivie de sa source, comme le demande l'accord.
         h.bios.forEach { b ->
-            addView(VueJour.texte(context, b.texte, 16f, R.color.ink, haut = 14).apply {
+            val texte = VueJour.texte(context, b.texte, 16f, R.color.ink, haut = 14).apply {
                 textDirection = View.TEXT_DIRECTION_RTL; PoliceHebraique.appliquer(this)
-            })
+            }
+            addView(texte)
+            // Une longue biographie se replie à huit lignes ; « Lire la suite » la déplie.
+            if (b.texte.length > 500) {
+                texte.maxLines = 8
+                texte.ellipsize = android.text.TextUtils.TruncateAt.END
+                addView(VueJour.texte(context, getString(R.string.hilloula_lire_plus), 14f, R.color.brand, gras = true, haut = 4).apply {
+                    setOnClickListener {
+                        val replie = texte.maxLines != Int.MAX_VALUE
+                        texte.maxLines = if (replie) Int.MAX_VALUE else 8
+                        text = getString(if (replie) R.string.hilloula_reduire else R.string.hilloula_lire_plus)
+                    }
+                })
+            }
             val nom = getString(if (b.source == "m") R.string.hilloula_source_mytzadik else R.string.hilloula_source_hameir)
             addView(VueJour.texte(context, if (b.lien != null) "$nom ↗" else nom, 13f, R.color.brand, haut = 6).apply {
                 b.lien?.let { l -> setOnClickListener { ouvrir(l) } }

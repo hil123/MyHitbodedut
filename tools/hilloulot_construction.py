@@ -22,7 +22,7 @@ Clé des jours : « <mois>-<jour> », mois de KosherJava (1 Nissan … 6 Eloul,
 
   python3 tools/hilloulot_construction.py
 """
-import json, os, re
+import collections, json, os, re
 
 ICI = os.path.dirname(os.path.abspath(__file__))
 MOIS = {"ניסן": "1", "אייר": "2", "סיוון": "3", "סיון": "3", "תמוז": "4", "אב": "5", "אלול": "6",
@@ -104,6 +104,101 @@ def complements(jours):
     print(f"Hidabroot : {liens} liens, {ajouts} ajouts ; תורת אמת : {te} ;", end=" ")
 
 
+TITRES = set('רבי הרב ר רב חכם האדמו"ר אדמו"ר האדמור אדמור המקובל מקובל התנא רבנו רבינו מרן הגאון הצדיק '
+             'הרה"ק הרבנית רבנית בעל ה בן בר זצ"ל זיע"א זצוק"ל מוהר"ר הקדוש החכם השר אבינו אמנו הנביא'.split())
+
+
+def mots(nom):
+    """Les mots qui distinguent un nom : sans niqqoud, ponctuation ni titres ; les
+    sigles gardent leurs lettres (הגר"א → הגרא)."""
+    nom = re.sub("[\u0591-\u05C7]", "", nom)
+    nom = re.sub("[\"'׳״`]", "", nom)
+    nom = re.sub("[,.()\\[\\]\\-–:;]", " ", nom)
+    return [w for w in nom.split() if w not in TITRES and len(w) > 1]
+
+
+def cle_de(date):
+    """« כ"ו אייר », « ט' בסיוון », « אדר ב' » … → la clé du jour, ou None."""
+    p = re.sub("מנחם[ -]אב", "אב", date).replace("מרחשון", "מרחשוון").replace("־", " ").split()
+    if len(p) < 2 or jour_hebreu(p[0]) is None:
+        return None
+    m = " ".join(p[1:])
+    m = m[1:] if m.startswith("ב") and m[1:].split()[0] in MOIS else m
+    m = {"אדר א'": "adar1", "אדר ב'": "adar2", "אדר א׳": "adar1", "אדר ב׳": "adar2"}.get(m) or MOIS.get(m.split()[0])
+    return f"{m}-{jour_hebreu(p[0])}" if m else None
+
+
+def sans_balisage(texte):
+    """Ôte la mise en forme Markdown laissée par l'extraction (« ## », « ** », liens),
+    sans toucher aux mots ; trois lignes vides au plus deviennent une seule."""
+    texte = re.sub(r"(?m)^\s*#+\s*", "", texte)
+    texte = texte.replace("**", "").replace("__", "")
+    texte = re.sub(r"!?\[([^\]]*)\]\([^)]*\)", r"\1", texte)
+    return re.sub(r"\n{3,}", "\n\n", texte).strip()
+
+
+def sources_autorisees(jours):
+    """MyTzadik et המאיר לארץ (12/10) : reprise autorisée avec mention, accord reçu par le
+    propriétaire de l'app. Leur biographie, mot pour mot, s'ajoute au tsaddik du même jour
+    quand les noms concordent ; sinon le tsaddik est ajouté, avec cette seule source."""
+    communs = collections.Counter(w for v in jours.values() for x in v for w in mots(x["he"]))
+
+    def candidats(cle):
+        if cle.startswith("adar"):
+            return [x for k in ("adar", "adar1", "adar2") for x in jours.get(f"{k}-{cle.split('-')[1]}", [])]
+        return jours.get(cle, [])
+
+    def score(a, x):
+        m = mots(x["he"])
+        c = a & set(m)
+        rares = [w for w in c if communs[w] < 15]
+        # Un seul mot commun ne suffit que s'il est rare et que c'est le dernier de notre nom
+        # (un nom de famille, un lieu, un sigle) : « דניאל » seul ne fait pas la même personne.
+        return len(c) + len(rares) if len(c) >= 2 or (rares and m and m[-1] in rares) else 0
+
+    def apparier(nom, cle):
+        """Le même jour d'abord ; sinon, un rapprochement net (deux mots rares) un autre
+        jour : c'est la même personne, notre date est gardée."""
+        a = set(mots(nom))
+        meilleur = max(((score(a, x), x) for x in candidats(cle)), key=lambda t: t[0], default=(0, None))
+        if meilleur[0]:
+            return meilleur[1], False
+        def net(x):
+            b = set(mots(x["he"]))
+            c = a & b
+            return score(a, x) if len(c) >= 2 and len(c) / len(a) >= 0.6 and len(c) / len(b) >= 0.6 else 0
+        ailleurs = max(((net(x), x) for v in jours.values() for x in v), key=lambda t: t[0], default=(0, None))
+        return (ailleurs[1], True) if ailleurs[0] >= 4 else (None, False)
+
+    autres_jours = []
+    for code, fichier in (("l", "hameir.json"), ("m", "mytzadik.json")):
+        chemin = os.path.join(ICI, "hilloulot", fichier)
+        if not os.path.exists(chemin):
+            continue
+        lies = ajoutes = 0
+        for e in json.load(open(chemin, encoding="utf-8")):
+            cle = cle_de(e.get("date") or "")
+            if not cle:
+                continue
+            bio = sans_balisage(e.get("bio") or "")
+            x, autre_jour = apparier(e["nom"], cle)
+            if autre_jour:
+                autres_jours.append(f"{code} {cle} {e['nom']} → {x['he']}")
+            if x is None:
+                x = {"he": e["nom"].strip(), "a": "", "s": ""}
+                jours.setdefault(cle, []).append(x)
+                ajoutes += 1
+            else:
+                lies += 1
+            if code not in x["s"]:
+                x["s"] += code
+            if bio and not any(b[0] == code for b in x.get("b", [])):
+                x.setdefault("b", []).append([code, bio, e.get("url") or ""])
+        print(f"{fichier} : {lies} rapprochés, {ajoutes} ajoutés ;", end=" ")
+    with open(os.path.join(ICI, "hilloulot", "autres_jours.txt"), "w", encoding="utf-8") as f:
+        f.write("# Même personne, date différente de la nôtre : notre date est gardée.\n" + "\n".join(autres_jours) + "\n")
+
+
 def main():
     jours, total, retires = {}, 0, 0
     for lot in (1, 2, 3, 4):
@@ -150,6 +245,7 @@ def main():
                 allonges += 1
     print(f"{allonges} descriptions allongées ;", end=" ")
     complements(jours)
+    sources_autorisees(jours)
     sortie = {
         "_meta": {
             "date": "2026-10-12",

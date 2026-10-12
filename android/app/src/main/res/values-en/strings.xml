@@ -749,6 +749,8 @@
     <string name="hilloula_source_hameir">HaMeir LaAretz</string>
     <string name="hilloula_source_hidabroot">Read on Hidabroot</string>
     <string name="hilloula_source_toratemet">Torat Emet (CC BY-NC-SA)</string>
+    <string name="hilloula_lire_plus">Read more</string>
+    <string name="hilloula_reduire">Show less</string>
     <string name="hilloulot_tout">All hillulot ›</string>
     <!-- La halakha du jour hors ligne : le Ben Ish 'Haï (11/10) -->
     <string name="halakha_title">Halacha of the day</string>

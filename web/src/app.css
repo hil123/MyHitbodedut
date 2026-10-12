@@ -732,6 +732,8 @@ input[type="range"] { width: 100%; accent-color: var(--brand); }
 .carte-hilloula .hilloula-traduit { margin: 2px 0 0; color: var(--muted); }
 .carte-hilloula .hilloula-annee { margin: 4px 0 0; color: var(--muted); font-size: 14px; }
 .carte-hilloula .hilloula-description { margin: 10px 0 0; white-space: pre-line; font-family: var(--police-texte); font-size: calc(16px * var(--echelle-texte, 1)); line-height: 1.7; }
+.carte-hilloula .hilloula-description.replie { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 8; line-clamp: 8; overflow: hidden; }
+.carte-hilloula .hilloula-plus { display: block; margin: 4px 0 0; font-weight: 700; }
 .carte-hilloula .hilloula-source { display: block; margin: 8px 0 0; color: var(--brand); font-size: 13px; text-decoration: none; }
 
 /* La halakha du jour (Ben Ish 'Haï, 11/10) */

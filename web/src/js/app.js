@@ -1466,7 +1466,15 @@ function ecranHilloulot() {
     // Les autres biographies (MyTzadik, המאיר לארץ), chacune suivie de sa source, comme le demande l'accord (12/10).
     ...(x.b ?? []).flatMap(([src, texte, lien]) => {
       const nom = tr.t(src === 'm' ? 'hilloula_source_mytzadik' : 'hilloula_source_hameir');
-      return [h('p', { class: 'hilloula-description', lang: 'he', dir: 'rtl' }, texte),
+      // Une longue biographie se replie à huit lignes ; « Lire la suite » la déplie.
+      const long = texte.length > 500;
+      const p = h('p', { class: `hilloula-description${long ? ' replie' : ''}`, lang: 'he', dir: 'rtl' }, texte);
+      const bascule = long ? h('button', { type: 'button', class: 'lien-bouton hilloula-plus', 'aria-expanded': 'false', onclick: (e) => {
+        const ouvert = p.classList.toggle('replie') === false;
+        e.currentTarget.setAttribute('aria-expanded', String(ouvert));
+        e.currentTarget.textContent = tr.t(ouvert ? 'hilloula_reduire' : 'hilloula_lire_plus');
+      } }, tr.t('hilloula_lire_plus')) : null;
+      return [p, bascule,
         lien ? h('a', { class: 'hilloula-source', href: lien, target: '_blank', rel: 'noopener' }, `${nom} ↗`) : h('p', { class: 'hilloula-source' }, nom)];
     }),
     x.i ? h('a', { class: 'hilloula-source', href: x.i, target: '_blank', rel: 'noopener' }, `${tr.t('hilloula_source_hidabroot')} ↗`) : null);

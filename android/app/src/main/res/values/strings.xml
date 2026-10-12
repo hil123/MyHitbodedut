@@ -795,6 +795,8 @@
     <string name="hilloula_source_hameir">המאיר לארץ</string>
     <string name="hilloula_source_hidabroot">Lire sur Hidabroot</string>
     <string name="hilloula_source_toratemet">תורת אמת (CC BY-NC-SA)</string>
+    <string name="hilloula_lire_plus">Lire la suite</string>
+    <string name="hilloula_reduire">Réduire</string>
     <string name="hilloulot_tout">Toutes les hilloulot ›</string>
     <!-- La halakha du jour hors ligne : le Ben Ish 'Haï (11/10) -->
     <string name="halakha_title">Halakha du jour</string>
