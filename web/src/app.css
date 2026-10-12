@@ -9,12 +9,14 @@
 
 /* La police des textes saints en hébreu (res/font/hebreu_serif.xml) : Noto Serif Hebrew,
    SIL Open Font License 1.1 (polices/OFL-NotoSerifHebrew.txt). */
+/* La police des textes (12/10), au choix dans le bouton « Aa » : voir appliquerPolice (app.js). */
+:root { --police-texte: "Hebreu Serif", "Noto Serif Hebrew", "Times New Roman", serif; }
 @font-face { font-family: "Hebreu Serif"; font-weight: 400; font-display: swap; src: url(polices/hebreu_serif_regular.woff2) format("woff2"); }
 /* Les lignes d'état de l'accueil (10/10) : Varela Round, fichier d'origine, OFL (polices/OFL-VarelaRound.txt). */
 @font-face { font-family: "Varela Round"; font-weight: 400; font-display: swap; src: url(polices/varela_round.ttf) format("truetype"); }
 @font-face { font-family: "Hebreu Serif"; font-weight: 700; font-display: swap; src: url(polices/hebreu_serif_bold.woff2) format("woff2"); }
 .statut:not(.titre), .serie, .detail { font-family: "Varela Round", system-ui, sans-serif; }
-.chizuk-he, .lecture .psaume, .lecture .psaume-titre, .siddour .priere, .siddour .consigne, .nom-he, .signet { font-family: "Hebreu Serif", "Noto Serif Hebrew", "Times New Roman", serif; }
+.chizuk-he, .lecture .psaume, .lecture .psaume-titre, .siddour .priere, .siddour .consigne, .nom-he, .signet { font-family: var(--police-texte); }
 
 * { box-sizing: border-box; }
 
@@ -487,7 +489,7 @@ input[type="range"] { width: 100%; accent-color: var(--brand); }
 
 /* --- La liste du siddour (SiddurActivity, 04/10) ------------------------------------------ */
 .liste-siddour { padding-top: 0; }
-.serif-he, .maintenant-he, .livre-he, .source-titre { font-family: "Hebreu Serif", "Noto Serif Hebrew", "Times New Roman", serif; }
+.serif-he, .maintenant-he, .livre-he, .source-titre { font-family: var(--police-texte); }
 .maintenant {
   display: flex; align-items: center; gap: 16px; width: 100%; margin-top: 16px;
   padding: 14px; padding-inline-end: 18px; text-align: start; cursor: pointer; color: inherit;
@@ -645,7 +647,7 @@ input[type="range"] { width: 100%; accent-color: var(--brand); }
 .ecran.lu.nuit .replie-bouton { color: var(--lecture-nuit-discret, #A3A8A5); border-color: color-mix(in srgb, var(--lecture-nuit-discret, #A3A8A5) 40%, transparent); }
 .ecran.lu.nuit .replie-nom { color: var(--lecture-nuit-texte, #F2F0EA); }
 .renvoi-jour { display: block; width: 100%; margin: 6px 0 18px; padding: 12px 14px; border: 0; border-radius: 12px; text-align: start; cursor: pointer;
-  font: inherit; font-family: "Hebreu Serif", "Noto Serif Hebrew", serif; font-size: calc(16px * var(--echelle, 1)); font-weight: 700;
+  font: inherit; font-family: var(--police-texte); font-size: calc(16px * var(--echelle, 1)); font-weight: 700;
   color: var(--brand); background: color-mix(in srgb, var(--brand) 11%, transparent); }
 .ecran.lu.nuit .renvoi-jour { color: var(--lecture-nuit-titre, #D6C28C); background: color-mix(in srgb, var(--lecture-nuit-titre, #D6C28C) 15%, transparent); }
 .ecran.lu.nuit .indice-jour { color: var(--lecture-nuit-titre, #D6C28C); background: color-mix(in srgb, var(--lecture-nuit-titre, #D6C28C) 15%, transparent); }
@@ -662,7 +664,7 @@ input[type="range"] { width: 100%; accent-color: var(--brand); }
 
 /* --- Zmanim et calendrier (10/10) --------------------------------------------- */
 .carte-jour { padding: 16px; }
-.jour-hebreu { margin: 0; font-family: "Hebreu Serif", "Noto Serif Hebrew", serif; font-size: 26px; font-weight: 700; color: var(--brand); text-align: start; }
+.jour-hebreu { margin: 0; font-family: var(--police-texte); font-size: 26px; font-weight: 700; color: var(--brand); text-align: start; }
 .jour-civil { margin: 2px 0 0; color: var(--muted); font-size: 14px; }
 .jour-marques { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
 .marque { padding: 3px 10px; border-radius: 999px; background: color-mix(in srgb, var(--brand) 12%, transparent); color: var(--brand); font-size: 13px; }
@@ -685,7 +687,7 @@ input[type="range"] { width: 100%; accent-color: var(--brand); }
 .vue-calendrier button.actif { background: var(--brand); color: var(--on-brand); font-weight: 600; }
 .mois-principal { margin: 0; font-weight: 700; font-size: 17px; text-transform: capitalize; }
 .mois-second { margin: 2px 0 0; color: var(--brand); font-size: 14px; }
-.mois-hebreu { font-family: "Hebreu Serif", "Noto Serif Hebrew", serif; text-align: center; }
+.mois-hebreu { font-family: var(--police-texte); text-align: center; }
 .mois-principal.mois-hebreu { font-size: 20px; color: var(--ink); }
 .mois-second.mois-hebreu { font-size: 15px; }
 .mois-tete .icone-bouton { width: 40px; height: 40px; border: 0; border-radius: 999px; background: none; color: var(--brand); font-size: 26px; line-height: 1; cursor: pointer; }
@@ -697,7 +699,7 @@ input[type="range"] { width: 100%; accent-color: var(--brand); }
 .case-haut { font-size: 15px; font-variant-numeric: tabular-nums; }
 .case-haut.case-hebreu { font-size: 17px; }
 .case-bas { font-size: 11px; color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
-.case-hebreu { font-family: "Hebreu Serif", "Noto Serif Hebrew", serif; }
+.case-hebreu { font-family: var(--police-texte); }
 .case.chome { background: color-mix(in srgb, var(--brand) 9%, transparent); }
 .case.fete .case-haut::after { content: ""; display: block; width: 5px; height: 5px; margin: 1px auto 0; border-radius: 50%; background: var(--brand); }
 .case.aujourdhui .case-haut { font-weight: 700; color: var(--brand); }
@@ -726,16 +728,16 @@ input[type="range"] { width: 100%; accent-color: var(--brand); }
 .jour-hilloula-reste { display: block; color: var(--muted); font-size: 13px; }
 .lien-bouton { background: none; border: 0; font: inherit; font-weight: 700; cursor: pointer; padding-inline: 0; }
 .champ-recherche { width: 100%; box-sizing: border-box; margin-top: 10px; padding: 10px 12px; border: 1px solid var(--line, #ccd); border-radius: 12px; font: inherit; background: transparent; color: inherit; }
-.carte-hilloula .hilloula-nom { margin: 0; font-size: 22px; font-weight: 700; }
+.carte-hilloula .hilloula-nom { margin: 0; font-family: var(--police-texte); font-size: calc(22px * var(--echelle-texte, 1)); font-weight: 700; }
 .carte-hilloula .hilloula-traduit { margin: 2px 0 0; color: var(--muted); }
 .carte-hilloula .hilloula-annee { margin: 4px 0 0; color: var(--muted); font-size: 14px; }
-.carte-hilloula .hilloula-description { margin: 8px 0 0; font-size: 16px; line-height: 1.5; }
+.carte-hilloula .hilloula-description { margin: 8px 0 0; font-family: var(--police-texte); font-size: calc(16px * var(--echelle-texte, 1)); line-height: 1.5; }
 .carte-hilloula .hilloula-source { display: block; margin: 8px 0 0; color: var(--brand); font-size: 13px; text-decoration: none; }
 
 /* La halakha du jour (Ben Ish 'Haï, 11/10) */
 .jour-halakha { margin: 2px 0 0; font-size: 16px; line-height: 1.6; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
-.carte-hilloula .halakha-source { margin: 0; font-size: 13px; font-weight: 700; color: var(--brand); }
-.carte-hilloula .halakha-texte { margin: 8px 0 0; font-size: 18px; line-height: 1.7; white-space: pre-line; }
+.carte-hilloula .halakha-source { margin: 0; font-family: var(--police-texte); font-size: calc(13px * var(--echelle-texte, 1)); font-weight: 700; color: var(--brand); }
+.carte-hilloula .halakha-texte { margin: 8px 0 0; font-family: var(--police-texte); font-size: calc(18px * var(--echelle-texte, 1)); line-height: 1.7; white-space: pre-line; }
 .note-halakha { margin: 14px 4px 0; font-size: 12px; color: var(--muted); text-align: center; }
 
 /* Les trophées et les confettis (11/10) */

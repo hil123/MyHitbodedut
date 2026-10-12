@@ -214,6 +214,9 @@ export function creeStore(stockage, { maintenant = () => new Date(), fuseau } = 
     /** La lecture (ReglagesLecture.kt) : taille des lettres de 0,8 à 2, fond noir. */
     lectureEchelle: () => Math.min(2, Math.max(0.8, Number(get('lecture_echelle', 1)) || 1)),
     setLectureEchelle: (e) => set('lecture_echelle', Math.round(Math.min(2, Math.max(0.8, e)) * 10) / 10),
+    // La police des textes (12/10) : 'serif' (par défaut), 'sans' ou 'arrondie'.
+    lecturePolice: () => (['serif', 'sans', 'arrondie'].includes(get('lecture_police', 'serif')) ? get('lecture_police', 'serif') : 'serif'),
+    setLecturePolice: (p) => set('lecture_police', p),
     lectureSombre: () => get('lecture_sombre', false) === true,
     setLectureSombre: (v) => set('lecture_sombre', !!v),
     /** Le bouton de lecture masqué par l'utilisateur, sur tous les écrans de lecture. */

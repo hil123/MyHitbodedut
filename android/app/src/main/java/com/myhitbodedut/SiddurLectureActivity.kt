@@ -241,10 +241,10 @@ class SiddurLectureActivity : AppCompatActivity() {
                     PoliceHebraique.appliquer(this)
                     val consigne = ligne.bloc.consigne
                     // Des paragraphes aérés ; les consignes, petites, collées au texte qu'elles annoncent (12/10).
-                    setPadding(dp(20), dp(if (consigne) 14 else 12), dp(20), dp(if (consigne) 0 else 10))
+                    setPadding(dp(20), dp(if (consigne) 18 else 14), dp(20), dp(if (consigne) 2 else 12))
                     text = Html.fromHtml(ligne.bloc.texte, Html.FROM_HTML_MODE_LEGACY)
                     textSize = (if (consigne) 12f else 19f) * e
-                    setLineSpacing(dp(if (consigne) 2 else 7).toFloat() * e, 1f)
+                    setLineSpacing(dp(if (consigne) 2 else 10).toFloat() * e, 1f)
                     setTextColor(if (consigne) rendu.discret else rendu.texte)
                     if (ligne.style == SiddurJour.Style.DU_JOUR) setBackgroundColor(teinte)
                     if (ligne.style == SiddurJour.Style.HORS) alpha = 0.55f

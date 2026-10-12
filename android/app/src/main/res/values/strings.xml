@@ -454,7 +454,7 @@
     <string name="hero_greeting_afternoon">Bonjour, %1$s</string>
     <string name="hero_greeting_evening">Bonsoir, %1$s</string>
     <string name="nav_today">Aujourd’hui</string>
-    <string name="nav_texts">Hitbodedout</string>
+    <string name="nav_texts">Bibliothèque</string>
     <string name="nav_journal">Journal</string>
     <string name="section_around">Autour de la hitbodedout</string>
     <plurals name="week_gauge">
@@ -595,6 +595,10 @@
     <string name="lecture_nuit">Lecture sur fond noir</string>
     <string name="lecture_replier">Replier</string>
     <string name="lecture_masquer">Masquer le bouton</string>
+    <string name="lecture_police">Police du texte</string>
+    <string name="police_serif">Hébraïque à empattements</string>
+    <string name="police_sans">Sans empattements</string>
+    <string name="police_arrondie">Arrondie</string>
     <string name="lecture_masque_info">Bouton masqué. Appui long sur le texte pour le faire revenir.</string>
     <string name="lecture_annuler_masque">Annuler</string>
     <string name="lecture_taille">Taille du texte : %1$d %%</string>

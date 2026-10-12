@@ -378,7 +378,7 @@
     <string name="hero_greeting_afternoon">Good afternoon, %1$s</string>
     <string name="hero_greeting_evening">Good evening, %1$s</string>
     <string name="nav_today">Today</string>
-    <string name="nav_texts">Hitbodedut</string>
+    <string name="nav_texts">Library</string>
     <string name="nav_journal">Journal</string>
     <string name="section_around">Around the hitbodedut</string>
     <plurals name="week_gauge">
@@ -551,6 +551,10 @@
     <string name="lecture_nuit">Read on a black background</string>
     <string name="lecture_replier">Fold away</string>
     <string name="lecture_masquer">Hide the button</string>
+    <string name="lecture_police">Text font</string>
+    <string name="police_serif">Hebrew serif</string>
+    <string name="police_sans">Sans serif</string>
+    <string name="police_arrondie">Rounded</string>
     <string name="lecture_masque_info">Button hidden. Long-press the text to bring it back.</string>
     <string name="lecture_annuler_masque">Undo</string>
     <string name="lecture_taille">Text size: %1$d%%</string>

@@ -59,6 +59,8 @@ class HalakhaActivity : AppCompatActivity() {
         })
         liste = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
         contenu.addView(liste)
+        // Taille et police des textes, comme dans les écrans de lecture (12/10).
+        ReglagesLecture.installer(this, findViewById(R.id.halakha_defile)) { afficher() }
         afficher()
     }
 
@@ -68,6 +70,11 @@ class HalakhaActivity : AppCompatActivity() {
     }
 
     private fun afficher() {
+        remplir()
+        ReglagesLecture.retailler(liste)
+    }
+
+    private fun remplir() {
         liste.removeAllViews()
         val livre = Halakha.livre(this)
         if (recherche.trim().length >= 2) {

@@ -89,6 +89,7 @@ object Store {
     private const val KEY_CALENDRIER_CIVIL = "calendrier_civil"
     private const val KEY_LECTURE_ECHELLE = "lecture_echelle"
     private const val KEY_LECTURE_SOMBRE = "lecture_sombre"
+    private const val KEY_LECTURE_POLICE = "lecture_police"
     private const val KEY_LECTURE_MASQUEE = "lecture_masquee"
     private const val KEY_PAUSE_SHABBAT = "pause_shabbat"
     private const val KEY_IN_ISRAEL = "in_israel"
@@ -525,6 +526,14 @@ object Store {
 
     fun setLectureEchelle(context: Context, echelle: Float) {
         prefs(context).edit().putFloat(KEY_LECTURE_ECHELLE, echelle).apply()
+    }
+
+    /** La police des textes (12/10) : clé de PoliceHebraique.Police, l'hébraïque à empattements par défaut. */
+    fun lecturePolice(context: Context): PoliceHebraique.Police =
+        PoliceHebraique.Police.entries.firstOrNull { it.cle == prefs(context).getString(KEY_LECTURE_POLICE, null) } ?: PoliceHebraique.Police.SERIF
+
+    fun setLecturePolice(context: Context, police: PoliceHebraique.Police) {
+        prefs(context).edit().putString(KEY_LECTURE_POLICE, police.cle).apply()
     }
 
     /** La lecture sur fond noir, choisie d'un toucher sur la lune. */

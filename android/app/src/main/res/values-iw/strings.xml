@@ -386,7 +386,7 @@
     <string name="hero_greeting_afternoon">צהריים טובים, %1$s</string>
     <string name="hero_greeting_evening">ערב טוב, %1$s</string>
     <string name="nav_today">היום</string>
-    <string name="nav_texts">התבודדות</string>
+    <string name="nav_texts">ספרייה</string>
     <string name="nav_journal">יומן</string>
     <string name="section_around">סביב ההתבודדות</string>
     <plurals name="week_gauge">
@@ -564,6 +564,10 @@
     <string name="lecture_nuit">קריאה על רקע שחור</string>
     <string name="lecture_replier">קיפול</string>
     <string name="lecture_masquer">הסתרת הכפתור</string>
+    <string name="lecture_police">גופן הטקסט</string>
+    <string name="police_serif">עברי עם תגים</string>
+    <string name="police_sans">ללא תגים</string>
+    <string name="police_arrondie">מעוגל</string>
     <string name="lecture_masque_info">הכפתור הוסתר. לחיצה ארוכה על הטקסט תחזיר אותו.</string>
     <string name="lecture_annuler_masque">ביטול</string>
     <string name="lecture_taille">גודל הטקסט: %1$d%%</string>

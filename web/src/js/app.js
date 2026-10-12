@@ -650,6 +650,18 @@ function icone(nom) {
 }
 
 /** Un nouveau rendu, puis le doigt (ou le clavier) retrouve le bon bouton. */
+/** La police choisie des textes hébreux (12/10), posée sur toute la page. */
+const POLICES = {
+  serif: '"Hebreu Serif", "Noto Serif Hebrew", "Times New Roman", serif',
+  sans: '"Noto Sans Hebrew", "Arial Hebrew", system-ui, sans-serif',
+  arrondie: '"Varela Round", system-ui, sans-serif',
+};
+function appliquerPolice() {
+  document.documentElement.style.setProperty('--police-texte', POLICES[store.lecturePolice()]);
+  // La taille choisie à la lecture vaut aussi pour les cartes de halakha et de hilloulot.
+  document.documentElement.style.setProperty('--echelle-texte', String(store.lectureEchelle()));
+}
+
 function rendreEtViser(selecteur) {
   rendre();
   app.querySelector(selecteur)?.focus({ preventScroll: true });
@@ -716,6 +728,9 @@ function reglagesLecture({ avecNusah }) {
         new Intl.NumberFormat(tr.langue, { style: 'percent' }).format(pourcent / 100)),
       bouton({ class: 'lettres', lang: 'en', dir: 'ltr', 'aria-label': tl('lecture_plus'), disabled: e >= 2, onclick: () => echelle(e + 0.1) }, 'A+'),
       separateur(),
+      // « אב » : la police suivante (hébraïque à empattements, sans, arrondie), pour tous les textes.
+      bouton({ class: 'lecture-police', lang: 'he', dir: 'rtl', 'aria-label': `${tl('lecture_police')} : ${tl(`police_${store.lecturePolice()}`)}`, title: tl(`police_${store.lecturePolice()}`),
+        onclick: () => { const l = ['serif', 'sans', 'arrondie']; store.setLecturePolice(l[(l.indexOf(store.lecturePolice()) + 1) % l.length]); appliquerPolice(); rendreEtViser('.lecture-police'); } }, 'אב'),
       bouton({ class: 'icone-bouton', 'aria-label': tl('lecture_nuit'), 'aria-pressed': String(nuit), onclick: () => { store.setLectureSombre(!nuit); rendreEtViser('.lecture-barre [aria-pressed]'); } }, icone('lune')),
       avecNusah ? bouton({
         class: 'lecture-nusah-bouton', 'aria-haspopup': 'menu', 'aria-expanded': String(choixNusahOuvert),
@@ -2070,6 +2085,7 @@ function ouvrirRenvoi(depuis, cible) {
 }
 
 function rendre() {
+  appliquerPolice();
   // Une séance arrivée à son terme pendant que le téléphone dormait.
   if (store.isSessionOver()) cloreSeance({ avantTerme: false });
   // Le bravo d'une séance close attend le prochain écran ouvert.

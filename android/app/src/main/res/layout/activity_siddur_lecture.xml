@@ -13,8 +13,8 @@
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:paddingHorizontal="@dimen/edge"
-        android:paddingTop="22dp"
-        android:paddingBottom="18dp">
+        android:paddingTop="12dp"
+        android:paddingBottom="10dp">
 
         <LinearLayout
             android:layout_width="0dp"
@@ -27,32 +27,20 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/white"
-                android:textSize="24sp"
+                android:textSize="20sp"
                 android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/siddur_lecture_subtitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
+                android:layout_marginTop="2dp"
                 android:textColor="?attr/mhMint"
-                android:textSize="14sp" />
+                android:textSize="13sp" />
         </LinearLayout>
 
-        <FrameLayout
-            android:layout_width="64dp"
-            android:layout_height="78dp"
-            android:layout_marginStart="12dp"
-            android:background="@drawable/bg_stage"
-            android:padding="5dp">
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:contentDescription="@null"
-                android:scaleType="fitCenter"
-                android:src="@drawable/char_praying" />
-        </FrameLayout>
+        <!-- Pas d'image ici (12/10) : on ne prie pas devant une image
+             (Choul'han Aroukh, Ora'h 'Haïm 90, 23). -->
     </LinearLayout>
 
     <!-- La bande de signets : une section par signet, de droite à gauche comme

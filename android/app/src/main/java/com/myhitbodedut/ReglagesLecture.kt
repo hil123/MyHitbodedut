@@ -59,7 +59,7 @@ class ReglagesLecture private constructor(
      */
     private val bouton: Int = run {
         val largeur = contexte.resources.displayMetrics.widthPixels / densite
-        val nombre = if (avecNusah) 7 else 6
+        val nombre = if (avecNusah) 8 else 7
         (((largeur - 24 - 48 - 18 - 12) / nombre).toInt()).coerceIn(30, 44)
     }
 
@@ -124,6 +124,17 @@ class ReglagesLecture private constructor(
                 montrerEtat()
                 surChangement()
             }
+        })
+        barre.addView(TextView(contexte).apply {
+            // « אב » : le choix de la police (12/10), en lettres hébraïques puisque c'est elles qu'il change.
+            layoutParams = LinearLayout.LayoutParams(dp(bouton), dp(44))
+            gravity = Gravity.CENTER
+            text = "אב"
+            textSize = 17f
+            setTextColor(surAccent)
+            contentDescription = contexte.getString(R.string.lecture_police)
+            touchable(this)
+            setOnClickListener { choisirPolice(it) }
         })
         if (avecNusah) barre.addView(icone(R.drawable.ic_lecture_nusah, R.string.siddur_choose) { choisirNusah(it) })
         barre.addView(filet())
@@ -216,6 +227,22 @@ class ReglagesLecture private constructor(
         } else null
         if (android.os.Build.VERSION.SDK_INT >= 30) {
             lune.stateDescription = contexte.getString(if (nuit) R.string.lecture_nuit_oui else R.string.lecture_nuit_non)
+        }
+    }
+
+    private fun choisirPolice(ancre: View) {
+        PopupMenu(contexte, ancre).apply {
+            val actuelle = Store.lecturePolice(contexte)
+            PoliceHebraique.Police.entries.forEachIndexed { i, p ->
+                menu.add(0, i, i, contexte.getString(p.libelle)).isChecked = p == actuelle
+            }
+            menu.setGroupCheckable(0, true, true)
+            setOnMenuItemClickListener { item ->
+                Store.setLecturePolice(contexte, PoliceHebraique.Police.entries[item.itemId])
+                surChangement()
+                true
+            }
+            show()
         }
     }
 
@@ -370,6 +397,23 @@ class ReglagesLecture private constructor(
             }
         }
 
+        /**
+         * Les écrans faits de cartes reconstruites (halakha, hilloulot, 12/10) :
+         * chaque texte sous [racine] à sa taille de base fois l'échelle, la
+         * police choisie déjà posée par PoliceHebraique à la construction.
+         */
+        fun retailler(racine: View) {
+            val echelle = Store.lectureEchelle(racine.context)
+            fun parcourir(v: View) {
+                if (v is TextView && v !is android.widget.EditText) {
+                    val base = (v.getTag(R.id.lecture_taille) as? Float) ?: v.textSize.also { v.setTag(R.id.lecture_taille, it) }
+                    v.setTextSize(TypedValue.COMPLEX_UNIT_PX, base * echelle)
+                }
+                if (v is ViewGroup) for (i in 0 until v.childCount) parcourir(v.getChildAt(i))
+            }
+            parcourir(racine)
+        }
+
         /** Marque une vue du texte : son rôle pour les couleurs, et sa taille de base en pixels. */
         fun <V : View> marquer(vue: V, role: Role): V {
             vue.setTag(R.id.lecture_role, role)
@@ -394,7 +438,10 @@ class ReglagesLecture private constructor(
                     // Une vue sans fond (la ScrollView) en reçoit un, la couleur du papier.
                     if (v.background == null) v.setBackgroundColor(Apparence.couleur(v.context, R.color.paper))
                     v.backgroundTintList = if (r.sombre) ColorStateList.valueOf(r.fond) else null
-                } else if (role != null && v is TextView) {
+                } else if (v is TextView && v.getTag(R.id.lecture_police) == true) {
+                    PoliceHebraique.appliquer(v)
+                }
+                if (role != null && role != Role.FOND && v is TextView) {
                     (v.getTag(R.id.lecture_taille) as? Float)?.let { v.setTextSize(TypedValue.COMPLEX_UNIT_PX, it * r.echelle) }
                     (v.getTag(R.id.lecture_interligne) as? Float)?.let { v.setLineSpacing(it * r.echelle, 1f) }
                     v.setTextColor(
