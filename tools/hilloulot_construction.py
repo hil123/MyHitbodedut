@@ -70,6 +70,20 @@ def main():
         if e.get("article") and e.get("description"):
             item["t"], item["w"] = e["description"], e["article"]
             decrits += 1
+    # Plus de détails (12/10) : le début de l'article, jusqu'à six phrases de son
+    # introduction, mot pour mot (API de Wikipédia hébreu, prop=extracts, exintro,
+    # exsentences=6, relevé le 12/10/2026 : tools/hilloulot/extraits_wiki.json).
+    # Il remplace la première phrase quand il en dit plus.
+    fichier = os.path.join(ICI, "hilloulot", "extraits_wiki.json")
+    extraits = json.load(open(fichier, encoding="utf-8")) if os.path.exists(fichier) else {}
+    allonges = 0
+    for liste in jours.values():
+        for item in liste:
+            x = extraits.get(item.get("w") or "")
+            if x and len(x["texte"].strip()) > len(item.get("t", "")):
+                item["t"] = x["texte"].strip()
+                allonges += 1
+    print(f"{allonges} descriptions allongées ;", end=" ")
     sortie = {
         "_meta": {
             "date": "2026-10-11",
