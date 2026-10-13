@@ -17,6 +17,7 @@ object Notifications {
     const val ID_REMINDER = 3
     const val ID_COMPLETED = 4
     const val ID_CELEBRATION = 5
+    const val ID_CHABBAT = 6
 
     fun ensureChannels(context: Context) {
         val manager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager

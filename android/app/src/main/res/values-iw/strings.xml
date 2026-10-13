@@ -870,4 +870,6 @@
     <string name="trophee_sommet">הדרגה הגבוהה ביותר הושגה</string>
     <string name="trophee_vedette">הגביע הכי יפה שלך</string>
     <string name="trophee_vedette_aucune">הגביע הראשון שלך מחכה</string>
+    <string name="chabbat_alerte_titre">שבת בעוד 3 שעות, תתכוננו לכיף!</string>
+    <string name="chabbat_alerte_texte">נשמה כפולה, שמחה כפולה וסעודה כפולה! נסו התבודדות כפולה.</string>
 </resources>

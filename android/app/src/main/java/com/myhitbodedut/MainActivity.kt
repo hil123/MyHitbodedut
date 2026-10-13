@@ -807,6 +807,7 @@ class MainActivity : AppCompatActivity() {
             if (GateStatus.shouldRunService(this)) GateService.start(this) else GateService.stop(this)
         }
         Reminder.reschedule(this)
+        ChabbatAlerte.programmer(this)
     }
 
     // --- Sélecteurs ---------------------------------------------------------

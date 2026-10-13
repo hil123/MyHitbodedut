@@ -890,4 +890,6 @@
     <string name="trophee_sommet">Niveau le plus haut atteint</string>
     <string name="trophee_vedette">Ton plus beau trophée</string>
     <string name="trophee_vedette_aucune">Ton premier trophée t’attend</string>
+    <string name="chabbat_alerte_titre">Chabbat dans 3 h, prépare-toi au kiff !</string>
+    <string name="chabbat_alerte_texte">Double neshama, double simha et double repas ! Tente une double hitbodedout.</string>
 </resources>

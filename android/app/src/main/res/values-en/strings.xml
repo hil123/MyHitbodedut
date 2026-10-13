@@ -844,4 +844,6 @@
     <string name="trophee_sommet">Highest level reached</string>
     <string name="trophee_vedette">Your finest trophy</string>
     <string name="trophee_vedette_aucune">Your first trophy is waiting</string>
+    <string name="chabbat_alerte_titre">Shabbat in 3 hours, get ready to enjoy!</string>
+    <string name="chabbat_alerte_texte">Double neshama, double joy and double meals! Try a double hitbodedut.</string>
 </resources>

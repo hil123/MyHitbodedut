@@ -24,6 +24,7 @@ class BootReceiver : BroadcastReceiver() {
         // est inscrite pour sa durée ; sinon elle reprend si Android le permet.
         SessionService.reconcilier(context)
         Reminder.reschedule(context)
+        ChabbatAlerte.programmer(context)
         StreakWidget.refresh(context)
     }
 

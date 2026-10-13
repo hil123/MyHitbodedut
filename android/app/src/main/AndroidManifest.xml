@@ -224,6 +224,11 @@
             android:name=".ReminderReceiver"
             android:exported="false" />
 
+        <!-- « Chabbat dans 3 h » (13/10). -->
+        <receiver
+            android:name=".ChabbatAlerteReceiver"
+            android:exported="false" />
+
         <!-- La série sur l'écran d'accueil. -->
         <receiver
             android:name=".StreakWidget"
