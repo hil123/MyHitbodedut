@@ -10,7 +10,7 @@ export const MOMENTS = ['ouverture', 'blocage', 'porte', 'relance', 'cloture', '
 /** L'illustration d'un moment (Character.ofMoment) : l'image dit ce qu'on vit. */
 export const ART_DU_MOMENT = {
   ouverture: 'char_open_arms',
-  blocage: 'char_sitting_low',
+  blocage: 'char_praying',
   porte: 'char_pointing',
   relance: 'char_thinking', // plus le personnage qui marche (13/10)
   cloture: 'char_praise',

@@ -242,7 +242,7 @@ public final class MyHitbodedut extends MIDlet implements CommandListener, Minut
         int m = textes.moment("cloture");
         int t = m < 0 ? -1 : textes.tire(m);
         String bilan = minutes > 0 ? "Bravo ! " + Regles.duree(minutes) + " de hitbodedout." : "Moins d'une minute : rien n'est noté.";
-        fin = new Lecture(textes.mot("session_done_title"), minutes > 0 ? Ecran.duJour(Ecran.JOIE, 3) : "sitting_low", bilan,
+        fin = new Lecture(textes.mot("session_done_title"), minutes > 0 ? Ecran.duJour(Ecran.JOIE, 3) : "walking", bilan,
             t < 0 ? null : textes.textes[m][t], t < 0 ? null : textes.refs[m][t]);
         fin.action = new Lecture.Action() {
             public void centre(Lecture l) {

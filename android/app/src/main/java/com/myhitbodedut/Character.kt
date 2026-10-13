@@ -25,7 +25,6 @@ object Character {
         R.drawable.char_arms_raised,
         R.drawable.char_praying,
         R.drawable.char_standing_back,
-        R.drawable.char_sitting_low,
         // Les mains levées, la louange (demande du 13/10).
         R.drawable.char_praise
     )
@@ -64,7 +63,7 @@ object Character {
         // On se présente, les mains ouvertes.
         Moment.OUVERTURE -> R.drawable.char_open_arms
         // Les mots ne viennent pas : assis, en attente.
-        Moment.BLOCAGE -> R.drawable.char_sitting_low
+        Moment.BLOCAGE -> R.drawable.char_praying
         // Sur le pas de la porte, le téléphone à la main.
         Moment.PORTE -> R.drawable.char_pointing
         // Reprendre la route après une rupture.

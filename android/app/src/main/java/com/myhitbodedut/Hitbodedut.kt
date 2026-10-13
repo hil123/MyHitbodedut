@@ -75,7 +75,7 @@ object Hitbodedut {
             "חֲרָטָה וּתְשׁוּבָה עַל הֶעָבָר",
             R.string.hitbodedut_harata,
             R.string.hitbodedut_harata_invite,
-            R.drawable.char_sitting_low,
+            R.drawable.char_thinking,
             SOURCE_LIKOUTEI
         ),
         Mouvement(

@@ -111,7 +111,7 @@ NAMES = [
     "char_welcome", "char_thumbs_up", "char_tehilim", "char_praise",
     "char_writing", "char_thinking", "char_pointing", "char_walking",
     "char_praying", "char_dancing", "char_torah", "char_offering",
-    "char_sitting_low", "char_reading_seated", "char_standing_back", "char_face",
+    "char_reading_seated", "char_standing_back", "char_face",
 ]
 # char_dancing_joy, char_guitar, char_arms_raised et char_open_arms ne viennent
 # pas de la planche et ne sont plus produits ici. (char_arms_raised_guitar a été

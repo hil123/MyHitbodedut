@@ -68,7 +68,7 @@ function duJour(pool, sel) {
   return pool[((jourEpoque % pool.length) + pool.length) % pool.length];
 }
 const APPEL = ['char_praise', 'char_pointing', 'char_walking', 'char_tehilim', 'char_thinking', 'char_welcome', 'char_open_arms'];
-const PENDANT = ['char_arms_raised', 'char_praying', 'char_standing_back', 'char_sitting_low', 'char_praise'];
+const PENDANT = ['char_arms_raised', 'char_praying', 'char_standing_back', 'char_praise'];
 // Au centre de l'anneau : tant que la hitbodedout du jour reste à faire, celui qui accueille (13/10).
 const salutation = (fait) => (fait ? duJour(JOIE, 3) : 'char_welcome');
 const joie = () => duJour(JOIE, 3);

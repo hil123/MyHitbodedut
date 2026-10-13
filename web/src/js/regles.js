@@ -275,7 +275,7 @@ export const SiddurMoment = {
   },
   illustration(id) {
     return {
-      tikoun_hatsot: 'char_sitting_low',
+      tikoun_hatsot: 'char_praying',
       birkot_hachahar: 'char_welcome',
       chaharit: 'char_tefillin',
       minha: 'char_standing_back',

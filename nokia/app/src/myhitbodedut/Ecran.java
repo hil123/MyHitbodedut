@@ -95,7 +95,7 @@ abstract class Ecran extends Canvas {
     /** Le personnage du moment ('hizouk), comme Character.ofMoment. */
     static String duMoment(String moment) {
         if ("ouverture".equals(moment)) return "open_arms";
-        if ("blocage".equals(moment)) return "sitting_low";
+        if ("blocage".equals(moment)) return "praying";
         if ("porte".equals(moment)) return "pointing";
         if ("relance".equals(moment)) return "walking";
         if ("cloture".equals(moment)) return "praise";
@@ -110,7 +110,7 @@ abstract class Ecran extends Canvas {
     }
 
     static final String[] ACCUEIL = {"welcome", "pointing", "praise"};
-    static final String[] PENDANT = {"praying", "standing_back", "sitting_low"};
+    static final String[] PENDANT = {"praying", "standing_back", "praise"};
     static final String[] JOIE = {"dancing_joy", "thumbs_up", "open_arms"};
 
     /** Le bandeau vert du haut ; renvoie sa hauteur. */

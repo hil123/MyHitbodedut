@@ -141,7 +141,7 @@ object SiddurMoment {
 
     /** Le hassid qui accompagne la suggestion, parmi les illustrations de l'application. */
     fun illustration(id: String): Int = when (id) {
-        "tikoun_hatsot" -> R.drawable.char_sitting_low
+        "tikoun_hatsot" -> R.drawable.char_praying
         "birkot_hachahar" -> R.drawable.char_welcome
         // Les tefillin et le lit (planche du 11/10).
         "chaharit" -> R.drawable.char_tefillin
