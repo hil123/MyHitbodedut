@@ -20,6 +20,8 @@
     <color name="brand">#16775A</color>
     <color name="brand_dark">#173C32</color>
     <color name="mint">#DFF5E8</color>
+    <!-- L'écran d'ouverture : la menthe du fond de l'icône, pour qu'aucune forme ne se détache (13/10). -->
+    <color name="ouverture">#DFF5E8</color>
     <color name="warning">#A8561F</color>
     <color name="ink">#172B27</color>
     <color name="muted">#5E706A</color>
