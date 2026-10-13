@@ -50,6 +50,10 @@ class SiddurActivity : AppCompatActivity() {
         val lieu = Store.lieuZmanim(this)
         val moment = if (lieu != null) JourAffiche.momentDuSiddour(lieu, java.time.Instant.now()) else SiddurMoment.suggestion(LocalTime.now())
         moment?.let(siddur::texte)?.let { liste.addView(maintenant(it, langue)) }
+        // 'Hanouka (13/10) : le Hallel du jour, avec la scène de 'Hanouka, sous la prière du matin.
+        if (moment == "chaharit" && "hanouka" in CalendrierJuif.jour(java.time.LocalDate.now(), Store.inIsrael(this)).fetes) {
+            siddur.texte("hallel")?.let { liste.addView(maintenant(it, langue, R.drawable.scene_hanukkah)) }
+        }
 
         liste.addView(entete(getString(R.string.siddur_books), null))
         liste.addView(LinearLayout(this).apply {
@@ -131,7 +135,7 @@ class SiddurActivity : AppCompatActivity() {
     }
 
     /** La suggestion de l'heure : le hassid, l'heure dite en clair, le texte. */
-    private fun maintenant(texte: SiddurTexte, langue: String): View = LinearLayout(this).apply {
+    private fun maintenant(texte: SiddurTexte, langue: String, image: Int = SiddurMoment.illustration(texte.id)): View = LinearLayout(this).apply {
         orientation = LinearLayout.HORIZONTAL
         gravity = Gravity.CENTER_VERTICAL
         setBackgroundResource(R.drawable.bg_card)
@@ -140,7 +144,7 @@ class SiddurActivity : AppCompatActivity() {
         setPadding(dp(14), dp(14), dp(18), dp(14))
         ondulation(this)
         setOnClickListener { SiddurLectureActivity.ouvrir(this@SiddurActivity, texte.id) }
-        addView(scene(SiddurMoment.illustration(texte.id), 72, 86))
+        addView(scene(image, 72, 86))
         addView(LinearLayout(context).apply {
             orientation = LinearLayout.VERTICAL
             layoutParams = LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f).apply { marginStart = dp(16) }

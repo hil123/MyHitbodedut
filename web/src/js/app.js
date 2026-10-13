@@ -878,10 +878,10 @@ function choisirNusah() {
 }
 
 /** La suggestion de l'heure : le hassid, l'heure dite en clair, le texte. */
-function carteMaintenant(x) {
+function carteMaintenant(x, dessin = SiddurMoment.illustration(x.id)) {
   const traduction = titreTexte(x.titre) !== x.titre.he ? titreTexte(x.titre) : null;
   return h('button', { class: 'maintenant', onclick: () => { priere = x.id; ouvrir('priere'); } },
-    plateau(SiddurMoment.illustration(x.id), 'plateau-maintenant'),
+    plateau(dessin, 'plateau-maintenant'),
     h('span', { class: 'maintenant-corps' },
       h('span', { class: 'maintenant-libelle' }, tr.t('siddur_maintenant')),
       h('span', { class: 'maintenant-he', lang: 'he', dir: 'rtl' }, x.titre.he),
@@ -909,12 +909,16 @@ function ecranSiddur() {
   // Avec un lieu, la suggestion suit ses zmanim ; sans lieu, les heures fixes.
   const moment = store.lieu() ? momentDuSiddour(store.lieu(), heure) : SiddurMoment.suggestion(heure.getHours(), heure.getMinutes());
   const suggere = pret && moment ? siddur.textes.find((x) => x.id === moment) : null;
+  // 'Hanouka (13/10) : le Hallel du jour, avec la scène de 'Hanouka, sous la prière du matin.
+  const hallelHanouka = pret && moment === 'chaharit' && jourJuif(isoLocal(heure), store.inIsrael()).fetes.includes('hanouka')
+    ? siddur.textes.find((x) => x.id === 'hallel') : null;
   const puce = h('button', {
     type: 'button', class: 'puce-bandeau', 'aria-haspopup': 'dialog', 'aria-label': `${tr.t('siddur_choose')} : ${nomNusah}`, onclick: choisirNusah,
   }, h('span', {}, nomNusah), icone('replier'));
   return h('div', { class: 'ecran avec-bandeau' }, bandeau(tr.t('siddur_title'), { puce, dessin: 'char_praying' }),
     h('div', { class: 'defile' }, h('div', { class: 'contenu liste-siddour' },
       suggere ? carteMaintenant(suggere) : null,
+      hallelHanouka ? carteMaintenant(hallelHanouka, 'scene_hanukkah') : null,
       enteteGroupe(tr.t('siddur_books'), null),
       h('div', { class: 'livres' },
         tuileLivre(tr.t('siddur_tehilim_he'), tr.t('tehilim_title'), 'char_tehilim', () => ouvrir('tehilim')),
