@@ -9,14 +9,6 @@ import java.time.LocalDate
  */
 object Character {
 
-    /** Accueil, quand la pratique du jour reste à faire. */
-    private val GREETING = intArrayOf(
-        R.drawable.char_welcome,
-        R.drawable.char_offering,
-        R.drawable.char_pointing,
-        R.drawable.char_praise
-    )
-
     /** Appel à la pratique, sur l'écran de garde. */
     private val CALL = intArrayOf(
         R.drawable.char_praise,
@@ -81,7 +73,8 @@ object Character {
         Moment.LIEU -> R.drawable.scene_nature
     }
 
-    fun greeting(done: Boolean): Int = if (done) ofDay(JOY, 3) else ofDay(GREETING, 0)
+    /** Au centre de l'anneau : tant que la hitbodedout du jour reste à faire, celui qui accueille (13/10). */
+    fun greeting(done: Boolean): Int = if (done) ofDay(JOY, 3) else R.drawable.char_welcome
 
     fun call(): Int = ofDay(CALL, 1)
 

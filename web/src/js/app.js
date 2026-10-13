@@ -61,7 +61,6 @@ function s(tag, attrs = {}) {
 const SUJETS = ['emotions', 'gratitude', 'decisions', 'famille', 'zivoug', 'parnassa', 'avoda', 'difficultes', 'croissance', 'autre'];
 
 // --- Le hassid (Character.kt) : stable sur une journée, change le lendemain -------
-const ACCUEIL = ['char_welcome', 'char_offering', 'char_pointing', 'char_praise'];
 const JOIE = ['char_dancing_joy', 'char_dancing', 'char_guitar', 'char_thumbs_up', 'char_open_arms'];
 function duJour(pool, sel) {
   const [a, m, j] = store.today().split('-').map(Number);
@@ -70,7 +69,8 @@ function duJour(pool, sel) {
 }
 const APPEL = ['char_praise', 'char_pointing', 'char_walking', 'char_tehilim', 'char_thinking', 'char_welcome', 'char_open_arms'];
 const PENDANT = ['char_arms_raised', 'char_praying', 'char_standing_back', 'char_sitting_low'];
-const salutation = (fait) => (fait ? duJour(JOIE, 3) : duJour(ACCUEIL, 0));
+// Au centre de l'anneau : tant que la hitbodedout du jour reste à faire, celui qui accueille (13/10).
+const salutation = (fait) => (fait ? duJour(JOIE, 3) : 'char_welcome');
 const joie = () => duJour(JOIE, 3);
 const appel = () => duJour(APPEL, 1);
 const pendant = () => duJour(PENDANT, 2);
