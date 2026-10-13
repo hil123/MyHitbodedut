@@ -30,19 +30,23 @@ class LibraryActivity : AppCompatActivity() {
         data class Livre(val texte: SiddurTexte) : Row
     }
 
+    /** Les livres entiers (onglet Bibliothèque, 13/10), ou les sources de la hitbodedout. */
+    private val livresSeuls: Boolean by lazy { intent.getBooleanExtra(EXTRA_LIVRES, false) }
+
     private val rows: List<Row> by lazy {
-        val livres = Data.livres(this)
-        livres.groupes.flatMap { g -> listOf(Row.TitreLivres(g.titre)) + livres.du(g.cle).map { Row.Livre(it) } } +
-            Data.library(this).sections.flatMap { section ->
-                listOf(Row.Header(section)) + section.sousSections.map { Row.Sub(it) }
-            }
+        if (livresSeuls) {
+            val livres = Data.livres(this)
+            livres.groupes.flatMap { g -> listOf(Row.TitreLivres(g.titre)) + livres.du(g.cle).map { Row.Livre(it) } }
+        } else Data.library(this).sections.flatMap { section ->
+            listOf(Row.Header(section)) + section.sousSections.map { Row.Sub(it) }
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_library)
-        findViewById<TextView>(R.id.library_title).setText(R.string.library_title)
-        findViewById<TextView>(R.id.library_subtitle).setText(R.string.library_hint)
+        findViewById<TextView>(R.id.library_title).setText(if (livresSeuls) R.string.livres_title else R.string.library_title)
+        findViewById<TextView>(R.id.library_subtitle).setText(if (livresSeuls) R.string.livres_hint else R.string.library_hint)
         findViewById<ImageView>(R.id.library_art).setImageResource(Character.STUDY)
         findViewById<RecyclerView>(R.id.library_list).apply {
             layoutManager = LinearLayoutManager(this@LibraryActivity)
@@ -121,8 +125,10 @@ class LibraryActivity : AppCompatActivity() {
         }
     }
 
-    private companion object {
-        const val TYPE_HEADER = 0
-        const val TYPE_SUB = 1
+    companion object {
+        /** true : les livres entiers seulement ; sinon les sources de la hitbodedout. */
+        const val EXTRA_LIVRES = "livres"
+        private const val TYPE_HEADER = 0
+        private const val TYPE_SUB = 1
     }
 }

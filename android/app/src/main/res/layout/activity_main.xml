@@ -432,6 +432,28 @@
 
                         <ImageView style="@style/SectionChevron" />
                     </LinearLayout>
+                    <!-- Les livres entiers : Likoutei Moharan, les méguilot … (13/10). -->
+                    <LinearLayout
+                        android:id="@+id/livres_button"
+                        style="@style/SectionRow">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                style="@style/SettingLabelStacked"
+                                android:text="@string/livres_title" />
+
+                            <TextView
+                                style="@style/SectionState"
+                                android:text="@string/livres_hint" />
+                        </LinearLayout>
+
+                        <ImageView style="@style/SectionChevron" />
+                    </LinearLayout>
                     <LinearLayout
                         android:id="@+id/library_button"
                         style="@style/SectionRow">

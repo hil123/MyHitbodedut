@@ -193,6 +193,9 @@ class MainActivity : AppCompatActivity() {
         findViewById<View>(R.id.tefilot_button).setOnClickListener {
             startActivity(Intent(this, TefilotActivity::class.java))
         }
+        findViewById<View>(R.id.livres_button).setOnClickListener {
+            startActivity(Intent(this, LibraryActivity::class.java).putExtra(LibraryActivity.EXTRA_LIVRES, true))
+        }
         findViewById<View>(R.id.library_button).setOnClickListener {
             startActivity(Intent(this, LibraryActivity::class.java))
         }

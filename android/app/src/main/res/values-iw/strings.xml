@@ -290,8 +290,8 @@
     <string name="chizuk_stuck">המילים לא באות לי</string>
 
     <!-- Point 5 : bibliothèque -->
-    <string name="library_title">ספרייה</string>
-    <string name="library_hint">מקורות ההתבודדות, ומה שנכתב עליה.</string>
+    <string name="library_title">מקורות התבודדות</string>
+    <string name="library_hint">מה שנכתב עליה, מן המקורות ועד היום.</string>
     <string name="library_entries_count">%1$d ערכים</string>
     <plurals name="livre_chapitres">
         <item quantity="one">פרק אחד</item>
@@ -872,4 +872,7 @@
     <string name="trophee_vedette_aucune">הגביע הראשון שלך מחכה</string>
     <string name="chabbat_alerte_titre">שבת בעוד 3 שעות, תתכוננו לכיף!</string>
     <string name="chabbat_alerte_texte">נשמה כפולה, שמחה כפולה וסעודה כפולה! נסו התבודדות כפולה.</string>
+    <!-- L’onglet Bibliothèque : les livres entiers (13/10) -->
+    <string name="livres_title">ספרים</string>
+    <string name="livres_hint">ליקוטי מוהר״ן, השתפכות הנפש, כוכבי אור, מגילות, פרק שירה, נשמת כל חי…</string>
 </resources>

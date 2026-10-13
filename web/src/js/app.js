@@ -938,7 +938,7 @@ function ecranSiddur() {
 function ecranPriere() {
   // Un livre de la bibliothèque (« livre:likoutei_etsot », 12/10) se lit comme une prière, sans nusah ni ajouts.
   const livre = priere?.startsWith('livre:') ?? false;
-  if (livre ? !chargeLivres() : !chargeSiddur()) return h('div', { class: 'ecran' }, barre(tr.t(livre ? 'library_title' : 'siddur_title')), h('div', { class: 'defile' }));
+  if (livre ? !chargeLivres() : !chargeSiddur()) return h('div', { class: 'ecran' }, barre(tr.t(livre ? 'livres_title' : 'siddur_title')), h('div', { class: 'defile' }));
   const recueil = livre ? livres : siddur;
   const x = recueil.textes.find((y) => y.id === (livre ? priere.slice(6) : priere));
   // Rouvert directement sur #priere, sans texte choisi : la liste.
@@ -1124,19 +1124,26 @@ function chargeBibliotheque() {
   return false;
 }
 
-function ecranBibliotheque() {
-  const pret = chargeBibliotheque();
+/** Les livres entiers (onglet Bibliothèque, 13/10) : Likoutei Moharan, les méguilot … */
+function ecranLivres() {
   const livresPrets = chargeLivres();
   return h('div', { class: 'ecran avec-bandeau' },
-    bandeau(tr.t('library_title'), { puce: h('p', { class: 'bandeau-sous-titre' }, tr.t('library_hint')), dessin: 'char_torah' }),
+    bandeau(tr.t('livres_title'), { puce: h('p', { class: 'bandeau-sous-titre' }, tr.t('livres_hint')), dessin: 'char_torah' }),
     h('div', { class: 'defile' }, h('div', { class: 'contenu liste-siddour' },
-      // Les livres entiers (12/10) : Likoutei Etsot, Sefer HaMiddot.
       ...(livresPrets ? livres.groupes.flatMap((g) => [
         enteteGroupe(g.titre.he, titreTexte(g.titre)),
         h('div', { class: 'carte carte-sections' }, livres.textes.filter((x) => x.groupe === g.cle).map((x) =>
           ligneHebreu(x.titre.he, [titreTexte(x.titre) !== x.titre.he ? titreTexte(x.titre) : null, tr.p('livre_chapitres', x.sections.length)].filter(Boolean).join(' · '),
             () => { priere = `livre:${x.id}`; ouvrir('priere'); }))),
-      ]) : []),
+      ]) : []))));
+}
+
+/** Les sources de la hitbodedout. */
+function ecranBibliotheque() {
+  const pret = chargeBibliotheque();
+  return h('div', { class: 'ecran avec-bandeau' },
+    bandeau(tr.t('library_title'), { puce: h('p', { class: 'bandeau-sous-titre' }, tr.t('library_hint')), dessin: 'char_torah' }),
+    h('div', { class: 'defile' }, h('div', { class: 'contenu liste-siddour' },
       ...(pret ? LibraryRules.sources(bibliotheque).flatMap((section) => [
         enteteGroupe(section.titre.he, titreTexte(section.titre)),
         ...section.sous_sections.flatMap((sous) => [
@@ -1177,7 +1184,8 @@ function panneauTextes() {
       ligne({ nom: tr.t('tikkun_title'), etat: etatTikkun(), onclick: () => ouvrir('tikkun') }),
       // Les textes arrivent à l'étape 4.
       ligne({ nom: tr.t('tefilot_title'), etat: tr.t('tefilot_hint'), aVenir: true }),
-      // La bibliothèque : ses sources, lisibles (04/10) ; les articles attendent.
+      // Les livres entiers (13/10), puis les sources de la hitbodedout.
+      ligne({ nom: tr.t('livres_title'), etat: tr.t('livres_hint'), onclick: () => ouvrir('livres') }),
       ligne({ nom: tr.t('library_title'), etat: tr.t('library_hint'), onclick: () => ouvrir('bibliotheque') }),
       ligne({ nom: tr.t('tips_title'), etat: tr.t('tips_hint'), aVenir: true })),
     h('h2', { class: 'section' }, tr.t('section_around')),
@@ -2208,7 +2216,7 @@ function arreteDanse() {
 // et le geste de retour ramènent à l'accueil, sur l'onglet quitté.
 function ecranCourant() {
   const e = location.hash.slice(1);
-  return ['musique', 'reglages', 'seance', 'bravo', 'tehilim', 'lecture', 'siddur', 'priere', 'tikkun', 'bibliotheque', 'source', 'zmanim', 'calendrier', 'paliers', 'hilloulot', 'halakha'].includes(e) ? e : 'accueil';
+  return ['musique', 'reglages', 'seance', 'bravo', 'tehilim', 'lecture', 'siddur', 'priere', 'tikkun', 'bibliotheque', 'livres', 'source', 'zmanim', 'calendrier', 'paliers', 'hilloulot', 'halakha'].includes(e) ? e : 'accueil';
 }
 function ouvrir(ecran) {
   // L'entrée sur l'écran de séance tire le mot d'ouverture (SessionActivity.onCreate).
@@ -2276,6 +2284,7 @@ function rendre() {
   else if (ecran === 'priere') app.append(ecranPriere());
   else if (ecran === 'tikkun') app.append(ecranTikkun());
   else if (ecran === 'bibliotheque') app.append(ecranBibliotheque());
+  else if (ecran === 'livres') app.append(ecranLivres());
   else if (ecran === 'source') app.append(ecranSource());
   else {
     app.append(h('div', { class: 'ecran avec-onglets' },

@@ -360,8 +360,8 @@
     <string name="chizuk_stuck">Je n’arrive pas à parler</string>
 
     <!-- Point 5 : bibliothèque -->
-    <string name="library_title">Bibliothèque</string>
-    <string name="library_hint">Les sources de la hitbodedout, et ce qu’on en écrit.</string>
+    <string name="library_title">Sources de la hitbodedout</string>
+    <string name="library_hint">Ce qu’on en a écrit, des sources à aujourd’hui.</string>
     <string name="library_entries_count">%1$d entrées</string>
     <plurals name="livre_chapitres">
         <item quantity="one">%1$d chapitre</item>
@@ -892,4 +892,7 @@
     <string name="trophee_vedette_aucune">Ton premier trophée t’attend</string>
     <string name="chabbat_alerte_titre">Chabbat dans 3 h, prépare-toi au kiff !</string>
     <string name="chabbat_alerte_texte">Double neshama, double simha et double repas ! Tente une double hitbodedout.</string>
+    <!-- L’onglet Bibliothèque : les livres entiers (13/10) -->
+    <string name="livres_title">Livres</string>
+    <string name="livres_hint">Likoutei Moharan, Hichtapkhout HaNefech, Kokhvei Or, méguilot, Perek Chira, Nichmat…</string>
 </resources>
