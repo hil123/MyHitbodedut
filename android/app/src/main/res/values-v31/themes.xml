@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Android 12 et plus : l'écran d'ouverture du système, l'icône (le visage) sur le papier. -->
+    <style name="Theme.MyHitbodedut.Ouverture" parent="Theme.MyHitbodedut">
+        <item name="android:windowBackground">@drawable/fond_ouverture</item>
+        <item name="android:windowSplashScreenBackground">@color/paper</item>
+        <item name="android:windowSplashScreenAnimatedIcon">@mipmap/ic_launcher</item>
+    </style>
+</resources>

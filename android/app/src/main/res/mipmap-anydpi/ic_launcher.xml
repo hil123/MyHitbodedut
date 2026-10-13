@@ -1,22 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-    L'icone de lancement.
-
-    Le fond est clair, et ce n'est pas un choix esthetique : le detourage du
-    visage est dechire. Une frange de fond blanc est restee collee a toute la
-    silhouette — le long des papillotes, du haut de la kippa, des epaules. Sur
-    le vert fonce d'origine elle se lisait comme une dechirure blanche autour
-    du personnage, ce qui etait le defaut signale.
-
-    Elle ne peut pas etre recoupee : sa luminance mediane est 242, celle de la
-    chemise 246 et celle de la kippa 237. Aucun seuil ne les separe, et un
-    seuil qui mangerait la frange mangerait le vetement. L'information est
-    perdue dans l'image livree.
-
-    Sur la menthe de l'application — la meme plaque qui porte les
-    illustrations partout ailleurs — la frange est du blanc sur du presque
-    blanc : invisible. C'est pour cela que le fond doit rester clair, et un
-    test le rappelle a qui voudrait y remettre du vert fonce.
+    L'icone de lancement : le visage du personnage (char_face, detoure net), en
+    buste jusqu'au bord bas, sur la menthe de l'application (13/10).
+    Le fond reste clair : le test LauncherIconTest le garde.
 -->
 <adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
     <background android:drawable="@color/mint" />

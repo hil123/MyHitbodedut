@@ -243,4 +243,10 @@
         <item name="android:background">?attr/mhLine</item>
     </style>
 
+
+    <!-- L'écran d'ouverture (13/10) : le visage pendant trois secondes, au démarrage
+         seulement (MainActivity retient le premier dessin). -->
+    <style name="Theme.MyHitbodedut.Ouverture" parent="Theme.MyHitbodedut">
+        <item name="android:windowBackground">@drawable/fond_ouverture</item>
+    </style>
 </resources>

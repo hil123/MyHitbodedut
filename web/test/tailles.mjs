@@ -115,6 +115,8 @@ async function verifie(langue, mode, [taille, largeur, hauteur], e) {
   const prefs = JSON.stringify({ langue_app: langue, apparence_mode: mode, music_enabled: false, ...e.prefs });
   const journal = JSON.stringify({ days: { ...JOURNAL, ...e.journal } });
   await page.addInitScript(({ journal, prefs, maintenant }) => {
+    // Sans l'écran d'ouverture (13/10), qui couvrirait la capture trois secondes.
+    try { sessionStorage.setItem('ouverture-vue', '1'); } catch { /* rien */ }
     const Vrai = Date;
     const decalage = maintenant - Vrai.now();
     globalThis.Date = class extends Vrai {

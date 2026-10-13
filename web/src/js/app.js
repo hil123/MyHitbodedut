@@ -2320,3 +2320,15 @@ if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('sw.js').catch(() => {});
 }
 demarrer();
+
+// L'écran d'ouverture (13/10) : le visage trois secondes au démarrage, puis un fondu ;
+// une seule fois par session (un rechargement ne le rejoue pas).
+{
+  const ouverture = document.getElementById('ouverture');
+  let deja = false;
+  try { deja = sessionStorage.getItem('ouverture-vue') === '1'; sessionStorage.setItem('ouverture-vue', '1'); } catch { /* stockage refusé : on le montre */ }
+  if (ouverture) {
+    if (deja) ouverture.remove();
+    else setTimeout(() => { ouverture.classList.add('fin'); setTimeout(() => ouverture.remove(), 450); }, 3000);
+  }
+}

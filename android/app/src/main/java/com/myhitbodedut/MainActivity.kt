@@ -3,7 +3,9 @@ package com.myhitbodedut
 import android.content.Intent
 import android.graphics.Typeface
 import android.os.Bundle
+import android.os.SystemClock
 import android.view.HapticFeedbackConstants
+import android.view.ViewTreeObserver
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
@@ -25,6 +27,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        ouverture(savedInstanceState == null)
         Notifications.ensureChannels(this)
         // Recopie la langue choisie pour les services réveillés seuls (LangueApp).
         LangueApp.retenir(this)
@@ -808,7 +811,35 @@ class MainActivity : AppCompatActivity() {
 
     // --- Sélecteurs ---------------------------------------------------------
 
+    /**
+     * L'écran d'ouverture (demande du 13/10) : le visage pendant trois secondes, au
+     * démarrage seulement. Le premier dessin est retenu ; le système garde son écran
+     * d'ouverture (Android 12 et plus) ou le fond du thème (avant) jusque-là.
+     */
+    private fun ouverture(demarrage: Boolean) {
+        if (!demarrage) {
+            window.setBackgroundDrawableResource(R.color.paper)
+            return
+        }
+        val debut = SystemClock.uptimeMillis()
+        val contenu = findViewById<View>(android.R.id.content)
+        contenu.viewTreeObserver.addOnPreDrawListener(object : ViewTreeObserver.OnPreDrawListener {
+            override fun onPreDraw(): Boolean {
+                if (SystemClock.uptimeMillis() - debut < OUVERTURE_MS) {
+                    contenu.postDelayed({ contenu.invalidate() }, 100)
+                    return false
+                }
+                contenu.viewTreeObserver.removeOnPreDrawListener(this)
+                window.setBackgroundDrawableResource(R.color.paper)
+                return true
+            }
+        })
+    }
+
     companion object {
+        /** La durée de l'écran d'ouverture. */
+        const val OUVERTURE_MS = 3000L
+
         /** Le jour de la séance dont la note est proposée (AAAA-MM-JJ). */
         const val EXTRA_ASK_NOTE = "ask_note"
 

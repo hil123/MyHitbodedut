@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- L'écran d'ouverture (13/10) : le visage du personnage au centre, sur le papier.
+     Sous Android 12 et plus, le système montre l'icône ; ce fond sert avant. -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@color/paper" />
+    <item
+        android:width="200dp"
+        android:height="275dp"
+        android:gravity="center"
+        android:drawable="@drawable/char_face" />
+</layer-list>

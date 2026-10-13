@@ -52,6 +52,8 @@ async function capture(nom, { langue, mode = 'clair', fond = 'vert', accent = 'v
     ...(adresse ? { adresse } : {}),
   });
   await page.addInitScript(({ donnees, prefs, maintenant }) => {
+    // Sans l'écran d'ouverture (13/10), qui couvrirait la capture trois secondes.
+    try { sessionStorage.setItem('ouverture-vue', '1'); } catch { /* rien */ }
     // L'horloge figée : la même semaine à chaque capture.
     const Vrai = Date;
     const decalage = maintenant - Vrai.now();
