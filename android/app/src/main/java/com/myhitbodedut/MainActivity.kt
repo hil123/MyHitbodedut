@@ -817,12 +817,14 @@ class MainActivity : AppCompatActivity() {
      * d'ouverture (Android 12 et plus) ou le fond du thème (avant) jusque-là.
      */
     private fun ouverture(demarrage: Boolean) {
+        // Le fond du thème (la palette choisie) remplace le visage une fois l'écran dessiné.
+        val fond = android.util.TypedValue().also { theme.resolveAttribute(android.R.attr.colorBackground, it, true) }.data
         if (!demarrage) {
-            window.setBackgroundDrawableResource(R.color.paper)
+            window.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(fond))
             return
         }
         val debut = SystemClock.uptimeMillis()
-        val contenu = findViewById<View>(android.R.id.content)
+        val contenu = window.decorView
         contenu.viewTreeObserver.addOnPreDrawListener(object : ViewTreeObserver.OnPreDrawListener {
             override fun onPreDraw(): Boolean {
                 if (SystemClock.uptimeMillis() - debut < OUVERTURE_MS) {
@@ -830,7 +832,7 @@ class MainActivity : AppCompatActivity() {
                     return false
                 }
                 contenu.viewTreeObserver.removeOnPreDrawListener(this)
-                window.setBackgroundDrawableResource(R.color.paper)
+                window.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(fond))
                 return true
             }
         })
