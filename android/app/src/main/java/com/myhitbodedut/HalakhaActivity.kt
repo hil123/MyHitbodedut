@@ -78,9 +78,11 @@ class HalakhaActivity : AppCompatActivity() {
         liste.removeAllViews()
         val livre = Halakha.livre(this)
         if (recherche.trim().length >= 2) {
+            val yy = YalkutYosef.recherche(YalkutYosef.livre(this), recherche)
             val trouves = Halakha.recherche(livre, recherche)
-            liste.addView(VueJour.texte(this, getString(R.string.hilloulot_resultats, trouves.size), 14f, R.color.muted, gras = true, haut = 14))
-            trouves.take(40).forEach { liste.addView(carte(it)) }
+            liste.addView(VueJour.texte(this, getString(R.string.hilloulot_resultats, yy.size + trouves.size), 14f, R.color.muted, gras = true, haut = 14))
+            yy.take(40).forEach { liste.addView(carte(YalkutYosef.source(it), it.texte)) }
+            trouves.take(40).forEach { liste.addView(carte(source(it), it.texte)) }
             return
         }
         val israel = Store.inIsrael(this)
@@ -102,9 +104,14 @@ class HalakhaActivity : AppCompatActivity() {
             })
             addView(fleche(if (rtl) "‹" else "›") { jour = jour.plusDays(1); afficher() })
         })
+        // Le Yalkut Yosef d'abord (13/10), deux halakhot courtes ; puis le Ben Ish 'Haï de la semaine.
+        val yy = YalkutYosef.pour(YalkutYosef.livre(this), jour, israel)
+        yy.forEach { liste.addView(carte(YalkutYosef.source(it), it.texte)) }
         val du = Halakha.pour(livre, jour, israel)
-        if (du.isEmpty()) liste.addView(VueJour.texte(this, getString(R.string.halakha_aucune), 15f, R.color.muted, haut = 14).apply { gravity = Gravity.CENTER })
-        du.forEach { liste.addView(carte(it)) }
+        if (yy.isEmpty() && du.isEmpty()) liste.addView(VueJour.texte(this, getString(R.string.halakha_aucune), 15f, R.color.muted, haut = 14).apply { gravity = Gravity.CENTER })
+        if (du.isNotEmpty()) liste.addView(VueJour.texte(this, getString(R.string.halakha_ben_ish_hai), 14f, R.color.muted, gras = true, haut = 18))
+        du.forEach { liste.addView(carte(source(it), it.texte)) }
+        liste.addView(VueJour.texte(this, getString(R.string.halakha_yalkut_source), 12f, R.color.muted, haut = 14).apply { gravity = Gravity.CENTER })
         liste.addView(VueJour.texte(this, getString(R.string.halakha_note), 12f, R.color.muted, haut = 14).apply { gravity = Gravity.CENTER })
         // Le site de Rav Ovadia Yossef : un lien seulement (tous droits réservés sur ses textes).
         liste.addView(VueJour.texte(this, getString(R.string.halakha_yomit_lien) + " ↗", 15f, R.color.brand, gras = true, haut = 10).apply {
@@ -114,11 +121,11 @@ class HalakhaActivity : AppCompatActivity() {
         })
     }
 
-    private fun carte(h: Halakha.Choisie) = VueJour.carte(this).apply {
-        addView(VueJour.texte(context, source(h), 13f, R.color.brand, gras = true).apply {
+    private fun carte(titre: String, texte: String) = VueJour.carte(this).apply {
+        addView(VueJour.texte(context, titre, 13f, R.color.brand, gras = true).apply {
             textDirection = View.TEXT_DIRECTION_RTL; PoliceHebraique.appliquer(this)
         })
-        addView(VueJour.texte(context, h.texte, 18f, R.color.ink, haut = 8).apply {
+        addView(VueJour.texte(context, texte, 18f, R.color.ink, haut = 8).apply {
             textDirection = View.TEXT_DIRECTION_RTL
             PoliceHebraique.appliquer(this)
             setLineSpacing(0f, 1.4f)

@@ -15,6 +15,7 @@ import * as Paliers from './paliers.js';
 import * as Trophees from './trophees.js';
 import { FORMES } from './trophees-formes.js';
 import { pour as halakhotPour, recherche as rechercheHalakha, source as sourceHalakha } from './halakha.js';
+import { pour as yalkutPour, recherche as rechercheYalkut, source as sourceYalkut } from './yalkut.js';
 import { ajouts as ajoutsDuJour, dateHilloula, debutMoisHebreu, hilloulotPour, lienArticle, rechercheHilloula, horaires, illustration as illustrationDuJour, lienHalakha, lienHyomi, momentDuSiddour, moisHebreuVoisin, semaines, semainesHebreu } from './jour-affiche.js';
 import { ALLUMAGES, heure as heureZman } from './zmanim.js';
 
@@ -878,9 +879,9 @@ function choisirNusah() {
 }
 
 /** La suggestion de l'heure : le hassid, l'heure dite en clair, le texte. */
-function carteMaintenant(x, dessin = SiddurMoment.illustration(x.id)) {
+function carteMaintenant(x, dessin = SiddurMoment.illustration(x.id), action = () => { priere = x.id; ouvrir('priere'); }) {
   const traduction = titreTexte(x.titre) !== x.titre.he ? titreTexte(x.titre) : null;
-  return h('button', { class: 'maintenant', onclick: () => { priere = x.id; ouvrir('priere'); } },
+  return h('button', { class: 'maintenant', onclick: action },
     plateau(dessin, 'plateau-maintenant'),
     h('span', { class: 'maintenant-corps' },
       h('span', { class: 'maintenant-libelle' }, tr.t('siddur_maintenant')),
@@ -912,6 +913,9 @@ function ecranSiddur() {
   // 'Hanouka (13/10) : le Hallel du jour, avec la scène de 'Hanouka, sous la prière du matin.
   const hallelHanouka = pret && moment === 'chaharit' && jourJuif(isoLocal(heure), store.inIsrael()).fetes.includes('hanouka')
     ? siddur.textes.find((x) => x.id === 'hallel') : null;
+  // Pourim (13/10) : la Méguila sous Arvit (la nuit qui ouvre Pourim) et sous Cha'harit (SiddurMoment.megila).
+  // Les livres (7 Mo) ne se chargent que les jours de Méguila.
+  const esther = megilaDuMoment(moment, isoLocal(heure)) && chargeLivres() ? livres.textes.find((x) => x.id === 'meguilat_esther') : null;
   const puce = h('button', {
     type: 'button', class: 'puce-bandeau', 'aria-haspopup': 'dialog', 'aria-label': `${tr.t('siddur_choose')} : ${nomNusah}`, onclick: choisirNusah,
   }, h('span', {}, nomNusah), icone('replier'));
@@ -919,6 +923,7 @@ function ecranSiddur() {
     h('div', { class: 'defile' }, h('div', { class: 'contenu liste-siddour' },
       suggere ? carteMaintenant(suggere) : null,
       hallelHanouka ? carteMaintenant(hallelHanouka, 'scene_hanukkah') : null,
+      esther ? carteMaintenant(esther, 'char_purim', () => { priere = `livre:${esther.id}`; ouvrir('priere'); }) : null,
       enteteGroupe(tr.t('siddur_books'), null),
       h('div', { class: 'livres' },
         tuileLivre(tr.t('siddur_tehilim_he'), tr.t('tehilim_title'), 'char_tehilim', () => ouvrir('tehilim')),
@@ -1317,8 +1322,19 @@ function choisirAllumage() {
     ALLUMAGES.indexOf(store.allumage()), (i) => { store.setAllumage(ALLUMAGES[i]); rendre(); });
 }
 
-/** Jérusalem choisie : Pourim le 15 Adar (CalendrierJuif.jour, Store.mukafChoma). */
-const mukafChoma = () => store.lieu()?.ville === JERUSALEM_GEONAMES;
+/** Jérusalem choisie, ou une ville murée depuis Yehoshoua bin Noun (13/10) : Pourim le 15 Adar (Store.mukafChoma). */
+const mukafChoma = () => store.lieu()?.ville === JERUSALEM_GEONAMES || store.villeMuree();
+
+/** La Méguila avec la prière : sous Arvit, le jour hébreu de demain ; sous Cha'harit, aujourd'hui (SiddurMoment.megila). */
+function megilaDuMoment(moment, iso) {
+  if (moment !== 'chaharit' && moment !== 'arvit') return false;
+  const [a, m, d] = iso.split('-').map(Number);
+  const jour = moment === 'arvit' ? new Date(Date.UTC(a, m - 1, d + 1, 12)).toISOString().slice(0, 10) : iso;
+  const fetes = jourJuif(jour, store.inIsrael(), mukafChoma()).fetes;
+  const semaine = new Date(`${jour}T12:00:00Z`).getUTCDay();
+  if (fetes.includes('pourim') || (fetes.includes('pourim_jerusalem') && semaine !== 6)) return true;
+  return mukafChoma() && fetes.includes('pourim_ailleurs') && semaine === 5;
+}
 
 /** La date hébraïque d'un jour, ses fêtes, et ce qu'il change aux prières. */
 // La hilloula du jour (11/10) : hilloulot.json, chargé à la première carte.
@@ -1358,6 +1374,17 @@ function livreDuJour() {
   return livreHalakha;
 }
 
+// La halakha courte du jour (13/10) : yalkut_yosef.json, chargé à la première carte.
+let livreYalkut = null;
+let livreYalkutDemande = false;
+function yalkutDuJour() {
+  if (!livreYalkutDemande) {
+    livreYalkutDemande = true;
+    fetch('data/yalkut_yosef.json').then((r) => r.json()).then((d) => { livreYalkut = d; rendre(); }).catch(() => {});
+  }
+  return livreYalkut;
+}
+
 function lienExterne(libelle, url) {
   return h('a', { class: 'jour-lien', href: url, target: '_blank', rel: 'noopener' }, `${libelle} ↗`);
 }
@@ -1386,15 +1413,15 @@ function carteJour(iso) {
     ...blocHalakha(iso));
 }
 
-/** La halakha du jour, hors ligne (Ben Ish 'Haï) : la première, puis l'écran de la halakha. */
+/** La halakha du jour, hors ligne : une halakha courte du Yalkut Yosef (13/10), puis l'écran de la halakha. */
 function blocHalakha(iso) {
-  const livre = livreDuJour();
+  const livre = yalkutDuJour();
   if (!livre || !store.halakhaAffichee()) return [];
-  const liste = halakhotPour(livre, iso, store.inIsrael());
+  const liste = yalkutPour(livre, iso, store.inIsrael());
   if (!liste.length) return [];
   return [
     h('h3', { class: 'jour-sous-titre' }, `${tr.t('halakha_yomit_titre')} · ${tr.t('halakha_livre')}`),
-    h('p', { class: 'jour-halakha', lang: 'he', dir: 'rtl' }, liste[0].texte),
+    h('p', { class: 'jour-halakha', lang: 'he', dir: 'rtl' }, liste[0].t),
     h('button', { class: 'jour-lien lien-bouton', onclick: () => { jourHalakha = iso; rechercheHalakhaTexte = ''; ouvrir('halakha'); } }, tr.t('halakha_tout')),
   ];
 }
@@ -1416,25 +1443,35 @@ function zoneReglable(contenu) {
 function ecranHalakha() {
   const livre = livreDuJour() ?? { annees: {} };
   const iso = jourHalakha ?? isoLocal(new Date());
-  const carte = (x) => h('div', { class: 'carte carte-hilloula' },
-    h('p', { class: 'halakha-source', lang: 'he', dir: 'rtl' }, sourceHalakha(x, (n) => Reference.lettres(n))),
-    h('p', { class: 'halakha-texte', lang: 'he', dir: 'rtl' }, x.texte));
+  const yalkut = yalkutDuJour() ?? { periodes: {} };
+  const fiche = (titre, texte) => h('div', { class: 'carte carte-hilloula' },
+    h('p', { class: 'halakha-source', lang: 'he', dir: 'rtl' }, titre),
+    h('p', { class: 'halakha-texte', lang: 'he', dir: 'rtl' }, texte));
+  const carte = (x) => fiche(sourceHalakha(x, (n) => Reference.lettres(n)), x.texte);
+  const carteYalkut = (x) => fiche(sourceYalkut(x), x.t);
   const champ = h('input', { type: 'search', class: 'champ-recherche', placeholder: tr.t('halakha_recherche'), value: rechercheHalakhaTexte,
     oninput: (e) => { rechercheHalakhaTexte = e.target.value; rendre(); setTimeout(() => { const c = app.querySelector('.champ-recherche'); c?.focus(); c?.setSelectionRange(c.value.length, c.value.length); }, 0); } });
   let corps;
   if (rechercheHalakhaTexte.trim().length >= 2) {
+    const yy = rechercheYalkut(yalkut, rechercheHalakhaTexte);
     const trouves = rechercheHalakha(livre, rechercheHalakhaTexte);
-    corps = [h('p', { class: 'jour-sous-titre' }, tr.t('hilloulot_resultats', trouves.length)), ...trouves.slice(0, 40).map(carte)];
+    corps = [h('p', { class: 'jour-sous-titre' }, tr.t('hilloulot_resultats', yy.length + trouves.length)),
+      ...yy.slice(0, 40).map(carteYalkut), ...trouves.slice(0, 40).map(carte)];
   } else {
     const j = jourJuif(iso, store.inIsrael());
     const decale = (n) => { const [a, m, d] = iso.split('-').map(Number); jourHalakha = new Date(Date.UTC(a, m - 1, d + n, 12)).toISOString().slice(0, 10); rendre(); };
     const liste = livreHalakha ? halakhotPour(livre, iso, store.inIsrael()) : [];
+    // Le Yalkut Yosef d'abord (13/10), deux halakhot courtes ; puis le Ben Ish 'Haï de la semaine.
+    const yy = livreYalkut ? yalkutPour(yalkut, iso, store.inIsrael()) : [];
     corps = [
       h('div', { class: 'mois-tete' },
         h('button', { class: 'icone-bouton mois-precedent', dir: 'ltr', 'aria-label': tr.t('calendrier_precedent'), onclick: () => decale(-1) }, tr.rtl ? '›' : '‹'),
         h('div', { class: 'mois-titres' }, h('p', { class: 'mois-principal mois-hebreu', lang: 'he', dir: 'rtl' }, j.dateHebraique), h('p', { class: 'mois-second' }, iso)),
         h('button', { class: 'icone-bouton mois-suivant', dir: 'ltr', 'aria-label': tr.t('calendrier_suivant'), onclick: () => decale(1) }, tr.rtl ? '‹' : '›')),
-      ...(liste.length ? liste.map(carte) : [h('p', { class: 'message' }, tr.t('halakha_aucune'))]),
+      ...yy.map(carteYalkut),
+      ...(liste.length ? [h('h3', { class: 'jour-sous-titre' }, tr.t('halakha_ben_ish_hai')), ...liste.map(carte)] : []),
+      ...(yy.length || liste.length ? [] : [h('p', { class: 'message' }, tr.t('halakha_aucune'))]),
+      h('p', { class: 'note-halakha' }, tr.t('halakha_yalkut_source')),
       h('p', { class: 'note-halakha' }, tr.t('halakha_note')),
       // Le site de Rav Ovadia Yossef : un lien seulement (tous droits réservés sur ses textes).
       lienExterne(tr.t('halakha_yomit_lien'), lienHalakha(tr.langue)),
@@ -1838,6 +1875,12 @@ function ecranReglages() {
         // À Jérusalem, l'usage des 40 minutes est proposé, jamais imposé.
         ligne({ nom: tr.t('reglage_allumage'), onclick: choisirAllumage,
           etat: [libelleAllumage(store.allumage()), mukafChoma() && store.allumage() !== 40 ? tr.t('reglage_allumage_proposition') : null].filter(Boolean).join(' · ') }),
+        // Ville murée depuis Yehoshoua bin Noun : Pourim et la Méguila le 15 Adar (13/10).
+        h('label', { class: 'ligne' },
+          h('span', { class: 'corps' }, h('div', { class: 'nom' }, tr.t('reglage_ville_muree')),
+            h('div', { class: 'etat' }, tr.t(store.lieu()?.ville === JERUSALEM_GEONAMES ? 'reglage_ville_muree_jerusalem' : 'reglage_ville_muree_aide'))),
+          h('input', { type: 'checkbox', role: 'switch', class: 'interrupteur', checked: mukafChoma(), disabled: store.lieu()?.ville === JERUSALEM_GEONAMES,
+            'aria-label': tr.t('reglage_ville_muree'), onchange: (e) => { store.setVilleMuree(e.target.checked); rendre(); } })),
         store.siddurNusah() === 'sefard' ? ligne({ nom: tr.t('reglage_tahanoun_tichri'), onclick: choisirTahanounTichri,
           etat: tr.t(store.sansTahanounFinTichri() ? 'reglage_tahanoun_tichri_sans' : 'reglage_tahanoun_tichri_dit') }) : null),
       // Réinitialiser l'application (12/10) : en dernier, avec une confirmation.

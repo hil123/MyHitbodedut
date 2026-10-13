@@ -801,10 +801,10 @@
     <!-- La halakha du jour hors ligne : le Ben Ish 'Haï (11/10) -->
     <string name="halakha_title">Halakha du jour</string>
     <string name="halakha_afficher">Afficher la halakha du jour</string>
-    <string name="halakha_recherche">Rechercher dans le Ben Ish \'Haï</string>
+    <string name="halakha_recherche">Rechercher dans le Yalkut Yosef et le Ben Ish \'Haï</string>
     <string name="halakha_aucune">Pas de halakha pour ce jour</string>
     <string name="halakha_tout">Toute la halakha du jour ›</string>
-    <string name="halakha_livre">Ben Ish \'Haï, paracha de la semaine</string>
+    <string name="halakha_livre">Yalkut Yosef, Kitsour Choulhan Aroukh</string>
     <string name="halakha_note">Texte original en hébreu, verbatim. Pour la pratique, consultez un rav.</string>
     <!-- Les trophées et la fête (11/10) -->
     <string name="celebration_titre">Mazal tov !</string>
@@ -895,4 +895,11 @@
     <!-- L’onglet Bibliothèque : les livres entiers (13/10) -->
     <string name="livres_title">Livres</string>
     <string name="livres_hint">Likoutei Moharan, Hichtapkhout HaNefech, Kokhvei Or, méguilot, Perek Chira, Nichmat…</string>
+    <!-- La halakha du jour : le Yalkut Yosef, puis le Ben Ish 'Haï (13/10) -->
+    <string name="halakha_ben_ish_hai">Ben Ish \'Haï, paracha de la semaine</string>
+    <string name="halakha_yalkut_source">Yalkut Yosef – Kitsour Choulhan Aroukh, Rav Yitzhak Yosef (texte de Torat Emet, CC BY-NC-SA 2.5) : une sélection, non le livre entier.</string>
+    <!-- Ville murée : Pourim le 15 Adar ; la Méguila dans le siddour (13/10) -->
+    <string name="reglage_ville_muree">Ville entourée d’une muraille depuis Yehoshoua bin Noun</string>
+    <string name="reglage_ville_muree_aide">Pourim et la lecture de la Méguila le 15 Adar, comme à Jérusalem.</string>
+    <string name="reglage_ville_muree_jerusalem">Jérusalem : Pourim le 15 Adar.</string>
 </resources>

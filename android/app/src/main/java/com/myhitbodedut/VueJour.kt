@@ -102,8 +102,8 @@ object VueJour {
                 setOnClickListener(ouvrirHilloulot)
             })
         }
-        // La halakha du jour, hors ligne (Ben Ish 'Haï) : la première, puis l'écran de la halakha.
-        val halakhot = if (Store.halakhaAffichee(c)) Halakha.pour(Halakha.livre(c), date, enIsrael) else emptyList()
+        // La halakha du jour, hors ligne : une halakha courte du Yalkut Yosef (13/10), puis l'écran de la halakha.
+        val halakhot = if (Store.halakhaAffichee(c)) YalkutYosef.pour(YalkutYosef.livre(c), date, enIsrael) else emptyList()
         if (halakhot.isNotEmpty()) {
             carte.addView(texte(c, c.getString(R.string.halakha_yomit_titre) + " · " + c.getString(R.string.halakha_livre), 12f, R.color.muted, gras = true, haut = 14))
             carte.addView(texte(c, halakhot.first().texte, 16f, R.color.ink, haut = 2).apply {

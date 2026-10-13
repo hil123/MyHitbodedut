@@ -771,10 +771,10 @@
     <!-- La halakha du jour hors ligne : le Ben Ish 'Haï (11/10) -->
     <string name="halakha_title">הלכה יומית</string>
     <string name="halakha_afficher">הצג הלכה יומית</string>
-    <string name="halakha_recherche">חיפוש בבן איש חי</string>
+    <string name="halakha_recherche">חיפוש בילקוט יוסף ובבן איש חי</string>
     <string name="halakha_aucune">אין הלכה ליום זה</string>
     <string name="halakha_tout">כל ההלכה היומית ›</string>
-    <string name="halakha_livre">בן איש חי, פרשת השבוע</string>
+    <string name="halakha_livre">ילקוט יוסף, קיצור שולחן ערוך</string>
     <string name="halakha_note">לשון המקור. להלכה למעשה יש לשאול רב.</string>
     <!-- Les trophées et la fête (11/10) -->
     <string name="celebration_titre">מזל טוב!</string>
@@ -875,4 +875,11 @@
     <!-- L’onglet Bibliothèque : les livres entiers (13/10) -->
     <string name="livres_title">ספרים</string>
     <string name="livres_hint">ליקוטי מוהר״ן, השתפכות הנפש, כוכבי אור, מגילות, פרק שירה, נשמת כל חי…</string>
+    <!-- La halakha du jour : le Yalkut Yosef, puis le Ben Ish 'Haï (13/10) -->
+    <string name="halakha_ben_ish_hai">בן איש חי, פרשת השבוע</string>
+    <string name="halakha_yalkut_source">ילקוט יוסף – קיצור שולחן ערוך, מו״ר הרב יצחק יוסף (הוכן מתוכנת תורת אמת, CC BY-NC-SA 2.5): מבחר, לא הספר כולו.</string>
+    <!-- Ville murée : Pourim le 15 Adar ; la Méguila dans le siddour (13/10) -->
+    <string name="reglage_ville_muree">עיר המוקפת חומה מימות יהושע בן נון</string>
+    <string name="reglage_ville_muree_aide">פורים וקריאת המגילה בט״ו באדר, כמו בירושלים.</string>
+    <string name="reglage_ville_muree_jerusalem">ירושלים: פורים בט״ו באדר.</string>
 </resources>

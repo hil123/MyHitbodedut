@@ -139,6 +139,23 @@ object SiddurMoment {
         }
     }
 
+    /**
+     * La Méguila d'Esther avec la prière (13/10) : sous Arvit la nuit qui ouvre
+     * Pourim (le jour hébreu de demain), sous Cha'harit le jour même. Dans une
+     * ville murée, le 15 Adar ; quand il tombe un Chabbat (Pourim mechoulach),
+     * la Méguila se lit le vendredi 14.
+     */
+    fun megila(moment: String?, aujourdhui: java.time.LocalDate, israel: Boolean, mukafChoma: Boolean): Boolean {
+        val jour = when (moment) {
+            "chaharit" -> aujourdhui
+            "arvit" -> aujourdhui.plusDays(1)
+            else -> return false
+        }
+        val fetes = CalendrierJuif.jour(jour, israel, mukafChoma).fetes
+        if ("pourim" in fetes || "pourim_jerusalem" in fetes && jour.dayOfWeek != java.time.DayOfWeek.SATURDAY) return true
+        return mukafChoma && "pourim_ailleurs" in fetes && jour.dayOfWeek == java.time.DayOfWeek.FRIDAY
+    }
+
     /** Le hassid qui accompagne la suggestion, parmi les illustrations de l'application. */
     fun illustration(id: String): Int = when (id) {
         "tikoun_hatsot" -> R.drawable.char_praying

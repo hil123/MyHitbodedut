@@ -857,3 +857,40 @@ Détail et sources : `ZMANIM.md`, « Différences de noussa'h ».
   deux dates, chacune avec sa source (ex. Rabbi Akiva, 9 Tichri chez
   המאיר לארץ) ;
 - les icônes signalées le 12/10 : lesquelles, à préciser.
+
+## Mise à jour (13/10)
+
+**Droits — déclarations du propriétaire, 13/10, telles quelles** :
+« droits reçus si textes non copiés dans leur entièreté », puis « Je te donne
+toutes les autorisations arrête de me demander ». Elles portent sur les
+textes d'or-breslev.co.il et le Yalkut Yosef. Utile pour la trace : de qui
+vient l'accord, quand, et sur quoi il porte.
+
+**Fait** :
+
+- Halakha du jour : le **Yalkut Yosef – Kitsour Choulhan Aroukh** (Rav Yitzhak
+  Yosef, texte de Torat Emet, CC BY-NC-SA 2.5 ; « כל הזכויות שמורות … אסור
+  להעתיק קטעים מהספר ללא ציון המקור »). Une **sélection** — jamais le livre
+  entier — de halakhot **courtes** (420 caractères au plus), deux par jour, la
+  source à chaque halakha : Roch 'Hodech ; avant et pendant chaque fête ses
+  lois (Pessa'h dès le 16 Adar, Chavouot pendant l'omer, Bein haMetsarim,
+  Eloul et Roch Hachana, Kippour, Soukkot, 'Hanouka, Tou biChvat, Pourim) ;
+  le vendredi le Chabbat ; sinon la vie de chaque jour. Le Ben Ish 'Haï reste
+  dessous. Le fichier d'or-breslev n'est pas joignable d'ici et sa couche
+  texte est un OCR bruité : le même texte Torat Emet est lu page à page sur
+  itim-latora.org (tools/yalkut_yosef_construction.py).
+- Bibliothèque : l'onglet s'appelle « ספרייה » depuis le 12/10 (l'écran vu le
+  13/10 était une version antérieure) ; la ligne « ספרייה » devient « מקורות
+  התבודדות », et une ligne « ספרים » ouvre les livres entiers :
+  - ליקוטי מוהר״ן (חלק א׳ et תנינא, rabenubook, Public Domain, vocalisé) ;
+  - השתפכות הנפש et כוכבי אור (or-breslev, domaine public, accord déclaré) ;
+  - מגילת אסתר, שיר השירים (tanach.us, Public Domain, comme les Tehilim) ;
+  - נשמת כל חי (Siddur Edot HaMizrach, Torat Emet 357, Public Domain) ;
+  - פרק שירה (Torat Emet 357, Public Domain).
+- Kokhvei Or, demandé depuis le 22/09, est enfin dans l'application.
+
+**Reste** :
+
+- livres.json pèse 6,9 Mo (Likoutei Moharan : 4,6 Mo) : lu à l'ouverture des
+  livres ; à découper par livre si l'ouverture paraît lente sur téléphone ;
+- les autres textes d'or-breslev, sur demande.
