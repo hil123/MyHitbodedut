@@ -20,7 +20,7 @@ class ChabbatAlerteTest {
     }
 
     @Test
-    fun `le vendredi avant l alerte, c est ce vendredi ; apres, le suivant`() {
+    fun `le vendredi avant l alerte c est ce vendredi, apres le suivant`() {
         assertEquals(le(2026, 10, 16, 14, 45), ChabbatAlerte.prochaine(le(2026, 10, 16, 10, 0), ::allumage))
         assertEquals(le(2026, 10, 23, 14, 45), ChabbatAlerte.prochaine(le(2026, 10, 16, 15, 0), ::allumage))
     }
