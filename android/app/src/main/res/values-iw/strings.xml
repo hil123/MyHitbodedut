@@ -117,7 +117,7 @@
 
     <string name="session_screen_title">התבודדות</string>
     <string name="session_idle_caption">בחרו משך והניחו את הטלפון.</string>
-    <string name="session_idle_done">כבר אושר היום. אפשר להתחיל שוב.</string>
+    <string name="session_idle_done">היום: %1$s. המספר למעלה הוא משך ההתבודדות הבאה.</string>
     <string name="session_start">להתחיל, %1$s</string>
     <string name="session_target">התבודדות של %1$s</string>
     <string name="session_finish_now">לסיים עכשיו</string>

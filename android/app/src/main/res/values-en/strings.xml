@@ -116,7 +116,7 @@
 
     <string name="session_screen_title">HITBODEDUT</string>
     <string name="session_idle_caption">Pick a length, then put the phone down.</string>
-    <string name="session_idle_done">Already confirmed today. You can start again.</string>
+    <string name="session_idle_done">Done today: %1$s. The number above is the length of the next one.</string>
     <string name="session_start">Start, %1$s</string>
     <string name="session_target">%1$s hitbodedut</string>
     <string name="session_finish_now">Finish now</string>

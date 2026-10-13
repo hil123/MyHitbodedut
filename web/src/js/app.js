@@ -2063,7 +2063,8 @@ function ecranSeance() {
     enCours
       ? (c.texte ? h('div', { class: 'decompte', role: 'timer' }, c.texte) : null)
       : h('div', { class: 'decompte' }, tr.duree(store.targetMinutes())),
-    h('p', { class: 'legende' }, enCours ? c.legende : tr.t(fait ? 'session_idle_done' : 'session_idle_caption')),
+    // Fait, le grand chiffre reste la durée de la prochaine : la légende dit ce qui a été fait (13/10).
+    h('p', { class: 'legende' }, enCours ? c.legende : fait ? tr.t('session_idle_done', tr.duree(store.record()?.minutes ?? 0)) : tr.t('session_idle_caption')),
     morceau ? h('p', { class: 'legende petite' }, tr.t('session_music_line', titreMorceau(morceau))) : null,
     carteChizuk(chizukSeance),
     enCours && aBlocage ? h('button', { class: 'texte-clair blocage', onclick: () => { tireChizuk('blocage'); rendre(); } }, tr.t('chizuk_stuck')) : null,

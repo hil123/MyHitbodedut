@@ -128,7 +128,7 @@
     <!-- Séance -->
     <string name="session_screen_title">HITBODEDOUT</string>
     <string name="session_idle_caption">Choisissez une durée, posez le téléphone.</string>
-    <string name="session_idle_done">Déjà validée aujourd’hui. Vous pouvez recommencer.</string>
+    <string name="session_idle_done">Fait aujourd’hui : %1$s. Le chiffre ci-dessus est la durée de la prochaine.</string>
     <string name="session_start">Commencer, %1$s</string>
     <string name="session_target">Hitbodedout de %1$s</string>
     <string name="session_finish_now">Terminer maintenant</string>

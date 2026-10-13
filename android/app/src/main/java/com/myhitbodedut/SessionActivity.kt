@@ -240,9 +240,11 @@ class SessionActivity : AppCompatActivity() {
             )
             countdown.visibility = View.VISIBLE
             countdown.text = Store.formatDuration(this, Store.targetMinutes(this))
-            caption.setText(
-                if (Store.isDone(this)) R.string.session_idle_done else R.string.session_idle_caption
-            )
+            // Fait, le grand chiffre reste la durée de la prochaine : la légende dit ce qui a
+            // été fait aujourd'hui (13/10 : 4 min faites, l'écran montrait « 5 min »).
+            caption.text = if (Store.isDone(this))
+                getString(R.string.session_idle_done, Store.formatDuration(this, Store.record(this)?.minutes ?: 0))
+            else getString(R.string.session_idle_caption)
             durations.visibility = View.VISIBLE
             openSession.visibility = View.VISIBLE
             findViewById<View>(R.id.session_custom).visibility = View.VISIBLE
