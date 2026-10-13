@@ -68,7 +68,8 @@ object Character {
         // Sur le pas de la porte, le téléphone à la main.
         Moment.PORTE -> R.drawable.char_pointing
         // Reprendre la route après une rupture.
-        Moment.RELANCE -> R.drawable.char_walking
+        // La relance : plus le personnage qui marche (13/10).
+        Moment.RELANCE -> R.drawable.char_thinking
         // La séance s'achève : on remercie.
         Moment.CLOTURE -> R.drawable.char_praise
         // Le lieu et le moment : seul, assis face au paysage (planche du 11/10).
