@@ -68,21 +68,7 @@
                         android:textColor="?attr/mhMint"
                         android:textSize="13sp" />
                 </LinearLayout>
-
-                <FrameLayout
-                    android:layout_width="72dp"
-                    android:layout_height="88dp"
-                    android:layout_marginStart="14dp"
-                    android:background="@drawable/bg_stage"
-                    android:padding="5dp">
-
-                    <ImageView
-                        android:id="@+id/entry_art"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:contentDescription="@null"
-                        android:scaleType="fitCenter" />
-                </FrameLayout>
+                <!-- Pas d'image pendant une lecture (demande du 13/10). -->
             </LinearLayout>
         </LinearLayout>
 

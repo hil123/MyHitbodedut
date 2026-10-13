@@ -1159,8 +1159,7 @@ function ecranSource() {
       h('div', { class: 'source-titres' },
         h('span', { class: 'badge' }, tr.t('library_kind_source')),
         h('h2', { class: 'source-titre', lang: 'he', dir: 'rtl' }, e.titre_he),
-        h('p', { class: 'source-ref' }, Reference.localise(e.ref, tr.langue))),
-      plateau('char_torah', 'plateau-source')),
+        h('p', { class: 'source-ref' }, Reference.localise(e.ref, tr.langue)))),
     h('div', { class: 'carte carte-texte psaume', lang: 'he', dir: 'rtl' },
       LibraryRules.paragraphes(bibliotheque, e).map((p) => h('p', { class: 'verset paragraphe-source' }, p))),
     // Ni note ni édition sous le texte : l'attribution passe par le lien vers Sefaria.
@@ -1433,7 +1432,7 @@ function ecranHalakha() {
       lienExterne(tr.t('halakha_yomit_lien'), lienHalakha(tr.langue)),
     ];
   }
-  return h('div', { class: 'ecran avec-bandeau' }, bandeau(tr.t('halakha_title'), { dessin: 'char_reading_seated' }),
+  return h('div', { class: 'ecran avec-bandeau' }, bandeau(tr.t('halakha_title')),
     zoneReglable(h('div', { class: 'contenu' },
       h('div', { class: 'carte' },
         h('label', { class: 'ligne' }, h('span', { class: 'corps' }, h('div', { class: 'nom' }, tr.t('halakha_afficher'))),
@@ -1517,7 +1516,7 @@ function ecranHilloulot() {
       lienExterne(tr.t('hilloula_lien'), lienHyomi(iso)),
     ];
   }
-  return h('div', { class: 'ecran avec-bandeau' }, bandeau(tr.t('hilloulot_title'), { dessin: 'char_torah' }),
+  return h('div', { class: 'ecran avec-bandeau' }, bandeau(tr.t('hilloulot_title')),
     zoneReglable(h('div', { class: 'contenu' },
       h('div', { class: 'carte' },
         h('label', { class: 'ligne' }, h('span', { class: 'corps' }, h('div', { class: 'nom' }, tr.t('hilloulot_afficher'))),

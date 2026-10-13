@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -41,7 +40,6 @@ class TikkunActivity : AppCompatActivity() {
             tikkun.apres.map { Ligne.Bloc(it) }
         progress = findViewById(R.id.tikkun_progress)
         reset = findViewById(R.id.tikkun_reset)
-        findViewById<ImageView>(R.id.tikkun_art).setImageResource(Character.TEHILIM)
 
         adapter = Adapter()
         findViewById<RecyclerView>(R.id.tikkun_list).apply {

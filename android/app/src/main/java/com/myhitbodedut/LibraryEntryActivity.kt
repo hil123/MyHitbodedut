@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.TextView
@@ -37,7 +36,6 @@ class LibraryEntryActivity : AppCompatActivity() {
             return
         }
         facts = findViewById(R.id.entry_facts)
-        findViewById<ImageView>(R.id.entry_art).setImageResource(Character.ofLibraryEntry(entry))
 
         when (entry) {
             is SourceEntry -> bindSource(library, entry)

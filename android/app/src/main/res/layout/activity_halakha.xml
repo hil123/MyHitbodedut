@@ -30,21 +30,7 @@
                 android:textSize="@dimen/hero_title"
                 android:textStyle="bold" />
         </LinearLayout>
-
-        <FrameLayout
-            android:layout_width="@dimen/hero_art_w"
-            android:layout_height="@dimen/hero_art_h"
-            android:layout_marginStart="12dp"
-            android:background="@drawable/bg_stage"
-            android:padding="5dp">
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:contentDescription="@null"
-                android:scaleType="fitCenter"
-                android:src="@drawable/char_reading_seated" />
-        </FrameLayout>
+        <!-- Pas d'image pendant une lecture ou une prière (demande du 13/10). -->
     </LinearLayout>
 
     <ScrollView

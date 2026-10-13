@@ -40,21 +40,7 @@
                 android:textColor="?attr/mhMint"
                 android:textSize="14sp" />
         </LinearLayout>
-
-        <FrameLayout
-            android:layout_width="78dp"
-            android:layout_height="96dp"
-            android:layout_marginStart="14dp"
-            android:background="@drawable/bg_stage"
-            android:padding="6dp">
-
-            <ImageView
-                android:id="@+id/tikkun_art"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:contentDescription="@null"
-                android:scaleType="fitCenter" />
-        </FrameLayout>
+        <!-- Pas d'image dans une prière (demande du 13/10). -->
     </LinearLayout>
 
     <!-- Le Tikoun se dit d'un trait : c'est l'action, pas une variante.
