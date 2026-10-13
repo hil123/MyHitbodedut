@@ -25,7 +25,9 @@ object Character {
         R.drawable.char_arms_raised,
         R.drawable.char_praying,
         R.drawable.char_standing_back,
-        R.drawable.char_sitting_low
+        R.drawable.char_sitting_low,
+        // Les mains levées, la louange (demande du 13/10).
+        R.drawable.char_praise
     )
 
     /** Après la séance, ou journée déjà validée. */
