@@ -51,10 +51,16 @@ class CelebrationActivity : AppCompatActivity() {
             }
         }
         val chizuk = findViewById<View>(R.id.celebration_chizuk)
-        // Un jour la danse, le lendemain la guitare (12/10) : le guitariste se balance au même rythme.
-        if (!annulee && java.time.LocalDate.now().toEpochDay() % 2 == 0L) {
-            findViewById<ImageView>(R.id.celebration_art).setImageResource(R.drawable.char_guitar)
-            findViewById<ImageView>(R.id.celebration_art_b).setImageResource(R.drawable.char_guitar)
+        // Un jour la danse, le lendemain la guitare (12/10), le surlendemain le pouce levé (13/10) :
+        // le personnage se balance au même rythme.
+        val seul = when (Math.floorMod(java.time.LocalDate.now().toEpochDay(), 3L)) {
+            1L -> R.drawable.char_guitar
+            2L -> R.drawable.char_thumbs_up
+            else -> null
+        }
+        if (!annulee && seul != null) {
+            findViewById<ImageView>(R.id.celebration_art).setImageResource(seul)
+            findViewById<ImageView>(R.id.celebration_art_b).setImageResource(seul)
         }
         if (annulee) {
             findViewById<ImageView>(R.id.celebration_art).setImageResource(R.drawable.char_walking)

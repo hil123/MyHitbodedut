@@ -2122,14 +2122,15 @@ function ecranBravo() {
       setTimeout(() => ecrireNote(dateNote ?? store.today(), rendre), 50);
     }
   };
-  const guitare = Math.floor(Date.now() / 86400000) % 2 === 0;
+  // Un jour la danse, le lendemain la guitare, le surlendemain le pouce levé (12-13/10).
+  const seul = [null, 'char_guitar', 'char_thumbs_up'][Math.floor(Date.now() / 86400000) % 3];
   return h('div', { class: 'ecran bravo' },
     h('div', { class: 'defile' }, h('div', { class: 'contenu' },
       h('div', { class: 'scene danse' },
         h('div', { class: 'danseur' },
-          // Un jour la danse, le lendemain la guitare (12/10) : le guitariste se balance au même rythme.
-          h('img', { class: 'pose-a', src: `img/${annulee ? 'char_walking' : guitare ? 'char_guitar' : 'char_dancing'}.webp`, alt: '' }),
-          annulee ? null : h('img', { class: 'pose-b', src: `img/${guitare ? 'char_guitar' : 'char_dancing_joy'}.webp`, alt: '' }))),
+          // Seul (guitare ou pouce levé), le personnage se balance au rythme de la danse.
+          h('img', { class: 'pose-a', src: `img/${annulee ? 'char_walking' : seul ?? 'char_dancing'}.webp`, alt: '' }),
+          annulee ? null : h('img', { class: 'pose-b', src: `img/${seul ?? 'char_dancing_joy'}.webp`, alt: '' }))),
       h('h1', { class: 'bravo-titre' }, titre),
       sousTitre ? h('p', { class: 'bravo-sous-titre' }, sousTitre) : null,
       annulee && chizukBravo ? carteChizuk({ moment: 'relance', item: chizukBravo }, { compacte: true }) : null,
