@@ -2337,3 +2337,15 @@ demarrer();
     else setTimeout(() => { ouverture.classList.add('fin'); setTimeout(() => ouverture.remove(), 450); }, 3000);
   }
 }
+
+// La banderole du haut s'efface quand on fait défiler vers le bas, et revient en haut
+// de la page (13/10) ; seulement si la page la dépasse, sinon elle reviendrait aussitôt.
+document.addEventListener('scroll', (e) => {
+  const d = e.target;
+  if (!(d instanceof Element) || !d.classList.contains('defile')) return;
+  const ecran = d.closest('.avec-bandeau');
+  const bandeau = ecran?.querySelector('.bandeau');
+  if (!bandeau) return;
+  if (d.scrollTop > 8 && d.scrollHeight - d.clientHeight > bandeau.offsetHeight) ecran.classList.add('bandeau-cache');
+  else if (d.scrollTop <= 0) ecran.classList.remove('bandeau-cache');
+}, true);

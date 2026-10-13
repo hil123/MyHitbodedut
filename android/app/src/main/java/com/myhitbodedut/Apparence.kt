@@ -156,7 +156,8 @@ object Apparence {
                 appliquees.remove(activity)
             }
 
-            override fun onActivityStarted(activity: Activity) = Unit
+            // La banderole s'efface au défilement (13/10) : les vues existent à ce moment.
+            override fun onActivityStarted(activity: Activity) = BandeauDefilant.installer(activity)
             override fun onActivityPaused(activity: Activity) = Unit
             override fun onActivityStopped(activity: Activity) = Unit
             override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) = Unit

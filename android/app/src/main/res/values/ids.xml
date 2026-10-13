@@ -9,4 +9,6 @@
     <item name="lecture_police" type="id" />
     <item name="lecture_taille" type="id" />
     <item name="lecture_interligne" type="id" />
+    <!-- La banderole déjà surveillée par BandeauDefilant. -->
+    <item name="bandeau_defilant" type="id" />
 </resources>
