@@ -82,11 +82,12 @@ TEXTES = [
 
 
 def extrait(source, chemin):
+    """Les sections d'un chemin, sans les vides ; rien (None) si la source n'a pas de texte là."""
     if chemin is None:
         return None
-    if isinstance(chemin[0], list):
-        return source.plusieurs(chemin)
-    return source.sections(chemin)
+    sections = source.plusieurs(chemin) if isinstance(chemin[0], list) else source.sections(chemin)
+    sections = [x for x in sections if x["blocs"]]
+    return sections or None
 
 
 def main(dossier):
