@@ -308,7 +308,9 @@ input[type="range"] { width: 100%; accent-color: var(--brand); }
    le bouton « Commencer » se voie sans faire défiler. */
 @media (orientation: landscape) and (max-height: 500px) {
   .accueil {
-    display: grid; grid-template-columns: auto minmax(0, 1fr); grid-template-areas: "jauge tete" "jauge actions";
+    /* Colonne des anneaux bornée (15/10) : « auto » la calait sur la légende la plus longue,
+       sans retour à la ligne, et l'en-tête de droite se retrouvait écrasé (WebKit, CI). */
+    display: grid; grid-template-columns: minmax(0, 220px) minmax(0, 1fr); grid-template-areas: "jauge tete" "jauge actions";
     column-gap: 24px; align-items: start; padding-top: 12px; padding-bottom: 12px;
   }
   .accueil-tete { grid-area: tete; }
