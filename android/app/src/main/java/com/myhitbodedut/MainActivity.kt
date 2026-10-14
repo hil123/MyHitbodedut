@@ -26,6 +26,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         ouverture(savedInstanceState == null)
+        jaugeCompacte()
         Notifications.ensureChannels(this)
         // Recopie la langue choisie pour les services réveillés seuls (LangueApp).
         LangueApp.retenir(this)
@@ -851,6 +852,24 @@ class MainActivity : AppCompatActivity() {
     // --- Sélecteurs ---------------------------------------------------------
 
     /**
+     * Petit écran et texte du système agrandi (15/10) : les lignes de l'en-tête et de la
+     * légende s'allongent, et la jauge de 136dp repoussait encore « Commencer » sous les
+     * onglets (capture 480x854, police 1,3). La jauge descend alors à 116dp.
+     */
+    private fun jaugeCompacte() {
+        val c = resources.configuration
+        if (c.fontScale <= 1.1f || c.screenHeightDp >= 640 || c.orientation != android.content.res.Configuration.ORIENTATION_PORTRAIT) return
+        val d = resources.displayMetrics.density
+        val cadre = findViewById<View>(R.id.week_gauge).parent as View
+        cadre.layoutParams = (cadre.layoutParams as android.view.ViewGroup.MarginLayoutParams).apply {
+            width = (116 * d).toInt(); height = (116 * d).toInt(); topMargin = (8 * d).toInt()
+        }
+        findViewById<View>(R.id.hero_plate).apply {
+            layoutParams = (layoutParams as android.view.ViewGroup.MarginLayoutParams).apply { setMargins((28 * d).toInt(), (28 * d).toInt(), (28 * d).toInt(), (28 * d).toInt()) }
+        }
+    }
+
+    /**
      * L'écran d'ouverture (13/10, refait le 15/10) : le 'hassid debout, souriant, devant
      * le tziyoun de Rabbi Na'hman à Ouman, une seconde et demie au démarrage, puis un
      * fondu. Il se pose par-dessus l'accueil dès le premier dessin : plus d'écran vide
@@ -898,9 +917,17 @@ class MainActivity : AppCompatActivity() {
             })
         }
         decor.addView(voile, android.view.ViewGroup.LayoutParams(-1, -1))
-        voile.postDelayed({
-            voile.animate().alpha(0f).setDuration(350).withEndAction { decor.removeView(voile) }.start()
-        }, OUVERTURE_MS)
+        // La seconde et demie se compte depuis le premier dessin du voile, pas depuis
+        // onCreate : sur un téléphone lent, l'écran du système occupait déjà ce temps.
+        voile.viewTreeObserver.addOnPreDrawListener(object : android.view.ViewTreeObserver.OnPreDrawListener {
+            override fun onPreDraw(): Boolean {
+                voile.viewTreeObserver.removeOnPreDrawListener(this)
+                voile.postDelayed({
+                    voile.animate().alpha(0f).setDuration(350).withEndAction { decor.removeView(voile) }.start()
+                }, OUVERTURE_MS)
+                return true
+            }
+        })
     }
 
     companion object {

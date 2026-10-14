@@ -335,10 +335,11 @@ def main():
         sh(f"am force-stop {PKG}")
         pause(1.0)
         sh(f"am start -n {PKG}/com.myhitbodedut.MainActivity")
-        pause(0.9)
-        png = adb("exec-out", "screencap", "-p", binary=True)
-        with open(os.path.join(OUT, "00-ouverture.png"), "wb") as f:
-            f.write(png)
+        for i, t in enumerate((1.2, 0.6)):
+            pause(t)
+            png = adb("exec-out", "screencap", "-p", binary=True)
+            with open(os.path.join(OUT, f"00-ouverture-{i + 1}.png"), "wb") as f:
+                f.write(png)
         pause(2.0)
     etape("00 ouverture", s00)
 
