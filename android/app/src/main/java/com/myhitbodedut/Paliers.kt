@@ -53,8 +53,12 @@ object Paliers {
         val rang: Int,
     ) {
         val reste: Int get() = prochain - valeur
-        /** De 0 à 1, entre le palier atteint et le prochain. */
-        val avancee: Float get() = ((valeur - atteint).toFloat() / (prochain - atteint)).coerceIn(0f, 1f)
+        /**
+         * De 0 à 1 : la valeur rapportée au prochain palier (30 min sur 1 h : à moitié).
+         * Comptée depuis le dernier palier atteint, la barre restait vide à 30 min sur
+         * 1 h, sous « encore 30 min » (capture du 15/10, « incompréhensible »).
+         */
+        val avancee: Float get() = (valeur.toFloat() / prochain).coerceIn(0f, 1f)
     }
 
     fun etat(piste: Piste, valeur: Int, objectifJour: Int = 0): Etat {

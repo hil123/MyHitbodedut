@@ -84,10 +84,13 @@ class PaliersActivity : AppCompatActivity() {
                 layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
             })
         })
+        addView(VueJour.texte(context, getString(R.string.trophees_explication), 13f, R.color.muted, haut = 6))
         // Les plus hauts métaux d'abord ; à égalité, les plus proches du niveau suivant.
         val tries = familles.sortedWith(compareByDescending<Trophees.Famille> { Trophees.rang(pratique, it).let { r -> if (r == 0) -1 else Trophees.metal(it, r).ordinal } }
             .thenByDescending { Trophees.progres(pratique, it).fraction })
-        addView(scene(pratique, tries.firstOrNull()?.takeIf { Trophees.rang(pratique, it) > 0 }))
+        // En vedette, le plus beau trophée — pas « Premier pas », le plus facile, tant qu'un autre est gagné (15/10).
+        val gagnees = tries.filter { Trophees.rang(pratique, it) > 0 }
+        addView(scene(pratique, gagnees.firstOrNull { it != Trophees.Famille.PREMIER_PAS } ?: gagnees.firstOrNull()))
         addView(barre(atteints.toFloat() / total, dp(8)).apply {
             (layoutParams as LinearLayout.LayoutParams).topMargin = dp(12)
         })
@@ -148,7 +151,8 @@ class PaliersActivity : AppCompatActivity() {
             text = nom
             textSize = 10f
             setTypeface(typeface, Typeface.BOLD)
-            maxLines = 1
+            // Deux lignes : « Erev Chabbat », « Semaines pleines » se coupaient (15/10).
+            maxLines = 2
             ellipsize = android.text.TextUtils.TruncateAt.END
             gravity = Gravity.CENTER
             setPadding(dp(3), dp(2), dp(3), dp(2))
@@ -164,10 +168,12 @@ class PaliersActivity : AppCompatActivity() {
 
     /** La planche de verre sous une rangée. */
     private fun planche() = View(this).apply {
-        layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, dp(12))
+        // Fine et pâle (15/10) : épaisse et blanche, elle se lisait comme une barre de progression.
+        layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, dp(4))
+        alpha = 0.45f
         background = GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM,
             intArrayOf(Color.argb(0xF2, 0xFF, 0xFF, 0xFF), Color.argb(0xBF, 0xDC, 0xE6, 0xF0))).apply {
-            cornerRadius = dp(6).toFloat()
+            cornerRadius = dp(2).toFloat()
             setStroke(1, Color.argb(0x59, 0x96, 0xAA, 0xBE))
         }
         elevation = dp(4).toFloat()
@@ -179,7 +185,8 @@ class PaliersActivity : AppCompatActivity() {
         gravity = Gravity.CENTER_HORIZONTAL or Gravity.BOTTOM
         layoutParams = LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f)
         val metal = if (rang > 0) Trophees.metal(f, rang) else null
-        addView(bulle(metal, if (metal != null) "${TropheesVue.metal(context, metal)} · $rang/${f.seuils.size}" else getString(R.string.trophee_a_venir)))
+        // Le métal seul : « Bronze · 4/16 » se coupait en « Bronze · 4… » (15/10) ; le niveau est dessous.
+        addView(bulle(metal, if (metal != null) TropheesVue.metal(context, metal) else getString(R.string.trophee_a_venir)))
         addView(View(context).apply {
             layoutParams = LinearLayout.LayoutParams(dp(78), dp(78))
             background = TropheeDessin(context, f.forme, metal, f.icone)
@@ -193,15 +200,20 @@ class PaliersActivity : AppCompatActivity() {
         ).joinToString(", ")
     }
 
-    /** Sous la planche : ce qu'a demandé le niveau, la barre et le compte vers le suivant (ou le sommet). */
+    /**
+     * Sous la planche (refait le 15/10, « incompréhensible ») : le niveau, puis ce que
+     * demande le PROCHAIN niveau, la barre et le compte vers lui. Avant, le texte
+     * nommait le niveau déjà atteint (« 15 jours ») et le compte le suivant (« 16 / 18 »).
+     */
     private fun details(f: Trophees.Famille, rang: Int, pr: Trophees.Progres) = LinearLayout(this).apply {
         orientation = LinearLayout.VERTICAL
         gravity = Gravity.CENTER_HORIZONTAL
         layoutParams = LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f)
-        addView(VueJour.texte(context, TropheesVue.description(context, f, f.seuils[(rang - 1).coerceAtLeast(0)]), 11f, R.color.muted).apply { gravity = Gravity.CENTER })
+        if (rang > 0) addView(VueJour.texte(context, getString(R.string.trophee_niveau_court, rang, f.seuils.size), 11f, R.color.ink, gras = true).apply { gravity = Gravity.CENTER })
         if (rang >= f.seuils.size) {
             addView(VueJour.texte(context, getString(R.string.trophee_sommet), 11f, R.color.brand, gras = true, haut = 2).apply { gravity = Gravity.CENTER })
         } else {
+            addView(VueJour.texte(context, getString(R.string.trophee_prochain, TropheesVue.description(context, f, pr.cible)), 11f, R.color.muted, haut = 2).apply { gravity = Gravity.CENTER })
             addView(barre(pr.fraction, dp(4)).apply {
                 (layoutParams as LinearLayout.LayoutParams).apply { topMargin = dp(6); marginStart = dp(10); marginEnd = dp(10) }
             })
@@ -288,10 +300,10 @@ class PaliersActivity : AppCompatActivity() {
             PaliersVue.valeur(context, e.piste, e.prochain), PaliersVue.valeur(context, e.piste, e.reste)), 15f, R.color.brand, gras = true, haut = 8))
         if (e.rang > 0) {
             addView(VueJour.texte(context, getString(R.string.palier_atteints, e.rang), 13f, R.color.muted, haut = 10))
-            // Les paliers atteints, du plus récent au plus ancien, et le prochain en pointillé.
+            // Les paliers atteints, dans l'ordre où on les a franchis (15/10 : « 7 jours, 3 jours » se lisait à l'envers).
             val rangee = LinearLayout(context).apply { orientation = LinearLayout.HORIZONTAL }
             val echelle = Paliers.echelle(e.piste, e.valeur, bilan.objectifJour)
-            (echelle.filter { it <= e.valeur }.reversed().take(8)).forEach { rangee.addView(pastille(PaliersVue.court(context, e.piste, it), true)) }
+            (echelle.filter { it <= e.valeur }.takeLast(8)).forEach { rangee.addView(pastille(PaliersVue.court(context, e.piste, it), true)) }
             addView(HorizontalScrollView(context).apply {
                 isHorizontalScrollBarEnabled = false
                 layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply { topMargin = dp(6) }

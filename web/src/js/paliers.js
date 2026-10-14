@@ -34,7 +34,7 @@ export function etat(piste, valeur, objectifJour = 0) {
   const atteint = faits.at(-1) ?? 0;
   const prochain = e.find((x) => x > v);
   return { piste, valeur: v, atteint, prochain, rang: faits.length, reste: prochain - v,
-    avancee: Math.min(1, Math.max(0, (v - atteint) / (prochain - atteint))) };
+    avancee: Math.min(1, Math.max(0, v / prochain)) }; // la valeur sur le prochain palier (15/10)
 }
 
 /** minutes : { iso: minutes } des jours faits. */

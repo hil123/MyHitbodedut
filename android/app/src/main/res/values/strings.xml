@@ -886,6 +886,8 @@
     <string name="metal_or">Or</string>
     <string name="metal_platine">Platine</string>
     <string name="trophee_niveau">Niveau %1$d sur %2$d · %3$s</string>
+    <string name="trophee_niveau_court">Niveau %1$d sur %2$d</string>
+    <string name="trophees_explication">Chaque trophée monte de niveau en niveau, du bronze à l’argent, à l’or puis au platine. Sous chacun : votre niveau, ce que demande le suivant, et où vous en êtes.</string>
     <string name="trophee_a_venir">À gagner</string>
     <string name="trophee_niveau_gagne">Trophée « %1$s » : niveau %2$d, %3$s !</string>
     <string name="trophee_prochain">Prochain niveau : %1$s</string>

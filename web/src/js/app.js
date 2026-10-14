@@ -2020,7 +2020,9 @@ function vitrineTrophees() {
     h('span', { style: `width: ${Math.round(Math.min(1, Math.max(0, fraction)) * 100)}%` }));
   const desc = (f, seuil) => tr.p(`trophee_${f.cle}_desc`, seuil);
   // La scène : l'avatar, de plus en plus joyeux à mesure que le métal monte, et le plus beau trophée sur son socle.
-  const meilleure = tries[0] && Trophees.rang(p, tries[0]) ? tries[0] : null;
+  // Pas « Premier pas », le plus facile, en vedette tant qu'un autre trophée est gagné (15/10).
+  const gagnees = tries.filter((f) => Trophees.rang(p, f));
+  const meilleure = gagnees.find((f) => f.cle !== 'premier_pas') ?? gagnees[0] ?? null;
   const mMeilleure = meilleure ? Trophees.metal(meilleure, Trophees.rang(p, meilleure)) : null;
   const avatar = { bronze: 'char_thumbs_up', argent: 'char_open_arms', or: 'char_arms_raised', platine: 'char_dancing_joy' }[mMeilleure] ?? 'char_thinking';
   const socle = (metal, nom, grand) => h('div', { class: `trophee-socle ${metal ?? 'aucun'}${grand ? ' grand' : ''}` }, h('span', { class: 'socle-plaque' }, nom));
@@ -2039,7 +2041,7 @@ function vitrineTrophees() {
     const niveau = m ? tr.t('trophee_niveau', r, f.seuils.length, tr.t(`metal_${m}`)) : tr.t('trophee_a_venir');
     return h('div', { class: `trophee ${m ?? ''}${m ? ' gagne' : ''}`,
       'aria-label': [tr.t(`trophee_${f.cle}`), niveau, sommet ? tr.t('trophee_sommet') : tr.t('trophee_prochain', desc(f, pr.cible))].join(', ') },
-      h('span', { class: `bulle ${m ?? 'aucun'}`, 'aria-hidden': 'true' }, m ? `${tr.t(`metal_${m}`)} · ${r}/${f.seuils.length}` : tr.t('trophee_a_venir')),
+      h('span', { class: `bulle ${m ?? 'aucun'}`, 'aria-hidden': 'true' }, m ? tr.t(`metal_${m}`) : tr.t('trophee_a_venir')),
       h('div', { class: `objet${m ? ' gagne' : ''}`, 'aria-hidden': 'true' }, objetTrophee(f.forme, m, f.icone, 78), m ? h('span', { class: 'eclat' }) : null),
       socle(m, tr.t(`trophee_${f.cle}`)));
   };
@@ -2047,8 +2049,10 @@ function vitrineTrophees() {
     const r = Trophees.rang(p, f);
     const pr = Trophees.progres(p, f);
     const sommet = r >= f.seuils.length;
+    // Le niveau, puis ce que demande le PROCHAIN niveau et où l'on en est (15/10, PaliersActivity.details).
     return h('div', { class: 'trophee-details' },
-      h('span', { class: 'trophee-desc' }, desc(f, f.seuils[Math.max(0, r - 1)])),
+      r ? h('span', { class: 'trophee-niveau' }, tr.t('trophee_niveau_court', r, f.seuils.length)) : null,
+      sommet ? null : h('span', { class: 'trophee-desc' }, tr.t('trophee_prochain', desc(f, pr.cible))),
       sommet ? h('span', { class: 'trophee-progres' }, tr.t('trophee_sommet')) : barre(pr.fraction, 'petite'),
       sommet ? null : h('span', { class: 'trophee-progres' }, tr.t('trophee_progres', Math.min(pr.valeur, pr.cible), pr.cible)));
   };
@@ -2058,6 +2062,7 @@ function vitrineTrophees() {
   return h('div', { class: 'carte carte-palier' },
     h('div', { class: 'trophees-tete' }, h('p', { class: 'palier-nom' }, tr.t('trophees_titre')),
       h('p', { class: 'trophees-compte' }, tr.t('trophees_compte', atteints, total))),
+    h('p', { class: 'trophees-explication' }, tr.t('trophees_explication')),
     scene,
     barre(atteints / total, 'globale'),
     ...rangees.map((rangee) => h('div', { class: 'etagere' },
@@ -2079,7 +2084,7 @@ function ecranPaliers() {
     h('p', { class: 'palier-prochain' }, tr.t('palier_prochain', valeurPalier(e.piste, e.prochain), valeurPalier(e.piste, e.reste))),
     e.rang > 0 ? h('p', { class: 'palier-atteints' }, tr.t('palier_atteints', e.rang)) : null,
     e.rang > 0 ? h('div', { class: 'palier-pastilles' }, Paliers.echelle(e.piste, e.valeur, bilan.objectifJour).filter((x) => x <= e.valeur)
-      .reverse().slice(0, 8).map((x) => h('span', { class: 'palier-pastille' }, valeurPalier(e.piste, x)))) : null);
+      .slice(-8).map((x) => h('span', { class: 'palier-pastille' }, valeurPalier(e.piste, x)))) : null);
   return h('div', { class: 'ecran avec-bandeau' }, bandeau(tr.t('trophees_paliers_titre'), { dessin: 'char_arms_raised' }),
     h('div', { class: 'defile' }, h('div', { class: 'contenu' },
       vitrineTrophees(),

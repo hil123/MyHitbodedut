@@ -840,6 +840,8 @@
     <string name="metal_or">Gold</string>
     <string name="metal_platine">Platinum</string>
     <string name="trophee_niveau">Level %1$d of %2$d · %3$s</string>
+    <string name="trophee_niveau_court">Level %1$d of %2$d</string>
+    <string name="trophees_explication">Each trophy climbs level by level, from bronze to silver, gold and platinum. Under each one: your level, what the next one asks, and how far you are.</string>
     <string name="trophee_a_venir">To win</string>
     <string name="trophee_niveau_gagne">“%1$s” trophy: level %2$d, %3$s!</string>
     <string name="trophee_prochain">Next level: %1$s</string>

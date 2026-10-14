@@ -866,6 +866,8 @@
     <string name="metal_or">זהב</string>
     <string name="metal_platine">פלטינה</string>
     <string name="trophee_niveau">דרגה %1$d מתוך %2$d · %3$s</string>
+    <string name="trophee_niveau_court">דרגה %1$d מתוך %2$d</string>
+    <string name="trophees_explication">כל גביע עולה מדרגה לדרגה: ארד, כסף, זהב ופלטינה. מתחת לכל אחד: הדרגה שלך, מה דורשת הבאה, וכמה כבר עשית.</string>
     <string name="trophee_a_venir">עוד לא הושג</string>
     <string name="trophee_niveau_gagne">גביע „%1$s”: דרגה %2$d, %3$s!</string>
     <string name="trophee_prochain">הדרגה הבאה: %1$s</string>
