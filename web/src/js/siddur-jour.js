@@ -23,9 +23,13 @@ export function libelle(condition) {
  * Les conditions du jour, ajustées au nusah (SiddurJour.conditionsPour) :
  * pas de Morid hatal ashkénaze hors d'Israël, pas de Ta'hanoun Edot en fin de Tichri.
  */
-export function conditionsPour(nusah, enIsrael, conditions, sansTahanounFinTichri = nusah === 'edot') {
+export function conditionsPour(nusah, enIsrael, conditions, sansTahanounFinTichri = nusah === 'edot', sud = false) {
   const c = new Set(conditions);
   if (nusah === 'ashkenaz' && !enIsrael) c.delete('morid_hatal');
+  // Hémisphère sud, Edot (14/10) : « מוריד הטל » toute l'année, jamais « מוריד הגשם » ;
+  // ותן טל ומטר suit la diaspora. Yalkut Yosef, Kitsour Choulhan Aroukh, O.H. 117:20
+  // (Chéérit Yossef III p. 105 ; Yalkut Yosef Tefila II, 117 note 20).
+  if (sud && nusah === 'edot' && c.delete('machiv_harouah')) c.add('morid_hatal');
   // Pas de Ta'hanoun du lendemain de Kippour jusqu'au 2 'Hechvan : Edot, et Sfard au choix.
   if (sansTahanounFinTichri && c.has('fin_tichri')) for (const k of ['tahanoun_chaharit', 'tahanoun_minha', 'lundi_jeudi']) c.delete(k);
   return c;

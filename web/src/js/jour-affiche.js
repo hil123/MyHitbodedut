@@ -12,8 +12,8 @@ import { SiddurMoment } from './regles.js';
  * change Morid hatal hors d'Israël, la bénédiction du Hallel partiel et
  * l'Anénou du particulier (JourAffiche.ajouts, ZMANIM.md).
  */
-export function ajouts(c0, nusah = 'edot', enIsrael = false, sansTahanounFinTichri = nusah === 'edot') {
-  const c = conditionsPour(nusah, enIsrael, c0, sansTahanounFinTichri);
+export function ajouts(c0, nusah = 'edot', enIsrael = false, sansTahanounFinTichri = nusah === 'edot', sud = false) {
+  const c = conditionsPour(nusah, enIsrael, c0, sansTahanounFinTichri, sud);
   const l = [];
   if (c.has(C.ASSERET_YEMEI_TECHOUVA)) l.push('ajout_asseret_yemei_techouva');
   if (c.has(C.MACHIV_HAROUAH)) l.push('ajout_machiv_harouah');

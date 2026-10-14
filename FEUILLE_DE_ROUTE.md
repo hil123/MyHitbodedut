@@ -970,6 +970,21 @@ Michna Beroura 426:6, 11, 17, 19, 20.
 - Retirée : la figure assise (char_reading_seated), remplacée par la Torah (bandeau
   Zmanim), Tehilim (Arvit, bibliothèque), l'écriture (relecture).
 
+## Hémisphère sud, Tal ou-matar (14/10)
+
+- Yalkut Yosef, Kitsour Choulhan Aroukh O.H. 117:20 (texte lu sur
+  moreshet-maran.com ; renvoie à Chéérit Yossef III p. 105 et Yalkut Yosef Tefila II,
+  117 note 20) : au Brésil, en Australie…, ותן טל ומטר dans ברך עלינו du 60ᵉ jour
+  après la tekoufa jusqu'à la veille de Pessa'h, comme la diaspora ; « מוריד הטל »
+  toute l'année. Codé pour le noussa'h Edot quand le lieu est au sud.
+- Recoupé pour « מוריד הטל toute l'année » : R. Y. Kaganoff (yeshiva.co,
+  « Davening for Rain in the Southern Hemisphere »), shofar.tv. Les communautés
+  ashkénazes suivent les dates habituelles (R. A. A. Hirschowitz, Beit Avraham, avec
+  R. Yits'hak El'hanan Spektor et R. Chmouel Salant, d'après torahb.co.il) :
+  Ashkenaz et Sefard inchangés.
+- Halakha Beroura (R. David Yosef), siman 117 : texte non trouvé en ligne, non
+  vérifié.
+
 ## Ce qui manque — liste complète (14/10)
 
 **Textes et prières**
@@ -987,8 +1002,8 @@ Michna Beroura 426:6, 11, 17, 19, 20.
 - Pourim : les villes au statut douteux (Hébron, Tibériade, Safed…) où l'on
   lit deux jours ne sont pas traitées.
 - Hémisphère sud : Birkat haIlanot en Eloul et Tichri (fait, voir 14/10 suite).
-  Tal ou-matar / Morid hatal : inchangés (dates d'Israël ou de diaspora) ; aucune
-  règle propre au sud codée, faute de source vérifiée et recoupée.
+  Tal ou-matar : dates de la diaspora pour tous (inchangé). Morid hatal : voir
+  « Hémisphère sud, Tal ou-matar (14/10) ».
 
 **Fonctions (les onze propositions)**
 - 2 : choix du thème au début et structure adaptée au thème.

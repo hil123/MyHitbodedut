@@ -95,8 +95,9 @@ object SiddurJour {
         nusah: String = "edot",
         enIsrael: Boolean = false,
         sansTahanounFinTichri: Boolean = nusah == "edot",
+        sud: Boolean = false,
     ): List<Ligne> {
-        val conditions = conditionsPour(nusah, enIsrael, conditionsDuJour, sansTahanounFinTichri)
+        val conditions = conditionsPour(nusah, enIsrael, conditionsDuJour, sansTahanounFinTichri, sud)
         fun nom(a: Annotation, condition: String) = libelleJour(a.libelle, condition, nusah, conditions)
         val sections = annotations.filter { it.sorte == Sorte.SECTION }.associateBy { it.section }
         val blocs = annotations.filter { it.sorte == Sorte.BLOC }.associateBy { it.section to it.bloc!! }
@@ -165,9 +166,14 @@ object SiddurJour {
         enIsrael: Boolean,
         conditions: Set<String>,
         sansTahanounFinTichri: Boolean = nusah == "edot",
+        sud: Boolean = false,
     ): Set<String> {
         var c = conditions
         if (nusah == "ashkenaz" && !enIsrael) c = c - CalendrierJuif.C.MORID_HATAL
+        // Hémisphère sud, Edot (14/10) : « מוריד הטל » toute l'année, jamais « מוריד הגשם » ;
+        // ותן טל ומטר suit la diaspora. Yalkut Yosef, Kitsour Choulhan Aroukh, O.H. 117:20
+        // (Chéérit Yossef III p. 105 ; Yalkut Yosef Tefila II, 117 note 20).
+        if (sud && nusah == "edot" && CalendrierJuif.C.MACHIV_HAROUAH in c) c = c - CalendrierJuif.C.MACHIV_HAROUAH + CalendrierJuif.C.MORID_HATAL
         // Pas de Ta'hanoun du lendemain de Kippour jusqu'au 2 'Hechvan : la
         // coutume des Edot, au choix en Sfard (Store.sansTahanounFinTichri) ;
         // TefilaRules le fait reprendre après Isrou 'hag.

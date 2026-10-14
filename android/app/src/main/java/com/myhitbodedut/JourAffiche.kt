@@ -39,8 +39,9 @@ object JourAffiche {
         nusah: String = "edot",
         enIsrael: Boolean = false,
         sansTahanounFinTichri: Boolean = nusah == "edot",
+        sud: Boolean = false,
     ): List<String> = buildList {
-        val c = SiddurJour.conditionsPour(nusah, enIsrael, c0, sansTahanounFinTichri)
+        val c = SiddurJour.conditionsPour(nusah, enIsrael, c0, sansTahanounFinTichri, sud)
         if (C.ASSERET_YEMEI_TECHOUVA in c) add("ajout_asseret_yemei_techouva")
         if (C.MACHIV_HAROUAH in c) add("ajout_machiv_harouah") else if (C.MORID_HATAL in c) add("ajout_morid_hatal")
         add(if (C.TAL_OUMATAR in c) "ajout_tal_oumatar" else "ajout_berakha")

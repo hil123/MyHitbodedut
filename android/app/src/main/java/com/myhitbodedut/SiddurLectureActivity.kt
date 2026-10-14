@@ -109,7 +109,7 @@ class SiddurLectureActivity : AppCompatActivity() {
         val note = if (annotations.isEmpty()) emptyList() else listOf(Note(getString(R.string.siddur_jour_ajouts,
             jour.dateHebraique, getString(if (israel) R.string.region_israel else R.string.region_diaspora))))
         val lignes: List<Any> = note + SiddurJour.lignes(texte, annotations, jour.conditions, ouverts,
-            Store.siddurNusah(this).cle, israel, Store.sansTahanounFinTichri(this))
+            Store.siddurNusah(this).cle, israel, Store.sansTahanounFinTichri(this), Store.hemisphereSud(this))
         val rendu = ReglagesLecture.rendu(this)
         val gestion = liste.layoutManager as LinearLayoutManager
         val place = gestion.findFirstVisibleItemPosition()

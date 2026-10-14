@@ -990,7 +990,7 @@ function ecranPriere() {
   const maintenant = new Date();
   const jourDuTexte = jourJuif(jourDeLaPriere(x.id, isoLocal(maintenant), maintenant.getHours()), store.inIsrael(), mukafChoma());
   const nusah = store.siddurNusah();
-  const c = conditionsPour(nusah, store.inIsrael(), jourDuTexte.conditions, store.sansTahanounFinTichri());
+  const c = conditionsPour(nusah, store.inIsrael(), jourDuTexte.conditions, store.sansTahanounFinTichri(), hemisphereSud());
   const nom = (a, condition) => tr.t(libelleJour(a.libelle, condition, nusah, c));
   const paragraphe = (s, i) => {
     const b = s.blocs[i];
@@ -1450,7 +1450,7 @@ function carteJour(iso, { complet = true } = {}) {
     h('p', { class: 'jour-civil' }, civil),
     marques.length ? h('div', { class: 'jour-marques' }, marques.map((m) => h('span', { class: 'marque' }, m))) : null,
     h('h3', { class: 'jour-sous-titre' }, tr.t('zmanim_ajouts_titre')),
-    h('p', { class: 'jour-ajouts' }, ajoutsDuJour(j.conditions, store.siddurNusah(), store.inIsrael(), store.sansTahanounFinTichri()).map((k) => tr.t(k)).join(' · ')),
+    h('p', { class: 'jour-ajouts' }, ajoutsDuJour(j.conditions, store.siddurNusah(), store.inIsrael(), store.sansTahanounFinTichri(), hemisphereSud()).map((k) => tr.t(k)).join(' · ')),
     // Le calendrier montre tout ; l'écran Zmanim (14/10) n'y garde que le jour (sousHoraires).
     ...(complet ? [store.levanaAffichee() ? blocLevana(iso) : null, ...blocHilloula(iso), ...blocHalakha(iso)] : []));
 }
@@ -1494,6 +1494,9 @@ function dessinLune({ eclairage, croissante }, sud) {
 }
 
 /** L'usage de Birkat haLevana : celui choisi, sinon celui du noussa'h (VueJour.usageLevana). */
+/** Le lieu des zmanim est au sud de l'équateur (Store.hemisphereSud). */
+const hemisphereSud = () => (store.lieu()?.latitude ?? 0) < 0;
+
 const usageLevanaCourant = () => usageLevana(store.siddurNusah(), store.levanaUsage());
 
 /**

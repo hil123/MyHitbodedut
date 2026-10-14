@@ -638,6 +638,9 @@ object Store {
         prefs(context).edit().apply { if (v == null) remove(KEY_LEVANA_USAGE) else putString(KEY_LEVANA_USAGE, v.cle) }.apply()
     }
 
+    /** Le lieu des zmanim est au sud de l'équateur (14/10) : Ilanot, Morid hatal des Edot. */
+    fun hemisphereSud(context: Context): Boolean = (lieuZmanim(context)?.latitude ?: 0.0) < 0
+
     /** L'écran d'ouverture (14/10) : Aujourd'hui, Textes ou Zmanim. */
     enum class Ouverture(val cle: String, val libelle: Int) {
         AUJOURDHUI("aujourdhui", R.string.nav_today),

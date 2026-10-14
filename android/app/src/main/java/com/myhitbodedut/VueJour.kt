@@ -132,7 +132,7 @@ object VueJour {
             )
         if (marques.isNotEmpty()) carte.addView(texte(c, marques.joinToString("  ·  "), 14f, R.color.brand, gras = true, haut = 10))
         carte.addView(texte(c, c.getString(R.string.zmanim_ajouts_titre), 12f, R.color.muted, gras = true, haut = 14))
-        val ajouts = JourAffiche.ajouts(j.conditions, Store.siddurNusah(c).cle, enIsrael, Store.sansTahanounFinTichri(c)).mapNotNull { Libelles.res(it)?.let(c::getString) }
+        val ajouts = JourAffiche.ajouts(j.conditions, Store.siddurNusah(c).cle, enIsrael, Store.sansTahanounFinTichri(c), Store.hemisphereSud(c)).mapNotNull { Libelles.res(it)?.let(c::getString) }
         carte.addView(texte(c, ajouts.joinToString(" · ").ifBlank { c.getString(R.string.zmanim_aucun_ajout) }, 15f, R.color.ink, haut = 2))
         // Le calendrier montre tout dans la carte ; l'écran Zmanim (14/10) n'y garde que le jour,
         // et pose Levana, hilloula et halakha sous les horaires (VueJour.sousHoraires).
