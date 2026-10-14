@@ -950,7 +950,7 @@
     <string name="journal_graphique">הדקות בכל יום, %s</string>
     <string name="partage_jour">שיתוף היום</string>
     <plurals name="widget_zmanim_serie">
-        <item quantity="one">רצף: יום %d</item>
+        <item quantity="one">רצף: יום אחד</item>
         <item quantity="two">רצף: יומיים</item>
         <item quantity="other">רצף: %d ימים</item>
     </plurals>

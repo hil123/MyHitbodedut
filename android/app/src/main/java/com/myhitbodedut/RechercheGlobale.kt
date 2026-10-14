@@ -14,7 +14,7 @@ object RechercheGlobale {
 
     const val PAR_SORTE = 30
 
-    fun nu(t: String): String = t.replace(Regex("<[^>]+>"), " ").replace(Regex("[֑-ׇ\"'״׳]"), "").replace(Regex("\\s+"), " ").lowercase()
+    fun nu(t: String): String = t.replace(Regex("<[^>]+>"), " ").replace(Regex("[֑-ׇ\"'״׳]"), "").replace(Regex("\\s+"), " ").trim().lowercase()
 
     /** Un extrait d'une quarantaine de caractères autour de la trouvaille, dans le texte sans voyelles. */
     fun extrait(texte: String, q: String): String {

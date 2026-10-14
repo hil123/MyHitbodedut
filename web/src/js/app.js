@@ -1080,7 +1080,7 @@ function ecranPriere() {
 
 // --- La recherche dans toute l'application (RechercheActivity.kt, 14/10) ------------------
 let texteRecherche = '';
-const nuRecherche = (t) => t.replace(/<[^>]+>/g, ' ').replace(/[\u0591-\u05C7"'״׳]/g, '').replace(/\s+/g, ' ').toLowerCase();
+const nuRecherche = (t) => t.replace(/<[^>]+>/g, ' ').replace(/[\u0591-\u05C7"'״׳]/g, '').replace(/\s+/g, ' ').trim().toLowerCase();
 function extraitRecherche(texte, q) {
   const t = nuRecherche(texte);
   const i = Math.max(0, t.indexOf(q));

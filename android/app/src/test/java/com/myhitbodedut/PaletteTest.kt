@@ -166,7 +166,7 @@ class PaletteTest {
         val hors = setOf(
             "widget_streak.xml", "widget_small.xml", "widget_large.xml",
             "bg_widget.xml", "bg_widget_button.xml", "bg_widget_day.xml", "bg_widget_day_done.xml",
-            "widget_apercu_anneaux.xml",
+            "widget_apercu_anneaux.xml", "widget_zmanim.xml",
         )
         val fautes = (File("src/main/res/layout").listFiles()!! + File("src/main/res/drawable").listFiles()!!)
             .filter { it.extension == "xml" && it.name !in hors }
