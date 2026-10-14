@@ -115,6 +115,8 @@ async function capture(nom, { langue, mode = 'clair', fond = 'vert', accent = 'v
 await capture('accueil-fr', { langue: 'fr' });
 await capture('accueil-he', { langue: 'he', prenom: 'אברהם' });
 await capture('accueil-en-sombre', { langue: 'en', mode: 'sombre' });
+// Un jour fait touché : sa durée à la place du ✓ (14/10).
+await capture('accueil-fr-durees', { langue: 'fr', actions: async (p) => { const n = await p.locator('button.jour.fait').count(); for (let i = 0; i < n; i++) await p.locator('button.jour.fait').nth(i).click(); } });
 await capture('accueil-fr-sable-violet', { langue: 'fr', fond: 'sable', accent: 'violet', prenom: 'Hillel' });
 await capture('textes-he', { langue: 'he', onglet: 'textes' });
 await capture('musique-fr', { langue: 'fr', ecran: 'musique' });

@@ -739,6 +739,9 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    /** Les jours faits dont on a touché la case : leur durée remplace le ✓. */
+    private val joursMontres = mutableSetOf<java.time.LocalDate>()
+
     private fun renderWeek() {
         val strip = findViewById<LinearLayout>(R.id.week_strip)
         strip.removeAllViews()
@@ -754,14 +757,27 @@ class MainActivity : AppCompatActivity() {
             val restDay = day.shabbat && day.exempt
             // Le numéro du jour remplit les cases encore ouvertes : la bande
             // se lit comme un calendrier, pas comme des cases vides.
+            // Un jour fait touché montre sa durée à la place du ✓ (14/10) ; touché encore, le ✓ revient.
+            val minutes = Store.record(this, day.date.toString())?.minutes ?: 0
+            val montre = day.done && day.date in joursMontres
             mark.text = when {
+                montre -> JaugeSemaine.dureeCourte(minutes)
                 day.done -> "✓"
                 restDay -> getString(R.string.week_shabbat_mark)
                 day.exempt -> "—"
                 else -> day.date.dayOfMonth.toString()
             }
+            if (day.done) {
+                mark.setTextSize(android.util.TypedValue.COMPLEX_UNIT_PX, mark.textSize * if (montre) 0.75f else 1f)
+                cell.isClickable = true
+                cell.foreground = getDrawable(android.R.drawable.list_selector_background)
+                cell.setOnClickListener {
+                    if (!joursMontres.remove(day.date)) joursMontres.add(day.date)
+                    renderWeek()
+                }
+            }
             cell.contentDescription = when {
-                day.done -> getString(R.string.week_done)
+                day.done -> getString(R.string.week_done) + " · " + Store.formatDuration(this, minutes)
                 restDay -> getString(R.string.settings_shabbat)
                 day.exempt -> getString(R.string.gate_exempt_title)
                 else -> getString(R.string.week_todo)

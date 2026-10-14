@@ -236,6 +236,11 @@ export const CycleTehilim = {
 };
 
 export const JaugeSemaine = {
+  /** La durée d'un jour fait, pour la case de la bande (14/10) : « 25′ », « 1h », « 1h20 ». */
+  dureeCourte(minutes) {
+    if (minutes < 60) return `${minutes}′`;
+    return minutes % 60 === 0 ? `${minutes / 60}h` : `${Math.floor(minutes / 60)}h${String(minutes % 60).padStart(2, '0')}`;
+  },
   progression(jours) {
     const faits = jours.filter((j) => j.done).length;
     const dus = jours.filter((j) => j.done || !j.exempt).length;

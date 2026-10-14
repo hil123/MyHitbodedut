@@ -83,6 +83,8 @@ let tikkun = null;
 let chizuk = null;
 // L'onglet d'ouverture (14/10) : Aujourd'hui ou Textes ; Zmanim s'ouvre par-dessus au démarrage.
 let onglet = store.ouverture() === 'textes' ? 'textes' : 'aujourdhui';
+/** Les jours faits dont on a touché la case : leur durée remplace le ✓ (14/10). */
+const joursMontres = new Set();
 const app = document.getElementById('app');
 
 function appliqueApparence() {
@@ -474,12 +476,17 @@ function panneauAujourdhui() {
     h('div', { class: 'semaine' }, semaine.map((j) => {
       const repos = j.shabbat && j.exempt;
       // Le numéro du jour remplit les cases ouvertes : la bande se lit comme un calendrier.
-      const marque = j.done ? '✓' : repos ? tr.t('week_shabbat_mark') : j.exempt ? '—' : String(Number(j.date.slice(8)));
-      const etiquette = j.done ? tr.t('week_done') : repos ? tr.t('settings_shabbat')
+      // Un jour fait touché montre sa durée à la place du ✓ (14/10) ; touché encore, le ✓ revient.
+      const minutes = store.record(j.date)?.minutes ?? 0;
+      const montre = j.done && joursMontres.has(j.date);
+      const marque = montre ? JaugeSemaine.dureeCourte(minutes) : j.done ? '✓' : repos ? tr.t('week_shabbat_mark') : j.exempt ? '—' : String(Number(j.date.slice(8)));
+      const etiquette = j.done ? `${tr.t('week_done')} · ${tr.duree(minutes)}` : repos ? tr.t('settings_shabbat')
         : j.exempt ? tr.t('gate_exempt_title') : tr.t('week_todo');
       const classe = ['jour', j.done ? 'fait' : j.exempt ? 'exempte' : '', repos && !j.done ? 'repos' : '',
         !j.done && !j.exempt && j.date === store.today() ? 'aujourdhui' : '', j.future ? 'avenir' : ''].join(' ').replace(/\s+/g, ' ').trim();
-      return h('div', { class: classe, role: 'img', 'aria-label': `${nomJour.format(new Date(`${j.date}T12:00:00Z`))} : ${etiquette}` },
+      const nom = `${nomJour.format(new Date(`${j.date}T12:00:00Z`))} : ${etiquette}`;
+      const bascule = () => { if (!joursMontres.delete(j.date)) joursMontres.add(j.date); rendre(); };
+      return h(j.done ? 'button' : 'div', { class: `${classe}${montre ? ' montre-duree' : ''}`, ...(j.done ? { type: 'button', onclick: bascule, 'aria-pressed': String(montre) } : { role: 'img' }), 'aria-label': nom },
         h('span', { class: 'nom', 'aria-hidden': 'true' }, nomJour.format(new Date(`${j.date}T12:00:00Z`))),
         h('span', { class: 'marque-jour', 'aria-hidden': 'true' }, marque));
     })),

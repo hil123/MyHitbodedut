@@ -15,6 +15,16 @@ object JaugeSemaine {
             get() = if (dus == 0) 0f else (faits.toFloat() / dus).coerceIn(0f, 1f)
     }
 
+    /**
+     * La durée d'un jour fait, assez courte pour la case de la bande (14/10,
+     * « le temps à la place du ✓ ») : « 25′ », « 1h », « 1h20 ».
+     */
+    fun dureeCourte(minutes: Int): String = when {
+        minutes < 60 -> "$minutes′"
+        minutes % 60 == 0 -> "${minutes / 60}h"
+        else -> "${minutes / 60}h%02d".format(minutes % 60)
+    }
+
     fun progression(jours: List<WeekDay>): Progression = Progression(
         faits = jours.count { it.done },
         dus = jours.count { it.done || !it.exempt }
