@@ -375,6 +375,8 @@ class SettingsActivity : AppCompatActivity() {
         findViewById<Button>(R.id.police_button).setText(Store.lecturePolice(this).libelle)
         findViewById<Button>(R.id.ouverture_button).setText(Store.ouverture(this).libelle)
         findViewById<Button>(R.id.halakha_source_button).setText(Store.sourceHalakha(this).libelle)
+        // Une valeur longue ne doit pas écraser l'intitulé en colonne (capture du 14/10) : largeur bornée.
+        findViewById<Button>(R.id.levana_usage_button).maxWidth = (resources.displayMetrics.widthPixels * 0.45).toInt()
         findViewById<Button>(R.id.levana_usage_button).text = Store.levanaUsage(this)?.let { getString(it.libelle) }
             ?: getString(R.string.levana_usage_auto) + " · " + getString(VueJour.usageLevana(this).libelle)
         val prenom = Store.firstName(this)
