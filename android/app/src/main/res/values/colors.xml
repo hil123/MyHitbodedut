@@ -22,6 +22,8 @@
     <color name="mint">#DFF5E8</color>
     <!-- L'écran d'ouverture : la menthe du fond de l'icône, pour qu'aucune forme ne se détache (13/10). -->
     <color name="ouverture">#DFF5E8</color>
+    <!-- L'écran d'ouverture du 15/10 : le vert sombre du bas de la photo du tziyoun, sous le voile. -->
+    <color name="ouverture_fond">#1E3A30</color>
     <color name="warning">#A8561F</color>
     <color name="ink">#172B27</color>
     <color name="muted">#5E706A</color>

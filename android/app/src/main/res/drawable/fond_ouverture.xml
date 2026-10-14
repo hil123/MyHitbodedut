@@ -1,11 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- L'écran d'ouverture (13/10) : le visage du personnage au centre, sur le papier.
-     Sous Android 12 et plus, le système montre l'icône ; ce fond sert avant. -->
-<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:drawable="@color/ouverture" />
-    <item
-        android:width="200dp"
-        android:height="275dp"
-        android:gravity="center"
-        android:drawable="@drawable/char_face" />
-</layer-list>
+<!-- L'écran d'ouverture (15/10) : un fond sombre seulement, le temps du premier dessin ;
+     le tziyoun et le 'hassid sont posés par MainActivity.ouverture(). L'ancien visage sur
+     la menthe restait parfois seul trois secondes, comme un écran vide (capture du 15/10). -->
+<color xmlns:android="http://schemas.android.com/apk/res/android" android:color="@color/ouverture_fond" />

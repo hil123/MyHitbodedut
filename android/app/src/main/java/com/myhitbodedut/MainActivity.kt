@@ -3,9 +3,7 @@ package com.myhitbodedut
 import android.content.Intent
 import android.graphics.Typeface
 import android.os.Bundle
-import android.os.SystemClock
 import android.view.HapticFeedbackConstants
-import android.view.ViewTreeObserver
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
@@ -853,35 +851,61 @@ class MainActivity : AppCompatActivity() {
     // --- Sélecteurs ---------------------------------------------------------
 
     /**
-     * L'écran d'ouverture (demande du 13/10) : le visage pendant trois secondes, au
-     * démarrage seulement. Le premier dessin est retenu ; le système garde son écran
-     * d'ouverture (Android 12 et plus) ou le fond du thème (avant) jusque-là.
+     * L'écran d'ouverture (13/10, refait le 15/10) : le 'hassid debout, souriant, devant
+     * le tziyoun de Rabbi Na'hman à Ouman, une seconde et demie au démarrage, puis un
+     * fondu. Il se pose par-dessus l'accueil dès le premier dessin : plus d'écran vide
+     * pendant que l'application attend (capture du 15/10, trois secondes de menthe).
+     * Photo : « Rabbi Nahman Tomb (Uman, Ukraine) », Lord Mountbatten, mai 2010,
+     * Wikimedia Commons, domaine public (tools/sources-images/).
      */
     private fun ouverture(demarrage: Boolean) {
-        // Le fond du thème (la palette choisie) remplace le visage une fois l'écran dessiné.
+        // Le fond du thème (la palette choisie) remplace celui de l'ouverture.
         val fond = android.util.TypedValue().also { theme.resolveAttribute(android.R.attr.colorBackground, it, true) }.data
-        if (!demarrage) {
-            window.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(fond))
-            return
-        }
-        val debut = SystemClock.uptimeMillis()
-        val contenu = window.decorView
-        contenu.viewTreeObserver.addOnPreDrawListener(object : ViewTreeObserver.OnPreDrawListener {
-            override fun onPreDraw(): Boolean {
-                if (SystemClock.uptimeMillis() - debut < OUVERTURE_MS) {
-                    contenu.postDelayed({ contenu.invalidate() }, 100)
-                    return false
+        window.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(fond))
+        if (!demarrage) return
+        val decor = window.decorView as android.view.ViewGroup
+        val haut = resources.displayMetrics.heightPixels
+        val voile = android.widget.FrameLayout(this).apply {
+            layoutDirection = View.LAYOUT_DIRECTION_LTR
+            setBackgroundColor(getColor(R.color.ouverture_fond))
+            isClickable = true
+            importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS
+            // Le tziyoun, calé en bas : l'inscription « ציון … רבינו נחמן » reste à l'écran.
+            addView(android.widget.ImageView(context).apply {
+                setImageResource(R.drawable.scene_ouverture_tombe)
+                scaleType = android.widget.ImageView.ScaleType.MATRIX
+                addOnLayoutChangeListener { v, l, t, r, b, _, _, _, _ ->
+                    val d = (v as android.widget.ImageView).drawable ?: return@addOnLayoutChangeListener
+                    val w = (r - l).toFloat(); val h = (b - t).toFloat()
+                    val k = maxOf(w / d.intrinsicWidth, h / d.intrinsicHeight)
+                    v.imageMatrix = android.graphics.Matrix().apply {
+                        setScale(k, k)
+                        postTranslate((w - d.intrinsicWidth * k) * 0.4f, h - d.intrinsicHeight * k)
+                    }
                 }
-                contenu.viewTreeObserver.removeOnPreDrawListener(this)
-                window.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(fond))
-                return true
-            }
-        })
+            }, android.widget.FrameLayout.LayoutParams(-1, -1))
+            addView(View(context).apply {
+                background = android.graphics.drawable.GradientDrawable(
+                    android.graphics.drawable.GradientDrawable.Orientation.TOP_BOTTOM,
+                    intArrayOf(0x00000000, 0x00000000, 0x99102820.toInt()))
+            }, android.widget.FrameLayout.LayoutParams(-1, -1))
+            addView(android.widget.ImageView(context).apply {
+                setImageResource(R.drawable.char_debout)
+                adjustViewBounds = true
+                scaleType = android.widget.ImageView.ScaleType.FIT_END
+            }, android.widget.FrameLayout.LayoutParams(-2, (haut * 0.6).toInt(), android.view.Gravity.BOTTOM or android.view.Gravity.LEFT).apply {
+                bottomMargin = (haut * 0.03).toInt()
+            })
+        }
+        decor.addView(voile, android.view.ViewGroup.LayoutParams(-1, -1))
+        voile.postDelayed({
+            voile.animate().alpha(0f).setDuration(350).withEndAction { decor.removeView(voile) }.start()
+        }, OUVERTURE_MS)
     }
 
     companion object {
-        /** La durée de l'écran d'ouverture. */
-        const val OUVERTURE_MS = 3000L
+        /** La durée de l'écran d'ouverture (15/10 : une seconde et demie). */
+        const val OUVERTURE_MS = 1500L
 
         /** Le jour de la séance dont la note est proposée (AAAA-MM-JJ). */
         const val EXTRA_ASK_NOTE = "ask_note"

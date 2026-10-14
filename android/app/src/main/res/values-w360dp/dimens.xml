@@ -4,4 +4,5 @@
     <dimen name="edge">24dp</dimen>
     <dimen name="wide_gutter">0dp</dimen>
     <dimen name="edge_inner">24dp</dimen>
+    <dimen name="nav_label">12sp</dimen>
 </resources>

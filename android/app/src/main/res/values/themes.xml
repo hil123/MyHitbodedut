@@ -219,6 +219,10 @@
     </style>
 
     <!-- La pastille derrière l’onglet actif. mhLine plutôt que mhMint : la menthe reste claire la nuit, et l’icône active, éclaircie la nuit, n’y serait plus lisible. -->
+    <style name="NavLabel" parent="TextAppearance.Material3.LabelMedium">
+        <item name="android:textSize">@dimen/nav_label</item>
+    </style>
+
     <style name="NavIndicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
         <item name="android:color">?attr/mhLine</item>
     </style>
@@ -244,8 +248,8 @@
     </style>
 
 
-    <!-- L'écran d'ouverture (13/10) : le visage pendant trois secondes, au démarrage
-         seulement (MainActivity retient le premier dessin). -->
+    <!-- L'écran d'ouverture (15/10) : un fond sombre le temps du premier dessin, puis
+         le 'hassid devant le tziyoun une seconde et demie (MainActivity.ouverture). -->
     <style name="Theme.MyHitbodedut.Ouverture" parent="Theme.MyHitbodedut">
         <item name="android:windowBackground">@drawable/fond_ouverture</item>
     </style>

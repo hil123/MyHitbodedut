@@ -2723,7 +2723,7 @@ if ('serviceWorker' in navigator) {
 }
 demarrer();
 
-// L'écran d'ouverture (13/10) : le visage trois secondes au démarrage, puis un fondu ;
+// L'écran d'ouverture (15/10) : le 'hassid devant le tziyoun une seconde et demie, puis un fondu ;
 // une seule fois par session (un rechargement ne le rejoue pas).
 {
   const ouverture = document.getElementById('ouverture');
@@ -2731,7 +2731,7 @@ demarrer();
   try { deja = sessionStorage.getItem('ouverture-vue') === '1'; sessionStorage.setItem('ouverture-vue', '1'); } catch { /* stockage refusé : on le montre */ }
   if (ouverture) {
     if (deja) ouverture.remove();
-    else setTimeout(() => { ouverture.classList.add('fin'); setTimeout(() => ouverture.remove(), 450); }, 3000);
+    else setTimeout(() => { ouverture.classList.add('fin'); setTimeout(() => ouverture.remove(), 400); }, 1500);
   }
 }
 

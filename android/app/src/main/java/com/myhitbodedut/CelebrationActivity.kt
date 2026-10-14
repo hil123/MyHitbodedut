@@ -12,6 +12,7 @@ import android.view.animation.LinearInterpolator
 import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import kotlin.random.Random
@@ -39,6 +40,14 @@ class CelebrationActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_celebration)
+        // Petit écran (15/10) : la scène, mesurée sans limite dans le défilement, prenait la
+        // hauteur de l'image et repoussait « Bravo » et « Continuer » hors de l'écran.
+        findViewById<FrameLayout>(R.id.celebration_stage).apply {
+            val haut = resources.displayMetrics.heightPixels
+            if (haut / resources.displayMetrics.density < 720) {
+                layoutParams = (layoutParams as LinearLayout.LayoutParams).apply { height = (haut * 0.42).toInt(); weight = 0f }
+            }
+        }
 
         val minutes = intent.getIntExtra(EXTRA_MINUTES, 0)
         findViewById<TextView>(R.id.celebration_minutes).apply {

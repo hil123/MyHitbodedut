@@ -102,6 +102,13 @@ Il subsiste un liseré clair le long des contours, inévitable sur un fond blanc
 Les écrans sombres posent donc les personnages sur un panneau clair, où ce
 liseré ne se voit pas.
 
+L'écran d'ouverture (15/10) pose le 'hassid debout (`char_debout.webp`, détouré
+par connexité depuis le bord, seuil 249 : la chemise plafonne à 245) devant le
+tziyoun de Rabbi Na'hman à Ouman (`scene_ouverture_tombe.webp`). La photo est
+« Rabbi Nahman Tomb (Uman, Ukraine).JPG », Lord Mountbatten, mai 2010, Wikimedia
+Commons, versée par son auteur au **domaine public** ; l'original est gardé dans
+`tools/sources-images/`. Le cadrage, calé en bas, garde l'inscription du tziyoun.
+
 `Character.kt` répartit les images par moment : accueil, appel à la pratique,
 pendant la séance, après la séance. Le choix est stable sur une journée entière
 et change le lendemain.

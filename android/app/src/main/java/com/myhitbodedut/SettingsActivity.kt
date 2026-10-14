@@ -60,6 +60,7 @@ class SettingsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
+        bornerValeurs(findViewById(android.R.id.content))
         notificationsDemandees = savedInstanceState?.getBoolean(ETAT_DEMANDE, false) ?: false
         wireActions()
         applyEdition()
@@ -375,8 +376,6 @@ class SettingsActivity : AppCompatActivity() {
         findViewById<Button>(R.id.police_button).setText(Store.lecturePolice(this).libelle)
         findViewById<Button>(R.id.ouverture_button).setText(Store.ouverture(this).libelle)
         findViewById<Button>(R.id.halakha_source_button).setText(Store.sourceHalakha(this).libelle)
-        // Une valeur longue ne doit pas écraser l'intitulé en colonne (capture du 14/10) : largeur bornée.
-        findViewById<Button>(R.id.levana_usage_button).maxWidth = (resources.displayMetrics.widthPixels * 0.45).toInt()
         findViewById<Button>(R.id.levana_usage_button).text = Store.levanaUsage(this)?.let { getString(it.libelle) }
             ?: getString(R.string.levana_usage_auto) + " · " + getString(VueJour.usageLevana(this).libelle)
         val prenom = Store.firstName(this)
@@ -588,6 +587,25 @@ class SettingsActivity : AppCompatActivity() {
     private fun safeStart(intent: Intent) {
         runCatching { startActivity(intent) }.onFailure {
             Toast.makeText(this, R.string.settings_screen_missing, Toast.LENGTH_LONG).show()
+        }
+    }
+
+
+    /**
+     * Une valeur longue (« Comme le téléphone », texte agrandi) ne doit pas écraser
+     * l'intitulé en colonne d'une lettre (captures du 14 et du 15/10) : chaque bouton
+     * de valeur posé à côté d'un intitulé prend au plus 45 % de la largeur.
+     */
+    private fun bornerValeurs(v: android.view.View) {
+        if (v !is android.view.ViewGroup) return
+        val rangee = v is android.widget.LinearLayout && v.orientation == android.widget.LinearLayout.HORIZONTAL &&
+            (0 until v.childCount).any { v.getChildAt(it) is TextView && v.getChildAt(it) !is Button }
+        for (i in 0 until v.childCount) {
+            val e = v.getChildAt(i)
+            if (rangee && e is Button && e.layoutParams.width == android.view.ViewGroup.LayoutParams.WRAP_CONTENT) {
+                e.maxWidth = (resources.displayMetrics.widthPixels * 0.45).toInt()
+            }
+            bornerValeurs(e)
         }
     }
 

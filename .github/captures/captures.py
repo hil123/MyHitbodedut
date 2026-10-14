@@ -329,6 +329,19 @@ def main():
 
     # Sur demande (CAPTURES_TAILLES_SEULES=1) : le seul passage des tailles,
     # deux fois plus court que le parcours entier.
+    # L'ecran d'ouverture (15/10) : le 'hassid devant le tziyoun, saisi pendant sa
+    # seconde et demie, au demarrage a froid.
+    def s00():
+        sh(f"am force-stop {PKG}")
+        pause(1.0)
+        sh(f"am start -n {PKG}/com.myhitbodedut.MainActivity")
+        pause(0.9)
+        png = adb("exec-out", "screencap", "-p", binary=True)
+        with open(os.path.join(OUT, "00-ouverture.png"), "wb") as f:
+            f.write(png)
+        pause(2.0)
+    etape("00 ouverture", s00)
+
     if os.environ.get("CAPTURES_TAILLES_SEULES") == "1":
         etape("20 tailles d'ecran", lambda: tailles())
         return

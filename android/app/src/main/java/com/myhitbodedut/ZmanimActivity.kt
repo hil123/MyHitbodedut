@@ -115,7 +115,12 @@ class ZmanimActivity : AppCompatActivity() {
     private fun bouton(texte: Int, marge: Int, action: () -> Unit) =
         MaterialButton(this, null, com.google.android.material.R.attr.materialButtonOutlinedStyle).apply {
             text = getString(texte)
-            maxLines = 2
+            // Un mot seul (« Calendrier ») tient sur une ligne, réduit s'il le faut, plutôt
+            // que d'être coupé en deux (petit écran, texte agrandi ; 15/10).
+            maxLines = text.trim().split(" ").size.coerceAtMost(2)
+            letterSpacing = 0f
+            androidx.core.widget.TextViewCompat.setAutoSizeTextTypeUniformWithConfiguration(
+                this, 9, 14, 1, android.util.TypedValue.COMPLEX_UNIT_SP)
             setPadding(dp(6), paddingTop, dp(6), paddingBottom)
             layoutParams = LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f).apply { marginStart = dp(marge) }
             setOnClickListener { action() }
