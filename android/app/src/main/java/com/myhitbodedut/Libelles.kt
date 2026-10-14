@@ -26,6 +26,8 @@ object Libelles {
         "ajout_hallel_partiel_avec_berakha" -> R.string.ajout_hallel_partiel_avec_berakha
         "ajout_hallel_partiel_sans_berakha" -> R.string.ajout_hallel_partiel_sans_berakha
         "ajout_jeune" -> R.string.ajout_jeune
+        "ajout_jeune_public" -> R.string.ajout_jeune_public
+        "ajout_avinou_malkenou" -> R.string.ajout_avinou_malkenou
         "ajout_lundi_jeudi" -> R.string.ajout_lundi_jeudi
         "ajout_machiv_harouah" -> R.string.ajout_machiv_harouah
         "ajout_morid_hatal" -> R.string.ajout_morid_hatal
