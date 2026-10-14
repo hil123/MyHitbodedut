@@ -161,7 +161,7 @@ test('soleil de minuit à Tromsø : absent, jamais en erreur', () => {
 
 // --- 4. Les annotations du siddour ---------------------------------------------------
 test('siddour : chaque annotation désigne encore son bloc, et chaque libellé existe', async () => {
-  const { empreinte, libelle, vrai } = await import('../src/js/siddur-jour.js');
+  const { empreinte, libelle, vrai, DERIVEES } = await import('../src/js/siddur-jour.js');
   const raw = join(ICI, '..', '..', 'android', 'app', 'src', 'main', 'res');
   const annotations = JSON.parse(readFileSync(join(raw, 'raw', 'siddur_annotations.json'), 'utf8'));
   const chaines = readFileSync(join(raw, 'values', 'strings.xml'), 'utf8');
@@ -173,7 +173,7 @@ test('siddour : chaque annotation désigne encore son bloc, et chaque libellé e
         const section = texte.sections[a.s];
         const vu = a.b === undefined ? empreinte(section.titre) : empreinte(section.blocs[a.b].t ?? section.blocs[a.b].c);
         assert.equal(vu, a.empreinte, `${nusah}/${id} §${a.s}/${a.b}`);
-        assert.ok(TOUTES.includes(a.si.replace(/^!/, '')), a.si);
+        assert.ok([...TOUTES, ...DERIVEES].includes(a.si.replace(/^!/, '')), a.si);
         assert.ok(chaines.includes(`name="${libelle(a.si)}"`), libelle(a.si));
         if (a.libelle) assert.ok(chaines.includes(`name="${a.libelle}"`), a.libelle);
       }
@@ -244,6 +244,12 @@ test('JourAffiche : allumage, sortie, ajouts nommés et grille, comme Android', 
   assert.ok(A.ajouts(fin, 'sefard', true).includes('ajout_tahanoun'));
   assert.ok(!A.ajouts(fin, 'sefard', true, true).includes('ajout_tahanoun'));
   assert.ok(conditionsPour('edot', true, jour('2026-10-13', true).conditions).has('tahanoun_chaharit'));
+  // Avinou malkénou (14/10) : 10 Tévèt, jour des dix jours de pénitence, Roch Hachana un dimanche ;
+  // jamais un jour ordinaire, Roch Hachana un Chabbat, le Chabbat Chouva, la veille de Kippour ni le 9 Av.
+  const am = (d) => conditionsPour('ashkenaz', true, jour(d, true).conditions).has('avinou_malkenou');
+  for (const d of ['2026-12-20', '2026-09-15', '2026-09-13', '2026-09-14']) assert.ok(am(d), d);
+  for (const d of ['2026-12-21', '2026-09-12', '2026-09-19', '2026-09-20', '2027-08-12']) assert.ok(!am(d), d);
+  assert.ok(jour('2027-08-12', true).conditions.has('ticha_beav'));
   // Jérusalem : Pourim et Al hanissim le 15 Adar II 5787 (24/03/2027).
   assert.ok(!jour('2027-03-23', true, true).conditions.has('al_hanissim'));
   assert.ok(jour('2027-03-24', true, true).conditions.has('pourim'));

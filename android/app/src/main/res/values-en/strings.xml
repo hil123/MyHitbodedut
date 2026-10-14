@@ -646,6 +646,8 @@
     <string name="ajout_sans_tahanoun">No Tachanun</string>
     <string name="ajout_asseret_yemei_techouva">Ten Days of Repentance</string>
     <string name="ajout_jeune">Aneinu</string>
+    <string name="ajout_jeune_public">Public fast</string>
+    <string name="ajout_avinou_malkenou">Avinu Malkeinu</string>
     <string name="ajout_ticha_beav">Nachem</string>
     <string name="ajout_chabbat">Shabbat</string>
     <string name="ajout_lundi_jeudi">Monday and Thursday</string>

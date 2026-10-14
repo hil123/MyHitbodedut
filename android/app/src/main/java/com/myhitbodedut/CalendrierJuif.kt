@@ -62,6 +62,10 @@ object CalendrierJuif {
             TAHANOUN_CHAHARIT, TAHANOUN_MINHA, LUNDI_JEUDI, ASSERET_YEMEI_TECHOUVA,
             JEUNE, TICHA_BEAV, CHABBAT, MOTSAE_CHABBAT, OMER, FIN_TICHRI,
         )
+
+        /** Avinou malkénou (SiddurJour.conditionsPour) : déduite des conditions du jour, hors des vecteurs KosherJava. */
+        const val AVINOU_MALKENOU = "avinou_malkenou"
+        val DERIVEES = listOf(AVINOU_MALKENOU)
     }
 
     /**

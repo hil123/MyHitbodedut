@@ -33,7 +33,7 @@ class SiddurJourTest {
 
     @Test
     fun `les conditions existent et chaque libelle est traduit`() {
-        val connues = CalendrierJuif.C.TOUTES.toSet()
+        val connues = (CalendrierJuif.C.TOUTES + CalendrierJuif.C.DERIVEES).toSet()
         val xml = listOf("values", "values-en", "values-iw").map { File("src/main/res/$it/strings.xml").readText() }
         Nusah.entries.forEach { n ->
             SiddurJour.parse(json, n.cle).values.flatten().forEach { a ->
@@ -129,6 +129,22 @@ class SiddurJourTest {
         assertTrue(etat(Nusah.ASHKENAZ, false).any { it is SiddurJour.Ligne.Replie && it.condition == "morid_hatal" })
         assertTrue(SiddurJour.Ligne.Etiquette("morid_hatal", "ajout_morid_hatal") in etat(Nusah.ASHKENAZ, true))
         assertTrue(SiddurJour.Ligne.Etiquette("morid_hatal", "ajout_morid_hatal") in etat(Nusah.SEFARD, false))
+    }
+
+    /** Avinou malkénou (14/10) : replié un jour ordinaire, ouvert le 10 Tévèt et pendant les dix jours. */
+    @Test
+    fun `avinou malkenou - jeunes et dix jours seulement`() {
+        fun am(d: String) = CalendrierJuif.C.AVINOU_MALKENOU in
+            SiddurJour.conditionsPour("ashkenaz", true, CalendrierJuif.jour(java.time.LocalDate.parse(d), true).conditions)
+        listOf("2026-12-20", "2026-09-15", "2026-09-13", "2026-09-14").forEach { assertTrue(it, am(it)) }
+        listOf("2026-12-21", "2026-09-12", "2026-09-19", "2026-09-20", "2027-08-12").forEach { assertFalse(it, am(it)) }
+        listOf(Nusah.ASHKENAZ, Nusah.SEFARD).forEach { n ->
+            fun lignes(d: String) = SiddurJour.lignes(DataFiles.siddur(n).texte("chaharit")!!,
+                SiddurJour.parse(json, n.cle).getValue("chaharit"),
+                CalendrierJuif.jour(java.time.LocalDate.parse(d), true).conditions, nusah = n.cle, enIsrael = true)
+            assertTrue("${n.cle}", lignes("2026-12-21").any { it is SiddurJour.Ligne.Replie && it.condition == "avinou_malkenou" })
+            assertTrue("${n.cle}", SiddurJour.Ligne.Etiquette("avinou_malkenou", "ajout_avinou_malkenou") in lignes("2026-12-20"))
+        }
     }
 
     @Test

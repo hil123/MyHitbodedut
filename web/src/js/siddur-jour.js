@@ -32,7 +32,23 @@ export function conditionsPour(nusah, enIsrael, conditions, sansTahanounFinTichr
   if (sud && nusah === 'edot' && c.delete('machiv_harouah')) c.add('morid_hatal');
   // Pas de Ta'hanoun du lendemain de Kippour jusqu'au 2 'Hechvan : Edot, et Sfard au choix.
   if (sansTahanounFinTichri && c.has('fin_tichri')) for (const k of ['tahanoun_chaharit', 'tahanoun_minha', 'lundi_jeudi']) c.delete(k);
+  if (avinouMalkenou(conditions)) c.add('avinou_malkenou');
   return c;
+}
+
+/** Les conditions déduites (SiddurJour, CalendrierJuif.C.DERIVEES), hors des vecteurs KosherJava. */
+export const DERIVEES = ['avinou_malkenou'];
+
+/**
+ * Avinou malkénou (SiddurJour.avinouMalkenou) : jeûnes publics sauf le 9 Av, dix
+ * jours de pénitence (Roch Hachana et Kippour compris, pas la veille de Kippour),
+ * jamais le Chabbat.
+ */
+export function avinouMalkenou(conditions) {
+  const c = conditions instanceof Set ? conditions : new Set(conditions);
+  if (c.has('chabbat')) return false;
+  if (c.has('jeune') && !c.has('ticha_beav')) return true;
+  return c.has('asseret_yemei_techouva') && (c.has('tahanoun_chaharit') || c.has('roch_hachana') || c.has('kippour'));
 }
 
 /** Hallel complet, ou partiel avec ou sans bénédiction selon le nusah (OC 422:2) ; null hors Hallel. */

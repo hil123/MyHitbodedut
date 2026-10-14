@@ -692,6 +692,8 @@
     <string name="ajout_sans_tahanoun">Pas de Ta’hanoun</string>
     <string name="ajout_asseret_yemei_techouva">Dix jours de pénitence</string>
     <string name="ajout_jeune">Anénou</string>
+    <string name="ajout_jeune_public">Jeûne public</string>
+    <string name="ajout_avinou_malkenou">Avinou malkénou</string>
     <string name="ajout_ticha_beav">Na’hem</string>
     <string name="ajout_chabbat">Chabbat</string>
     <string name="ajout_lundi_jeudi">Lundi et jeudi</string>

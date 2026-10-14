@@ -34,7 +34,7 @@ import sys
 
 RACINE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
 RAW = os.path.join(RACINE, "android", "app", "src", "main", "res", "raw")
-TEXTES = ["chaharit", "minha", "arvit", "birkat_hamazon", "meen_chaloch"]
+TEXTES = ["chaharit", "minha", "arvit", "birkat_hamazon", "meen_chaloch", "moussaf_rosh_hodech", "havdala", "hallel"]
 OFFICE = {"chaharit": "chaharit", "minha": "minha"}
 
 
@@ -178,6 +178,57 @@ def annoter(texte_id, sections, nusah):
                 prend(bi, c, libelle)
             elif cons[bi] and re.fullmatch(r"\(?בתענית ציבור אומר כאן הש״ץ עננו ?\)?:?", x):
                 prend(bi, "jeune", "ajout_anenou_officiant")
+            # Avinou malkénou des jeûnes et des dix jours (Ashkenaz, Sfard) : la consigne
+            # « … אומרים כאן אבינו מלכנו » et toute la suite, en un seul groupe ; ses lignes
+            # propres à un seul des deux en sont des variantes, estompées l'autre jour
+            # (SOUS ; relevé du 14/10).
+            elif cons[bi] and "אומרים כאן אבינו מלכנו" in x:
+                prend(bi, "avinou_malkenou")
+                j = bi + 1
+                sous = None
+                souche = None
+                while j < n:
+                    y = txt[j]
+                    if cons[j]:
+                        if re.fullmatch(r"בתענית ציבור:?", y):
+                            sous = "jeune"
+                        elif re.fullmatch(r"(בעשי״ת|בעשרת ימי תשובה)( (אומרים|מוסיפים))?:?", y):
+                            sous = "asseret_yemei_techouva"
+                        else:
+                            break
+                        souche = None
+                        prend(j, sous)
+                    elif y.startswith("בתענית ציבור:"):
+                        prend(j, "jeune")
+                    elif re.match(r"בעשי״ת:", y):
+                        prend(j, "asseret_yemei_techouva")
+                    elif commence(y, "אבינו מלכנו"):
+                        # Une variante ne couvre que ses lignes sœurs (« … כתבנו בספר », « … זכרנו ל ») :
+                        # « בטל מעלינו », « הצמח לנו »… se disent dans les deux cas.
+                        mots = " ".join(y.split()[:3])
+                        if sous and souche is not None and mots != souche:
+                            sous = None
+                        if sous and souche is None:
+                            souche = mots
+                        prend(j, sous or "avinou_malkenou")
+                    else:
+                        break
+                    j += 1
+                bi = j
+                continue
+            # Une consigne courte (« בחנוכה אומרים », « בראש חודש: », « בשבת אומר: »…) et ses blocs.
+            elif cons[bi] and any(re.fullmatch(m, x) for m, _ in CONSIGNES_COURTES) and bi + 1 < n and not cons[bi + 1]:
+                c = next(c for m, c in CONSIGNES_COURTES if re.fullmatch(m, x))
+                lib = JEUNE if c == "jeune" else None
+                prend(bi, c, lib)
+                j = bi + 1
+                # Le Hallel partiel ne saute que le premier bloc annoncé (Ps 115:1-11, 116:1-11) :
+                # « יהוה זכרנו » et « מה אשיב » se disent tous les jours de Hallel.
+                while j < n and not cons[j] and (c != "hallel_complet" or j == bi + 1):
+                    prend(j, c, lib)
+                    j += 1
+                bi = j
+                continue
             # Na'hem, le 9 Av.
             elif not cons[bi] and commence(x, "נחם יהוה אלהינו"):
                 en_tete(bi, "ticha_beav", "באב")
@@ -187,7 +238,7 @@ def annoter(texte_id, sections, nusah):
                 prend(bi, "ticha_beav")
             # Avinou malkénou des jeûnes (Ashkenaz : « בתענית ציבור: אבינו מלכנו ברך עלינו » ; relevé le 14/10).
             elif not cons[bi] and x.startswith("בתענית ציבור:"):
-                prend(bi, "jeune")
+                prend(bi, "jeune", JEUNE)
             # Les ajouts de Chabbat et de Roch 'Hodech annoncés dans leur bloc (Méèn chaloch, relevé le 14/10).
             elif not cons[bi] and re.match(r"בשבת ורצה", x):
                 prend(bi, "chabbat")
@@ -195,7 +246,7 @@ def annoter(texte_id, sections, nusah):
                 prend(bi, "roch_hodech")
             # La prière de Rav Chéchèt, « ביום תענית יאמר רבון העולמים » (Edot, Min'ha ; relevé le 14/10).
             elif not cons[bi] and re.match(r"ביום תענית (יאמר|אומרים)", x):
-                prend(bi, "jeune")
+                prend(bi, "jeune", JEUNE)
             # Été, hiver : la consigne seule, puis son bloc.
             elif cons[bi] and x in ETE + HIVER and bi + 1 < n and not cons[bi + 1]:
                 y = txt[bi + 1]
@@ -261,10 +312,27 @@ def annoter(texte_id, sections, nusah):
 
 
 # Les variantes qui suivent leur ajout : repliées avec lui quand il est replié.
+# « jeune » seul se lit « Anénou » (SiddurJour.libelle) : les autres ajouts du jeûne
+# public portent ce libellé-ci.
+JEUNE = "ajout_jeune_public"
+
 SOUS = {
     "yaale_veyavo": {"roch_hodech", "pessah", "soukkot", "chavouot", "roch_hachana", "chemini_atseret", "kippour"},
     "al_hanissim": {"hanouka", "pourim"},
+    "avinou_malkenou": {"jeune", "asseret_yemei_techouva"},
 }
+
+# Une consigne courte annonce les blocs de prière qui la suivent, jusqu'à la
+# consigne suivante (relevé du 14/10 : ces passages restaient ouverts tous les jours).
+CONSIGNES_COURTES = [
+    (r"בחנוכה( (אומרים|אומר|מוסיפים))?( זה)?:?", "hanouka"),
+    (r"(בראש חודש|בראש חדש|בר״ח)( (אומרים|אומר|מוסיפים|מוסיפין))?:?", "roch_hodech"),
+    (r"בשבת( (אומרים|אומר))?:?", "chabbat"),
+    (r"בסוכות:?", "soukkot"),
+    (r"בתענית ציבור:?", "jeune"),
+    # Le Hallel : les passages sautés les jours de Hallel partiel.
+    (r"(בימים שאין גומרים את ההלל (מדלגים|אין אומרים)|בראש חודש מדלגים זה|בר״ח ובחוה״מ פסח .*מדלגין זה):?", "hallel_complet"),
+]
 
 
 def grouper(annotations):

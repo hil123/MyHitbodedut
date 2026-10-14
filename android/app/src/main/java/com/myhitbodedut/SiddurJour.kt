@@ -180,7 +180,23 @@ object SiddurJour {
         if (sansTahanounFinTichri && CalendrierJuif.C.FIN_TICHRI in c) {
             c = c - setOf(CalendrierJuif.C.TAHANOUN_CHAHARIT, CalendrierJuif.C.TAHANOUN_MINHA, CalendrierJuif.C.LUNDI_JEUDI)
         }
+        if (avinouMalkenou(conditions)) c = c + CalendrierJuif.C.AVINOU_MALKENOU
         return c
+    }
+
+    /**
+     * Avinou malkénou (Ashkenaz, Sfard ; 14/10) : les jeûnes publics sauf le 9 Av
+     * et les dix jours de pénitence, Roch
+     * Hachana et Kippour compris, jamais le Chabbat. Déduit, non vérifié ligne à
+     * ligne : la veille de Kippour, sans Ta'hanoun, en est exclue ; les nuances de
+     * Min'ha (veille de Chabbat) ne sont pas codées.
+     */
+    fun avinouMalkenou(conditions: Set<String>): Boolean {
+        val c = CalendrierJuif.C
+        if (c.CHABBAT in conditions) return false
+        if (c.JEUNE in conditions && c.TICHA_BEAV !in conditions) return true
+        return c.ASSERET_YEMEI_TECHOUVA in conditions &&
+            (c.TAHANOUN_CHAHARIT in conditions || c.ROCH_HACHANA in conditions || c.KIPPOUR in conditions)
     }
 
     /**
