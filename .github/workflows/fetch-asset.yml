@@ -1,0 +1,25 @@
+# Temporaire (15/10) : récupère une image du domaine public que le conteneur de
+# développement ne peut pas télécharger, puis se retire. À supprimer après usage.
+name: Fetch asset
+on:
+  push:
+    branches: [ccr-a461212d-jym2rj]
+    paths: [.github/workflows/fetch-asset.yml]
+permissions:
+  contents: write
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          mkdir -p tools/sources-images
+          curl -fsSL -A "MyHitbodedut-build/1.0 (github.com/hil123/MyHitbodedut)" -o tools/sources-images/tombe_rabbi_nahman_uman.jpg \
+            "https://upload.wikimedia.org/wikipedia/commons/0/00/Rabbi_Nahman_Tomb_%28Uman%2C_Ukraine%29.JPG"
+          ls -l tools/sources-images
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git rm -q .github/workflows/fetch-asset.yml
+          git add tools/sources-images
+          git commit -m "chore: fetch public-domain photo of Rabbi Nachman's tomb (Wikimedia Commons, Lord Mountbatten, May 2010)"
+          git push
