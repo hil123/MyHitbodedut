@@ -603,6 +603,9 @@ TAILLES = [
     # Pixel 6 restait couche et ses captures debout sortaient en paysage.
     ("pixel6-couche", "1080x2400", 420, True),
     ("petit", "480x854", 240, False),
+    # Le petit telephone avec le texte agrandi du systeme (15/10, « responsive
+    # sur petite taille ») : la combinaison qui casse le plus de lignes.
+    ("petit-gros-texte", "480x854", 240, False),
     ("pixel6", "1080x2400", 420, False),
     ("tablette", "1600x2560", 320, False),
 ]
@@ -665,7 +668,28 @@ ECRANS_APP = [
     ("LibraryEntryActivity", "--es entry_id src-lm2-25"),
     ("ZmanimActivity", ""),
     ("CalendrierActivity", ""),
+    ("HalakhaActivity", ""),
+    ("HilloulotActivity", ""),
+    ("RechercheActivity", ""),
+    ("PaliersActivity", ""),
 ]
+
+
+def serre(nom, ecran):
+    """Les textes ecrases (une lettre par ligne) ou colles au bord de l'ecran."""
+    racine = dump()
+    if racine is None:
+        return
+    for n in racine.iter("node"):
+        b = bornes(n)
+        texte = (n.get("text", "") or "").strip()
+        if not b or len(texte) < 6 or "TextView" not in n.get("class", "") and "Button" not in n.get("class", ""):
+            continue
+        larg = b[2] - b[0]
+        if larg < W * 0.14 and len(texte) > 10:
+            faute(f"{nom} {ecran} : texte ecrase ({larg}px) « {texte[:30]} »")
+        elif b[0] <= 0 or b[2] >= W:
+            faute(f"{nom} {ecran} : texte colle au bord {b} « {texte[:30]} »")
 
 
 def visibles(racine, rids):
@@ -703,6 +727,7 @@ def presentation(nom, langue_app="fr"):
 def tailles():
     for nom, taille, densite, couche in TAILLES:
         log(f"\n--- taille {nom} ---")
+        sh("settings put system font_scale " + ("1.3" if nom.endswith("gros-texte") else "1.0"))
         appliquer_taille(taille, densite, couche)
         presentation(nom)
         lancer()
@@ -720,8 +745,10 @@ def tailles():
         limite = onglets[1] if onglets else H
         if not bouton or bouton[3] >= limite - 2 or bouton[1] < 0:
             faute(f"{nom} accueil : « Commencer » cache (bouton {bouton}, onglets a {limite})")
+        serre(nom, "accueil")
         capture(f"20-{nom}-accueil")
         defiler(True)
+        serre(nom, "accueil-suite")
         capture(f"20-{nom}-accueil-suite")
         onglet_textes()
         capture(f"20-{nom}-textes")
@@ -738,9 +765,11 @@ def tailles():
                 # Debout comme couchee, « Commencer » se voit sans defiler.
                 if classe == "SessionActivity" and "session_primary" not in visibles(dump(), {"session_primary"}):
                     faute(f"{nom} seance : « Commencer » hors de l'ecran")
+                serre(nom, classe)
                 capture(f"20-{nom}-{classe.replace('Activity', '').lower()}", attente=0.8)
         if nom in ("petit", "petit-couche", "pixel6-couche"):
             presentation(nom + "-he", "he")
+    sh("settings put system font_scale 1.0")
     appliquer_taille(None, None, False)
     regler({"langue_app": ("string", "fr")})
     langue("fr")
