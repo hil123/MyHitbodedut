@@ -871,11 +871,11 @@ class MainActivity : AppCompatActivity() {
 
     /**
      * L'écran d'ouverture (13/10, refait le 15/10) : le 'hassid debout, souriant, devant
-     * le tziyoun de Rabbi Na'hman à Ouman, une seconde et demie au démarrage, puis un
+     * le היכל הציון de Rabbi Na'hman à Ouman, une seconde et demie au démarrage, puis un
      * fondu. Il se pose par-dessus l'accueil dès le premier dessin : plus d'écran vide
      * pendant que l'application attend (capture du 15/10, trois secondes de menthe).
-     * Photo : « Rabbi Nahman Tomb (Uman, Ukraine) », Lord Mountbatten, mai 2010,
-     * Wikimedia Commons, domaine public (tools/sources-images/).
+     * Photo : la façade du היכל הציון à Ouman, fournie par le porteur le 15/10
+     * (tools/sources-images/heikhal_tziyoun_uman.jpg) ; licence non vérifiée.
      */
     private fun ouverture(demarrage: Boolean) {
         // Le fond du thème (la palette choisie) remplace celui de l'ouverture.
@@ -889,7 +889,7 @@ class MainActivity : AppCompatActivity() {
             setBackgroundColor(getColor(R.color.ouverture_fond))
             isClickable = true
             importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS
-            // Le tziyoun, calé en bas : l'inscription « ציון … רבינו נחמן » reste à l'écran.
+            // Le היכל הציון, centré : l'inscription « ציון רביה"ק רבי נחמן מברסלב » reste entière (15/10).
             addView(android.widget.ImageView(context).apply {
                 setImageResource(R.drawable.scene_ouverture_tombe)
                 scaleType = android.widget.ImageView.ScaleType.MATRIX
@@ -899,7 +899,7 @@ class MainActivity : AppCompatActivity() {
                     val k = maxOf(w / d.intrinsicWidth, h / d.intrinsicHeight)
                     v.imageMatrix = android.graphics.Matrix().apply {
                         setScale(k, k)
-                        postTranslate((w - d.intrinsicWidth * k) * 0.4f, h - d.intrinsicHeight * k)
+                        postTranslate((w - d.intrinsicWidth * k) / 2f, (h - d.intrinsicHeight * k) / 2f)
                     }
                 }
             }, android.widget.FrameLayout.LayoutParams(-1, -1))
@@ -912,7 +912,7 @@ class MainActivity : AppCompatActivity() {
                 setImageResource(R.drawable.char_debout)
                 adjustViewBounds = true
                 scaleType = android.widget.ImageView.ScaleType.FIT_END
-            }, android.widget.FrameLayout.LayoutParams(-2, (haut * 0.6).toInt(), android.view.Gravity.BOTTOM or android.view.Gravity.LEFT).apply {
+            }, android.widget.FrameLayout.LayoutParams(-2, (haut * 0.5).toInt(), android.view.Gravity.BOTTOM or android.view.Gravity.LEFT).apply {
                 bottomMargin = (haut * 0.03).toInt()
             })
         }
