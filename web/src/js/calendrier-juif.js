@@ -55,6 +55,14 @@ export function calendrier(iso, enIsrael, modernes, mukafChoma) {
 
 /** Jérusalem (GeoNames), ville murée depuis Josué : Pourim y est le 15 Adar. */
 export const JERUSALEM_GEONAMES = 281184;
+
+/** Une position dans Jérusalem : à 10 km au plus de la Vieille Ville (choix de l'application, CalendrierJuif.aJerusalem). */
+export function aJerusalem(latitude, longitude) {
+  const rad = (x) => (x * Math.PI) / 180;
+  const dLat = rad(latitude - 31.7767), dLon = rad(longitude - 35.2345);
+  const a = Math.sin(dLat / 2) ** 2 + Math.cos(rad(31.7767)) * Math.cos(rad(latitude)) * Math.sin(dLon / 2) ** 2;
+  return 2 * 6371 * Math.asin(Math.sqrt(a)) <= 10;
+}
 /** Les noms de Pourim dans une ville murée (CalendrierJuif.MUREE). */
 const MUREE = { pourim: 'pourim_ailleurs', chouchan_pourim: 'pourim_jerusalem' };
 
@@ -136,4 +144,29 @@ export function jourDeLaPriere(texte, iso, heures) {
     return new Date(Date.UTC(a, m - 1, j + 1, 12)).toISOString().slice(0, 10);
   }
   return iso;
+}
+
+/**
+ * Birkat haLevana (Levana.kt, 13/10) : la fenêtre qui concerne le soir de [iso],
+ * de sept jours après le molad jusqu'à la mi-mois (Choulhan Aroukh, O.H. 426).
+ * Le premier soir est celui du début ; le dernier, celui de la nuit où elle se ferme.
+ */
+const MOIS_LUNAIRE = ((29 * 24 + 12) * 60 + 44) * 60000 + 3333;
+export function levana(iso, zone) {
+  const local = (ms) => new Intl.DateTimeFormat('en-CA', { timeZone: zone, year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date(ms));
+  const du = (d) => {
+    const c = calendrier(d, false, false, false);
+    const f = { molad: c.getMoladAsDate().toMillis(), debut: c.getTchilasZmanKidushLevana7Days().toMillis(), fin: c.getSofZmanKidushLevanaBetweenMoldos().toMillis() };
+    return { ...f, premier: local(f.debut), dernier: local(f.fin - 12 * 3600000) };
+  };
+  let f = du(iso);
+  if (iso > f.dernier) {
+    const [a, m, d] = iso.split('-').map(Number);
+    const jour = calendrier(iso, false, false, false).getJewishDayOfMonth();
+    f = du(new Date(Date.UTC(a, m - 1, d + 31 - jour + 2, 12)).toISOString().slice(0, 10));
+  }
+  const part = (ms) => Math.min(1, Math.max(0, (ms - f.molad) / MOIS_LUNAIRE));
+  const jours = Math.round((Date.parse(`${f.premier}T12:00:00Z`) - Date.parse(`${iso}T12:00:00Z`)) / 86400000);
+  const etat = iso < f.premier ? { dans: jours } : iso === f.dernier ? 'dernier' : 'ce_soir';
+  return { premier: f.premier, dernier: f.dernier, etat, debut: part(f.debut), fin: part(f.fin), point: part(Date.parse(`${iso}T18:00:00Z`)) };
 }

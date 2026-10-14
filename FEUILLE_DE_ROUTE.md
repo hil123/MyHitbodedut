@@ -888,6 +888,18 @@ vient l'accord, quand, et sur quoi il porte.
   - נשמת כל חי (Siddur Edot HaMizrach, Torat Emet 357, Public Domain) ;
   - פרק שירה (Torat Emet 357, Public Domain).
 - Kokhvei Or, demandé depuis le 22/09, est enfin dans l'application.
+- Pourim : la Méguila d'Esther s'affiche sous Arvit (la nuit qui ouvre
+  Pourim) et sous Cha'harit ; le 15 Adar d'après le lieu, sans réglage
+  (demande du 13/10) : la ville de Jérusalem, ou une position à 10 km au plus
+  de la Vieille Ville (rayon choisi par l'application) ; Pourim mechoulach :
+  le vendredi 14. Les villes au statut douteux (Hébron, Tibériade, Safed…),
+  où l'on lit les deux jours, ne sont pas traitées.
+- Halakha du jour : les deux halakhot dans une seule carte.
+- Birkat haLevana sur la carte du jour (comme CalJ) : la fenêtre du mois,
+  sept jours après le molad jusqu'à la mi-mois (Choulhan Aroukh O.H. 426,
+  KosherJava), « ce soir » / « dernier soir » / « dans N jours », et une
+  jauge du mois lunaire. Vérifié contre CalJ : 'Hechvan 5787, du 18 au 25
+  octobre 2026.
 
 **Reste** :
 

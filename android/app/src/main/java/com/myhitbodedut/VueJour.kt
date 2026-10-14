@@ -45,6 +45,39 @@ object VueJour {
 
     private fun locale(langue: String): Locale = Locale.forLanguageTag(langue)
 
+    /** Birkat haLevana (13/10) : la fenêtre du mois, ce soir ou dans combien de jours, et la jauge du mois lunaire. */
+    private fun levana(c: Context, date: LocalDate, langue: String): View = LinearLayout(c).apply {
+        orientation = LinearLayout.VERTICAL
+        layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+        val zone = Store.lieuZmanim(c)?.fuseau?.let { runCatching { java.time.ZoneId.of(it) }.getOrNull() } ?: java.time.ZoneId.systemDefault()
+        val f = Levana.fenetre(date, zone)
+        val fmt = DateTimeFormatter.ofPattern("d MMM", locale(langue))
+        addView(LinearLayout(c).apply {
+            orientation = LinearLayout.HORIZONTAL
+            gravity = Gravity.CENTER_VERTICAL
+            layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+                .apply { topMargin = dp(c, 14) }
+            addView(texte(c, c.getString(R.string.levana_titre), 12f, R.color.muted, gras = true).apply {
+                layoutParams = LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f)
+            })
+            val etat = when (val e = Levana.etat(f, date, zone)) {
+                is Levana.Etat.Dans -> c.resources.getQuantityString(R.plurals.levana_dans, e.jours, e.jours)
+                Levana.Etat.CeSoir -> c.getString(R.string.levana_ce_soir)
+                Levana.Etat.DernierSoir -> c.getString(R.string.levana_dernier_soir)
+            }
+            addView(texte(c, etat, 12f, if (Levana.etat(f, date, zone) is Levana.Etat.Dans) R.color.muted else R.color.brand, gras = true).apply {
+                layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+            })
+        })
+        addView(texte(c, c.getString(R.string.levana_fenetre, f.premierSoir(zone).format(fmt), f.dernierSoir(zone).format(fmt)), 15f, R.color.ink, haut = 2))
+        addView(Levana.Jauge(c, Levana.part(f, f.debut), Levana.part(f, f.fin), Levana.part(f, Levana.soir(date, zone))).apply {
+            layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+                .apply { topMargin = dp(c, 8) }
+            contentDescription = null
+        })
+        addView(texte(c, c.getString(R.string.levana_source), 11f, R.color.muted, haut = 4))
+    }
+
     /** La carte d'un jour : la date hébraïque, la date civile, les fêtes, ce qu'il change aux prières. */
     fun carteJour(c: Context, date: LocalDate, enIsrael: Boolean): View {
         val j = CalendrierJuif.jour(date, enIsrael, Store.mukafChoma(c))
@@ -78,6 +111,7 @@ object VueJour {
         carte.addView(texte(c, c.getString(R.string.zmanim_ajouts_titre), 12f, R.color.muted, gras = true, haut = 14))
         val ajouts = JourAffiche.ajouts(j.conditions, Store.siddurNusah(c).cle, enIsrael, Store.sansTahanounFinTichri(c)).mapNotNull { Libelles.res(it)?.let(c::getString) }
         carte.addView(texte(c, ajouts.joinToString(" · ").ifBlank { c.getString(R.string.zmanim_aucun_ajout) }, 15f, R.color.ink, haut = 2))
+        carte.addView(levana(c, date, langue))
         // La hilloula du jour (comme CalJ) : les noms, cinq au plus, puis l'écran des hilloulot.
         val hilloulot = if (Store.hilloulotAffichees(c)) Hilloulot.pour(Hilloulot.table(c), date, enIsrael) else emptyList()
         if (hilloulot.isNotEmpty()) {

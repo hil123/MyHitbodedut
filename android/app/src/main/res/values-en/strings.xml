@@ -852,8 +852,14 @@
     <!-- La halakha du jour : le Yalkut Yosef, puis le Ben Ish 'Haï (13/10) -->
     <string name="halakha_ben_ish_hai">Ben Ish Chai, weekly portion</string>
     <string name="halakha_yalkut_source">Yalkut Yosef – Kitzur Shulchan Aruch, Rav Yitzhak Yosef (Torat Emet text, CC BY-NC-SA 2.5): a selection, not the whole book.</string>
-    <!-- Ville murée : Pourim le 15 Adar ; la Méguila dans le siddour (13/10) -->
-    <string name="reglage_ville_muree">City walled since the days of Yehoshua bin Nun</string>
-    <string name="reglage_ville_muree_aide">Purim and the Megillah reading on 15 Adar, as in Jerusalem.</string>
-    <string name="reglage_ville_muree_jerusalem">Jerusalem: Purim on 15 Adar.</string>
+    <!-- Birkat haLevana sur la carte du jour (13/10) -->
+    <string name="levana_titre">Birkat HaLevana</string>
+    <string name="levana_fenetre">From %1$s to %2$s in the evening (night included)</string>
+    <string name="levana_ce_soir">Possible tonight</string>
+    <string name="levana_dernier_soir">Last night</string>
+    <plurals name="levana_dans">
+        <item quantity="one">In %d day</item>
+        <item quantity="other">In %d days</item>
+    </plurals>
+    <string name="levana_source">Seven days after the molad, until mid-month (Shulchan Aruch, Orach Chaim 426).</string>
 </resources>

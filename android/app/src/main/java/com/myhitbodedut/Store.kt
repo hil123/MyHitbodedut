@@ -84,7 +84,6 @@ object Store {
     private const val KEY_TROPHEES_NOTIFIES = "trophees_notifies"
     private const val KEY_HILLOULOT = "hilloulot_affichees"
     private const val KEY_HALAKHA = "halakha_affichee"
-    private const val KEY_VILLE_MUREE = "ville_muree"
     private const val KEY_SIDDUR_NUSAH = "siddur_nusah"
     private const val KEY_TAHANOUN_TICHRI_SFARD = "sans_tahanoun_fin_tichri_sfard"
     private const val KEY_CALENDRIER_CIVIL = "calendrier_civil"
@@ -352,17 +351,13 @@ object Store {
     fun lieuVille(context: Context): Long = prefs(context).getLong(KEY_LIEU_VILLE, -1L)
 
     /**
-     * Pourim le 15 Adar (CalendrierJuif.jour) : la ville des zmanim est Jérusalem,
-     * ou l'utilisateur a dit habiter une ville entourée d'une muraille depuis
-     * Yehoshoua bin Noun (13/10) — l'application ne tient pas la liste de ces villes.
+     * Pourim le 15 Adar (CalendrierJuif.jour), d'après le lieu des zmanim, sans
+     * réglage (demande du 13/10) : la ville de Jérusalem, ou une position dans
+     * Jérusalem (CalendrierJuif.aJerusalem).
      */
-    fun mukafChoma(context: Context): Boolean = lieuVille(context) == CalendrierJuif.JERUSALEM_GEONAMES || villeMuree(context)
-
-    fun villeMuree(context: Context): Boolean = prefs(context).getBoolean(KEY_VILLE_MUREE, false)
-
-    fun setVilleMuree(context: Context, v: Boolean) {
-        prefs(context).edit().putBoolean(KEY_VILLE_MUREE, v).apply()
-    }
+    fun mukafChoma(context: Context): Boolean =
+        lieuVille(context) == CalendrierJuif.JERUSALEM_GEONAMES ||
+            (lieuVille(context) == -1L && lieuZmanim(context)?.let { CalendrierJuif.aJerusalem(it.latitude, it.longitude) } == true)
 
     /**
      * Choisir le lieu règle aussi Israël ou diaspora : le deuxième jour de

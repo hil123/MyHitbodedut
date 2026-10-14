@@ -100,6 +100,19 @@ object YalkutYosef {
     fun source(s: Seif): String =
         listOf("ילקוט יוסף", s.siman, if (s.lettre.isNotEmpty()) "סעיף ${s.lettre}" else null).filterNotNull().joinToString(" · ")
 
+    /** Les halakhot du jour en une seule carte (13/10) : le siman une fois s'il est commun. */
+    fun titreCarte(seifs: List<Seif>): String =
+        if (seifs.map { it.siman }.distinct().size == 1) "ילקוט יוסף · ${seifs.first().siman}" else "ילקוט יוסף"
+
+    /** Chaque se'if sous sa lettre (et son siman, s'ils diffèrent). */
+    fun texteCarte(seifs: List<Seif>): String {
+        val commun = seifs.map { it.siman }.distinct().size == 1
+        return seifs.joinToString("\n\n") { s ->
+            val l = if (s.lettre.isNotEmpty()) "${s.lettre}. " else ""
+            if (commun) "$l${s.texte}" else "${s.siman}\n$l${s.texte}"
+        }
+    }
+
     @Volatile private var cache: Livre? = null
 
     fun livre(context: Context): Livre =

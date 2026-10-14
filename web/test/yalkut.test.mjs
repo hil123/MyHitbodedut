@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { du, fenetre, periode, pour, recherche, source, PAR_JOUR } from '../src/js/yalkut.js';
+import { du, fenetre, periode, pour, recherche, source, texteCarte, titreCarte, PAR_JOUR } from '../src/js/yalkut.js';
 
 const livre = JSON.parse(readFileSync(new URL('../../android/app/src/main/res/raw/yalkut_yosef.json', import.meta.url)));
 const PERIODES = ['ordinaire', 'chabbat', 'roch_hodech', 'pessah', 'omer', 'bein_hametsarim', 'eloul', 'kippour', 'soukkot', 'hanouka', 'tou_bichvat', 'pourim'];
@@ -56,4 +56,12 @@ test('les fenêtres de fête', () => {
   assert.equal(periode('2026-10-21', false)[0], 'ordinaire');
   assert.deepEqual(du([1, 2, 3], 2), [2, 3]);
   assert.ok(recherche(livre, 'ציצית').length > 0);
+});
+
+test('une seule carte pour les halakhot du jour', () => {
+  const a = { s: 'סימן א', l: 'ב', t: 'x' }, b = { s: 'סימן א', l: 'ג', t: 'y' }, c = { s: 'סימן ב', l: 'א', t: 'z' };
+  assert.equal(titreCarte([a, b]), 'ילקוט יוסף · סימן א');
+  assert.equal(texteCarte([a, b]), 'ב. x\n\nג. y');
+  assert.equal(titreCarte([b, c]), 'ילקוט יוסף');
+  assert.equal(texteCarte([b, c]), 'סימן א\nג. y\n\nסימן ב\nא. z');
 });

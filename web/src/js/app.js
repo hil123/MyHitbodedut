@@ -9,13 +9,13 @@ import { ART_DU_MOMENT, ChizukBag, ChizukRules } from './chizuk.js';
 import { DanseMesure } from './seance.js';
 import { creeStore, memoire } from './store.js';
 import { isoLocal } from './calendrier.js';
-import { JERUSALEM_GEONAMES, jour as jourJuif, jourDeLaPriere } from './calendrier-juif.js';
+import { JERUSALEM_GEONAMES, aJerusalem, jour as jourJuif, jourDeLaPriere, levana } from './calendrier-juif.js';
 import { conditionsPour, index as indexAjouts, libelleJour, vrai as ajoutVrai } from './siddur-jour.js';
 import * as Paliers from './paliers.js';
 import * as Trophees from './trophees.js';
 import { FORMES } from './trophees-formes.js';
 import { pour as halakhotPour, recherche as rechercheHalakha, source as sourceHalakha } from './halakha.js';
-import { pour as yalkutPour, recherche as rechercheYalkut, source as sourceYalkut } from './yalkut.js';
+import { pour as yalkutPour, recherche as rechercheYalkut, source as sourceYalkut, texteCarte, titreCarte } from './yalkut.js';
 import { ajouts as ajoutsDuJour, dateHilloula, debutMoisHebreu, hilloulotPour, lienArticle, rechercheHilloula, horaires, illustration as illustrationDuJour, lienHalakha, lienHyomi, momentDuSiddour, moisHebreuVoisin, semaines, semainesHebreu } from './jour-affiche.js';
 import { ALLUMAGES, heure as heureZman } from './zmanim.js';
 
@@ -1322,8 +1322,8 @@ function choisirAllumage() {
     ALLUMAGES.indexOf(store.allumage()), (i) => { store.setAllumage(ALLUMAGES[i]); rendre(); });
 }
 
-/** Jérusalem choisie, ou une ville murée depuis Yehoshoua bin Noun (13/10) : Pourim le 15 Adar (Store.mukafChoma). */
-const mukafChoma = () => store.lieu()?.ville === JERUSALEM_GEONAMES || store.villeMuree();
+/** Pourim le 15 Adar d'après le lieu, sans réglage (13/10) : la ville de Jérusalem, ou une position dans Jérusalem (Store.mukafChoma). */
+const mukafChoma = () => { const l = store.lieu(); return !!l && (l.ville === JERUSALEM_GEONAMES || (l.ville == null && aJerusalem(l.latitude, l.longitude))); };
 
 /** La Méguila avec la prière : sous Arvit, le jour hébreu de demain ; sous Cha'harit, aujourd'hui (SiddurMoment.megila). */
 function megilaDuMoment(moment, iso) {
@@ -1409,8 +1409,28 @@ function carteJour(iso) {
     marques.length ? h('div', { class: 'jour-marques' }, marques.map((m) => h('span', { class: 'marque' }, m))) : null,
     h('h3', { class: 'jour-sous-titre' }, tr.t('zmanim_ajouts_titre')),
     h('p', { class: 'jour-ajouts' }, ajoutsDuJour(j.conditions, store.siddurNusah(), store.inIsrael(), store.sansTahanounFinTichri()).map((k) => tr.t(k)).join(' · ')),
+    blocLevana(iso),
     ...blocHilloula(iso),
     ...blocHalakha(iso));
+}
+
+/** Birkat haLevana (Levana.kt, 13/10) : la fenêtre du mois, ce soir ou dans combien de jours, la jauge du mois lunaire. */
+function blocLevana(iso) {
+  const zone = store.lieu()?.fuseau ?? Intl.DateTimeFormat().resolvedOptions().timeZone;
+  const l = levana(iso, zone);
+  const court = (d) => new Intl.DateTimeFormat(tr.langue, { day: 'numeric', month: 'short', timeZone: 'UTC' }).format(new Date(`${d}T12:00:00Z`));
+  const etat = l.etat === 'ce_soir' ? tr.t('levana_ce_soir') : l.etat === 'dernier' ? tr.t('levana_dernier_soir') : tr.p('levana_dans', l.etat.dans);
+  const pct = (x) => `${(x * 100).toFixed(2)}%`;
+  return h('div', { class: 'levana' },
+    h('div', { class: 'levana-tete' },
+      h('h3', { class: 'jour-sous-titre' }, tr.t('levana_titre')),
+      h('span', { class: `levana-etat${typeof l.etat === 'string' ? ' ouvert' : ''}` }, etat)),
+    h('p', { class: 'levana-fenetre' }, tr.t('levana_fenetre', court(l.premier), court(l.dernier))),
+    h('div', { class: 'levana-jauge', 'aria-hidden': 'true' },
+      h('span', { class: 'levana-fil' }),
+      h('span', { class: 'levana-or', style: `inset-inline-start: ${pct(l.debut)}; width: ${pct(l.fin - l.debut)}` }),
+      h('span', { class: 'levana-point', style: `inset-inline-start: ${pct(l.point)}` })),
+    h('p', { class: 'levana-source' }, tr.t('levana_source')));
 }
 
 /** La halakha du jour, hors ligne : une halakha courte du Yalkut Yosef (13/10), puis l'écran de la halakha. */
@@ -1468,7 +1488,7 @@ function ecranHalakha() {
         h('button', { class: 'icone-bouton mois-precedent', dir: 'ltr', 'aria-label': tr.t('calendrier_precedent'), onclick: () => decale(-1) }, tr.rtl ? '›' : '‹'),
         h('div', { class: 'mois-titres' }, h('p', { class: 'mois-principal mois-hebreu', lang: 'he', dir: 'rtl' }, j.dateHebraique), h('p', { class: 'mois-second' }, iso)),
         h('button', { class: 'icone-bouton mois-suivant', dir: 'ltr', 'aria-label': tr.t('calendrier_suivant'), onclick: () => decale(1) }, tr.rtl ? '‹' : '›')),
-      ...yy.map(carteYalkut),
+      ...(yy.length ? [fiche(titreCarte(yy), texteCarte(yy))] : []),
       ...(liste.length ? [h('h3', { class: 'jour-sous-titre' }, tr.t('halakha_ben_ish_hai')), ...liste.map(carte)] : []),
       ...(yy.length || liste.length ? [] : [h('p', { class: 'message' }, tr.t('halakha_aucune'))]),
       h('p', { class: 'note-halakha' }, tr.t('halakha_yalkut_source')),
@@ -1875,12 +1895,6 @@ function ecranReglages() {
         // À Jérusalem, l'usage des 40 minutes est proposé, jamais imposé.
         ligne({ nom: tr.t('reglage_allumage'), onclick: choisirAllumage,
           etat: [libelleAllumage(store.allumage()), mukafChoma() && store.allumage() !== 40 ? tr.t('reglage_allumage_proposition') : null].filter(Boolean).join(' · ') }),
-        // Ville murée depuis Yehoshoua bin Noun : Pourim et la Méguila le 15 Adar (13/10).
-        h('label', { class: 'ligne' },
-          h('span', { class: 'corps' }, h('div', { class: 'nom' }, tr.t('reglage_ville_muree')),
-            h('div', { class: 'etat' }, tr.t(store.lieu()?.ville === JERUSALEM_GEONAMES ? 'reglage_ville_muree_jerusalem' : 'reglage_ville_muree_aide'))),
-          h('input', { type: 'checkbox', role: 'switch', class: 'interrupteur', checked: mukafChoma(), disabled: store.lieu()?.ville === JERUSALEM_GEONAMES,
-            'aria-label': tr.t('reglage_ville_muree'), onchange: (e) => { store.setVilleMuree(e.target.checked); rendre(); } })),
         store.siddurNusah() === 'sefard' ? ligne({ nom: tr.t('reglage_tahanoun_tichri'), onclick: choisirTahanounTichri,
           etat: tr.t(store.sansTahanounFinTichri() ? 'reglage_tahanoun_tichri_sans' : 'reglage_tahanoun_tichri_dit') }) : null),
       // Réinitialiser l'application (12/10) : en dernier, avec une confirmation.

@@ -120,8 +120,6 @@ export function creeStore(stockage, { maintenant = () => new Date(), fuseau } = 
     /** La halakha du jour (Ben Ish 'Haï) sur la carte du jour (11/10) : affichée par défaut. */
     halakhaAffichee: () => get('halakha_affichee', true) !== false,
     setHalakhaAffichee: (v) => set('halakha_affichee', !!v),
-    villeMuree: () => get('ville_muree', false) === true,
-    setVilleMuree: (v) => set('ville_muree', !!v),
 
     /** La note d'un jour. Sur un jour sans hitbodedout, elle ne le valide pas. */
     setNote(date, note) {

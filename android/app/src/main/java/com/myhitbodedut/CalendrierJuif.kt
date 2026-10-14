@@ -136,6 +136,20 @@ object CalendrierJuif {
     /** Jérusalem, ville murée depuis Josué : Pourim y est le 15 Adar (Chouchan Pourim). */
     const val JERUSALEM_GEONAMES = 281184L
 
+    /**
+     * Une position dans Jérusalem (13/10) : à 10 km au plus de la Vieille Ville
+     * (31,7767 N ; 35,2345 E). Le rayon est un choix de l'application, qui
+     * approche l'agglomération ; ce n'est pas une limite halakhique.
+     */
+    fun aJerusalem(latitude: Double, longitude: Double): Boolean {
+        val r = 6371.0
+        val dLat = Math.toRadians(latitude - 31.7767)
+        val dLon = Math.toRadians(longitude - 35.2345)
+        val a = Math.sin(dLat / 2).let { it * it } +
+            Math.cos(Math.toRadians(31.7767)) * Math.cos(Math.toRadians(latitude)) * Math.sin(dLon / 2).let { it * it }
+        return 2 * r * Math.asin(Math.sqrt(a)) <= 10.0
+    }
+
     /** Les noms de Pourim dans une ville murée (libellés « fete_<clé> »). */
     private val MUREE = mapOf("pourim" to "pourim_ailleurs", "chouchan_pourim" to "pourim_jerusalem")
 

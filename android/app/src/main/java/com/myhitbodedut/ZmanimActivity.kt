@@ -6,8 +6,6 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.SwitchCompat
-import android.view.Gravity
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import java.time.LocalDate
@@ -60,27 +58,6 @@ class ZmanimActivity : AppCompatActivity() {
             }
             foreground = getDrawable(android.R.drawable.list_selector_background)
             setOnClickListener { choisirAllumage() }
-        })
-        // Ville entourée d'une muraille depuis Yehoshoua bin Noun : Pourim et la Méguila le 15 Adar (13/10).
-        val jerusalem = Store.lieuVille(this) == CalendrierJuif.JERUSALEM_GEONAMES
-        contenu.addView(VueJour.carte(this).apply {
-            addView(LinearLayout(context).apply {
-                orientation = LinearLayout.HORIZONTAL
-                gravity = Gravity.CENTER_VERTICAL
-                addView(LinearLayout(context).apply {
-                    orientation = LinearLayout.VERTICAL
-                    layoutParams = LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f)
-                    addView(VueJour.texte(context, getString(R.string.reglage_ville_muree), 15f, R.color.ink))
-                    addView(VueJour.texte(context, getString(if (jerusalem) R.string.reglage_ville_muree_jerusalem else R.string.reglage_ville_muree_aide),
-                        13f, R.color.muted, haut = 2))
-                })
-                addView(SwitchCompat(context).apply {
-                    isChecked = Store.mukafChoma(context)
-                    isEnabled = !jerusalem
-                    contentDescription = getString(R.string.reglage_ville_muree)
-                    setOnCheckedChangeListener { _, v -> Store.setVilleMuree(context, v); recreate() }
-                })
-            })
         })
         // Ta'hanoun en fin de Tichri : au choix en Sfard seulement.
         if (Store.siddurNusah(this).cle == "sefard") {

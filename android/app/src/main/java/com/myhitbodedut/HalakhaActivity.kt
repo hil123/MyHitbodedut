@@ -106,7 +106,7 @@ class HalakhaActivity : AppCompatActivity() {
         })
         // Le Yalkut Yosef d'abord (13/10), deux halakhot courtes ; puis le Ben Ish 'Haï de la semaine.
         val yy = YalkutYosef.pour(YalkutYosef.livre(this), jour, israel)
-        yy.forEach { liste.addView(carte(YalkutYosef.source(it), it.texte)) }
+        if (yy.isNotEmpty()) liste.addView(carte(YalkutYosef.titreCarte(yy), YalkutYosef.texteCarte(yy)))
         val du = Halakha.pour(livre, jour, israel)
         if (yy.isEmpty() && du.isEmpty()) liste.addView(VueJour.texte(this, getString(R.string.halakha_aucune), 15f, R.color.muted, haut = 14).apply { gravity = Gravity.CENTER })
         if (du.isNotEmpty()) liste.addView(VueJour.texte(this, getString(R.string.halakha_ben_ish_hai), 14f, R.color.muted, gras = true, haut = 18))

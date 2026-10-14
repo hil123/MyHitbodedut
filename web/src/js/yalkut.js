@@ -68,3 +68,12 @@ export function recherche(livre, texte) {
 
 /** « ילקוט יוסף · סימן א - הלכות השכמת הבוקר · סעיף ב » */
 export const source = (x) => ['ילקוט יוסף', x.s, x.l ? `סעיף ${x.l}` : null].filter(Boolean).join(' · ');
+
+/** Les halakhot du jour en une seule carte (YalkutYosef.titreCarte) : le siman une fois s'il est commun. */
+export const titreCarte = (seifs) => (new Set(seifs.map((x) => x.s)).size === 1 ? `ילקוט יוסף · ${seifs[0].s}` : 'ילקוט יוסף');
+
+/** Chaque se'if sous sa lettre, et son siman s'ils diffèrent (YalkutYosef.texteCarte). */
+export function texteCarte(seifs) {
+  const commun = new Set(seifs.map((x) => x.s)).size === 1;
+  return seifs.map((x) => { const l = x.l ? `${x.l}. ` : ''; return commun ? `${l}${x.t}` : `${x.s}\n${l}${x.t}`; }).join('\n\n');
+}

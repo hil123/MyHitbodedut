@@ -898,8 +898,14 @@
     <!-- La halakha du jour : le Yalkut Yosef, puis le Ben Ish 'Haï (13/10) -->
     <string name="halakha_ben_ish_hai">Ben Ish \'Haï, paracha de la semaine</string>
     <string name="halakha_yalkut_source">Yalkut Yosef – Kitsour Choulhan Aroukh, Rav Yitzhak Yosef (texte de Torat Emet, CC BY-NC-SA 2.5) : une sélection, non le livre entier.</string>
-    <!-- Ville murée : Pourim le 15 Adar ; la Méguila dans le siddour (13/10) -->
-    <string name="reglage_ville_muree">Ville entourée d’une muraille depuis Yehoshoua bin Noun</string>
-    <string name="reglage_ville_muree_aide">Pourim et la lecture de la Méguila le 15 Adar, comme à Jérusalem.</string>
-    <string name="reglage_ville_muree_jerusalem">Jérusalem : Pourim le 15 Adar.</string>
+    <!-- Birkat haLevana sur la carte du jour (13/10) -->
+    <string name="levana_titre">Birkat haLevana</string>
+    <string name="levana_fenetre">Du %1$s au %2$s au soir (nuit comprise)</string>
+    <string name="levana_ce_soir">Possible ce soir</string>
+    <string name="levana_dernier_soir">Dernier soir</string>
+    <plurals name="levana_dans">
+        <item quantity="one">Dans %d jour</item>
+        <item quantity="other">Dans %d jours</item>
+    </plurals>
+    <string name="levana_source">Sept jours après le molad, jusqu’à la mi-mois (Choulhan Aroukh, Ora’h ’Haïm 426).</string>
 </resources>
