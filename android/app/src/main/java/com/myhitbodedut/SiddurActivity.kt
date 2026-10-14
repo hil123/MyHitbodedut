@@ -54,6 +54,10 @@ class SiddurActivity : AppCompatActivity() {
         if (moment == "chaharit" && "hanouka" in CalendrierJuif.jour(java.time.LocalDate.now(), Store.inIsrael(this)).fetes) {
             siddur.texte("hallel")?.let { liste.addView(maintenant(it, langue, R.drawable.scene_hanukkah)) }
         }
+        // Birkat haIlanot (14/10), le mois où on la dit, sous la suggestion de l'heure.
+        if (SiddurMoment.ilanot(java.time.LocalDate.now(), lieu?.latitude)) {
+            siddur.texte("birkat_hailanot")?.let { liste.addView(maintenant(it, langue, R.drawable.scene_nature)) }
+        }
         // Pourim (13/10) : la Méguila sous Arvit (la nuit qui ouvre Pourim) et sous Cha'harit.
         if (SiddurMoment.megila(moment, java.time.LocalDate.now(), Store.inIsrael(this), Store.mukafChoma(this))) {
             Data.livres(this).texte("meguilat_esther")?.let { esther ->

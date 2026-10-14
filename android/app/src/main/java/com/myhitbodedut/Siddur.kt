@@ -156,6 +156,20 @@ object SiddurMoment {
         return mukafChoma && "pourim_ailleurs" in fetes && jour.dayOfWeek == java.time.DayOfWeek.FRIDAY
     }
 
+    /**
+     * Birkat haIlanot (14/10) : on la dit une fois l'an, en voyant des arbres
+     * fruitiers en fleur — en Nissan dans l'hémisphère nord (Choulhan Aroukh
+     * O.H. 226). [latitude] : celle du lieu des zmanim, ou null.
+     */
+    fun ilanot(date: java.time.LocalDate, latitude: Double?): Boolean {
+        val c = com.kosherjava.zmanim.hebrewcalendar.JewishCalendar(date)
+        return if (latitude != null && latitude < 0) moisIlanotSud(c.jewishMonth)
+        else c.jewishMonth == com.kosherjava.zmanim.hebrewcalendar.JewishDate.NISSAN
+    }
+
+    /** L'hémisphère sud : voir FEUILLE_DE_ROUTE.md (recherche du 14/10). */
+    fun moisIlanotSud(mois: Int): Boolean = false
+
     /** Le hassid qui accompagne la suggestion, parmi les illustrations de l'application. */
     fun illustration(id: String): Int = when (id) {
         "tikoun_hatsot" -> R.drawable.char_praying

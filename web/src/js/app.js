@@ -9,7 +9,7 @@ import { ART_DU_MOMENT, ChizukBag, ChizukRules } from './chizuk.js';
 import { DanseMesure } from './seance.js';
 import { creeStore, memoire } from './store.js';
 import { isoLocal } from './calendrier.js';
-import { JERUSALEM_GEONAMES, aJerusalem, jour as jourJuif, jourDeLaPriere, levana } from './calendrier-juif.js';
+import { JERUSALEM_GEONAMES, aJerusalem, calendrier, jour as jourJuif, jourDeLaPriere, levana } from './calendrier-juif.js';
 import { conditionsPour, index as indexAjouts, libelleJour, vrai as ajoutVrai } from './siddur-jour.js';
 import * as Paliers from './paliers.js';
 import * as Trophees from './trophees.js';
@@ -935,6 +935,8 @@ function ecranSiddur() {
   // 'Hanouka (13/10) : le Hallel du jour, avec la scène de 'Hanouka, sous la prière du matin.
   const hallelHanouka = pret && moment === 'chaharit' && jourJuif(isoLocal(heure), store.inIsrael()).fetes.includes('hanouka')
     ? siddur.textes.find((x) => x.id === 'hallel') : null;
+  // Birkat haIlanot (14/10), le mois où on la dit (SiddurMoment.ilanot).
+  const ilanot = pret && ilanotDuMois(isoLocal(heure)) ? siddur.textes.find((x) => x.id === 'birkat_hailanot') : null;
   // Pourim (13/10) : la Méguila sous Arvit (la nuit qui ouvre Pourim) et sous Cha'harit (SiddurMoment.megila).
   // Les livres (7 Mo) ne se chargent que les jours de Méguila.
   const esther = megilaDuMoment(moment, isoLocal(heure)) && chargeLivres() ? livres.textes.find((x) => x.id === 'meguilat_esther') : null;
@@ -945,6 +947,7 @@ function ecranSiddur() {
     h('div', { class: 'defile' }, h('div', { class: 'contenu liste-siddour' },
       suggere ? carteMaintenant(suggere) : null,
       hallelHanouka ? carteMaintenant(hallelHanouka, 'scene_hanukkah') : null,
+      ilanot ? carteMaintenant(ilanot, 'scene_nature') : null,
       esther ? carteMaintenant(esther, 'char_purim', () => { priere = `livre:${esther.id}`; ouvrir('priere'); }) : null,
       enteteGroupe(tr.t('siddur_books'), null),
       h('div', { class: 'livres' },
@@ -1346,6 +1349,14 @@ function choisirAllumage() {
 
 /** Pourim le 15 Adar d'après le lieu, sans réglage (13/10) : la ville de Jérusalem, ou une position dans Jérusalem (Store.mukafChoma). */
 const mukafChoma = () => { const l = store.lieu(); return !!l && (l.ville === JERUSALEM_GEONAMES || (l.ville == null && aJerusalem(l.latitude, l.longitude))); };
+
+/** Birkat haIlanot : en Nissan dans l'hémisphère nord (SiddurMoment.ilanot) ; l'hémisphère sud, voir moisIlanotSud. */
+const moisIlanotSud = () => false;
+function ilanotDuMois(iso) {
+  const c = calendrier(iso, store.inIsrael(), false, false);
+  const l = store.lieu();
+  return l && l.latitude < 0 ? moisIlanotSud(c.getJewishMonth()) : c.getJewishMonth() === 1;
+}
 
 /** La Méguila avec la prière : sous Arvit, le jour hébreu de demain ; sous Cha'harit, aujourd'hui (SiddurMoment.megila). */
 function megilaDuMoment(moment, iso) {

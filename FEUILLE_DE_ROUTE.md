@@ -906,3 +906,68 @@ vient l'accord, quand, et sur quoi il porte.
 - livres.json pèse 6,9 Mo (Likoutei Moharan : 4,6 Mo) : lu à l'ouverture des
   livres ; à découper par livre si l'ouverture paraît lente sur téléphone ;
 - les autres textes d'or-breslev, sur demande.
+
+## Mise à jour (14/10)
+
+**Fait** :
+
+- Été / hiver : l'Arvit ashkénaze ne basculait pas « ברך עלינו » (la consigne
+  et la variante étaient dans le même bloc) ; corrigé, et le test couvre
+  désormais Cha'harit, Min'ha et Arvit dans les trois nusah. Dates vérifiées
+  (KosherJava) : Israël du 7 'Hechvan ; diaspora le 5 décembre 2026, le
+  6 décembre 2027 (année civile bissextile qui suit).
+- Polices : sept au choix (quatre ajoutées, libres OFL, toutes avec le
+  nikkoud : Frank Ruhl, David, Rachi, Miriam) ; sur le web, une feuille de
+  choix où chaque police montre un verset vocalisé.
+- Siddour : le groupe « בְּרָכוֹת לַזְּמַנִּים וְלַמִּצְווֹת », 21 textes dans les
+  trois nusah (tools/siddur_occasions.py, domaine public) : Ilanot, arc-en-
+  ciel, éclairs et tonnerre, la mer, bénédictions des plaisirs, HaGomel,
+  mezouza, 'hala, tévilat kélim, parapet, téroumot et maasrot, avant un
+  remède, 'Hanouka, Méguila, omer, soukka, loulav, 'hamets, érouv tavchilin,
+  bougies de Chabbat, Havdala. Ce qu'un nusah n'a pas dans ses sources libres
+  est emprunté et marqué (l'Ashkenaz surtout, au Sefard).
+- Birkat haIlanot proposée dans le siddour le mois où on la dit.
+- « מקורות ההתבודדות ».
+
+## Ce qui manque — liste complète (14/10)
+
+**Textes et prières**
+- Les offices de Chabbat et des fêtes (Kabbalat Chabbat, Amida et Moussaf de
+  Chabbat, Amida des fêtes, Hallel des fêtes, Kiddouch), le Ma'hzor (Roch
+  Hachana, Kippour), les Seli'hot, la Haggada, les Hochaanot : les sources
+  libres existent, rien n'est encore dans l'application.
+- Birkat ha'Hama (tous les 28 ans, prochaine en 2037) : pas de texte.
+- Brit mila, pidyon haben : les textes sont dans les sources, non repris.
+- Nusah Ashkenaz : la plupart des bénédictions des occasions sont empruntées
+  au Sefard (pas de version ashkénaze vocalisée et libre trouvée).
+- Kokhvei Or est là ; les livres du Rav Arush et du Yanuka : aucun texte fourni.
+
+**Calendrier**
+- Pourim : les villes au statut douteux (Hébron, Tibériade, Safed…) où l'on
+  lit deux jours ne sont pas traitées.
+- Hémisphère sud : voir plus bas.
+
+**Fonctions (les onze propositions)**
+- 2 : choix du thème au début et structure adaptée au thème.
+- 3 / 15 : « Je ne sais pas quoi dire » en questions, une à la fois.
+- 5 : journal — humeur avant/après, thème, gratitude et chose à travailler.
+- 6 : page « Mon parcours » et thèmes fréquents.
+- 7 : accueil et texte selon le moment de la journée.
+- 9 : ambiances (pluie, mer, forêt, feu, nuit, silence) et leurs fichiers.
+- 10 : « source du jour » distincte du 'hizouk.
+- 11 : 'hizouk à la demande hors séance, favoris, partage.
+- 12 : présentation « Je suis avec Hachem » de la barrière.
+
+**Versions**
+- Web : le journal, les Tefilot de Rabbi Natan et les conseils n'y sont pas
+  encore (« à venir »).
+- Nokia : minuteur, journal, textes et musique seulement ; ni zmanim, ni
+  siddour, ni halakha, ni livres.
+- Android : la barrière du matin jamais éprouvée sur un vrai téléphone ;
+  livres.json (6,9 Mo) à découper si l'ouverture est lente.
+
+**Droits et sources en attente**
+- breslev.co.il : accord écrit nécessaire ; « יד מאיר » : site à préciser.
+- Pour la trace : de qui vient l'accord du 13/10 (or-breslev, Yalkut Yosef),
+  quand, et sur quoi il porte.
+- Les icônes signalées le 12/10 : lesquelles.
