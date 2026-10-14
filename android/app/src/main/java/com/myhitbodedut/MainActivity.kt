@@ -38,7 +38,13 @@ class MainActivity : AppCompatActivity() {
         // redimensionnée) pendant la présentation en ouvrait une seconde.
         if (savedInstanceState == null) showOnboardingOnce()
         wireActions()
-        wireTabs(savedInstanceState?.getInt(ETAT_ONGLET, R.id.nav_today) ?: R.id.nav_today)
+        // L'écran d'ouverture choisi dans les réglages (14/10) : Textes s'ouvre sur place, Zmanim par-dessus.
+        val ouverture = Store.ouverture(this)
+        wireTabs(savedInstanceState?.getInt(ETAT_ONGLET, R.id.nav_today)
+            ?: if (ouverture == Store.Ouverture.TEXTES) R.id.nav_texts else R.id.nav_today)
+        if (savedInstanceState == null && ouverture == Store.Ouverture.ZMANIM && intent?.getStringExtra(EXTRA_ASK_NOTE) == null) {
+            startActivity(Intent(this, ZmanimActivity::class.java))
+        }
         // Venu de la notification de fin : la note du jour de la séance, pas
         // du jour où l'on touche la notification. Si le bravo attend encore,
         // c'est lui qui la proposera, après. Lue une seule fois : une

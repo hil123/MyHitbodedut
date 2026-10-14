@@ -771,7 +771,7 @@
     <!-- La halakha du jour hors ligne : le Ben Ish 'Haï (11/10) -->
     <string name="halakha_title">הלכה יומית</string>
     <string name="halakha_afficher">הצג הלכה יומית</string>
-    <string name="halakha_recherche">חיפוש בילקוט יוסף ובבן איש חי</string>
+    <string name="halakha_recherche">חיפוש בהלכה</string>
     <string name="halakha_aucune">אין הלכה ליום זה</string>
     <string name="halakha_tout">כל ההלכה היומית ›</string>
     <string name="halakha_livre">ילקוט יוסף, קיצור שולחן ערוך</string>
@@ -894,4 +894,16 @@
     <string name="police_david">דוד</string>
     <string name="police_rachi">רש״י (כתב המפרשים)</string>
     <string name="police_miriam">מרים (מודרני)</string>
+    <!-- Personnalisation et écran Zmanim (14/10). -->
+    <string name="settings_police">גופן עברי</string>
+    <string name="settings_ouverture">מסך פתיחה</string>
+    <string name="section_zmanim_ecran">מסך הזמנים</string>
+    <string name="section_zmanim_ecran_hint">מה שמוצג מתחת לזמנים, וספר ההלכה היומית.</string>
+    <string name="reglage_levana">הצג ברכת הלבנה</string>
+    <string name="halakha_source_titre">ספר ההלכה</string>
+    <string name="halakha_source_yalkut">ילקוט יוסף</string>
+    <string name="halakha_source_bih">בן איש חי</string>
+    <string name="halakha_source_deux">שניהם</string>
+    <string name="zmanim_bouton_halakha">הלכה יומית</string>
+    <string name="zmanim_bouton_hilloulot">הילולות</string>
 </resources>

@@ -84,6 +84,9 @@ object Store {
     private const val KEY_TROPHEES_NOTIFIES = "trophees_notifies"
     private const val KEY_HILLOULOT = "hilloulot_affichees"
     private const val KEY_HALAKHA = "halakha_affichee"
+    private const val KEY_SOURCE_HALAKHA = "halakha_source"
+    private const val KEY_LEVANA = "levana_affichee"
+    private const val KEY_OUVERTURE = "ecran_ouverture"
     private const val KEY_SIDDUR_NUSAH = "siddur_nusah"
     private const val KEY_TAHANOUN_TICHRI_SFARD = "sans_tahanoun_fin_tichri_sfard"
     private const val KEY_CALENDRIER_CIVIL = "calendrier_civil"
@@ -592,11 +595,52 @@ object Store {
         prefs(context).edit().putBoolean(KEY_HILLOULOT, v).apply()
     }
 
-    /** La halakha du jour (Ben Ish 'Haï) sur la carte du jour (11/10) : affichée par défaut. */
+    /** La halakha du jour sur la carte du jour (11/10) : affichée par défaut. */
     fun halakhaAffichee(context: Context): Boolean = prefs(context).getBoolean(KEY_HALAKHA, true)
 
     fun setHalakhaAffichee(context: Context, v: Boolean) {
         prefs(context).edit().putBoolean(KEY_HALAKHA, v).apply()
+    }
+
+    /**
+     * Le livre de la halakha du jour (14/10, « propose le choix ») : le
+     * Yalkut Yosef par défaut, le Ben Ish 'Haï de la paracha, ou les deux.
+     */
+    enum class SourceHalakha(val cle: String, val libelle: Int) {
+        YALKUT("yalkut", R.string.halakha_source_yalkut),
+        BEN_ISH_HAI("ben_ish_hai", R.string.halakha_source_bih),
+        LES_DEUX("les_deux", R.string.halakha_source_deux);
+
+        val yalkut get() = this != BEN_ISH_HAI
+        val benIshHai get() = this != YALKUT
+    }
+
+    fun sourceHalakha(context: Context): SourceHalakha =
+        prefs(context).getString(KEY_SOURCE_HALAKHA, null)?.let { c -> SourceHalakha.values().firstOrNull { it.cle == c } } ?: SourceHalakha.YALKUT
+
+    fun setSourceHalakha(context: Context, v: SourceHalakha) {
+        prefs(context).edit().putString(KEY_SOURCE_HALAKHA, v.cle).apply()
+    }
+
+    /** Birkat haLevana sur l'écran Zmanim (14/10) : affichée par défaut. */
+    fun levanaAffichee(context: Context): Boolean = prefs(context).getBoolean(KEY_LEVANA, true)
+
+    fun setLevanaAffichee(context: Context, v: Boolean) {
+        prefs(context).edit().putBoolean(KEY_LEVANA, v).apply()
+    }
+
+    /** L'écran d'ouverture (14/10) : Aujourd'hui, Textes ou Zmanim. */
+    enum class Ouverture(val cle: String, val libelle: Int) {
+        AUJOURDHUI("aujourdhui", R.string.nav_today),
+        TEXTES("textes", R.string.nav_texts),
+        ZMANIM("zmanim", R.string.nav_zmanim),
+    }
+
+    fun ouverture(context: Context): Ouverture =
+        prefs(context).getString(KEY_OUVERTURE, null)?.let { c -> Ouverture.values().firstOrNull { it.cle == c } } ?: Ouverture.AUJOURDHUI
+
+    fun setOuverture(context: Context, v: Ouverture) {
+        prefs(context).edit().putString(KEY_OUVERTURE, v.cle).apply()
     }
 
     // --- Paliers d'objectifs (11/10) -------------------------------------------

@@ -755,7 +755,7 @@
     <!-- La halakha du jour hors ligne : le Ben Ish 'Haï (11/10) -->
     <string name="halakha_title">Halacha of the day</string>
     <string name="halakha_afficher">Show the halacha of the day</string>
-    <string name="halakha_recherche">Search the Yalkut Yosef and the Ben Ish Chai</string>
+    <string name="halakha_recherche">Search the halakha</string>
     <string name="halakha_aucune">No halacha for this day</string>
     <string name="halakha_tout">The whole halacha of the day ›</string>
     <string name="halakha_livre">Yalkut Yosef, Kitzur Shulchan Aruch</string>
@@ -867,4 +867,16 @@
     <string name="police_david">David</string>
     <string name="police_rachi">Rashi (commentary script)</string>
     <string name="police_miriam">Miriam (modern)</string>
+    <!-- Personnalisation et écran Zmanim (14/10). -->
+    <string name="settings_police">Hebrew font</string>
+    <string name="settings_ouverture">Opening screen</string>
+    <string name="section_zmanim_ecran">Zmanim screen</string>
+    <string name="section_zmanim_ecran_hint">What appears below the times, and the book of the daily halakha.</string>
+    <string name="reglage_levana">Show Birkat HaLevana</string>
+    <string name="halakha_source_titre">Halakha book</string>
+    <string name="halakha_source_yalkut">Yalkut Yosef</string>
+    <string name="halakha_source_bih">Ben Ish Chai</string>
+    <string name="halakha_source_deux">Both</string>
+    <string name="zmanim_bouton_halakha">Daily halakha</string>
+    <string name="zmanim_bouton_hilloulot">Hillulot</string>
 </resources>

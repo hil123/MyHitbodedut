@@ -801,7 +801,7 @@
     <!-- La halakha du jour hors ligne : le Ben Ish 'Haï (11/10) -->
     <string name="halakha_title">Halakha du jour</string>
     <string name="halakha_afficher">Afficher la halakha du jour</string>
-    <string name="halakha_recherche">Rechercher dans le Yalkut Yosef et le Ben Ish \'Haï</string>
+    <string name="halakha_recherche">Rechercher dans la halakha</string>
     <string name="halakha_aucune">Pas de halakha pour ce jour</string>
     <string name="halakha_tout">Toute la halakha du jour ›</string>
     <string name="halakha_livre">Yalkut Yosef, Kitsour Choulhan Aroukh</string>
@@ -913,4 +913,16 @@
     <string name="police_david">David</string>
     <string name="police_rachi">Rachi (écriture des commentaires)</string>
     <string name="police_miriam">Miriam (moderne)</string>
+    <!-- Personnalisation et écran Zmanim (14/10). -->
+    <string name="settings_police">Police hébraïque</string>
+    <string name="settings_ouverture">Écran d’ouverture</string>
+    <string name="section_zmanim_ecran">Écran Zmanim</string>
+    <string name="section_zmanim_ecran_hint">Ce qui s’affiche sous les horaires, et le livre de la halakha du jour.</string>
+    <string name="reglage_levana">Afficher Birkat haLevana</string>
+    <string name="halakha_source_titre">Livre de la halakha</string>
+    <string name="halakha_source_yalkut">Yalkut Yosef</string>
+    <string name="halakha_source_bih">Ben Ish ’Haï</string>
+    <string name="halakha_source_deux">Les deux</string>
+    <string name="zmanim_bouton_halakha">Halakha yomit</string>
+    <string name="zmanim_bouton_hilloulot">Hilloulot</string>
 </resources>

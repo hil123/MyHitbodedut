@@ -12,8 +12,9 @@ import java.time.LocalDate
 
 /**
  * L'onglet Zmanim (demande du 10/10) : la date hébraïque du jour, ce qu'elle
- * change aux prières, le bouton du calendrier, puis tous les horaires de la
- * journée, chacun avec sa méthode (ZMANIM.md). Le lieu se choisit sur le
+ * change aux prières, les boutons halakha, hilloulot et calendrier, puis tous
+ * les horaires de la journée, chacun avec sa méthode (ZMANIM.md) ; ensuite
+ * Birkat haLevana, la hilloula et la halakha du jour (14/10). Le lieu se choisit sur le
  * bandeau ; l'allumage des bougies, en bas de page.
  */
 class ZmanimActivity : AppCompatActivity() {
@@ -40,14 +41,21 @@ class ZmanimActivity : AppCompatActivity() {
         val aujourdhui = LocalDate.now()
         val contenu = findViewById<LinearLayout>(R.id.zmanim_contenu)
         contenu.removeAllViews()
-        contenu.addView(VueJour.carteJour(this, aujourdhui, israel))
-        contenu.addView(MaterialButton(this, null, com.google.android.material.R.attr.materialButtonOutlinedStyle).apply {
-            text = getString(R.string.zmanim_calendrier)
+        // Le jour seul, puis trois boutons, puis les horaires (14/10, « trop de choses avant les זמנים ») :
+        // Levana, hilloula et halakha viennent après, chacune masquable dans les réglages.
+        contenu.addView(VueJour.carteJour(this, aujourdhui, israel, complet = false))
+        contenu.addView(LinearLayout(this).apply {
+            orientation = LinearLayout.HORIZONTAL
             layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
                 .apply { setMargins(dp(16), dp(12), dp(16), 0) }
-            setOnClickListener { startActivity(Intent(this@ZmanimActivity, CalendrierActivity::class.java)) }
+            addView(bouton(R.string.zmanim_bouton_halakha, 0) { VueJour.ouvrirHalakha(this@ZmanimActivity, aujourdhui) })
+            addView(bouton(R.string.zmanim_bouton_hilloulot, 8) {
+                startActivity(Intent(this@ZmanimActivity, HilloulotActivity::class.java).putExtra(HilloulotActivity.EXTRA_DATE, aujourdhui.toString()))
+            })
+            addView(bouton(R.string.zmanim_calendrier, 8) { startActivity(Intent(this@ZmanimActivity, CalendrierActivity::class.java)) })
         })
         contenu.addView(VueJour.horaires(this, aujourdhui, israel) { choixLieu.montrer() })
+        VueJour.sousHoraires(this, aujourdhui, israel).forEach { contenu.addView(it) }
         contenu.addView(VueJour.carte(this).apply {
             addView(VueJour.texte(this@ZmanimActivity, getString(R.string.reglage_allumage), 15f, R.color.ink))
             addView(VueJour.texte(this@ZmanimActivity, libelleAllumage(Store.allumage(this@ZmanimActivity)),
@@ -102,6 +110,16 @@ class ZmanimActivity : AppCompatActivity() {
             }
             .show()
     }
+
+    /** Un des trois boutons sous la carte du jour : même largeur, texte sur deux lignes au besoin. */
+    private fun bouton(texte: Int, marge: Int, action: () -> Unit) =
+        MaterialButton(this, null, com.google.android.material.R.attr.materialButtonOutlinedStyle).apply {
+            text = getString(texte)
+            maxLines = 2
+            setPadding(dp(6), paddingTop, dp(6), paddingBottom)
+            layoutParams = LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f).apply { marginStart = dp(marge) }
+            setOnClickListener { action() }
+        }
 
     private fun dp(v: Int) = (v * resources.displayMetrics.density).toInt()
 

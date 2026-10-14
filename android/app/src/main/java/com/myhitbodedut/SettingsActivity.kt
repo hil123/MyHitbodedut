@@ -96,6 +96,25 @@ class SettingsActivity : AppCompatActivity() {
         findViewById<Button>(R.id.mode_button).setOnClickListener { askMode() }
         findViewById<Button>(R.id.fond_button).setOnClickListener { askFond() }
         findViewById<Button>(R.id.accent_button).setOnClickListener { askAccent() }
+        // Personnalisation (14/10) : police hébraïque, écran d'ouverture, livre de la halakha.
+        findViewById<Button>(R.id.police_button).setOnClickListener {
+            val polices = PoliceHebraique.Police.values()
+            choisirParmi(R.string.settings_police, polices.map { it.libelle }, polices.indexOf(Store.lecturePolice(this))) {
+                Store.setLecturePolice(this, polices[it]); renderValues()
+            }
+        }
+        findViewById<Button>(R.id.ouverture_button).setOnClickListener {
+            val choix = Store.Ouverture.values()
+            choisirParmi(R.string.settings_ouverture, choix.map { it.libelle }, choix.indexOf(Store.ouverture(this))) {
+                Store.setOuverture(this, choix[it]); renderValues()
+            }
+        }
+        findViewById<Button>(R.id.halakha_source_button).setOnClickListener {
+            val choix = Store.SourceHalakha.values()
+            choisirParmi(R.string.halakha_source_titre, choix.map { it.libelle }, choix.indexOf(Store.sourceHalakha(this))) {
+                Store.setSourceHalakha(this, choix[it]); renderValues()
+            }
+        }
         findViewById<Button>(R.id.region_button).setOnClickListener {
             Store.setInIsrael(this, !Store.inIsrael(this))
             refresh()
@@ -294,6 +313,9 @@ class SettingsActivity : AppCompatActivity() {
             Store.setShabbatMode(this, checked)
             refresh()
         }
+        bindSwitch(R.id.levana_switch, Store.levanaAffichee(this)) { Store.setLevanaAffichee(this, it) }
+        bindSwitch(R.id.hilloulot_switch, Store.hilloulotAffichees(this)) { Store.setHilloulotAffichees(this, it) }
+        bindSwitch(R.id.halakha_switch, Store.halakhaAffichee(this)) { Store.setHalakhaAffichee(this, it) }
         bindSwitch(R.id.exempt_today_switch, Store.pausedDates(this).contains(Store.today())) {
             Store.togglePausedDate(this, Store.today())
             StreakWidget.refresh(this)
@@ -333,6 +355,9 @@ class SettingsActivity : AppCompatActivity() {
         findViewById<Button>(R.id.mode_button).setText(Store.modeApparence(this).nom)
         findViewById<Button>(R.id.fond_button).setText(Store.fond(this).nom)
         findViewById<Button>(R.id.accent_button).setText(Store.accent(this).nom)
+        findViewById<Button>(R.id.police_button).setText(Store.lecturePolice(this).libelle)
+        findViewById<Button>(R.id.ouverture_button).setText(Store.ouverture(this).libelle)
+        findViewById<Button>(R.id.halakha_source_button).setText(Store.sourceHalakha(this).libelle)
         val prenom = Store.firstName(this)
         findViewById<Button>(R.id.name_button).text =
             prenom.ifBlank { getString(R.string.settings_name_empty) }

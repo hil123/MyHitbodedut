@@ -117,9 +117,18 @@ export function creeStore(stockage, { maintenant = () => new Date(), fuseau } = 
     /** La hilloula du jour sur la carte du jour (11/10) : affichée par défaut. */
     hilloulotAffichees: () => get('hilloulot_affichees', true) !== false,
     setHilloulotAffichees: (v) => set('hilloulot_affichees', !!v),
-    /** La halakha du jour (Ben Ish 'Haï) sur la carte du jour (11/10) : affichée par défaut. */
+    /** La halakha du jour sur la carte du jour (11/10) : affichée par défaut. */
     halakhaAffichee: () => get('halakha_affichee', true) !== false,
     setHalakhaAffichee: (v) => set('halakha_affichee', !!v),
+    /** Le livre de la halakha du jour (14/10) : 'yalkut' par défaut, 'ben_ish_hai' ou 'les_deux' (Store.SourceHalakha). */
+    sourceHalakha: () => (['yalkut', 'ben_ish_hai', 'les_deux'].includes(get('halakha_source', 'yalkut')) ? get('halakha_source', 'yalkut') : 'yalkut'),
+    setSourceHalakha: (v) => set('halakha_source', v),
+    /** Birkat haLevana sur l'écran Zmanim (14/10) : affichée par défaut. */
+    levanaAffichee: () => get('levana_affichee', true) !== false,
+    setLevanaAffichee: (v) => set('levana_affichee', !!v),
+    /** L'écran d'ouverture (14/10) : 'aujourdhui', 'textes' ou 'zmanim'. */
+    ouverture: () => (['aujourdhui', 'textes', 'zmanim'].includes(get('ecran_ouverture', 'aujourdhui')) ? get('ecran_ouverture', 'aujourdhui') : 'aujourdhui'),
+    setOuverture: (v) => set('ecran_ouverture', v),
 
     /** La note d'un jour. Sur un jour sans hitbodedout, elle ne le valide pas. */
     setNote(date, note) {

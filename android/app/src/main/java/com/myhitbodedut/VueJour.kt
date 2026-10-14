@@ -46,7 +46,7 @@ object VueJour {
     private fun locale(langue: String): Locale = Locale.forLanguageTag(langue)
 
     /** Birkat haLevana (13/10) : la fenêtre du mois, ce soir ou dans combien de jours, et la jauge du mois lunaire. */
-    private fun levana(c: Context, date: LocalDate, langue: String): View = LinearLayout(c).apply {
+    private fun levana(c: Context, date: LocalDate, langue: String, haut: Int = 14): View = LinearLayout(c).apply {
         orientation = LinearLayout.VERTICAL
         layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
         val zone = Store.lieuZmanim(c)?.fuseau?.let { runCatching { java.time.ZoneId.of(it) }.getOrNull() } ?: java.time.ZoneId.systemDefault()
@@ -56,7 +56,7 @@ object VueJour {
             orientation = LinearLayout.HORIZONTAL
             gravity = Gravity.CENTER_VERTICAL
             layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-                .apply { topMargin = dp(c, 14) }
+                .apply { topMargin = dp(c, haut) }
             addView(texte(c, c.getString(R.string.levana_titre), 12f, R.color.muted, gras = true).apply {
                 layoutParams = LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f)
             })
@@ -79,7 +79,7 @@ object VueJour {
     }
 
     /** La carte d'un jour : la date hébraïque, la date civile, les fêtes, ce qu'il change aux prières. */
-    fun carteJour(c: Context, date: LocalDate, enIsrael: Boolean): View {
+    fun carteJour(c: Context, date: LocalDate, enIsrael: Boolean, complet: Boolean = true): View {
         val j = CalendrierJuif.jour(date, enIsrael, Store.mukafChoma(c))
         // L'omer se compte le soir, pour le jour hébreu qui commence : celui de demain.
         val omerCeSoir = CalendrierJuif.jour(date.plusDays(1), enIsrael).omer
@@ -111,50 +111,89 @@ object VueJour {
         carte.addView(texte(c, c.getString(R.string.zmanim_ajouts_titre), 12f, R.color.muted, gras = true, haut = 14))
         val ajouts = JourAffiche.ajouts(j.conditions, Store.siddurNusah(c).cle, enIsrael, Store.sansTahanounFinTichri(c)).mapNotNull { Libelles.res(it)?.let(c::getString) }
         carte.addView(texte(c, ajouts.joinToString(" · ").ifBlank { c.getString(R.string.zmanim_aucun_ajout) }, 15f, R.color.ink, haut = 2))
-        carte.addView(levana(c, date, langue))
-        // La hilloula du jour (comme CalJ) : les noms, cinq au plus, puis l'écran des hilloulot.
-        val hilloulot = if (Store.hilloulotAffichees(c)) Hilloulot.pour(Hilloulot.table(c), date, enIsrael) else emptyList()
-        if (hilloulot.isNotEmpty()) {
-            carte.addView(texte(c, c.getString(R.string.hilloula_titre), 12f, R.color.muted, gras = true, haut = 14))
-            val reste = hilloulot.size - 5
-            val ouvrirHilloulot = View.OnClickListener {
-                c.startActivity(Intent(c, HilloulotActivity::class.java).putExtra(HilloulotActivity.EXTRA_DATE, date.toString()))
-            }
-            carte.addView(texte(c, hilloulot.take(5).joinToString("\n") { it.he }, 16f, R.color.ink, haut = 2).apply {
-                textDirection = View.TEXT_DIRECTION_RTL
-                PoliceHebraique.appliquer(this)
-            })
-            // « ועוד אחד › » : plus petit, plus discret, et la flèche mène aux autres.
-            if (reste > 0) carte.addView(texte(c, c.resources.getQuantityString(R.plurals.hilloula_autres, reste, reste) + " ›", 13f, R.color.muted, haut = 2).apply {
-                textDirection = View.TEXT_DIRECTION_RTL
-                PoliceHebraique.appliquer(this)
-                setOnClickListener(ouvrirHilloulot)
-            })
-            carte.addView(texte(c, c.getString(R.string.hilloulot_tout), 15f, R.color.brand, gras = true, haut = 4).apply {
-                setPadding(0, dp(c, 6), 0, dp(c, 6))
-                foreground = c.getDrawable(android.R.drawable.list_selector_background)
-                setOnClickListener(ouvrirHilloulot)
-            })
-        }
-        // La halakha du jour, hors ligne : une halakha courte du Yalkut Yosef (13/10), puis l'écran de la halakha.
-        val halakhot = if (Store.halakhaAffichee(c)) YalkutYosef.pour(YalkutYosef.livre(c), date, enIsrael) else emptyList()
-        if (halakhot.isNotEmpty()) {
-            carte.addView(texte(c, c.getString(R.string.halakha_yomit_titre) + " · " + c.getString(R.string.halakha_livre), 12f, R.color.muted, gras = true, haut = 14))
-            carte.addView(texte(c, halakhot.first().texte, 16f, R.color.ink, haut = 2).apply {
-                textDirection = View.TEXT_DIRECTION_RTL
-                PoliceHebraique.appliquer(this)
-                maxLines = 4
-                ellipsize = android.text.TextUtils.TruncateAt.END
-            })
-            carte.addView(texte(c, c.getString(R.string.halakha_tout), 15f, R.color.brand, gras = true, haut = 4).apply {
-                setPadding(0, dp(c, 6), 0, dp(c, 6))
-                foreground = c.getDrawable(android.R.drawable.list_selector_background)
-                setOnClickListener {
-                    c.startActivity(Intent(c, HalakhaActivity::class.java).putExtra(HalakhaActivity.EXTRA_DATE, date.toString()))
-                }
-            })
+        // Le calendrier montre tout dans la carte ; l'écran Zmanim (14/10) n'y garde que le jour,
+        // et pose Levana, hilloula et halakha sous les horaires (VueJour.sousHoraires).
+        if (complet) {
+            if (Store.levanaAffichee(c)) carte.addView(levana(c, date, langue))
+            blocHilloula(c, carte, date, enIsrael)
+            blocHalakha(c, carte, date, enIsrael)
         }
         return carte
+    }
+
+    /**
+     * Sous les horaires de l'écran Zmanim (14/10, « trop de choses avant les
+     * זמנים ») : Birkat haLevana, la hilloula, la halakha, chacune dans sa
+     * carte et chacune masquable dans les réglages.
+     */
+    fun sousHoraires(c: Context, date: LocalDate, enIsrael: Boolean): List<View> = listOfNotNull(
+        if (Store.levanaAffichee(c)) carte(c).apply { addView(levana(c, date, ChizukCard.language(c), haut = 0)) } else null,
+        carte(c).takeIf { blocHilloula(c, it, date, enIsrael, haut = 0) },
+        carte(c).takeIf { blocHalakha(c, it, date, enIsrael, haut = 0) },
+    )
+
+    /** La hilloula du jour (comme CalJ) : les noms, cinq au plus, puis l'écran des hilloulot. Faux s'il n'y a rien. */
+    private fun blocHilloula(c: Context, carte: LinearLayout, date: LocalDate, enIsrael: Boolean, haut: Int = 14): Boolean {
+        val hilloulot = if (Store.hilloulotAffichees(c)) Hilloulot.pour(Hilloulot.table(c), date, enIsrael) else emptyList()
+        if (hilloulot.isEmpty()) return false
+        carte.addView(texte(c, c.getString(R.string.hilloula_titre), 12f, R.color.muted, gras = true, haut = haut))
+        val reste = hilloulot.size - 5
+        val ouvrirHilloulot = View.OnClickListener {
+            c.startActivity(Intent(c, HilloulotActivity::class.java).putExtra(HilloulotActivity.EXTRA_DATE, date.toString()))
+        }
+        // Plus petit que le reste de la carte (14/10) : les noms sont souvent longs.
+        carte.addView(texte(c, hilloulot.take(5).joinToString("\n") { it.he }, 14f, R.color.ink, haut = 2).apply {
+            textDirection = View.TEXT_DIRECTION_RTL
+            PoliceHebraique.appliquer(this)
+            setLineSpacing(0f, 1.15f)
+        })
+        // « ועוד אחד › » : plus petit, plus discret, et la flèche mène aux autres.
+        if (reste > 0) carte.addView(texte(c, c.resources.getQuantityString(R.plurals.hilloula_autres, reste, reste) + " ›", 12f, R.color.muted, haut = 2).apply {
+            textDirection = View.TEXT_DIRECTION_RTL
+            PoliceHebraique.appliquer(this)
+            setOnClickListener(ouvrirHilloulot)
+        })
+        carte.addView(lien(c, c.getString(R.string.hilloulot_tout), ouvrirHilloulot))
+        return true
+    }
+
+    /**
+     * Le début de la halakha du jour, dans le livre choisi (14/10) : le Yalkut
+     * Yosef, le Ben Ish 'Haï, ou les deux ; null s'il n'y en a pas.
+     */
+    fun apercuHalakha(c: Context, date: LocalDate, enIsrael: Boolean): Pair<String, String>? {
+        val source = Store.sourceHalakha(c)
+        if (source.yalkut) YalkutYosef.pour(YalkutYosef.livre(c), date, enIsrael).firstOrNull()?.let {
+            return c.getString(R.string.halakha_livre) to it.texte
+        }
+        if (source.benIshHai) Halakha.pour(Halakha.livre(c), date, enIsrael).firstOrNull()?.let {
+            return c.getString(R.string.halakha_ben_ish_hai) to it.texte
+        }
+        return null
+    }
+
+    /** La halakha du jour, hors ligne : son début, puis l'écran de la halakha. Faux s'il n'y a rien. */
+    private fun blocHalakha(c: Context, carte: LinearLayout, date: LocalDate, enIsrael: Boolean, haut: Int = 14): Boolean {
+        val (livre, debut) = (if (Store.halakhaAffichee(c)) apercuHalakha(c, date, enIsrael) else null) ?: return false
+        carte.addView(texte(c, c.getString(R.string.halakha_yomit_titre) + " · " + livre, 12f, R.color.muted, gras = true, haut = haut))
+        carte.addView(texte(c, debut, 16f, R.color.ink, haut = 2).apply {
+            textDirection = View.TEXT_DIRECTION_RTL
+            PoliceHebraique.appliquer(this)
+            maxLines = 4
+            ellipsize = android.text.TextUtils.TruncateAt.END
+        })
+        carte.addView(lien(c, c.getString(R.string.halakha_tout)) { ouvrirHalakha(c, date) })
+        return true
+    }
+
+    fun ouvrirHalakha(c: Context, date: LocalDate) {
+        c.startActivity(Intent(c, HalakhaActivity::class.java).putExtra(HalakhaActivity.EXTRA_DATE, date.toString()))
+    }
+
+    private fun lien(c: Context, libelle: String, action: View.OnClickListener) = texte(c, libelle, 15f, R.color.brand, gras = true, haut = 4).apply {
+        setPadding(0, dp(c, 6), 0, dp(c, 6))
+        foreground = c.getDrawable(android.R.drawable.list_selector_background)
+        setOnClickListener(action)
     }
 
     private fun illustration(nom: String): Int = when (nom) {

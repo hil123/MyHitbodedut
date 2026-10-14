@@ -105,6 +105,77 @@
 
                 <Button android:id="@+id/accent_button" style="@style/SettingValue" />
             </LinearLayout>
+
+            <LinearLayout style="@style/SettingRow">
+
+                <TextView style="@style/SettingLabel" android:text="@string/settings_police" />
+
+                <Button android:id="@+id/police_button" style="@style/SettingValue" />
+            </LinearLayout>
+
+            <LinearLayout style="@style/SettingRow">
+
+                <TextView style="@style/SettingLabel" android:text="@string/settings_ouverture" />
+
+                <Button android:id="@+id/ouverture_button" style="@style/SettingValue" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- L'écran Zmanim (14/10) : ce qui s'affiche sous les horaires, et le livre de la halakha. -->
+        <LinearLayout style="@style/Card">
+
+            <TextView style="@style/CardTitle" android:text="@string/section_zmanim_ecran" />
+
+            <TextView style="@style/CardHint" android:text="@string/section_zmanim_ecran_hint" />
+
+            <LinearLayout style="@style/SettingRow">
+
+                <TextView
+                    style="@style/SettingLabel"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:text="@string/reglage_levana" />
+
+                <com.google.android.material.materialswitch.MaterialSwitch
+                    android:id="@+id/levana_switch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <LinearLayout style="@style/SettingRow">
+
+                <TextView
+                    style="@style/SettingLabel"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:text="@string/hilloulot_afficher" />
+
+                <com.google.android.material.materialswitch.MaterialSwitch
+                    android:id="@+id/hilloulot_switch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <LinearLayout style="@style/SettingRow">
+
+                <TextView
+                    style="@style/SettingLabel"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:text="@string/halakha_afficher" />
+
+                <com.google.android.material.materialswitch.MaterialSwitch
+                    android:id="@+id/halakha_switch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <LinearLayout style="@style/SettingRow">
+
+                <TextView style="@style/SettingLabel" android:text="@string/halakha_source_titre" />
+
+                <Button android:id="@+id/halakha_source_button" style="@style/SettingValue" />
+            </LinearLayout>
         </LinearLayout>
 
         <LinearLayout android:id="@+id/card_gate_state" style="@style/Card">

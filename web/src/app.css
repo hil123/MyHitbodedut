@@ -676,6 +676,15 @@ input[type="range"] { width: 100%; accent-color: var(--brand); }
 .jour-sous-titre { margin: 14px 0 2px; font-size: 12px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); }
 .jour-ajouts { margin: 0; color: var(--ink); font-size: 15px; line-height: 1.5; }
 .bouton-calendrier { margin: 12px 0; }
+/* Écran Zmanim (14/10) : trois boutons sous le jour, puis les horaires ; Levana, hilloula, halakha après. */
+.boutons-jour { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin: 12px 0; }
+.boutons-jour .secondaire { width: 100%; min-width: 0; padding: 12px 6px; font-size: 14px; white-space: normal; line-height: 1.2; }
+.carte-sous-horaires { margin-top: 12px; }
+.carte-sous-horaires > .levana, .carte-sous-horaires > .jour-sous-titre:first-child { margin-top: 0; }
+/* Le livre de la halakha (14/10) : trois puces, une cochée. */
+.puces-choix { display: flex; flex-wrap: wrap; gap: 8px; margin: 4px 0 10px; }
+.puce-choix { border: 1px solid var(--line); background: transparent; border-radius: 999px; padding: 6px 14px; color: var(--ink); cursor: pointer; }
+.puce-choix[aria-checked="true"] { background: var(--brand); border-color: var(--brand); color: var(--on-brand, #fff); font-weight: 600; }
 .carte-zmanim { padding: 4px 16px; }
 .zman { padding: 10px 0; border-bottom: 1px solid var(--line); }
 .zman:last-child { border-bottom: 0; }
@@ -729,17 +738,18 @@ input[type="range"] { width: 100%; accent-color: var(--brand); }
 .palier-record { margin: 6px 0 0; }
 
 /* L'écran des hilloulot (11/10). */
-.jour-hilloula { margin: 2px 0 0; font-size: 16px; line-height: 1.6; }
-.jour-hilloula-reste { display: block; color: var(--muted); font-size: 13px; }
+.jour-hilloula { margin: 2px 0 0; font-size: 14px; line-height: 1.55; }
+.jour-hilloula-reste { display: block; color: var(--muted); font-size: 12px; }
 .lien-bouton { background: none; border: 0; font: inherit; font-weight: 700; cursor: pointer; padding-inline: 0; }
 .champ-recherche { width: 100%; box-sizing: border-box; margin-top: 10px; padding: 10px 12px; border: 1px solid var(--line, #ccd); border-radius: 12px; font: inherit; background: transparent; color: inherit; }
-.carte-hilloula .hilloula-nom { margin: 0; font-family: var(--police-texte); font-size: calc(22px * var(--echelle-texte, 1)); font-weight: 700; }
-.carte-hilloula .hilloula-traduit { margin: 2px 0 0; color: var(--muted); }
-.carte-hilloula .hilloula-annee { margin: 4px 0 0; color: var(--muted); font-size: 14px; }
-.carte-hilloula .hilloula-description { margin: 10px 0 0; white-space: pre-line; font-family: var(--police-texte); font-size: calc(16px * var(--echelle-texte, 1)); line-height: 1.7; }
+/* Hilloulot en plus petit (14/10). */
+.carte-hilloula .hilloula-nom { margin: 0; font-family: var(--police-texte); font-size: calc(18px * var(--echelle-texte, 1)); font-weight: 700; }
+.carte-hilloula .hilloula-traduit { margin: 2px 0 0; color: var(--muted); font-size: 13px; }
+.carte-hilloula .hilloula-annee { margin: 4px 0 0; color: var(--muted); font-size: 12px; }
+.carte-hilloula .hilloula-description { margin: 10px 0 0; white-space: pre-line; font-family: var(--police-texte); font-size: calc(14px * var(--echelle-texte, 1)); line-height: 1.7; }
 .carte-hilloula .hilloula-description.replie { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 8; line-clamp: 8; overflow: hidden; }
 .carte-hilloula .hilloula-plus { display: block; margin: 4px 0 0; font-weight: 700; }
-.carte-hilloula .hilloula-source { display: block; margin: 8px 0 0; color: var(--brand); font-size: 13px; text-decoration: none; }
+.carte-hilloula .hilloula-source { display: block; margin: 8px 0 0; color: var(--brand); font-size: 12px; text-decoration: none; }
 
 /* La halakha du jour (Ben Ish 'Haï, 11/10) */
 .jour-halakha { margin: 2px 0 0; font-size: 16px; line-height: 1.6; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
