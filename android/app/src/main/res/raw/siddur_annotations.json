@@ -3456,10 +3456,28 @@
    {
     "sorte": "bloc",
     "s": 3,
+    "si": "berakha",
+    "b": 29,
+    "empreinte": "בימות החמה: ברכה",
+    "g": 5,
+    "racine": "berakha"
+   },
+   {
+    "sorte": "bloc",
+    "s": 3,
+    "si": "tal_oumatar",
+    "b": 30,
+    "empreinte": "בימות הגשמים: טל ומטר לברכה",
+    "g": 6,
+    "racine": "tal_oumatar"
+   },
+   {
+    "sorte": "bloc",
+    "s": 3,
     "si": "asseret_yemei_techouva",
     "b": 36,
     "empreinte": "בעשי״ת יסיים: ברוך אתה יהוה המלך המשפט:",
-    "g": 5,
+    "g": 7,
     "racine": "asseret_yemei_techouva"
    },
    {
@@ -3468,7 +3486,7 @@
     "si": "yaale_veyavo",
     "b": 44,
     "empreinte": "בראש חדש ובחול המועד אומרים זה:",
-    "g": 6,
+    "g": 8,
     "racine": "yaale_veyavo"
    },
    {
@@ -3477,7 +3495,7 @@
     "si": "yaale_veyavo",
     "b": 45,
     "empreinte": "אלהינו ואלהי אבותינו. יעלה ויבא ויגיע וי",
-    "g": 6,
+    "g": 8,
     "racine": "yaale_veyavo"
    },
    {
@@ -3486,7 +3504,7 @@
     "si": "al_hanissim",
     "b": 49,
     "empreinte": "בחנוכה ופורים אומרים על הנסים. שכח לומר ",
-    "g": 7,
+    "g": 9,
     "racine": "al_hanissim"
    },
    {
@@ -3495,7 +3513,7 @@
     "si": "al_hanissim",
     "b": 50,
     "empreinte": "על הנסים ועל הפרקן ועל הגבורות ועל התשוע",
-    "g": 7,
+    "g": 9,
     "racine": "al_hanissim"
    },
    {
@@ -3504,7 +3522,7 @@
     "si": "hanouka",
     "b": 51,
     "empreinte": "בחנוכה: בימי מתתיהו בן יוחנן כהן גדול חש",
-    "g": 7,
+    "g": 9,
     "racine": "al_hanissim"
    },
    {
@@ -3513,7 +3531,7 @@
     "si": "pourim",
     "b": 52,
     "empreinte": "בפורים: בימי מרדכי ואסתר בשושן הבירה כשע",
-    "g": 7,
+    "g": 9,
     "racine": "al_hanissim"
    },
    {
@@ -3522,7 +3540,7 @@
     "si": "asseret_yemei_techouva",
     "b": 54,
     "empreinte": "בעשי״ת: וכתוב לחיים טובים כל בני בריתך:",
-    "g": 8,
+    "g": 10,
     "racine": "asseret_yemei_techouva"
    },
    {
@@ -3531,7 +3549,7 @@
     "si": "asseret_yemei_techouva",
     "b": 58,
     "empreinte": "בעשי״ת: בספר חיים ברכה ושלום ופרנסה טובה",
-    "g": 9,
+    "g": 11,
     "racine": "asseret_yemei_techouva"
    },
    {

@@ -665,6 +665,11 @@ const POLICES = {
   serif: '"Hebreu Serif", "Noto Serif Hebrew", "Times New Roman", serif',
   sans: '"Noto Sans Hebrew", "Arial Hebrew", system-ui, sans-serif',
   arrondie: '"Varela Round", system-ui, sans-serif',
+  // Quatre polices hébraïques libres (OFL, Google Fonts), toutes avec le nikkoud (14/10).
+  frank: '"Frank Ruhl Libre", "Hebreu Serif", serif',
+  david: '"David Libre", "Hebreu Serif", serif',
+  rachi: '"Noto Rashi Hebrew", "Hebreu Serif", serif',
+  miriam: '"Miriam Libre", system-ui, sans-serif',
 };
 function appliquerPolice() {
   document.documentElement.style.setProperty('--police-texte', POLICES[store.lecturePolice()]);
@@ -738,9 +743,9 @@ function reglagesLecture({ avecNusah, sansNuit = false }) {
         new Intl.NumberFormat(tr.langue, { style: 'percent' }).format(pourcent / 100)),
       bouton({ class: 'lettres', lang: 'en', dir: 'ltr', 'aria-label': tl('lecture_plus'), disabled: e >= 2, onclick: () => echelle(e + 0.1) }, 'A+'),
       separateur(),
-      // « אב » : la police suivante (hébraïque à empattements, sans, arrondie), pour tous les textes.
+      // « אב » : la police suivante (les sept, l'une après l'autre), pour tous les textes.
       bouton({ class: 'lecture-police', lang: 'he', dir: 'rtl', 'aria-label': `${tl('lecture_police')} : ${tl(`police_${store.lecturePolice()}`)}`, title: tl(`police_${store.lecturePolice()}`),
-        onclick: () => { const l = ['serif', 'sans', 'arrondie']; store.setLecturePolice(l[(l.indexOf(store.lecturePolice()) + 1) % l.length]); appliquerPolice(); rendreEtViser('.lecture-police'); } }, 'אב'),
+        onclick: choisirPolice }, 'אב'),
       sansNuit ? null : bouton({ class: 'icone-bouton', 'aria-label': tl('lecture_nuit'), 'aria-pressed': String(nuit), onclick: () => { store.setLectureSombre(!nuit); rendreEtViser('.lecture-barre [aria-pressed]'); } }, icone('lune')),
       avecNusah ? bouton({
         class: 'lecture-nusah-bouton', 'aria-haspopup': 'menu', 'aria-expanded': String(choixNusahOuvert),
@@ -865,6 +870,23 @@ function enteteGroupe(hebreu, traduction) {
 }
 
 /** Les trois nusah ; le choix est gardé, et vaut aussi dans les lectures. */
+/** Le choix de la police (14/10) : chaque nom écrit dans sa police, avec un mot vocalisé pour juger. */
+function choisirPolice() {
+  feuille(tr.t('lecture_police'), (f, fermer) => {
+    f.append(h('div', { role: 'radiogroup', 'aria-label': tr.t('lecture_police') }, Object.keys(POLICES).map((cle) => {
+      const courant = cle === store.lecturePolice();
+      return h('button', {
+        type: 'button', class: 'choix choix-radio choix-police', role: 'radio', 'aria-checked': String(courant),
+        onclick: () => { fermer(); if (!courant) { store.setLecturePolice(cle); appliquerPolice(); rendreEtViser('.lecture-police'); } },
+      }, h('span', { class: 'radio', 'aria-hidden': 'true' }),
+      h('span', { class: 'choix-police-corps' },
+        h('span', { class: 'choix-police-nom' }, tr.t(`police_${cle}`)),
+        h('span', { class: 'choix-police-exemple', lang: 'he', dir: 'rtl', style: `font-family: ${POLICES[cle]}` }, 'בְּרֵאשִׁית בָּרָא אֱלֹהִים')));
+    })));
+  });
+  document.querySelector('.feuille [aria-checked="true"]')?.focus();
+}
+
 function choisirNusah() {
   feuille(tr.t('siddur_choose'), (f, fermer) => {
     f.append(h('div', { role: 'radiogroup', 'aria-label': tr.t('siddur_choose') }, NUSAH.map(([cle, nom]) => {

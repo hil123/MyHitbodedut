@@ -290,7 +290,7 @@
     <string name="chizuk_stuck">המילים לא באות לי</string>
 
     <!-- Point 5 : bibliothèque -->
-    <string name="library_title">מקורות התבודדות</string>
+    <string name="library_title">מקורות ההתבודדות</string>
     <string name="library_hint">מה שנכתב עליה, מן המקורות ועד היום.</string>
     <string name="library_entries_count">%1$d ערכים</string>
     <plurals name="livre_chapitres">
@@ -889,4 +889,9 @@
         <item quantity="other">בעוד %d ימים</item>
     </plurals>
     <string name="levana_source">שבעה ימים אחר המולד, עד חצי החודש (שולחן ערוך, אורח חיים תכ״ו).</string>
+    <!-- Polices hébraïques supplémentaires (14/10) -->
+    <string name="police_frank">פרנק רוהל (קלאסי)</string>
+    <string name="police_david">דוד</string>
+    <string name="police_rachi">רש״י (כתב המפרשים)</string>
+    <string name="police_miriam">מרים (מודרני)</string>
 </resources>

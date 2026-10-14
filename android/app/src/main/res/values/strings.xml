@@ -908,4 +908,9 @@
         <item quantity="other">Dans %d jours</item>
     </plurals>
     <string name="levana_source">Sept jours après le molad, jusqu’à la mi-mois (Choulhan Aroukh, Ora’h ’Haïm 426).</string>
+    <!-- Polices hébraïques supplémentaires (14/10) -->
+    <string name="police_frank">Frank Ruhl (classique)</string>
+    <string name="police_david">David</string>
+    <string name="police_rachi">Rachi (écriture des commentaires)</string>
+    <string name="police_miriam">Miriam (moderne)</string>
 </resources>

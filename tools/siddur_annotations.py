@@ -193,6 +193,15 @@ def annoter(texte_id, sections, nusah):
                 prend(bi + 1, c)
                 bi += 2
                 continue
+            # Été, hiver : la consigne et sa variante dans le même bloc (Arvit
+            # ashkénaze, « בימות החמה: ברכה » ; relevé le 14/10).
+            elif not cons[bi] and any(x.startswith(e + " ") for e in ETE + HIVER) \
+                    and not (any(e in x for e in ETE) and any(h in x for h in HIVER)):
+                if any(x.startswith(e) for e in ETE):
+                    c = "morid_hatal" if "מוריד הטל" in x else "berakha"
+                else:
+                    c = "machiv_harouah" if "משיב הרוח" in x else "tal_oumatar"
+                prend(bi, c)
             # Les dix jours : la consigne courte, puis son bloc ; ou le bloc qui
             # s'annonce lui-même (« בעשי״ת: זכרנו לחיים »).
             elif cons[bi] and re.fullmatch(r"(בעשי״ת|בעשרת ימי תשובה)( (מסיים|יסיים|אומרים|מוסיפים))?:?", x) \

@@ -15,6 +15,11 @@
 /* Les lignes d'état de l'accueil (10/10) : Varela Round, fichier d'origine, OFL (polices/OFL-VarelaRound.txt). */
 @font-face { font-family: "Varela Round"; font-weight: 400; font-display: swap; src: url(polices/varela_round.ttf) format("truetype"); }
 @font-face { font-family: "Hebreu Serif"; font-weight: 700; font-display: swap; src: url(polices/hebreu_serif_bold.woff2) format("woff2"); }
+@font-face { font-family: "Frank Ruhl Libre"; font-weight: 300 900; font-display: swap; src: url(polices/frank_ruhl.ttf) format("truetype"); }
+@font-face { font-family: "David Libre"; font-weight: 400; font-display: swap; src: url(polices/david_libre.ttf) format("truetype"); }
+@font-face { font-family: "David Libre"; font-weight: 700; font-display: swap; src: url(polices/david_libre_bold.ttf) format("truetype"); }
+@font-face { font-family: "Noto Rashi Hebrew"; font-weight: 100 900; font-display: swap; src: url(polices/noto_rashi.ttf) format("truetype"); }
+@font-face { font-family: "Miriam Libre"; font-weight: 400 700; font-display: swap; src: url(polices/miriam_libre.ttf) format("truetype"); }
 .statut:not(.titre), .serie, .detail { font-family: "Varela Round", system-ui, sans-serif; }
 .chizuk-he, .lecture .psaume, .lecture .psaume-titre, .siddour .priere, .siddour .consigne, .nom-he, .signet { font-family: var(--police-texte); }
 
@@ -899,3 +904,7 @@ input[type="range"] { width: 100%; accent-color: var(--brand); }
 .levana-or { position: absolute; top: 6px; height: 6px; border-radius: 3px; background: var(--ring-streak, #B8780F); }
 .levana-point { position: absolute; top: 2px; width: 14px; height: 14px; margin-inline-start: -7px; border-radius: 50%; background: var(--brand); box-shadow: 0 0 0 2px var(--card); }
 .levana-source { margin: 6px 0 0; font-size: 11px; color: var(--muted); }
+
+/* Le choix de la police (14/10) : le nom, puis un verset vocalisé dans la police même. */
+.choix-police-corps { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; min-width: 0; }
+.choix-police-exemple { font-size: 20px; line-height: 1.5; color: var(--ink); }

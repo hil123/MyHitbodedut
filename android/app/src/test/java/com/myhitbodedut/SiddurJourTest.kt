@@ -51,6 +51,11 @@ class SiddurJourTest {
             val chaharit = SiddurJour.parse(json, n.cle).getValue("chaharit").map { it.condition }.toSet()
             listOf("yaale_veyavo", "al_hanissim", "hanouka", "pourim", "tal_oumatar", "berakha", "asseret_yemei_techouva")
                 .forEach { assertTrue("${n.cle} : $it", it in chaharit) }
+            // Été / hiver dans les trois offices (14/10 : l'Arvit ashkénaze n'était pas marqué).
+            listOf("chaharit", "minha", "arvit").forEach { o ->
+                val c = SiddurJour.parse(json, n.cle).getValue(o).map { it.condition }.toSet()
+                listOf("tal_oumatar", "berakha").forEach { assertTrue("${n.cle} $o : $it", it in c) }
+            }
             val repas = SiddurJour.parse(json, n.cle).getValue("birkat_hamazon").map { it.condition }.toSet()
             listOf("yaale_veyavo", "al_hanissim", "chabbat").forEach { assertTrue("${n.cle} repas : $it", it in repas) }
         }

@@ -862,4 +862,9 @@
         <item quantity="other">In %d days</item>
     </plurals>
     <string name="levana_source">Seven days after the molad, until mid-month (Shulchan Aruch, Orach Chaim 426).</string>
+    <!-- Polices hébraïques supplémentaires (14/10) -->
+    <string name="police_frank">Frank Ruhl (classic)</string>
+    <string name="police_david">David</string>
+    <string name="police_rachi">Rashi (commentary script)</string>
+    <string name="police_miriam">Miriam (modern)</string>
 </resources>
