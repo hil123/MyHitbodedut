@@ -985,6 +985,23 @@ Michna Beroura 426:6, 11, 17, 19, 20.
 - Halakha Beroura (R. David Yosef), siman 117 : texte non trouvé en ligne, non
   vérifié.
 
+## Les dix améliorations (14/10, validées)
+
+| # | Amélioration | Android | Web |
+|---|---|---|---|
+| 1 | Rappel Birkat haLevana (premier soir, motsaé Chabbat conseillé, dernier soir), à la sortie des étoiles | notification (Réglages → Écran Zmanim) | carte « Possible ce soir » sur l'accueil (pas de notification hors de l'app) |
+| 2 | Texte de Birkat haLevana en un toucher, dans le noussa'h choisi | oui | oui |
+| 3 | Accueil selon l'heure : la prière du moment, Birkat haLevana les soirs de la fenêtre | oui | oui |
+| 4 | Vignette « Zmanim » : date hébraïque, prière du moment et son heure limite, chki'a, série | oui | — (pas de vignette sur le web) |
+| 5 | « Ne pas déranger » pendant la hitbodedout, mode d'avant rétabli ensuite | oui (autorisation Android) | — |
+| 6 | Recherche globale : siddour, livres, halakha, hilloulot | oui (Bibliothèque) | oui |
+| 7 | Favoris (étoile) et reprise de lecture à la place laissée | oui | oui |
+| 8 | Grand texte de lecture (140 %) et fond « Contraste élevé » | oui | oui |
+| 9 | Journal : humeur avant/après, gratitude, graphique des minutes du mois | oui | — (pas encore de journal sur le web) |
+| 10 | Partager un jour en image (date, fêtes, hilloula, halakha) | oui | oui (partage du téléphone, sinon téléchargement) |
+
+Non vérifié : Eretz Hemdah (avis de Rav Ovadia sur le sud), le site ne répond pas.
+
 ## Ce qui manque — liste complète (14/10)
 
 **Textes et prières**
