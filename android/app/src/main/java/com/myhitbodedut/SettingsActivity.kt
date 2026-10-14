@@ -60,7 +60,7 @@ class SettingsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
-        bornerValeurs(findViewById(android.R.id.content))
+        bornerValeurs(window.decorView)
         notificationsDemandees = savedInstanceState?.getBoolean(ETAT_DEMANDE, false) ?: false
         wireActions()
         applyEdition()
