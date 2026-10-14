@@ -875,7 +875,7 @@ class MainActivity : AppCompatActivity() {
      * fondu. Il se pose par-dessus l'accueil dès le premier dessin : plus d'écran vide
      * pendant que l'application attend (capture du 15/10, trois secondes de menthe).
      * Photo : la façade du היכל הציון à Ouman, fournie par le porteur le 15/10
-     * (tools/sources-images/heikhal_tziyoun_uman.jpg) ; licence non vérifiée.
+     * (tools/sources-images/heikhal_tziyoun_uman.jpg), retouchée par IA.
      */
     private fun ouverture(demarrage: Boolean) {
         // Le fond du thème (la palette choisie) remplace celui de l'ouverture.
