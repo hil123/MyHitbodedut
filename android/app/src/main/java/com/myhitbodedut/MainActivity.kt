@@ -854,7 +854,7 @@ class MainActivity : AppCompatActivity() {
     /**
      * Petit écran et texte du système agrandi (15/10) : les lignes de l'en-tête et de la
      * légende s'allongent, et la jauge de 136dp repoussait encore « Commencer » sous les
-     * onglets (capture 480x854, police 1,3). La jauge descend alors à 116dp.
+     * onglets (capture 480x854, police 1,3). La jauge descend alors à 96dp.
      */
     private fun jaugeCompacte() {
         val c = resources.configuration
@@ -862,10 +862,10 @@ class MainActivity : AppCompatActivity() {
         val d = resources.displayMetrics.density
         val cadre = findViewById<View>(R.id.week_gauge).parent as View
         cadre.layoutParams = (cadre.layoutParams as android.view.ViewGroup.MarginLayoutParams).apply {
-            width = (116 * d).toInt(); height = (116 * d).toInt(); topMargin = (8 * d).toInt()
+            width = (96 * d).toInt(); height = (96 * d).toInt(); topMargin = (2 * d).toInt()
         }
         findViewById<View>(R.id.hero_plate).apply {
-            layoutParams = (layoutParams as android.view.ViewGroup.MarginLayoutParams).apply { setMargins((28 * d).toInt(), (28 * d).toInt(), (28 * d).toInt(), (28 * d).toInt()) }
+            layoutParams = (layoutParams as android.view.ViewGroup.MarginLayoutParams).apply { setMargins((24 * d).toInt(), (24 * d).toInt(), (24 * d).toInt(), (24 * d).toInt()) }
         }
     }
 

@@ -5,6 +5,6 @@
         <item name="android:windowBackground">@drawable/fond_ouverture</item>
         <item name="android:windowSplashScreenBackground">@color/ouverture_fond</item>
         <item name="android:windowSplashScreenIconBackgroundColor">@color/ouverture_fond</item>
-        <item name="android:windowSplashScreenAnimatedIcon">@mipmap/ic_launcher</item>
+        <item name="android:windowSplashScreenAnimatedIcon">@drawable/vide</item>
     </style>
 </resources>
