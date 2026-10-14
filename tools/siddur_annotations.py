@@ -182,6 +182,20 @@ def annoter(texte_id, sections, nusah):
             elif not cons[bi] and commence(x, "נחם יהוה אלהינו"):
                 en_tete(bi, "ticha_beav", "באב")
                 prend(bi, "ticha_beav")
+            # Na'hem annoncé dans son propre bloc (Edot, Min'ha : « בתשעה באב אומרים: נחם » ; relevé le 14/10).
+            elif not cons[bi] and re.match(r"בתשעה באב (יש )?אומרים:? ?נחם", x):
+                prend(bi, "ticha_beav")
+            # Avinou malkénou des jeûnes (Ashkenaz : « בתענית ציבור: אבינו מלכנו ברך עלינו » ; relevé le 14/10).
+            elif not cons[bi] and x.startswith("בתענית ציבור:"):
+                prend(bi, "jeune")
+            # Les ajouts de Chabbat et de Roch 'Hodech annoncés dans leur bloc (Méèn chaloch, relevé le 14/10).
+            elif not cons[bi] and re.match(r"בשבת ורצה", x):
+                prend(bi, "chabbat")
+            elif not cons[bi] and re.match(r"בראש ?חודש וזכרנו", x):
+                prend(bi, "roch_hodech")
+            # La prière de Rav Chéchèt, « ביום תענית יאמר רבון העולמים » (Edot, Min'ha ; relevé le 14/10).
+            elif not cons[bi] and re.match(r"ביום תענית (יאמר|אומרים)", x):
+                prend(bi, "jeune")
             # Été, hiver : la consigne seule, puis son bloc.
             elif cons[bi] and x in ETE + HIVER and bi + 1 < n and not cons[bi + 1]:
                 y = txt[bi + 1]

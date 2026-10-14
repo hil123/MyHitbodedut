@@ -203,8 +203,7 @@
                             android:layout_marginStart="8dp"
                             android:fontFeatureSettings="tnum"
                             android:layout_weight="1"
-                            android:ellipsize="end"
-                            android:maxLines="1"
+                                                        android:maxLines="2"
                             android:textColor="?attr/mhMuted"
                             android:textSize="17sp" />
                     </LinearLayout>

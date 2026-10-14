@@ -716,11 +716,20 @@
    {
     "sorte": "bloc",
     "s": 1,
+    "si": "ticha_beav",
+    "b": 25,
+    "empreinte": "בתשעה באב אומרים: נחם יהוה אלהינו את אבל",
+    "g": 3,
+    "racine": "ticha_beav"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
     "si": "jeune",
     "b": 30,
     "empreinte": "בתענית אומר היחיד עננו, וכן שליח ציבור ש",
     "libelle": "ajout_anenou_particulier",
-    "g": 3,
+    "g": 4,
     "racine": "jeune"
    },
    {
@@ -730,7 +739,7 @@
     "b": 31,
     "empreinte": "נוסח עננו בג׳ צומות (סנסן ליעיר ג:ט) עננ",
     "libelle": "ajout_anenou_particulier",
-    "g": 3,
+    "g": 4,
     "racine": "jeune"
    },
    {
@@ -739,7 +748,7 @@
     "si": "yaale_veyavo",
     "b": 34,
     "empreinte": "בראש חודש ובחול המועד אומרים:",
-    "g": 4,
+    "g": 5,
     "racine": "yaale_veyavo"
    },
    {
@@ -748,7 +757,7 @@
     "si": "yaale_veyavo",
     "b": 35,
     "empreinte": "אלהינו ואלהי אבותינו, יעלה ויבא, ויגיע ו",
-    "g": 4,
+    "g": 5,
     "racine": "yaale_veyavo"
    },
    {
@@ -757,7 +766,7 @@
     "si": "roch_hodech",
     "b": 36,
     "empreinte": "בראש חדש: ראש חדש הזה,",
-    "g": 4,
+    "g": 5,
     "racine": "yaale_veyavo"
    },
    {
@@ -766,7 +775,7 @@
     "si": "pessah",
     "b": 37,
     "empreinte": "בחוה״מ פסח: חג המצות הזה, ביום מקרא קדש ",
-    "g": 4,
+    "g": 5,
     "racine": "yaale_veyavo"
    },
    {
@@ -775,7 +784,7 @@
     "si": "soukkot",
     "b": 38,
     "empreinte": "בחוה״מ סוכות: חג הסכות הזה, ביום מקרא קד",
-    "g": 4,
+    "g": 5,
     "racine": "yaale_veyavo"
    },
    {
@@ -784,7 +793,7 @@
     "si": "yaale_veyavo",
     "b": 39,
     "empreinte": "לרחם בו עלינו ולהושיענו. זכרנו יהוה אלהי",
-    "g": 4,
+    "g": 5,
     "racine": "yaale_veyavo"
    },
    {
@@ -793,7 +802,7 @@
     "si": "al_hanissim",
     "b": 44,
     "empreinte": "בחנוכה ופורים אומרים:",
-    "g": 5,
+    "g": 6,
     "racine": "al_hanissim"
    },
    {
@@ -802,7 +811,7 @@
     "si": "al_hanissim",
     "b": 45,
     "empreinte": "על הנסים ועל הפרקן ועל הגבורות ועל התשוע",
-    "g": 5,
+    "g": 6,
     "racine": "al_hanissim"
    },
    {
@@ -811,7 +820,7 @@
     "si": "hanouka",
     "b": 46,
     "empreinte": "בחנוכה אומרים: בימי מתתיה בןיוחנן כהן גד",
-    "g": 5,
+    "g": 6,
     "racine": "al_hanissim"
    },
    {
@@ -820,7 +829,7 @@
     "si": "pourim",
     "b": 47,
     "empreinte": "בפורים אומרים בימי מרדכי ואסתר בשושן הבי",
-    "g": 5,
+    "g": 6,
     "racine": "al_hanissim"
    },
    {
@@ -840,6 +849,15 @@
     "texte": "ובספר חיים, ברכה ושלום, ופרנסה טובה וישועה ונחמה, וגזרות טובות, נזכר ונכתב לפניך, אנחנו וכל עמך בית ישראל, לחיים טובים ולשלום. ברוך אתה יוהוווהו, המברך את עמו ישראל בשלום. אמן"
    },
    {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "jeune",
+    "b": 68,
+    "empreinte": "ביום תענית יאמר רבון העולמים גלוי לפניך ",
+    "g": 7,
+    "racine": "jeune"
+   },
+   {
     "sorte": "indice",
     "s": 1,
     "si": "asseret_yemei_techouva",
@@ -853,7 +871,7 @@
     "si": "asseret_yemei_techouva",
     "b": 71,
     "empreinte": "בעשרת ימי תשובה אומרים:",
-    "g": 6,
+    "g": 8,
     "racine": "asseret_yemei_techouva"
    },
    {
@@ -862,7 +880,7 @@
     "si": "asseret_yemei_techouva",
     "b": 72,
     "empreinte": "אבינו מלכנו חטאנו לפניך רחם עלינו:",
-    "g": 6,
+    "g": 8,
     "racine": "asseret_yemei_techouva"
    },
    {
@@ -871,7 +889,7 @@
     "si": "asseret_yemei_techouva",
     "b": 73,
     "empreinte": "אבינו מלכנו אין לנו מלך אלא אתה:",
-    "g": 6,
+    "g": 8,
     "racine": "asseret_yemei_techouva"
    },
    {
@@ -880,7 +898,7 @@
     "si": "asseret_yemei_techouva",
     "b": 74,
     "empreinte": "אבינו מלכנו עשה עמנו למען שמך:",
-    "g": 6,
+    "g": 8,
     "racine": "asseret_yemei_techouva"
    },
    {
@@ -889,7 +907,7 @@
     "si": "asseret_yemei_techouva",
     "b": 75,
     "empreinte": "אבינו מלכנו חדש עלינו שנה טובה:",
-    "g": 6,
+    "g": 8,
     "racine": "asseret_yemei_techouva"
    },
    {
@@ -898,7 +916,7 @@
     "si": "asseret_yemei_techouva",
     "b": 76,
     "empreinte": "אבינו מלכנו בטל מעלינו כל גזרות קשות ורע",
-    "g": 6,
+    "g": 8,
     "racine": "asseret_yemei_techouva"
    },
    {
@@ -907,7 +925,7 @@
     "si": "asseret_yemei_techouva",
     "b": 77,
     "empreinte": "אבינו מלכנו בטל מחשבות שנאינו:",
-    "g": 6,
+    "g": 8,
     "racine": "asseret_yemei_techouva"
    },
    {
@@ -916,7 +934,7 @@
     "si": "asseret_yemei_techouva",
     "b": 78,
     "empreinte": "אבינו מלכנו הפר עצת אויבינו:",
-    "g": 6,
+    "g": 8,
     "racine": "asseret_yemei_techouva"
    },
    {
@@ -925,7 +943,7 @@
     "si": "asseret_yemei_techouva",
     "b": 79,
     "empreinte": "אבינו מלכנו כלה כל צר ומשטין מעלינו:",
-    "g": 6,
+    "g": 8,
     "racine": "asseret_yemei_techouva"
    },
    {
@@ -934,7 +952,7 @@
     "si": "asseret_yemei_techouva",
     "b": 80,
     "empreinte": "אבינו מלכנו כלה דבר וחרב ורעה ורעב ושבי ",
-    "g": 6,
+    "g": 8,
     "racine": "asseret_yemei_techouva"
    },
    {
@@ -943,7 +961,7 @@
     "si": "asseret_yemei_techouva",
     "b": 81,
     "empreinte": "אבינו מלכנו שלח רפואה שלמה לכל חולי עמך:",
-    "g": 6,
+    "g": 8,
     "racine": "asseret_yemei_techouva"
    },
    {
@@ -952,7 +970,7 @@
     "si": "asseret_yemei_techouva",
     "b": 82,
     "empreinte": "אבינו מלכנו מנע מגפה מנחלתך:",
-    "g": 6,
+    "g": 8,
     "racine": "asseret_yemei_techouva"
    },
    {
@@ -961,7 +979,7 @@
     "si": "asseret_yemei_techouva",
     "b": 83,
     "empreinte": "אבינו מלכנו זכור כי עפר אנחנו:",
-    "g": 6,
+    "g": 8,
     "racine": "asseret_yemei_techouva"
    },
    {
@@ -970,7 +988,7 @@
     "si": "asseret_yemei_techouva",
     "b": 84,
     "empreinte": "אבינו מלכנו מחול וסלח לכל עונותינו:",
-    "g": 6,
+    "g": 8,
     "racine": "asseret_yemei_techouva"
    },
    {
@@ -979,7 +997,7 @@
     "si": "asseret_yemei_techouva",
     "b": 85,
     "empreinte": "אבינו מלכנו קרע רוע גזר דיננו: (יכוין בש",
-    "g": 6,
+    "g": 8,
     "racine": "asseret_yemei_techouva"
    },
    {
@@ -988,7 +1006,7 @@
     "si": "asseret_yemei_techouva",
     "b": 86,
     "empreinte": "אבינו מלכנו מחוק ברחמיך הרבים כל שטרי חו",
-    "g": 6,
+    "g": 8,
     "racine": "asseret_yemei_techouva"
    },
    {
@@ -997,7 +1015,7 @@
     "si": "asseret_yemei_techouva",
     "b": 87,
     "empreinte": "אבינו מלכנו מחה והעבר פשעינו מנגד עיניך:",
-    "g": 6,
+    "g": 8,
     "racine": "asseret_yemei_techouva"
    },
    {
@@ -1006,7 +1024,7 @@
     "si": "asseret_yemei_techouva",
     "b": 88,
     "empreinte": "אבינו מלכנו כתבנו בספר חיים טובים:",
-    "g": 6,
+    "g": 8,
     "racine": "asseret_yemei_techouva"
    },
    {
@@ -1015,7 +1033,7 @@
     "si": "asseret_yemei_techouva",
     "b": 89,
     "empreinte": "אבינו מלכנו כתבנו בספר צדיקים וחסידים:",
-    "g": 6,
+    "g": 8,
     "racine": "asseret_yemei_techouva"
    },
    {
@@ -1024,7 +1042,7 @@
     "si": "asseret_yemei_techouva",
     "b": 90,
     "empreinte": "אבינו מלכנו כתבנו בספר ישרים ותמימים:",
-    "g": 6,
+    "g": 8,
     "racine": "asseret_yemei_techouva"
    },
    {
@@ -1033,7 +1051,7 @@
     "si": "asseret_yemei_techouva",
     "b": 91,
     "empreinte": "אבינו מלכנו כתבנו בספר פרנסה וכלכלה טובה",
-    "g": 6,
+    "g": 8,
     "racine": "asseret_yemei_techouva"
    },
    {
@@ -1042,7 +1060,7 @@
     "si": "asseret_yemei_techouva",
     "b": 92,
     "empreinte": "אבינו מלכנו כתבנו בספר מחילה וסליחה וכפר",
-    "g": 6,
+    "g": 8,
     "racine": "asseret_yemei_techouva"
    },
    {
@@ -1051,7 +1069,7 @@
     "si": "asseret_yemei_techouva",
     "b": 93,
     "empreinte": "אבינו מלכנו כתבנו בספר גאלה וישועה:",
-    "g": 6,
+    "g": 8,
     "racine": "asseret_yemei_techouva"
    },
    {
@@ -1060,7 +1078,7 @@
     "si": "asseret_yemei_techouva",
     "b": 94,
     "empreinte": "אבינו מלכנו זכרנו בזכרון טוב מלפניך:",
-    "g": 6,
+    "g": 8,
     "racine": "asseret_yemei_techouva"
    },
    {
@@ -1069,7 +1087,7 @@
     "si": "asseret_yemei_techouva",
     "b": 95,
     "empreinte": "אבינו מלכנו הצמח לנו ישועה בקרוב:",
-    "g": 6,
+    "g": 8,
     "racine": "asseret_yemei_techouva"
    },
    {
@@ -1078,7 +1096,7 @@
     "si": "asseret_yemei_techouva",
     "b": 96,
     "empreinte": "אבינו מלכנו הרם קרן ישראל עמך:",
-    "g": 6,
+    "g": 8,
     "racine": "asseret_yemei_techouva"
    },
    {
@@ -1087,7 +1105,7 @@
     "si": "asseret_yemei_techouva",
     "b": 97,
     "empreinte": "אבינו מלכנו והרם קרן משיחך:",
-    "g": 6,
+    "g": 8,
     "racine": "asseret_yemei_techouva"
    },
    {
@@ -1096,7 +1114,7 @@
     "si": "asseret_yemei_techouva",
     "b": 98,
     "empreinte": "אבינו מלכנו חננו ועננו:",
-    "g": 6,
+    "g": 8,
     "racine": "asseret_yemei_techouva"
    },
    {
@@ -1105,7 +1123,7 @@
     "si": "asseret_yemei_techouva",
     "b": 99,
     "empreinte": "אבינו מלכנו החזירנו בתשובה שלמה לפניך:",
-    "g": 6,
+    "g": 8,
     "racine": "asseret_yemei_techouva"
    },
    {
@@ -1114,7 +1132,7 @@
     "si": "asseret_yemei_techouva",
     "b": 100,
     "empreinte": "אבינו מלכנו שמע קולנו חוס ורחם עלינו:",
-    "g": 6,
+    "g": 8,
     "racine": "asseret_yemei_techouva"
    },
    {
@@ -1123,7 +1141,7 @@
     "si": "asseret_yemei_techouva",
     "b": 101,
     "empreinte": "אבינו מלכנו עשה למענך אם לא למעננו:",
-    "g": 6,
+    "g": 8,
     "racine": "asseret_yemei_techouva"
    },
    {
@@ -1132,7 +1150,7 @@
     "si": "asseret_yemei_techouva",
     "b": 102,
     "empreinte": "אבינו מלכנו קבל ברחמים וברצון את תפלתנו:",
-    "g": 6,
+    "g": 8,
     "racine": "asseret_yemei_techouva"
    },
    {
@@ -1141,7 +1159,7 @@
     "si": "asseret_yemei_techouva",
     "b": 103,
     "empreinte": "אבינו מלכנו אל תשיבנו ריקם מלפניך:",
-    "g": 6,
+    "g": 8,
     "racine": "asseret_yemei_techouva"
    },
    {
@@ -1150,7 +1168,7 @@
     "si": "!tahanoun_minha",
     "b": 104,
     "empreinte": "בימים שאין בהם תחנון אומרים",
-    "g": 7,
+    "g": 9,
     "racine": "!tahanoun_minha"
    },
    {
@@ -1159,7 +1177,7 @@
     "si": "!tahanoun_minha",
     "b": 105,
     "empreinte": "יהי שם יהוה מברך מעתה ועדעולם ממזרחשמש ע",
-    "g": 7,
+    "g": 9,
     "racine": "!tahanoun_minha"
    },
    {
@@ -1524,6 +1542,26 @@
     "empreinte": "לרחם בו עלינו ולהושיענו. זכרנו יהוה אלהי",
     "g": 2,
     "racine": "yaale_veyavo"
+   }
+  ],
+  "meen_chaloch": [
+   {
+    "sorte": "bloc",
+    "s": 0,
+    "si": "chabbat",
+    "b": 5,
+    "empreinte": "בשבת ורצה והחליצנו ביום השבת הזה.",
+    "g": 0,
+    "racine": "chabbat"
+   },
+   {
+    "sorte": "bloc",
+    "s": 0,
+    "si": "roch_hodech",
+    "b": 6,
+    "empreinte": "בראשחודש וזכרנו לטובה ביום ראש חדש הזה.",
+    "g": 1,
+    "racine": "roch_hodech"
    }
   ]
  },
@@ -3029,10 +3067,19 @@
    {
     "sorte": "bloc",
     "s": 4,
+    "si": "jeune",
+    "b": 14,
+    "empreinte": "בתענית ציבור: אבינו מלכנו ברך עלינו שנה ",
+    "g": 15,
+    "racine": "jeune"
+   },
+   {
+    "sorte": "bloc",
+    "s": 4,
     "si": "asseret_yemei_techouva",
     "b": 29,
     "empreinte": "בעשרת ימי תשובה:",
-    "g": 15,
+    "g": 16,
     "racine": "asseret_yemei_techouva"
    },
    {
@@ -3041,7 +3088,7 @@
     "si": "asseret_yemei_techouva",
     "b": 30,
     "empreinte": "אבינו מלכנו כתבנו בספר חיים טובים:",
-    "g": 15,
+    "g": 16,
     "racine": "asseret_yemei_techouva"
    },
    {
@@ -3050,7 +3097,7 @@
     "si": "asseret_yemei_techouva",
     "b": 31,
     "empreinte": "אבינו מלכנו כתבנו בספר גאלה וישועה:",
-    "g": 15,
+    "g": 16,
     "racine": "asseret_yemei_techouva"
    },
    {
@@ -3059,7 +3106,7 @@
     "si": "asseret_yemei_techouva",
     "b": 32,
     "empreinte": "אבינו מלכנו כתבנו בספר פרנסה וכלכלה:",
-    "g": 15,
+    "g": 16,
     "racine": "asseret_yemei_techouva"
    },
    {
@@ -3068,7 +3115,7 @@
     "si": "asseret_yemei_techouva",
     "b": 33,
     "empreinte": "אבינו מלכנו כתבנו בספר זכיות:",
-    "g": 15,
+    "g": 16,
     "racine": "asseret_yemei_techouva"
    },
    {
@@ -3077,7 +3124,7 @@
     "si": "asseret_yemei_techouva",
     "b": 34,
     "empreinte": "אבינו מלכנו כתבנו בספר סליחה ומחילה:",
-    "g": 15,
+    "g": 16,
     "racine": "asseret_yemei_techouva"
    },
    {
@@ -3337,10 +3384,19 @@
    {
     "sorte": "bloc",
     "s": 2,
+    "si": "jeune",
+    "b": 5,
+    "empreinte": "בתענית ציבור: אבינו מלכנו ברך עלינו שנה ",
+    "g": 16,
+    "racine": "jeune"
+   },
+   {
+    "sorte": "bloc",
+    "s": 2,
     "si": "asseret_yemei_techouva",
     "b": 20,
     "empreinte": "בעשרת ימי תשובה:",
-    "g": 16,
+    "g": 17,
     "racine": "asseret_yemei_techouva"
    },
    {
@@ -3349,7 +3405,7 @@
     "si": "asseret_yemei_techouva",
     "b": 21,
     "empreinte": "אבינו מלכנו כתבנו בספר חיים טובים:",
-    "g": 16,
+    "g": 17,
     "racine": "asseret_yemei_techouva"
    },
    {
@@ -3358,7 +3414,7 @@
     "si": "asseret_yemei_techouva",
     "b": 22,
     "empreinte": "אבינו מלכנו כתבנו בספר גאלה וישועה:",
-    "g": 16,
+    "g": 17,
     "racine": "asseret_yemei_techouva"
    },
    {
@@ -3367,7 +3423,7 @@
     "si": "asseret_yemei_techouva",
     "b": 23,
     "empreinte": "אבינו מלכנו כתבנו בספר פרנסה וכלכלה:",
-    "g": 16,
+    "g": 17,
     "racine": "asseret_yemei_techouva"
    },
    {
@@ -3376,7 +3432,7 @@
     "si": "asseret_yemei_techouva",
     "b": 24,
     "empreinte": "אבינו מלכנו כתבנו בספר זכיות:",
-    "g": 16,
+    "g": 17,
     "racine": "asseret_yemei_techouva"
    },
    {
@@ -3385,7 +3441,7 @@
     "si": "asseret_yemei_techouva",
     "b": 25,
     "empreinte": "אבינו מלכנו כתבנו בספר סליחה ומחילה:",
-    "g": 16,
+    "g": 17,
     "racine": "asseret_yemei_techouva"
    }
   ],
