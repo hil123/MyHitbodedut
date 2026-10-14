@@ -129,6 +129,18 @@ export function creeStore(stockage, { maintenant = () => new Date(), fuseau } = 
     /** L'usage de Birkat haLevana (14/10) : 'auto' (celui du noussa'h) ou un de USAGES_LEVANA. */
     levanaUsage: () => get('levana_usage', 'auto'),
     setLevanaUsage: (v) => set('levana_usage', v),
+    /** Favoris et reprise de lecture (14/10, Store.favoris) : clés « s:id » ou « l:id ». */
+    favoris: () => (Array.isArray(get('favoris', [])) ? get('favoris', []) : []),
+    basculerFavori(cle) {
+      const l = this.favoris().filter((x) => x !== cle);
+      set('favoris', l.length === this.favoris().length ? [cle, ...l] : l);
+    },
+    derniereLecture: () => get('derniere_lecture', null),
+    positionLecture: (cle) => Number(get('positions_lecture', {})?.[cle] ?? 0),
+    setPositionLecture(cle, y) {
+      set('positions_lecture', { ...(get('positions_lecture', {}) ?? {}), [cle]: y });
+      set('derniere_lecture', cle);
+    },
     /** L'écran d'ouverture (14/10) : 'aujourdhui', 'textes' ou 'zmanim'. */
     ouverture: () => (['aujourdhui', 'textes', 'zmanim'].includes(get('ecran_ouverture', 'aujourdhui')) ? get('ecran_ouverture', 'aujourdhui') : 'aujourdhui'),
     setOuverture: (v) => set('ecran_ouverture', v),

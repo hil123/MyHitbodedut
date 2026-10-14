@@ -56,7 +56,7 @@ object LevanaAlerte {
 
     /** L'heure du rappel un soir donné : la sortie des étoiles au lieu choisi, sinon 20 h. */
     fun heure(context: Context, zone: ZoneId): (LocalDate) -> ZonedDateTime = { d ->
-        Store.lieuZmanim(context)?.let { lieu -> Zmanim.jour(lieu, d).firstOrNull { it.cle == "tset" }?.local?.atZone(zone) }
+        Store.lieuZmanim(context)?.let { lieu -> Zmanim.jour(lieu, d).firstOrNull { it.cle == "tset" }?.local?.withZoneSameInstant(zone) }
             ?: d.atTime(20, 0).atZone(zone)
     }
 

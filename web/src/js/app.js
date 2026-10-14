@@ -492,8 +492,32 @@ function panneauAujourdhui() {
     })),
 
     fait ? h('button', { class: 'texte-bouton', onclick: () => ecrireNote(store.today(), rendre) }, tr.t('action_write_note')) : null,
+    // L'accueil selon l'heure (14/10) : la prière du moment, Birkat haLevana les soirs de la fenêtre.
+    ...momentAccueil(),
     // Les trophées et les paliers, en bas de la page (11/10).
     h('button', { class: 'bouton-trophees', onclick: () => ouvrir('paliers') }, tr.t('trophees_paliers'))));
+}
+
+/** L'accueil selon l'heure (AccueilMoment.kt) : la prière du moment, et Birkat haLevana les soirs où elle se dit. */
+function momentAccueil() {
+  if (!chargeSiddur()) return [];
+  const heure = new Date();
+  const moment = store.lieu() ? momentDuSiddour(store.lieu(), heure) : SiddurMoment.suggestion(heure.getHours(), heure.getMinutes());
+  const cartes = [];
+  const t = moment ? siddur.textes.find((x) => x.id === moment) : null;
+  if (t) cartes.push(carteMaintenant(t));
+  const zone = store.lieu()?.fuseau ?? Intl.DateTimeFormat().resolvedOptions().timeZone;
+  const l = levana(isoLocal(heure), zone, { usage: usageLevanaCourant() });
+  const lv = siddur.textes.find((x) => x.id === 'birkat_halevana');
+  if (lv && typeof l.etat === 'string' && heure.getHours() >= 14) {
+    cartes.push(h('button', { class: 'maintenant', onclick: () => { priere = lv.id; ouvrir('priere'); } },
+      plateau('char_praise', 'plateau-maintenant'),
+      h('span', { class: 'maintenant-corps' },
+        h('span', { class: 'maintenant-libelle' }, tr.t('levana_ce_soir')),
+        h('span', { class: 'maintenant-he', lang: 'he', dir: 'rtl' }, lv.titre.he)),
+      h('span', { class: 'chevron', 'aria-hidden': 'true' })));
+  }
+  return cartes.length ? [h('div', { class: 'accueil-moment' }, ...cartes)] : [];
 }
 
 function pastille(libelle, valeur, onclick) {
@@ -1037,7 +1061,88 @@ function ecranPriere() {
   const bande = titres.length > 1 ? bandeSignets(titres) : null;
   const ecran = ecranLu(x.titre.he, contenu, { avecNusah: !livre, bande: bande?.nav });
   bande?.suivre(ecran.querySelector('.defile'));
+  // Favori et reprise de lecture (14/10, RepriseFavoris.kt) : « s:id » ou « l:id ».
+  const cle = `${livre ? 'l' : 's'}:${x.id}`;
+  const etoile = h('button', { type: 'button', class: 'favori', 'aria-pressed': String(store.favoris().includes(cle)),
+    'aria-label': tr.t(store.favoris().includes(cle) ? 'favori_retirer' : 'favori_ajouter'),
+    onclick: (e) => { store.basculerFavori(cle); const fav = store.favoris().includes(cle); e.currentTarget.setAttribute('aria-pressed', String(fav)); e.currentTarget.textContent = fav ? '★' : '☆'; } },
+  store.favoris().includes(cle) ? '★' : '☆');
+  ecran.querySelector('.barre')?.append(etoile);
+  const defile = ecran.querySelector('.defile');
+  if (defile) {
+    const place = store.positionLecture(cle);
+    if (place > 0 && app.dataset.ecran !== `priere/${onglet}`) requestAnimationFrame(() => { defile.scrollTop = place; });
+    let minuteur = null;
+    defile.addEventListener('scroll', () => { clearTimeout(minuteur); minuteur = setTimeout(() => store.setPositionLecture(cle, Math.round(defile.scrollTop)), 400); }, { passive: true });
+  }
   return ecran;
+}
+
+// --- La recherche dans toute l'application (RechercheActivity.kt, 14/10) ------------------
+let texteRecherche = '';
+const nuRecherche = (t) => t.replace(/<[^>]+>/g, ' ').replace(/[\u0591-\u05C7"'״׳]/g, '').replace(/\s+/g, ' ').toLowerCase();
+function extraitRecherche(texte, q) {
+  const t = nuRecherche(texte);
+  const i = Math.max(0, t.indexOf(q));
+  const debut = Math.max(0, i - 30);
+  return (debut > 0 ? '…' : '') + t.slice(debut, i + q.length + 50).trim() + (i + q.length + 50 < t.length ? '…' : '');
+}
+function dansRecueil(recueil, q, livre) {
+  const r = [];
+  for (const t of recueil.textes) {
+    if (r.length >= 30) break;
+    if (nuRecherche(t.titre.he).includes(q) || nuRecherche(titreTexte(t.titre)).includes(q)) { r.push({ t, extrait: titreTexte(t.titre) !== t.titre.he ? titreTexte(t.titre) : '', livre }); continue; }
+    for (const s of t.sections) {
+      const b = s.blocs.find((x) => x.t && nuRecherche(x.t).includes(q));
+      if (b) { r.push({ t, extrait: extraitRecherche(b.t, q), livre }); break; }
+    }
+  }
+  return r;
+}
+function ecranRecherche() {
+  chargeLivres();
+  const q = nuRecherche(texteRecherche.trim());
+  const champ = h('input', { type: 'search', class: 'champ-recherche', placeholder: tr.t('recherche_indice'), value: texteRecherche,
+    oninput: (e) => { texteRecherche = e.target.value; clearTimeout(ecranRecherche.minuteur); ecranRecherche.minuteur = setTimeout(() => { rendre(); const c = app.querySelector('.champ-recherche'); c?.focus(); c?.setSelectionRange(c.value.length, c.value.length); }, 300); } });
+  const resultat = (titre, extrait, onclick) => h('button', { class: 'carte resultat-recherche', onclick },
+    h('span', { class: 'resultat-titre', dir: 'auto' }, titre), extrait ? h('span', { class: 'resultat-extrait', dir: 'auto' }, extrait) : null);
+  const groupes = [];
+  if (q.length >= 2) {
+    const sid = chargeSiddur() ? dansRecueil(siddur, q, false) : [];
+    const liv = livres ? dansRecueil(livres, q, true) : [];
+    const yy = livreYalkut ? rechercheYalkut(livreYalkut, texteRecherche).slice(0, 30) : [];
+    const bih = livreHalakha ? rechercheHalakha(livreHalakha, texteRecherche).slice(0, 30) : [];
+    const hil = tableHilloulot() ? rechercheHilloula(tableHilloulot(), texteRecherche).slice(0, 30) : [];
+    yalkutDuJour(); livreDuJour();
+    const total = sid.length + liv.length + yy.length + bih.length + hil.length;
+    groupes.push(h('p', { class: 'jour-sous-titre' }, tr.t('hilloulot_resultats', total)));
+    const groupe = (nom, l) => (l.length ? [h('h2', { class: 'section' }, tr.t(nom)), ...l] : []);
+    groupes.push(...groupe('siddur_title', sid.map((r) => resultat(r.t.titre.he, r.extrait, () => { priere = r.t.id; ouvrir('priere'); }))));
+    groupes.push(...groupe('recherche_livres', liv.map((r) => resultat(r.t.titre.he, r.extrait, () => { priere = `livre:${r.t.id}`; ouvrir('priere'); }))));
+    groupes.push(...groupe('halakha_title', [...yy.map((x) => resultat(sourceYalkut(x), extraitRecherche(x.t, q), () => { rechercheHalakhaTexte = texteRecherche; ouvrir('halakha'); })),
+      ...bih.map((x) => resultat(sourceHalakha(x, (n) => Reference.lettres(n)), extraitRecherche(x.texte, q), () => { rechercheHalakhaTexte = texteRecherche; ouvrir('halakha'); }))]));
+    groupes.push(...groupe('hilloulot_title', hil.map(([, x]) => resultat(x.he, x.a ?? '', () => { rechercheHilloulot = texteRecherche; ouvrir('hilloulot'); }))));
+  }
+  return h('div', { class: 'ecran' }, barre(tr.t('recherche_titre')),
+    h('div', { class: 'defile' }, h('div', { class: 'contenu' }, h('div', { class: 'carte' }, champ), ...groupes)));
+}
+
+/** « Reprendre la lecture » et les favoris, en tête de la Bibliothèque (RepriseFavoris.kt). */
+function repriseFavoris() {
+  const titre = (cle) => {
+    const livre = cle.startsWith('l:');
+    if (livre ? !livres : !chargeSiddur()) return null;
+    return (livre ? livres : siddur).textes.find((t) => t.id === cle.slice(2))?.titre.he ?? null;
+  };
+  const ouvrirCle = (cle) => { priere = cle.startsWith('l:') ? `livre:${cle.slice(2)}` : cle.slice(2); ouvrir('priere'); };
+  const lignes = [];
+  const derniere = store.derniereLecture();
+  if (derniere && titre(derniere)) lignes.push(ligne({ nom: tr.t('reprise_titre'), etat: titre(derniere), onclick: () => ouvrirCle(derniere) }));
+  for (const cle of store.favoris()) {
+    const t = titre(cle);
+    if (t) lignes.push(ligne({ nom: `★ ${t}`, onclick: () => ouvrirCle(cle) }));
+  }
+  return lignes.length ? h('div', { class: 'carte' }, ...lignes) : null;
 }
 
 // Les annotations des ajouts (tools/siddur_annotations.py), chargées une fois.
@@ -1214,6 +1319,9 @@ function ecranSource() {
 function panneauTextes() {
   return h('div', { class: 'contenu' },
     h('h1', { class: 'titre-ecran' }, tr.t('nav_texts')),
+    // La recherche dans toute l'application (14/10), puis la reprise et les favoris.
+    h('button', { class: 'secondaire bouton-recherche', onclick: () => { texteRecherche = ''; ouvrir('recherche'); } }, tr.t('recherche_indice')),
+    repriseFavoris(),
     h('div', { class: 'carte' },
       ligne({ nom: tr.t('siddur_title'), etat: tr.t('siddur_hint'), onclick: () => ouvrir('siddur') }),
       // Tehilim est le premier texte lisible sur le web (04/10).
@@ -1451,8 +1559,60 @@ function carteJour(iso, { complet = true } = {}) {
     marques.length ? h('div', { class: 'jour-marques' }, marques.map((m) => h('span', { class: 'marque' }, m))) : null,
     h('h3', { class: 'jour-sous-titre' }, tr.t('zmanim_ajouts_titre')),
     h('p', { class: 'jour-ajouts' }, ajoutsDuJour(j.conditions, store.siddurNusah(), store.inIsrael(), store.sansTahanounFinTichri(), hemisphereSud()).map((k) => tr.t(k)).join(' · ')),
+    // Partager le jour en image (14/10, PartageJour.kt).
+    h('button', { class: 'jour-lien lien-bouton', onclick: () => partagerJour(iso) }, `${tr.t('partage_jour')} ↗`),
     // Le calendrier montre tout ; l'écran Zmanim (14/10) n'y garde que le jour (sousHoraires).
     ...(complet ? [store.levanaAffichee() ? blocLevana(iso) : null, ...blocHilloula(iso), ...blocHalakha(iso)] : []));
+}
+
+/**
+ * Partager un jour (PartageJour.kt) : une image de 1080 × 1350 — date hébraïque et
+ * civile, fêtes et paracha, hilloula, début de la halakha — par le partage du
+ * téléphone, sinon téléchargée. Rien ne part sans ce geste.
+ */
+async function partagerJour(iso) {
+  const j = jourJuif(iso, store.inIsrael(), mukafChoma());
+  const civil = new Intl.DateTimeFormat(tr.langue, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' }).format(new Date(`${iso}T12:00:00Z`));
+  const marques = [...j.fetes.map((f) => tr.t(`fete_${f}`)), j.paracha ? tr.t('zmanim_paracha', j.paracha) : null].filter(Boolean).join('  ·  ');
+  const hil = tableHilloulot() ? hilloulotPour(tableHilloulot(), iso, store.inIsrael()).slice(0, 3).map((x) => x.he).join(' · ') : '';
+  const [livre, debut] = apercuHalakha(iso) ?? ['', ''];
+  const c = document.createElement('canvas');
+  c.width = 1080; c.height = 1350;
+  const g = c.getContext('2d');
+  g.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--brand-dark').trim() || '#123d33';
+  g.fillRect(0, 0, c.width, c.height);
+  const M = 84;
+  let y = M + 60;
+  const lignes = (texte, taille, couleur, police, rtl, apres) => {
+    if (!texte) return;
+    g.font = `${taille}px ${police}`; g.fillStyle = couleur; g.direction = rtl ? 'rtl' : 'ltr'; g.textAlign = rtl ? 'right' : 'left';
+    const x = rtl ? c.width - M : M;
+    let l = '';
+    for (const mot of texte.split(' ')) {
+      if (g.measureText(`${l} ${mot}`).width > c.width - 2 * M && l) { g.fillText(l, x, y); y += taille * 1.3; l = mot; } else l = l ? `${l} ${mot}` : mot;
+    }
+    if (l) { g.fillText(l, x, y); y += taille * 1.3; }
+    y += apres;
+  };
+  const he = '"Frank Ruhl Libre", "Hebreu Serif", serif';
+  const ui = 'system-ui, sans-serif';
+  lignes(j.dateHebraique, 92, '#fff', `bold ${he}`, true, 0);
+  lignes(civil, 40, 'rgba(255,255,255,.8)', ui, tr.rtl, 16);
+  lignes(marques, 40, '#fff', `bold ${ui}`, tr.rtl, 36);
+  if (hil) { lignes(tr.t('hilloula_titre'), 30, 'rgba(255,255,255,.8)', `bold ${ui}`, tr.rtl, 0); lignes(hil, 44, '#fff', he, true, 36); }
+  if (debut) {
+    lignes(`${tr.t('halakha_yomit_titre')} · ${livre}`, 30, 'rgba(255,255,255,.8)', `bold ${ui}`, tr.rtl, 0);
+    lignes(debut.length > 420 ? `${debut.slice(0, 420)}…` : debut, 42, '#fff', he, true, 0);
+  }
+  g.font = `bold 30px ${ui}`; g.fillStyle = 'rgba(255,255,255,.8)'; g.direction = 'ltr'; g.textAlign = 'left';
+  g.fillText(tr.t('app_name'), M, c.height - M / 2);
+  const blob = await new Promise((r) => c.toBlob(r, 'image/png'));
+  const fichier = new File([blob], `jour-${iso}.png`, { type: 'image/png' });
+  if (navigator.canShare?.({ files: [fichier] })) {
+    try { await navigator.share({ files: [fichier], title: j.dateHebraique }); return; } catch { /* annulé : rien à faire */ return; }
+  }
+  const a = h('a', { href: URL.createObjectURL(blob), download: fichier.name });
+  document.body.append(a); a.click(); a.remove();
 }
 
 /**
@@ -1527,7 +1687,9 @@ function blocLevana(iso) {
       h('span', { class: 'levana-fil' }),
       h('span', { class: 'levana-or', style: `inset-inline-start: ${pct(l.debut)}; width: ${pct(l.fin - l.debut)}` }),
       h('span', { class: 'levana-point', style: `inset-inline-start: ${pct(l.point)}` })),
-    h('p', { class: 'levana-source' }, tr.t('levana_source', tr.t(`levana_usage_${usage}`))));
+    h('p', { class: 'levana-source' }, tr.t('levana_source', tr.t(`levana_usage_${usage}`))),
+    // Le texte en un toucher (14/10), dans le noussa'h choisi.
+    h('button', { class: 'jour-lien lien-bouton', onclick: () => { priere = 'birkat_halevana'; ouvrir('priere'); } }, tr.t('levana_lire')));
 }
 
 /** Le début de la halakha du jour dans le livre choisi (14/10) : [livre, texte], ou null. */
@@ -2002,7 +2164,7 @@ function ecranCalendrier() {
 
 // Les choix d'Apparence.kt et de Store.Ouverture (14/10).
 const MODES = ['auto', 'clair', 'sombre'];
-const FONDS = ['vert', 'blanc', 'sable', 'bleu', 'rose'];
+const FONDS = ['vert', 'blanc', 'sable', 'bleu', 'rose', 'contraste'];
 const ACCENTS = ['vert', 'bleu', 'violet', 'bordeaux', 'ambre', 'turquoise'];
 const OUVERTURES = [['aujourdhui', 'nav_today'], ['textes', 'nav_texts'], ['zmanim', 'nav_zmanim']];
 
@@ -2039,6 +2201,10 @@ function ecranReglages() {
             onclick: () => choisirDans(tr.t(nom), liste.map((x) => tr.t(`${prefixe}_${x}`)), i, (j) => { ecrit(liste[j]); appliqueApparence(); rendre(); }) });
         }),
         ligne({ nom: tr.t('settings_police'), etat: tr.t(`police_${store.lecturePolice()}`), onclick: choisirPolice }),
+        // Grand texte (14/10) : les textes de lecture à 140 % ; « Aa » règle toujours finement.
+        h('label', { class: 'ligne' }, h('span', { class: 'corps' }, h('div', { class: 'nom' }, tr.t('settings_grand_texte'))),
+          h('input', { type: 'checkbox', role: 'switch', class: 'interrupteur', checked: store.lectureEchelle() >= 1.4, 'aria-label': tr.t('settings_grand_texte'),
+            onchange: (e) => { store.setLectureEchelle(e.target.checked ? 1.4 : 1); rendre(); } })),
         ligne({ nom: tr.t('settings_ouverture'), etat: tr.t(OUVERTURES.find(([c]) => c === store.ouverture())[1]),
           onclick: () => choisirDans(tr.t('settings_ouverture'), OUVERTURES.map(([, n]) => tr.t(n)), OUVERTURES.findIndex(([c]) => c === store.ouverture()),
             (j) => { store.setOuverture(OUVERTURES[j][0]); rendre(); }) })),
@@ -2436,7 +2602,7 @@ function arreteDanse() {
 // et le geste de retour ramènent à l'accueil, sur l'onglet quitté.
 function ecranCourant() {
   const e = location.hash.slice(1);
-  return ['musique', 'reglages', 'seance', 'bravo', 'tehilim', 'lecture', 'siddur', 'priere', 'tikkun', 'bibliotheque', 'livres', 'source', 'zmanim', 'calendrier', 'paliers', 'hilloulot', 'halakha'].includes(e) ? e : 'accueil';
+  return ['musique', 'reglages', 'seance', 'bravo', 'tehilim', 'lecture', 'siddur', 'priere', 'tikkun', 'bibliotheque', 'livres', 'source', 'zmanim', 'calendrier', 'paliers', 'hilloulot', 'halakha', 'recherche'].includes(e) ? e : 'accueil';
 }
 function ouvrir(ecran) {
   // L'entrée sur l'écran de séance tire le mot d'ouverture (SessionActivity.onCreate).
@@ -2496,6 +2662,7 @@ function rendre() {
   else if (ecran === 'paliers') app.append(ecranPaliers());
   else if (ecran === 'hilloulot') app.append(ecranHilloulot());
   else if (ecran === 'halakha') app.append(ecranHalakha());
+  else if (ecran === 'recherche') app.append(ecranRecherche());
   else if (ecran === 'seance') app.append(ecranSeance());
   else if (ecran === 'bravo') app.append(ecranBravo());
   else if (ecran === 'tehilim') app.append(ecranTehilim());
