@@ -15,6 +15,9 @@ import { demarreServeur } from '../tools/serveur.mjs';
 const ICI = dirname(fileURLToPath(import.meta.url));
 const moteur = process.argv[2] || 'chromium';
 const SORTIE = process.argv[3] || join(ICI, '..', 'captures');
+// LARGEUR=320 : le plus petit téléphone courant (iPhone SE 1re génération), 15/10.
+const LARGEUR = Number(process.env.LARGEUR) || 390;
+const HAUTEUR = LARGEUR < 390 ? 568 : 844;
 mkdirSync(SORTIE, { recursive: true });
 
 const require = createRequire(import.meta.url);
@@ -35,7 +38,7 @@ const MAINTENANT = new Date('2026-09-29T09:00:00').getTime();
 
 async function capture(nom, { langue, mode = 'clair', fond = 'vert', accent = 'vert', prenom = '', ecran = '', onglet = null, adresse = null, actions = null, calme = false, extra = {} }) {
   const contexte = await navigateur.newContext({
-    viewport: { width: 390, height: 844 }, deviceScaleFactor: 2, colorScheme: mode === 'sombre' ? 'dark' : 'light',
+    viewport: { width: LARGEUR, height: HAUTEUR }, deviceScaleFactor: 2, colorScheme: mode === 'sombre' ? 'dark' : 'light',
     serviceWorkers: 'block',
     // « calme » : le téléphone demande moins d'animations. La danse du bravo
     // s'arrête alors, comme sur Android ; sous WebKit, la capture d'un écran
@@ -109,6 +112,35 @@ async function capture(nom, { langue, mode = 'clair', fond = 'vert', accent = 'v
   // Aucun débordement horizontal, en aucune langue.
   const deborde = await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth);
   if (deborde) erreurs.push(`${nom} : la page déborde en largeur`);
+  // Ni élément qui sort de l'écran, ni texte rogné dans sa boîte (15/10).
+  const sortis = await page.evaluate(() => {
+    const l = window.innerWidth;
+    const fautes = [];
+    for (const e of document.querySelectorAll('#app *')) {
+      const r = e.getBoundingClientRect();
+      if (!r.width || !r.height || getComputedStyle(e).visibility === 'hidden') continue;
+      // Une rangée qui défile de côté (les pastilles de l'accueil) déborde par construction.
+      let defile = false;
+      for (let a = e.parentElement; a && !defile; a = a.parentElement) defile = ['auto', 'scroll'].includes(getComputedStyle(a).overflowX);
+      if (defile) continue;
+      const style = getComputedStyle(e);
+      const texte = [...e.childNodes].some((n) => n.nodeType === 3 && n.textContent.trim());
+      if (r.right > l + 1 || r.left < -1) fautes.push(`sort de l'écran : <${e.tagName.toLowerCase()} class="${e.className}"> ${Math.round(r.left)}–${Math.round(r.right)}`);
+      else if (texte && style.overflowX !== 'auto' && style.overflowX !== 'scroll' && e.scrollWidth > e.clientWidth + 1 && style.textOverflow !== 'ellipsis')
+        fautes.push(`texte rogné : <${e.tagName.toLowerCase()} class="${e.className}"> « ${e.textContent.trim().slice(0, 30)} »`);
+    }
+    return [...new Set(fautes)].slice(0, 8);
+  });
+  for (const f of sortis) erreurs.push(`${nom} (${LARGEUR}px) : ${f}`);
+  // L'accueil, sans défiler : « Commencer » entier au-dessus des onglets (comme sur Android).
+  if (nom.startsWith('accueil') && !actions) {
+    const cache = await page.evaluate(() => {
+      const b = document.querySelector('.accueil-actions .principal')?.getBoundingClientRect();
+      const o = document.querySelector('nav.onglets')?.getBoundingClientRect();
+      return !b || b.bottom > (o ? o.top : window.innerHeight) - 2;
+    });
+    if (cache) erreurs.push(`${nom} (${LARGEUR}px) : « Commencer » caché sous les onglets`);
+  }
   await contexte.close();
 }
 

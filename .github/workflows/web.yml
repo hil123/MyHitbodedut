@@ -70,6 +70,8 @@ jobs:
         run: |
           node test/captures.mjs webkit captures
           node test/captures.mjs chromium captures
+          # Le plus petit téléphone courant (320×568) : rien ne déborde, « Commencer » se voit (15/10).
+          LARGEUR=320 node test/captures.mjs chromium captures/petit
 
       # Chaque écran à chaque taille, du petit téléphone à l'ordinateur :
       # aucun débordement, et les onglets en bas ou sur le côté selon la largeur.
