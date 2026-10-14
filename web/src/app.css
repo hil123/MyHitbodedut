@@ -905,12 +905,12 @@ input[type="range"] { width: 100%; accent-color: var(--brand); }
 @keyframes flotte { 0%, 100% { transform: translateY(0) rotate(-2deg); } 50% { transform: translateY(-5px) rotate(2deg); } }
 @media (prefers-reduced-motion: reduce) { .trophees-scene .objet-svg { animation: none; } }
 
-/* L'écran d'ouverture (15/10) : le 'hassid debout devant le tziyoun, une seconde et demie.
-   Le fond est calé en bas, pour que l'inscription « ציון … רבינו נחמן » reste visible. */
+/* L'écran d'ouverture (15/10) : le 'hassid debout devant le היכל הציון, une seconde et demie.
+   Le fond (photo nette sur son propre flou) est centré : l'inscription reste entière. */
 #ouverture { position: fixed; inset: 0; z-index: 1000; background: #1E3A30; overflow: hidden; transition: opacity 350ms ease-out; }
-#ouverture .fond { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 40% 100%; }
+#ouverture .fond { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 50%; }
 #ouverture::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to bottom, transparent 55%, rgba(16, 40, 32, 0.6)); }
-#ouverture .hassid { position: absolute; z-index: 1; left: 0; bottom: 3vh; height: 60vh; width: auto; max-width: 70vw; object-fit: contain; object-position: left bottom; }
+#ouverture .hassid { position: absolute; z-index: 1; left: 0; bottom: 3vh; height: 50vh; width: auto; max-width: 70vw; object-fit: contain; object-position: left bottom; }
 #ouverture.fin { opacity: 0; pointer-events: none; }
 @media (prefers-reduced-motion: reduce) { #ouverture { transition: none; } }
 
