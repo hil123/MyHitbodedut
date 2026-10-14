@@ -302,6 +302,13 @@
                     android:text="@string/action_done_offline"
                     android:visibility="gone" />
 
+                <!-- Selon l'heure (14/10) : la prière du moment, Birkat haLevana les soirs de la fenêtre. -->
+                <LinearLayout
+                    android:id="@+id/accueil_moment"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" />
+
                 <!-- Les trophées et les paliers, en bas de la page (11/10). -->
                 <Button
                     android:id="@+id/trophees_paliers"
@@ -343,6 +350,24 @@
                     android:textColor="?attr/mhInk"
                     android:textSize="24sp"
                     android:textStyle="bold" />
+
+                <!-- La recherche dans toute l'application (14/10). -->
+                <Button
+                    android:id="@+id/recherche_button"
+                    style="@style/Widget.Material3.Button.OutlinedButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/edge_inner"
+                    android:layout_marginTop="12dp"
+                    android:gravity="start|center_vertical"
+                    android:text="@string/recherche_indice" />
+
+                <!-- Reprendre la lecture là où on s'est arrêté, et les favoris (14/10). -->
+                <LinearLayout
+                    android:id="@+id/reprise_favoris"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" />
 
                 <LinearLayout style="@style/Card">
 

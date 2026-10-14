@@ -6,6 +6,8 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <!-- « Ne pas déranger » pendant la hitbodedout (14/10), accordé par l'utilisateur dans Android. -->
+    <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <!-- Tient le processeur éveillé jusqu'au terme d'une séance minutée (SessionService). -->
     <uses-permission android:name="android.permission.WAKE_LOCK" />
@@ -184,6 +186,10 @@
             android:label="@string/hilloulot_title" />
 
         <activity
+            android:name=".RechercheActivity"
+            android:exported="false"
+            android:label="@string/recherche_titre" />
+        <activity
             android:name=".HalakhaActivity"
             android:exported="false"
             android:label="@string/halakha_title" />
@@ -228,6 +234,35 @@
         <receiver
             android:name=".ChabbatAlerteReceiver"
             android:exported="false" />
+
+        <!-- Le rappel de Birkat haLevana (14/10). -->
+        <receiver
+            android:name=".LevanaAlerteReceiver"
+            android:exported="false" />
+
+        <!-- Partager un jour en image (14/10) : seulement le dossier partage/ du cache. -->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.partage"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/partage_paths" />
+        </provider>
+
+        <!-- Les zmanim sur l'écran d'accueil (14/10). -->
+        <receiver
+            android:name=".ZmanimWidget"
+            android:exported="false"
+            android:label="@string/widget_zmanim_label">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_zmanim_info" />
+        </receiver>
 
         <!-- La série sur l'écran d'accueil. -->
         <receiver

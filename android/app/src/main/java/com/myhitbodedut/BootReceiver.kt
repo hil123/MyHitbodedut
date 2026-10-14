@@ -25,7 +25,9 @@ class BootReceiver : BroadcastReceiver() {
         SessionService.reconcilier(context)
         Reminder.reschedule(context)
         ChabbatAlerte.programmer(context)
+        LevanaAlerte.programmer(context)
         StreakWidget.refresh(context)
+        ZmanimWidget.refresh(context)
     }
 
     private companion object {

@@ -891,4 +891,39 @@
     <string name="levana_usage_trois_mi_mois">From 3 days, until mid-month (Mishnah Berurah, Rema)</string>
     <string name="levana_usage_sept_mi_mois">From 7 days, until mid-month (Arizal)</string>
     <string name="levana_usage_sept_quinze">From 7 days, until the 15th day (Shulchan Aruch)</string>
+    <!-- Les dix améliorations du 14/10. -->
+    <string name="levana_rappel_premier">Birkat HaLevana: first night</string>
+    <string name="levana_rappel_motsae">Birkat HaLevana: tonight, Motzaei Shabbat</string>
+    <string name="levana_rappel_dernier">Birkat HaLevana: last night</string>
+    <string name="levana_rappel_texte">Tap to open the text.</string>
+    <string name="levana_rappel_reglage">Birkat HaLevana reminder</string>
+    <string name="levana_lire">Read Birkat HaLevana ›</string>
+    <string name="widget_zmanim_label">MyHitbodedut Zmanim</string>
+    <string name="widget_zmanim_description">The Hebrew date, the prayer of the moment, sunset and the streak.</string>
+    <string name="widget_zmanim_chaharit">Shacharit</string>
+    <string name="widget_zmanim_minha">Mincha</string>
+    <string name="widget_zmanim_arvit">Arvit</string>
+    <string name="widget_zmanim_jusqua">%1$s until %2$s</string>
+    <string name="widget_zmanim_chkia">Sunset %s</string>
+    <string name="settings_ne_pas_deranger">Do not disturb during hitbodedut</string>
+    <string name="settings_ne_pas_deranger_hint">The phone switches to priority mode for the hitbodedut, then returns to how it was. Android asks for permission the first time.</string>
+    <string name="recherche_titre">Search</string>
+    <string name="recherche_indice">Search the siddur, books, halakha, hillulot</string>
+    <string name="recherche_livres">Books</string>
+    <string name="favori_ajouter">Add to favorites</string>
+    <string name="favori_retirer">Remove from favorites</string>
+    <string name="reprise_titre">Continue reading</string>
+    <string name="favoris_titre">Favorites</string>
+    <string name="fond_contraste">High contrast</string>
+    <string name="settings_grand_texte">Large reading text</string>
+    <string name="journal_humeur_avant">Before the hitbodedut</string>
+    <string name="journal_humeur_apres">After</string>
+    <string name="journal_gratitude">Gratitude</string>
+    <string name="journal_gratitude_hint">One thing I am thankful for today</string>
+    <string name="journal_graphique">Minutes each day, %s</string>
+    <string name="partage_jour">Share this day</string>
+    <plurals name="widget_zmanim_serie">
+        <item quantity="one">Streak: %d day</item>
+        <item quantity="other">Streak: %d days</item>
+    </plurals>
 </resources>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- La recherche dans toute l’application (14/10), construite par RechercheActivity. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/mhPaper"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_hero"
+        android:tag="bandeau"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingHorizontal="@dimen/edge"
+        android:paddingTop="@dimen/hero_pad_top"
+        android:paddingBottom="@dimen/hero_pad_bottom">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/recherche_titre"
+                android:textColor="@color/white"
+                android:textSize="@dimen/hero_title"
+                android:textStyle="bold" />
+        </LinearLayout>
+        <!-- Pas d'image pendant une lecture ou une prière (demande du 13/10). -->
+    </LinearLayout>
+
+    <ScrollView
+        android:id="@+id/recherche_defile"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true"
+        android:paddingHorizontal="@dimen/wide_gutter">
+
+        <LinearLayout
+            android:id="@+id/recherche_contenu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="28dp" />
+    </ScrollView>
+</LinearLayout>

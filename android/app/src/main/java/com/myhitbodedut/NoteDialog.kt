@@ -49,18 +49,59 @@ object NoteDialog {
             gravity = Gravity.TOP or Gravity.START
         }
 
+        // Le journal enrichi (14/10) : l'humeur avant et après, une gratitude.
+        val plus = JournalPlus.lire(activity, date)
+        var avant = plus.avant
+        var apres = plus.apres
+        fun humeurs(titre: Int, initiale: Int, choisir: (Int) -> Unit) = LinearLayout(activity).apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding(0, (8 * density).toInt(), 0, 0)
+            addView(android.widget.TextView(activity).apply { setText(titre); textSize = 13f })
+            val rang = LinearLayout(activity).apply { orientation = LinearLayout.HORIZONTAL }
+            val boutons = JournalPlus.HUMEURS.mapIndexed { i, e ->
+                android.widget.TextView(activity).apply {
+                    text = e
+                    textSize = 26f
+                    gravity = Gravity.CENTER
+                    layoutParams = LinearLayout.LayoutParams(0, (44 * density).toInt(), 1f)
+                    alpha = if (initiale == i + 1) 1f else 0.35f
+                    contentDescription = "${i + 1}/5"
+                }
+            }
+            boutons.forEachIndexed { i, b ->
+                b.setOnClickListener {
+                    val n = if (b.alpha == 1f) 0 else i + 1
+                    boutons.forEachIndexed { j, x -> x.alpha = if (n == j + 1) 1f else 0.35f }
+                    choisir(n)
+                }
+                rang.addView(b)
+            }
+            addView(rang)
+        }
+        val gratitude = EditText(activity).apply {
+            filters = arrayOf(android.text.InputFilter.LengthFilter(JournalPlus.GRATITUDE_MAX))
+            setText(plus.gratitude)
+            setHint(R.string.journal_gratitude_hint)
+            setSingleLine()
+        }
+
         val layout = LinearLayout(activity).apply {
             orientation = LinearLayout.VERTICAL
             setPadding(pad, pad, pad, 0)
             addView(art)
             addView(input)
+            addView(humeurs(R.string.journal_humeur_avant, avant) { avant = it })
+            addView(humeurs(R.string.journal_humeur_apres, apres) { apres = it })
+            addView(gratitude)
         }
+        val defile = android.widget.ScrollView(activity).apply { addView(layout) }
 
         val dialog = AlertDialog.Builder(activity)
             .setTitle(R.string.note_title)
-            .setView(layout)
+            .setView(defile)
             .setPositiveButton(R.string.action_save) { _, _ ->
                 Store.setNote(activity, date, input.text.toString().trim())
+                JournalPlus.ecrire(activity, date, JournalPlus.Plus(avant, apres, gratitude.text.toString().trim()))
                 onSaved()
             }
             .setNegativeButton(R.string.action_later, null)

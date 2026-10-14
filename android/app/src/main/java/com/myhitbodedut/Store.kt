@@ -641,6 +641,61 @@ object Store {
     /** Le lieu des zmanim est au sud de l'équateur (14/10) : Ilanot, Morid hatal des Edot. */
     fun hemisphereSud(context: Context): Boolean = (lieuZmanim(context)?.latitude ?: 0.0) < 0
 
+    /** Le rappel de Birkat haLevana (14/10) : activé par défaut ; le soir annoncé par l'alarme posée. */
+    fun levanaRappel(context: Context): Boolean = prefs(context).getBoolean("levana_rappel", true)
+
+    fun setLevanaRappel(context: Context, v: Boolean) {
+        prefs(context).edit().putBoolean("levana_rappel", v).apply()
+    }
+
+    fun levanaRappelSoir(context: Context): String? = prefs(context).getString("levana_rappel_soir", null)
+
+    fun setLevanaRappelSoir(context: Context, v: String) {
+        prefs(context).edit().putString("levana_rappel_soir", v).apply()
+    }
+
+    /** « Ne pas déranger » pendant la hitbodedout (14/10) : désactivé par défaut. */
+    fun nePasDeranger(context: Context): Boolean = prefs(context).getBoolean("ne_pas_deranger", false)
+
+    fun setNePasDeranger(context: Context, v: Boolean) {
+        prefs(context).edit().putBoolean("ne_pas_deranger", v).apply()
+    }
+
+    /** Le mode du téléphone avant la séance, à rétablir à la fin ; null s'il n'a pas été changé. */
+    fun filtreAvantSeance(context: Context): Int? = prefs(context).getInt("filtre_avant_seance", -1).takeIf { it >= 0 }
+
+    fun setFiltreAvantSeance(context: Context, v: Int?) {
+        prefs(context).edit().apply { if (v == null) remove("filtre_avant_seance") else putInt("filtre_avant_seance", v) }.apply()
+    }
+
+    /**
+     * Favoris et reprise de lecture (14/10) : des clés « s:id » (siddour) ou
+     * « l:id » (livre) ; la dernière lue, et sa place (le premier paragraphe visible).
+     */
+    fun favoris(context: Context): List<String> =
+        prefs(context).getString("favoris", "").orEmpty().split('|').filter { it.isNotBlank() }
+
+    fun basculerFavori(context: Context, cle: String) {
+        val l = favoris(context).toMutableList()
+        if (!l.remove(cle)) l.add(0, cle)
+        prefs(context).edit().putString("favoris", l.joinToString("|")).apply()
+    }
+
+    fun derniereLecture(context: Context): String? = prefs(context).getString("derniere_lecture", null)
+
+    fun positionLecture(context: Context, cle: String): Int? = prefs(context).getInt("position:$cle", -1).takeIf { it > 0 }
+
+    fun setPositionLecture(context: Context, cle: String, position: Int) {
+        prefs(context).edit().putInt("position:$cle", position).putString("derniere_lecture", cle).apply()
+    }
+
+    /** Le journal enrichi (14/10), en JSON : JournalPlus. Dans le fichier du journal, comme les notes. */
+    fun journalPlusBrut(context: Context): String? = journalPrefs(context).getString("journal_plus", null)
+
+    fun setJournalPlusBrut(context: Context, v: String) {
+        journalPrefs(context).edit().putString("journal_plus", v).apply()
+    }
+
     /** L'écran d'ouverture (14/10) : Aujourd'hui, Textes ou Zmanim. */
     enum class Ouverture(val cle: String, val libelle: Int) {
         AUJOURDHUI("aujourdhui", R.string.nav_today),

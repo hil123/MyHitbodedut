@@ -918,4 +918,40 @@
     <string name="levana_usage_trois_mi_mois">מ־3 ימים עד חצי החודש (משנה ברורה, רמ\"א)</string>
     <string name="levana_usage_sept_mi_mois">מ־7 ימים עד חצי החודש (האר\"י)</string>
     <string name="levana_usage_sept_quinze">מ־7 ימים עד ט\"ו יום (שולחן ערוך)</string>
+    <!-- Les dix améliorations du 14/10. -->
+    <string name="levana_rappel_premier">ברכת הלבנה: הלילה הראשון</string>
+    <string name="levana_rappel_motsae">ברכת הלבנה: מוצאי שבת הערב</string>
+    <string name="levana_rappel_dernier">ברכת הלבנה: הלילה האחרון</string>
+    <string name="levana_rappel_texte">לחצו לפתיחת הנוסח.</string>
+    <string name="levana_rappel_reglage">תזכורת לברכת הלבנה</string>
+    <string name="levana_lire">לנוסח ברכת הלבנה ›</string>
+    <string name="widget_zmanim_label">זמנים MyHitbodedut</string>
+    <string name="widget_zmanim_description">התאריך העברי, התפילה של השעה, השקיעה והרצף.</string>
+    <string name="widget_zmanim_chaharit">שחרית</string>
+    <string name="widget_zmanim_minha">מנחה</string>
+    <string name="widget_zmanim_arvit">ערבית</string>
+    <string name="widget_zmanim_jusqua">%1$s עד %2$s</string>
+    <string name="widget_zmanim_chkia">שקיעה %s</string>
+    <string name="settings_ne_pas_deranger">נא לא להפריע בזמן ההתבודדות</string>
+    <string name="settings_ne_pas_deranger_hint">הטלפון עובר למצב \"עדיפות\" בזמן ההתבודדות וחוזר אחר כך כפי שהיה. אנדרואיד מבקש הרשאה בפעם הראשונה.</string>
+    <string name="recherche_titre">חיפוש</string>
+    <string name="recherche_indice">חיפוש בסידור, בספרים, בהלכה ובהילולות</string>
+    <string name="recherche_livres">ספרים</string>
+    <string name="favori_ajouter">הוספה למועדפים</string>
+    <string name="favori_retirer">הסרה מהמועדפים</string>
+    <string name="reprise_titre">המשך קריאה</string>
+    <string name="favoris_titre">מועדפים</string>
+    <string name="fond_contraste">ניגודיות גבוהה</string>
+    <string name="settings_grand_texte">טקסט קריאה גדול</string>
+    <string name="journal_humeur_avant">לפני ההתבודדות</string>
+    <string name="journal_humeur_apres">אחרי</string>
+    <string name="journal_gratitude">הודיה</string>
+    <string name="journal_gratitude_hint">דבר אחד שאני מודה עליו היום</string>
+    <string name="journal_graphique">הדקות בכל יום, %s</string>
+    <string name="partage_jour">שיתוף היום</string>
+    <plurals name="widget_zmanim_serie">
+        <item quantity="one">רצף: יום %d</item>
+        <item quantity="two">רצף: יומיים</item>
+        <item quantity="other">רצף: %d ימים</item>
+    </plurals>
 </resources>

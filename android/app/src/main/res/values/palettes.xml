@@ -145,4 +145,19 @@
         <item name="colorOnSurfaceVariant">#80646A</item>
         <item name="colorOutline">#EEDCE0</item>
     </style>
+    <!-- Contraste élevé (14/10) : texte noir sur blanc (blanc sur noir la nuit), traits marqués. -->
+    <style name="Fond.Contraste" parent="">
+        <item name="mhPaper">#FFFFFF</item>
+        <item name="mhCard">#FFFFFF</item>
+        <item name="mhLine">#767676</item>
+        <item name="mhInk">#000000</item>
+        <item name="mhMuted">#2B2B2B</item>
+        <item name="mhDayTodo">#E6E6E6</item>
+        <item name="android:colorBackground">#FFFFFF</item>
+        <item name="colorSurface">#FFFFFF</item>
+        <item name="colorSurfaceContainerHigh">#FFFFFF</item>
+        <item name="colorOnSurface">#000000</item>
+        <item name="colorOnSurfaceVariant">#2B2B2B</item>
+        <item name="colorOutline">#767676</item>
+    </style>
 </resources>

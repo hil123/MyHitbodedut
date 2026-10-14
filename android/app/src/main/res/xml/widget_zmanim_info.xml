@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- La vignette des zmanim (14/10) : 3 × 2 cases, mise à jour toutes les demi-heures. -->
+<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
+    android:description="@string/widget_zmanim_description"
+    android:initialLayout="@layout/widget_zmanim"
+    android:minHeight="110dp"
+    android:minWidth="180dp"
+    android:previewLayout="@layout/widget_zmanim"
+    android:resizeMode="horizontal|vertical"
+    android:targetCellHeight="2"
+    android:targetCellWidth="3"
+    android:updatePeriodMillis="1800000"
+    android:widgetCategory="home_screen" />

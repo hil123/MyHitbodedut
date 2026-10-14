@@ -115,6 +115,20 @@
 
             <LinearLayout style="@style/SettingRow">
 
+                <TextView
+                    style="@style/SettingLabel"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:text="@string/settings_grand_texte" />
+
+                <com.google.android.material.materialswitch.MaterialSwitch
+                    android:id="@+id/grand_texte_switch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <LinearLayout style="@style/SettingRow">
+
                 <TextView style="@style/SettingLabel" android:text="@string/settings_ouverture" />
 
                 <Button android:id="@+id/ouverture_button" style="@style/SettingValue" />
@@ -138,6 +152,20 @@
 
                 <com.google.android.material.materialswitch.MaterialSwitch
                     android:id="@+id/levana_switch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <LinearLayout style="@style/SettingRow">
+
+                <TextView
+                    style="@style/SettingLabel"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:text="@string/levana_rappel_reglage" />
+
+                <com.google.android.material.materialswitch.MaterialSwitch
+                    android:id="@+id/levana_rappel_switch"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
             </LinearLayout>
@@ -373,6 +401,25 @@
 
                 <com.google.android.material.materialswitch.MaterialSwitch
                     android:id="@+id/hide_countdown_switch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <LinearLayout style="@style/SettingRow">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView style="@style/SettingLabelStacked" android:text="@string/settings_ne_pas_deranger" />
+
+                    <TextView style="@style/CardHint" android:text="@string/settings_ne_pas_deranger_hint" />
+                </LinearLayout>
+
+                <com.google.android.material.materialswitch.MaterialSwitch
+                    android:id="@+id/ne_pas_deranger_switch"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
             </LinearLayout>

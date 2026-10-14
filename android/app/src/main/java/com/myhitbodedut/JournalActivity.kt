@@ -49,6 +49,17 @@ class JournalActivity : AppCompatActivity() {
         // Les journées faites seulement : une note seule n'en est pas une.
         val faites = rows.count { it.faite }
         val total = Store.totalMinutes(this)
+        // Le graphique du mois (14/10), sous le résumé, dans le bandeau.
+        val resume = findViewById<TextView>(R.id.journal_summary)
+        val bandeau = resume.parent as ViewGroup
+        bandeau.findViewWithTag<View>("graphique")?.let { bandeau.removeView(it) }
+        val mois = java.time.YearMonth.now()
+        bandeau.addView(JournalPlus.Graphique(this, JournalPlus.minutesDuMois(Store.days(this), mois), java.time.LocalDate.now().dayOfMonth).apply {
+            tag = "graphique"
+            contentDescription = getString(R.string.journal_graphique, mois.format(DateTimeFormatter.ofPattern("MMMM yyyy", resources.configuration.locales[0])))
+            layoutParams = android.widget.LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+                .apply { topMargin = (12 * resources.displayMetrics.density).toInt() }
+        })
         findViewById<TextView>(R.id.journal_summary).text = resources.getQuantityString(
             R.plurals.journal_summary,
             faites,
@@ -87,8 +98,11 @@ class JournalActivity : AppCompatActivity() {
                 row.minutes > 0 -> Store.formatDuration(holder.itemView.context, row.minutes)
                 else -> getString(R.string.today_declared)
             }
-            holder.note.visibility = if (row.note.isBlank()) View.GONE else View.VISIBLE
-            holder.note.text = row.note
+            // Le journal enrichi (14/10) : l'humeur et la gratitude sous la note.
+            val plus = JournalPlus.resume(JournalPlus.lire(holder.itemView.context, row.date), getString(R.string.journal_gratitude))
+            val texte = listOf(row.note, plus).filter { it.isNotBlank() }.joinToString("\n")
+            holder.note.visibility = if (texte.isBlank()) View.GONE else View.VISIBLE
+            holder.note.text = texte
             holder.itemView.setOnClickListener {
                 NoteDialog.show(this@JournalActivity, row.date, onSaved = { reload() })
             }

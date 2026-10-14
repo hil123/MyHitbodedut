@@ -40,6 +40,15 @@
                 android:textSize="13sp" />
         </LinearLayout>
 
+        <!-- Favori (14/10) : l'étoile ajoute ou retire le texte de la liste de la Bibliothèque. -->
+        <TextView
+            android:id="@+id/siddur_lecture_favori"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="24sp" />
+
         <!-- Pas d'image ici (12/10) : on ne prie pas devant une image
              (Choul'han Aroukh, Ora'h 'Haïm 90, 23). -->
     </LinearLayout>

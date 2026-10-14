@@ -136,6 +136,7 @@ class MainActivity : AppCompatActivity() {
         CelebrationActivity.showIfPending(this)
         // La vignette d'accueil suit ce que l'écran vient de montrer.
         StreakWidget.refresh(this)
+        ZmanimWidget.refresh(this)
     }
 
     /**
@@ -186,6 +187,9 @@ class MainActivity : AppCompatActivity() {
         }
         findViewById<View>(R.id.reminders_button).setOnClickListener {
             startActivity(Intent(this, RemindersActivity::class.java))
+        }
+        findViewById<View>(R.id.recherche_button).setOnClickListener {
+            startActivity(Intent(this, RechercheActivity::class.java))
         }
         findViewById<View>(R.id.tikkun_button).setOnClickListener {
             startActivity(Intent(this, TikkunActivity::class.java))
@@ -296,6 +300,16 @@ class MainActivity : AppCompatActivity() {
     private fun refresh() {
         renderToday()
         renderWeek()
+        // Reprendre la lecture et les favoris (14/10), en tête de la Bibliothèque.
+        findViewById<LinearLayout>(R.id.reprise_favoris).apply {
+            removeAllViews()
+            runCatching { RepriseFavoris.lignes(this@MainActivity) }.getOrDefault(emptyList()).forEach { addView(it) }
+        }
+        // L'accueil selon l'heure (14/10).
+        findViewById<LinearLayout>(R.id.accueil_moment).apply {
+            removeAllViews()
+            runCatching { AccueilMoment.cartes(this@MainActivity) }.getOrDefault(emptyList()).forEach { addView(it) }
+        }
         renderGauge()
         renderSwitches()
         renderMusic()
@@ -833,6 +847,7 @@ class MainActivity : AppCompatActivity() {
         }
         Reminder.reschedule(this)
         ChabbatAlerte.programmer(this)
+        LevanaAlerte.programmer(this)
     }
 
     // --- Sélecteurs ---------------------------------------------------------

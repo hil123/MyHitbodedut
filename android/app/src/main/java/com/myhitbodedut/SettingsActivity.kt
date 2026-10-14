@@ -113,7 +113,7 @@ class SettingsActivity : AppCompatActivity() {
         findViewById<Button>(R.id.levana_usage_button).setOnClickListener {
             val choix = listOf<Levana.Usage?>(null) + Levana.Usage.values()
             choisirParmi(R.string.levana_usage_titre, choix.map { it?.libelle ?: R.string.levana_usage_auto }, choix.indexOf(Store.levanaUsage(this))) {
-                Store.setLevanaUsage(this, choix[it]); renderValues()
+                Store.setLevanaUsage(this, choix[it]); renderValues(); LevanaAlerte.programmer(this)
             }
         }
         findViewById<Button>(R.id.halakha_source_button).setOnClickListener {
@@ -310,6 +310,13 @@ class SettingsActivity : AppCompatActivity() {
             applyServiceState()
             refresh()
         }
+        // Ne pas déranger (14/10) : sans l'accès d'Android, la case mène à l'écran qui le donne.
+        bindSwitch(R.id.ne_pas_deranger_switch, Store.nePasDeranger(this) && NePasDeranger.accesAccorde(this)) { checked ->
+            Store.setNePasDeranger(this, checked)
+            if (checked && !NePasDeranger.accesAccorde(this)) {
+                safeStart(Intent(android.provider.Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS))
+            }
+        }
         bindSwitch(R.id.hide_countdown_switch, Store.hideCountdown(this)) { checked ->
             Store.setHideCountdown(this, checked)
         }
@@ -320,7 +327,10 @@ class SettingsActivity : AppCompatActivity() {
             Store.setShabbatMode(this, checked)
             refresh()
         }
+        // Grand texte (14/10) : les textes de lecture à 140 % ; la barre « Aa » règle toujours finement.
+        bindSwitch(R.id.grand_texte_switch, Store.lectureEchelle(this) >= GRAND_TEXTE) { Store.setLectureEchelle(this, if (it) GRAND_TEXTE else 1f) }
         bindSwitch(R.id.levana_switch, Store.levanaAffichee(this)) { Store.setLevanaAffichee(this, it) }
+        bindSwitch(R.id.levana_rappel_switch, Store.levanaRappel(this)) { Store.setLevanaRappel(this, it); LevanaAlerte.programmer(this) }
         bindSwitch(R.id.hilloulot_switch, Store.hilloulotAffichees(this)) { Store.setHilloulotAffichees(this, it) }
         bindSwitch(R.id.halakha_switch, Store.halakhaAffichee(this)) { Store.setHalakhaAffichee(this, it) }
         bindSwitch(R.id.exempt_today_switch, Store.pausedDates(this).contains(Store.today())) {
@@ -583,5 +593,7 @@ class SettingsActivity : AppCompatActivity() {
         const val ETAT_DEMANDE = "notifications_demandees"
         /** Au-delà, ce n'est pas une sauvegarde de cette application. */
         const val IMPORT_MAX_OCTETS = 2 * 1024 * 1024
+        /** Grand texte (14/10) : l'échelle des textes de lecture. */
+        const val GRAND_TEXTE = 1.4f
     }
 }

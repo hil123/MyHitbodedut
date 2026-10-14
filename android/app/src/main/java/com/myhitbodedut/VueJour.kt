@@ -99,6 +99,8 @@ object VueJour {
             contentDescription = null
         })
         addView(texte(c, c.getString(R.string.levana_source, c.getString(usage.libelle)), 11f, R.color.muted, haut = 4))
+        // Le texte en un toucher (14/10), dans le noussa'h choisi.
+        addView(lien(c, c.getString(R.string.levana_lire)) { SiddurLectureActivity.ouvrir(c, "birkat_halevana") })
     }
 
     /** La carte d'un jour : la date hébraïque, la date civile, les fêtes, ce qu'il change aux prières. */
@@ -141,6 +143,8 @@ object VueJour {
             blocHilloula(c, carte, date, enIsrael)
             blocHalakha(c, carte, date, enIsrael)
         }
+        // Partager le jour en image (14/10).
+        carte.addView(lien(c, c.getString(R.string.partage_jour) + " ↗") { runCatching { PartageJour.partager(c, date) } })
         return carte
     }
 

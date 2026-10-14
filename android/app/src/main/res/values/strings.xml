@@ -937,4 +937,39 @@
     <string name="levana_usage_trois_mi_mois">Dès 3 jours, jusqu’à la mi-mois (Michna Beroura, Rema)</string>
     <string name="levana_usage_sept_mi_mois">Dès 7 jours, jusqu’à la mi-mois (Ari)</string>
     <string name="levana_usage_sept_quinze">Dès 7 jours, jusqu’au 15ᵉ jour (Choulhan Aroukh)</string>
+    <!-- Les dix améliorations du 14/10. -->
+    <string name="levana_rappel_premier">Birkat haLevana : premier soir</string>
+    <string name="levana_rappel_motsae">Birkat haLevana : ce motsaé Chabbat</string>
+    <string name="levana_rappel_dernier">Birkat haLevana : dernier soir</string>
+    <string name="levana_rappel_texte">Touchez pour ouvrir le texte.</string>
+    <string name="levana_rappel_reglage">Rappel de Birkat haLevana</string>
+    <string name="levana_lire">Lire Birkat haLevana ›</string>
+    <string name="widget_zmanim_label">Zmanim MyHitbodedut</string>
+    <string name="widget_zmanim_description">La date hébraïque, la prière du moment, la chki’a et la série.</string>
+    <string name="widget_zmanim_chaharit">Cha’harit</string>
+    <string name="widget_zmanim_minha">Min’ha</string>
+    <string name="widget_zmanim_arvit">Arvit</string>
+    <string name="widget_zmanim_jusqua">%1$s jusqu’à %2$s</string>
+    <string name="widget_zmanim_chkia">Chki’a %s</string>
+    <string name="settings_ne_pas_deranger">Ne pas déranger pendant la hitbodedout</string>
+    <string name="settings_ne_pas_deranger_hint">Le téléphone passe en mode « priorité » le temps de la hitbodedout, puis revient comme avant. Android demande une autorisation la première fois.</string>
+    <string name="recherche_titre">Recherche</string>
+    <string name="recherche_indice">Rechercher dans le siddour, les livres, la halakha, les hilloulot</string>
+    <string name="recherche_livres">Livres</string>
+    <string name="favori_ajouter">Ajouter aux favoris</string>
+    <string name="favori_retirer">Retirer des favoris</string>
+    <string name="reprise_titre">Reprendre la lecture</string>
+    <string name="favoris_titre">Favoris</string>
+    <string name="fond_contraste">Contraste élevé</string>
+    <string name="settings_grand_texte">Grand texte de lecture</string>
+    <string name="journal_humeur_avant">Avant la hitbodedout</string>
+    <string name="journal_humeur_apres">Après</string>
+    <string name="journal_gratitude">Gratitude</string>
+    <string name="journal_gratitude_hint">Une chose pour laquelle je remercie aujourd’hui</string>
+    <string name="journal_graphique">Les minutes de chaque jour, %s</string>
+    <string name="partage_jour">Partager ce jour</string>
+    <plurals name="widget_zmanim_serie">
+        <item quantity="one">Série : %d jour</item>
+        <item quantity="other">Série : %d jours</item>
+    </plurals>
 </resources>

@@ -75,6 +75,26 @@ class SiddurLectureActivity : AppCompatActivity() {
             afficher(garderPlace = recueil().nusah == nusahAffiche)
         }
         afficher(garderPlace = false)
+        // Reprendre là où on s'était arrêté (14/10).
+        Store.positionLecture(this, cle())?.let { p -> liste.post { (liste.layoutManager as LinearLayoutManager).scrollToPositionWithOffset(p, 0) } }
+        findViewById<TextView>(R.id.siddur_lecture_favori).apply {
+            fun etoile() {
+                val fav = cle() in Store.favoris(this@SiddurLectureActivity)
+                text = if (fav) "★" else "☆"
+                contentDescription = getString(if (fav) R.string.favori_retirer else R.string.favori_ajouter)
+            }
+            etoile()
+            setOnClickListener { Store.basculerFavori(this@SiddurLectureActivity, cle()); etoile() }
+        }
+    }
+
+    /** « s:chaharit » pour le siddour, « l:likoutei_etsot » pour un livre : la clé des favoris et de la reprise. */
+    private fun cle(): String = (if (livre) "l:" else "s:") + id
+
+    override fun onPause() {
+        super.onPause()
+        val p = (liste.layoutManager as LinearLayoutManager).findFirstVisibleItemPosition()
+        if (p >= 0) Store.setPositionLecture(this, cle(), p)
     }
 
     private var nusahAffiche: LocalizedText? = null
@@ -315,8 +335,10 @@ class SiddurLectureActivity : AppCompatActivity() {
         private const val ID = "id"
         private const val LIVRE = "livre"
 
+        fun intent(context: Context, id: String): Intent = Intent(context, SiddurLectureActivity::class.java).putExtra(ID, id)
+
         fun ouvrir(context: Context, id: String) {
-            context.startActivity(Intent(context, SiddurLectureActivity::class.java).putExtra(ID, id))
+            context.startActivity(intent(context, id))
         }
 
         fun ouvrirLivre(context: Context, id: String) {

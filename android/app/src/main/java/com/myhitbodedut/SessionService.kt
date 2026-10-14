@@ -113,6 +113,8 @@ class SessionService : Service() {
         startForegroundNow()
         enMarche = true
         garderEveille()
+        // Ne pas déranger pendant la séance (14/10), si choisi.
+        NePasDeranger.activer(this)
         ensureMusic()
         StreakWidget.refresh(this)
         handler.removeCallbacks(tick)
@@ -232,6 +234,7 @@ class SessionService : Service() {
 
     private fun stopSelfAndClear() {
         relacherEveil()
+        NePasDeranger.retablir(this)
         music.stop()
         Store.setMusicNow(this, null)
         handler.removeCallbacks(tick)

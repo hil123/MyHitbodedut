@@ -45,7 +45,8 @@ object Apparence {
         BLANC("blanc", R.string.fond_blanc, R.style.Fond_Blanc),
         SABLE("sable", R.string.fond_sable, R.style.Fond_Sable),
         BLEU("bleu", R.string.fond_bleu, R.style.Fond_Bleu),
-        ROSE("rose", R.string.fond_rose, R.style.Fond_Rose);
+        ROSE("rose", R.string.fond_rose, R.style.Fond_Rose),
+        CONTRASTE("contraste", R.string.fond_contraste, R.style.Fond_Contraste);
 
         companion object {
             fun parse(cle: String?): Fond = values().firstOrNull { it.cle == cle } ?: VERT
