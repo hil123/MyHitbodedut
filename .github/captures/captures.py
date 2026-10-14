@@ -520,6 +520,41 @@ def main():
         capture("18h-priere-ajouts-suite", ok=ok3)
     etape("18 zmanim, calendrier, ajouts", s18)
 
+    def s19():
+        # Les écrans du 11 au 14/10 : halakha (livre au choix), hilloulot, livres, siddour des occasions,
+        # paliers, réglages (personnalisation, écran Zmanim). Lieu : Paris, réglé par s18.
+        lancer()
+        ok = activite("HalakhaActivity")
+        capture("19a-halakha", ok=ok)
+        defiler(True)
+        capture("19b-halakha-suite", ok=ok)
+        retour()
+        ok = activite("HilloulotActivity")
+        capture("19c-hilloulot", ok=ok)
+        defiler(True)
+        capture("19d-hilloulot-suite", ok=ok)
+        retour()
+        ok = activite("LibraryActivity", "--ez livres true")
+        capture("19e-livres", ok=ok)
+        retour()
+        ok = ouvrir_siddour()
+        for i in range(10):
+            defiler(True)
+        capture("19f-siddour-occasions", ok=ok)
+        retour(2)
+        ok = activite("PaliersActivity")
+        capture("19g-paliers-trophees", ok=ok)
+        retour()
+        lancer()
+        ok = toucher(rid="nav_settings", attente=2.5)
+        capture("19h-reglages", ok=ok)
+        for i in range(2):
+            defiler(True)
+        capture("19i-reglages-apparence", ok=ok)
+        defiler(True)
+        capture("19j-reglages-ecran-zmanim", ok=ok)
+    etape("19 halakha, hilloulot, livres, occasions, reglages", s19)
+
     def s16():
         regler({"apparence_accent": ("string", "vert")})
         langue("he")
@@ -533,6 +568,15 @@ def main():
         capture("16d-he-priere-pastille", attente=1.5, ok=ok)
         ok = toucher(desc="הגדרות קריאה", attente=1.2)
         capture("16e-he-priere-barre-depliee", ok=ok)
+        lancer()
+        ok = toucher(rid="nav_zmanim", attente=2.5)
+        capture("16f-he-zmanim", ok=ok)
+        defiler(True)
+        capture("16g-he-zmanim-suite", ok=ok)
+        ok = activite("HalakhaActivity")
+        capture("16h-he-halakha", ok=ok)
+        ok = activite("HilloulotActivity")
+        capture("16i-he-hilloulot", ok=ok)
     etape("16 passage en hebreu", s16)
 
     etape("20 tailles d'ecran", lambda: tailles())

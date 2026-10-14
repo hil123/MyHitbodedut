@@ -33,7 +33,7 @@ const DONNEES = {
 };
 const MAINTENANT = new Date('2026-09-29T09:00:00').getTime();
 
-async function capture(nom, { langue, mode = 'clair', fond = 'vert', accent = 'vert', prenom = '', ecran = '', onglet = null, adresse = null, actions = null, calme = false }) {
+async function capture(nom, { langue, mode = 'clair', fond = 'vert', accent = 'vert', prenom = '', ecran = '', onglet = null, adresse = null, actions = null, calme = false, extra = {} }) {
   const contexte = await navigateur.newContext({
     viewport: { width: 390, height: 844 }, deviceScaleFactor: 2, colorScheme: mode === 'sombre' ? 'dark' : 'light',
     serviceWorkers: 'block',
@@ -50,6 +50,7 @@ async function capture(nom, { langue, mode = 'clair', fond = 'vert', accent = 'v
   const prefs = JSON.stringify({
     langue_app: langue, apparence_mode: mode, apparence_fond: fond, apparence_accent: accent, first_name: prenom,
     ...(adresse ? { adresse } : {}),
+    ...extra,
   });
   await page.addInitScript(({ donnees, prefs, maintenant }) => {
     // Sans l'écran d'ouverture (13/10), qui couvrirait la capture trois secondes.
@@ -118,6 +119,24 @@ await capture('accueil-fr-sable-violet', { langue: 'fr', fond: 'sable', accent: 
 await capture('textes-he', { langue: 'he', onglet: 'textes' });
 await capture('musique-fr', { langue: 'fr', ecran: 'musique' });
 await capture('reglages-en', { langue: 'en', ecran: 'reglages' });
+
+// Les écrans du 10 au 14/10 : zmanim (allégé), calendrier, halakha (livre au choix),
+// hilloulot, livres, siddour, réglages. Lieu : Jérusalem, sans le dialogue.
+const JERUSALEM = { lieu_zmanim: { nom: 'ירושלים', latitude: 31.76904, longitude: 35.21633, altitude: 754, fuseau: 'Asia/Jerusalem', ville: 281184 }, in_israel: true };
+const bas = (n) => async (p) => { await p.waitForTimeout(1200); await p.evaluate((y) => { const d = document.querySelector('.defile'); if (d) d.scrollTop = y; }, n); };
+await capture('zmanim-he', { langue: 'he', ecran: 'zmanim', extra: JERUSALEM, actions: bas(0) });
+await capture('zmanim-he-suite', { langue: 'he', ecran: 'zmanim', extra: JERUSALEM, actions: bas(700) });
+await capture('zmanim-fr', { langue: 'fr', ecran: 'zmanim', extra: JERUSALEM, actions: bas(0) });
+await capture('calendrier-he', { langue: 'he', ecran: 'calendrier', extra: JERUSALEM, actions: bas(0) });
+await capture('halakha-he', { langue: 'he', ecran: 'halakha', extra: JERUSALEM, actions: bas(0) });
+await capture('halakha-he-ben-ish-hai', { langue: 'he', ecran: 'halakha', extra: { ...JERUSALEM, halakha_source: 'ben_ish_hai' }, actions: bas(0) });
+await capture('hilloulot-he', { langue: 'he', ecran: 'hilloulot', extra: JERUSALEM, actions: bas(0) });
+await capture('livres-he', { langue: 'he', ecran: 'livres', actions: bas(0) });
+await capture('siddour-he', { langue: 'he', ecran: 'siddur', actions: bas(0) });
+await capture('siddour-he-occasions', { langue: 'he', ecran: 'siddur', actions: bas(100000) });
+await capture('bibliotheque-he', { langue: 'he', ecran: 'bibliotheque', actions: bas(0) });
+await capture('reglages-fr-personnalisation', { langue: 'fr', ecran: 'reglages', actions: bas(400) });
+await capture('reglages-he', { langue: 'he', ecran: 'reglages', mode: 'sombre', actions: bas(400) });
 
 // La séance : avant, pendant, le bravo, l'abandon.
 const finDeSeance = async (page) => {
