@@ -109,6 +109,13 @@ class SettingsActivity : AppCompatActivity() {
                 Store.setOuverture(this, choix[it]); renderValues()
             }
         }
+        // Birkat haLevana (14/10) : selon le noussa'h, ou l'un des trois usages.
+        findViewById<Button>(R.id.levana_usage_button).setOnClickListener {
+            val choix = listOf<Levana.Usage?>(null) + Levana.Usage.values()
+            choisirParmi(R.string.levana_usage_titre, choix.map { it?.libelle ?: R.string.levana_usage_auto }, choix.indexOf(Store.levanaUsage(this))) {
+                Store.setLevanaUsage(this, choix[it]); renderValues()
+            }
+        }
         findViewById<Button>(R.id.halakha_source_button).setOnClickListener {
             val choix = Store.SourceHalakha.values()
             choisirParmi(R.string.halakha_source_titre, choix.map { it.libelle }, choix.indexOf(Store.sourceHalakha(this))) {
@@ -358,6 +365,8 @@ class SettingsActivity : AppCompatActivity() {
         findViewById<Button>(R.id.police_button).setText(Store.lecturePolice(this).libelle)
         findViewById<Button>(R.id.ouverture_button).setText(Store.ouverture(this).libelle)
         findViewById<Button>(R.id.halakha_source_button).setText(Store.sourceHalakha(this).libelle)
+        findViewById<Button>(R.id.levana_usage_button).text = Store.levanaUsage(this)?.let { getString(it.libelle) }
+            ?: getString(R.string.levana_usage_auto) + " · " + getString(VueJour.usageLevana(this).libelle)
         val prenom = Store.firstName(this)
         findViewById<Button>(R.id.name_button).text =
             prenom.ifBlank { getString(R.string.settings_name_empty) }

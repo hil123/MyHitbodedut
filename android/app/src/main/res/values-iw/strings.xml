@@ -880,7 +880,7 @@
     <string name="halakha_yalkut_source">ילקוט יוסף – קיצור שולחן ערוך, מו״ר הרב יצחק יוסף (הוכן מתוכנת תורת אמת, CC BY-NC-SA 2.5): מבחר, לא הספר כולו.</string>
     <!-- Birkat haLevana sur la carte du jour (13/10) -->
     <string name="levana_titre">ברכת הלבנה</string>
-    <string name="levana_fenetre">מ־%1$s עד %2$s בערב (כולל הלילה)</string>
+    <string name="levana_fenetre">מ%1$s עד %2$s</string>
     <string name="levana_ce_soir">אפשר לברך הלילה</string>
     <string name="levana_dernier_soir">הלילה האחרון</string>
     <plurals name="levana_dans">
@@ -888,7 +888,7 @@
         <item quantity="two">בעוד יומיים</item>
         <item quantity="other">בעוד %d ימים</item>
     </plurals>
-    <string name="levana_source">שבעה ימים אחר המולד, עד חצי החודש (שולחן ערוך, אורח חיים תכ״ו).</string>
+    <string name="levana_source">שולחן ערוך או\"ח תכ\"ו; משנה ברורה תכ\"ו. מנהג: %s.</string>
     <!-- Polices hébraïques supplémentaires (14/10) -->
     <string name="police_frank">פרנק רוהל (קלאסי)</string>
     <string name="police_david">דוד</string>
@@ -906,4 +906,16 @@
     <string name="halakha_source_deux">שניהם</string>
     <string name="zmanim_bouton_halakha">הלכה יומית</string>
     <string name="zmanim_bouton_hilloulot">הילולות</string>
+    <!-- Birkat haLevana revue sur le texte (14/10). -->
+    <string name="levana_lune">הלבנה הערב: %1$s מוארת, %2$s</string>
+    <string name="levana_croissante">מתמלאת</string>
+    <string name="levana_decroissante">מתמעטת</string>
+    <string name="levana_motsae">מומלץ: מוצאי שבת %s (רמ\"א תכ\"ו ב)</string>
+    <string name="levana_kippour">לא לפני מוצאי יום הכיפורים (רמ\"א תכ\"ו ב)</string>
+    <string name="levana_tisha">לא לפני מוצאי תשעה באב (רמ\"א תכ\"ו ב; משנה ברורה תכ\"ו יא)</string>
+    <string name="levana_usage_titre">ברכת הלבנה: מנהג</string>
+    <string name="levana_usage_auto">לפי הנוסח</string>
+    <string name="levana_usage_trois_mi_mois">מ־3 ימים עד חצי החודש (משנה ברורה, רמ\"א)</string>
+    <string name="levana_usage_sept_mi_mois">מ־7 ימים עד חצי החודש (האר\"י)</string>
+    <string name="levana_usage_sept_quinze">מ־7 ימים עד ט\"ו יום (שולחן ערוך)</string>
 </resources>

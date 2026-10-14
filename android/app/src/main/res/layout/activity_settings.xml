@@ -144,6 +144,13 @@
 
             <LinearLayout style="@style/SettingRow">
 
+                <TextView style="@style/SettingLabel" android:text="@string/levana_usage_titre" />
+
+                <Button android:id="@+id/levana_usage_button" style="@style/SettingValue" />
+            </LinearLayout>
+
+            <LinearLayout style="@style/SettingRow">
+
                 <TextView
                     style="@style/SettingLabel"
                     android:layout_width="0dp"

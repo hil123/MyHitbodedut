@@ -86,6 +86,7 @@ object Store {
     private const val KEY_HALAKHA = "halakha_affichee"
     private const val KEY_SOURCE_HALAKHA = "halakha_source"
     private const val KEY_LEVANA = "levana_affichee"
+    private const val KEY_LEVANA_USAGE = "levana_usage"
     private const val KEY_OUVERTURE = "ecran_ouverture"
     private const val KEY_SIDDUR_NUSAH = "siddur_nusah"
     private const val KEY_TAHANOUN_TICHRI_SFARD = "sans_tahanoun_fin_tichri_sfard"
@@ -627,6 +628,14 @@ object Store {
 
     fun setLevanaAffichee(context: Context, v: Boolean) {
         prefs(context).edit().putBoolean(KEY_LEVANA, v).apply()
+    }
+
+    /** L'usage de Birkat haLevana choisi (14/10) ; null : celui du noussa'h (VueJour.usageLevana). */
+    fun levanaUsage(context: Context): Levana.Usage? =
+        prefs(context).getString(KEY_LEVANA_USAGE, null)?.let { c -> Levana.Usage.values().firstOrNull { it.cle == c } }
+
+    fun setLevanaUsage(context: Context, v: Levana.Usage?) {
+        prefs(context).edit().apply { if (v == null) remove(KEY_LEVANA_USAGE) else putString(KEY_LEVANA_USAGE, v.cle) }.apply()
     }
 
     /** L'écran d'ouverture (14/10) : Aujourd'hui, Textes ou Zmanim. */

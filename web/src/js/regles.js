@@ -284,7 +284,7 @@ export const SiddurMoment = {
       birkot_hachahar: 'char_welcome',
       chaharit: 'char_tefillin',
       minha: 'char_standing_back',
-      arvit: 'char_reading_seated',
+      arvit: 'char_tehilim',
       chema_coucher: 'scene_sleeping',
       tefilat_haderekh: 'scene_airport',
     }[id] ?? 'char_thinking';

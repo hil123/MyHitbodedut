@@ -948,6 +948,28 @@ vient l'accord, quand, et sur quoi il porte.
   (« Birkat HaIlanot » : en Australie, Eloul et Tichri) ; Torah Live (vers
   Tichri). Les responsa elles-mêmes n'ont pas été lues.
 
+## Mise à jour (14/10, Birkat haLevana revue sur le texte)
+
+Vérifié sur le texte (export public de Sefaria) : Choulhan Aroukh O.H. 426:2-4 et
+Michna Beroura 426:6, 11, 17, 19, 20.
+- Début : 7 jours (CA 426:4) ; 3 jours d'heure à heure pour « la plupart des
+  A'haronim » (MB 426:20). Fin : 15 jours depuis l'heure du molad (CA 426:3,
+  MB 426:17) ou la mi-mois (Rema, MB 426:19).
+- Usage par défaut : Edot haMizra'h 7 j → 15 j (Choulhan Aroukh) ; Sefard 7 j →
+  mi-mois (l'Ari : Chabad.org, Ohr Somayach ; non lu dans les écrits de l'Ari) ;
+  Ashkenaz 3 j → mi-mois. Modifiable : Réglages → Écran Zmanim.
+  Avant : 7 j → mi-mois pour tous (ni le Choulhan Aroukh, ni la Michna Beroura).
+- Pas avant la sortie de Kippour ni de Tich'a beAv (Rema 426:2 ; MB 426:11).
+- Motsaé Chabbat conseillé quand sa nuit tombe avant le 10 (Rema 426:2, MB 426:6),
+  sauf motsaé Chabbat qui est Yom Tov.
+- Heures exactes de début et de fin (KosherJava / kosher-zmanim).
+- La lune de ce soir dessinée à sa phase réelle (Meeus ch. 48), côté éclairé selon
+  l'hémisphère du lieu. Recoupé : nouvelle lune 10/10 15:50 UTC, premier quartier
+  18/10 16:12 UTC, pleine lune 26/10 04:12 UTC (timeanddate, Griffith Observatory,
+  Royal Observatory Greenwich) ; écart ≤ 1 point avec moongiant.com.
+- Retirée : la figure assise (char_reading_seated), remplacée par la Torah (bandeau
+  Zmanim), Tehilim (Arvit, bibliothèque), l'écriture (relecture).
+
 ## Ce qui manque — liste complète (14/10)
 
 **Textes et prières**

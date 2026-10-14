@@ -9,7 +9,7 @@ import { ART_DU_MOMENT, ChizukBag, ChizukRules } from './chizuk.js';
 import { DanseMesure } from './seance.js';
 import { creeStore, memoire } from './store.js';
 import { isoLocal } from './calendrier.js';
-import { JERUSALEM_GEONAMES, aJerusalem, calendrier, jour as jourJuif, jourDeLaPriere, levana } from './calendrier-juif.js';
+import { JERUSALEM_GEONAMES, USAGES_LEVANA, aJerusalem, calendrier, jour as jourJuif, jourDeLaPriere, levana, usageLevana } from './calendrier-juif.js';
 import { conditionsPour, index as indexAjouts, libelleJour, vrai as ajoutVrai } from './siddur-jour.js';
 import * as Paliers from './paliers.js';
 import * as Trophees from './trophees.js';
@@ -1464,23 +1464,67 @@ function sousHoraires(iso) {
   return [carte(store.levanaAffichee() ? [blocLevana(iso)] : []), carte(blocHilloula(iso)), carte(blocHalakha(iso))].filter(Boolean);
 }
 
-/** Birkat haLevana (Levana.kt, 13/10) : la fenêtre du mois, ce soir ou dans combien de jours, la jauge du mois lunaire. */
+/**
+ * La lune de ce soir (Levana.Dessin) : le disque sombre, la part éclairée à sa vraie
+ * mesure, du côté où la voit l'hémisphère du lieu, quelques mers.
+ */
+function dessinLune({ eclairage, croissante }, sud) {
+  const r = 27;
+  const droite = croissante !== sud;
+  const e = r * Math.abs(1 - 2 * eclairage);
+  const bombe = eclairage > 0.5 ? droite : !droite;
+  // Le demi-disque éclairé, refermé par le terminateur (une demi-ellipse).
+  const chemin = `M28 1 A${r} ${r} 0 0 ${droite ? 1 : 0} 28 55 A${e.toFixed(2)} ${r} 0 0 ${bombe ? 1 : 0} 28 1 Z`;
+  const ns = 'http://www.w3.org/2000/svg';
+  const el = (nom, attrs) => { const n = document.createElementNS(ns, nom); for (const [k, v] of Object.entries(attrs)) n.setAttribute(k, v); return n; };
+  const svg = el('svg', { viewBox: '0 0 56 56', class: 'lune', 'aria-hidden': 'true' });
+  const id = `lune-${Math.random().toString(36).slice(2, 8)}`;
+  const defs = el('defs', {});
+  const clip = el('clipPath', { id });
+  clip.append(el('path', { d: chemin }));
+  defs.append(clip);
+  svg.append(defs, el('circle', { cx: 28, cy: 28, r, class: 'lune-ombre' }));
+  const g = el('g', { 'clip-path': `url(#${id})` });
+  g.append(el('circle', { cx: 28, cy: 28, r, class: 'lune-clair' }));
+  for (const [x, y, t] of [[-0.25, -0.3, 0.22], [0.2, -0.1, 0.18], [-0.05, 0.25, 0.2], [0.35, 0.35, 0.1]]) {
+    g.append(el('circle', { cx: 28 + x * r, cy: 28 + y * r, r: t * r, class: 'lune-mer' }));
+  }
+  svg.append(g, el('circle', { cx: 28, cy: 28, r, class: 'lune-bord' }));
+  return svg;
+}
+
+/** L'usage de Birkat haLevana : celui choisi, sinon celui du noussa'h (VueJour.usageLevana). */
+const usageLevanaCourant = () => usageLevana(store.siddurNusah(), store.levanaUsage());
+
+/**
+ * Birkat haLevana (Levana.kt ; plus réaliste le 14/10) : la lune de ce soir dessinée,
+ * ce soir ou dans combien de jours, la fenêtre à l'heure près, le motsaé Chabbat
+ * conseillé, Kippour et Tich'a beAv, la jauge du mois lunaire, l'usage suivi.
+ */
 function blocLevana(iso) {
-  const zone = store.lieu()?.fuseau ?? Intl.DateTimeFormat().resolvedOptions().timeZone;
-  const l = levana(iso, zone);
-  const court = (d) => new Intl.DateTimeFormat(tr.langue, { day: 'numeric', month: 'short', timeZone: 'UTC' }).format(new Date(`${d}T12:00:00Z`));
+  const lieu = store.lieu();
+  const zone = lieu?.fuseau ?? Intl.DateTimeFormat().resolvedOptions().timeZone;
+  const usage = usageLevanaCourant();
+  const l = levana(iso, zone, { usage });
+  const court = (d) => new Intl.DateTimeFormat(tr.langue, { weekday: 'short', day: 'numeric', month: 'short', timeZone: 'UTC' }).format(new Date(`${d}T12:00:00Z`));
+  const heure = (ms) => new Intl.DateTimeFormat(tr.langue, { weekday: 'short', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit', hourCycle: 'h23', timeZone: zone }).format(new Date(ms));
   const etat = l.etat === 'ce_soir' ? tr.t('levana_ce_soir') : l.etat === 'dernier' ? tr.t('levana_dernier_soir') : tr.p('levana_dans', l.etat.dans);
   const pct = (x) => `${(x * 100).toFixed(2)}%`;
   return h('div', { class: 'levana' },
     h('div', { class: 'levana-tete' },
-      h('h3', { class: 'jour-sous-titre' }, tr.t('levana_titre')),
-      h('span', { class: `levana-etat${typeof l.etat === 'string' ? ' ouvert' : ''}` }, etat)),
-    h('p', { class: 'levana-fenetre' }, tr.t('levana_fenetre', court(l.premier), court(l.dernier))),
+      dessinLune(l.lune, (lieu?.latitude ?? 1) < 0),
+      h('div', { class: 'levana-corps' },
+        h('h3', { class: 'jour-sous-titre' }, tr.t('levana_titre')),
+        h('p', { class: `levana-etat${typeof l.etat === 'string' ? ' ouvert' : ''}` }, etat),
+        h('p', { class: 'levana-lune' }, tr.t('levana_lune', `${Math.round(l.lune.eclairage * 100)} %`, tr.t(l.lune.croissante ? 'levana_croissante' : 'levana_decroissante'))))),
+    h('p', { class: 'levana-fenetre' }, tr.t('levana_fenetre', heure(l.debutMs), heure(l.finMs))),
+    l.motsae ? h('p', { class: 'levana-conseil' }, tr.t('levana_motsae', court(l.motsae))) : null,
+    l.restriction ? h('p', { class: 'levana-conseil' }, tr.t(l.restriction === 'kippour' ? 'levana_kippour' : 'levana_tisha')) : null,
     h('div', { class: 'levana-jauge', 'aria-hidden': 'true' },
       h('span', { class: 'levana-fil' }),
       h('span', { class: 'levana-or', style: `inset-inline-start: ${pct(l.debut)}; width: ${pct(l.fin - l.debut)}` }),
       h('span', { class: 'levana-point', style: `inset-inline-start: ${pct(l.point)}` })),
-    h('p', { class: 'levana-source' }, tr.t('levana_source')));
+    h('p', { class: 'levana-source' }, tr.t('levana_source', tr.t(`levana_usage_${usage}`))));
 }
 
 /** Le début de la halakha du jour dans le livre choisi (14/10) : [livre, texte], ou null. */
@@ -1692,7 +1736,7 @@ function ecranZmanim() {
     type: 'button', class: 'puce-bandeau', 'aria-haspopup': 'dialog', onclick: choisirLieu,
     'aria-label': `${tr.t('reglage_lieu')} : ${lieu ? lieu.nom : tr.t('reglage_lieu_aucun')}`,
   }, h('span', {}, lieu ? tr.t('zmanim_lieu_detail', lieu.nom, tr.t(store.inIsrael() ? 'region_israel' : 'region_diaspora')) : tr.t('zmanim_choisir_lieu')), icone('replier'));
-  return h('div', { class: 'ecran avec-bandeau' }, bandeau(tr.t('zmanim_title'), { puce, dessin: 'char_reading_seated' }),
+  return h('div', { class: 'ecran avec-bandeau' }, bandeau(tr.t('zmanim_title'), { puce, dessin: 'char_torah' }),
     h('div', { class: 'defile' }, h('div', { class: 'contenu' },
       // Le jour seul, trois boutons, puis les horaires (14/10, « trop de choses avant les זמנים »).
       carteJour(iso, { complet: false }),
@@ -2004,6 +2048,12 @@ function ecranReglages() {
           h('label', { class: 'ligne' }, h('span', { class: 'corps' }, h('div', { class: 'nom' }, tr.t(nom))),
             h('input', { type: 'checkbox', role: 'switch', class: 'interrupteur', checked: lit(), 'aria-label': tr.t(nom),
               onchange: (e) => { ecrit(e.target.checked); rendre(); } }))),
+        // Birkat haLevana (14/10) : selon le noussa'h, ou l'un des trois usages.
+        ligne({ nom: tr.t('levana_usage_titre'),
+          etat: store.levanaUsage() === 'auto' ? `${tr.t('levana_usage_auto')} · ${tr.t(`levana_usage_${usageLevanaCourant()}`)}` : tr.t(`levana_usage_${store.levanaUsage()}`),
+          onclick: () => { const choix = ['auto', ...Object.keys(USAGES_LEVANA)];
+            choisirDans(tr.t('levana_usage_titre'), choix.map((c) => tr.t(c === 'auto' ? 'levana_usage_auto' : `levana_usage_${c}`)), choix.indexOf(store.levanaUsage()),
+              (j) => { store.setLevanaUsage(choix[j]); rendre(); }); } }),
         ligne({ nom: tr.t('halakha_source_titre'), etat: tr.t(SOURCES_HALAKHA.find(([c]) => c === store.sourceHalakha())[1]),
           onclick: () => choisirDans(tr.t('halakha_source_titre'), SOURCES_HALAKHA.map(([, n]) => tr.t(n)), SOURCES_HALAKHA.findIndex(([c]) => c === store.sourceHalakha()),
             (j) => { store.setSourceHalakha(SOURCES_HALAKHA[j][0]); rendre(); }) })),

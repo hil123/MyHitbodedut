@@ -907,11 +907,20 @@ input[type="range"] { width: 100%; accent-color: var(--brand); }
 
 /* Birkat haLevana sur la carte du jour (Levana.kt, 13/10) : un fil, la fenêtre en or, le soir en point. */
 .levana { margin-top: 14px; }
-.levana-tete { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+/* Birkat haLevana (14/10) : la lune de ce soir à côté de l'état. La lune garde ses couleurs dans les deux thèmes. */
+.levana-tete { display: flex; align-items: center; gap: 14px; }
+.levana-corps { min-width: 0; flex: 1; }
 .levana-tete .jour-sous-titre { margin: 0; }
-.levana-etat { font-size: 12px; font-weight: 700; color: var(--muted); white-space: nowrap; }
+.levana-etat { margin: 2px 0 0; font-size: 17px; font-weight: 700; color: var(--ink); }
 .levana-etat.ouvert { color: var(--brand); }
-.levana-fenetre { margin: 2px 0 0; font-size: 15px; color: var(--ink); }
+.levana-lune { margin: 2px 0 0; font-size: 13px; color: var(--muted); }
+.levana-conseil { margin: 4px 0 0; font-size: 13px; color: var(--brand); }
+.lune { width: 56px; height: 56px; flex: none; }
+.lune-ombre { fill: #3a3f4a; }
+.lune-clair { fill: #f4efd8; }
+.lune-mer { fill: rgba(107, 100, 80, .18); }
+.lune-bord { fill: none; stroke: rgba(255, 255, 255, .2); stroke-width: 1; }
+.levana-fenetre { margin: 10px 0 0; font-size: 14px; color: var(--ink); }
 .levana-jauge { position: relative; height: 18px; margin: 10px 7px 0; }
 .levana-fil { position: absolute; inset-inline: 0; top: 7.5px; height: 3px; border-radius: 2px; background: var(--line); }
 .levana-or { position: absolute; top: 6px; height: 6px; border-radius: 3px; background: var(--ring-streak, #B8780F); }

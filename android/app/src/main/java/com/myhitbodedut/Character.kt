@@ -40,7 +40,7 @@ object Character {
 
     val JOURNAL = R.drawable.char_writing
     val STUDY = R.drawable.char_torah
-    val READING = R.drawable.char_reading_seated
+    val READING = R.drawable.char_tehilim
 
     /** Le Tikoun HaKlali : dix psaumes, livre en main. */
     val TEHILIM = R.drawable.char_tehilim

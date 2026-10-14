@@ -147,26 +147,97 @@ export function jourDeLaPriere(texte, iso, heures) {
 }
 
 /**
- * Birkat haLevana (Levana.kt, 13/10) : la fenêtre qui concerne le soir de [iso],
- * de sept jours après le molad jusqu'à la mi-mois (Choulhan Aroukh, O.H. 426).
- * Le premier soir est celui du début ; le dernier, celui de la nuit où elle se ferme.
+ * Birkat haLevana (Levana.kt ; 13/10, revue le 14/10 sur le texte, export Sefaria) :
+ *  - début : pas avant sept jours (Choulhan Aroukh O.H. 426:4) ; « la plupart des
+ *    A'haronim » permettent après trois jours d'heure à heure (Michna Beroura 426:20) ;
+ *    l'Ari attend sept jours (Chabad.org, Ohr Somayach) ;
+ *  - fin : jusqu'au seizième jour, non compris (426:3), soit quinze jours depuis
+ *    l'heure du molad (MB 426:17) ; le Rema : la mi-mois, 14 j 18 h 22 min (MB 426:19) ;
+ *  - pas avant Kippour ni avant Tich'a beAv (Rema 426:2) ; à leur sortie, oui
+ *    (Rema ; MB 426:11 pour Tich'a beAv) ;
+ *  - motsaé Chabbat de préférence, si cette nuit tombe avant le 10 du mois (Rema 426:2,
+ *    MB 426:6), et pas un motsaé Chabbat qui est Yom Tov.
+ * Le premier soir est celui du début ; le dernier, celui de la nuit où la fenêtre se ferme.
  */
 const MOIS_LUNAIRE = ((29 * 24 + 12) * 60 + 44) * 60000 + 3333;
-export function levana(iso, zone) {
+
+/** Les trois usages : début (jours depuis le molad), fin (15 jours ou mi-mois). */
+export const USAGES_LEVANA = {
+  trois_mi_mois: { debut: 3, fin: 'mi_mois' },
+  sept_mi_mois: { debut: 7, fin: 'mi_mois' },
+  sept_quinze: { debut: 7, fin: 15 },
+};
+
+/** L'usage par défaut d'un noussa'h : Edot haMizra'h le Choulhan Aroukh, Sefard l'Ari, Ashkenaz la Michna Beroura et le Rema. */
+export function usageLevana(nusah, choix = 'auto') {
+  if (USAGES_LEVANA[choix]) return choix;
+  return nusah === 'edot' ? 'sept_quinze' : nusah === 'sefard' ? 'sept_mi_mois' : 'trois_mi_mois';
+}
+
+const ajoute = (iso, n) => { const [a, m, d] = iso.split('-').map(Number); return new Date(Date.UTC(a, m - 1, d + n, 12)).toISOString().slice(0, 10); };
+
+/**
+ * La lune vue d'ici, à un instant : la part éclairée du disque (0 à 1) et si elle
+ * croît. Meeus, Astronomical Algorithms, ch. 48 (angle de phase approché) ; à un
+ * ou deux pour cent près, assez pour un dessin.
+ */
+export function phaseLune(ms) {
+  const T = (ms / 86400000 + 2440587.5 - 2451545) / 36525;
+  const r = Math.PI / 180;
+  const D = 297.8501921 + 445267.1114034 * T;
+  const M = 357.5291092 + 35999.0502909 * T;
+  const Mp = 134.9633964 + 477198.8675055 * T;
+  const i = 180 - D - 6.289 * Math.sin(Mp * r) + 2.1 * Math.sin(M * r) - 1.274 * Math.sin((2 * D - Mp) * r)
+    - 0.658 * Math.sin(2 * D * r) - 0.214 * Math.sin(2 * Mp * r) - 0.11 * Math.sin(D * r);
+  return { eclairage: (1 + Math.cos(i * r)) / 2, croissante: ((D % 360) + 360) % 360 < 180 };
+}
+
+export function levana(iso, zone, { usage = 'sept_mi_mois' } = {}) {
+  const regle = USAGES_LEVANA[usage] ?? USAGES_LEVANA.sept_mi_mois;
   const local = (ms) => new Intl.DateTimeFormat('en-CA', { timeZone: zone, year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date(ms));
+  const soir = (d) => DateTime.fromISO(`${d}T20:00`, { zone }).toMillis();
   const du = (d) => {
     const c = calendrier(d, false, false, false);
-    const f = { molad: c.getMoladAsDate().toMillis(), debut: c.getTchilasZmanKidushLevana7Days().toMillis(), fin: c.getSofZmanKidushLevanaBetweenMoldos().toMillis() };
+    const f = {
+      molad: c.getMoladAsDate().toMillis(),
+      debut: (regle.debut === 3 ? c.getTchilasZmanKidushLevana3Days() : c.getTchilasZmanKidushLevana7Days()).toMillis(),
+      fin: (regle.fin === 15 ? c.getSofZmanKidushLevana15Days() : c.getSofZmanKidushLevanaBetweenMoldos()).toMillis(),
+      restriction: null,
+    };
+    // Tichri et Av : pas avant la sortie de Kippour, de Tich'a beAv (le jeûne, même repoussé au 10).
+    const mois = calendrier(local(f.debut), false, false, false).getJewishMonth();
+    if (mois === JewishDate.TISHREI || mois === JewishDate.AV) {
+      const cible = mois === JewishDate.TISHREI ? JewishCalendar.YOM_KIPPUR : JewishCalendar.TISHA_BEAV;
+      for (let k = -9; k <= 12; k++) {
+        const j = ajoute(local(f.molad), k);
+        if (calendrier(j, false, false, false).getYomTovIndex() === cible) {
+          if (soir(j) > f.debut) { f.debut = soir(j); f.restriction = mois === JewishDate.TISHREI ? 'kippour' : 'tisha_beav'; }
+          break;
+        }
+      }
+    }
     return { ...f, premier: local(f.debut), dernier: local(f.fin - 12 * 3600000) };
   };
   let f = du(iso);
   if (iso > f.dernier) {
-    const [a, m, d] = iso.split('-').map(Number);
     const jour = calendrier(iso, false, false, false).getJewishDayOfMonth();
-    f = du(new Date(Date.UTC(a, m - 1, d + 31 - jour + 2, 12)).toISOString().slice(0, 10));
+    f = du(ajoute(iso, 31 - jour + 2));
+  }
+  // Le motsaé Chabbat conseillé : un samedi de la fenêtre dont la nuit est avant le 10, et pas Yom Tov.
+  let motsae = null;
+  for (let d = f.premier; d <= f.dernier; d = ajoute(d, 1)) {
+    if (new Date(`${d}T12:00:00Z`).getUTCDay() !== 6) continue;
+    const nuit = calendrier(ajoute(d, 1), false, false, false);
+    if (nuit.getJewishDayOfMonth() <= 10 && !nuit.isYomTovAssurBemelacha()) { motsae = d; break; }
   }
   const part = (ms) => Math.min(1, Math.max(0, (ms - f.molad) / MOIS_LUNAIRE));
   const jours = Math.round((Date.parse(`${f.premier}T12:00:00Z`) - Date.parse(`${iso}T12:00:00Z`)) / 86400000);
   const etat = iso < f.premier ? { dans: jours } : iso === f.dernier ? 'dernier' : 'ce_soir';
-  return { premier: f.premier, dernier: f.dernier, etat, debut: part(f.debut), fin: part(f.fin), point: part(Date.parse(`${iso}T18:00:00Z`)) };
+  const ceSoir = soir(iso);
+  return {
+    premier: f.premier, dernier: f.dernier, etat, debutMs: f.debut, finMs: f.fin, restriction: f.restriction, usage,
+    motsae: motsae && motsae >= iso ? motsae : null,
+    debut: part(f.debut), fin: part(f.fin), point: part(ceSoir),
+    lune: { ...phaseLune(ceSoir), age: (ceSoir - f.molad) / 86400000 },
+  };
 }

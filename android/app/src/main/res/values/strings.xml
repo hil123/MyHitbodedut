@@ -900,14 +900,14 @@
     <string name="halakha_yalkut_source">Yalkut Yosef – Kitsour Choulhan Aroukh, Rav Yitzhak Yosef (texte de Torat Emet, CC BY-NC-SA 2.5) : une sélection, non le livre entier.</string>
     <!-- Birkat haLevana sur la carte du jour (13/10) -->
     <string name="levana_titre">Birkat haLevana</string>
-    <string name="levana_fenetre">Du %1$s au %2$s au soir (nuit comprise)</string>
+    <string name="levana_fenetre">Du %1$s au %2$s</string>
     <string name="levana_ce_soir">Possible ce soir</string>
     <string name="levana_dernier_soir">Dernier soir</string>
     <plurals name="levana_dans">
         <item quantity="one">Dans %d jour</item>
         <item quantity="other">Dans %d jours</item>
     </plurals>
-    <string name="levana_source">Sept jours après le molad, jusqu’à la mi-mois (Choulhan Aroukh, Ora’h ’Haïm 426).</string>
+    <string name="levana_source">Choulhan Aroukh O.H. 426 ; Michna Beroura 426. Usage : %s.</string>
     <!-- Polices hébraïques supplémentaires (14/10) -->
     <string name="police_frank">Frank Ruhl (classique)</string>
     <string name="police_david">David</string>
@@ -925,4 +925,16 @@
     <string name="halakha_source_deux">Les deux</string>
     <string name="zmanim_bouton_halakha">Halakha yomit</string>
     <string name="zmanim_bouton_hilloulot">Hilloulot</string>
+    <!-- Birkat haLevana revue sur le texte (14/10). -->
+    <string name="levana_lune">Lune ce soir : %1$s éclairée, %2$s</string>
+    <string name="levana_croissante">croissante</string>
+    <string name="levana_decroissante">décroissante</string>
+    <string name="levana_motsae">Conseillé : motsaé Chabbat %s (Rema 426:2)</string>
+    <string name="levana_kippour">Pas avant la sortie de Kippour (Rema 426:2)</string>
+    <string name="levana_tisha">Pas avant la sortie de Tich’a beAv (Rema 426:2 ; Michna Beroura 426:11)</string>
+    <string name="levana_usage_titre">Birkat haLevana : usage</string>
+    <string name="levana_usage_auto">Selon le noussa’h</string>
+    <string name="levana_usage_trois_mi_mois">Dès 3 jours, jusqu’à la mi-mois (Michna Beroura, Rema)</string>
+    <string name="levana_usage_sept_mi_mois">Dès 7 jours, jusqu’à la mi-mois (Ari)</string>
+    <string name="levana_usage_sept_quinze">Dès 7 jours, jusqu’au 15ᵉ jour (Choulhan Aroukh)</string>
 </resources>

@@ -854,14 +854,14 @@
     <string name="halakha_yalkut_source">Yalkut Yosef – Kitzur Shulchan Aruch, Rav Yitzhak Yosef (Torat Emet text, CC BY-NC-SA 2.5): a selection, not the whole book.</string>
     <!-- Birkat haLevana sur la carte du jour (13/10) -->
     <string name="levana_titre">Birkat HaLevana</string>
-    <string name="levana_fenetre">From %1$s to %2$s in the evening (night included)</string>
+    <string name="levana_fenetre">From %1$s to %2$s</string>
     <string name="levana_ce_soir">Possible tonight</string>
     <string name="levana_dernier_soir">Last night</string>
     <plurals name="levana_dans">
         <item quantity="one">In %d day</item>
         <item quantity="other">In %d days</item>
     </plurals>
-    <string name="levana_source">Seven days after the molad, until mid-month (Shulchan Aruch, Orach Chaim 426).</string>
+    <string name="levana_source">Shulchan Aruch OC 426; Mishnah Berurah 426. Custom: %s.</string>
     <!-- Polices hébraïques supplémentaires (14/10) -->
     <string name="police_frank">Frank Ruhl (classic)</string>
     <string name="police_david">David</string>
@@ -879,4 +879,16 @@
     <string name="halakha_source_deux">Both</string>
     <string name="zmanim_bouton_halakha">Daily halakha</string>
     <string name="zmanim_bouton_hilloulot">Hillulot</string>
+    <!-- Birkat haLevana revue sur le texte (14/10). -->
+    <string name="levana_lune">Moon tonight: %1$s lit, %2$s</string>
+    <string name="levana_croissante">waxing</string>
+    <string name="levana_decroissante">waning</string>
+    <string name="levana_motsae">Best: Motzaei Shabbat %s (Rema 426:2)</string>
+    <string name="levana_kippour">Not before Yom Kippur ends (Rema 426:2)</string>
+    <string name="levana_tisha">Not before Tisha B’Av ends (Rema 426:2; Mishnah Berurah 426:11)</string>
+    <string name="levana_usage_titre">Birkat HaLevana: custom</string>
+    <string name="levana_usage_auto">By nusach</string>
+    <string name="levana_usage_trois_mi_mois">From 3 days, until mid-month (Mishnah Berurah, Rema)</string>
+    <string name="levana_usage_sept_mi_mois">From 7 days, until mid-month (Arizal)</string>
+    <string name="levana_usage_sept_quinze">From 7 days, until the 15th day (Shulchan Aruch)</string>
 </resources>

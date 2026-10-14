@@ -45,37 +45,60 @@ object VueJour {
 
     private fun locale(langue: String): Locale = Locale.forLanguageTag(langue)
 
-    /** Birkat haLevana (13/10) : la fenêtre du mois, ce soir ou dans combien de jours, et la jauge du mois lunaire. */
+    /** L'usage de Birkat haLevana : celui choisi, sinon celui du noussa'h (14/10). */
+    fun usageLevana(c: Context): Levana.Usage = Store.levanaUsage(c) ?: Levana.Usage.duNusah(Store.siddurNusah(c).cle)
+
+    /**
+     * Birkat haLevana (13/10 ; plus réaliste le 14/10) : la lune de ce soir dessinée,
+     * ce soir ou dans combien de jours, la fenêtre à l'heure près, le motsaé Chabbat
+     * conseillé, Kippour et Tich'a beAv, la jauge du mois lunaire, l'usage suivi.
+     */
     private fun levana(c: Context, date: LocalDate, langue: String, haut: Int = 14): View = LinearLayout(c).apply {
         orientation = LinearLayout.VERTICAL
         layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-        val zone = Store.lieuZmanim(c)?.fuseau?.let { runCatching { java.time.ZoneId.of(it) }.getOrNull() } ?: java.time.ZoneId.systemDefault()
-        val f = Levana.fenetre(date, zone)
-        val fmt = DateTimeFormatter.ofPattern("d MMM", locale(langue))
+        val lieu = Store.lieuZmanim(c)
+        val zone = lieu?.fuseau?.let { runCatching { java.time.ZoneId.of(it) }.getOrNull() } ?: java.time.ZoneId.systemDefault()
+        val usage = usageLevana(c)
+        val f = Levana.fenetre(date, zone, usage)
+        val lune = Levana.phase(Levana.soir(date, zone))
+        val etat = Levana.etat(f, date, zone)
+        val jour = DateTimeFormatter.ofPattern("EEE d MMM", locale(langue))
+        val heure = DateTimeFormatter.ofPattern("EEE d MMM, HH:mm", locale(langue))
         addView(LinearLayout(c).apply {
             orientation = LinearLayout.HORIZONTAL
             gravity = Gravity.CENTER_VERTICAL
             layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
                 .apply { topMargin = dp(c, haut) }
-            addView(texte(c, c.getString(R.string.levana_titre), 12f, R.color.muted, gras = true).apply {
-                layoutParams = LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f)
-            })
-            val etat = when (val e = Levana.etat(f, date, zone)) {
-                is Levana.Etat.Dans -> c.resources.getQuantityString(R.plurals.levana_dans, e.jours, e.jours)
-                Levana.Etat.CeSoir -> c.getString(R.string.levana_ce_soir)
-                Levana.Etat.DernierSoir -> c.getString(R.string.levana_dernier_soir)
-            }
-            addView(texte(c, etat, 12f, if (Levana.etat(f, date, zone) is Levana.Etat.Dans) R.color.muted else R.color.brand, gras = true).apply {
+            addView(Levana.Dessin(c, lune, sud = (lieu?.latitude ?: 1.0) < 0).apply {
+                contentDescription = null
                 layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+                    .apply { marginEnd = dp(c, 14) }
+            })
+            addView(LinearLayout(c).apply {
+                orientation = LinearLayout.VERTICAL
+                layoutParams = LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f)
+                addView(texte(c, c.getString(R.string.levana_titre), 12f, R.color.muted, gras = true))
+                addView(texte(c, when (etat) {
+                    is Levana.Etat.Dans -> c.resources.getQuantityString(R.plurals.levana_dans, etat.jours, etat.jours)
+                    Levana.Etat.CeSoir -> c.getString(R.string.levana_ce_soir)
+                    Levana.Etat.DernierSoir -> c.getString(R.string.levana_dernier_soir)
+                }, 17f, if (etat is Levana.Etat.Dans) R.color.ink else R.color.brand, gras = true, haut = 2))
+                val pct = "${Math.round(lune.eclairage * 100)} %"
+                addView(texte(c, c.getString(R.string.levana_lune, pct,
+                    c.getString(if (lune.croissante) R.string.levana_croissante else R.string.levana_decroissante)), 13f, R.color.muted, haut = 2))
             })
         })
-        addView(texte(c, c.getString(R.string.levana_fenetre, f.premierSoir(zone).format(fmt), f.dernierSoir(zone).format(fmt)), 15f, R.color.ink, haut = 2))
+        addView(texte(c, c.getString(R.string.levana_fenetre, f.debut.atZone(zone).format(heure), f.fin.atZone(zone).format(heure)), 14f, R.color.ink, haut = 8))
+        Levana.motsaeChabbat(f, date, zone)?.let { addView(texte(c, c.getString(R.string.levana_motsae, it.format(jour)), 13f, R.color.brand, haut = 4)) }
+        f.restriction?.let {
+            addView(texte(c, c.getString(if (it == Levana.Restriction.KIPPOUR) R.string.levana_kippour else R.string.levana_tisha), 13f, R.color.brand, haut = 4))
+        }
         addView(Levana.Jauge(c, Levana.part(f, f.debut), Levana.part(f, f.fin), Levana.part(f, Levana.soir(date, zone))).apply {
             layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
                 .apply { topMargin = dp(c, 8) }
             contentDescription = null
         })
-        addView(texte(c, c.getString(R.string.levana_source), 11f, R.color.muted, haut = 4))
+        addView(texte(c, c.getString(R.string.levana_source, c.getString(usage.libelle)), 11f, R.color.muted, haut = 4))
     }
 
     /** La carte d'un jour : la date hébraïque, la date civile, les fêtes, ce qu'il change aux prières. */

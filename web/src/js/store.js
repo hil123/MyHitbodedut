@@ -126,6 +126,9 @@ export function creeStore(stockage, { maintenant = () => new Date(), fuseau } = 
     /** Birkat haLevana sur l'écran Zmanim (14/10) : affichée par défaut. */
     levanaAffichee: () => get('levana_affichee', true) !== false,
     setLevanaAffichee: (v) => set('levana_affichee', !!v),
+    /** L'usage de Birkat haLevana (14/10) : 'auto' (celui du noussa'h) ou un de USAGES_LEVANA. */
+    levanaUsage: () => get('levana_usage', 'auto'),
+    setLevanaUsage: (v) => set('levana_usage', v),
     /** L'écran d'ouverture (14/10) : 'aujourdhui', 'textes' ou 'zmanim'. */
     ouverture: () => (['aujourdhui', 'textes', 'zmanim'].includes(get('ecran_ouverture', 'aujourdhui')) ? get('ecran_ouverture', 'aujourdhui') : 'aujourdhui'),
     setOuverture: (v) => set('ecran_ouverture', v),
