@@ -97,7 +97,11 @@ button { font: inherit; color: inherit; }
 @media (min-height: 720px) { .jauge { width: 268px; height: 268px; } .jauge .plaque { inset: 38px; } }
 /* Écran bas (iPhone SE, petits Android ; 15/10) : des anneaux plus petits, pour
    que « Commencer » se voie au-dessus des onglets sans défiler. */
-@media (max-height: 640px) { .jauge { width: 172px; height: 172px; margin-top: 10px; } .jauge .plaque { inset: 30px; padding: 8px 10px 2px; } }
+@media (max-height: 640px) {
+  .jauge { width: 136px; height: 136px; margin-top: 6px; } .jauge .plaque { inset: 26px; padding: 6px 8px 2px; }
+  /* Le titre de l'accueil sur deux lignes au plus (polices du CI, plus larges : 15/10). */
+  .statut.titre { font-size: 21px; }
+}
 .jauge svg { position: absolute; inset: 0; width: 100%; height: 100%; }
 [dir="rtl"] .jauge svg { transform: scaleX(-1); }
 .jauge .piste { stroke: var(--day-todo); }
