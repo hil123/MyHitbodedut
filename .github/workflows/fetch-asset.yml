@@ -1,0 +1,30 @@
+# Temporaire (15/10) : télécharge des photos libres de Wikimedia Commons que le
+# conteneur de développement ne peut pas atteindre, puis se retire.
+name: Fetch asset
+on:
+  push:
+    branches: [ccr-a461212d-jym2rj]
+    paths: [.github/workflows/fetch-asset.yml]
+permissions:
+  contents: write
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          mkdir -p tools/sources-images/candidats
+          cd tools/sources-images/candidats
+          UA="MyHitbodedut-build/1.0 (github.com/hil123/MyHitbodedut)"
+          curl -fsSL -A "$UA" -o entree_2007_henriksson.jpg "https://upload.wikimedia.org/wikipedia/commons/d/d2/Uman-2007-08-12-02.jpg"
+          curl -fsSL -A "$UA" -o ouman3_nahoumsabban.jpg "https://upload.wikimedia.org/wikipedia/commons/7/7b/Ouman3.JPG"
+          curl -fsSL -A "$UA" -o umann_2010.jpg "https://upload.wikimedia.org/wikipedia/commons/f/f5/Umann.jpg"
+          curl -fsSL -A "$UA" -o hasidi_uman_2_ukkamelot.jpg "https://upload.wikimedia.org/wikipedia/commons/d/d2/Hasidi_Uman_2.JPG"
+          ls -l
+          cd ../../..
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git rm -q .github/workflows/fetch-asset.yml
+          git add tools/sources-images/candidats
+          git commit -m "chore: fetch freely licensed Uman tziyun photos (Wikimedia Commons) for review"
+          git push
