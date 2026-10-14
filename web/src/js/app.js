@@ -1352,7 +1352,8 @@ function choisirAllumage() {
 const mukafChoma = () => { const l = store.lieu(); return !!l && (l.ville === JERUSALEM_GEONAMES || (l.ville == null && aJerusalem(l.latitude, l.longitude))); };
 
 /** Birkat haIlanot : en Nissan dans l'hémisphère nord (SiddurMoment.ilanot) ; l'hémisphère sud, voir moisIlanotSud. */
-const moisIlanotSud = () => false;
+// Hémisphère sud (14/10) : quand les arbres y fleurissent — Eloul (6) et Tichri (7), comme Siddur.moisIlanotSud.
+const moisIlanotSud = (mois) => mois === 6 || mois === 7;
 function ilanotDuMois(iso) {
   const c = calendrier(iso, store.inIsrael(), false, false);
   const l = store.lieu();

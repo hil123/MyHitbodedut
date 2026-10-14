@@ -167,8 +167,14 @@ object SiddurMoment {
         else c.jewishMonth == com.kosherjava.zmanim.hebrewcalendar.JewishDate.NISSAN
     }
 
-    /** L'hémisphère sud : voir FEUILLE_DE_ROUTE.md (recherche du 14/10). */
-    fun moisIlanotSud(mois: Int): Boolean = false
+    /**
+     * L'hémisphère sud (14/10) : on bénit quand les arbres y fleurissent (Har Tsvi
+     * O.H. 1:118 ; Min'hat Yits'hak 10:16, cités par Yeshivat Har Etzion) ; en
+     * Australie en Eloul et Tichri (Halachipedia, « Birkat HaIlanot »). Recoupé, non
+     * lu dans les responsa elles-mêmes ; la floraison locale prime sur le mois.
+     */
+    fun moisIlanotSud(mois: Int): Boolean =
+        mois == com.kosherjava.zmanim.hebrewcalendar.JewishDate.ELUL || mois == com.kosherjava.zmanim.hebrewcalendar.JewishDate.TISHREI
 
     /** Le hassid qui accompagne la suggestion, parmi les illustrations de l'application. */
     fun illustration(id: String): Int = when (id) {

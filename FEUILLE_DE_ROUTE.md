@@ -929,6 +929,25 @@ vient l'accord, quand, et sur quoi il porte.
 - Birkat haIlanot proposée dans le siddour le mois où on la dit.
 - « מקורות ההתבודדות ».
 
+## Mise à jour (14/10, suite)
+
+- Écran Zmanim : la carte du jour ne garde que la date et les ajouts ; trois
+  boutons (הלכה יומית, הילולות, לוח שנה) ; puis les horaires ; Birkat haLevana,
+  la hilloula et la halakha viennent après, chacune masquable (Réglages → Écran
+  Zmanim). Le calendrier garde la carte complète.
+- Halakha du jour : livre au choix — Yalkut Yosef (défaut), Ben Ish 'Haï, ou
+  les deux (écran de la halakha et réglages). Le Ben Ish 'Haï était la première
+  halakha hors ligne (11/10, domaine public) ; le Yalkut Yosef est venu le 13/10.
+- Hilloulot : police plus petite (noms, textes, sources), Android et web.
+- Réglages : police hébraïque, écran d'ouverture (Aujourd'hui, Bibliothèque,
+  Zmanim) ; sur le web, le mode clair/sombre, le fond et l'accent (déjà sur
+  Android).
+- Birkat haIlanot dans l'hémisphère sud : Eloul et Tichri. Sources recoupées :
+  Yeshivat Har Etzion (Laws of Berakhot 81, citant Har Tsvi O.H. 1:118 et
+  Min'hat Yits'hak 10:16 : quand les arbres fleurissent) ; Halachipedia
+  (« Birkat HaIlanot » : en Australie, Eloul et Tichri) ; Torah Live (vers
+  Tichri). Les responsa elles-mêmes n'ont pas été lues.
+
 ## Ce qui manque — liste complète (14/10)
 
 **Textes et prières**
@@ -945,7 +964,9 @@ vient l'accord, quand, et sur quoi il porte.
 **Calendrier**
 - Pourim : les villes au statut douteux (Hébron, Tibériade, Safed…) où l'on
   lit deux jours ne sont pas traitées.
-- Hémisphère sud : voir plus bas.
+- Hémisphère sud : Birkat haIlanot en Eloul et Tichri (fait, voir 14/10 suite).
+  Tal ou-matar / Morid hatal : inchangés (dates d'Israël ou de diaspora) ; aucune
+  règle propre au sud codée, faute de source vérifiée et recoupée.
 
 **Fonctions (les onze propositions)**
 - 2 : choix du thème au début et structure adaptée au thème.
