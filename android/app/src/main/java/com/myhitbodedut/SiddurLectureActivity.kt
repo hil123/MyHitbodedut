@@ -88,7 +88,7 @@ class SiddurLectureActivity : AppCompatActivity() {
         if (marque != null) liste.post { allerA(marque[0], marque[1]) }
         else Store.positionLecture(this, cle())?.let { p -> liste.post { (liste.layoutManager as LinearLayoutManager).scrollToPositionWithOffset(p, 0) } }
         findViewById<android.widget.ImageView>(R.id.siddur_lecture_marques).apply {
-            // Ruban en contour pour une prière, ruban à l'étoile pour une étude (15/10).
+            // Ruban en contour pour une prière, livre ouvert et ruban pour une étude (15/10).
             setImageResource(icone(livre))
             setOnClickListener { listeMarques() }
         }

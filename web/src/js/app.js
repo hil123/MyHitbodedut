@@ -1148,15 +1148,18 @@ function ecranRecherche() {
     h('div', { class: 'defile' }, h('div', { class: 'contenu' }, h('div', { class: 'carte' }, champ), ...groupes)));
 }
 
-/** L'icône des marque-pages (15/10) : ruban en contour pour une prière, ruban à l'étoile pour une étude. */
+/** L'icône des marque-pages (15/10) : ruban en contour pour une prière, livre ouvert et ruban pour une étude. */
 function iconeMarque(etude, taille = 22) {
   const NS = 'http://www.w3.org/2000/svg';
   const s = document.createElementNS(NS, 'svg');
   for (const [k, v] of Object.entries({ viewBox: '0 0 24 24', width: taille, height: taille, 'aria-hidden': 'true', class: 'icone-marque' })) s.setAttribute(k, v);
   const p = document.createElementNS(NS, 'path');
   if (etude) {
-    p.setAttribute('d', 'M6 3h12v18l-6-4.5L6 21z M12 6.2l1.1 2.3 2.5.3-1.8 1.7.5 2.5-2.3-1.2-2.3 1.2.5-2.5-1.8-1.7 2.5-.3z');
-    p.setAttribute('fill', 'currentColor'); p.setAttribute('fill-rule', 'evenodd');
+    p.setAttribute('d', 'M2.5 6.5c3-1.3 6.2-1.3 9.5.8v12.2c-3.3-2-6.5-2-9.5-.8z M21.5 6.5c-3-1.3-6.2-1.3-9.5.8v12.2c3.3-2 6.5-2 9.5-.8z');
+    for (const [k, v] of Object.entries({ fill: 'none', stroke: 'currentColor', 'stroke-width': '1.7', 'stroke-linejoin': 'round' })) p.setAttribute(k, v);
+    const ruban = document.createElementNS(NS, 'path');
+    ruban.setAttribute('d', 'M15 6.4h3.4v8.4l-1.7-1.3-1.7 1.3z'); ruban.setAttribute('fill', 'currentColor');
+    s.append(ruban);
   } else {
     p.setAttribute('d', 'M6.5 3.5h11v16.6l-5.5-4.1-5.5 4.1z');
     for (const [k, v] of Object.entries({ fill: 'none', stroke: 'currentColor', 'stroke-width': '2', 'stroke-linejoin': 'round' })) p.setAttribute(k, v);
