@@ -110,12 +110,12 @@ object Trophees {
 
     /**
      * Le grade (15/10, « les matériaux sont mélangés ») : un seul matériau à la fois, selon
-     * le nombre de trophées gagnés — bronze, argent au 10ᵉ, or au 25ᵉ, platine au 50ᵉ.
-     * Le [rang]-ième trophée gagné (de 0) prend le matériau du grade d'alors.
+     * le [compte] de trophées gagnés — bronze, argent dès le 10ᵉ, or dès le 25ᵉ, platine
+     * dès le 50ᵉ. Le k-ième trophée gagné (de 1) prend le matériau de grade(k).
      */
     val SEUILS_GRADES = intArrayOf(0, 10, 25, 50)
 
-    fun grade(rang: Int): Metal = Metal.entries[SEUILS_GRADES.count { rang >= it } - 1]
+    fun grade(compte: Int): Metal = Metal.entries[SEUILS_GRADES.count { compte >= it } - 1]
 
     /** De 0 à 1 vers une étape. */
     fun fraction(p: Pratique, n: Niveau): Float = (valeur(p, n.famille).coerceAtMost(n.seuil).toFloat() / n.seuil)

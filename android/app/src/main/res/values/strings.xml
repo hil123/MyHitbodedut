@@ -813,6 +813,17 @@
     <string name="celebration_titre">Mazal tov !</string>
     <string name="trophees_paliers_titre">Trophées et paliers</string>
     <string name="trophees_titre">Trophées</string>
+    <string name="grade_titre">Grade %1$s</string>
+    <string name="grade_sous">%1$d trophées gagnés · encore %2$d pour %3$s</string>
+    <string name="grade_sous_max">%1$d trophées gagnés</string>
+    <string name="grade_atteint">Grade %1$s atteint</string>
+    <string name="grade_au">au %1$dᵉ trophée</string>
+    <string name="trophee_gagne">Gagné ✓</string>
+    <string name="trophees_ici">TU ES ICI · PROCHAIN OBJECTIF</string>
+    <string name="trophee_encore">%1$d / %2$d · encore %3$d</string>
+    <string name="trophees_autres">… et %1$d autres trophées plus loin</string>
+    <string name="grade_nouveau">Nouveau grade : %1$s</string>
+    <string name="grade_prochain">Prochain grade : %1$s, au %2$dᵉ trophée.</string>
     <string name="trophees_prochain">Prochain trophée</string>
     <string name="trophees_gagnes">Gagnés · %1$d</string>
     <string name="trophees_a_venir">À venir · %1$d</string>

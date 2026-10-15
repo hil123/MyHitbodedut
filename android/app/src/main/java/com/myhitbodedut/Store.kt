@@ -756,6 +756,13 @@ object Store {
     }
 
     /** Les trophées déjà fêtés à l'écran (null : jamais encore regardés, le premier passage ne fête rien). */
+    /** Le dernier grade fêté (15/10) : null la première fois, pour ne pas fêter un grade ancien. */
+    fun gradeVu(context: Context): Int? = prefs(context).getInt("grade_vu", -1).takeIf { it >= 0 }
+
+    fun setGradeVu(context: Context, g: Int) {
+        prefs(context).edit().putInt("grade_vu", g).apply()
+    }
+
     fun tropheesVus(context: Context): Set<String>? = prefs(context).getStringSet(KEY_TROPHEES_VUS, null)?.toSet()
 
     fun setTropheesVus(context: Context, cles: Set<String>) {

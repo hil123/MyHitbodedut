@@ -111,6 +111,9 @@ export function creeStore(stockage, { maintenant = () => new Date(), fuseau } = 
     paliersVus: () => { const v = get('paliers_vus', null); return Array.isArray(v) ? new Set(v) : null; },
     setPaliersVus: (marques) => set('paliers_vus', [...marques]),
     /** Les trophées déjà fêtés (null : jamais regardés, le premier passage ne fête rien). */
+    /** Le dernier grade fêté (15/10, Store.gradeVu) : null la première fois. */
+    gradeVu: () => (Number.isInteger(get('grade_vu', null)) ? get('grade_vu', null) : null),
+    setGradeVu: (g) => set('grade_vu', g),
     tropheesVus: () => { const v = get('trophees_vus', null); return Array.isArray(v) ? new Set(v) : null; },
     setTropheesVus: (cles) => set('trophees_vus', [...cles]),
     nombreNotes: () => Object.values(days()).filter((r) => (r.note ?? '').trim()).length,

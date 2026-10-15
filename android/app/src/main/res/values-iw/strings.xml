@@ -783,6 +783,17 @@
     <string name="celebration_titre">מזל טוב!</string>
     <string name="trophees_paliers_titre">גביעים ויעדים</string>
     <string name="trophees_titre">גביעים</string>
+    <string name="grade_titre">דרגת %1$s</string>
+    <string name="grade_sous">%1$d גביעים הושגו · עוד %2$d ל%3$s</string>
+    <string name="grade_sous_max">%1$d גביעים הושגו</string>
+    <string name="grade_atteint">הגעת לדרגת %1$s</string>
+    <string name="grade_au">בגביע ה־%1$d</string>
+    <string name="trophee_gagne">הושג ✓</string>
+    <string name="trophees_ici">אתה כאן · היעד הבא</string>
+    <string name="trophee_encore">%1$d / %2$d · עוד %3$d</string>
+    <string name="trophees_autres">… ועוד %1$d גביעים בהמשך</string>
+    <string name="grade_nouveau">דרגה חדשה: %1$s</string>
+    <string name="grade_prochain">הדרגה הבאה: %1$s, בגביע ה־%2$d.</string>
     <string name="trophees_prochain">הגביע הבא</string>
     <string name="trophees_gagnes">שהושגו · %1$d</string>
     <string name="trophees_a_venir">בהמשך · %1$d</string>

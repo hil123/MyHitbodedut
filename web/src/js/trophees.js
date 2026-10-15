@@ -104,6 +104,6 @@ export function prochain(p) {
   return m;
 }
 
-/** Le grade (15/10, Trophees.grade) : bronze, argent au 10ᵉ trophée gagné, or au 25ᵉ, platine au 50ᵉ. */
+/** Le grade (15/10, Trophees.grade) selon le nombre de trophées gagnés : bronze, argent dès 10, or dès 25, platine dès 50. */
 export const SEUILS_GRADES = [0, 10, 25, 50];
-export const grade = (rang) => METAUX[SEUILS_GRADES.filter((s) => rang >= s).length - 1];
+export const grade = (compte) => METAUX[SEUILS_GRADES.filter((s) => compte >= s).length - 1];

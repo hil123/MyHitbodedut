@@ -2068,51 +2068,77 @@ function objetTrophee(forme, metal, icone, taille) {
 }
 
 /**
- * Les trophées (refaits le 15/10, PaliersActivity) : une seule liste de petits objectifs, du plus
- * facile au plus dur ; le prochain en haut ; deux onglets, « À venir » et « Gagnés » ; les records.
+ * Les trophées en ligne (15/10, PaliersActivity) : le grade en tête ; une ligne verticale, les
+ * gagnés au-dessus (matériau du grade d'alors, une bannière à chaque passage), « Tu es ici »
+ * et le prochain objectif au milieu, les suivants en gris dessous ; la fête d'un nouveau grade.
  */
-let tropheesGagnes = false;
 function ecranPaliers() {
   const bilan = bilanPaliers();
   store.setPaliersVus(Paliers.marques(Paliers.etats(bilan), bilan));
   const p = pratique();
-  store.setTropheesVus(Trophees.gagnes(p));
   const r = Paliers.records(bilan.minutes, (d) => { const j = jourJuif(d, false); return `${j.anneeHebraique}-${j.moisHebreu}`; });
   const faits = Trophees.chemin.filter((e) => Trophees.gagne(p, e));
-  const futurs = Trophees.chemin.filter((e) => !Trophees.gagne(p, e));
+  const prochain = Trophees.prochain(p);
+  const futurs = Trophees.chemin.filter((e) => !Trophees.gagne(p, e) && e !== prochain);
+  const n = faits.length;
+  const g = Trophees.grade(n);
+  const suivant = Trophees.SEUILS_GRADES.find((x) => x > n);
+  const metal = (m) => tr.t(`metal_${m}`);
   const desc = (e) => tr.p(`trophee_${e.f.cle}_desc`, e.seuil);
-  // Gagné : le matériau du grade d'alors (Trophees.grade) ; à venir : gris.
-  const rangs = new Map(faits.map((e, i) => [e.cle, i]));
-  const objet = (e, gagne, taille) => h('span', { class: `trophee-objet${gagne ? ' gagne' : ''}`, 'aria-hidden': 'true' },
-    objetTrophee(e.f.forme, gagne ? Trophees.grade(rangs.get(e.cle)) : null, e.f.icone, taille));
-  const barre = (fr, classe) => h('div', { class: `trophee-barre ${classe}`, 'aria-hidden': 'true' }, h('span', { style: `width:${Math.round(fr * 100)}%` }));
-  const compte = (e) => tr.t('trophee_progres', Math.min(Trophees.valeur(p, e.f.cle), e.seuil), e.seuil);
-  const n = Trophees.prochain(p);
-  const prochain = h('div', { class: 'carte trophee-prochain' }, h('p', { class: 'palier-nom' }, tr.t('trophees_prochain')),
-    n ? h('div', { class: 'trophee-ligne' }, objet(n, false, 72), h('div', { class: 'trophee-texte' },
-      h('p', { class: 'trophee-but grand' }, desc(n)), barre(Trophees.fraction(p, n), 'grande'), h('p', { class: 'trophee-compte' }, compte(n))))
-      : h('p', { class: 'trophee-but grand' }, tr.t('trophees_tous')));
-  const onglet = (texte, choisi, gagnes) => h('button', { type: 'button', class: `trophee-onglet${choisi ? ' choisi' : ''}`, 'aria-pressed': String(choisi),
-    onclick: () => { tropheesGagnes = gagnes; rendre(); } }, texte);
-  const liste = tropheesGagnes ? [...faits].reverse() : futurs;
-  const ligneTrophee = (e) => {
-    const gagne = tropheesGagnes;
-    const fr = Trophees.fraction(p, e);
-    return h('div', { class: 'trophee-ligne' }, objet(e, gagne, 44), h('div', { class: 'trophee-texte' },
-      h('p', { class: `trophee-but${gagne ? ' gagne' : ''}` }, desc(e)),
-      !gagne && fr > 0 ? barre(fr, 'petite') : null, !gagne && fr > 0 ? h('p', { class: 'trophee-compte petit' }, compte(e)) : null),
-      gagne ? h('span', { class: 'trophee-coche', 'aria-hidden': 'true' }, '✓') : null);
-  };
-  return h('div', { class: 'ecran avec-bandeau' }, bandeau(tr.t('trophees_paliers_titre'), { dessin: 'char_arms_raised' }),
+  const medaille = (m, taille) => h('span', { class: 'medaille-grade', 'aria-hidden': 'true' }, objetTrophee('medaille', m, '★', taille));
+  const passage = (k) => k > 0 && Trophees.SEUILS_GRADES.includes(k);
+  const de = Trophees.SEUILS_GRADES.filter((x) => x <= n).pop();
+  const tete = h('div', { class: 'carte grade-tete' }, medaille(g, 48), h('div', { class: 'trophee-texte' },
+    h('p', { class: 'grade-nom' }, tr.t('grade_titre', metal(g))),
+    h('p', { class: 'grade-sous' }, suivant ? tr.t('grade_sous', n, suivant - n, metal(Trophees.grade(suivant))) : tr.t('grade_sous_max', n)),
+    suivant ? h('div', { class: `grade-barre ${g}`, 'aria-hidden': 'true' }, h('span', { style: `width:${Math.round(((n - de) / (suivant - de)) * 100)}%` })) : null));
+  const banniere = (m, k, atteint) => h('div', { class: `grade-banniere ${atteint ? m : 'avenir'}` }, medaille(atteint ? m : null, 34),
+    h('div', {}, h('strong', {}, tr.t(atteint ? 'grade_atteint' : 'grade_titre', metal(m))), h('small', {}, tr.t('grade_au', k))));
+  const etape = (e, m, sous, gagne) => h('div', { class: `ligne-etape${gagne ? ' gagne' : ''}` },
+    h('div', { class: `ligne-noeud ${m ?? 'avenir'}` }, h('span', { class: 'ligne-trait' }), objetTrophee(e.f.forme, m, e.f.icone, gagne ? 52 : 44)),
+    h('div', { class: 'trophee-texte' }, h('p', { class: 'trophee-but' }, desc(e)), sous ? h('p', { class: 'trophee-compte petit' }, sous) : null));
+  const ligne = [];
+  faits.forEach((e, i) => { if (passage(i + 1)) ligne.push(banniere(Trophees.grade(i + 1), i + 1, true)); ligne.push(etape(e, Trophees.grade(i + 1), tr.t('trophee_gagne'), true)); });
+  let ici = null;
+  if (prochain) {
+    if (passage(n + 1)) ligne.push(banniere(Trophees.grade(n + 1), n + 1, false));
+    const v = Math.min(Trophees.valeur(p, prochain.f.cle), prochain.seuil);
+    ici = h('div', { class: 'carte ligne-ici' }, h('p', { class: 'ici-tag' }, tr.t('trophees_ici')),
+      h('div', { class: 'trophee-ligne' }, h('span', { class: 'trophee-objet' }, objetTrophee(prochain.f.forme, null, prochain.f.icone, 64)),
+        h('div', { class: 'trophee-texte' }, h('p', { class: 'trophee-but grand' }, desc(prochain)),
+          h('div', { class: 'trophee-barre grande', 'aria-hidden': 'true' }, h('span', { style: `width:${Math.round(Trophees.fraction(p, prochain) * 100)}%` })),
+          h('p', { class: 'trophee-compte' }, tr.t('trophee_encore', v, prochain.seuil, prochain.seuil - v)))));
+    ligne.push(ici);
+  } else ligne.push(h('p', { class: 'trophee-but grand' }, tr.t('trophees_tous')));
+  futurs.slice(0, 15).forEach((e, k) => {
+    const c = n + 2 + k;
+    if (passage(c)) ligne.push(banniere(Trophees.grade(c), c, false));
+    const v = Trophees.valeur(p, e.f.cle);
+    ligne.push(etape(e, null, v > 0 ? tr.t('trophee_progres', Math.min(v, e.seuil), e.seuil) : null, false));
+  });
+  if (futurs.length > 15) ligne.push(h('p', { class: 'indice ligne-fin' }, tr.t('trophees_autres', futurs.length - 15)));
+  // Un nouveau grade : la fête, une fois (pas la première ouverture, pas le bronze).
+  const niveau = n === 0 ? 0 : Trophees.METAUX.indexOf(g) + 1;
+  const vu = store.gradeVu();
+  const fete = vu !== null && niveau > vu && g !== 'bronze';
+  store.setGradeVu(niveau);
+  store.setTropheesVus(Trophees.gagnes(p));
+  const ecran = h('div', { class: 'ecran avec-bandeau' }, bandeau(tr.t('trophees_paliers_titre'), { dessin: 'char_arms_raised' }),
     h('div', { class: 'defile' }, h('div', { class: 'contenu' },
-      prochain,
-      h('div', { class: 'trophee-onglets' }, onglet(tr.t('trophees_a_venir', futurs.length), !tropheesGagnes, false),
-        onglet(tr.t('trophees_gagnes', faits.length), tropheesGagnes, true)),
-      h('div', { class: 'carte trophee-liste' }, ...(liste.length ? liste.map(ligneTrophee)
-        : [h('p', { class: 'indice' }, tr.t(tropheesGagnes ? 'trophees_aucun_gagne' : 'trophees_tous'))])),
+      tete,
+      h('div', { class: 'ligne-trophees' }, ...ligne),
       h('div', { class: 'carte carte-palier' }, h('p', { class: 'palier-nom' }, tr.t('paliers_records')),
         ...[tr.t('record_serie', valeurPalier('serie', store.meilleureSerie())), tr.t('record_jour', tr.duree(r.jour)),
           tr.t('record_semaine', tr.duree(r.semaine)), tr.t('record_mois', tr.duree(r.mois))].map((x) => h('p', { class: 'palier-record' }, x))))));
+  if (ici) requestAnimationFrame(() => { const d = ecran.querySelector('.defile'); if (d) d.scrollTop = Math.max(0, ici.offsetTop - d.clientHeight / 3); });
+  if (fete) {
+    const voile = h('div', { class: 'grade-fete', role: 'dialog', 'aria-modal': 'true' },
+      h('div', { class: 'grade-fete-carte' }, medaille(g, 140), h('h2', {}, tr.t('grade_nouveau', metal(g))), h('p', {}, tr.t('grade_sous_max', n)),
+        suivant ? h('p', { class: 'indice' }, tr.t('grade_prochain', metal(Trophees.grade(suivant)), suivant)) : null,
+        h('button', { type: 'button', class: 'principal', onclick: () => voile.remove() }, tr.t('celebration_continue'))));
+    ecran.append(voile);
+  }
+  return ecran;
 }
 
 function ecranCalendrier() {
