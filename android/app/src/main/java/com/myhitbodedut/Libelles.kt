@@ -28,6 +28,7 @@ object Libelles {
         "ajout_jeune" -> R.string.ajout_jeune
         "ajout_jeune_public" -> R.string.ajout_jeune_public
         "ajout_avinou_malkenou" -> R.string.ajout_avinou_malkenou
+        "ajout_kriat_hatorah" -> R.string.ajout_kriat_hatorah
         "ajout_lundi_jeudi" -> R.string.ajout_lundi_jeudi
         "ajout_machiv_harouah" -> R.string.ajout_machiv_harouah
         "ajout_morid_hatal" -> R.string.ajout_morid_hatal

@@ -147,6 +147,21 @@ class SiddurJourTest {
         }
     }
 
+    /** La lecture de la Torah (15/10) : ouverte les jours de lecture, repliée un mardi ordinaire. */
+    @Test
+    fun `kriat hatorah - repliee les jours sans lecture`() {
+        fun c(d: String) = CalendrierJuif.jour(java.time.LocalDate.parse(d), true).conditions
+        listOf("2026-10-19", "2026-10-15", "2026-10-17", "2026-11-11", "2026-12-20", "2026-09-29")
+            .forEach { assertTrue(it, CalendrierJuif.C.KRIAT_HATORAH in c(it)) }
+        listOf("2026-10-20", "2026-10-21", "2026-10-23").forEach { assertFalse(it, CalendrierJuif.C.KRIAT_HATORAH in c(it)) }
+        Nusah.entries.forEach { n ->
+            fun lignes(d: String) = SiddurJour.lignes(DataFiles.siddur(n).texte("chaharit")!!,
+                SiddurJour.parse(json, n.cle).getValue("chaharit"), c(d), nusah = n.cle, enIsrael = true)
+            assertTrue(n.cle, lignes("2026-10-20").any { it is SiddurJour.Ligne.Replie && it.condition == "kriat_hatorah" })
+            assertTrue(n.cle, SiddurJour.Ligne.Etiquette("kriat_hatorah", "ajout_kriat_hatorah") in lignes("2026-10-19"))
+        }
+    }
+
     @Test
     fun `une condition niee s applique quand la cle manque`() {
         assertTrue(SiddurJour.vrai("!tahanoun_minha", setOf("chabbat")))

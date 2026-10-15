@@ -65,7 +65,9 @@ object CalendrierJuif {
 
         /** Avinou malkénou (SiddurJour.conditionsPour) : déduite des conditions du jour, hors des vecteurs KosherJava. */
         const val AVINOU_MALKENOU = "avinou_malkenou"
-        val DERIVEES = listOf(AVINOU_MALKENOU)
+        /** Jour de lecture de la Torah (15/10) : déduite, hors des vecteurs KosherJava comme Avinou malkénou. */
+        const val KRIAT_HATORAH = "kriat_hatorah"
+        val DERIVEES = listOf(AVINOU_MALKENOU, KRIAT_HATORAH)
     }
 
     /**
@@ -207,6 +209,11 @@ object CalendrierJuif {
             if (semaine == DayOfWeek.SUNDAY) add(C.MOTSAE_CHABBAT)
             if (regles.dayOfOmer > 0) add(C.OMER)
             if (regles.jewishMonth == JewishDate.TISHREI && regles.jewishDayOfMonth >= 22) add(C.FIN_TICHRI)
+            // La lecture de la Torah à Cha'harit (15/10) : lundi et jeudi, Chabbat et fêtes,
+            // Roch 'Hodech, 'Hol hamoed, 'Hanouka, Pourim, jeûnes publics (9 Av compris).
+            if (semaine == DayOfWeek.MONDAY || semaine == DayOfWeek.THURSDAY ||
+                listOf(C.CHABBAT, C.ROCH_HODECH, C.PESSAH, C.SOUKKOT, C.CHAVOUOT, C.ROCH_HACHANA, C.KIPPOUR,
+                    C.CHEMINI_ATSERET, C.HANOUKA, C.POURIM, C.JEUNE, C.TICHA_BEAV).any { it in this }) add(C.KRIAT_HATORAH)
         }
 
         val fetes = buildList {

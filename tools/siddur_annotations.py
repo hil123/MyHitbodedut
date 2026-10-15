@@ -104,6 +104,9 @@ def annoter(texte_id, sections, nusah):
             cond = "motsae_chabbat"
         elif titre == "ספירת העומר":
             cond = "omer"
+        # La lecture de la Torah (15/10) : repliée les jours sans lecture.
+        elif titre == "קריאת התורה" and office == "chaharit":
+            cond = "kriat_hatorah"
         elif titre == "ברכי נפשי" and "בראש חדש" in nu(sec["blocs"][0].get("c", "")):
             cond = "roch_hodech"
         if cond:

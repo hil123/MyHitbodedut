@@ -594,6 +594,12 @@
     "empreinte": "וידוי"
    },
    {
+    "sorte": "section",
+    "s": 11,
+    "si": "kriat_hatorah",
+    "empreinte": "קריאת התורה"
+   },
+   {
     "sorte": "bloc",
     "s": 15,
     "si": "hanouka",
@@ -2565,6 +2571,12 @@
     "s": 11,
     "si": "lundi_jeudi",
     "empreinte": "לשני וחמישי"
+   },
+   {
+    "sorte": "section",
+    "s": 12,
+    "si": "kriat_hatorah",
+    "empreinte": "קריאת התורה"
    },
    {
     "sorte": "section",
@@ -4724,6 +4736,12 @@
     "empreinte": "אבינו מלכנו חננו ועננו כי אין בנו מעשים ",
     "g": 15,
     "racine": "avinou_malkenou"
+   },
+   {
+    "sorte": "section",
+    "s": 5,
+    "si": "kriat_hatorah",
+    "empreinte": "קריאת התורה"
    },
    {
     "sorte": "renvoi",

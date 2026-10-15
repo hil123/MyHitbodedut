@@ -37,7 +37,7 @@ export function conditionsPour(nusah, enIsrael, conditions, sansTahanounFinTichr
 }
 
 /** Les conditions déduites (SiddurJour, CalendrierJuif.C.DERIVEES), hors des vecteurs KosherJava. */
-export const DERIVEES = ['avinou_malkenou'];
+export const DERIVEES = ['avinou_malkenou', 'kriat_hatorah'];
 
 /**
  * Avinou malkénou (SiddurJour.avinouMalkenou) : jeûnes publics sauf le 9 Av, dix

@@ -250,6 +250,9 @@ test('JourAffiche : allumage, sortie, ajouts nommés et grille, comme Android', 
   for (const d of ['2026-12-20', '2026-09-15', '2026-09-13', '2026-09-14']) assert.ok(am(d), d);
   for (const d of ['2026-12-21', '2026-09-12', '2026-09-19', '2026-09-20', '2027-08-12']) assert.ok(!am(d), d);
   assert.ok(jour('2027-08-12', true).conditions.has('ticha_beav'));
+  // Lecture de la Torah (15/10) : lundi, jeudi, Chabbat, Roch 'Hodech, jeûne, 'Hol hamoed ; pas un mardi ordinaire.
+  for (const d of ['2026-10-19', '2026-10-15', '2026-10-17', '2026-11-11', '2026-12-20', '2026-09-29', '2026-04-16']) assert.ok(jour(d, true).conditions.has('kriat_hatorah'), d);
+  for (const d of ['2026-10-20', '2026-10-21', '2026-10-23']) assert.ok(!jour(d, true).conditions.has('kriat_hatorah'), d);
   // Jérusalem : Pourim et Al hanissim le 15 Adar II 5787 (24/03/2027).
   assert.ok(!jour('2027-03-23', true, true).conditions.has('al_hanissim'));
   assert.ok(jour('2027-03-24', true, true).conditions.has('pourim'));
