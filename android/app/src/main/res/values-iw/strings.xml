@@ -946,7 +946,6 @@
     <string name="reprise_titre">המשך קריאה</string>
     <string name="favoris_titre">מועדפים</string>
     <string name="marques_titre">סימניות</string>
-    <string name="marques_icone">🔖</string>
     <string name="marques_aucun">אין סימניות בטקסט הזה. לחיצה ארוכה על פסקה מוסיפה סימנייה, ולחיצה ארוכה נוספת מסירה אותה.</string>
     <string name="marque_posee">הסימנייה נוספה</string>
     <string name="marque_retiree">הסימנייה הוסרה</string>

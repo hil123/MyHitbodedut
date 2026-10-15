@@ -1023,7 +1023,7 @@ function ecranPriere() {
   const paragraphe = (s, i) => {
     const b = s.blocs[i];
     const si = x.sections.indexOf(s);
-    const p = h('p', { class: `${b.c !== undefined ? 'consigne' : 'priere'}${marquee(si, i) ? ' marque-page' : ''}`, lang: 'he', dir: 'rtl', 'data-place': `${si}:${i}` }, riche(b.c ?? b.t));
+    const p = h('p', { class: `${b.c !== undefined ? 'consigne' : 'priere'}${marquee(si, i) ? ' marque-page' : ''}${livre ? ' marque-etude' : ''}`, lang: 'he', dir: 'rtl', 'data-place': `${si}:${i}` }, riche(b.c ?? b.t));
     let minuteur = null;
     const poser = () => {
       const pose = store.basculerMarque({ cle: cleMarque, nusah: nusahMarque, section: si, bloc: i, apercu: apercuMarque(b.c ?? b.t) });
@@ -1085,8 +1085,8 @@ function ecranPriere() {
   const listeMarques = h('button', { type: 'button', class: 'favori', 'aria-label': tr.t('marques_titre'), onclick: () => {
     const l = store.marques().filter((m) => m.cle === cleMarque && m.nusah === nusahMarque).sort((a, b) => a.section - b.section || a.bloc - b.bloc);
     if (!l.length) { signale(tr.t('marques_aucun')); return; }
-    choisirDans(tr.t('marques_titre'), l.map((m) => `🔖 ${m.apercu}…`), -1, (k) => allerAMarque(ecran, l[k]));
-  } }, '🔖');
+    choisirDans(tr.t('marques_titre'), l.map((m) => `${m.apercu}…`), -1, (k) => allerAMarque(ecran, l[k]));
+  } }, iconeMarque(livre));
   ecran.querySelector('.barre')?.append(listeMarques, etoile);
   if (marqueAOuvrir?.cle === cleMarque) { const m = marqueAOuvrir; marqueAOuvrir = null; requestAnimationFrame(() => allerAMarque(ecran, m)); return ecran; }
   const defile = ecran.querySelector('.defile');
@@ -1148,6 +1148,23 @@ function ecranRecherche() {
     h('div', { class: 'defile' }, h('div', { class: 'contenu' }, h('div', { class: 'carte' }, champ), ...groupes)));
 }
 
+/** L'icône des marque-pages (15/10) : ruban en contour pour une prière, ruban à l'étoile pour une étude. */
+function iconeMarque(etude, taille = 22) {
+  const NS = 'http://www.w3.org/2000/svg';
+  const s = document.createElementNS(NS, 'svg');
+  for (const [k, v] of Object.entries({ viewBox: '0 0 24 24', width: taille, height: taille, 'aria-hidden': 'true', class: 'icone-marque' })) s.setAttribute(k, v);
+  const p = document.createElementNS(NS, 'path');
+  if (etude) {
+    p.setAttribute('d', 'M6 3h12v18l-6-4.5L6 21z M12 6.2l1.1 2.3 2.5.3-1.8 1.7.5 2.5-2.3-1.2-2.3 1.2.5-2.5-1.8-1.7 2.5-.3z');
+    p.setAttribute('fill', 'currentColor'); p.setAttribute('fill-rule', 'evenodd');
+  } else {
+    p.setAttribute('d', 'M6.5 3.5h11v16.6l-5.5-4.1-5.5 4.1z');
+    for (const [k, v] of Object.entries({ fill: 'none', stroke: 'currentColor', 'stroke-width': '2', 'stroke-linejoin': 'round' })) p.setAttribute(k, v);
+  }
+  s.append(p);
+  return s;
+}
+
 /** Les premiers mots d'un paragraphe, sans balises ni voyelles (MarquesPages.apercu). */
 const apercuMarque = (t) => t.replace(/<[^>]+>/g, ' ').replace(/[\u0591-\u05C7]/g, '').trim().split(/\s+/).slice(0, 6).join(' ');
 /** Le marque-page à rejoindre à l'ouverture du texte (depuis la Bibliothèque). */
@@ -1179,7 +1196,7 @@ function repriseFavoris() {
   // Les marque-pages (15/10) : le texte et les premiers mots du paragraphe marqué.
   for (const m of store.marques().slice(0, 12)) {
     const t = titre(m.cle);
-    if (t) lignes.push(ligne({ nom: `🔖 ${t}`, etat: `${m.apercu}…`, onclick: () => { marqueAOuvrir = m; ouvrirCle(m.cle); } }));
+    if (t) lignes.push(ligne({ nom: h('span', { class: 'nom-marque' }, iconeMarque(m.cle.startsWith('l:'), 18), t), etat: `${m.apercu}…`, onclick: () => { marqueAOuvrir = m; ouvrirCle(m.cle); } }));
   }
   return lignes.length ? h('div', { class: 'carte' }, ...lignes) : null;
 }

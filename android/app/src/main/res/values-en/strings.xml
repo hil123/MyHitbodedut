@@ -919,7 +919,6 @@
     <string name="reprise_titre">Continue reading</string>
     <string name="favoris_titre">Favorites</string>
     <string name="marques_titre">Bookmarks</string>
-    <string name="marques_icone">🔖</string>
     <string name="marques_aucun">No bookmark in this text. Long-press a paragraph to add one; long-press again to remove it.</string>
     <string name="marque_posee">Bookmark added</string>
     <string name="marque_retiree">Bookmark removed</string>

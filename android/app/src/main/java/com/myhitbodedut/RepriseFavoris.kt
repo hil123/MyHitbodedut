@@ -33,11 +33,12 @@ object RepriseFavoris {
         favoris.forEachIndexed { i, (cle, t) -> add(ligne(c, if (i == 0) c.getString(R.string.favoris_titre) else null, t, cle)) }
         // Les marque-pages (15/10) : le texte et les premiers mots du paragraphe marqué.
         Store.marques(c).mapNotNull { m -> titre(c, m.cle)?.let { m to it } }.take(12).forEachIndexed { i, (m, t) ->
-            add(ligne(c, if (i == 0) c.getString(R.string.marques_titre) else null, "🔖 $t · ${m.apercu}…", m.cle) { SiddurLectureActivity.ouvrirMarque(c, m) })
+            add(ligne(c, if (i == 0) c.getString(R.string.marques_titre) else null, "$t · ${m.apercu}…", m.cle,
+                icone = SiddurLectureActivity.icone(m.cle.startsWith("l:"))) { SiddurLectureActivity.ouvrirMarque(c, m) })
         }
     }
 
-    private fun ligne(c: Context, entete: String?, titre: String, cle: String, action: () -> Unit = { ouvrir(c, cle) }): View = LinearLayout(c).apply {
+    private fun ligne(c: Context, entete: String?, titre: String, cle: String, icone: Int? = null, action: () -> Unit = { ouvrir(c, cle) }): View = LinearLayout(c).apply {
         orientation = LinearLayout.VERTICAL
         layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
             .apply { setMargins(dp(c, 16), dp(c, if (entete != null) 14 else 4), dp(c, 16), 0) }
@@ -60,6 +61,10 @@ object RepriseFavoris {
             PoliceHebraique.appliquer(this)
             foreground = c.getDrawable(android.R.drawable.list_selector_background)
             setOnClickListener { action() }
+            icone?.let { id ->
+                c.getDrawable(id)?.mutate()?.apply { setTint(Apparence.couleur(c, R.color.brand)); setBounds(0, 0, dp(c, 18), dp(c, 18)) }
+                    ?.let { setCompoundDrawablesRelative(null, null, it, null); compoundDrawablePadding = dp(c, 8) }
+            }
         })
     }
 }

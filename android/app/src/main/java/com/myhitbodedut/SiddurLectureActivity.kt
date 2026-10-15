@@ -87,9 +87,9 @@ class SiddurLectureActivity : AppCompatActivity() {
         val marque = intent.getStringExtra(MARQUE)?.split(':')?.mapNotNull { it.toIntOrNull() }?.takeIf { it.size == 2 }
         if (marque != null) liste.post { allerA(marque[0], marque[1]) }
         else Store.positionLecture(this, cle())?.let { p -> liste.post { (liste.layoutManager as LinearLayoutManager).scrollToPositionWithOffset(p, 0) } }
-        findViewById<TextView>(R.id.siddur_lecture_marques).apply {
-            setText(R.string.marques_icone)
-            contentDescription = getString(R.string.marques_titre)
+        findViewById<android.widget.ImageView>(R.id.siddur_lecture_marques).apply {
+            // Ruban en contour pour une prière, ruban à l'étoile pour une étude (15/10).
+            setImageResource(icone(livre))
             setOnClickListener { listeMarques() }
         }
         findViewById<TextView>(R.id.siddur_lecture_favori).apply {
@@ -287,6 +287,7 @@ class SiddurLectureActivity : AppCompatActivity() {
             // Tout est remis à chaque fois : une vue recyclée garde les réglages d'avant.
             vue.apply {
                 background = null
+                setCompoundDrawablesRelative(null, null, null, null)
                 alpha = 1f
                 contentDescription = null
                 setOnClickListener(null)
@@ -333,6 +334,11 @@ class SiddurLectureActivity : AppCompatActivity() {
                         android.graphics.drawable.ColorDrawable(rendu.titre))).apply {
                         setLayerWidth(1, dp(4)); setLayerGravity(1, android.view.Gravity.START or android.view.Gravity.FILL_VERTICAL)
                     }
+                    if (marquee(ligne.bloc)) setCompoundDrawablesRelative(null, null,
+                        ContextCompat.getDrawable(context, icone(livre))?.mutate()?.apply {
+                            setTint(rendu.titre); setBounds(0, 0, dp(16), dp(16))
+                        }, null)
+                    compoundDrawablePadding = dp(6)
                     setOnLongClickListener { basculerMarque(ligne.bloc); true }
                 }
                 is SiddurJour.Ligne.Etiquette -> vue.apply {
@@ -395,6 +401,9 @@ class SiddurLectureActivity : AppCompatActivity() {
         private const val ID = "id"
         private const val LIVRE = "livre"
         private const val MARQUE = "marque"
+
+        /** L'icône des marque-pages : prière (siddour) ou étude (livre). */
+        fun icone(etude: Boolean) = if (etude) R.drawable.ic_marque_etude else R.drawable.ic_marque_priere
 
         /** Ouvre le texte d'un marque-page, à sa place. */
         fun ouvrirMarque(context: Context, m: MarquesPages.Marque) {

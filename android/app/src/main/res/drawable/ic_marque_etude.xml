@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Le marque-page d'une étude (15/10, choix n° 3) : un ruban plein, une étoile évidée en son milieu. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp" android:height="24dp" android:viewportWidth="24" android:viewportHeight="24">
+    <path android:fillType="evenOdd" android:fillColor="#FFFFFFFF"
+        android:pathData="M6,3h12v18l-6,-4.5L6,21z M12,6.2l1.1,2.3l2.5,0.3l-1.8,1.7l0.5,2.5l-2.3,-1.2l-2.3,1.2l0.5,-2.5l-1.8,-1.7l2.5,-0.3z" />
+</vector>

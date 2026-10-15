@@ -41,13 +41,14 @@
         </LinearLayout>
 
         <!-- Marque-pages (15/10) : la liste de ceux du texte. -->
-        <TextView
+        <ImageView
             android:id="@+id/siddur_lecture_marques"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:gravity="center"
-            android:textColor="@color/white"
-            android:textSize="20sp" />
+            android:padding="12dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/marques_titre"
+            android:src="@drawable/ic_marque_priere" />
 
         <!-- Favori (14/10) : l'étoile ajoute ou retire le texte de la liste de la Bibliothèque. -->
         <TextView
