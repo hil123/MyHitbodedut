@@ -2067,89 +2067,49 @@ function objetTrophee(forme, metal, icone, taille) {
     el('text', { x: ex, y: ey, 'font-size': et, 'text-anchor': 'middle', 'dominant-baseline': 'central', opacity: metal ? '1' : '.45' }, icone));
 }
 
-function vitrineTrophees() {
-  const p = pratique();
-  store.setTropheesVus(Trophees.gagnes(p));
-  const atteints = Trophees.FAMILLES.reduce((n, f) => n + Trophees.rang(p, f), 0);
-  const total = Trophees.FAMILLES.reduce((n, f) => n + f.seuils.length, 0);
-  // Les plus hauts métaux d'abord ; à égalité, les plus proches du niveau suivant (12/10).
-  const ordre = (f) => { const r = Trophees.rang(p, f); return (r ? Trophees.METAUX.indexOf(Trophees.metal(f, r)) + 1 : 0) * 10 + Trophees.progres(p, f).fraction; };
-  const tries = [...Trophees.FAMILLES].sort((a, b) => ordre(b) - ordre(a));
-  const barre = (fraction, classe) => h('div', { class: `trophee-barre ${classe}`, 'aria-hidden': 'true' },
-    h('span', { style: `width: ${Math.round(Math.min(1, Math.max(0, fraction)) * 100)}%` }));
-  const desc = (f, seuil) => tr.p(`trophee_${f.cle}_desc`, seuil);
-  // La scène : l'avatar, de plus en plus joyeux à mesure que le métal monte, et le plus beau trophée sur son socle.
-  // Pas « Premier pas », le plus facile, en vedette tant qu'un autre trophée est gagné (15/10).
-  const gagnees = tries.filter((f) => Trophees.rang(p, f));
-  const meilleure = gagnees.find((f) => f.cle !== 'premier_pas') ?? gagnees[0] ?? null;
-  const mMeilleure = meilleure ? Trophees.metal(meilleure, Trophees.rang(p, meilleure)) : null;
-  const avatar = { bronze: 'char_thumbs_up', argent: 'char_open_arms', or: 'char_arms_raised', platine: 'char_dancing_joy' }[mMeilleure] ?? 'char_thinking';
-  const socle = (metal, nom, grand) => h('div', { class: `trophee-socle ${metal ?? 'aucun'}${grand ? ' grand' : ''}` }, h('span', { class: 'socle-plaque' }, nom));
-  const scene = h('div', { class: `trophees-scene ${mMeilleure ?? 'aucune'}` },
-    h('img', { class: 'scene-avatar', src: `img/${avatar}.webp`, alt: '' }),
-    h('div', { class: 'scene-podium' },
-      h('span', { class: `bulle ${mMeilleure ?? 'aucun'}` }, meilleure ? tr.t(`metal_${mMeilleure}`) : tr.t('trophee_a_venir')),
-      h('div', { class: `objet vedette${meilleure ? ' gagne' : ''}` }, objetTrophee(meilleure?.forme ?? 'coupe', mMeilleure, meilleure?.icone ?? '🏆', 116)),
-      socle(mMeilleure, meilleure ? tr.t(`trophee_${meilleure.cle}`) : tr.t('trophees_titre'), true),
-      h('p', { class: 'scene-titre' }, meilleure ? tr.t('trophee_vedette') : tr.t('trophee_vedette_aucune'))));
-  const carte = (f) => {
-    const r = Trophees.rang(p, f);
-    const m = r ? Trophees.metal(f, r) : null;
-    const pr = Trophees.progres(p, f);
-    const sommet = r >= f.seuils.length;
-    const niveau = m ? tr.t('trophee_niveau', r, f.seuils.length, tr.t(`metal_${m}`)) : tr.t('trophee_a_venir');
-    return h('div', { class: `trophee ${m ?? ''}${m ? ' gagne' : ''}`,
-      'aria-label': [tr.t(`trophee_${f.cle}`), niveau, sommet ? tr.t('trophee_sommet') : tr.t('trophee_prochain', desc(f, pr.cible))].join(', ') },
-      h('span', { class: `bulle ${m ?? 'aucun'}`, 'aria-hidden': 'true' }, m ? tr.t(`metal_${m}`) : tr.t('trophee_a_venir')),
-      h('div', { class: `objet${m ? ' gagne' : ''}`, 'aria-hidden': 'true' }, objetTrophee(f.forme, m, f.icone, 78), m ? h('span', { class: 'eclat' }) : null),
-      socle(m, tr.t(`trophee_${f.cle}`)));
-  };
-  const details = (f) => {
-    const r = Trophees.rang(p, f);
-    const pr = Trophees.progres(p, f);
-    const sommet = r >= f.seuils.length;
-    // Le niveau, puis ce que demande le PROCHAIN niveau et où l'on en est (15/10, PaliersActivity.details).
-    return h('div', { class: 'trophee-details' },
-      r ? h('span', { class: 'trophee-niveau' }, tr.t('trophee_niveau_court', r, f.seuils.length)) : null,
-      sommet ? null : h('span', { class: 'trophee-desc' }, tr.t('trophee_prochain', desc(f, pr.cible))),
-      sommet ? h('span', { class: 'trophee-progres' }, tr.t('trophee_sommet')) : barre(pr.fraction, 'petite'),
-      sommet ? null : h('span', { class: 'trophee-progres' }, tr.t('trophee_progres', Math.min(pr.valeur, pr.cible), pr.cible)));
-  };
-  // Les étagères : trois trophées par planche de verre, leurs détails dessous.
-  const rangees = [];
-  for (let k = 0; k < tries.length; k += 3) rangees.push(tries.slice(k, k + 3));
-  return h('div', { class: 'carte carte-palier' },
-    h('div', { class: 'trophees-tete' }, h('p', { class: 'palier-nom' }, tr.t('trophees_titre')),
-      h('p', { class: 'trophees-compte' }, tr.t('trophees_compte', atteints, total))),
-    h('p', { class: 'trophees-explication' }, tr.t('trophees_explication')),
-    scene,
-    barre(atteints / total, 'globale'),
-    ...rangees.map((rangee) => h('div', { class: 'etagere' },
-      h('div', { class: 'etagere-objets' }, ...rangee.map(carte)),
-      h('div', { class: 'planche', 'aria-hidden': 'true' }),
-      h('div', { class: 'etagere-details' }, ...rangee.map(details)))));
-}
-
+/**
+ * Les trophées (refaits le 15/10, PaliersActivity) : une seule liste de petits objectifs, du plus
+ * facile au plus dur ; le prochain en haut ; deux onglets, « À venir » et « Gagnés » ; les records.
+ */
+let tropheesGagnes = false;
 function ecranPaliers() {
   const bilan = bilanPaliers();
-  const etats = Paliers.etats(bilan);
-  store.setPaliersVus(Paliers.marques(etats, bilan));
+  store.setPaliersVus(Paliers.marques(Paliers.etats(bilan), bilan));
+  const p = pratique();
+  store.setTropheesVus(Trophees.gagnes(p));
   const r = Paliers.records(bilan.minutes, (d) => { const j = jourJuif(d, false); return `${j.anneeHebraique}-${j.moisHebreu}`; });
-  const carte = (e) => h('div', { class: 'carte carte-palier' },
-    h('p', { class: 'palier-nom' }, libellePalier(e.piste, bilan)),
-    h('p', { class: 'palier-valeur' }, valeurPalier(e.piste, e.valeur)),
-    h('div', { class: 'palier-barre', role: 'progressbar', 'aria-valuemin': '0', 'aria-valuemax': '100', 'aria-valuenow': String(Math.round(e.avancee * 100)) },
-      h('span', { style: `width:${Math.round(e.avancee * 100)}%` })),
-    h('p', { class: 'palier-prochain' }, tr.t('palier_prochain', valeurPalier(e.piste, e.prochain), valeurPalier(e.piste, e.reste))),
-    e.rang > 0 ? h('p', { class: 'palier-atteints' }, tr.t('palier_atteints', e.rang)) : null,
-    e.rang > 0 ? h('div', { class: 'palier-pastilles' }, Paliers.echelle(e.piste, e.valeur, bilan.objectifJour).filter((x) => x <= e.valeur)
-      .slice(-8).map((x) => h('span', { class: 'palier-pastille' }, valeurPalier(e.piste, x)))) : null);
+  const faits = Trophees.chemin.filter((e) => Trophees.gagne(p, e));
+  const futurs = Trophees.chemin.filter((e) => !Trophees.gagne(p, e));
+  const desc = (e) => tr.p(`trophee_${e.f.cle}_desc`, e.seuil);
+  // Gagné : le matériau du grade d'alors (Trophees.grade) ; à venir : gris.
+  const rangs = new Map(faits.map((e, i) => [e.cle, i]));
+  const objet = (e, gagne, taille) => h('span', { class: `trophee-objet${gagne ? ' gagne' : ''}`, 'aria-hidden': 'true' },
+    objetTrophee(e.f.forme, gagne ? Trophees.grade(rangs.get(e.cle)) : null, e.f.icone, taille));
+  const barre = (fr, classe) => h('div', { class: `trophee-barre ${classe}`, 'aria-hidden': 'true' }, h('span', { style: `width:${Math.round(fr * 100)}%` }));
+  const compte = (e) => tr.t('trophee_progres', Math.min(Trophees.valeur(p, e.f.cle), e.seuil), e.seuil);
+  const n = Trophees.prochain(p);
+  const prochain = h('div', { class: 'carte trophee-prochain' }, h('p', { class: 'palier-nom' }, tr.t('trophees_prochain')),
+    n ? h('div', { class: 'trophee-ligne' }, objet(n, false, 72), h('div', { class: 'trophee-texte' },
+      h('p', { class: 'trophee-but grand' }, desc(n)), barre(Trophees.fraction(p, n), 'grande'), h('p', { class: 'trophee-compte' }, compte(n))))
+      : h('p', { class: 'trophee-but grand' }, tr.t('trophees_tous')));
+  const onglet = (texte, choisi, gagnes) => h('button', { type: 'button', class: `trophee-onglet${choisi ? ' choisi' : ''}`, 'aria-pressed': String(choisi),
+    onclick: () => { tropheesGagnes = gagnes; rendre(); } }, texte);
+  const liste = tropheesGagnes ? [...faits].reverse() : futurs;
+  const ligneTrophee = (e) => {
+    const gagne = tropheesGagnes;
+    const fr = Trophees.fraction(p, e);
+    return h('div', { class: 'trophee-ligne' }, objet(e, gagne, 44), h('div', { class: 'trophee-texte' },
+      h('p', { class: `trophee-but${gagne ? ' gagne' : ''}` }, desc(e)),
+      !gagne && fr > 0 ? barre(fr, 'petite') : null, !gagne && fr > 0 ? h('p', { class: 'trophee-compte petit' }, compte(e)) : null),
+      gagne ? h('span', { class: 'trophee-coche', 'aria-hidden': 'true' }, '✓') : null);
+  };
   return h('div', { class: 'ecran avec-bandeau' }, bandeau(tr.t('trophees_paliers_titre'), { dessin: 'char_arms_raised' }),
     h('div', { class: 'defile' }, h('div', { class: 'contenu' },
-      vitrineTrophees(),
-      h('h2', { class: 'paliers-titre' }, tr.t('paliers_title')),
-      h('p', { class: 'paliers-sous-titre' }, tr.t('paliers_sous_titre')),
-      ...etats.map(carte),
+      prochain,
+      h('div', { class: 'trophee-onglets' }, onglet(tr.t('trophees_a_venir', futurs.length), !tropheesGagnes, false),
+        onglet(tr.t('trophees_gagnes', faits.length), tropheesGagnes, true)),
+      h('div', { class: 'carte trophee-liste' }, ...(liste.length ? liste.map(ligneTrophee)
+        : [h('p', { class: 'indice' }, tr.t(tropheesGagnes ? 'trophees_aucun_gagne' : 'trophees_tous'))])),
       h('div', { class: 'carte carte-palier' }, h('p', { class: 'palier-nom' }, tr.t('paliers_records')),
         ...[tr.t('record_serie', valeurPalier('serie', store.meilleureSerie())), tr.t('record_jour', tr.duree(r.jour)),
           tr.t('record_semaine', tr.duree(r.semaine)), tr.t('record_mois', tr.duree(r.mois))].map((x) => h('p', { class: 'palier-record' }, x))))));

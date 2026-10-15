@@ -767,6 +767,11 @@
     <string name="celebration_titre">Mazal tov!</string>
     <string name="trophees_paliers_titre">Trophies and milestones</string>
     <string name="trophees_titre">Trophies</string>
+    <string name="trophees_prochain">Next trophy</string>
+    <string name="trophees_gagnes">Earned · %1$d</string>
+    <string name="trophees_a_venir">Coming up · %1$d</string>
+    <string name="trophees_aucun_gagne">No trophy yet: the first comes with your first hitbodedut.</string>
+    <string name="trophees_tous">Every trophy is earned!</string>
     <string name="trophees_compte">%1$d of %2$d</string>
     <string name="trophees_paliers">🏆  Trophies and milestones</string>
     <string name="channel_celebration">Milestones and trophies</string>

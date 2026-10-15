@@ -83,6 +83,47 @@ object Trophees {
     fun gagnes(p: Pratique): Set<Niveau> =
         Famille.entries.flatMap { f -> (1..rang(p, f)).map { Niveau(f, it) } }.toSet()
 
+    /**
+     * Le chemin (15/10, « fais un système plus simple ») : tous les niveaux de toutes les
+     * familles en une seule liste, du plus facile au plus dur. Chaque étape est un petit
+     * objectif (« 3 jours d'affilée », « 1 heure en tout ») ; l'écran montre les gagnées
+     * et celles à venir, dans cet ordre. Le coût estime le nombre de jours qu'il faut,
+     * à raison d'un quart d'heure par jour ; choix de l'application.
+     */
+    fun cout(f: Famille, seuil: Int): Double = when (f) {
+        Famille.PREMIER_PAS, Famille.JOURS -> seuil.toDouble()
+        Famille.SEANCE_LONGUE -> seuil / 2.0
+        Famille.SERIE -> seuil * 1.5
+        Famille.HEURES -> seuil * 4.0
+        Famille.SEMAINES -> seuil * 8.0
+        Famille.EREV_CHABBAT -> seuil * 7.0
+        Famille.RETOUR -> seuil * 30.0 + 10
+        Famille.PLUME -> seuil * 1.3
+    }
+
+    val chemin: List<Niveau> by lazy {
+        Famille.entries.flatMap { f -> f.seuils.indices.map { Niveau(f, it + 1) } }
+            .sortedWith(compareBy<Niveau>({ cout(it.famille, it.seuil) }, { it.famille.ordinal }))
+    }
+
+    fun gagne(p: Pratique, n: Niveau): Boolean = valeur(p, n.famille) >= n.seuil
+
+    /**
+     * Le grade (15/10, « les matériaux sont mélangés ») : un seul matériau à la fois, selon
+     * le nombre de trophées gagnés — bronze, argent au 10ᵉ, or au 25ᵉ, platine au 50ᵉ.
+     * Le [rang]-ième trophée gagné (de 0) prend le matériau du grade d'alors.
+     */
+    val SEUILS_GRADES = intArrayOf(0, 10, 25, 50)
+
+    fun grade(rang: Int): Metal = Metal.entries[SEUILS_GRADES.count { rang >= it } - 1]
+
+    /** De 0 à 1 vers une étape. */
+    fun fraction(p: Pratique, n: Niveau): Float = (valeur(p, n.famille).coerceAtMost(n.seuil).toFloat() / n.seuil)
+
+    /** Le prochain trophée : parmi ceux à gagner, le plus près d'être atteint ; à égalité, le plus facile. */
+    fun prochain(p: Pratique): Niveau? = chemin.filterNot { gagne(p, it) }
+        .maxWithOrNull(compareBy<Niveau> { fraction(p, it) }.thenByDescending { cout(it.famille, it.seuil) })
+
     /** Où l'on en est vers le niveau suivant ; au sommet, le dernier seuil. */
     data class Progres(val valeur: Int, val cible: Int) {
         val fraction: Float get() = if (cible <= 0) 1f else (valeur.coerceAtMost(cible).toFloat() / cible)

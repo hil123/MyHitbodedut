@@ -16,15 +16,26 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.graphics.ColorUtils
 
 /**
- * Les paliers d'objectifs (11/10) : une carte par piste, la valeur, la barre
- * jusqu'au prochain palier, ce qu'il reste, et les paliers déjà atteints ;
- * puis les records. Le calcul est dans Paliers.
+ * Les trophées (refaits le 15/10, « toujours trop compliqué, fais plus simple ») :
+ * une seule liste de petits objectifs, du plus facile au plus dur (Trophees.chemin).
+ * En haut, le prochain trophée et sa barre ; puis deux onglets, « Gagnés » (les
+ * anciens) et « À venir » (les futurs, dans l'ordre) ; en bas, les records.
+ * Plus de métaux, de niveaux « 4/16 » ni de cartes de paliers sur cet écran.
  */
 class PaliersActivity : AppCompatActivity() {
+
+    /** L'onglet montré : les trophées à venir d'abord, puis les gagnés au toucher. */
+    private var gagnes = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_paliers)
+        gagnes = savedInstanceState?.getBoolean(ETAT_ONGLET) ?: false
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putBoolean(ETAT_ONGLET, gagnes)
     }
 
     override fun onResume() {
@@ -36,16 +47,54 @@ class PaliersActivity : AppCompatActivity() {
         val contenu = findViewById<LinearLayout>(R.id.paliers_contenu)
         contenu.removeAllViews()
         val bilan = Store.bilan(this)
-        val etats = Paliers.etats(bilan)
-        contenu.addView(trophees())
-        contenu.addView(VueJour.texte(this, getString(R.string.paliers_title), 20f, R.color.ink, gras = true, haut = 22).apply {
-            gravity = Gravity.CENTER
-        })
-        contenu.addView(VueJour.texte(this, getString(R.string.paliers_sous_titre), 15f, R.color.muted, haut = 4).apply {
-            gravity = Gravity.CENTER
-        })
-        etats.forEach { contenu.addView(carte(it, bilan)) }
+        val pratique = Store.pratique(this)
+        val faits = Trophees.chemin.filter { Trophees.gagne(pratique, it) }
+        val futurs = Trophees.chemin.filterNot { Trophees.gagne(pratique, it) }
 
+        // Le prochain trophée, en grand.
+        contenu.addView(VueJour.carte(this).apply {
+            addView(VueJour.texte(context, getString(R.string.trophees_prochain), 14f, R.color.muted, gras = true))
+            val n = Trophees.prochain(pratique)
+            if (n == null) {
+                addView(VueJour.texte(context, getString(R.string.trophees_tous), 20f, R.color.ink, gras = true, haut = 6))
+            } else {
+                addView(LinearLayout(context).apply {
+                    orientation = LinearLayout.HORIZONTAL
+                    gravity = Gravity.CENTER_VERTICAL
+                    layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+                        .apply { topMargin = dp(8) }
+                    addView(objet(n, null, taille = 72))
+                    addView(LinearLayout(context).apply {
+                        orientation = LinearLayout.VERTICAL
+                        layoutParams = LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f).apply { marginStart = dp(14) }
+                        addView(VueJour.texte(context, TropheesVue.description(context, n.famille, n.seuil), 20f, R.color.ink, gras = true))
+                        addView(barre(Trophees.fraction(pratique, n), dp(10)).apply { (layoutParams as LinearLayout.LayoutParams).topMargin = dp(10) })
+                        addView(VueJour.texte(context, getString(R.string.trophee_progres,
+                            Trophees.valeur(pratique, n.famille).coerceAtMost(n.seuil), n.seuil), 14f, R.color.brand, gras = true, haut = 4))
+                    })
+                })
+            }
+        })
+
+        // Les deux onglets : à venir, gagnés.
+        contenu.addView(LinearLayout(this).apply {
+            orientation = LinearLayout.HORIZONTAL
+            layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+                .apply { setMargins(dp(16), dp(16), dp(16), 0) }
+            addView(onglet(getString(R.string.trophees_a_venir, futurs.size), !gagnes) { gagnes = false; afficher() })
+            addView(onglet(getString(R.string.trophees_gagnes, faits.size), gagnes) { gagnes = true; afficher() }.apply {
+                (layoutParams as LinearLayout.LayoutParams).marginStart = dp(8)
+            })
+        })
+        contenu.addView(VueJour.carte(this).apply {
+            val liste = if (gagnes) faits.reversed() else futurs
+            if (liste.isEmpty()) addView(VueJour.texte(context, getString(if (gagnes) R.string.trophees_aucun_gagne else R.string.trophees_tous), 15f, R.color.muted))
+            // Le matériau d'un trophée gagné : le grade du moment où il l'a été (Trophees.grade).
+            val rangs = faits.withIndex().associate { (i, n) -> n to i }
+            liste.forEachIndexed { k, n -> addView(ligne(n, pratique, gagnes, premiere = k == 0, metal = rangs[n]?.let { Trophees.grade(it) })) }
+        })
+
+        // Les records, comme avant.
         val moisDe = { d: java.time.LocalDate -> CalendrierJuif.jour(d, false).let { "${it.anneeHebraique}-${it.moisHebreu}" } }
         val r = Paliers.records(bilan.minutes, moisDe)
         contenu.addView(VueJour.carte(this).apply {
@@ -58,275 +107,75 @@ class PaliersActivity : AppCompatActivity() {
             ).forEach { addView(VueJour.texte(context, it, 15f, R.color.ink, haut = 6)) }
         })
         // Ce qui est vu ici est acquis : l'accueil ne le refête pas.
-        Store.setPaliersVus(this, Paliers.marques(etats, bilan))
-        Store.setTropheesVus(this, Trophees.gagnes(Store.pratique(this)).map { it.cle }.toSet())
+        Store.setPaliersVus(this, Paliers.marques(Paliers.etats(bilan), bilan))
+        Store.setTropheesVus(this, Trophees.gagnes(pratique).map { it.cle }.toSet())
     }
 
-    /**
-     * La vitrine (refaite le 12/10, d'après les planches envoyées) : la
-     * scène avec l'avatar, puis des étagères de verre où chaque famille pose
-     * son objet (coupe, écusson, étoile, rosette, médaille, pièces, cristal,
-     * gemme) sur un socle à plaque, une bulle au-dessus (métal et niveau) ;
-     * dessous, ce qu'a demandé le niveau et la barre vers le suivant.
-     */
-    private fun trophees() = VueJour.carte(this).apply {
-        val pratique = Store.pratique(context)
-        val familles = Trophees.Famille.entries
-        val atteints = familles.sumOf { Trophees.rang(pratique, it) }
-        val total = familles.sumOf { it.seuils.size }
-        addView(LinearLayout(context).apply {
-            orientation = LinearLayout.HORIZONTAL
-            gravity = Gravity.CENTER_VERTICAL
-            addView(VueJour.texte(context, getString(R.string.trophees_titre), 18f, R.color.ink, gras = true).apply {
-                layoutParams = LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f)
-            })
-            addView(VueJour.texte(context, getString(R.string.trophees_compte, atteints, total), 14f, R.color.brand, gras = true).apply {
-                layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-            })
-        })
-        addView(VueJour.texte(context, getString(R.string.trophees_explication), 13f, R.color.muted, haut = 6))
-        // Les plus hauts métaux d'abord ; à égalité, les plus proches du niveau suivant.
-        val tries = familles.sortedWith(compareByDescending<Trophees.Famille> { Trophees.rang(pratique, it).let { r -> if (r == 0) -1 else Trophees.metal(it, r).ordinal } }
-            .thenByDescending { Trophees.progres(pratique, it).fraction })
-        // En vedette, le plus beau trophée — pas « Premier pas », le plus facile, tant qu'un autre est gagné (15/10).
-        val gagnees = tries.filter { Trophees.rang(pratique, it) > 0 }
-        addView(scene(pratique, gagnees.firstOrNull { it != Trophees.Famille.PREMIER_PAS } ?: gagnees.firstOrNull()))
-        addView(barre(atteints.toFloat() / total, dp(8)).apply {
-            (layoutParams as LinearLayout.LayoutParams).topMargin = dp(12)
-        })
-        tries.chunked(3).forEach { rangee ->
-            addView(rangeeLigne(dp(18)).apply { rangee.forEach { addView(objetPose(it, Trophees.rang(pratique, it))) } })
-            addView(planche())
-            addView(rangeeLigne(dp(8)).apply { rangee.forEach { addView(details(it, Trophees.rang(pratique, it), Trophees.progres(pratique, it))) } })
+    /** Un onglet : plein quand il est choisi. */
+    private fun onglet(texte: String, choisi: Boolean, action: () -> Unit) = TextView(this).apply {
+        text = texte
+        textSize = 15f
+        gravity = Gravity.CENTER
+        setTypeface(typeface, Typeface.BOLD)
+        val brand = Apparence.couleur(context, R.color.brand)
+        setTextColor(if (choisi) Apparence.couleur(context, R.color.on_brand) else brand)
+        setPadding(dp(12), dp(10), dp(12), dp(10))
+        background = GradientDrawable().apply {
+            cornerRadius = dp(999).toFloat()
+            if (choisi) setColor(brand) else setStroke(dp(1), brand)
         }
+        layoutParams = LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f)
+        isSelected = choisi
+        setOnClickListener { action() }
     }
 
-    private fun rangeeLigne(haut: Int) = LinearLayout(this).apply {
+    /** Une ligne : l'objet, ce qu'il demande ; à venir, la barre et le compte ; gagné, une coche. */
+    private fun ligne(n: Trophees.Niveau, p: Trophees.Pratique, gagne: Boolean, premiere: Boolean, metal: Trophees.Metal?) = LinearLayout(this).apply {
         orientation = LinearLayout.HORIZONTAL
-        gravity = Gravity.BOTTOM
-        layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply { topMargin = haut }
+        gravity = Gravity.CENTER_VERTICAL
+        layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+            .apply { topMargin = dp(if (premiere) 0 else 12) }
+        addView(objet(n, if (gagne) metal else null, taille = 44))
+        addView(LinearLayout(context).apply {
+            orientation = LinearLayout.VERTICAL
+            layoutParams = LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f).apply { marginStart = dp(12) }
+            addView(VueJour.texte(context, TropheesVue.description(context, n.famille, n.seuil), 15f, if (gagne) R.color.ink else R.color.ink, gras = gagne))
+            if (!gagne) {
+                val f = Trophees.fraction(p, n)
+                if (f > 0f) {
+                    addView(barre(f, dp(5)).apply { (layoutParams as LinearLayout.LayoutParams).topMargin = dp(5) })
+                    addView(VueJour.texte(context, getString(R.string.trophee_progres,
+                        Trophees.valeur(p, n.famille).coerceAtMost(n.seuil), n.seuil), 12f, R.color.muted, haut = 2))
+                }
+            }
+        })
+        if (gagne) addView(VueJour.texte(context, "✓", 20f, R.color.brand, gras = true))
+        contentDescription = TropheesVue.description(context, n.famille, n.seuil)
     }
 
-    private fun barre(fraction: Float, hauteur: Int) = android.widget.ProgressBar(this, null, android.R.attr.progressBarStyleHorizontal).apply {
+    /** L'objet dessiné : du matériau du grade s'il est gagné, gris et pâle sinon. */
+    private fun objet(n: Trophees.Niveau, metal: Trophees.Metal?, taille: Int) = View(this).apply {
+        layoutParams = LinearLayout.LayoutParams(dp(taille), dp(taille))
+        background = TropheeDessin(context, n.famille.forme, metal, n.famille.icone)
+        if (metal == null) alpha = 0.45f
+        importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO
+    }
+
+    private fun barre(fraction: Float, hauteur: Int) = ProgressBar(this, null, android.R.attr.progressBarStyleHorizontal).apply {
         max = 1000
         progress = (fraction.coerceIn(0f, 1f) * 1000).toInt()
-        progressTintList = android.content.res.ColorStateList.valueOf(Apparence.couleur(context, R.color.brand))
-        progressBackgroundTintList = android.content.res.ColorStateList.valueOf(Apparence.couleur(context, R.color.muted))
+        val brand = Apparence.couleur(context, R.color.brand)
+        progressTintList = android.content.res.ColorStateList.valueOf(brand)
+        progressBackgroundTintList = android.content.res.ColorStateList.valueOf(ColorUtils.setAlphaComponent(brand, 0x30))
         layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, hauteur)
         importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO
     }
 
-    /** La bulle au-dessus de l'objet : le métal (et le niveau), sur une pastille de sa couleur. */
-    private fun bulle(metal: Trophees.Metal?, texte: String) = TextView(this).apply {
-        text = texte
-        textSize = 11f
-        setTypeface(typeface, Typeface.BOLD)
-        maxLines = 1
-        ellipsize = android.text.TextUtils.TruncateAt.END
-        gravity = Gravity.CENTER
-        setPadding(dp(10), dp(3), dp(10), dp(3))
-        val (clair, fonce, sombre) = TropheeDessin.teintes(metal)
-        setTextColor(if (metal == null) Apparence.couleur(context, R.color.muted) else ColorUtils.blendARGB(sombre, Color.BLACK, 0.35f))
-        background = GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM,
-            intArrayOf(ColorUtils.blendARGB(clair, Color.WHITE, 0.5f), ColorUtils.blendARGB(clair, fonce, 0.35f))).apply { cornerRadius = dp(99).toFloat() }
-        elevation = dp(2).toFloat()
-        layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply { bottomMargin = dp(6) }
-    }
-
-    /** Le socle : bois sombre (ou métal pour l'argent et le platine), et sa plaque gravée du nom. */
-    private fun socle(metal: Trophees.Metal?, nom: String, largeur: Int) = LinearLayout(this).apply {
-        orientation = LinearLayout.VERTICAL
-        setPadding(dp(5), dp(6), dp(5), dp(7))
-        layoutParams = LinearLayout.LayoutParams(largeur, ViewGroup.LayoutParams.WRAP_CONTENT)
-        val (bas, haut) = when (metal) {
-            Trophees.Metal.ARGENT, Trophees.Metal.PLATINE -> Color.rgb(0x2E, 0x34, 0x3A) to Color.rgb(0x59, 0x62, 0x6C)
-            null -> Color.rgb(0x80, 0x85, 0x8A) to Color.rgb(0xA9, 0xAD, 0xB1)
-            else -> Color.rgb(0x3E, 0x29, 0x15) to Color.rgb(0x6B, 0x4A, 0x2E)
-        }
-        background = GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM, intArrayOf(haut, bas)).apply {
-            cornerRadii = floatArrayOf(dp(6).toFloat(), dp(6).toFloat(), dp(6).toFloat(), dp(6).toFloat(), dp(3).toFloat(), dp(3).toFloat(), dp(3).toFloat(), dp(3).toFloat())
-        }
-        elevation = dp(3).toFloat()
-        addView(TextView(context).apply {
-            text = nom
-            textSize = 10f
-            setTypeface(typeface, Typeface.BOLD)
-            // Deux lignes : « Erev Chabbat », « Semaines pleines » se coupaient (15/10).
-            maxLines = 2
-            ellipsize = android.text.TextUtils.TruncateAt.END
-            gravity = Gravity.CENTER
-            setPadding(dp(3), dp(2), dp(3), dp(2))
-            val argent = metal == Trophees.Metal.ARGENT || metal == Trophees.Metal.PLATINE
-            setTextColor(if (argent) Color.rgb(0x23, 0x2A, 0x31) else if (metal == null) Color.rgb(0x4E, 0x53, 0x57) else Color.rgb(0x3A, 0x2A, 0x08))
-            background = GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM, when {
-                argent -> intArrayOf(Color.rgb(0xF4, 0xF6, 0xF8), Color.rgb(0xB9, 0xC1, 0xC9))
-                metal == null -> intArrayOf(Color.rgb(0xE6, 0xE8, 0xEA), Color.rgb(0xC4, 0xC8, 0xCB))
-                else -> intArrayOf(Color.rgb(0xFF, 0xE9, 0xA3), Color.rgb(0xD9, 0xAE, 0x3A))
-            }).apply { cornerRadius = dp(3).toFloat() }
-        })
-    }
-
-    /** La planche de verre sous une rangée. */
-    private fun planche() = View(this).apply {
-        // Fine et pâle (15/10) : épaisse et blanche, elle se lisait comme une barre de progression.
-        layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, dp(4))
-        alpha = 0.45f
-        background = GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM,
-            intArrayOf(Color.argb(0xF2, 0xFF, 0xFF, 0xFF), Color.argb(0xBF, 0xDC, 0xE6, 0xF0))).apply {
-            cornerRadius = dp(2).toFloat()
-            setStroke(1, Color.argb(0x59, 0x96, 0xAA, 0xBE))
-        }
-        elevation = dp(4).toFloat()
-    }
-
-    /** L'objet posé : bulle, objet dessiné, socle. */
-    private fun objetPose(f: Trophees.Famille, rang: Int) = LinearLayout(this).apply {
-        orientation = LinearLayout.VERTICAL
-        gravity = Gravity.CENTER_HORIZONTAL or Gravity.BOTTOM
-        layoutParams = LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f)
-        val metal = if (rang > 0) Trophees.metal(f, rang) else null
-        // Le métal seul : « Bronze · 4/16 » se coupait en « Bronze · 4… » (15/10) ; le niveau est dessous.
-        addView(bulle(metal, if (metal != null) TropheesVue.metal(context, metal) else getString(R.string.trophee_a_venir)))
-        addView(View(context).apply {
-            layoutParams = LinearLayout.LayoutParams(dp(78), dp(78))
-            background = TropheeDessin(context, f.forme, metal, f.icone)
-            if (metal == null) alpha = 0.55f
-        })
-        addView(socle(metal, TropheesVue.nom(context, f), ViewGroup.LayoutParams.MATCH_PARENT).apply {
-            (layoutParams as LinearLayout.LayoutParams).apply { marginStart = dp(6); marginEnd = dp(6) }
-        })
-        contentDescription = listOfNotNull(TropheesVue.nom(context, f),
-            metal?.let { getString(R.string.trophee_niveau, rang, f.seuils.size, TropheesVue.metal(context, it)) } ?: getString(R.string.trophee_a_venir),
-        ).joinToString(", ")
-    }
-
-    /**
-     * Sous la planche (refait le 15/10, « incompréhensible ») : le niveau, puis ce que
-     * demande le PROCHAIN niveau, la barre et le compte vers lui. Avant, le texte
-     * nommait le niveau déjà atteint (« 15 jours ») et le compte le suivant (« 16 / 18 »).
-     */
-    private fun details(f: Trophees.Famille, rang: Int, pr: Trophees.Progres) = LinearLayout(this).apply {
-        orientation = LinearLayout.VERTICAL
-        gravity = Gravity.CENTER_HORIZONTAL
-        layoutParams = LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f)
-        if (rang > 0) addView(VueJour.texte(context, getString(R.string.trophee_niveau_court, rang, f.seuils.size), 11f, R.color.ink, gras = true).apply { gravity = Gravity.CENTER })
-        if (rang >= f.seuils.size) {
-            addView(VueJour.texte(context, getString(R.string.trophee_sommet), 11f, R.color.brand, gras = true, haut = 2).apply { gravity = Gravity.CENTER })
-        } else {
-            addView(VueJour.texte(context, getString(R.string.trophee_prochain, TropheesVue.description(context, f, pr.cible)), 11f, R.color.muted, haut = 2).apply { gravity = Gravity.CENTER })
-            addView(barre(pr.fraction, dp(4)).apply {
-                (layoutParams as LinearLayout.LayoutParams).apply { topMargin = dp(6); marginStart = dp(10); marginEnd = dp(10) }
-            })
-            addView(VueJour.texte(context, getString(R.string.trophee_progres, pr.valeur.coerceAtMost(pr.cible), pr.cible), 11f, R.color.muted, haut = 2).apply { gravity = Gravity.CENTER })
-        }
-    }
-
-    /**
-     * La scène : l'avatar, de plus en plus joyeux à mesure que le métal
-     * monte, et le plus beau trophée sur son socle, qui flotte doucement
-     * (rien quand les animations sont coupées).
-     */
-    private fun scene(p: Trophees.Pratique, meilleure: Trophees.Famille?) = LinearLayout(this).apply {
-        orientation = LinearLayout.HORIZONTAL
-        gravity = Gravity.BOTTOM
-        setPadding(dp(10), dp(14), dp(10), dp(12))
-        layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply { topMargin = dp(12) }
-        val metal = meilleure?.let { Trophees.metal(it, Trophees.rang(p, it)) }
-        val lumiere = when (metal) {
-            Trophees.Metal.OR -> Color.rgb(0xF6, 0xD8, 0x6B)
-            Trophees.Metal.PLATINE -> Color.rgb(0xAA, 0xC8, 0xFF)
-            else -> Apparence.couleur(context, R.color.brand)
-        }
-        background = GradientDrawable().apply {
-            gradientType = GradientDrawable.RADIAL_GRADIENT
-            gradientRadius = dp(220).toFloat()
-            setGradientCenter(0.65f, 0.15f)
-            colors = intArrayOf(ColorUtils.setAlphaComponent(lumiere, 0x5A), ColorUtils.setAlphaComponent(lumiere, 0x0C))
-            cornerRadius = dp(18).toFloat()
-        }
-        addView(android.widget.ImageView(context).apply {
-            setImageResource(when (metal) {
-                Trophees.Metal.BRONZE -> R.drawable.char_thumbs_up
-                Trophees.Metal.ARGENT -> R.drawable.char_open_arms
-                Trophees.Metal.OR -> R.drawable.char_arms_raised
-                Trophees.Metal.PLATINE -> R.drawable.char_dancing_joy
-                null -> R.drawable.char_thinking
-            })
-            adjustViewBounds = true
-            scaleType = android.widget.ImageView.ScaleType.FIT_END
-            importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO
-            layoutParams = LinearLayout.LayoutParams(0, dp(180), 1f)
-        })
-        addView(LinearLayout(context).apply {
-            orientation = LinearLayout.VERTICAL
-            gravity = Gravity.CENTER_HORIZONTAL
-            layoutParams = LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1.2f)
-            addView(bulle(metal, metal?.let { TropheesVue.metal(context, it) } ?: getString(R.string.trophee_a_venir)))
-            addView(View(context).apply {
-                layoutParams = LinearLayout.LayoutParams(dp(116), dp(116))
-                background = TropheeDessin(context, meilleure?.forme ?: Trophees.Forme.COUPE, metal, meilleure?.icone ?: "🏆")
-                if (metal == null) alpha = 0.55f
-                importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO
-                if (metal != null && android.animation.ValueAnimator.areAnimatorsEnabled()) {
-                    android.animation.ObjectAnimator.ofFloat(this, View.TRANSLATION_Y, 0f, -dp(5).toFloat()).apply {
-                        duration = 3000
-                        repeatCount = android.animation.ValueAnimator.INFINITE
-                        repeatMode = android.animation.ValueAnimator.REVERSE
-                        interpolator = android.view.animation.AccelerateDecelerateInterpolator()
-                        start()
-                    }
-                }
-            })
-            addView(socle(metal, meilleure?.let { TropheesVue.nom(context, it) } ?: getString(R.string.trophees_titre), dp(124)))
-            addView(VueJour.texte(context, getString(if (meilleure != null) R.string.trophee_vedette else R.string.trophee_vedette_aucune), 12f, R.color.muted, haut = 8).apply { gravity = Gravity.CENTER })
-            contentDescription = if (meilleure != null && metal != null)
-                getString(R.string.trophee_vedette) + ", " + TropheesVue.nom(context, meilleure) + ", " + TropheesVue.metal(context, metal)
-            else getString(R.string.trophee_vedette_aucune)
-        })
-    }
-
-    private fun carte(e: Paliers.Etat, bilan: Paliers.Bilan) = VueJour.carte(this).apply {
-        val brand = Apparence.couleur(context, R.color.brand)
-        addView(VueJour.texte(context, PaliersVue.libelle(context, e.piste, bilan), 14f, R.color.muted, gras = true))
-        addView(VueJour.texte(context, PaliersVue.valeur(context, e.piste, e.valeur), 26f, R.color.ink, gras = true, haut = 2))
-        addView(ProgressBar(context, null, android.R.attr.progressBarStyleHorizontal).apply {
-            max = 1000
-            progress = (e.avancee * 1000).toInt()
-            progressTintList = android.content.res.ColorStateList.valueOf(brand)
-            progressBackgroundTintList = android.content.res.ColorStateList.valueOf(ColorUtils.setAlphaComponent(brand, 0x30))
-            layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, dp(10)).apply { topMargin = dp(8) }
-        })
-        addView(VueJour.texte(context, getString(R.string.palier_prochain,
-            PaliersVue.valeur(context, e.piste, e.prochain), PaliersVue.valeur(context, e.piste, e.reste)), 15f, R.color.brand, gras = true, haut = 8))
-        if (e.rang > 0) {
-            addView(VueJour.texte(context, getString(R.string.palier_atteints, e.rang), 13f, R.color.muted, haut = 10))
-            // Les paliers atteints, dans l'ordre où on les a franchis (15/10 : « 7 jours, 3 jours » se lisait à l'envers).
-            val rangee = LinearLayout(context).apply { orientation = LinearLayout.HORIZONTAL }
-            val echelle = Paliers.echelle(e.piste, e.valeur, bilan.objectifJour)
-            (echelle.filter { it <= e.valeur }.takeLast(8)).forEach { rangee.addView(pastille(PaliersVue.court(context, e.piste, it), true)) }
-            addView(HorizontalScrollView(context).apply {
-                isHorizontalScrollBarEnabled = false
-                layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply { topMargin = dp(6) }
-                addView(rangee)
-            })
-        }
-    }
-
-    private fun pastille(texte: String, atteinte: Boolean) = TextView(this).apply {
-        text = texte
-        textSize = 13f
-        setTypeface(typeface, Typeface.BOLD)
-        val brand = Apparence.couleur(context, R.color.brand)
-        setTextColor(if (atteinte) Apparence.couleur(context, R.color.on_brand) else brand)
-        setPadding(dp(12), dp(5), dp(12), dp(5))
-        background = GradientDrawable().apply {
-            cornerRadius = dp(999).toFloat()
-            if (atteinte) setColor(brand) else setStroke(dp(1), brand)
-        }
-        layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply { marginEnd = dp(6) }
-    }
-
     private fun dp(v: Int) = (v * resources.displayMetrics.density).toInt()
+
+    private companion object {
+        const val ETAT_ONGLET = "trophees_gagnes"
+    }
 }
 
 /** Les libellés et les valeurs des paliers, partagés par l'écran et l'accueil. */

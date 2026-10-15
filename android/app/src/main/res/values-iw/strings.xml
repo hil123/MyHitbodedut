@@ -783,6 +783,11 @@
     <string name="celebration_titre">מזל טוב!</string>
     <string name="trophees_paliers_titre">גביעים ויעדים</string>
     <string name="trophees_titre">גביעים</string>
+    <string name="trophees_prochain">הגביע הבא</string>
+    <string name="trophees_gagnes">שהושגו · %1$d</string>
+    <string name="trophees_a_venir">בהמשך · %1$d</string>
+    <string name="trophees_aucun_gagne">עוד אין גביע: הראשון יגיע עם ההתבודדות הראשונה.</string>
+    <string name="trophees_tous">כל הגביעים הושגו!</string>
     <string name="trophees_compte">%1$d מתוך %2$d</string>
     <string name="trophees_paliers">🏆  גביעים ויעדים</string>
     <string name="channel_celebration">יעדים וגביעים</string>

@@ -88,3 +88,22 @@ export function nouveaux(g, vus) {
   return [...parFamille].map(([cle, r]) => { const famille = FAMILLES.find((f) => f.cle === cle); return { famille, rang: r, metal: metal(famille, r) }; })
     .sort((a, b) => METAUX.indexOf(b.metal) * 100 + b.rang - (METAUX.indexOf(a.metal) * 100 + a.rang));
 }
+
+/** Le chemin (15/10, Trophees.chemin) : tous les niveaux en une liste, du plus facile au plus dur. */
+const COUTS = { premier_pas: (s) => s, jours: (s) => s, seance_longue: (s) => s / 2, serie: (s) => s * 1.5, heures: (s) => s * 4,
+  semaines: (s) => s * 8, erev_chabbat: (s) => s * 7, retour: (s) => s * 30 + 10, plume: (s) => s * 1.3 };
+export const cout = (f, seuil) => COUTS[f.cle](seuil);
+export const chemin = FAMILLES.flatMap((f, ordre) => f.seuils.map((seuil, i) => ({ f, rang: i + 1, seuil, ordre, cle: `${f.cle}:${i + 1}` })))
+  .sort((a, b) => cout(a.f, a.seuil) - cout(b.f, b.seuil) || a.ordre - b.ordre);
+export const gagne = (p, e) => valeur(p, e.f.cle) >= e.seuil;
+export const fraction = (p, e) => Math.min(valeur(p, e.f.cle), e.seuil) / e.seuil;
+/** Le prochain : parmi ceux à gagner, le plus près d'être atteint ; à égalité, le plus facile. */
+export function prochain(p) {
+  let m = null;
+  for (const e of chemin) if (!gagne(p, e) && (!m || fraction(p, e) > fraction(p, m))) m = e;
+  return m;
+}
+
+/** Le grade (15/10, Trophees.grade) : bronze, argent au 10ᵉ trophée gagné, or au 25ᵉ, platine au 50ᵉ. */
+export const SEUILS_GRADES = [0, 10, 25, 50];
+export const grade = (rang) => METAUX[SEUILS_GRADES.filter((s) => rang >= s).length - 1];

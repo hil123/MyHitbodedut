@@ -813,6 +813,11 @@
     <string name="celebration_titre">Mazal tov !</string>
     <string name="trophees_paliers_titre">Trophées et paliers</string>
     <string name="trophees_titre">Trophées</string>
+    <string name="trophees_prochain">Prochain trophée</string>
+    <string name="trophees_gagnes">Gagnés · %1$d</string>
+    <string name="trophees_a_venir">À venir · %1$d</string>
+    <string name="trophees_aucun_gagne">Pas encore de trophée : le premier arrive avec ta première hitbodedout.</string>
+    <string name="trophees_tous">Tous les trophées sont gagnés !</string>
     <string name="trophees_compte">%1$d sur %2$d</string>
     <string name="trophees_paliers">🏆  Trophées et paliers</string>
     <string name="channel_celebration">Paliers et trophées</string>
