@@ -104,9 +104,29 @@ def annoter(texte_id, sections, nusah):
             cond = "motsae_chabbat"
         elif titre == "ספירת העומר":
             cond = "omer"
-        # La lecture de la Torah (15/10) : repliée les jours sans lecture.
+        # La lecture de la Torah (15/10) : un seul groupe, replié les jours sans lecture ;
+        # dedans, ce qui ne se dit qu'avec Ta'hanoun, ou que lundi et jeudi, en variante.
         elif titre == "קריאת התורה" and office == "chaharit":
-            cond = "kriat_hatorah"
+            mode, reste = "kriat_hatorah", None
+            for bi, b in enumerate(sec["blocs"]):
+                x = nu(b.get("t") or b.get("c"))
+                if "c" in b:
+                    if "ביום שיש בו תחנון" in x or x.startswith("אין אומרים אא״א"):
+                        mode, reste = "tahanoun_chaharit", None
+                    elif "ביום שאין בו תחנון" in x:
+                        mode, reste = "!tahanoun_chaharit", 1
+                    elif "בשני וחמישי כשאומרים תחנון" in x:
+                        mode, reste = "lundi_jeudi", None
+                    else:
+                        mode, reste = "kriat_hatorah", None
+                    note("bloc", si, bi, mode, {"force": "kriat_hatorah"})
+                    continue
+                note("bloc", si, bi, mode, {"force": "kriat_hatorah"})
+                if reste is not None:
+                    reste -= 1
+                    if reste == 0:
+                        mode, reste = "kriat_hatorah", None
+            continue
         elif titre == "ברכי נפשי" and "בראש חדש" in nu(sec["blocs"][0].get("c", "")):
             cond = "roch_hodech"
         if cond:
@@ -311,6 +331,8 @@ def annoter(texte_id, sections, nusah):
                     note("indice", si, bi, "machiv_harouah", {"texte": "משיב הרוח ומוריד הגשם"})
             bi += 1
     grouper(sortie)
+    for e in sortie:
+        e.pop("_force", None)
     return sortie
 
 
@@ -348,6 +370,17 @@ def grouper(annotations):
     precedent = None
     for e in annotations:
         if e["sorte"] != "bloc":
+            continue
+        force = e.pop("force", None)
+        if force:
+            # Un groupe imposé (la lecture de la Torah) : une seule racine, ses variantes dedans.
+            if precedent and precedent.get("_force") == force and precedent["s"] == e["s"] and precedent["b"] + 1 == e["b"]:
+                e["g"], e["racine"] = precedent["g"], force
+            else:
+                g += 1
+                e["g"], e["racine"] = g, force
+            e["_force"] = force
+            precedent = e
             continue
         if precedent and precedent["s"] == e["s"] and precedent["b"] + 1 == e["b"] \
                 and e.get("libelle") == precedent.get("libelle") \

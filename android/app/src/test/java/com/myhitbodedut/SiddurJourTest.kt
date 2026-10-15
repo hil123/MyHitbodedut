@@ -159,6 +159,20 @@ class SiddurJourTest {
                 SiddurJour.parse(json, n.cle).getValue("chaharit"), c(d), nusah = n.cle, enIsrael = true)
             assertTrue(n.cle, lignes("2026-10-20").any { it is SiddurJour.Ligne.Replie && it.condition == "kriat_hatorah" })
             assertTrue(n.cle, SiddurJour.Ligne.Etiquette("kriat_hatorah", "ajout_kriat_hatorah") in lignes("2026-10-19"))
+            // « אל ארך אפים » : dit un lundi ordinaire, estompé à Pourim (23/03/2027) et à 'Hanouka (07/12/2026), sans Ta'hanoun.
+            fun elArekh(d: String) = lignes(d).filterIsInstance<SiddurJour.Ligne.Bloc>()
+                .first { SiddurJour.empreinte(it.bloc.texte).startsWith("אל ארך אפים") }.style
+            assertEquals(n.cle, SiddurJour.Style.DU_JOUR, elArekh("2026-10-19"))
+            assertEquals(n.cle, SiddurJour.Style.HORS, elArekh("2027-03-23"))
+            assertEquals(n.cle, SiddurJour.Style.HORS, elArekh("2026-12-07"))
+        }
+        // Les « יהי רצון » (Sfard, Ashkenaz) : lundi et jeudi avec Ta'hanoun seulement ; pas à Roch 'Hodech (11/11/2026, mercredi).
+        listOf(Nusah.SEFARD, Nusah.ASHKENAZ).forEach { n ->
+            fun yehiRatson(d: String) = SiddurJour.lignes(DataFiles.siddur(n).texte("chaharit")!!,
+                SiddurJour.parse(json, n.cle).getValue("chaharit"), c(d), nusah = n.cle, enIsrael = true)
+                .filterIsInstance<SiddurJour.Ligne.Bloc>().first { SiddurJour.empreinte(it.bloc.texte).startsWith("יהי רצון מלפני אבינו") }.style
+            assertEquals(n.cle, SiddurJour.Style.DU_JOUR, yehiRatson("2026-10-19"))
+            assertEquals(n.cle, SiddurJour.Style.HORS, yehiRatson("2026-11-11"))
         }
     }
 

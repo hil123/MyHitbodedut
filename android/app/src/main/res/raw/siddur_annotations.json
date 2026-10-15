@@ -594,10 +594,184 @@
     "empreinte": "וידוי"
    },
    {
-    "sorte": "section",
+    "sorte": "bloc",
+    "s": 11,
+    "si": "tahanoun_chaharit",
+    "b": 0,
+    "empreinte": "לפני הוצאת ספר תורה ביום שיש בו תחנון או",
+    "g": 10,
+    "racine": "kriat_hatorah"
+   },
+   {
+    "sorte": "bloc",
+    "s": 11,
+    "si": "tahanoun_chaharit",
+    "b": 1,
+    "empreinte": "אל ארך אפים ורב חסד ואמת, אל באפך תוכיחנ",
+    "g": 10,
+    "racine": "kriat_hatorah"
+   },
+   {
+    "sorte": "bloc",
+    "s": 11,
+    "si": "tahanoun_chaharit",
+    "b": 2,
+    "empreinte": "אל ארך אפים ומלא רחמים, אל תסתר פניך ממנ",
+    "g": 10,
+    "racine": "kriat_hatorah"
+   },
+   {
+    "sorte": "bloc",
+    "s": 11,
+    "si": "!tahanoun_chaharit",
+    "b": 3,
+    "empreinte": "ביום שאין בו תחנון אומרים:",
+    "g": 10,
+    "racine": "kriat_hatorah"
+   },
+   {
+    "sorte": "bloc",
+    "s": 11,
+    "si": "!tahanoun_chaharit",
+    "b": 4,
+    "empreinte": "יהי יהוה אלהינו עמנו כאשר היה עםאבתינו א",
+    "g": 10,
+    "racine": "kriat_hatorah"
+   },
+   {
+    "sorte": "bloc",
     "s": 11,
     "si": "kriat_hatorah",
-    "empreinte": "קריאת התורה"
+    "b": 5,
+    "empreinte": "שמוציאים ספר תורה אומרים ברוך המקום שנתן",
+    "g": 10,
+    "racine": "kriat_hatorah"
+   },
+   {
+    "sorte": "bloc",
+    "s": 11,
+    "si": "kriat_hatorah",
+    "b": 6,
+    "empreinte": "כשמגיע לדוכן, מגביה את ספר התורה ומראה ה",
+    "g": 10,
+    "racine": "kriat_hatorah"
+   },
+   {
+    "sorte": "bloc",
+    "s": 11,
+    "si": "kriat_hatorah",
+    "b": 7,
+    "empreinte": "וזאת התורה אשרשם משה לפני בני ישראל תורה",
+    "g": 10,
+    "racine": "kriat_hatorah"
+   },
+   {
+    "sorte": "bloc",
+    "s": 11,
+    "si": "kriat_hatorah",
+    "b": 8,
+    "empreinte": "ואומר העולה: השם עמכם:",
+    "g": 10,
+    "racine": "kriat_hatorah"
+   },
+   {
+    "sorte": "bloc",
+    "s": 11,
+    "si": "kriat_hatorah",
+    "b": 9,
+    "empreinte": "ועונים הקהל: יברכך השם:",
+    "g": 10,
+    "racine": "kriat_hatorah"
+   },
+   {
+    "sorte": "bloc",
+    "s": 11,
+    "si": "kriat_hatorah",
+    "b": 10,
+    "empreinte": "ואומר העולה: ברכו את יהוה המברך:",
+    "g": 10,
+    "racine": "kriat_hatorah"
+   },
+   {
+    "sorte": "bloc",
+    "s": 11,
+    "si": "kriat_hatorah",
+    "b": 11,
+    "empreinte": "ועונים הקהל: ברוך יהוה המברך לעולם ועד:",
+    "g": 10,
+    "racine": "kriat_hatorah"
+   },
+   {
+    "sorte": "bloc",
+    "s": 11,
+    "si": "kriat_hatorah",
+    "b": 12,
+    "empreinte": "וחוזר העולה: ברוך יהוה המברך לעולם ועד:",
+    "g": 10,
+    "racine": "kriat_hatorah"
+   },
+   {
+    "sorte": "bloc",
+    "s": 11,
+    "si": "kriat_hatorah",
+    "b": 13,
+    "empreinte": "ומברך העולה לפני הקריאה",
+    "g": 10,
+    "racine": "kriat_hatorah"
+   },
+   {
+    "sorte": "bloc",
+    "s": 11,
+    "si": "kriat_hatorah",
+    "b": 14,
+    "empreinte": "ברוך אתה יהוה, אלהינו מלך העולם, אשר בחר",
+    "g": 10,
+    "racine": "kriat_hatorah"
+   },
+   {
+    "sorte": "bloc",
+    "s": 11,
+    "si": "kriat_hatorah",
+    "b": 15,
+    "empreinte": "אחר הקריאה מברך העולה",
+    "g": 10,
+    "racine": "kriat_hatorah"
+   },
+   {
+    "sorte": "bloc",
+    "s": 11,
+    "si": "kriat_hatorah",
+    "b": 16,
+    "empreinte": "ברוך אתה יהוה, אלהינו מלך העולם, אשר נתן",
+    "g": 10,
+    "racine": "kriat_hatorah"
+   },
+   {
+    "sorte": "bloc",
+    "s": 11,
+    "si": "kriat_hatorah",
+    "b": 17,
+    "empreinte": "ברכת הגומל נמצא בסדר קריאת התורה של שבת",
+    "g": 10,
+    "racine": "kriat_hatorah"
+   },
+   {
+    "sorte": "bloc",
+    "s": 11,
+    "si": "kriat_hatorah",
+    "b": 18,
+    "empreinte": "העולה האחרון אומר חצי קדיש",
+    "g": 10,
+    "racine": "kriat_hatorah"
+   },
+   {
+    "sorte": "bloc",
+    "s": 11,
+    "si": "kriat_hatorah",
+    "b": 19,
+    "empreinte": "יתגדל ויתקדש שמה רבא. [אמן] בעלמא די ברא",
+    "g": 10,
+    "racine": "kriat_hatorah"
    },
    {
     "sorte": "bloc",
@@ -605,7 +779,7 @@
     "si": "hanouka",
     "b": 17,
     "empreinte": "בחנוכה אומרים",
-    "g": 10,
+    "g": 11,
     "racine": "hanouka"
    },
    {
@@ -614,7 +788,7 @@
     "si": "hanouka",
     "b": 18,
     "empreinte": "מזמור (תהילים ל׳:א׳-ב׳) שירחנכת הבית לדו",
-    "g": 10,
+    "g": 11,
     "racine": "hanouka"
    },
    {
@@ -2573,10 +2747,364 @@
     "empreinte": "לשני וחמישי"
    },
    {
-    "sorte": "section",
+    "sorte": "bloc",
+    "s": 12,
+    "si": "tahanoun_chaharit",
+    "b": 0,
+    "empreinte": "אין אומרים אא״א לא בר״ח ולא בע״פ ולא בער",
+    "g": 15,
+    "racine": "kriat_hatorah"
+   },
+   {
+    "sorte": "bloc",
+    "s": 12,
+    "si": "tahanoun_chaharit",
+    "b": 1,
+    "empreinte": "אל ארך אפים ומלא רחמים, אלתסתר פניך ממנו",
+    "g": 15,
+    "racine": "kriat_hatorah"
+   },
+   {
+    "sorte": "bloc",
     "s": 12,
     "si": "kriat_hatorah",
-    "empreinte": "קריאת התורה"
+    "b": 2,
+    "empreinte": "משה רבינו ונביאים שעמו תקנו שיהו קורין ב",
+    "g": 15,
+    "racine": "kriat_hatorah"
+   },
+   {
+    "sorte": "bloc",
+    "s": 12,
+    "si": "kriat_hatorah",
+    "b": 3,
+    "empreinte": "כשפותחין הארון הקדוש אומרים זה:",
+    "g": 15,
+    "racine": "kriat_hatorah"
+   },
+   {
+    "sorte": "bloc",
+    "s": 12,
+    "si": "kriat_hatorah",
+    "b": 4,
+    "empreinte": "ויהי בנסע הארן ויאמר משה קומה יהוה ויפצו",
+    "g": 15,
+    "racine": "kriat_hatorah"
+   },
+   {
+    "sorte": "bloc",
+    "s": 12,
+    "si": "kriat_hatorah",
+    "b": 5,
+    "empreinte": "איתא בזהר (ויקהל דף ר״ו.) אר״ש כד מפקין ",
+    "g": 15,
+    "racine": "kriat_hatorah"
+   },
+   {
+    "sorte": "bloc",
+    "s": 12,
+    "si": "kriat_hatorah",
+    "b": 6,
+    "empreinte": "בריך שמה דמרא עלמא בריך כתרך ואתרך, יהא ",
+    "g": 15,
+    "racine": "kriat_hatorah"
+   },
+   {
+    "sorte": "bloc",
+    "s": 12,
+    "si": "kriat_hatorah",
+    "b": 7,
+    "empreinte": "שליח ציבור:",
+    "g": 15,
+    "racine": "kriat_hatorah"
+   },
+   {
+    "sorte": "bloc",
+    "s": 12,
+    "si": "kriat_hatorah",
+    "b": 8,
+    "empreinte": "גדלו ליהוה אתי ונרוממה שמו יחדו:",
+    "g": 15,
+    "racine": "kriat_hatorah"
+   },
+   {
+    "sorte": "bloc",
+    "s": 12,
+    "si": "kriat_hatorah",
+    "b": 9,
+    "empreinte": "והקהל עונים:",
+    "g": 15,
+    "racine": "kriat_hatorah"
+   },
+   {
+    "sorte": "bloc",
+    "s": 12,
+    "si": "kriat_hatorah",
+    "b": 10,
+    "empreinte": "לך יהוה הגדלה והגבורה והתפארת והנצח וההו",
+    "g": 15,
+    "racine": "kriat_hatorah"
+   },
+   {
+    "sorte": "bloc",
+    "s": 12,
+    "si": "kriat_hatorah",
+    "b": 11,
+    "empreinte": "אב הרחמים הוא ירחם עם עמוסים, ויזכר ברית",
+    "g": 15,
+    "racine": "kriat_hatorah"
+   },
+   {
+    "sorte": "bloc",
+    "s": 12,
+    "si": "kriat_hatorah",
+    "b": 12,
+    "empreinte": "חזן:",
+    "g": 15,
+    "racine": "kriat_hatorah"
+   },
+   {
+    "sorte": "bloc",
+    "s": 12,
+    "si": "kriat_hatorah",
+    "b": 13,
+    "empreinte": "ותגלה ותראה מלכותו עלינו בזמן קרוב ויחון",
+    "g": 15,
+    "racine": "kriat_hatorah"
+   },
+   {
+    "sorte": "bloc",
+    "s": 12,
+    "si": "kriat_hatorah",
+    "b": 14,
+    "empreinte": "והקהל עונים:",
+    "g": 15,
+    "racine": "kriat_hatorah"
+   },
+   {
+    "sorte": "bloc",
+    "s": 12,
+    "si": "kriat_hatorah",
+    "b": 15,
+    "empreinte": "ואתם הדבקים ביהוה אלהיכם חיים כלכם היום:",
+    "g": 15,
+    "racine": "kriat_hatorah"
+   },
+   {
+    "sorte": "bloc",
+    "s": 12,
+    "si": "kriat_hatorah",
+    "b": 16,
+    "empreinte": "כשקורין אותו לתורה יאמר זה:",
+    "g": 15,
+    "racine": "kriat_hatorah"
+   },
+   {
+    "sorte": "bloc",
+    "s": 12,
+    "si": "kriat_hatorah",
+    "b": 17,
+    "empreinte": "ברכו את יהוה המברך:",
+    "g": 15,
+    "racine": "kriat_hatorah"
+   },
+   {
+    "sorte": "bloc",
+    "s": 12,
+    "si": "kriat_hatorah",
+    "b": 18,
+    "empreinte": "קהל ועולה:",
+    "g": 15,
+    "racine": "kriat_hatorah"
+   },
+   {
+    "sorte": "bloc",
+    "s": 12,
+    "si": "kriat_hatorah",
+    "b": 19,
+    "empreinte": "ברוך יהוה המברך לעולם ועד:",
+    "g": 15,
+    "racine": "kriat_hatorah"
+   },
+   {
+    "sorte": "bloc",
+    "s": 12,
+    "si": "kriat_hatorah",
+    "b": 20,
+    "empreinte": "ויאמר העולה:",
+    "g": 15,
+    "racine": "kriat_hatorah"
+   },
+   {
+    "sorte": "bloc",
+    "s": 12,
+    "si": "kriat_hatorah",
+    "b": 21,
+    "empreinte": "ברוך אתה יהוה אלהינו מלך העולם אשר בחר ב",
+    "g": 15,
+    "racine": "kriat_hatorah"
+   },
+   {
+    "sorte": "bloc",
+    "s": 12,
+    "si": "kriat_hatorah",
+    "b": 22,
+    "empreinte": "לאחר הקריאה מברך:",
+    "g": 15,
+    "racine": "kriat_hatorah"
+   },
+   {
+    "sorte": "bloc",
+    "s": 12,
+    "si": "kriat_hatorah",
+    "b": 23,
+    "empreinte": "ברוך אתה יהוה אלהינו מלך העולם אשר נתן ל",
+    "g": 15,
+    "racine": "kriat_hatorah"
+   },
+   {
+    "sorte": "bloc",
+    "s": 12,
+    "si": "kriat_hatorah",
+    "b": 24,
+    "empreinte": "ארבעה צריכים להודות יורדי הים כשעלו ממנה",
+    "g": 15,
+    "racine": "kriat_hatorah"
+   },
+   {
+    "sorte": "bloc",
+    "s": 12,
+    "si": "kriat_hatorah",
+    "b": 25,
+    "empreinte": "ברוך אתה יהוה אלהינו מלך העולם הגומל לחי",
+    "g": 15,
+    "racine": "kriat_hatorah"
+   },
+   {
+    "sorte": "bloc",
+    "s": 12,
+    "si": "kriat_hatorah",
+    "b": 26,
+    "empreinte": "והקהל עונים:",
+    "g": 15,
+    "racine": "kriat_hatorah"
+   },
+   {
+    "sorte": "bloc",
+    "s": 12,
+    "si": "kriat_hatorah",
+    "b": 27,
+    "empreinte": "מי שגמלך טוב הוא יגמלך כלטוב סלה:",
+    "g": 15,
+    "racine": "kriat_hatorah"
+   },
+   {
+    "sorte": "bloc",
+    "s": 12,
+    "si": "kriat_hatorah",
+    "b": 28,
+    "empreinte": "ברכת ברוך שפטרני",
+    "g": 15,
+    "racine": "kriat_hatorah"
+   },
+   {
+    "sorte": "bloc",
+    "s": 12,
+    "si": "kriat_hatorah",
+    "b": 29,
+    "empreinte": "מי שהגיע בנו לבן י״ג שנה ויום אחד יברך ה",
+    "g": 15,
+    "racine": "kriat_hatorah"
+   },
+   {
+    "sorte": "bloc",
+    "s": 12,
+    "si": "kriat_hatorah",
+    "b": 30,
+    "empreinte": "ברוך שפטרני מענשו של זה:",
+    "g": 15,
+    "racine": "kriat_hatorah"
+   },
+   {
+    "sorte": "bloc",
+    "s": 12,
+    "si": "kriat_hatorah",
+    "b": 31,
+    "empreinte": "בעת הגבהת ס״ת לאחר הקריאה היה האר״י ז״ל ",
+    "g": 15,
+    "racine": "kriat_hatorah"
+   },
+   {
+    "sorte": "bloc",
+    "s": 12,
+    "si": "kriat_hatorah",
+    "b": 32,
+    "empreinte": "וזאת התורה אשר שם משה לפני בני ישראל על ",
+    "g": 15,
+    "racine": "kriat_hatorah"
+   },
+   {
+    "sorte": "bloc",
+    "s": 12,
+    "si": "kriat_hatorah",
+    "b": 33,
+    "empreinte": "עץ חיים היא למחזיקים בה ותומכיה מאשר: דר",
+    "g": 15,
+    "racine": "kriat_hatorah"
+   },
+   {
+    "sorte": "bloc",
+    "s": 12,
+    "si": "lundi_jeudi",
+    "b": 34,
+    "empreinte": "בשני וחמישי כשאומרים תחנון בשעה שהגולל ג",
+    "g": 15,
+    "racine": "kriat_hatorah"
+   },
+   {
+    "sorte": "bloc",
+    "s": 12,
+    "si": "lundi_jeudi",
+    "b": 35,
+    "empreinte": "יהי רצון מלפני אבינו שבשמים לכונן את בית",
+    "g": 15,
+    "racine": "kriat_hatorah"
+   },
+   {
+    "sorte": "bloc",
+    "s": 12,
+    "si": "lundi_jeudi",
+    "b": 36,
+    "empreinte": "יהי רצון מלפני אבינו שבשמים לרחם עלינו ו",
+    "g": 15,
+    "racine": "kriat_hatorah"
+   },
+   {
+    "sorte": "bloc",
+    "s": 12,
+    "si": "lundi_jeudi",
+    "b": 37,
+    "empreinte": "יהי רצון מלפני אבינו שבשמים לקים בנו חכמ",
+    "g": 15,
+    "racine": "kriat_hatorah"
+   },
+   {
+    "sorte": "bloc",
+    "s": 12,
+    "si": "lundi_jeudi",
+    "b": 38,
+    "empreinte": "יהי רצון מלפני אבינו שבשמים שנשמע ונתבשר",
+    "g": 15,
+    "racine": "kriat_hatorah"
+   },
+   {
+    "sorte": "bloc",
+    "s": 12,
+    "si": "lundi_jeudi",
+    "b": 39,
+    "empreinte": "אחינו כל בית ישראל הנתונים בצרה ובשביה ה",
+    "g": 15,
+    "racine": "kriat_hatorah"
    },
    {
     "sorte": "section",
@@ -4738,10 +5266,427 @@
     "racine": "avinou_malkenou"
    },
    {
-    "sorte": "section",
+    "sorte": "bloc",
+    "s": 5,
+    "si": "tahanoun_chaharit",
+    "b": 0,
+    "empreinte": "אין אומרים אא״א לא בר״ח ולא בע״פ ולא בער",
+    "g": 16,
+    "racine": "kriat_hatorah"
+   },
+   {
+    "sorte": "bloc",
+    "s": 5,
+    "si": "tahanoun_chaharit",
+    "b": 1,
+    "empreinte": "אל ארך אפים ורבחסד ואמת אל באפך תוכיחנו:",
+    "g": 16,
+    "racine": "kriat_hatorah"
+   },
+   {
+    "sorte": "bloc",
     "s": 5,
     "si": "kriat_hatorah",
-    "empreinte": "קריאת התורה"
+    "b": 2,
+    "empreinte": "משה רבינו ונביאים שעמו תקנו שיהו קורין ב",
+    "g": 16,
+    "racine": "kriat_hatorah"
+   },
+   {
+    "sorte": "bloc",
+    "s": 5,
+    "si": "kriat_hatorah",
+    "b": 3,
+    "empreinte": "כשפותחין הארון הקדוש אומרים זה:",
+    "g": 16,
+    "racine": "kriat_hatorah"
+   },
+   {
+    "sorte": "bloc",
+    "s": 5,
+    "si": "kriat_hatorah",
+    "b": 4,
+    "empreinte": "ויהי בנסע הארן ויאמר משה קומה יהוה ויפצו",
+    "g": 16,
+    "racine": "kriat_hatorah"
+   },
+   {
+    "sorte": "bloc",
+    "s": 5,
+    "si": "kriat_hatorah",
+    "b": 5,
+    "empreinte": "איתא בזהר (ויקהל דף ר״ו.) אר״ש כד מפקין ",
+    "g": 16,
+    "racine": "kriat_hatorah"
+   },
+   {
+    "sorte": "bloc",
+    "s": 5,
+    "si": "kriat_hatorah",
+    "b": 6,
+    "empreinte": "בריך שמה דמרא עלמא. בריך כתרך ואתרך. יהא",
+    "g": 16,
+    "racine": "kriat_hatorah"
+   },
+   {
+    "sorte": "bloc",
+    "s": 5,
+    "si": "kriat_hatorah",
+    "b": 7,
+    "empreinte": "שליח ציבור:",
+    "g": 16,
+    "racine": "kriat_hatorah"
+   },
+   {
+    "sorte": "bloc",
+    "s": 5,
+    "si": "kriat_hatorah",
+    "b": 8,
+    "empreinte": "גדלו ליהוה אתי ונרוממה שמו יחדו:",
+    "g": 16,
+    "racine": "kriat_hatorah"
+   },
+   {
+    "sorte": "bloc",
+    "s": 5,
+    "si": "kriat_hatorah",
+    "b": 9,
+    "empreinte": "והקהל עונים: לך יהוה הגדלה והגבורה והתפא",
+    "g": 16,
+    "racine": "kriat_hatorah"
+   },
+   {
+    "sorte": "bloc",
+    "s": 5,
+    "si": "kriat_hatorah",
+    "b": 10,
+    "empreinte": "אב הרחמים הוא ירחם עם עמוסים, ויזכר ברית",
+    "g": 16,
+    "racine": "kriat_hatorah"
+   },
+   {
+    "sorte": "bloc",
+    "s": 5,
+    "si": "kriat_hatorah",
+    "b": 11,
+    "empreinte": "חזן:",
+    "g": 16,
+    "racine": "kriat_hatorah"
+   },
+   {
+    "sorte": "bloc",
+    "s": 5,
+    "si": "kriat_hatorah",
+    "b": 12,
+    "empreinte": "ותגלה ותראה מלכותו עלינו בזמן קרוב ויחון",
+    "g": 16,
+    "racine": "kriat_hatorah"
+   },
+   {
+    "sorte": "bloc",
+    "s": 5,
+    "si": "kriat_hatorah",
+    "b": 13,
+    "empreinte": "והקהל עונים:",
+    "g": 16,
+    "racine": "kriat_hatorah"
+   },
+   {
+    "sorte": "bloc",
+    "s": 5,
+    "si": "kriat_hatorah",
+    "b": 14,
+    "empreinte": "ואתם הדבקים ביהוה אלהיכם חיים כלכם היום:",
+    "g": 16,
+    "racine": "kriat_hatorah"
+   },
+   {
+    "sorte": "bloc",
+    "s": 5,
+    "si": "kriat_hatorah",
+    "b": 15,
+    "empreinte": "כשקורין אותו לתורה יאמר זה:",
+    "g": 16,
+    "racine": "kriat_hatorah"
+   },
+   {
+    "sorte": "bloc",
+    "s": 5,
+    "si": "kriat_hatorah",
+    "b": 16,
+    "empreinte": "ברכו את יהוה המברך:",
+    "g": 16,
+    "racine": "kriat_hatorah"
+   },
+   {
+    "sorte": "bloc",
+    "s": 5,
+    "si": "kriat_hatorah",
+    "b": 17,
+    "empreinte": "קהל ועולה:",
+    "g": 16,
+    "racine": "kriat_hatorah"
+   },
+   {
+    "sorte": "bloc",
+    "s": 5,
+    "si": "kriat_hatorah",
+    "b": 18,
+    "empreinte": "ברוך יהוה המברך לעולם ועד:",
+    "g": 16,
+    "racine": "kriat_hatorah"
+   },
+   {
+    "sorte": "bloc",
+    "s": 5,
+    "si": "kriat_hatorah",
+    "b": 19,
+    "empreinte": "ויאמר העולה:",
+    "g": 16,
+    "racine": "kriat_hatorah"
+   },
+   {
+    "sorte": "bloc",
+    "s": 5,
+    "si": "kriat_hatorah",
+    "b": 20,
+    "empreinte": "ברוך אתה יהוה אלהינו מלך העולם אשר בחר ב",
+    "g": 16,
+    "racine": "kriat_hatorah"
+   },
+   {
+    "sorte": "bloc",
+    "s": 5,
+    "si": "kriat_hatorah",
+    "b": 21,
+    "empreinte": "לאחר הקריאה מברך:",
+    "g": 16,
+    "racine": "kriat_hatorah"
+   },
+   {
+    "sorte": "bloc",
+    "s": 5,
+    "si": "kriat_hatorah",
+    "b": 22,
+    "empreinte": "ברוך אתה יהוה אלהינו מלך העולם אשר נתן ל",
+    "g": 16,
+    "racine": "kriat_hatorah"
+   },
+   {
+    "sorte": "bloc",
+    "s": 5,
+    "si": "kriat_hatorah",
+    "b": 23,
+    "empreinte": "ארבעה צריכים להודות יורדי הים כשעלו ממנה",
+    "g": 16,
+    "racine": "kriat_hatorah"
+   },
+   {
+    "sorte": "bloc",
+    "s": 5,
+    "si": "kriat_hatorah",
+    "b": 24,
+    "empreinte": "ברוך אתה יהוה אלהינו מלך העולם הגומל לחי",
+    "g": 16,
+    "racine": "kriat_hatorah"
+   },
+   {
+    "sorte": "bloc",
+    "s": 5,
+    "si": "kriat_hatorah",
+    "b": 25,
+    "empreinte": "והקהל עונים: מי שגמלך טוב הוא יגמלך כלטו",
+    "g": 16,
+    "racine": "kriat_hatorah"
+   },
+   {
+    "sorte": "bloc",
+    "s": 5,
+    "si": "kriat_hatorah",
+    "b": 26,
+    "empreinte": "מי שהגיע בנו לבן י״ג שנה ויום אחד יברך ה",
+    "g": 16,
+    "racine": "kriat_hatorah"
+   },
+   {
+    "sorte": "bloc",
+    "s": 5,
+    "si": "kriat_hatorah",
+    "b": 27,
+    "empreinte": "ברוך שפטרני מענשו של זה:",
+    "g": 16,
+    "racine": "kriat_hatorah"
+   },
+   {
+    "sorte": "bloc",
+    "s": 5,
+    "si": "kriat_hatorah",
+    "b": 28,
+    "empreinte": "יתגדל ויתקדש שמה רבא ( אמן )",
+    "g": 16,
+    "racine": "kriat_hatorah"
+   },
+   {
+    "sorte": "bloc",
+    "s": 5,
+    "si": "kriat_hatorah",
+    "b": 29,
+    "empreinte": "בעלמא דיברא כרעותה וימליך מלכותה בחייכון",
+    "g": 16,
+    "racine": "kriat_hatorah"
+   },
+   {
+    "sorte": "bloc",
+    "s": 5,
+    "si": "kriat_hatorah",
+    "b": 30,
+    "empreinte": "יהא שמה רבא מברך לעלם ולעלמי עלמיא",
+    "g": 16,
+    "racine": "kriat_hatorah"
+   },
+   {
+    "sorte": "bloc",
+    "s": 5,
+    "si": "kriat_hatorah",
+    "b": 31,
+    "empreinte": "יתברך וישתבח ויתפאר ויתרומם ויתנשא ויתהד",
+    "g": 16,
+    "racine": "kriat_hatorah"
+   },
+   {
+    "sorte": "bloc",
+    "s": 5,
+    "si": "kriat_hatorah",
+    "b": 32,
+    "empreinte": "לעלא מןכל ( בעשי״ת לעלא לעלא מכל) ברכתא ",
+    "g": 16,
+    "racine": "kriat_hatorah"
+   },
+   {
+    "sorte": "bloc",
+    "s": 5,
+    "si": "kriat_hatorah",
+    "b": 33,
+    "empreinte": "בעת הגבהת ס״ת לאחר הקריאה היה האר״י ז״ל ",
+    "g": 16,
+    "racine": "kriat_hatorah"
+   },
+   {
+    "sorte": "bloc",
+    "s": 5,
+    "si": "kriat_hatorah",
+    "b": 34,
+    "empreinte": "וזאת התורה אשר שם משה לפני בני ישראל על ",
+    "g": 16,
+    "racine": "kriat_hatorah"
+   },
+   {
+    "sorte": "bloc",
+    "s": 5,
+    "si": "kriat_hatorah",
+    "b": 35,
+    "empreinte": "עץ חיים היא למחזיקים בה ותומכיה מאשר: דר",
+    "g": 16,
+    "racine": "kriat_hatorah"
+   },
+   {
+    "sorte": "bloc",
+    "s": 5,
+    "si": "lundi_jeudi",
+    "b": 36,
+    "empreinte": "בשני וחמישי כשאומרים תחנון בשעה שהגולל ג",
+    "g": 16,
+    "racine": "kriat_hatorah"
+   },
+   {
+    "sorte": "bloc",
+    "s": 5,
+    "si": "lundi_jeudi",
+    "b": 37,
+    "empreinte": "יהי רצון מלפני אבינו שבשמים לכונן את בית",
+    "g": 16,
+    "racine": "kriat_hatorah"
+   },
+   {
+    "sorte": "bloc",
+    "s": 5,
+    "si": "lundi_jeudi",
+    "b": 38,
+    "empreinte": "יהי רצון מלפני אבינו שבשמים לרחם עלינו ו",
+    "g": 16,
+    "racine": "kriat_hatorah"
+   },
+   {
+    "sorte": "bloc",
+    "s": 5,
+    "si": "lundi_jeudi",
+    "b": 39,
+    "empreinte": "יהי רצון מלפני אבינו שבשמים לקים בנו חכמ",
+    "g": 16,
+    "racine": "kriat_hatorah"
+   },
+   {
+    "sorte": "bloc",
+    "s": 5,
+    "si": "lundi_jeudi",
+    "b": 40,
+    "empreinte": "יהי רצון מלפני אבינו שבשמים שנשמע ונתבשר",
+    "g": 16,
+    "racine": "kriat_hatorah"
+   },
+   {
+    "sorte": "bloc",
+    "s": 5,
+    "si": "lundi_jeudi",
+    "b": 41,
+    "empreinte": "אחינו כל בית ישראל הנתונים בצרה ובשביה ה",
+    "g": 16,
+    "racine": "kriat_hatorah"
+   },
+   {
+    "sorte": "bloc",
+    "s": 5,
+    "si": "kriat_hatorah",
+    "b": 42,
+    "empreinte": "בשני ובחמישי ושאר ימים שמוציאין ספר תורה",
+    "g": 16,
+    "racine": "kriat_hatorah"
+   },
+   {
+    "sorte": "bloc",
+    "s": 5,
+    "si": "kriat_hatorah",
+    "b": 43,
+    "empreinte": "יהללו אתשם יהוה כינשגב שמו לבדו:",
+    "g": 16,
+    "racine": "kriat_hatorah"
+   },
+   {
+    "sorte": "bloc",
+    "s": 5,
+    "si": "kriat_hatorah",
+    "b": 44,
+    "empreinte": "קהל: הודו עלארץ ושמים: וירם קרן לעמו תהל",
+    "g": 16,
+    "racine": "kriat_hatorah"
+   },
+   {
+    "sorte": "bloc",
+    "s": 5,
+    "si": "kriat_hatorah",
+    "b": 45,
+    "empreinte": "לדוד מזמור ליהוה הארץ ומלואה תבל וישבי ב",
+    "g": 16,
+    "racine": "kriat_hatorah"
+   },
+   {
+    "sorte": "bloc",
+    "s": 5,
+    "si": "kriat_hatorah",
+    "b": 46,
+    "empreinte": "ובנחה יאמר שובה יהוה רבבות אלפי ישראל: ק",
+    "g": 16,
+    "racine": "kriat_hatorah"
    },
    {
     "sorte": "renvoi",
