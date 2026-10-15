@@ -681,6 +681,16 @@ object Store {
         prefs(context).edit().putString("favoris", l.joinToString("|")).apply()
     }
 
+    /** Les marque-pages des lectures (15/10) : MarquesPages. */
+    fun marques(context: Context): List<MarquesPages.Marque> = MarquesPages.decoder(prefs(context).getString("marques_pages", null))
+
+    /** Pose ou retire ; vrai si la marque est maintenant posée. */
+    fun basculerMarque(context: Context, m: MarquesPages.Marque): Boolean {
+        val l = MarquesPages.basculer(marques(context), m)
+        prefs(context).edit().putString("marques_pages", MarquesPages.encoder(l)).apply()
+        return l.any { it.memePlace(m) }
+    }
+
     fun derniereLecture(context: Context): String? = prefs(context).getString("derniere_lecture", null)
 
     fun positionLecture(context: Context, cle: String): Int? = prefs(context).getInt("position:$cle", -1).takeIf { it > 0 }

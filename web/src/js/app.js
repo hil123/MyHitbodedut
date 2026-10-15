@@ -1016,9 +1016,24 @@ function ecranPriere() {
   const nusah = store.siddurNusah();
   const c = conditionsPour(nusah, store.inIsrael(), jourDuTexte.conditions, store.sansTahanounFinTichri(), hemisphereSud());
   const nom = (a, condition) => tr.t(libelleJour(a.libelle, condition, nusah, c));
+  // Marque-pages (15/10, SiddurLectureActivity) : un appui long sur un paragraphe le marque ou le démarque.
+  const cleMarque = `${livre ? 'l' : 's'}:${x.id}`;
+  const nusahMarque = livre ? '' : store.siddurNusah();
+  const marquee = (si, i) => store.marques().some((m) => m.cle === cleMarque && m.nusah === nusahMarque && m.section === si && m.bloc === i);
   const paragraphe = (s, i) => {
     const b = s.blocs[i];
-    return h('p', { class: b.c !== undefined ? 'consigne' : 'priere', lang: 'he', dir: 'rtl' }, riche(b.c ?? b.t));
+    const si = x.sections.indexOf(s);
+    const p = h('p', { class: `${b.c !== undefined ? 'consigne' : 'priere'}${marquee(si, i) ? ' marque-page' : ''}`, lang: 'he', dir: 'rtl', 'data-place': `${si}:${i}` }, riche(b.c ?? b.t));
+    let minuteur = null;
+    const poser = () => {
+      const pose = store.basculerMarque({ cle: cleMarque, nusah: nusahMarque, section: si, bloc: i, apercu: apercuMarque(b.c ?? b.t) });
+      p.classList.toggle('marque-page', pose);
+      signale(tr.t(pose ? 'marque_posee' : 'marque_retiree'));
+    };
+    p.addEventListener('contextmenu', (e) => { e.preventDefault(); clearTimeout(minuteur); poser(); });
+    p.addEventListener('touchstart', () => { minuteur = setTimeout(() => { minuteur = null; poser(); }, 550); }, { passive: true });
+    for (const ev of ['touchend', 'touchmove', 'touchcancel']) p.addEventListener(ev, () => clearTimeout(minuteur), { passive: true });
+    return p;
   };
   // « Aujourd'hui · הַלֵּל › » : le texte à dire là ce jour-là, ouvert d'un geste ; rien hors du jour.
   const renvois = (si, i) => (idx.renvois.get(`${si}:${i ?? ''}`) ?? []).filter((a) => ajoutVrai(a.si, c)).map((a) => {
@@ -1067,7 +1082,13 @@ function ecranPriere() {
     'aria-label': tr.t(store.favoris().includes(cle) ? 'favori_retirer' : 'favori_ajouter'),
     onclick: (e) => { store.basculerFavori(cle); const fav = store.favoris().includes(cle); e.currentTarget.setAttribute('aria-pressed', String(fav)); e.currentTarget.textContent = fav ? '★' : '☆'; } },
   store.favoris().includes(cle) ? '★' : '☆');
-  ecran.querySelector('.barre')?.append(etoile);
+  const listeMarques = h('button', { type: 'button', class: 'favori', 'aria-label': tr.t('marques_titre'), onclick: () => {
+    const l = store.marques().filter((m) => m.cle === cleMarque && m.nusah === nusahMarque).sort((a, b) => a.section - b.section || a.bloc - b.bloc);
+    if (!l.length) { signale(tr.t('marques_aucun')); return; }
+    choisirDans(tr.t('marques_titre'), l.map((m) => `🔖 ${m.apercu}…`), -1, (k) => allerAMarque(ecran, l[k]));
+  } }, '🔖');
+  ecran.querySelector('.barre')?.append(listeMarques, etoile);
+  if (marqueAOuvrir?.cle === cleMarque) { const m = marqueAOuvrir; marqueAOuvrir = null; requestAnimationFrame(() => allerAMarque(ecran, m)); return ecran; }
   const defile = ecran.querySelector('.defile');
   if (defile) {
     const place = store.positionLecture(cle);
@@ -1127,6 +1148,19 @@ function ecranRecherche() {
     h('div', { class: 'defile' }, h('div', { class: 'contenu' }, h('div', { class: 'carte' }, champ), ...groupes)));
 }
 
+/** Les premiers mots d'un paragraphe, sans balises ni voyelles (MarquesPages.apercu). */
+const apercuMarque = (t) => t.replace(/<[^>]+>/g, ' ').replace(/[\u0591-\u05C7]/g, '').trim().split(/\s+/).slice(0, 6).join(' ');
+/** Le marque-page à rejoindre à l'ouverture du texte (depuis la Bibliothèque). */
+let marqueAOuvrir = null;
+/** Va au paragraphe marqué ; replié aujourd'hui, à sa section (le premier paragraphe qui suit). */
+function allerAMarque(ecran, m) {
+  const defile = ecran.querySelector('.defile');
+  const cible = ecran.querySelector(`[data-place="${m.section}:${m.bloc}"]`);
+  const visible = cible && cible.offsetParent !== null ? cible
+    : [...ecran.querySelectorAll('[data-place]')].find((p) => p.offsetParent !== null && Number(p.dataset.place.split(':')[0]) >= m.section);
+  if (visible && defile) defile.scrollTop += visible.getBoundingClientRect().top - defile.getBoundingClientRect().top - 8;
+}
+
 /** « Reprendre la lecture » et les favoris, en tête de la Bibliothèque (RepriseFavoris.kt). */
 function repriseFavoris() {
   const titre = (cle) => {
@@ -1141,6 +1175,11 @@ function repriseFavoris() {
   for (const cle of store.favoris()) {
     const t = titre(cle);
     if (t) lignes.push(ligne({ nom: `★ ${t}`, onclick: () => ouvrirCle(cle) }));
+  }
+  // Les marque-pages (15/10) : le texte et les premiers mots du paragraphe marqué.
+  for (const m of store.marques().slice(0, 12)) {
+    const t = titre(m.cle);
+    if (t) lignes.push(ligne({ nom: `🔖 ${t}`, etat: `${m.apercu}…`, onclick: () => { marqueAOuvrir = m; ouvrirCle(m.cle); } }));
   }
   return lignes.length ? h('div', { class: 'carte' }, ...lignes) : null;
 }

@@ -135,6 +135,16 @@ export function creeStore(stockage, { maintenant = () => new Date(), fuseau } = 
       const l = this.favoris().filter((x) => x !== cle);
       set('favoris', l.length === this.favoris().length ? [cle, ...l] : l);
     },
+    /** Les marque-pages (15/10, MarquesPages.kt) : { cle, nusah, section, bloc, apercu }, le plus récent en tête. */
+    marques: () => (Array.isArray(get('marques_pages', [])) ? get('marques_pages', []) : []),
+    /** Pose ou retire ; vrai si la marque est maintenant posée. */
+    basculerMarque(m) {
+      const meme = (x) => x.cle === m.cle && x.nusah === m.nusah && x.section === m.section && x.bloc === m.bloc;
+      const l = this.marques();
+      const pose = !l.some(meme);
+      set('marques_pages', pose ? [m, ...l].slice(0, 60) : l.filter((x) => !meme(x)));
+      return pose;
+    },
     derniereLecture: () => get('derniere_lecture', null),
     positionLecture: (cle) => Number(get('positions_lecture', {})?.[cle] ?? 0),
     setPositionLecture(cle, y) {

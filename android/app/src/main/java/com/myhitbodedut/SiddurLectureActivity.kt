@@ -32,6 +32,10 @@ import java.time.LocalTime
  * signet ; on touche, on y est ; la section en cours se marque d'elle-même
  * pendant la lecture (SignetsSiddur).
  *
+ * Les marque-pages (15/10) : un appui long sur un paragraphe le marque (un
+ * trait à son début) ou le démarque ; le bouton 🔖 liste ceux du texte et y
+ * conduit ; la Bibliothèque les reprend tous (MarquesPages, RepriseFavoris).
+ *
  * Les ajouts du jour (10/10) : mis en évidence, avec leur nom ; les autres
  * repliés en une ligne, qu'un toucher ouvre et referme (SiddurJour, qui
  * construit les lignes et que les tests vérifient sur la JVM).
@@ -46,6 +50,10 @@ class SiddurLectureActivity : AppCompatActivity() {
 
     private lateinit var id: String
     private lateinit var liste: RecyclerView
+
+    /** La place (section, paragraphe) de chaque paragraphe affiché, par identité. */
+    private var places = java.util.IdentityHashMap<SiddurBloc, Pair<Int, Int>>()
+    private var lignesAffichees: List<Any> = emptyList()
 
     /** Les lignes où commencent les sections titrées : un signet chacune. */
     private var debuts: List<Int> = emptyList()
@@ -75,8 +83,14 @@ class SiddurLectureActivity : AppCompatActivity() {
             afficher(garderPlace = recueil().nusah == nusahAffiche)
         }
         afficher(garderPlace = false)
-        // Reprendre là où on s'était arrêté (14/10).
-        Store.positionLecture(this, cle())?.let { p -> liste.post { (liste.layoutManager as LinearLayoutManager).scrollToPositionWithOffset(p, 0) } }
+        // Ouvert depuis un marque-page (15/10) : à sa place ; sinon, reprendre là où on s'était arrêté (14/10).
+        val marque = intent.getStringExtra(MARQUE)?.split(':')?.mapNotNull { it.toIntOrNull() }?.takeIf { it.size == 2 }
+        if (marque != null) liste.post { allerA(marque[0], marque[1]) }
+        else Store.positionLecture(this, cle())?.let { p -> liste.post { (liste.layoutManager as LinearLayoutManager).scrollToPositionWithOffset(p, 0) } }
+        findViewById<TextView>(R.id.siddur_lecture_marques).apply {
+            contentDescription = getString(R.string.marques_titre)
+            setOnClickListener { listeMarques() }
+        }
         findViewById<TextView>(R.id.siddur_lecture_favori).apply {
             fun etoile() {
                 val fav = cle() in Store.favoris(this@SiddurLectureActivity)
@@ -90,6 +104,38 @@ class SiddurLectureActivity : AppCompatActivity() {
 
     /** « s:chaharit » pour le siddour, « l:likoutei_etsot » pour un livre : la clé des favoris et de la reprise. */
     private fun cle(): String = (if (livre) "l:" else "s:") + id
+
+    /** Le noussa'h des marque-pages : celui du siddour affiché ; aucun pour un livre. */
+    private fun nusahMarques(): String = if (livre) "" else Store.siddurNusah(this).cle
+
+    private fun marquee(bloc: SiddurBloc): Boolean {
+        val (si, bi) = places[bloc] ?: return false
+        return MarquesPages.duTexte(Store.marques(this), cle(), nusahMarques()).any { it.section == si && it.bloc == bi }
+    }
+
+    private fun basculerMarque(bloc: SiddurBloc) {
+        val (si, bi) = places[bloc] ?: return
+        val pose = Store.basculerMarque(this, MarquesPages.Marque(cle(), nusahMarques(), si, bi, MarquesPages.apercu(bloc.texte)))
+        android.widget.Toast.makeText(this, if (pose) R.string.marque_posee else R.string.marque_retiree, android.widget.Toast.LENGTH_SHORT).show()
+        liste.adapter?.notifyDataSetChanged()
+    }
+
+    /** Va au paragraphe ; replié aujourd'hui, au titre de sa section. */
+    private fun allerA(si: Int, bi: Int) {
+        val gestion = liste.layoutManager as LinearLayoutManager
+        val i = lignesAffichees.indexOfFirst { it is SiddurJour.Ligne.Bloc && places[it.bloc] == (si to bi) }
+        val repli = if (i >= 0) i else lignesAffichees.indexOfFirst { it is SiddurJour.Ligne.Bloc && (places[it.bloc]?.first ?: -1) >= si }
+        if (repli >= 0) { choisi = null; liste.stopScroll(); gestion.scrollToPositionWithOffset(repli, 0) }
+    }
+
+    /** La liste des marque-pages du texte ; vide, comment en poser un. */
+    private fun listeMarques() {
+        val marques = MarquesPages.duTexte(Store.marques(this), cle(), nusahMarques())
+        val dialogue = com.google.android.material.dialog.MaterialAlertDialogBuilder(this).setTitle(R.string.marques_titre)
+        if (marques.isEmpty()) dialogue.setMessage(R.string.marques_aucun)
+        else dialogue.setItems(marques.map { "🔖  ${it.apercu}…" }.toTypedArray()) { _, k -> allerA(marques[k].section, marques[k].bloc) }
+        dialogue.setPositiveButton(android.R.string.ok, null).show()
+    }
 
     override fun onPause() {
         super.onPause()
@@ -135,6 +181,10 @@ class SiddurLectureActivity : AppCompatActivity() {
         val place = gestion.findFirstVisibleItemPosition()
         val decalage = gestion.findViewByPosition(place)?.top ?: 0
         nusahAffiche = siddur.nusah
+        places = java.util.IdentityHashMap<SiddurBloc, Pair<Int, Int>>().apply {
+            texte.sections.forEachIndexed { si, s -> s.blocs.forEachIndexed { bi, b -> put(b, si to bi) } }
+        }
+        lignesAffichees = lignes
         liste.setBackgroundColor(rendu.fond)
         liste.adapter = Adaptateur(lignes, rendu)
         if (garderPlace && place in lignes.indices) gestion.scrollToPositionWithOffset(place, decalage)
@@ -239,7 +289,9 @@ class SiddurLectureActivity : AppCompatActivity() {
                 alpha = 1f
                 contentDescription = null
                 setOnClickListener(null)
+                setOnLongClickListener(null)
                 isClickable = false
+                isLongClickable = false
                 layoutDirection = View.LAYOUT_DIRECTION_RTL
                 textDirection = View.TEXT_DIRECTION_RTL
                 textAlignment = View.TEXT_ALIGNMENT_VIEW_START
@@ -274,6 +326,13 @@ class SiddurLectureActivity : AppCompatActivity() {
                     setTextColor(if (consigne) rendu.discret else rendu.texte)
                     if (ligne.style == SiddurJour.Style.DU_JOUR) setBackgroundColor(teinte)
                     if (ligne.style == SiddurJour.Style.HORS) alpha = 0.55f
+                    // Le marque-page : un trait de la couleur des titres au début du paragraphe.
+                    if (marquee(ligne.bloc)) background = android.graphics.drawable.LayerDrawable(arrayOf(
+                        background ?: android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT),
+                        android.graphics.drawable.ColorDrawable(rendu.titre))).apply {
+                        setLayerWidth(1, dp(4)); setLayerGravity(1, android.view.Gravity.START or android.view.Gravity.FILL_VERTICAL)
+                    }
+                    setOnLongClickListener { basculerMarque(ligne.bloc); true }
                 }
                 is SiddurJour.Ligne.Etiquette -> vue.apply {
                     layoutDirection = View.LAYOUT_DIRECTION_LOCALE
@@ -334,6 +393,15 @@ class SiddurLectureActivity : AppCompatActivity() {
     companion object {
         private const val ID = "id"
         private const val LIVRE = "livre"
+        private const val MARQUE = "marque"
+
+        /** Ouvre le texte d'un marque-page, à sa place. */
+        fun ouvrirMarque(context: Context, m: MarquesPages.Marque) {
+            val i = Intent(context, SiddurLectureActivity::class.java).putExtra(ID, m.cle.substringAfter(':'))
+                .putExtra(MARQUE, "${m.section}:${m.bloc}")
+            if (m.cle.startsWith("l:")) i.putExtra(LIVRE, true)
+            context.startActivity(i)
+        }
 
         fun intent(context: Context, id: String): Intent = Intent(context, SiddurLectureActivity::class.java).putExtra(ID, id)
 

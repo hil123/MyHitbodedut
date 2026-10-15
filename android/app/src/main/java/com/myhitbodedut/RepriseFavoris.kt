@@ -31,9 +31,13 @@ object RepriseFavoris {
         Store.derniereLecture(c)?.let { cle -> titre(c, cle)?.let { add(ligne(c, c.getString(R.string.reprise_titre), it, cle)) } }
         val favoris = Store.favoris(c).mapNotNull { cle -> titre(c, cle)?.let { cle to it } }
         favoris.forEachIndexed { i, (cle, t) -> add(ligne(c, if (i == 0) c.getString(R.string.favoris_titre) else null, t, cle)) }
+        // Les marque-pages (15/10) : le texte et les premiers mots du paragraphe marqué.
+        Store.marques(c).mapNotNull { m -> titre(c, m.cle)?.let { m to it } }.take(12).forEachIndexed { i, (m, t) ->
+            add(ligne(c, if (i == 0) c.getString(R.string.marques_titre) else null, "🔖 $t · ${m.apercu}…", m.cle) { SiddurLectureActivity.ouvrirMarque(c, m) })
+        }
     }
 
-    private fun ligne(c: Context, entete: String?, titre: String, cle: String): View = LinearLayout(c).apply {
+    private fun ligne(c: Context, entete: String?, titre: String, cle: String, action: () -> Unit = { ouvrir(c, cle) }): View = LinearLayout(c).apply {
         orientation = LinearLayout.VERTICAL
         layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
             .apply { setMargins(dp(c, 16), dp(c, if (entete != null) 14 else 4), dp(c, 16), 0) }
@@ -55,7 +59,7 @@ object RepriseFavoris {
             setPadding(0, dp(c, 6), 0, dp(c, 6))
             PoliceHebraique.appliquer(this)
             foreground = c.getDrawable(android.R.drawable.list_selector_background)
-            setOnClickListener { ouvrir(c, cle) }
+            setOnClickListener { action() }
         })
     }
 }

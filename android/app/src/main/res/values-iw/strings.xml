@@ -945,6 +945,10 @@
     <string name="favori_retirer">הסרה מהמועדפים</string>
     <string name="reprise_titre">המשך קריאה</string>
     <string name="favoris_titre">מועדפים</string>
+    <string name="marques_titre">סימניות</string>
+    <string name="marques_aucun">אין סימניות בטקסט הזה. לחיצה ארוכה על פסקה מוסיפה סימנייה, ולחיצה ארוכה נוספת מסירה אותה.</string>
+    <string name="marque_posee">הסימנייה נוספה</string>
+    <string name="marque_retiree">הסימנייה הוסרה</string>
     <string name="fond_contraste">ניגודיות גבוהה</string>
     <string name="settings_grand_texte">טקסט קריאה גדול</string>
     <string name="journal_humeur_avant">לפני ההתבודדות</string>

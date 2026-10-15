@@ -918,6 +918,10 @@
     <string name="favori_retirer">Remove from favorites</string>
     <string name="reprise_titre">Continue reading</string>
     <string name="favoris_titre">Favorites</string>
+    <string name="marques_titre">Bookmarks</string>
+    <string name="marques_aucun">No bookmark in this text. Long-press a paragraph to add one; long-press again to remove it.</string>
+    <string name="marque_posee">Bookmark added</string>
+    <string name="marque_retiree">Bookmark removed</string>
     <string name="fond_contraste">High contrast</string>
     <string name="settings_grand_texte">Large reading text</string>
     <string name="journal_humeur_avant">Before the hitbodedut</string>

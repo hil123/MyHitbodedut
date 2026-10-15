@@ -906,7 +906,7 @@ input[type="range"] { width: 100%; accent-color: var(--brand); }
 @media (prefers-reduced-motion: reduce) { .trophees-scene .objet-svg { animation: none; } }
 
 /* L'écran d'ouverture (15/10) : le 'hassid debout devant le היכל הציון, une seconde et demie.
-   Le fond (photo nette sur son propre flou) est centré : l'inscription reste entière. */
+   Le fond (la photo sur un vert sombre uni) est centré : l'inscription reste entière. */
 #ouverture { position: fixed; inset: 0; z-index: 1000; background: #1E3A30; overflow: hidden; transition: opacity 350ms ease-out; }
 #ouverture .fond { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 50%; }
 #ouverture::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to bottom, transparent 55%, rgba(16, 40, 32, 0.6)); }
@@ -959,3 +959,6 @@ input[type="range"] { width: 100%; accent-color: var(--brand); }
 .trophee-niveau { display: block; font-size: 11px; font-weight: 700; color: var(--ink); }
 .trophees-explication { margin: 6px 0 0; font-size: 13px; color: var(--muted); }
 .socle-plaque { white-space: normal !important; overflow: hidden !important; text-overflow: clip !important; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+
+/* Marque-page (15/10) : un trait de la couleur des titres au début du paragraphe. */
+.lecture .marque-page { border-inline-start: 4px solid var(--brand); padding-inline-start: 8px; }

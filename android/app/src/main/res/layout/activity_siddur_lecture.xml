@@ -40,6 +40,16 @@
                 android:textSize="13sp" />
         </LinearLayout>
 
+        <!-- Marque-pages (15/10) : la liste de ceux du texte. -->
+        <TextView
+            android:id="@+id/siddur_lecture_marques"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:gravity="center"
+            android:text="🔖"
+            android:textColor="@color/white"
+            android:textSize="20sp" />
+
         <!-- Favori (14/10) : l'étoile ajoute ou retire le texte de la liste de la Bibliothèque. -->
         <TextView
             android:id="@+id/siddur_lecture_favori"
