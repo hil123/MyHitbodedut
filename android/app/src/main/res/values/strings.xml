@@ -965,6 +965,7 @@
     <string name="reprise_titre">Reprendre la lecture</string>
     <string name="favoris_titre">Favoris</string>
     <string name="marques_titre">Marque-pages</string>
+    <string name="marques_icone">🔖</string>
     <string name="marques_aucun">Aucun marque-page dans ce texte. Un appui long sur un paragraphe en pose un ; un autre le retire.</string>
     <string name="marque_posee">Marque-page posé</string>
     <string name="marque_retiree">Marque-page retiré</string>

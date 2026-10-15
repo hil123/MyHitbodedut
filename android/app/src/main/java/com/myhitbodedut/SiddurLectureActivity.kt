@@ -88,6 +88,7 @@ class SiddurLectureActivity : AppCompatActivity() {
         if (marque != null) liste.post { allerA(marque[0], marque[1]) }
         else Store.positionLecture(this, cle())?.let { p -> liste.post { (liste.layoutManager as LinearLayoutManager).scrollToPositionWithOffset(p, 0) } }
         findViewById<TextView>(R.id.siddur_lecture_marques).apply {
+            setText(R.string.marques_icone)
             contentDescription = getString(R.string.marques_titre)
             setOnClickListener { listeMarques() }
         }
