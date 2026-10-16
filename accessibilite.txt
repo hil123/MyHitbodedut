@@ -1,0 +1,1748 @@
+== 01-accueil
+PETIT 108x40dp LinearLayout start_duration «Durée 15 min»
+PETIT 101x40dp LinearLayout start_theme «Sujet Aucun»
+PETIT 139x40dp LinearLayout start_music «Musique Niggoun 01»
+PETIT 363x43dp LinearLayout  «POUR CETTE HEURE תְּפִלַּת שַׁ»
+== 01b-accueil-suite
+PETIT 108x40dp LinearLayout start_duration «Durée 15 min»
+PETIT 101x40dp LinearLayout start_theme «Sujet Aucun»
+PETIT 139x40dp LinearLayout start_music «Musique Niggoun 01»
+== 02-onglet-textes
+PETIT 344x35dp LinearLayout music_button «Musique»
+PETIT 52x25dp Switch music_switch_main «»
+MUET Switch music_switch_main (770, 2062, 907, 2127)
+== 03-siddour-liste
+PETIT 272x36dp TextView siddur_heading_nusah «Noussa’h séfarade (Edot HaMizr»
+PETIT 350x42dp LinearLayout  «תִּקּוּן חֲצוֹת Tikoun ’hatsot»
+== 03b-siddour-liste-suite
+== 04-choix-nusah
+== 05-priere-pastille
+PETIT 11x48dp TextView  «תפילת שחרית»
+PETIT 411x35dp TextView  «פתיחת אליהו»
+PETIT 411x35dp TextView  «אחר המזמורים של תיקון לאה המנה»
+PETIT 56x36dp TextView  «Aa»
+== 06-barre-depliee
+PETIT 11x48dp TextView  «תפילת שחרית»
+PETIT 411x35dp TextView  «פתיחת אליהו»
+PETIT 411x35dp TextView  «אחר המזמורים של תיקון לאה המנה»
+PETIT 38x44dp TextView  «A−»
+PETIT 48x44dp TextView  «100 %»
+PETIT 38x44dp TextView  «A+»
+PETIT 38x44dp ImageView  «Lecture sur fond noir»
+PETIT 38x44dp TextView  «אב»
+PETIT 38x44dp ImageView  «Noussa’h»
+PETIT 38x44dp ImageView  «Masquer le bouton»
+PETIT 38x44dp ImageView  «Replier»
+== 07-lettres-plus-grandes
+PETIT 11x48dp TextView  «תפילת שחרית»
+PETIT 411x38dp TextView  «פתיחת אליהו»
+PETIT 38x44dp TextView  «A−»
+PETIT 48x44dp TextView  «120 %»
+PETIT 38x44dp TextView  «A+»
+PETIT 38x44dp ImageView  «Lecture sur fond noir»
+PETIT 38x44dp TextView  «אב»
+PETIT 38x44dp ImageView  «Noussa’h»
+PETIT 38x44dp ImageView  «Masquer le bouton»
+PETIT 38x44dp ImageView  «Replier»
+== 08-lecture-nuit
+PETIT 11x48dp TextView  «תפילת שחרית»
+PETIT 411x38dp TextView  «פתיחת אליהו»
+PETIT 38x44dp TextView  «A−»
+PETIT 48x44dp TextView  «120 %»
+PETIT 38x44dp TextView  «A+»
+PETIT 38x44dp ImageView  «Lecture sur fond noir»
+PETIT 38x44dp TextView  «אב»
+PETIT 38x44dp ImageView  «Noussa’h»
+PETIT 38x44dp ImageView  «Masquer le bouton»
+PETIT 38x44dp ImageView  «Replier»
+== 09-bouton-masque-snackbar
+PETIT 11x48dp TextView  «תפילת שחרית»
+PETIT 411x38dp TextView  «פתיחת אליהו»
+== 10a-texte-sans-bouton
+PETIT 11x48dp TextView  «תפילת שחרית»
+PETIT 411x38dp TextView  «פתיחת אליהו»
+== 10-appui-long-barre-revenue
+PETIT 11x48dp TextView  «תפילת שחרית»
+PETIT 411x38dp TextView  «פתיחת אליהו»
+PETIT 38x44dp TextView  «A−»
+PETIT 48x44dp TextView  «120 %»
+PETIT 38x44dp TextView  «A+»
+PETIT 38x44dp ImageView  «Lecture sur fond noir»
+PETIT 38x44dp TextView  «אב»
+PETIT 38x44dp ImageView  «Noussa’h»
+PETIT 38x44dp ImageView  «Masquer le bouton»
+PETIT 38x44dp ImageView  «Replier»
+== 11a-tehilim
+PETIT 72x32dp TextView  «46»
+PETIT 72x32dp TextView  «47»
+PETIT 72x32dp TextView  «48»
+PETIT 72x32dp TextView  «49»
+PETIT 72x32dp TextView  «50»
+== 11-tehilim-lecture
+PETIT 56x36dp TextView  «Aa»
+== 12a-tikkun
+== 12-tikkun-d-un-trait
+PETIT 56x36dp TextView  «Aa»
+== 13-tikkun-psaume
+PETIT 56x36dp TextView  «Aa»
+== 14a-bibliotheque
+== 14b-bibliotheque-sous-section
+== 14-bibliotheque-source
+PETIT 56x36dp TextView  «Aa»
+== 15a-choix-couleur
+PETIT 56x36dp TextView  «Aa»
+== 15b-reglages-violet
+PETIT 56x36dp TextView  «Aa»
+== 15c-siddour-violet
+PETIT 272x36dp TextView siddur_heading_nusah «Noussa’h séfarade (Edot HaMizr»
+PETIT 350x42dp LinearLayout  «תִּקּוּן חֲצוֹת Tikoun ’hatsot»
+== 15d-priere-pastille-violet
+PETIT 11x48dp TextView  «תפילת שחרית»
+PETIT 411x35dp TextView  «פתיחת אליהו»
+PETIT 56x36dp TextView  «Aa»
+== 15e-priere-barre-violet
+PETIT 11x48dp TextView  «תפילת שחרית»
+PETIT 411x35dp TextView  «פתיחת אליהו»
+PETIT 38x44dp TextView  «A−»
+PETIT 48x44dp TextView  «100 %»
+PETIT 38x44dp TextView  «A+»
+PETIT 38x44dp ImageView  «Lecture sur fond noir»
+PETIT 38x44dp TextView  «אב»
+PETIT 38x44dp ImageView  «Noussa’h»
+PETIT 38x44dp ImageView  «Masquer le bouton»
+PETIT 38x44dp ImageView  «Replier»
+== 18a-zmanim
+PETIT 147x36dp TextView zmanim_lieu «Paris · Diaspora»
+== 18b-zmanim-horaires
+PETIT 121x1dp Button  «Halakha yomit»
+PETIT 121x1dp Button  «Hilloulot»
+PETIT 121x1dp Button  «Calendrier»
+== 18c-zmanim-fin
+PETIT 344x33dp TextView  «Lire Birkat haLevana ›»
+== 18d-calendrier
+PETIT 95x30dp TextView  «Hébraïque»
+PETIT 92x30dp TextView  «Grégorien»
+PETIT 344x32dp TextView  «Aujourd’hui»
+== 18e-calendrier-jour
+PETIT 344x16dp TextView  «et 6 autres ›»
+== 18f-siddour-pour-cette-heure
+PETIT 272x36dp TextView siddur_heading_nusah «Noussa’h séfarade (Edot HaMizr»
+PETIT 350x42dp LinearLayout  «תִּקּוּן חֲצוֹת Tikoun ’hatsot»
+== 18g-priere-ajouts
+PETIT 44x48dp TextView  «ברכו»
+PETIT 46x48dp TextView  «עלינו»
+PETIT 411x35dp TextView  «ואומר החזן חצי קדיש»
+== 18h-priere-ajouts-suite
+PETIT 44x48dp TextView  «ברכו»
+PETIT 46x48dp TextView  «עלינו»
+== 19a-halakha
+PETIT 344x45dp EditText  «Rechercher dans la halakha»
+PETIT 56x36dp TextView  «Aa»
+== 19b-halakha-suite
+PETIT 48x34dp TextView  «‹»
+PETIT 48x34dp TextView  «›»
+PETIT 411x30dp TextView  «La halakha du jour sur halacha»
+== 19c-hilloulot
+PETIT 344x45dp EditText  «Rechercher un tsadik»
+PETIT 344x16dp TextView  «Wikipédia (CC BY-SA)»
+PETIT 344x18dp TextView  «Lire la suite»
+PETIT 344x17dp TextView  «MyTzadik ↗»
+PETIT 56x36dp TextView  «Aa»
+== 19d-hilloulot-suite
+PETIT 344x16dp TextView  «Wikipédia (CC BY-SA)»
+PETIT 344x18dp TextView  «Lire la suite»
+PETIT 344x17dp TextView  «MyTzadik ↗»
+PETIT 344x18dp TextView  «Lire la suite»
+PETIT 344x17dp TextView  «MyTzadik ↗»
+PETIT 344x16dp TextView  «Wikipédia (CC BY-SA)»
+== 19e-livres
+== 19f-siddour-occasions
+PETIT 44x48dp TextView  «ברכו»
+PETIT 46x48dp TextView  «עלינו»
+== 19g-paliers-trophees
+PETIT 62x40dp TextView  «Tous»
+PETIT 106x40dp TextView  «Premier pas»
+PETIT 155x40dp TextView  «Longue hitbodedout»
+PETIT 48x40dp TextView  «Jours de pratique»
+PETIT 379x38dp LinearLayout  «5 premières hitbodedouts»
+== 19h-reglages
+== 19i-reglages-apparence
+PETIT 52x29dp Switch grand_texte_switch «Grand texte de lecture»
+== 19j-reglages-ecran-zmanim
+PETIT 52x18dp Switch levana_rappel_switch «Rappel de Birkat haLevana»
+PETIT 344x18dp Button pick_apps «Choisir les applications»
+== 16a-he-accueil
+PETIT 99x40dp LinearLayout start_duration «משך 15 דק׳»
+PETIT 83x40dp LinearLayout start_theme «נושא ללא»
+PETIT 112x40dp LinearLayout start_music «מוזיקה ניגון 01»
+PETIT 46x40dp LinearLayout start_focus «ריכוז כבוי»
+PETIT 363x43dp LinearLayout  «לשעה זו תְּפִלַּת מִנְחָה»
+== 16b-he-onglet-textes
+PETIT 379x35dp TextView  «תְּפִלַּת עַרְבִית  ›»
+PETIT 344x34dp LinearLayout proofread_button «פתיחת ההגהה»
+== 16c-he-siddour-liste
+PETIT 205x36dp TextView siddur_heading_nusah «נוסח ספרדי – עדות המזרח»
+PETIT 350x44dp LinearLayout  «תִּקּוּן חֲצוֹת»
+== 16d-he-priere-pastille
+PETIT 11x48dp TextView  «תפילת שחרית»
+PETIT 411x35dp TextView  «פתיחת אליהו»
+PETIT 411x36dp TextView  «וְאִלֵּין עֶֽשֶׂר סְפִירָן אִנ»
+PETIT 56x36dp TextView  «Aa»
+== 16e-he-priere-barre-depliee
+PETIT 11x48dp TextView  «תפילת שחרית»
+PETIT 411x35dp TextView  «פתיחת אליהו»
+PETIT 411x36dp TextView  «וְאִלֵּין עֶֽשֶׂר סְפִירָן אִנ»
+PETIT 38x44dp TextView  «A−»
+PETIT 48x44dp TextView  «100%»
+PETIT 38x44dp TextView  «A+»
+PETIT 38x44dp ImageView  «קריאה על רקע שחור»
+PETIT 38x44dp TextView  «אב»
+PETIT 38x44dp ImageView  «נוסח»
+PETIT 38x44dp ImageView  «הסתרת הכפתור»
+PETIT 38x44dp ImageView  «קיפול»
+== 16f-he-zmanim
+PETIT 11x48dp TextView  «תפילת שחרית»
+PETIT 411x35dp TextView  «פתיחת אליהו»
+PETIT 411x36dp TextView  «וְאִלֵּין עֶֽשֶׂר סְפִירָן אִנ»
+PETIT 38x44dp TextView  «A−»
+PETIT 48x44dp TextView  «100%»
+PETIT 38x44dp TextView  «A+»
+PETIT 38x44dp ImageView  «קריאה על רקע שחור»
+PETIT 38x44dp TextView  «אב»
+PETIT 38x44dp ImageView  «נוסח»
+PETIT 38x44dp ImageView  «הסתרת הכפתור»
+PETIT 38x44dp ImageView  «קיפול»
+== 16g-he-zmanim-suite
+PETIT 11x48dp TextView  «תפילת שחרית»
+PETIT 38x44dp TextView  «A−»
+PETIT 48x44dp TextView  «100%»
+PETIT 38x44dp TextView  «A+»
+PETIT 38x44dp ImageView  «קריאה על רקע שחור»
+PETIT 38x44dp TextView  «אב»
+PETIT 38x44dp ImageView  «נוסח»
+PETIT 38x44dp ImageView  «הסתרת הכפתור»
+PETIT 38x44dp ImageView  «קיפול»
+== 16h-he-halakha
+PETIT 344x45dp EditText  «חיפוש בהלכה»
+PETIT 56x36dp TextView  «Aa»
+== 16i-he-hilloulot
+PETIT 344x45dp EditText  «חיפוש צדיק»
+PETIT 344x16dp TextView  «ויקיפדיה (CC BY-SA)»
+PETIT 344x18dp TextView  «להמשך קריאה»
+PETIT 344x17dp TextView  «MyTzadik ↗»
+PETIT 56x36dp TextView  «Aa»
+== 20-petit-couche-presentation-1
+PETIT 151x29dp Button onboarding_next «Suivant»
+PETIT 50x27dp Button onboarding_skip «Passer»
+== 20-petit-couche-presentation-2
+PETIT 151x29dp Button onboarding_next «Suivant»
+PETIT 51x27dp Button onboarding_back «Précédent»
+PETIT 50x27dp Button onboarding_skip «Passer»
+== 20-petit-couche-presentation-3
+PETIT 151x29dp Button onboarding_next «Suivant»
+PETIT 51x27dp Button onboarding_back «Précédent»
+PETIT 50x27dp Button onboarding_skip «Passer»
+== 20-petit-couche-presentation-4
+PETIT 151x29dp Button onboarding_next «Suivant»
+PETIT 51x27dp Button onboarding_back «Précédent»
+PETIT 50x27dp Button onboarding_skip «Passer»
+== 20-petit-couche-presentation-5
+PETIT 151x29dp Button onboarding_next «Suivant»
+PETIT 51x27dp Button onboarding_back «Précédent»
+PETIT 50x27dp Button onboarding_skip «Passer»
+== 20-petit-couche-presentation-6
+PETIT 151x29dp Button onboarding_next «Suivant»
+PETIT 51x27dp Button onboarding_back «Précédent»
+PETIT 50x27dp Button onboarding_skip «Passer»
+== 20-petit-couche-presentation-7
+PETIT 151x29dp Button onboarding_next «Commencer»
+PETIT 51x27dp Button onboarding_back «Précédent»
+== 20-petit-couche-accueil
+PETIT 62x46dp FrameLayout nav_texts «Bibliothèque»
+PETIT 62x46dp FrameLayout nav_zmanim «Zmanim»
+PETIT 61x46dp FrameLayout nav_journal «Journal»
+PETIT 61x46dp FrameLayout nav_settings «Réglages»
+== 20-petit-couche-accueil-suite
+PETIT 62x46dp FrameLayout nav_texts «Bibliothèque»
+PETIT 62x46dp FrameLayout nav_zmanim «Zmanim»
+PETIT 61x46dp FrameLayout nav_journal «Journal»
+PETIT 61x46dp FrameLayout nav_settings «Réglages»
+== 20-petit-couche-textes
+PETIT 280x27dp Button recherche_button «Rechercher dans le siddour, le»
+PETIT 290x21dp TextView  «תְּפִלַּת שַׁחֲרִית  ›»
+PETIT 62x46dp FrameLayout nav_today «Aujourd’hui»
+PETIT 62x46dp FrameLayout nav_zmanim «Zmanim»
+PETIT 61x46dp FrameLayout nav_journal «Journal»
+PETIT 61x46dp FrameLayout nav_settings «Réglages»
+== 20-petit-couche-settings
+PETIT 58x27dp Button language_button «Français»
+PETIT 65x27dp Button adresse_button «Pas choisi»
+PETIT 92x27dp Button onboarding_again «Revoir la présentation»
+== 20-petit-couche-session
+PETIT 133x31dp Button session_primary «Commencer, 15 min»
+PETIT 133x27dp Button session_theme «Sujet : aucun (facultatif)»
+PETIT 43x27dp Button duration_5 «5 min»
+PETIT 43x27dp Button duration_10 «10 min»
+PETIT 43x27dp Button duration_15 «15 min»
+PETIT 43x27dp Button duration_30 «30 min»
+PETIT 43x27dp Button duration_60 «1 h»
+PETIT 43x27dp Button duration_90 «1 h 30»
+PETIT 133x3dp Button session_custom «Durée réglable…»
+== 20-petit-couche-celebration
+PETIT 280x5dp Button celebration_continue «Continuer»
+== 20-petit-couche-journal
+== 20-petit-couche-tips
+== 20-petit-couche-reminders
+PETIT 30x27dp Switch reminders_switch «»
+MUET Switch reminders_switch (725, 297, 803, 369)
+PETIT 269x18dp Switch reminders_trophee «Dire dans le rappel qu’un trop»
+== 20-petit-couche-music
+PETIT 30x27dp Switch music_switch «»
+MUET Switch music_switch (725, 222, 803, 294)
+== 20-petit-couche-siddur
+PETIT 154x21dp TextView siddur_heading_nusah «Noussa’h séfarade (Edot HaMizr»
+== 20-petit-couche-siddurlecture
+PETIT 27x27dp ImageView siddur_lecture_marques «Marque-pages»
+PETIT 27x27dp TextView siddur_lecture_favori «☆»
+PETIT 51x27dp TextView  «פתיחת אליהו»
+PETIT 62x27dp TextView  «סדר עטיפת ציצית»
+PETIT 62x27dp TextView  «סדר הנחת תפילין»
+PETIT 48x27dp TextView  «ותתפלל חנה»
+PETIT 53x27dp TextView  «תפילת שחרית»
+PETIT 27x27dp TextView  «פטום הקטורת»
+PETIT 308x5dp TextView  «אחר המזמורים של תיקון לאה המנה»
+PETIT 308x24dp TextView  «וִיהִ֤י ׀ נֹ֤עַם אֲדֹנָ֥י אֱלֹ»
+PETIT 32x21dp TextView  «Aa»
+== 20-petit-couche-tefilot
+PETIT 290x36dp LinearLayout  «Hitbodedout ההתבודדות — לפרש ש»
+== 20-petit-couche-tehilim
+PETIT 269x35dp LinearLayout tehilim_month_button «Selon le jour du mois Jour 5 d»
+PETIT 269x35dp LinearLayout tehilim_week_button «Selon le jour de la semaine Ve»
+== 20-petit-couche-tehilimlecture
+PETIT 145x27dp Button lecture_next «Psaume suivant»
+PETIT 32x21dp TextView  «Aa»
+== 20-petit-couche-tikkun
+PETIT 290x31dp Button tikkun_flow «Tout lire d’un trait»
+PETIT 290x37dp LinearLayout  «לפני ההתחלה Avant de commencer»
+PETIT 290x21dp LinearLayout  «1  תהילים ט״ז 11 versets»
+== 20-petit-couche-tikkunflow
+PETIT 290x31dp Button flow_done «J’ai dit le Tikoun en entier»
+PETIT 32x21dp TextView  «Aa»
+== 20-petit-couche-psalm
+PETIT 142x30dp Button psalm_done «Marquer comme dit»
+PETIT 142x30dp Button psalm_next «Psaume suivant»
+PETIT 32x21dp TextView  «Aa»
+== 20-petit-couche-library
+PETIT 290x37dp LinearLayout  «התבודדות מה ולמה Hitbodedout :»
+== 20-petit-couche-libraryentry
+PETIT 32x21dp TextView  «Aa»
+== 20-petit-couche-zmanim
+PETIT 83x21dp TextView zmanim_lieu «Paris · Diaspora»
+PETIT 269x20dp TextView  «Partager ce jour ↗»
+== 20-petit-couche-calendrier
+PETIT 56x18dp TextView  «Hébraïque»
+PETIT 53x18dp TextView  «Grégorien»
+PETIT 27x27dp TextView  «‹»
+PETIT 27x27dp TextView  «›»
+PETIT 38x20dp LinearLayout  «2026-10-12 · א׳ חשון תשפ״ז · R»
+PETIT 38x20dp LinearLayout  «2026-10-13 · ב׳ חשון תשפ״ז»
+PETIT 38x20dp LinearLayout  «2026-10-14 · ג׳ חשון תשפ״ז»
+PETIT 38x20dp LinearLayout  «2026-10-15 · ד׳ חשון תשפ״ז»
+PETIT 38x20dp LinearLayout  «2026-10-16 · ה׳ חשון תשפ״ז»
+PETIT 38x20dp LinearLayout  «2026-10-17 · ו׳ חשון תשפ״ז»
+== 20-petit-couche-halakha
+PETIT 27x27dp Switch  «Afficher la halakha du jour»
+PETIT 64x27dp RadioButton  «Yalkut Yosef»
+PETIT 61x27dp RadioButton  «Ben Ish ’Haï»
+PETIT 51x27dp RadioButton  «Les deux»
+PETIT 269x26dp EditText  «Rechercher dans la halakha»
+PETIT 32x21dp TextView  «Aa»
+== 20-petit-couche-hilloulot
+PETIT 27x27dp Switch  «Afficher les hilloulot»
+PETIT 269x26dp EditText  «Rechercher un tsadik»
+PETIT 27x27dp TextView  «‹»
+PETIT 27x27dp TextView  «›»
+PETIT 32x21dp TextView  «Aa»
+== 20-petit-couche-recherche
+PETIT 269x26dp EditText  «Rechercher dans le siddour, le»
+== 20-petit-couche-paliers
+PETIT 36x23dp TextView  «Tous»
+PETIT 61x23dp TextView  «Premier pas»
+PETIT 90x23dp TextView  «Longue hitbodedout»
+PETIT 81x23dp TextView  «Jours de pratique»
+PETIT 13x23dp TextView  «La série»
+PETIT 290x41dp LinearLayout  «1 note au journal»
+PETIT 290x2dp LinearLayout  «2 premières hitbodedouts»
+== 20-petit-couche-he-presentation-1
+PETIT 151x29dp Button onboarding_next «הבא»
+PETIT 50x27dp Button onboarding_skip «דילוג»
+== 20-petit-couche-he-presentation-2
+PETIT 151x29dp Button onboarding_next «הבא»
+PETIT 50x27dp Button onboarding_back «הקודם»
+PETIT 50x27dp Button onboarding_skip «דילוג»
+== 20-petit-couche-he-presentation-3
+PETIT 151x29dp Button onboarding_next «הבא»
+PETIT 50x27dp Button onboarding_back «הקודם»
+PETIT 50x27dp Button onboarding_skip «דילוג»
+== 20-petit-couche-he-presentation-4
+PETIT 151x29dp Button onboarding_next «הבא»
+PETIT 50x27dp Button onboarding_back «הקודם»
+PETIT 50x27dp Button onboarding_skip «דילוג»
+== 20-petit-couche-he-presentation-5
+PETIT 151x29dp Button onboarding_next «הבא»
+PETIT 50x27dp Button onboarding_back «הקודם»
+PETIT 50x27dp Button onboarding_skip «דילוג»
+== 20-petit-couche-he-presentation-6
+PETIT 151x29dp Button onboarding_next «הבא»
+PETIT 50x27dp Button onboarding_back «הקודם»
+PETIT 50x27dp Button onboarding_skip «דילוג»
+== 20-petit-couche-he-presentation-7
+PETIT 151x29dp Button onboarding_next «להתחיל»
+PETIT 50x27dp Button onboarding_back «הקודם»
+== 20-tablette-couchee-presentation-1
+PETIT 235x44dp Button onboarding_next «Suivant»
+PETIT 67x37dp Button onboarding_skip «Passer»
+== 20-tablette-couchee-presentation-2
+PETIT 59x37dp CompoundButton onboarding_duree_0 «5 min»
+PETIT 59x37dp CompoundButton onboarding_duree_1 «10 min»
+PETIT 59x37dp CompoundButton onboarding_duree_2 «15 min»
+PETIT 59x37dp CompoundButton onboarding_duree_3 «30 min»
+PETIT 235x44dp Button onboarding_next «Suivant»
+PETIT 68x37dp Button onboarding_back «Précédent»
+PETIT 67x37dp Button onboarding_skip «Passer»
+== 20-tablette-couchee-presentation-3
+PETIT 162x37dp Switch onboarding_rappel_switch «Me le rappeler chaque jour»
+PETIT 67x37dp Button onboarding_rappel_heure «à 07:00»
+PETIT 235x44dp Button onboarding_next «Suivant»
+PETIT 68x37dp Button onboarding_back «Précédent»
+PETIT 67x37dp Button onboarding_skip «Passer»
+== 20-tablette-couchee-presentation-4
+PETIT 235x44dp Button onboarding_next «Suivant»
+PETIT 68x37dp Button onboarding_back «Précédent»
+PETIT 67x37dp Button onboarding_skip «Passer»
+== 20-tablette-couchee-presentation-5
+PETIT 235x44dp Button onboarding_next «Suivant»
+PETIT 68x37dp Button onboarding_back «Précédent»
+PETIT 67x37dp Button onboarding_skip «Passer»
+== 20-tablette-couchee-presentation-6
+PETIT 69x37dp CompoundButton onboarding_tsadik «Tsadik»
+PETIT 81x37dp CompoundButton onboarding_tsadeket «Tsadeket»
+PETIT 235x44dp Button onboarding_next «Suivant»
+PETIT 68x37dp Button onboarding_back «Précédent»
+PETIT 67x37dp Button onboarding_skip «Passer»
+== 20-tablette-couchee-presentation-7
+PETIT 235x44dp Button onboarding_next «Commencer»
+PETIT 68x37dp Button onboarding_back «Précédent»
+== 20-tablette-couchee-accueil
+PETIT 318x37dp TextView paliers_line «Prochain trophée : Une premièr»
+PETIT 83x30dp LinearLayout start_duration «Durée 15 min»
+PETIT 10x30dp LinearLayout start_theme «»
+MUET LinearLayout start_theme (1893, 639, 1920, 719)
+PETIT 14x50dp LinearLayout  «à faire»
+PETIT 14x40dp LinearLayout  «à faire»
+PETIT 14x50dp LinearLayout  «à faire»
+PETIT 14x50dp LinearLayout  «à faire»
+PETIT 14x40dp LinearLayout  «à faire»
+PETIT 14x50dp LinearLayout  «à faire»
+PETIT 99x42dp Button today_offline «Je l’ai faite sans le téléphon»
+== 20-tablette-couchee-accueil-suite
+PETIT 318x37dp TextView paliers_line «Prochain trophée : Une premièr»
+PETIT 83x30dp LinearLayout start_duration «Durée 15 min»
+PETIT 10x30dp LinearLayout start_theme «»
+MUET LinearLayout start_theme (1893, 249, 1920, 329)
+PETIT 14x50dp LinearLayout  «à faire»
+PETIT 14x40dp LinearLayout  «à faire»
+PETIT 14x50dp LinearLayout  «à faire»
+PETIT 14x50dp LinearLayout  «à faire»
+PETIT 14x40dp LinearLayout  «à faire»
+PETIT 14x50dp LinearLayout  «à faire»
+PETIT 99x42dp Button today_offline «Je l’ai faite sans le téléphon»
+PETIT 99x42dp Button trophees_paliers «🏆 Trophées et paliers»
+== 20-tablette-couchee-textes
+PETIT 435x37dp Button recherche_button «Rechercher dans le siddour, le»
+PETIT 435x28dp TextView  «תְּפִלַּת שַׁחֲרִית  ›»
+PETIT 435x28dp TextView  «תְּפִלַּת שַׁחֲרִית · אחר המזמ»
+PETIT 408x46dp LinearLayout tikkun_button «Tikoun HaKlali 10 psaumes, 164»
+PETIT 408x46dp LinearLayout siddur_button «Siddour Cha’harit, Min’ha, Arv»
+PETIT 408x46dp LinearLayout tehilim_button «Tehilim Aujourd’hui : Tehilim »
+PETIT 408x46dp LinearLayout tefilot_button «Tefilot Dix sujets, vingt-et-u»
+PETIT 408x46dp LinearLayout livres_button «Livres Likoutei Moharan, Hicht»
+PETIT 408x46dp LinearLayout library_button «Sources de la hitbodedout Ce q»
+PETIT 408x45dp LinearLayout tips_button «Conseils pour la hitbodedout D»
+== 20-tablette-couchee-settings
+PETIT 78x37dp Button language_button «Français»
+PETIT 86x37dp Button adresse_button «Pas choisi»
+PETIT 124x37dp Button onboarding_again «Revoir la présentation»
+PETIT 136x37dp Button mode_button «Comme le téléphone»
+PETIT 80x37dp Button fond_button «Vert pâle»
+PETIT 67x37dp Button accent_button «Vert»
+PETIT 168x37dp Button police_button «Hébraïque à empattements»
+PETIT 40x37dp Switch grand_texte_switch «Grand texte de lecture»
+PETIT 93x37dp Button ouverture_button «Aujourd’hui»
+== 20-tablette-couchee-session
+PETIT 209x41dp Button session_primary «Commencer, 15 min»
+PETIT 209x37dp Button session_theme «Sujet : aucun (facultatif)»
+PETIT 67x37dp Button duration_5 «5 min»
+PETIT 67x37dp Button duration_10 «10 min»
+PETIT 68x37dp Button duration_15 «15 min»
+PETIT 67x37dp Button duration_30 «30 min»
+PETIT 67x37dp Button duration_60 «1 h»
+PETIT 68x37dp Button duration_90 «1 h 30»
+PETIT 209x37dp Button session_custom «Durée réglable…»
+PETIT 209x37dp Button session_open «Sans durée»
+== 20-tablette-couchee-celebration
+PETIT 435x41dp Button celebration_continue «Continuer»
+PETIT 435x37dp Button celebration_share «Partager ma hitbodedout»
+== 20-tablette-couchee-journal
+PETIT 221x37dp Button journal_empty_commencer «Commencer ma première hitboded»
+== 20-tablette-couchee-tips
+== 20-tablette-couchee-reminders
+PETIT 40x37dp Switch reminders_switch «»
+MUET Switch reminders_switch (2388, 384, 2492, 480)
+PETIT 871x37dp Switch reminders_trophee «Dire dans le rappel qu’un trop»
+PETIT 67x37dp Button reminder_remove «Retirer»
+PETIT 899x39dp Button reminders_add «Ajouter une heure»
+== 20-tablette-couchee-music
+PETIT 40x37dp Switch music_switch «»
+MUET Switch music_switch (2388, 303, 2492, 399)
+PETIT 40x37dp Switch music_shuffle «»
+MUET Switch music_shuffle (2388, 600, 2492, 696)
+PETIT 37x37dp RadioButton track_radio «»
+MUET RadioButton track_radio (193, 894, 289, 990)
+PETIT 34x34dp ImageButton track_rename «Renommer»
+PETIT 34x34dp ImageButton track_play «Écouter»
+PETIT 37x37dp RadioButton track_radio «»
+MUET RadioButton track_radio (193, 1038, 289, 1134)
+PETIT 34x34dp ImageButton track_rename «Renommer»
+PETIT 34x34dp ImageButton track_play «Écouter»
+PETIT 37x37dp RadioButton track_radio «»
+MUET RadioButton track_radio (193, 1182, 289, 1278)
+PETIT 34x34dp ImageButton track_rename «Renommer»
+PETIT 34x34dp ImageButton track_play «Écouter»
+PETIT 899x47dp LinearLayout  «Niggoun 04 Livré avec l’applic»
+PETIT 37x37dp RadioButton track_radio «»
+MUET RadioButton track_radio (193, 1326, 289, 1422)
+PETIT 34x34dp ImageButton track_rename «Renommer»
+PETIT 34x34dp ImageButton track_play «Écouter»
+PETIT 899x39dp Button music_add «Ajouter un morceau du téléphon»
+== 20-tablette-couchee-siddur
+PETIT 206x27dp TextView siddur_heading_nusah «Noussa’h séfarade (Edot HaMizr»
+PETIT 413x46dp LinearLayout  «בִּרְכוֹת הַשַּׁחַר Birkot hac»
+PETIT 413x46dp LinearLayout  «תְּפִלַּת שַׁחֲרִית Cha’harit»
+PETIT 413x46dp LinearLayout  «תְּפִלַּת מִנְחָה Min’ha»
+PETIT 413x46dp LinearLayout  «תְּפִלַּת עַרְבִית Arvit»
+PETIT 413x25dp LinearLayout  «קְרִיאַת שְׁמַע שֶׁעַל הַמִּטָ»
+== 20-tablette-couchee-siddurlecture
+PETIT 68x37dp TextView  «פתיחת אליהו»
+PETIT 86x37dp TextView  «סדר עטיפת ציצית»
+PETIT 84x37dp TextView  «סדר הנחת תפילין»
+PETIT 65x37dp TextView  «ותתפלל חנה»
+PETIT 71x37dp TextView  «תפילת שחרית»
+PETIT 71x37dp TextView  «פטום הקטורת»
+PETIT 32x37dp TextView  «הודו»
+PETIT 66x37dp TextView  «פסוקי דזמרה»
+PETIT 72x37dp TextView  «ק״ש וברכותיה»
+PETIT 41x37dp TextView  «עמידה»
+PETIT 32x37dp TextView  «וידוי»
+PETIT 70x37dp TextView  «קריאת התורה»
+PETIT 36x37dp TextView  «אשרי»
+PETIT 51x37dp TextView  «ובא לציון»
+PETIT 52x37dp TextView  «בית יעקב»
+PETIT 20x37dp TextView  «שיר של יום»
+PETIT 923x6dp TextView  «אחר המזמורים של תיקון לאה המנה»
+PETIT 923x38dp TextView  «וִיהִ֤י ׀ נֹ֤עַם אֲדֹנָ֥י אֱלֹ»
+PETIT 923x41dp TextView  «קָם רַבִּי שִׁמְעוֹן פָּתַח וְ»
+PETIT 43x27dp TextView  «Aa»
+== 20-tablette-couchee-tefilot
+PETIT 899x12dp LinearLayout  «»
+MUET LinearLayout  (169, 1568, 2528, 1600)
+== 20-tablette-couchee-tehilim
+PETIT 408x46dp LinearLayout tehilim_month_button «Selon le jour du mois Jour 5 d»
+PETIT 408x46dp LinearLayout tehilim_week_button «Selon le jour de la semaine Ve»
+PETIT 83x37dp TextView  «1»
+PETIT 84x37dp TextView  «2»
+PETIT 84x37dp TextView  «3»
+PETIT 84x37dp TextView  «4»
+PETIT 84x37dp TextView  «5»
+PETIT 83x37dp TextView  «6»
+PETIT 84x37dp TextView  «7»
+PETIT 84x37dp TextView  «8»
+PETIT 84x37dp TextView  «9»
+PETIT 84x37dp TextView  «10»
+PETIT 83x37dp TextView  «11»
+PETIT 84x37dp TextView  «12»
+PETIT 84x37dp TextView  «13»
+PETIT 84x37dp TextView  «14»
+PETIT 84x37dp TextView  «15»
+PETIT 83x37dp TextView  «16»
+PETIT 84x37dp TextView  «17»
+PETIT 84x37dp TextView  «18»
+PETIT 84x37dp TextView  «19»
+PETIT 84x37dp TextView  «20»
+PETIT 83x37dp TextView  «21»
+PETIT 84x37dp TextView  «22»
+PETIT 84x37dp TextView  «23»
+PETIT 84x37dp TextView  «24»
+PETIT 84x37dp TextView  «25»
+PETIT 83x37dp TextView  «26»
+PETIT 84x37dp TextView  «27»
+PETIT 84x37dp TextView  «28»
+PETIT 84x37dp TextView  «29»
+PETIT 84x37dp TextView  «30»
+PETIT 83x37dp TextView  «31»
+PETIT 84x37dp TextView  «32»
+PETIT 84x37dp TextView  «33»
+PETIT 84x37dp TextView  «34»
+PETIT 84x37dp TextView  «35»
+PETIT 83x37dp TextView  «36»
+PETIT 84x37dp TextView  «37»
+PETIT 84x37dp TextView  «38»
+PETIT 84x37dp TextView  «39»
+PETIT 84x37dp TextView  «40»
+PETIT 83x9dp TextView  «41»
+PETIT 84x9dp TextView  «42»
+PETIT 84x9dp TextView  «43»
+PETIT 84x9dp TextView  «44»
+PETIT 84x9dp TextView  «45»
+== 20-tablette-couchee-tehilimlecture
+PETIT 450x37dp Button lecture_next «Psaume suivant»
+PETIT 43x27dp TextView  «Aa»
+== 20-tablette-couchee-tikkun
+PETIT 899x41dp Button tikkun_flow «Tout lire d’un trait»
+PETIT 899x10dp LinearLayout  «תהילים ק״ה»
+== 20-tablette-couchee-tikkunflow
+PETIT 899x41dp Button flow_done «J’ai dit le Tikoun en entier»
+PETIT 43x27dp TextView  «Aa»
+== 20-tablette-couchee-psalm
+PETIT 446x40dp Button psalm_done «Marquer comme dit»
+PETIT 446x40dp Button psalm_next «Psaume suivant»
+PETIT 43x27dp TextView  «Aa»
+== 20-tablette-couchee-library
+== 20-tablette-couchee-libraryentry
+PETIT 43x27dp TextView  «Aa»
+== 20-tablette-couchee-zmanim
+PETIT 110x27dp TextView zmanim_lieu «Paris · Diaspora»
+PETIT 408x37dp TextView  «Partager ce jour ↗»
+PETIT 141x37dp Button  «Halakha yomit»
+PETIT 141x37dp Button  «Hilloulot»
+PETIT 141x37dp Button  «Calendrier»
+== 20-tablette-couchee-calendrier
+PETIT 74x24dp TextView  «Hébraïque»
+PETIT 70x24dp TextView  «Grégorien»
+PETIT 37x37dp TextView  «‹»
+PETIT 37x37dp TextView  «›»
+PETIT 58x40dp LinearLayout  «2026-10-12 · א׳ חשון תשפ״ז · R»
+PETIT 58x40dp LinearLayout  «2026-10-13 · ב׳ חשון תשפ״ז»
+PETIT 58x40dp LinearLayout  «2026-10-14 · ג׳ חשון תשפ״ז»
+PETIT 58x40dp LinearLayout  «2026-10-15 · ד׳ חשון תשפ״ז»
+PETIT 58x40dp LinearLayout  «2026-10-16 · ה׳ חשון תשפ״ז»
+PETIT 58x40dp LinearLayout  «2026-10-17 · ו׳ חשון תשפ״ז»
+PETIT 58x40dp LinearLayout  «2026-10-18 · ז׳ חשון תשפ״ז»
+PETIT 58x40dp LinearLayout  «2026-10-19 · ח׳ חשון תשפ״ז»
+PETIT 58x40dp LinearLayout  «2026-10-20 · ט׳ חשון תשפ״ז»
+PETIT 58x40dp LinearLayout  «2026-10-21 · י׳ חשון תשפ״ז»
+PETIT 58x40dp LinearLayout  «2026-10-22 · י״א חשון תשפ״ז»
+PETIT 58x40dp LinearLayout  «2026-10-23 · י״ב חשון תשפ״ז»
+PETIT 58x40dp LinearLayout  «2026-10-24 · י״ג חשון תשפ״ז»
+PETIT 58x40dp LinearLayout  «2026-10-25 · י״ד חשון תשפ״ז»
+PETIT 58x40dp LinearLayout  «2026-10-26 · ט״ו חשון תשפ״ז»
+PETIT 58x40dp LinearLayout  «2026-10-27 · ט״ז חשון תשפ״ז»
+PETIT 58x40dp LinearLayout  «2026-10-28 · י״ז חשון תשפ״ז»
+PETIT 58x40dp LinearLayout  «2026-10-29 · י״ח חשון תשפ״ז»
+PETIT 58x40dp LinearLayout  «2026-10-30 · י״ט חשון תשפ״ז»
+PETIT 58x40dp LinearLayout  «2026-10-31 · כ׳ חשון תשפ״ז»
+PETIT 58x40dp LinearLayout  «2026-11-01 · כ״א חשון תשפ״ז»
+PETIT 58x40dp LinearLayout  «2026-11-02 · כ״ב חשון תשפ״ז»
+PETIT 58x40dp LinearLayout  «2026-11-03 · כ״ג חשון תשפ״ז»
+PETIT 58x40dp LinearLayout  «2026-11-04 · כ״ד חשון תשפ״ז»
+PETIT 58x40dp LinearLayout  «2026-11-05 · כ״ה חשון תשפ״ז»
+PETIT 58x40dp LinearLayout  «2026-11-06 · כ״ו חשון תשפ״ז»
+PETIT 58x40dp LinearLayout  «2026-11-07 · כ״ז חשון תשפ״ז»
+PETIT 58x40dp LinearLayout  «2026-11-08 · כ״ח חשון תשפ״ז»
+PETIT 58x40dp LinearLayout  «2026-11-09 · כ״ט חשון תשפ״ז»
+PETIT 58x40dp LinearLayout  «2026-11-10 · ל׳ חשון תשפ״ז · R»
+PETIT 408x25dp TextView  «Aujourd’hui»
+== 20-tablette-couchee-halakha
+PETIT 37x37dp Switch  «Afficher la halakha du jour»
+PETIT 85x37dp RadioButton  «Yalkut Yosef»
+PETIT 82x37dp RadioButton  «Ben Ish ’Haï»
+PETIT 68x37dp RadioButton  «Les deux»
+PETIT 408x35dp EditText  «Rechercher dans la halakha»
+PETIT 37x37dp TextView  «‹»
+PETIT 37x37dp TextView  «›»
+PETIT 43x27dp TextView  «Aa»
+== 20-tablette-couchee-hilloulot
+PETIT 37x37dp Switch  «Afficher les hilloulot»
+PETIT 408x35dp EditText  «Rechercher un tsadik»
+PETIT 37x37dp TextView  «‹»
+PETIT 37x37dp TextView  «›»
+PETIT 408x13dp TextView  «Wikipédia (CC BY-SA)»
+PETIT 408x14dp TextView  «Lire la suite»
+PETIT 408x13dp TextView  «MyTzadik ↗»
+PETIT 43x27dp TextView  «Aa»
+== 20-tablette-couchee-recherche
+PETIT 408x35dp EditText  «Rechercher dans le siddour, le»
+== 20-tablette-couchee-paliers
+PETIT 408x27dp LinearLayout  «Une première hitbodedout, 0 / »
+PETIT 408x37dp LinearLayout  «1 note au journal, 0 / 1»
+PETIT 408x37dp LinearLayout  «2 premières hitbodedouts, 0 / »
+PETIT 48x30dp TextView  «Tous»
+PETIT 82x30dp TextView  «Premier pas»
+PETIT 119x30dp TextView  «Longue hitbodedout»
+PETIT 107x30dp TextView  «Jours de pratique»
+PETIT 61x30dp TextView  «La série»
+PETIT 1x30dp TextView  «Les heures»
+== 20-pixel6-couche-presentation-1
+== 20-pixel6-couche-presentation-2
+PETIT 85x41dp CompoundButton onboarding_duree_0 «5 min»
+PETIT 85x41dp CompoundButton onboarding_duree_1 «10 min»
+PETIT 86x41dp CompoundButton onboarding_duree_2 «15 min»
+PETIT 86x41dp CompoundButton onboarding_duree_3 «30 min»
+== 20-pixel6-couche-presentation-3
+PETIT 243x41dp Switch onboarding_rappel_switch «Me le rappeler chaque jour»
+PETIT 88x41dp Button onboarding_rappel_heure «à 07:00»
+== 20-pixel6-couche-presentation-4
+== 20-pixel6-couche-presentation-5
+== 20-pixel6-couche-presentation-6
+== 20-pixel6-couche-presentation-7
+== 20-pixel6-couche-accueil
+PETIT 108x40dp LinearLayout start_duration «Durée 15 min»
+PETIT 69x40dp LinearLayout start_theme «Sujet Aucun»
+PETIT 26x20dp LinearLayout  «à faire»
+PETIT 26x20dp LinearLayout  «à faire»
+PETIT 26x20dp LinearLayout  «à faire»
+PETIT 27x20dp LinearLayout  «à faire»
+PETIT 27x20dp LinearLayout  «à faire»
+PETIT 27x20dp LinearLayout  «à faire»
+== 20-pixel6-couche-accueil-suite
+PETIT 108x40dp LinearLayout start_duration «Durée 15 min»
+PETIT 69x40dp LinearLayout start_theme «Sujet Aucun»
+PETIT 26x53dp LinearLayout  «à faire»
+PETIT 26x53dp LinearLayout  «à faire»
+PETIT 26x53dp LinearLayout  «à faire»
+PETIT 27x53dp LinearLayout  «à faire»
+PETIT 27x53dp LinearLayout  «à faire»
+PETIT 27x53dp LinearLayout  «à faire»
+PETIT 186x34dp LinearLayout  «POUR CETTE HEURE»
+== 20-pixel6-couche-textes
+PETIT 626x35dp TextView  «תְּפִלַּת שַׁחֲרִית  ›»
+PETIT 626x35dp TextView  «תְּפִלַּת שַׁחֲרִית · אחר המזמ»
+PETIT 590x12dp LinearLayout tikkun_button «Tikoun HaKlali»
+== 20-pixel6-couche-settings
+PETIT 180x2dp Button mode_button «Comme le téléphone»
+== 20-pixel6-couche-session
+== 20-pixel6-couche-celebration
+PETIT 626x5dp Button celebration_share «Partager ma hitbodedout»
+== 20-pixel6-couche-journal
+== 20-pixel6-couche-tips
+== 20-pixel6-couche-reminders
+MUET Switch reminders_switch (2174, 504, 2311, 630)
+== 20-pixel6-couche-music
+MUET Switch music_switch (2174, 388, 2311, 514)
+MUET Switch music_shuffle (2174, 779, 2311, 905)
+== 20-pixel6-couche-siddur
+PETIT 272x36dp TextView siddur_heading_nusah «Noussa’h séfarade (Edot HaMizr»
+== 20-pixel6-couche-siddurlecture
+PETIT 43x48dp TextView  «הודו»
+PETIT 3x48dp TextView  «וידוי»
+PETIT 866x8dp TextView  «אחר המזמורים של תיקון לאה המנה»
+PETIT 56x36dp TextView  «Aa»
+== 20-pixel6-couche-tefilot
+== 20-pixel6-couche-tehilim
+PETIT 121x16dp TextView  «6»
+PETIT 121x16dp TextView  «7»
+PETIT 121x16dp TextView  «8»
+PETIT 122x16dp TextView  «9»
+PETIT 122x16dp TextView  «10»
+== 20-pixel6-couche-tehilimlecture
+PETIT 56x36dp TextView  «Aa»
+== 20-pixel6-couche-tikkun
+== 20-pixel6-couche-tikkunflow
+PETIT 56x36dp TextView  «Aa»
+== 20-pixel6-couche-psalm
+PETIT 56x36dp TextView  «Aa»
+== 20-pixel6-couche-library
+== 20-pixel6-couche-libraryentry
+PETIT 56x36dp TextView  «Aa»
+== 20-pixel6-couche-zmanim
+PETIT 147x36dp TextView zmanim_lieu «Paris · Diaspora»
+== 20-pixel6-couche-calendrier
+PETIT 95x30dp TextView  «Hébraïque»
+PETIT 92x30dp TextView  «Grégorien»
+PETIT 84x17dp LinearLayout  «2026-10-25 · י״ד חשון תשפ״ז»
+PETIT 84x17dp LinearLayout  «2026-10-26 · ט״ו חשון תשפ״ז»
+PETIT 84x17dp LinearLayout  «2026-10-27 · ט״ז חשון תשפ״ז»
+PETIT 84x17dp LinearLayout  «2026-10-28 · י״ז חשון תשפ״ז»
+PETIT 84x17dp LinearLayout  «2026-10-29 · י״ח חשון תשפ״ז»
+PETIT 84x17dp LinearLayout  «2026-10-30 · י״ט חשון תשפ״ז»
+PETIT 85x17dp LinearLayout  «2026-10-31 · כ׳ חשון תשפ״ז»
+== 20-pixel6-couche-halakha
+PETIT 590x45dp EditText  «Rechercher dans la halakha»
+PETIT 56x36dp TextView  «Aa»
+== 20-pixel6-couche-hilloulot
+PETIT 590x45dp EditText  «Rechercher un tsadik»
+PETIT 56x36dp TextView  «Aa»
+== 20-pixel6-couche-recherche
+PETIT 590x45dp EditText  «Rechercher dans le siddour, le»
+== 20-pixel6-couche-paliers
+PETIT 590x6dp LinearLayout  «2 premières hitbodedouts, 0 / »
+PETIT 62x40dp TextView  «Tous»
+PETIT 106x40dp TextView  «Premier pas»
+PETIT 155x40dp TextView  «Longue hitbodedout»
+PETIT 139x40dp TextView  «Jours de pratique»
+PETIT 80x40dp TextView  «La série»
+PETIT 59x40dp TextView  «Les heures»
+== 20-pixel6-couche-he-presentation-1
+== 20-pixel6-couche-he-presentation-2
+== 20-pixel6-couche-he-presentation-3
+== 20-pixel6-couche-he-presentation-4
+== 20-pixel6-couche-he-presentation-5
+== 20-pixel6-couche-he-presentation-6
+== 20-pixel6-couche-he-presentation-7
+== 20-petit-presentation-1
+PETIT 165x29dp Button onboarding_next «Suivant»
+PETIT 50x27dp Button onboarding_skip «Passer»
+== 20-petit-presentation-2
+PETIT 42x27dp CompoundButton onboarding_duree_0 «5 min»
+PETIT 42x27dp CompoundButton onboarding_duree_1 «10 min»
+PETIT 42x27dp CompoundButton onboarding_duree_2 «15 min»
+PETIT 42x27dp CompoundButton onboarding_duree_3 «30 min»
+PETIT 165x29dp Button onboarding_next «Suivant»
+PETIT 51x27dp Button onboarding_back «Précédent»
+PETIT 50x27dp Button onboarding_skip «Passer»
+== 20-petit-presentation-3
+PETIT 110x27dp Switch onboarding_rappel_switch «Me le rappeler chaque jour»
+PETIT 50x27dp Button onboarding_rappel_heure «à 07:00»
+PETIT 165x29dp Button onboarding_next «Suivant»
+PETIT 51x27dp Button onboarding_back «Précédent»
+PETIT 50x27dp Button onboarding_skip «Passer»
+== 20-petit-presentation-4
+PETIT 165x29dp Button onboarding_next «Suivant»
+PETIT 51x27dp Button onboarding_back «Précédent»
+PETIT 50x27dp Button onboarding_skip «Passer»
+== 20-petit-presentation-5
+PETIT 165x29dp Button onboarding_next «Suivant»
+PETIT 51x27dp Button onboarding_back «Précédent»
+PETIT 50x27dp Button onboarding_skip «Passer»
+== 20-petit-presentation-6
+PETIT 51x27dp CompoundButton onboarding_tsadik «Tsadik»
+PETIT 61x27dp CompoundButton onboarding_tsadeket «Tsadeket»
+PETIT 165x29dp Button onboarding_next «Suivant»
+PETIT 51x27dp Button onboarding_back «Précédent»
+PETIT 50x27dp Button onboarding_skip «Passer»
+== 20-petit-presentation-7
+PETIT 165x29dp Button onboarding_next «Commencer»
+PETIT 51x27dp Button onboarding_back «Précédent»
+== 20-petit-accueil
+PETIT 41x41dp FrameLayout hero_plate «Touchez pour voir vos chiffres»
+PETIT 165x27dp TextView paliers_line «Prochain trophée : Une premièr»
+PETIT 165x38dp Button start_session «Commencer une hitbodedout de 1»
+PETIT 37x46dp FrameLayout nav_texts «Bibliothèque»
+PETIT 37x46dp FrameLayout nav_zmanim «Zmanim»
+PETIT 37x46dp FrameLayout nav_journal «Journal»
+PETIT 37x46dp FrameLayout nav_settings «Réglages»
+== 20-petit-accueil-suite
+PETIT 165x27dp TextView paliers_line «Prochain trophée : Une premièr»
+PETIT 62x23dp LinearLayout start_duration «Durée 15 min»
+PETIT 58x23dp LinearLayout start_theme «Sujet Aucun»
+PETIT 35x23dp LinearLayout start_music «Musique»
+PETIT 23x30dp LinearLayout  «à faire»
+PETIT 23x30dp LinearLayout  «à faire»
+PETIT 24x30dp LinearLayout  «à faire»
+PETIT 24x30dp LinearLayout  «à faire»
+PETIT 24x30dp LinearLayout  «à faire»
+PETIT 24x30dp LinearLayout  «à faire»
+PETIT 165x27dp Button today_offline «Je l’ai faite sans le téléphon»
+PETIT 165x43dp LinearLayout  «POUR CETTE HEURE תְּפִלַּת מִנ»
+PETIT 165x5dp Button trophees_paliers «🏆 Trophées et paliers»
+PETIT 37x46dp FrameLayout nav_texts «Bibliothèque»
+PETIT 37x46dp FrameLayout nav_zmanim «Zmanim»
+PETIT 37x46dp FrameLayout nav_journal «Journal»
+PETIT 37x46dp FrameLayout nav_settings «Réglages»
+== 20-petit-textes
+PETIT 165x32dp Button recherche_button «Rechercher dans le siddour, le»
+PETIT 165x21dp TextView  «תְּפִלַּת שַׁחֲרִית  ›»
+PETIT 165x34dp TextView  «תְּפִלַּת שַׁחֲרִית · אחר המזמ»
+PETIT 144x35dp LinearLayout tikkun_button «Tikoun HaKlali 10 psaumes, 164»
+PETIT 144x38dp LinearLayout siddur_button «Siddour Cha’harit, Min’ha, Arv»
+PETIT 37x46dp FrameLayout nav_today «Aujourd’hui»
+PETIT 37x46dp FrameLayout nav_zmanim «Zmanim»
+PETIT 37x46dp FrameLayout nav_journal «Journal»
+PETIT 37x46dp FrameLayout nav_settings «Réglages»
+== 20-petit-settings
+PETIT 58x27dp Button language_button «Français»
+PETIT 65x27dp Button adresse_button «Pas choisi»
+PETIT 92x27dp Button onboarding_again «Revoir la présentation»
+PETIT 82x32dp Button mode_button «Comme le téléphone»
+PETIT 60x27dp Button fond_button «Vert pâle»
+== 20-petit-session
+PETIT 165x31dp Button session_primary «Commencer, 15 min»
+PETIT 165x14dp Button session_theme «Sujet : aucun (facultatif)»
+== 20-petit-celebration
+PETIT 165x31dp Button celebration_continue «Continuer»
+PETIT 165x27dp Button celebration_share «Partager ma hitbodedout»
+== 20-petit-journal
+== 20-petit-tips
+== 20-petit-reminders
+PETIT 30x27dp Switch reminders_switch «»
+MUET Switch reminders_switch (351, 334, 429, 406)
+PETIT 144x27dp Switch reminders_trophee «Dire dans le rappel qu’un trop»
+PETIT 165x3dp LinearLayout  «»
+MUET LinearLayout  (24, 684, 456, 693)
+PETIT 165x29dp Button reminders_add «Ajouter une heure»
+== 20-petit-music
+PETIT 30x27dp Switch music_switch «»
+MUET Switch music_switch (351, 268, 429, 340)
+PETIT 30x27dp Switch music_shuffle «»
+MUET Switch music_shuffle (351, 549, 429, 621)
+PETIT 165x1dp Button music_add «Ajouter un morceau du téléphon»
+== 20-petit-siddur
+PETIT 129x21dp TextView siddur_heading_nusah «Noussa’h séfarade (Edot HaMizr»
+PETIT 147x22dp LinearLayout  «בִּרְכוֹת הַשַּׁחַר Birkot hac»
+== 20-petit-siddurlecture
+PETIT 51x27dp TextView  «פתיחת אליהו»
+PETIT 62x27dp TextView  «סדר עטיפת ציצית»
+PETIT 62x27dp TextView  «סדר הנחת תפילין»
+PETIT 3x27dp TextView  «ותתפלל חנה»
+PETIT 183x5dp TextView  «אחר המזמורים של תיקון לאה המנה»
+PETIT 32x21dp TextView  «Aa»
+== 20-petit-tefilot
+PETIT 165x6dp LinearLayout  «»
+MUET LinearLayout  (24, 801, 456, 818)
+== 20-petit-tehilim
+PETIT 144x35dp LinearLayout tehilim_month_button «Selon le jour du mois Jour 5 d»
+PETIT 144x35dp LinearLayout tehilim_week_button «Selon le jour de la semaine Ve»
+PETIT 30x27dp TextView  «1»
+PETIT 31x27dp TextView  «2»
+PETIT 31x27dp TextView  «3»
+PETIT 31x27dp TextView  «4»
+PETIT 31x27dp TextView  «5»
+PETIT 30x27dp TextView  «6»
+PETIT 31x27dp TextView  «7»
+PETIT 31x27dp TextView  «8»
+PETIT 31x27dp TextView  «9»
+PETIT 31x27dp TextView  «10»
+PETIT 30x27dp TextView  «11»
+PETIT 31x27dp TextView  «12»
+PETIT 31x27dp TextView  «13»
+PETIT 31x27dp TextView  «14»
+PETIT 31x27dp TextView  «15»
+PETIT 30x27dp TextView  «16»
+PETIT 31x27dp TextView  «17»
+PETIT 31x27dp TextView  «18»
+PETIT 31x27dp TextView  «19»
+PETIT 31x27dp TextView  «20»
+PETIT 30x1dp TextView  «21»
+PETIT 31x1dp TextView  «22»
+PETIT 31x1dp TextView  «23»
+PETIT 31x1dp TextView  «24»
+PETIT 31x1dp TextView  «25»
+== 20-petit-tehilimlecture
+PETIT 82x32dp Button lecture_next «Psaume suivant»
+PETIT 32x21dp TextView  «Aa»
+== 20-petit-tikkun
+PETIT 165x31dp Button tikkun_flow «Tout lire d’un trait»
+PETIT 165x37dp LinearLayout  «לפני ההתחלה Avant de commencer»
+PETIT 165x37dp LinearLayout  «1  תהילים ט״ז 11 versets»
+PETIT 165x37dp LinearLayout  «2  תהילים ל״ב 11 versets»
+PETIT 165x37dp LinearLayout  «3  תהילים מ״א 14 versets»
+PETIT 165x34dp LinearLayout  «4  תהילים מ״ב 12 versets»
+== 20-petit-tikkunflow
+PETIT 165x31dp Button flow_done «J’ai dit le Tikoun en entier»
+PETIT 32x21dp TextView  «Aa»
+== 20-petit-psalm
+PETIT 80x41dp Button psalm_done «Marquer comme dit»
+PETIT 80x41dp Button psalm_next «Psaume suivant»
+PETIT 32x21dp TextView  «Aa»
+== 20-petit-library
+== 20-petit-libraryentry
+PETIT 32x21dp TextView  «Aa»
+== 20-petit-zmanim
+PETIT 83x21dp TextView zmanim_lieu «Paris · Diaspora»
+PETIT 144x27dp TextView  «Partager ce jour ↗»
+PETIT 52x29dp Button  «Halakha yomit»
+PETIT 52x27dp Button  «Hilloulot»
+PETIT 52x27dp Button  «Calendrier»
+== 20-petit-calendrier
+PETIT 56x18dp TextView  «Hébraïque»
+PETIT 53x18dp TextView  «Grégorien»
+PETIT 27x27dp TextView  «‹»
+PETIT 27x27dp TextView  «›»
+PETIT 21x30dp LinearLayout  «2026-10-12 · א׳ חשון תשפ״ז · R»
+PETIT 21x30dp LinearLayout  «2026-10-13 · ב׳ חשון תשפ״ז»
+PETIT 21x30dp LinearLayout  «2026-10-14 · ג׳ חשון תשפ״ז»
+PETIT 21x30dp LinearLayout  «2026-10-15 · ד׳ חשון תשפ״ז»
+PETIT 21x30dp LinearLayout  «2026-10-16 · ה׳ חשון תשפ״ז»
+PETIT 21x30dp LinearLayout  «2026-10-17 · ו׳ חשון תשפ״ז»
+PETIT 21x30dp LinearLayout  «2026-10-18 · ז׳ חשון תשפ״ז»
+PETIT 21x30dp LinearLayout  «2026-10-19 · ח׳ חשון תשפ״ז»
+PETIT 21x30dp LinearLayout  «2026-10-20 · ט׳ חשון תשפ״ז»
+PETIT 21x30dp LinearLayout  «2026-10-21 · י׳ חשון תשפ״ז»
+PETIT 21x30dp LinearLayout  «2026-10-22 · י״א חשון תשפ״ז»
+PETIT 21x30dp LinearLayout  «2026-10-23 · י״ב חשון תשפ״ז»
+PETIT 21x30dp LinearLayout  «2026-10-24 · י״ג חשון תשפ״ז»
+PETIT 21x30dp LinearLayout  «2026-10-25 · י״ד חשון תשפ״ז»
+PETIT 21x30dp LinearLayout  «2026-10-26 · ט״ו חשון תשפ״ז»
+PETIT 21x30dp LinearLayout  «2026-10-27 · ט״ז חשון תשפ״ז»
+PETIT 21x30dp LinearLayout  «2026-10-28 · י״ז חשון תשפ״ז»
+PETIT 21x30dp LinearLayout  «2026-10-29 · י״ח חשון תשפ״ז»
+PETIT 21x30dp LinearLayout  «2026-10-30 · י״ט חשון תשפ״ז»
+PETIT 21x30dp LinearLayout  «2026-10-31 · כ׳ חשון תשפ״ז»
+PETIT 21x30dp LinearLayout  «2026-11-01 · כ״א חשון תשפ״ז»
+PETIT 21x30dp LinearLayout  «2026-11-02 · כ״ב חשון תשפ״ז»
+PETIT 21x30dp LinearLayout  «2026-11-03 · כ״ג חשון תשפ״ז»
+PETIT 21x30dp LinearLayout  «2026-11-04 · כ״ד חשון תשפ״ז»
+PETIT 21x30dp LinearLayout  «2026-11-05 · כ״ה חשון תשפ״ז»
+PETIT 21x30dp LinearLayout  «2026-11-06 · כ״ו חשון תשפ״ז»
+PETIT 21x30dp LinearLayout  «2026-11-07 · כ״ז חשון תשפ״ז»
+PETIT 21x22dp LinearLayout  «2026-11-08 · כ״ח חשון תשפ״ז»
+PETIT 21x22dp LinearLayout  «2026-11-09 · כ״ט חשון תשפ״ז»
+PETIT 21x22dp LinearLayout  «2026-11-10 · ל׳ חשון תשפ״ז · R»
+== 20-petit-halakha
+PETIT 27x27dp Switch  «Afficher la halakha du jour»
+PETIT 64x27dp RadioButton  «Yalkut Yosef»
+PETIT 61x27dp RadioButton  «Ben Ish ’Haï»
+PETIT 51x27dp RadioButton  «Les deux»
+PETIT 144x26dp EditText  «Rechercher dans la halakha»
+PETIT 27x27dp TextView  «‹»
+PETIT 27x27dp TextView  «›»
+PETIT 32x21dp TextView  «Aa»
+== 20-petit-hilloulot
+PETIT 27x27dp Switch  «Afficher les hilloulot»
+PETIT 144x26dp EditText  «Rechercher un tsadik»
+PETIT 27x27dp TextView  «‹»
+PETIT 27x27dp TextView  «›»
+PETIT 32x21dp TextView  «Aa»
+== 20-petit-recherche
+PETIT 144x26dp EditText  «Rechercher dans le siddour, le»
+== 20-petit-paliers
+PETIT 144x5dp LinearLayout  «1 note au journal, 0 / 1»
+PETIT 144x27dp LinearLayout  «2 premières hitbodedouts, 0 / »
+PETIT 36x23dp TextView  «Tous»
+PETIT 61x23dp TextView  «Premier pas»
+PETIT 68x23dp TextView  «Longue hitbodedout»
+PETIT 165x41dp LinearLayout  «1 note au journal»
+PETIT 165x41dp LinearLayout  «2 premières hitbodedouts»
+PETIT 165x41dp LinearLayout  «3 premières hitbodedouts»
+== 20-petit-he-presentation-1
+PETIT 165x29dp Button onboarding_next «הבא»
+PETIT 50x27dp Button onboarding_skip «דילוג»
+== 20-petit-he-presentation-2
+PETIT 42x27dp CompoundButton onboarding_duree_0 «5 דק׳»
+PETIT 42x27dp CompoundButton onboarding_duree_1 «10 דק׳»
+PETIT 42x27dp CompoundButton onboarding_duree_2 «15 דק׳»
+PETIT 42x27dp CompoundButton onboarding_duree_3 «30 דק׳»
+PETIT 165x29dp Button onboarding_next «הבא»
+PETIT 50x27dp Button onboarding_back «הקודם»
+PETIT 50x27dp Button onboarding_skip «דילוג»
+== 20-petit-he-presentation-3
+PETIT 110x27dp Switch onboarding_rappel_switch «להזכיר לי כל יום»
+PETIT 50x27dp Button onboarding_rappel_heure «ב־07:00»
+PETIT 165x29dp Button onboarding_next «הבא»
+PETIT 50x27dp Button onboarding_back «הקודם»
+PETIT 50x27dp Button onboarding_skip «דילוג»
+== 20-petit-he-presentation-4
+PETIT 165x29dp Button onboarding_next «הבא»
+PETIT 50x27dp Button onboarding_back «הקודם»
+PETIT 50x27dp Button onboarding_skip «דילוג»
+== 20-petit-he-presentation-5
+PETIT 165x29dp Button onboarding_next «הבא»
+PETIT 50x27dp Button onboarding_back «הקודם»
+PETIT 50x27dp Button onboarding_skip «דילוג»
+== 20-petit-he-presentation-6
+PETIT 50x27dp CompoundButton onboarding_tsadik «צדיק»
+PETIT 50x27dp CompoundButton onboarding_tsadeket «צדקת»
+PETIT 165x29dp Button onboarding_next «הבא»
+PETIT 50x27dp Button onboarding_back «הקודם»
+PETIT 50x27dp Button onboarding_skip «דילוג»
+== 20-petit-he-presentation-7
+PETIT 165x29dp Button onboarding_next «להתחיל»
+PETIT 50x27dp Button onboarding_back «הקודם»
+== 20-petit-gros-texte-presentation-1
+PETIT 165x32dp Button onboarding_next «Suivant»
+PETIT 50x27dp Button onboarding_skip «Passer»
+== 20-petit-gros-texte-presentation-2
+PETIT 42x27dp CompoundButton onboarding_duree_0 «5 min»
+PETIT 42x27dp CompoundButton onboarding_duree_1 «10 min»
+PETIT 42x27dp CompoundButton onboarding_duree_2 «15 min»
+PETIT 42x27dp CompoundButton onboarding_duree_3 «30 min»
+PETIT 165x16dp Button onboarding_next «Suivant»
+== 20-petit-gros-texte-presentation-3
+PETIT 110x41dp Switch onboarding_rappel_switch «Me le rappeler chaque jour»
+PETIT 50x27dp Button onboarding_rappel_heure «à 07:00»
+PETIT 165x18dp Button onboarding_next «Suivant»
+== 20-petit-gros-texte-presentation-4
+PETIT 165x32dp Button onboarding_next «Suivant»
+PETIT 64x27dp Button onboarding_back «Précédent»
+PETIT 50x27dp Button onboarding_skip «Passer»
+== 20-petit-gros-texte-presentation-5
+PETIT 165x32dp Button onboarding_next «Suivant»
+PETIT 64x27dp Button onboarding_back «Précédent»
+PETIT 50x27dp Button onboarding_skip «Passer»
+== 20-petit-gros-texte-presentation-6
+PETIT 59x27dp CompoundButton onboarding_tsadik «Tsadik»
+PETIT 72x27dp CompoundButton onboarding_tsadeket «Tsadeket»
+PETIT 165x32dp Button onboarding_next «Suivant»
+PETIT 64x27dp Button onboarding_back «Précédent»
+PETIT 50x27dp Button onboarding_skip «Passer»
+== 20-petit-gros-texte-presentation-7
+PETIT 165x32dp Button onboarding_next «Commencer»
+PETIT 64x27dp Button onboarding_back «Précédent»
+== 20-petit-gros-texte-accueil
+PETIT 27x27dp FrameLayout hero_plate «Touchez pour voir vos chiffres»
+PETIT 165x45dp TextView paliers_line «Prochain trophée : Une premièr»
+PETIT 165x39dp Button start_session «Commencer une hitbodedout de 1»
+PETIT 37x46dp FrameLayout nav_texts «Bibliothèque»
+PETIT 37x46dp FrameLayout nav_zmanim «Zmanim»
+PETIT 37x46dp FrameLayout nav_journal «Journal»
+PETIT 37x46dp FrameLayout nav_settings «Réglages»
+== 20-petit-gros-texte-accueil-suite
+PETIT 165x33dp TextView paliers_line «Prochain trophée : Une premièr»
+PETIT 76x23dp LinearLayout start_duration «Durée 15 min»
+PETIT 70x23dp LinearLayout start_theme «Sujet Aucun»
+PETIT 9x23dp LinearLayout start_music «Musique»
+PETIT 23x36dp LinearLayout  «à faire»
+PETIT 23x36dp LinearLayout  «à faire»
+PETIT 24x36dp LinearLayout  «à faire»
+PETIT 24x36dp LinearLayout  «à faire»
+PETIT 24x36dp LinearLayout  «à faire»
+PETIT 24x36dp LinearLayout  «à faire»
+PETIT 165x27dp Button today_offline «Je l’ai faite sans le téléphon»
+PETIT 165x42dp LinearLayout  «POUR CETTE HEURE תְּפִלַּת מִנ»
+PETIT 37x46dp FrameLayout nav_texts «Bibliothèque»
+PETIT 37x46dp FrameLayout nav_zmanim «Zmanim»
+PETIT 37x46dp FrameLayout nav_journal «Journal»
+PETIT 37x46dp FrameLayout nav_settings «Réglages»
+== 20-petit-gros-texte-textes
+PETIT 165x23dp TextView  «תְּפִלַּת שַׁחֲרִית  ›»
+PETIT 144x25dp LinearLayout tikkun_button «Tikoun HaKlali 10 psaumes, 164»
+PETIT 37x46dp FrameLayout nav_today «Aujourd’hui»
+PETIT 37x46dp FrameLayout nav_zmanim «Zmanim»
+PETIT 37x46dp FrameLayout nav_journal «Journal»
+PETIT 37x46dp FrameLayout nav_settings «Réglages»
+== 20-petit-gros-texte-settings
+PETIT 69x27dp Button language_button «Français»
+PETIT 77x27dp Button adresse_button «Pas choisi»
+PETIT 120x27dp Button onboarding_again «Revoir la présentation»
+PETIT 82x38dp Button mode_button «Comme le téléphone»
+PETIT 71x7dp Button fond_button «Vert pâle»
+== 20-petit-gros-texte-session
+PETIT 165x30dp Button session_primary «Commencer, 15 min»
+== 20-petit-gros-texte-celebration
+PETIT 165x34dp Button celebration_continue «Continuer»
+PETIT 165x27dp Button celebration_share «Partager ma hitbodedout»
+== 20-petit-gros-texte-journal
+== 20-petit-gros-texte-tips
+== 20-petit-gros-texte-reminders
+PETIT 30x27dp Switch reminders_switch «»
+MUET Switch reminders_switch (351, 366, 429, 438)
+PETIT 144x40dp Switch reminders_trophee «Dire dans le rappel qu’un trop»
+PETIT 165x3dp Button reminders_add «Ajouter une heure»
+== 20-petit-gros-texte-music
+PETIT 30x27dp Switch music_switch «»
+MUET Switch music_switch (351, 300, 429, 372)
+PETIT 30x27dp Switch music_shuffle «»
+MUET Switch music_shuffle (351, 633, 429, 705)
+== 20-petit-gros-texte-siddur
+PETIT 129x27dp TextView siddur_heading_nusah «Noussa’h séfarade (Edot HaMizr»
+== 20-petit-gros-texte-siddurlecture
+PETIT 62x27dp TextView  «פתיחת אליהו»
+PETIT 78x27dp TextView  «סדר עטיפת ציצית»
+PETIT 37x27dp TextView  «סדר הנחת תפילין»
+PETIT 183x5dp TextView  «אחר המזמורים של תיקון לאה המנה»
+PETIT 32x21dp TextView  «Aa»
+== 20-petit-gros-texte-tefilot
+== 20-petit-gros-texte-tehilim
+PETIT 30x27dp TextView  «1»
+PETIT 31x27dp TextView  «2»
+PETIT 31x27dp TextView  «3»
+PETIT 31x27dp TextView  «4»
+PETIT 31x27dp TextView  «5»
+PETIT 30x27dp TextView  «6»
+PETIT 31x27dp TextView  «7»
+PETIT 31x27dp TextView  «8»
+PETIT 31x27dp TextView  «9»
+PETIT 31x27dp TextView  «10»
+PETIT 30x10dp TextView  «11»
+PETIT 31x10dp TextView  «12»
+PETIT 31x10dp TextView  «13»
+PETIT 31x10dp TextView  «14»
+PETIT 31x10dp TextView  «15»
+== 20-petit-gros-texte-tehilimlecture
+PETIT 82x38dp Button lecture_next «Psaume suivant»
+PETIT 32x21dp TextView  «Aa»
+== 20-petit-gros-texte-tikkun
+PETIT 165x34dp Button tikkun_flow «Tout lire d’un trait»
+PETIT 165x43dp LinearLayout  «לפני ההתחלה Avant de commencer»
+PETIT 165x43dp LinearLayout  «1  תהילים ט״ז 11 versets»
+PETIT 165x43dp LinearLayout  «2  תהילים ל״ב 11 versets»
+PETIT 165x43dp LinearLayout  «3  תהילים מ״א 14 versets»
+PETIT 165x3dp LinearLayout  «»
+MUET LinearLayout  (24, 810, 456, 818)
+== 20-petit-gros-texte-tikkunflow
+PETIT 165x34dp Button flow_done «J’ai dit le Tikoun en entier»
+PETIT 32x21dp TextView  «Aa»
+== 20-petit-gros-texte-psalm
+PETIT 80x46dp Button psalm_next «Psaume suivant»
+PETIT 32x21dp TextView  «Aa»
+== 20-petit-gros-texte-library
+PETIT 165x38dp LinearLayout  «תְּפִלּוֹת לְפִי עִנְיָן Prièr»
+== 20-petit-gros-texte-libraryentry
+PETIT 32x21dp TextView  «Aa»
+== 20-petit-gros-texte-zmanim
+PETIT 101x21dp TextView zmanim_lieu «Paris · Diaspora»
+PETIT 144x27dp TextView  «Partager ce jour ↗»
+PETIT 52x38dp Button  «Halakha yomit»
+PETIT 52x27dp Button  «Hilloulot»
+PETIT 52x27dp Button  «Calendrier»
+== 20-petit-gros-texte-calendrier
+PETIT 68x21dp TextView  «Hébraïque»
+PETIT 64x21dp TextView  «Grégorien»
+PETIT 27x27dp TextView  «‹»
+PETIT 27x27dp TextView  «›»
+PETIT 21x30dp LinearLayout  «2026-10-12 · א׳ חשון תשפ״ז · R»
+PETIT 21x30dp LinearLayout  «2026-10-13 · ב׳ חשון תשפ״ז»
+PETIT 21x30dp LinearLayout  «2026-10-14 · ג׳ חשון תשפ״ז»
+PETIT 21x30dp LinearLayout  «2026-10-15 · ד׳ חשון תשפ״ז»
+PETIT 21x30dp LinearLayout  «2026-10-16 · ה׳ חשון תשפ״ז»
+PETIT 21x30dp LinearLayout  «2026-10-17 · ו׳ חשון תשפ״ז»
+PETIT 21x30dp LinearLayout  «2026-10-18 · ז׳ חשון תשפ״ז»
+PETIT 21x30dp LinearLayout  «2026-10-19 · ח׳ חשון תשפ״ז»
+PETIT 21x30dp LinearLayout  «2026-10-20 · ט׳ חשון תשפ״ז»
+PETIT 21x30dp LinearLayout  «2026-10-21 · י׳ חשון תשפ״ז»
+PETIT 21x30dp LinearLayout  «2026-10-22 · י״א חשון תשפ״ז»
+PETIT 21x30dp LinearLayout  «2026-10-23 · י״ב חשון תשפ״ז»
+PETIT 21x30dp LinearLayout  «2026-10-24 · י״ג חשון תשפ״ז»
+PETIT 21x30dp LinearLayout  «2026-10-25 · י״ד חשון תשפ״ז»
+PETIT 21x30dp LinearLayout  «2026-10-26 · ט״ו חשון תשפ״ז»
+PETIT 21x30dp LinearLayout  «2026-10-27 · ט״ז חשון תשפ״ז»
+PETIT 21x30dp LinearLayout  «2026-10-28 · י״ז חשון תשפ״ז»
+PETIT 21x30dp LinearLayout  «2026-10-29 · י״ח חשון תשפ״ז»
+PETIT 21x30dp LinearLayout  «2026-10-30 · י״ט חשון תשפ״ז»
+PETIT 21x30dp LinearLayout  «2026-10-31 · כ׳ חשון תשפ״ז»
+PETIT 21x30dp LinearLayout  «2026-11-01 · כ״א חשון תשפ״ז»
+PETIT 21x30dp LinearLayout  «2026-11-02 · כ״ב חשון תשפ״ז»
+PETIT 21x30dp LinearLayout  «2026-11-03 · כ״ג חשון תשפ״ז»
+PETIT 21x30dp LinearLayout  «2026-11-04 · כ״ד חשון תשפ״ז»
+PETIT 21x30dp LinearLayout  «2026-11-05 · כ״ה חשון תשפ״ז»
+PETIT 21x30dp LinearLayout  «2026-11-06 · כ״ו חשון תשפ״ז»
+PETIT 21x30dp LinearLayout  «2026-11-07 · כ״ז חשון תשפ״ז»
+PETIT 21x10dp LinearLayout  «2026-11-08 · כ״ח חשון תשפ״ז»
+PETIT 21x10dp LinearLayout  «2026-11-09 · כ״ט חשון תשפ״ז»
+PETIT 21x10dp LinearLayout  «2026-11-10 · ל׳ חשון תשפ״ז · R»
+== 20-petit-gros-texte-halakha
+PETIT 27x27dp Switch  «Afficher la halakha du jour»
+PETIT 79x27dp RadioButton  «Yalkut Yosef»
+PETIT 76x27dp RadioButton  «Ben Ish ’Haï»
+PETIT 62x27dp RadioButton  «Les deux»
+PETIT 144x28dp EditText  «Rechercher dans la halakha»
+PETIT 27x27dp TextView  «‹»
+PETIT 27x27dp TextView  «›»
+PETIT 32x21dp TextView  «Aa»
+== 20-petit-gros-texte-hilloulot
+PETIT 27x27dp Switch  «Afficher les hilloulot»
+PETIT 144x28dp EditText  «Rechercher un tsadik»
+PETIT 27x27dp TextView  «‹»
+PETIT 27x27dp TextView  «›»
+PETIT 32x21dp TextView  «Aa»
+== 20-petit-gros-texte-recherche
+PETIT 144x28dp EditText  «Rechercher dans le siddour, le»
+== 20-petit-gros-texte-paliers
+PETIT 144x5dp LinearLayout  «1 note au journal, 0 / 1»
+PETIT 144x27dp LinearLayout  «2 premières hitbodedouts, 0 / »
+PETIT 42x23dp TextView  «Tous»
+PETIT 75x23dp TextView  «Premier pas»
+PETIT 48x23dp TextView  «Longue hitbodedout»
+PETIT 165x41dp LinearLayout  «1 note au journal»
+PETIT 165x41dp LinearLayout  «2 premières hitbodedouts»
+PETIT 165x30dp LinearLayout  «3 premières hitbodedouts»
+== 20-pixel6-presentation-1
+== 20-pixel6-presentation-2
+== 20-pixel6-presentation-3
+== 20-pixel6-presentation-4
+== 20-pixel6-presentation-5
+== 20-pixel6-presentation-6
+== 20-pixel6-presentation-7
+== 20-pixel6-accueil
+PETIT 108x40dp LinearLayout start_duration «Durée 15 min»
+PETIT 101x40dp LinearLayout start_theme «Sujet Aucun»
+PETIT 139x40dp LinearLayout start_music «Musique Niggoun 01»
+PETIT 363x43dp LinearLayout  «POUR CETTE HEURE תְּפִלַּת מִנ»
+== 20-pixel6-accueil-suite
+PETIT 108x40dp LinearLayout start_duration «Durée 15 min»
+PETIT 101x40dp LinearLayout start_theme «Sujet Aucun»
+PETIT 139x40dp LinearLayout start_music «Musique Niggoun 01»
+== 20-pixel6-textes
+PETIT 379x35dp TextView  «תְּפִלַּת שַׁחֲרִית  ›»
+PETIT 344x13dp LinearLayout proofread_button «»
+MUET LinearLayout proofread_button (89, 2092, 991, 2127)
+== 20-pixel6-settings
+== 20-pixel6-session
+== 20-pixel6-celebration
+== 20-pixel6-journal
+== 20-pixel6-tips
+== 20-pixel6-reminders
+MUET Switch reminders_switch (854, 582, 991, 708)
+== 20-pixel6-music
+MUET Switch music_switch (854, 477, 991, 603)
+MUET Switch music_shuffle (854, 890, 991, 1016)
+MUET RadioButton track_radio (74, 1284, 200, 1410)
+PETIT 44x44dp ImageButton track_rename «Renommer»
+PETIT 44x44dp ImageButton track_play «Écouter»
+MUET RadioButton track_radio (74, 1473, 200, 1599)
+PETIT 44x44dp ImageButton track_rename «Renommer»
+PETIT 44x44dp ImageButton track_play «Écouter»
+MUET RadioButton track_radio (74, 1662, 200, 1788)
+PETIT 44x44dp ImageButton track_rename «Renommer»
+PETIT 44x44dp ImageButton track_play «Écouter»
+MUET RadioButton track_radio (74, 1851, 200, 1977)
+PETIT 44x44dp ImageButton track_rename «Renommer»
+PETIT 44x44dp ImageButton track_play «Écouter»
+PETIT 379x38dp LinearLayout  «Niggoun 05 Livré avec l’applic»
+PETIT 48x30dp RadioButton track_radio «»
+MUET RadioButton track_radio (74, 2040, 200, 2118)
+PETIT 44x28dp ImageButton track_rename «Renommer»
+PETIT 44x28dp ImageButton track_play «Écouter»
+== 20-pixel6-siddur
+PETIT 272x36dp TextView siddur_heading_nusah «Noussa’h séfarade (Edot HaMizr»
+PETIT 350x42dp LinearLayout  «תִּקּוּן חֲצוֹת Tikoun ’hatsot»
+== 20-pixel6-siddurlecture
+PETIT 11x48dp TextView  «תפילת שחרית»
+PETIT 411x8dp TextView  «אחר המזמורים של תיקון לאה המנה»
+PETIT 56x36dp TextView  «Aa»
+== 20-pixel6-tefilot
+== 20-pixel6-tehilim
+PETIT 72x32dp TextView  «46»
+PETIT 72x32dp TextView  «47»
+PETIT 72x32dp TextView  «48»
+PETIT 72x32dp TextView  «49»
+PETIT 72x32dp TextView  «50»
+== 20-pixel6-tehilimlecture
+PETIT 56x36dp TextView  «Aa»
+== 20-pixel6-tikkun
+PETIT 379x6dp LinearLayout  «»
+MUET LinearLayout  (42, 2320, 1038, 2337)
+== 20-pixel6-tikkunflow
+PETIT 56x36dp TextView  «Aa»
+== 20-pixel6-psalm
+PETIT 56x36dp TextView  «Aa»
+== 20-pixel6-library
+== 20-pixel6-libraryentry
+PETIT 56x36dp TextView  «Aa»
+== 20-pixel6-zmanim
+PETIT 147x36dp TextView zmanim_lieu «Paris · Diaspora»
+== 20-pixel6-calendrier
+PETIT 95x30dp TextView  «Hébraïque»
+PETIT 92x30dp TextView  «Grégorien»
+PETIT 344x32dp TextView  «Aujourd’hui»
+== 20-pixel6-halakha
+PETIT 344x45dp EditText  «Rechercher dans la halakha»
+PETIT 56x36dp TextView  «Aa»
+== 20-pixel6-hilloulot
+PETIT 344x45dp EditText  «Rechercher un tsadik»
+PETIT 344x16dp TextView  «Wikipédia (CC BY-SA)»
+PETIT 344x18dp TextView  «Lire la suite»
+PETIT 344x17dp TextView  «MyTzadik ↗»
+PETIT 56x36dp TextView  «Aa»
+== 20-pixel6-recherche
+PETIT 344x45dp EditText  «Rechercher dans le siddour, le»
+== 20-pixel6-paliers
+PETIT 62x40dp TextView  «Tous»
+PETIT 106x40dp TextView  «Premier pas»
+PETIT 155x40dp TextView  «Longue hitbodedout»
+PETIT 48x40dp TextView  «Jours de pratique»
+PETIT 379x38dp LinearLayout  «5 premières hitbodedouts»
+== 20-tablette-presentation-1
+PETIT 536x44dp Button onboarding_next «Suivant»
+PETIT 67x37dp Button onboarding_skip «Passer»
+== 20-tablette-presentation-2
+PETIT 134x37dp CompoundButton onboarding_duree_0 «5 min»
+PETIT 134x37dp CompoundButton onboarding_duree_1 «10 min»
+PETIT 135x37dp CompoundButton onboarding_duree_2 «15 min»
+PETIT 135x37dp CompoundButton onboarding_duree_3 «30 min»
+PETIT 536x44dp Button onboarding_next «Suivant»
+PETIT 68x37dp Button onboarding_back «Précédent»
+PETIT 67x37dp Button onboarding_skip «Passer»
+== 20-tablette-presentation-3
+PETIT 463x37dp Switch onboarding_rappel_switch «Me le rappeler chaque jour»
+PETIT 67x37dp Button onboarding_rappel_heure «à 07:00»
+PETIT 536x44dp Button onboarding_next «Suivant»
+PETIT 68x37dp Button onboarding_back «Précédent»
+PETIT 67x37dp Button onboarding_skip «Passer»
+== 20-tablette-presentation-4
+PETIT 536x44dp Button onboarding_next «Suivant»
+PETIT 68x37dp Button onboarding_back «Précédent»
+PETIT 67x37dp Button onboarding_skip «Passer»
+== 20-tablette-presentation-5
+PETIT 536x44dp Button onboarding_next «Suivant»
+PETIT 68x37dp Button onboarding_back «Précédent»
+PETIT 67x37dp Button onboarding_skip «Passer»
+== 20-tablette-presentation-6
+PETIT 69x37dp CompoundButton onboarding_tsadik «Tsadik»
+PETIT 81x37dp CompoundButton onboarding_tsadeket «Tsadeket»
+PETIT 536x44dp Button onboarding_next «Suivant»
+PETIT 68x37dp Button onboarding_back «Précédent»
+PETIT 67x37dp Button onboarding_skip «Passer»
+== 20-tablette-presentation-7
+PETIT 536x44dp Button onboarding_next «Commencer»
+PETIT 68x37dp Button onboarding_back «Précédent»
+== 20-tablette-accueil
+PETIT 318x37dp TextView paliers_line «Prochain trophée : Une premièr»
+PETIT 83x30dp LinearLayout start_duration «Durée 15 min»
+PETIT 77x30dp LinearLayout start_theme «Sujet Aucun»
+PETIT 115x30dp LinearLayout start_music «Musique Niggoun 01»
+PETIT 137x30dp LinearLayout start_focus «Concentration désactivée»
+PETIT 77x40dp LinearLayout  «à faire»
+PETIT 77x40dp LinearLayout  «à faire»
+PETIT 77x40dp LinearLayout  «à faire»
+PETIT 77x40dp LinearLayout  «à faire»
+PETIT 77x40dp LinearLayout  «à faire»
+PETIT 77x40dp LinearLayout  «à faire»
+PETIT 536x37dp Button today_offline «Je l’ai faite sans le téléphon»
+PETIT 536x37dp Button trophees_paliers «🏆 Trophées et paliers»
+== 20-tablette-accueil-suite
+PETIT 318x37dp TextView paliers_line «Prochain trophée : Une premièr»
+PETIT 83x30dp LinearLayout start_duration «Durée 15 min»
+PETIT 77x30dp LinearLayout start_theme «Sujet Aucun»
+PETIT 115x30dp LinearLayout start_music «Musique Niggoun 01»
+PETIT 137x30dp LinearLayout start_focus «Concentration désactivée»
+PETIT 77x40dp LinearLayout  «à faire»
+PETIT 77x40dp LinearLayout  «à faire»
+PETIT 77x40dp LinearLayout  «à faire»
+PETIT 77x40dp LinearLayout  «à faire»
+PETIT 77x40dp LinearLayout  «à faire»
+PETIT 77x40dp LinearLayout  «à faire»
+PETIT 536x37dp Button today_offline «Je l’ai faite sans le téléphon»
+PETIT 536x37dp Button trophees_paliers «🏆 Trophées et paliers»
+== 20-tablette-textes
+PETIT 536x37dp Button recherche_button «Rechercher dans le siddour, le»
+PETIT 536x28dp TextView  «תְּפִלַּת שַׁחֲרִית  ›»
+PETIT 536x28dp TextView  «תְּפִלַּת שַׁחֲרִית · אחר המזמ»
+PETIT 509x46dp LinearLayout tikkun_button «Tikoun HaKlali 10 psaumes, 164»
+PETIT 509x46dp LinearLayout siddur_button «Siddour Cha’harit, Min’ha, Arv»
+PETIT 509x46dp LinearLayout tehilim_button «Tehilim Aujourd’hui : Tehilim »
+PETIT 509x46dp LinearLayout tefilot_button «Tefilot Dix sujets, vingt-et-u»
+PETIT 509x46dp LinearLayout livres_button «Livres Likoutei Moharan, Hicht»
+PETIT 509x46dp LinearLayout library_button «Sources de la hitbodedout Ce q»
+PETIT 509x46dp LinearLayout tips_button «Conseils pour la hitbodedout D»
+PETIT 509x43dp LinearLayout proofread_button «Ouvrir la relecture»
+PETIT 40x37dp Switch music_switch_main «»
+MUET Switch music_switch_main (1300, 1818, 1404, 1914)
+PETIT 509x46dp LinearLayout reminders_button «Rappels Désactivés.»
+== 20-tablette-settings
+PETIT 78x37dp Button language_button «Français»
+PETIT 86x37dp Button adresse_button «Pas choisi»
+PETIT 124x37dp Button onboarding_again «Revoir la présentation»
+PETIT 136x37dp Button mode_button «Comme le téléphone»
+PETIT 80x37dp Button fond_button «Vert pâle»
+PETIT 67x37dp Button accent_button «Vert»
+PETIT 168x37dp Button police_button «Hébraïque à empattements»
+PETIT 40x37dp Switch grand_texte_switch «Grand texte de lecture»
+PETIT 93x37dp Button ouverture_button «Aujourd’hui»
+PETIT 40x37dp Switch levana_switch «Afficher Birkat haLevana»
+PETIT 40x37dp Switch levana_rappel_switch «Rappel de Birkat haLevana»
+PETIT 274x42dp Button levana_usage_button «Selon le noussa’h · Dès 7 jour»
+PETIT 40x37dp Switch hilloulot_switch «Afficher les hilloulot»
+PETIT 40x37dp Switch halakha_switch «Afficher la halakha du jour»
+PETIT 97x37dp Button halakha_source_button «Yalkut Yosef»
+== 20-tablette-session
+PETIT 536x41dp Button session_primary «Commencer, 15 min»
+PETIT 536x37dp Button session_theme «Sujet : aucun (facultatif)»
+PETIT 177x37dp Button duration_5 «5 min»
+PETIT 177x37dp Button duration_10 «10 min»
+PETIT 177x37dp Button duration_15 «15 min»
+PETIT 177x37dp Button duration_30 «30 min»
+PETIT 177x37dp Button duration_60 «1 h»
+PETIT 177x37dp Button duration_90 «1 h 30»
+PETIT 536x37dp Button session_custom «Durée réglable…»
+PETIT 536x37dp Button session_open «Sans durée»
+== 20-tablette-celebration
+PETIT 536x41dp Button celebration_continue «Continuer»
+PETIT 536x37dp Button celebration_share «Partager ma hitbodedout»
+== 20-tablette-journal
+PETIT 221x37dp Button journal_empty_commencer «Commencer ma première hitboded»
+== 20-tablette-tips
+== 20-tablette-reminders
+PETIT 40x37dp Switch reminders_switch «»
+MUET Switch reminders_switch (1428, 473, 1532, 569)
+PETIT 558x37dp Switch reminders_trophee «Dire dans le rappel qu’un trop»
+PETIT 67x37dp Button reminder_remove «Retirer»
+PETIT 585x39dp Button reminders_add «Ajouter une heure»
+== 20-tablette-music
+PETIT 40x37dp Switch music_switch «»
+MUET Switch music_switch (1428, 392, 1532, 488)
+PETIT 40x37dp Switch music_shuffle «»
+MUET Switch music_shuffle (1428, 689, 1532, 785)
+PETIT 37x37dp RadioButton track_radio «»
+MUET RadioButton track_radio (56, 983, 152, 1079)
+PETIT 34x34dp ImageButton track_rename «Renommer»
+PETIT 34x34dp ImageButton track_play «Écouter»
+PETIT 37x37dp RadioButton track_radio «»
+MUET RadioButton track_radio (56, 1127, 152, 1223)
+PETIT 34x34dp ImageButton track_rename «Renommer»
+PETIT 34x34dp ImageButton track_play «Écouter»
+PETIT 37x37dp RadioButton track_radio «»
+MUET RadioButton track_radio (56, 1271, 152, 1367)
+PETIT 34x34dp ImageButton track_rename «Renommer»
+PETIT 34x34dp ImageButton track_play «Écouter»
+PETIT 37x37dp RadioButton track_radio «»
+MUET RadioButton track_radio (56, 1415, 152, 1511)
+PETIT 34x34dp ImageButton track_rename «Renommer»
+PETIT 34x34dp ImageButton track_play «Écouter»
+PETIT 37x37dp RadioButton track_radio «»
+MUET RadioButton track_radio (56, 1559, 152, 1655)
+PETIT 34x34dp ImageButton track_rename «Renommer»
+PETIT 34x34dp ImageButton track_play «Écouter»
+PETIT 37x37dp RadioButton track_radio «»
+MUET RadioButton track_radio (56, 1703, 152, 1799)
+PETIT 34x34dp ImageButton track_rename «Renommer»
+PETIT 34x34dp ImageButton track_play «Écouter»
+PETIT 37x37dp RadioButton track_radio «»
+MUET RadioButton track_radio (56, 1847, 152, 1943)
+PETIT 34x34dp ImageButton track_rename «Renommer»
+PETIT 34x34dp ImageButton track_play «Écouter»
+PETIT 37x37dp RadioButton track_radio «»
+MUET RadioButton track_radio (56, 1991, 152, 2087)
+PETIT 34x34dp ImageButton track_rename «Renommer»
+PETIT 34x34dp ImageButton track_play «Écouter»
+PETIT 37x37dp RadioButton track_radio «»
+MUET RadioButton track_radio (56, 2135, 152, 2231)
+PETIT 34x34dp ImageButton track_rename «Renommer»
+PETIT 34x34dp ImageButton track_play «Écouter»
+PETIT 37x37dp RadioButton track_radio «»
+MUET RadioButton track_radio (56, 2279, 152, 2375)
+PETIT 34x34dp ImageButton track_rename «Renommer»
+PETIT 34x34dp ImageButton track_play «Écouter»
+PETIT 585x39dp Button music_add «Ajouter un morceau du téléphon»
+== 20-tablette-siddur
+PETIT 206x27dp TextView siddur_heading_nusah «Noussa’h séfarade (Edot HaMizr»
+PETIT 514x46dp LinearLayout  «בִּרְכוֹת הַשַּׁחַר Birkot hac»
+PETIT 514x46dp LinearLayout  «תְּפִלַּת שַׁחֲרִית Cha’harit»
+PETIT 514x46dp LinearLayout  «תְּפִלַּת מִנְחָה Min’ha»
+PETIT 514x46dp LinearLayout  «תְּפִלַּת עַרְבִית Arvit»
+PETIT 514x46dp LinearLayout  «קְרִיאַת שְׁמַע שֶׁעַל הַמִּטָ»
+PETIT 514x46dp LinearLayout  «תִּקּוּן חֲצוֹת Tikoun ’hatsot»
+PETIT 514x46dp LinearLayout  «אֲשֶׁר יָצַר Acher yatsar»
+PETIT 514x46dp LinearLayout  «בִּרְכַּת הַמָּזוֹן Birkat ham»
+PETIT 514x46dp LinearLayout  «בְּרָכָה מֵעֵין שָׁלֹשׁ Méèn c»
+PETIT 514x46dp LinearLayout  «בּוֹרֵא נְפָשׁוֹת Boré néfacho»
+PETIT 514x37dp LinearLayout  «תְּפִלַּת הַדֶּרֶךְ Téfilat ha»
+== 20-tablette-siddurlecture
+PETIT 68x37dp TextView  «פתיחת אליהו»
+PETIT 86x37dp TextView  «סדר עטיפת ציצית»
+PETIT 84x37dp TextView  «סדר הנחת תפילין»
+PETIT 65x37dp TextView  «ותתפלל חנה»
+PETIT 71x37dp TextView  «תפילת שחרית»
+PETIT 71x37dp TextView  «פטום הקטורת»
+PETIT 32x37dp TextView  «הודו»
+PETIT 66x37dp TextView  «פסוקי דזמרה»
+PETIT 61x37dp TextView  «ק״ש וברכותיה»
+PETIT 610x6dp TextView  «אחר המזמורים של תיקון לאה המנה»
+PETIT 610x38dp TextView  «וִיהִ֤י ׀ נֹ֤עַם אֲדֹנָ֥י אֱלֹ»
+PETIT 43x27dp TextView  «Aa»
+== 20-tablette-tefilot
+== 20-tablette-tehilim
+PETIT 509x46dp LinearLayout tehilim_month_button «Selon le jour du mois Jour 5 d»
+PETIT 509x46dp LinearLayout tehilim_week_button «Selon le jour de la semaine Ve»
+PETIT 104x37dp TextView  «1»
+PETIT 104x37dp TextView  «2»
+PETIT 104x37dp TextView  «3»
+PETIT 104x37dp TextView  «4»
+PETIT 104x37dp TextView  «5»
+PETIT 104x37dp TextView  «6»
+PETIT 104x37dp TextView  «7»
+PETIT 104x37dp TextView  «8»
+PETIT 104x37dp TextView  «9»
+PETIT 104x37dp TextView  «10»
+PETIT 104x37dp TextView  «11»
+PETIT 104x37dp TextView  «12»
+PETIT 104x37dp TextView  «13»
+PETIT 104x37dp TextView  «14»
+PETIT 104x37dp TextView  «15»
+PETIT 104x37dp TextView  «16»
+PETIT 104x37dp TextView  «17»
+PETIT 104x37dp TextView  «18»
+PETIT 104x37dp TextView  «19»
+PETIT 104x37dp TextView  «20»
+PETIT 104x37dp TextView  «21»
+PETIT 104x37dp TextView  «22»
+PETIT 104x37dp TextView  «23»
+PETIT 104x37dp TextView  «24»
+PETIT 104x37dp TextView  «25»
+PETIT 104x37dp TextView  «26»
+PETIT 104x37dp TextView  «27»
+PETIT 104x37dp TextView  «28»
+PETIT 104x37dp TextView  «29»
+PETIT 104x37dp TextView  «30»
+PETIT 104x37dp TextView  «31»
+PETIT 104x37dp TextView  «32»
+PETIT 104x37dp TextView  «33»
+PETIT 104x37dp TextView  «34»
+PETIT 104x37dp TextView  «35»
+PETIT 104x37dp TextView  «36»
+PETIT 104x37dp TextView  «37»
+PETIT 104x37dp TextView  «38»
+PETIT 104x37dp TextView  «39»
+PETIT 104x37dp TextView  «40»
+PETIT 104x37dp TextView  «41»
+PETIT 104x37dp TextView  «42»
+PETIT 104x37dp TextView  «43»
+PETIT 104x37dp TextView  «44»
+PETIT 104x37dp TextView  «45»
+PETIT 104x37dp TextView  «46»
+PETIT 104x37dp TextView  «47»
+PETIT 104x37dp TextView  «48»
+PETIT 104x37dp TextView  «49»
+PETIT 104x37dp TextView  «50»
+PETIT 104x37dp TextView  «51»
+PETIT 104x37dp TextView  «52»
+PETIT 104x37dp TextView  «53»
+PETIT 104x37dp TextView  «54»
+PETIT 104x37dp TextView  «55»
+PETIT 104x37dp TextView  «56»
+PETIT 104x37dp TextView  «57»
+PETIT 104x37dp TextView  «58»
+PETIT 104x37dp TextView  «59»
+PETIT 104x37dp TextView  «60»
+PETIT 104x37dp TextView  «61»
+PETIT 104x37dp TextView  «62»
+PETIT 104x37dp TextView  «63»
+PETIT 104x37dp TextView  «64»
+PETIT 104x37dp TextView  «65»
+PETIT 104x37dp TextView  «66»
+PETIT 104x37dp TextView  «67»
+PETIT 104x37dp TextView  «68»
+PETIT 104x37dp TextView  «69»
+PETIT 104x37dp TextView  «70»
+PETIT 104x37dp TextView  «71»
+PETIT 104x37dp TextView  «72»
+PETIT 104x37dp TextView  «73»
+PETIT 104x37dp TextView  «74»
+PETIT 104x37dp TextView  «75»
+PETIT 104x37dp TextView  «76»
+PETIT 104x37dp TextView  «77»
+PETIT 104x37dp TextView  «78»
+PETIT 104x37dp TextView  «79»
+PETIT 104x37dp TextView  «80»
+PETIT 104x11dp TextView  «81»
+PETIT 104x11dp TextView  «82»
+PETIT 104x11dp TextView  «83»
+PETIT 104x11dp TextView  «84»
+PETIT 104x11dp TextView  «85»
+== 20-tablette-tehilimlecture
+PETIT 293x37dp Button lecture_next «Psaume suivant»
+PETIT 43x27dp TextView  «Aa»
+== 20-tablette-tikkun
+PETIT 585x41dp Button tikkun_flow «Tout lire d’un trait»
+== 20-tablette-tikkunflow
+PETIT 585x41dp Button flow_done «J’ai dit le Tikoun en entier»
+PETIT 43x27dp TextView  «Aa»
+== 20-tablette-psalm
+PETIT 290x40dp Button psalm_done «Marquer comme dit»
+PETIT 290x40dp Button psalm_next «Psaume suivant»
+PETIT 43x27dp TextView  «Aa»
+== 20-tablette-library
+== 20-tablette-libraryentry
+PETIT 585x40dp Button entry_link «Ouvrir sur Sefaria»
+PETIT 43x27dp TextView  «Aa»
+== 20-tablette-zmanim
+PETIT 110x27dp TextView zmanim_lieu «Paris · Diaspora»
+PETIT 509x37dp TextView  «Partager ce jour ↗»
+PETIT 174x37dp Button  «Halakha yomit»
+PETIT 175x37dp Button  «Hilloulot»
+PETIT 175x37dp Button  «Calendrier»
+== 20-tablette-calendrier
+PETIT 74x24dp TextView  «Hébraïque»
+PETIT 70x24dp TextView  «Grégorien»
+PETIT 37x37dp TextView  «‹»
+PETIT 37x37dp TextView  «›»
+PETIT 73x40dp LinearLayout  «2026-10-12 · א׳ חשון תשפ״ז · R»
+PETIT 73x40dp LinearLayout  «2026-10-13 · ב׳ חשון תשפ״ז»
+PETIT 73x40dp LinearLayout  «2026-10-14 · ג׳ חשון תשפ״ז»
+PETIT 73x40dp LinearLayout  «2026-10-15 · ד׳ חשון תשפ״ז»
+PETIT 73x40dp LinearLayout  «2026-10-16 · ה׳ חשון תשפ״ז»
+PETIT 73x40dp LinearLayout  «2026-10-17 · ו׳ חשון תשפ״ז»
+PETIT 72x40dp LinearLayout  «2026-10-18 · ז׳ חשון תשפ״ז»
+PETIT 73x40dp LinearLayout  «2026-10-19 · ח׳ חשון תשפ״ז»
+PETIT 73x40dp LinearLayout  «2026-10-20 · ט׳ חשון תשפ״ז»
+PETIT 73x40dp LinearLayout  «2026-10-21 · י׳ חשון תשפ״ז»
+PETIT 73x40dp LinearLayout  «2026-10-22 · י״א חשון תשפ״ז»
+PETIT 73x40dp LinearLayout  «2026-10-23 · י״ב חשון תשפ״ז»
+PETIT 73x40dp LinearLayout  «2026-10-24 · י״ג חשון תשפ״ז»
+PETIT 72x40dp LinearLayout  «2026-10-25 · י״ד חשון תשפ״ז»
+PETIT 73x40dp LinearLayout  «2026-10-26 · ט״ו חשון תשפ״ז»
+PETIT 73x40dp LinearLayout  «2026-10-27 · ט״ז חשון תשפ״ז»
+PETIT 73x40dp LinearLayout  «2026-10-28 · י״ז חשון תשפ״ז»
+PETIT 73x40dp LinearLayout  «2026-10-29 · י״ח חשון תשפ״ז»
+PETIT 73x40dp LinearLayout  «2026-10-30 · י״ט חשון תשפ״ז»
+PETIT 73x40dp LinearLayout  «2026-10-31 · כ׳ חשון תשפ״ז»
+PETIT 72x40dp LinearLayout  «2026-11-01 · כ״א חשון תשפ״ז»
+PETIT 73x40dp LinearLayout  «2026-11-02 · כ״ב חשון תשפ״ז»
+PETIT 73x40dp LinearLayout  «2026-11-03 · כ״ג חשון תשפ״ז»
+PETIT 73x40dp LinearLayout  «2026-11-04 · כ״ד חשון תשפ״ז»
+PETIT 73x40dp LinearLayout  «2026-11-05 · כ״ה חשון תשפ״ז»
+PETIT 73x40dp LinearLayout  «2026-11-06 · כ״ו חשון תשפ״ז»
+PETIT 73x40dp LinearLayout  «2026-11-07 · כ״ז חשון תשפ״ז»
+PETIT 72x40dp LinearLayout  «2026-11-08 · כ״ח חשון תשפ״ז»
+PETIT 73x40dp LinearLayout  «2026-11-09 · כ״ט חשון תשפ״ז»
+PETIT 73x40dp LinearLayout  «2026-11-10 · ל׳ חשון תשפ״ז · R»
+PETIT 509x25dp TextView  «Aujourd’hui»
+PETIT 509x37dp TextView  «Lire Birkat haLevana ›»
+PETIT 509x11dp TextView  «et 6 autres ›»
+PETIT 509x37dp TextView  «Toutes les hilloulot ›»
+== 20-tablette-halakha
+PETIT 37x37dp Switch  «Afficher la halakha du jour»
+PETIT 85x37dp RadioButton  «Yalkut Yosef»
+PETIT 82x37dp RadioButton  «Ben Ish ’Haï»
+PETIT 68x37dp RadioButton  «Les deux»
+PETIT 509x35dp EditText  «Rechercher dans la halakha»
+PETIT 37x37dp TextView  «‹»
+PETIT 37x37dp TextView  «›»
+PETIT 561x25dp TextView  «La halakha du jour sur halacha»
+PETIT 43x27dp TextView  «Aa»
+== 20-tablette-hilloulot
+PETIT 37x37dp Switch  «Afficher les hilloulot»
+PETIT 509x35dp EditText  «Rechercher un tsadik»
+PETIT 37x37dp TextView  «‹»
+PETIT 37x37dp TextView  «›»
+PETIT 509x13dp TextView  «Wikipédia (CC BY-SA)»
+PETIT 509x14dp TextView  «Lire la suite»
+PETIT 509x13dp TextView  «MyTzadik ↗»
+PETIT 509x14dp TextView  «Lire la suite»
+PETIT 509x13dp TextView  «MyTzadik ↗»
+PETIT 509x13dp TextView  «Wikipédia (CC BY-SA)»
+PETIT 43x27dp TextView  «Aa»
+== 20-tablette-recherche
+PETIT 509x35dp EditText  «Rechercher dans le siddour, le»
+== 20-tablette-paliers
+PETIT 509x37dp LinearLayout  «Une première hitbodedout, 0 / »
+PETIT 509x37dp LinearLayout  «1 note au journal, 0 / 1»
+PETIT 509x37dp LinearLayout  «2 premières hitbodedouts, 0 / »
+PETIT 48x30dp TextView  «Tous»
+PETIT 82x30dp TextView  «Premier pas»
+PETIT 119x30dp TextView  «Longue hitbodedout»
+PETIT 107x30dp TextView  «Jours de pratique»
+PETIT 61x30dp TextView  «La série»
+PETIT 75x30dp TextView  «Les heures»
+PETIT 20x30dp TextView  «Semaines pleines»
+== 21a-accueil-grade-prochain
+PETIT 108x40dp LinearLayout start_duration «Durée 15 min»
+PETIT 101x40dp LinearLayout start_theme «Sujet Aucun»
+PETIT 139x40dp LinearLayout start_music «Musique Niggoun 01»
+PETIT 363x43dp LinearLayout  «POUR CETTE HEURE תְּפִלַּת מִנ»
+== 21b-trophees-ici
+PETIT 62x40dp TextView  «Tous»
+PETIT 106x40dp TextView  «Premier pas»
+PETIT 155x40dp TextView  «Longue hitbodedout»
+PETIT 48x40dp TextView  «Jours de pratique»
+PETIT 379x38dp LinearLayout  «5 premières hitbodedouts»
+== 21c-trophee-detail
+== 21d-trophees-tete
+PETIT 62x40dp TextView  «Tous»
+PETIT 106x40dp TextView  «Premier pas»
+PETIT 155x40dp TextView  «Longue hitbodedout»
+PETIT 48x40dp TextView  «Jours de pratique»
+PETIT 379x30dp LinearLayout  «4 premières hitbodedouts»
+== 21e-pratique-debut
+== 21f-pratique-calme
+== 21g-pratique-reveil
