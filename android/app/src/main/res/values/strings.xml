@@ -1029,4 +1029,26 @@
     <string name="jour_fait">%1$s inscrites ce jour.</string>
     <string name="jour_montrer_duree">Montrer la durée</string>
     <string name="jour_ajoute">%1$s ajoutées.</string>
+    <!-- Les rappels de tefila (16/10) : un changement dans la prière, annoncé quelques jours avant. -->
+    <string name="rappel_pluie_debut_titre">Bénédiction d’hiver dans la Amida</string>
+    <string name="rappel_pluie_debut_edot">%1$s, à la Amida d’Arvit, on commence à dire la bénédiction d’hiver « בָּרֵךְ עָלֵינוּ ».</string>
+    <string name="rappel_pluie_debut">%1$s, à la Amida d’Arvit, on commence à demander la pluie : « וְתֵן טַל וּמָטָר לִבְרָכָה ».</string>
+    <string name="rappel_pluie_fin_titre">Bénédiction d’été dans la Amida</string>
+    <string name="rappel_pluie_fin_edot">À partir de Pessa’h, on revient à la bénédiction d’été « בָּרְכֵנוּ ».</string>
+    <string name="rappel_pluie_fin">À partir de Pessa’h, on ne demande plus la pluie : « וְתֵן בְּרָכָה ».</string>
+    <string name="rappel_guechem_titre">« מַשִּׁיב הָרוּחַ » dans la Amida</string>
+    <string name="rappel_guechem_debut">%1$s, à Moussaf de Chemini Atseret, on commence à dire « מַשִּׁיב הָרוּחַ וּמוֹרִיד הַגֶּשֶׁם ».</string>
+    <string name="rappel_guechem_fin">%1$s, à Moussaf du premier jour de Pessa’h, on cesse de dire « מַשִּׁיב הָרוּחַ וּמוֹרִיד הַגֶּשֶׁם ».</string>
+    <string name="rappel_dix_jours_titre">Dix jours de techouva</string>
+    <string name="rappel_dix_jours">%1$s commencent les dix jours de techouva : « הַמֶּלֶךְ הַקָּדוֹשׁ », « הַמֶּלֶךְ הַמִּשְׁפָּט » et les ajouts de la Amida (« זָכְרֵנוּ »…).</string>
+    <string name="rappel_omer_titre">Compte de l’Omer</string>
+    <string name="rappel_omer">%1$s, après Arvit, on commence à compter l’Omer.</string>
+    <string name="rappel_source">Choul’han Aroukh, Ora’h ’Haïm %1$s</string>
+    <string name="rappel_ce_soir">Ce soir</string>
+    <string name="rappel_demain_soir">Demain soir</string>
+    <string name="rappel_soir">%1$s soir</string>
+    <string name="rappel_motsae">Motsaé Chabbat</string>
+    <string name="rappel_hier_soir">Depuis hier soir</string>
+    <string name="rappel_aujourdhui">Aujourd’hui</string>
+    <string name="rappel_demain">Demain</string>
 </resources>

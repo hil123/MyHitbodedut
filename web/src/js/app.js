@@ -9,7 +9,7 @@ import { ART_DU_MOMENT, ChizukBag, ChizukRules } from './chizuk.js';
 import { DanseMesure } from './seance.js';
 import { creeStore, memoire } from './store.js';
 import { isoLocal } from './calendrier.js';
-import { JERUSALEM_GEONAMES, USAGES_LEVANA, aJerusalem, calendrier, jour as jourJuif, jourDeLaPriere, levana, usageLevana } from './calendrier-juif.js';
+import { JERUSALEM_GEONAMES, RAPPELS_TEFILA, USAGES_LEVANA, aJerusalem, calendrier, jour as jourJuif, jourDeLaPriere, levana, rappelsTefila, usageLevana } from './calendrier-juif.js';
 import { conditionsPour, index as indexAjouts, libelleJour, vrai as ajoutVrai } from './siddur-jour.js';
 import * as Paliers from './paliers.js';
 import * as Trophees from './trophees.js';
@@ -512,11 +512,47 @@ function panneauAujourdhui() {
 }
 
 /** L'accueil selon l'heure (AccueilMoment.kt) : la prière du moment, et Birkat haLevana les soirs où elle se dit. */
+/**
+ * Les rappels de tefila (16/10, RappelsTefilaVue) : un changement dans la prière, annoncé
+ * quelques jours avant, avec sa source (Choul'han Aroukh).
+ */
+function rappelsDeTefila() {
+  const aujourdhui = store.today();
+  const israel = store.inIsrael();
+  const muk = mukafChoma();
+  const edot = store.siddurNusah() === 'edot';
+  const ajoute = (iso, n) => { const d = new Date(`${iso}T12:00:00Z`); d.setUTCDate(d.getUTCDate() + n); return d.toISOString().slice(0, 10); };
+  const jourSemaine = (iso) => { const t = new Intl.DateTimeFormat(tr.langue, { weekday: 'long', timeZone: 'UTC' }).format(new Date(`${iso}T12:00:00Z`)); return t.charAt(0).toLocaleUpperCase(tr.langue) + t.slice(1); };
+  const moment = (r) => {
+    if (!RAPPELS_TEFILA[r.type].leSoir) return r.date === aujourdhui ? tr.t('rappel_aujourdhui') : r.date === ajoute(aujourdhui, 1) ? tr.t('rappel_demain') : jourSemaine(r.date);
+    const soir = ajoute(r.date, -1);
+    if (soir < aujourdhui) return tr.t('rappel_hier_soir');
+    if (new Date(`${soir}T12:00:00Z`).getUTCDay() === 6) return tr.t('rappel_motsae');
+    if (soir === aujourdhui) return tr.t('rappel_ce_soir');
+    if (soir === ajoute(aujourdhui, 1)) return tr.t('rappel_demain_soir');
+    return tr.t('rappel_soir', jourSemaine(soir));
+  };
+  const TEXTES = {
+    pluie_debut: ['rappel_pluie_debut_titre', edot ? 'rappel_pluie_debut_edot' : 'rappel_pluie_debut'],
+    pluie_fin: ['rappel_pluie_fin_titre', edot ? 'rappel_pluie_fin_edot' : 'rappel_pluie_fin'],
+    guechem_debut: ['rappel_guechem_titre', 'rappel_guechem_debut'], guechem_fin: ['rappel_guechem_titre', 'rappel_guechem_fin'],
+    dix_jours: ['rappel_dix_jours_titre', 'rappel_dix_jours'], omer: ['rappel_omer_titre', 'rappel_omer'],
+  };
+  return rappelsTefila(aujourdhui, israel, 3, (iso) => jourJuif(iso, israel, muk)).map((r) => {
+    const [titre, corps] = TEXTES[r.type];
+    return h('div', { class: 'carte rappel-tefila' },
+      h('h3', { class: 'rappel-titre' }, tr.t(titre)),
+      h('p', { class: 'rappel-corps' }, tr.t(corps, moment(r))),
+      h('p', { class: 'rappel-source' }, tr.t('rappel_source', RAPPELS_TEFILA[r.type].source)));
+  });
+}
+
 function momentAccueil() {
-  if (!chargeSiddur()) return [];
+  const rappels = rappelsDeTefila();
+  if (!chargeSiddur()) return rappels;
   const heure = new Date();
   const moment = store.lieu() ? momentDuSiddour(store.lieu(), heure) : SiddurMoment.suggestion(heure.getHours(), heure.getMinutes());
-  const cartes = [];
+  const cartes = [...rappels];
   const t = moment ? siddur.textes.find((x) => x.id === moment) : null;
   if (t) cartes.push(carteMaintenant(t));
   const zone = store.lieu()?.fuseau ?? Intl.DateTimeFormat().resolvedOptions().timeZone;

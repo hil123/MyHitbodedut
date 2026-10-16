@@ -244,3 +244,32 @@ export function levana(iso, zone, { usage = 'sept_mi_mois' } = {}) {
     lune: { ...phaseLune(ceSoir), age: (ceSoir - f.molad) / 86400000 },
   };
 }
+
+/**
+ * Les rappels de tefila (16/10, RappelsTefila.kt) : les changements des `avance` jours à venir,
+ * aujourd'hui compris. leSoir : le changement commence au soir de la veille, à Arvit.
+ * Sources : Choul'han Aroukh, O.H. 117, 1 (pluie), 114, 1 (machiv harouah), 582, 1 (dix jours), 489, 1 (omer).
+ */
+export const RAPPELS_TEFILA = {
+  pluie_debut: { source: '117, 1', leSoir: true }, pluie_fin: { source: '117, 1', leSoir: false },
+  guechem_debut: { source: '114, 1', leSoir: false }, guechem_fin: { source: '114, 1', leSoir: false },
+  dix_jours: { source: '582, 1', leSoir: true }, omer: { source: '489, 1', leSoir: true },
+};
+export function rappelsTefila(aujourdhui, enIsrael, avance = 3, jourDe = (iso) => jour(iso, enIsrael)) {
+  const ajoute = (iso, n) => { const d = new Date(`${iso}T12:00:00Z`); d.setUTCDate(d.getUTCDate() + n); return d.toISOString().slice(0, 10); };
+  const res = [];
+  let veille = jourDe(ajoute(aujourdhui, -1));
+  for (let k = 0; k <= avance; k++) {
+    const d = ajoute(aujourdhui, k);
+    const j = jourDe(d);
+    const pluie = 'tal_oumatar';
+    if (j.conditions.has(pluie) && !veille.conditions.has(pluie)) res.push({ type: 'pluie_debut', date: d });
+    if (!j.conditions.has(pluie) && veille.conditions.has(pluie)) res.push({ type: 'pluie_fin', date: d });
+    if (j.moisHebreu === 7 && j.jourHebreu === 22) res.push({ type: 'guechem_debut', date: d });
+    if (j.moisHebreu === 1 && j.jourHebreu === 15) res.push({ type: 'guechem_fin', date: d });
+    if (j.moisHebreu === 7 && j.jourHebreu === 1) res.push({ type: 'dix_jours', date: d });
+    if (j.omer === 1) res.push({ type: 'omer', date: d });
+    veille = j;
+  }
+  return res;
+}

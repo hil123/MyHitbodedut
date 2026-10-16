@@ -1011,4 +1011,26 @@
     <string name="jour_fait">%1$s נרשמו ביום הזה.</string>
     <string name="jour_montrer_duree">להציג את משך הזמן</string>
     <string name="jour_ajoute">נוספו %1$s.</string>
+    <!-- Les rappels de tefila (16/10) : un changement dans la prière, annoncé quelques jours avant. -->
+    <string name="rappel_pluie_debut_titre">ברכת החורף בתפילה</string>
+    <string name="rappel_pluie_debut_edot">%1$s, בעמידת ערבית, מתחילים לומר את ברכת החורף „בָּרֵךְ עָלֵינוּ”.</string>
+    <string name="rappel_pluie_debut">%1$s, בעמידת ערבית, מתחילים לשאול גשמים: „וְתֵן טַל וּמָטָר לִבְרָכָה”.</string>
+    <string name="rappel_pluie_fin_titre">ברכת הקיץ בתפילה</string>
+    <string name="rappel_pluie_fin_edot">מפסח חוזרים לברכת הקיץ „בָּרְכֵנוּ”.</string>
+    <string name="rappel_pluie_fin">מפסח מפסיקים לשאול גשמים: „וְתֵן בְּרָכָה”.</string>
+    <string name="rappel_guechem_titre">„מַשִּׁיב הָרוּחַ” בתפילה</string>
+    <string name="rappel_guechem_debut">%1$s, במוסף של שמיני עצרת, מתחילים לומר „מַשִּׁיב הָרוּחַ וּמוֹרִיד הַגֶּשֶׁם”.</string>
+    <string name="rappel_guechem_fin">%1$s, במוסף של יום טוב ראשון של פסח, מפסיקים לומר „מַשִּׁיב הָרוּחַ וּמוֹרִיד הַגֶּשֶׁם”.</string>
+    <string name="rappel_dix_jours_titre">עשרת ימי תשובה</string>
+    <string name="rappel_dix_jours">%1$s מתחילים עשרת ימי תשובה: „הַמֶּלֶךְ הַקָּדוֹשׁ”, „הַמֶּלֶךְ הַמִּשְׁפָּט” והתוספות בעמידה („זָכְרֵנוּ”…).</string>
+    <string name="rappel_omer_titre">ספירת העומר</string>
+    <string name="rappel_omer">%1$s, אחרי ערבית, מתחילים לספור את העומר.</string>
+    <string name="rappel_source">שולחן ערוך, אורח חיים %1$s</string>
+    <string name="rappel_ce_soir">הערב</string>
+    <string name="rappel_demain_soir">מחר בערב</string>
+    <string name="rappel_soir">%1$s בערב</string>
+    <string name="rappel_motsae">מוצאי שבת</string>
+    <string name="rappel_hier_soir">מאתמול בערב</string>
+    <string name="rappel_aujourdhui">היום</string>
+    <string name="rappel_demain">מחר</string>
 </resources>

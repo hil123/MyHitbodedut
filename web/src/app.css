@@ -1167,3 +1167,9 @@ button.corps { min-height: 44px; }
 .feuille .actions { flex-wrap: wrap; }
 .feuille .actions button.fort { font-weight: 800; }
 .ajout-temps { margin-top: 12px; }
+
+/* Les rappels de tefila (16/10). */
+.rappel-tefila { text-align: center; }
+.rappel-titre { margin: 0; font-size: 20px; color: var(--ink); text-wrap: balance; }
+.rappel-corps { margin: 8px 0 0; font-size: 16px; line-height: 1.5; color: var(--ink); text-wrap: pretty; }
+.rappel-source { margin: 8px 0 0; font-size: 12px; color: var(--muted); }

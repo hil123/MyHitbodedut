@@ -333,3 +333,15 @@ test('siddour : la suggestion suit les zmanim du lieu, rien dans les creux', asy
   const tromso = { nom: 'T', latitude: 69.6492, longitude: 18.9553, altitude: 0, fuseau: 'Europe/Oslo' };
   assert.equal(A.momentDuSiddour(tromso, new Date('2026-06-21T14:00:00+02:00')), SiddurMoment.suggestion(14, 0));
 });
+
+// --- Rappels de tefila (RappelsTefilaTest, 16/10) ---
+import { rappelsTefila } from '../src/js/calendrier-juif.js';
+test('rappels de tefila : mêmes cas que RappelsTefilaTest', () => {
+  assert.deepEqual(rappelsTefila('2026-10-16', true), [{ type: 'pluie_debut', date: '2026-10-18' }]);
+  assert.ok(!rappelsTefila('2026-10-16', false).some((r) => r.type === 'pluie_debut'));
+  assert.deepEqual(rappelsTefila('2026-12-02', false, 6).filter((r) => r.type === 'pluie_debut').map((r) => r.date), ['2026-12-05']);
+  const p = rappelsTefila('2027-04-20', true).map((r) => `${r.type}@${r.date}`);
+  for (const x of ['pluie_fin@2027-04-22', 'guechem_fin@2027-04-22', 'omer@2027-04-23']) assert.ok(p.includes(x), x);
+  assert.ok(rappelsTefila('2027-09-30', false).some((r) => r.type === 'dix_jours' && r.date === '2027-10-02'));
+  assert.ok(rappelsTefila('2027-10-21', true).some((r) => r.type === 'guechem_debut' && r.date === '2027-10-23'));
+});

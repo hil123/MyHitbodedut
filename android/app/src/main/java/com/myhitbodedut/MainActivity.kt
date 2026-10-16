@@ -307,6 +307,8 @@ class MainActivity : AppCompatActivity() {
         // L'accueil selon l'heure (14/10).
         findViewById<LinearLayout>(R.id.accueil_moment).apply {
             removeAllViews()
+            // Un changement dans la tefila, annoncé quelques jours avant (16/10).
+            runCatching { RappelsTefilaVue.cartes(this@MainActivity) }.getOrDefault(emptyList()).forEach { addView(it) }
             runCatching { AccueilMoment.cartes(this@MainActivity) }.getOrDefault(emptyList()).forEach { addView(it) }
         }
         renderGauge()

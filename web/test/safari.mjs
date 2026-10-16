@@ -57,7 +57,8 @@ try {
   ];
   for (const [nom, prefs, ecran] of cas) {
     await wd('POST', `${S}/url`, { url: `${base}version.txt` });
-    await executer('localStorage.clear(); localStorage.setItem("myhitbodedut", arguments[0]); localStorage.setItem("myhitbodedut-journal", arguments[1]);',
+    // La présentation et le bilan de la semaine (16/10) déjà vus : ils couvriraient l'écran.
+    await executer('const d = new Date(); d.setDate(d.getDate() - d.getDay() - 7); const vu = d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0"); localStorage.clear(); localStorage.setItem("myhitbodedut", JSON.stringify(Object.assign({ onboarded_version: 2, bilan_vu: vu }, JSON.parse(arguments[0])))); localStorage.setItem("myhitbodedut-journal", arguments[1]);',
       [JSON.stringify(prefs), journal]);
     await wd('POST', `${S}/url`, { url: base + ecran });
     await attendre(1500);

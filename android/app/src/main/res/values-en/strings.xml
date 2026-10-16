@@ -983,4 +983,26 @@
     <string name="jour_fait">%1$s recorded on this day.</string>
     <string name="jour_montrer_duree">Show the duration</string>
     <string name="jour_ajoute">%1$s added.</string>
+    <!-- Les rappels de tefila (16/10) : un changement dans la prière, annoncé quelques jours avant. -->
+    <string name="rappel_pluie_debut_titre">Winter blessing in the Amida</string>
+    <string name="rappel_pluie_debut_edot">%1$s, in the Arvit Amida, we begin to say the winter blessing “בָּרֵךְ עָלֵינוּ”.</string>
+    <string name="rappel_pluie_debut">%1$s, in the Arvit Amida, we begin to ask for rain: “וְתֵן טַל וּמָטָר לִבְרָכָה”.</string>
+    <string name="rappel_pluie_fin_titre">Summer blessing in the Amida</string>
+    <string name="rappel_pluie_fin_edot">From Pesach, we return to the summer blessing “בָּרְכֵנוּ”.</string>
+    <string name="rappel_pluie_fin">From Pesach, we no longer ask for rain: “וְתֵן בְּרָכָה”.</string>
+    <string name="rappel_guechem_titre">“מַשִּׁיב הָרוּחַ” in the Amida</string>
+    <string name="rappel_guechem_debut">%1$s, at Musaf of Shemini Atzeret, we begin to say “מַשִּׁיב הָרוּחַ וּמוֹרִיד הַגֶּשֶׁם”.</string>
+    <string name="rappel_guechem_fin">%1$s, at Musaf of the first day of Pesach, we stop saying “מַשִּׁיב הָרוּחַ וּמוֹרִיד הַגֶּשֶׁם”.</string>
+    <string name="rappel_dix_jours_titre">Ten Days of Repentance</string>
+    <string name="rappel_dix_jours">%1$s the Ten Days of Repentance begin: “הַמֶּלֶךְ הַקָּדוֹשׁ”, “הַמֶּלֶךְ הַמִּשְׁפָּט” and the additions to the Amida (“זָכְרֵנוּ”…).</string>
+    <string name="rappel_omer_titre">Counting the Omer</string>
+    <string name="rappel_omer">%1$s, after Arvit, we begin counting the Omer.</string>
+    <string name="rappel_source">Shulchan Aruch, Orach Chaim %1$s</string>
+    <string name="rappel_ce_soir">Tonight</string>
+    <string name="rappel_demain_soir">Tomorrow night</string>
+    <string name="rappel_soir">%1$s night</string>
+    <string name="rappel_motsae">Motzaei Shabbat</string>
+    <string name="rappel_hier_soir">Since last night</string>
+    <string name="rappel_aujourdhui">Today</string>
+    <string name="rappel_demain">Tomorrow</string>
 </resources>

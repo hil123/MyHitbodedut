@@ -68,7 +68,10 @@ async function capture(nom, { langue, mode = 'clair', fond = 'vert', accent = 'v
       static now() { return Vrai.now() + decalage; }
     };
     for (const [k, v] of Object.entries(donnees)) localStorage.setItem(k, v);
-    localStorage.setItem('myhitbodedut', prefs);
+    // Le bilan de la semaine (16/10) déjà vu : il s'ouvrirait par-dessus l'accueil.
+    const d = new Date(); d.setDate(d.getDate() - d.getDay() - 7);
+    const vu = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    localStorage.setItem('myhitbodedut', JSON.stringify({ bilan_vu: vu, ...JSON.parse(prefs) }));
   }, { donnees: DONNEES, prefs, maintenant: MAINTENANT });
   if (moteur === 'webkit') {
     // WebKit sous Linux lit l'audio par GStreamer, que ni Safari ni l'iPhone

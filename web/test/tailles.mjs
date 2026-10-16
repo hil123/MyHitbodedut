@@ -112,7 +112,8 @@ async function verifie(langue, mode, [taille, largeur, hauteur], e) {
   page.on('dialog', (d) => { erreurs.push(`${id} : boîte « ${d.message()} »`); d.dismiss().catch(() => {}); });
   page.on('request', (r) => { if (!r.url().startsWith(base)) erreurs.push(`${id} : requête hors du site ${r.url()}`); });
   // Pas de musique pendant la séance : la mesure porte sur la mise en page.
-  const prefs = JSON.stringify({ langue_app: langue, apparence_mode: mode, music_enabled: false, ...e.prefs });
+  // La présentation du premier lancement (16/10) déjà vue : elle couvrirait chaque écran.
+  const prefs = JSON.stringify({ onboarded_version: 2, langue_app: langue, apparence_mode: mode, music_enabled: false, ...e.prefs });
   const journal = JSON.stringify({ days: { ...JOURNAL, ...e.journal } });
   await page.addInitScript(({ journal, prefs, maintenant }) => {
     // Sans l'écran d'ouverture (13/10), qui couvrirait la capture trois secondes.
@@ -126,7 +127,10 @@ async function verifie(langue, mode, [taille, largeur, hauteur], e) {
     // Une fois seulement : un rechargement garde ce que la page a écrit.
     if (!sessionStorage.getItem('pret')) {
       localStorage.setItem('myhitbodedut-journal', journal);
-      localStorage.setItem('myhitbodedut', prefs);
+      // Le bilan de la semaine (16/10) déjà vu : il s'ouvrirait par-dessus l'accueil.
+      const d = new Date(); d.setDate(d.getDate() - d.getDay() - 7);
+      const vu = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+      localStorage.setItem('myhitbodedut', JSON.stringify({ bilan_vu: vu, ...JSON.parse(prefs) }));
       sessionStorage.setItem('pret', '1');
     }
     HTMLMediaElement.prototype.play = function play() { return Promise.resolve(); };
