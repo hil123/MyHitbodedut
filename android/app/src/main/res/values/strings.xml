@@ -190,7 +190,8 @@
 
     <!-- Journal et notes -->
     <string name="journal_title">Journal</string>
-    <string name="journal_empty">Aucune hitbodedout enregistrée pour l’instant.</string>
+    <string name="journal_empty">Aucune hitbodedout enregistrée pour l’instant. Chaque hitbodedout faite s’inscrit ici, avec sa note si vous en écrivez une.</string>
+    <string name="journal_empty_action">Commencer ma première hitbodedout</string>
     <string name="note_title">Note de la hitbodedout</string>
     <string name="note_hint">Ce qui est monté, ce qui a été demandé…</string>
 

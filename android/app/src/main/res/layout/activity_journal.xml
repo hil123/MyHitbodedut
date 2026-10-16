@@ -69,6 +69,15 @@
                 android:textAlignment="center"
                 android:textColor="?attr/mhMuted"
                 android:textSize="15sp" />
+
+            <!-- Un écran vide dit quoi faire (16/10, point 10). -->
+            <Button
+                android:id="@+id/journal_empty_commencer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:minHeight="48dp"
+                android:text="@string/journal_empty_action" />
         </LinearLayout>
     </FrameLayout>
 </LinearLayout>

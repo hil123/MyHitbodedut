@@ -45,6 +45,9 @@ class JournalActivity : AppCompatActivity() {
 
         val empty = findViewById<View>(R.id.journal_empty)
         empty.visibility = if (rows.isEmpty()) View.VISIBLE else View.GONE
+        findViewById<View>(R.id.journal_empty_commencer).setOnClickListener {
+            startActivity(android.content.Intent(this, SessionActivity::class.java))
+        }
 
         // Les journées faites seulement : une note seule n'en est pas une.
         val faites = rows.count { it.faite }

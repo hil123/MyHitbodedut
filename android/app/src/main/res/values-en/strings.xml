@@ -173,7 +173,8 @@
     <string name="session_done_text">%1$s of hitbodedut. Tap to leave a note.</string>
 
     <string name="journal_title">Journal</string>
-    <string name="journal_empty">No hitbodedut recorded yet.</string>
+    <string name="journal_empty">No hitbodedut recorded yet. Each one you do is written here, with its note if you write one.</string>
+    <string name="journal_empty_action">Start my first hitbodedut</string>
     <string name="note_title">Hitbodedut note</string>
     <string name="note_hint">What came up, what was asked…</string>
 

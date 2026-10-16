@@ -174,7 +174,8 @@
     <string name="session_done_text">%1$s של התבודדות. הקישו כדי להוסיף הערה.</string>
 
     <string name="journal_title">יומן</string>
-    <string name="journal_empty">עדיין לא נרשמה התבודדות.</string>
+    <string name="journal_empty">עדיין לא נרשמה התבודדות. כל התבודדות שתעשו תירשם כאן, עם ההערה שלה אם תכתבו.</string>
+    <string name="journal_empty_action">להתחיל את ההתבודדות הראשונה</string>
     <string name="note_title">הערה על ההתבודדות</string>
     <string name="note_hint">מה עלה, מה התבקש…</string>
 
