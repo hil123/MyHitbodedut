@@ -401,11 +401,12 @@ class PaliersActivity : AppCompatActivity() {
         val suivant = Trophees.SEUILS_GRADES.firstOrNull { it > n }
         val ancien = Trophees.Metal.entries[(g.ordinal - 1).coerceAtLeast(0)]
         val nouveau = medaille(g, "★", 140)
+        val cadre = android.widget.FrameLayout(this)
         val vue = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
             gravity = Gravity.CENTER_HORIZONTAL
             setPadding(dp(24), dp(16), dp(24), dp(8))
-            addView(android.widget.FrameLayout(context).apply {
+            addView(cadre.apply {
                 clipChildren = false
                 addView(AnimationsTrophees.Rayons(context, TropheeDessin.teintes(g).first),
                     android.widget.FrameLayout.LayoutParams(dp(260), dp(260), Gravity.CENTER))
@@ -428,7 +429,7 @@ class PaliersActivity : AppCompatActivity() {
         }
         com.google.android.material.dialog.MaterialAlertDialogBuilder(this).setView(vue)
             .setPositiveButton(R.string.celebration_continue, null).show()
-        nouveau.postDelayed({ AnimationsTrophees.etincelles(this, nouveau, g) }, 1500)
+        nouveau.postDelayed({ AnimationsTrophees.etincelles(this, nouveau, g, dans = cadre) }, 1500)
     }
 
     private fun medaille(m: Trophees.Metal?, icone: String, taille: Int) = View(this).apply {

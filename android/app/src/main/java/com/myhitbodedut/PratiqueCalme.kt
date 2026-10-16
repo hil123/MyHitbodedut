@@ -58,8 +58,20 @@ class PratiqueCalme(
 
     fun liberer() {
         handler.removeCallbacks(endormir)
+        teinte?.cancel()
         barres(true)
     }
+
+    /** Une touche (clavier, contacteur) réveille aussi l'écran, sans être avalée. */
+    fun touche() {
+        if (calme) sortir(anime = true)
+        if (enCours) attendre()
+    }
+
+    /** Avec TalkBack, rien ne s'efface : un bouton invisible resterait atteignable (revue du 16/10). */
+    private val lectureEcran: Boolean
+        get() = (activite.getSystemService(android.content.Context.ACCESSIBILITY_SERVICE) as? android.view.accessibility.AccessibilityManager)
+            ?.isTouchExplorationEnabled == true
 
     private fun attendre() {
         handler.removeCallbacks(endormir)
@@ -67,7 +79,7 @@ class PratiqueCalme(
     }
 
     private fun entrer() {
-        if (!enCours || calme) return
+        if (!enCours || calme || lectureEcran) return
         calme = true
         val d = duree(900L)
         effaces().forEach { it.animate().alpha(0f).setDuration(d).start() }
@@ -84,9 +96,14 @@ class PratiqueCalme(
         barres(true)
     }
 
+    /** La teinte en cours : annulée avant toute autre, sinon la plus lente finissait en dernier. */
+    private var teinte: ValueAnimator? = null
+
     private fun teinter(de: Int, a: Int, d: Long) {
+        teinte?.cancel()
+        teinte = null
         if (d == 0L) { fond.setBackgroundColor(a); return }
-        ValueAnimator.ofArgb(de, a).apply {
+        teinte = ValueAnimator.ofArgb(de, a).apply {
             duration = d
             addUpdateListener { fond.setBackgroundColor(it.animatedValue as Int) }
             start()

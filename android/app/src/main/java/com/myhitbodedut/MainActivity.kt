@@ -838,7 +838,7 @@ class MainActivity : AppCompatActivity() {
                     AjoutTemps.ouvrir(this, day.date, montrer = {
                         if (!joursMontres.remove(day.date)) joursMontres.add(day.date)
                         renderWeek()
-                    }) { refresh() }
+                    }) { refresh(); renderPaliers() }
                 }
             }
             cell.contentDescription = when {

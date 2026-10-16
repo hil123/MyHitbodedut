@@ -52,7 +52,6 @@ object RappelsTefila {
             val d = aujourdhui.plusDays(k.toLong())
             val j = jour(d)
             val pluie = CalendrierJuif.C.TAL_OUMATAR
-            // Un changement du soir dont le soir est déjà passé (hier soir) reste annoncé aujourd'hui.
             if (pluie in j.conditions && pluie !in veille.conditions) res += Rappel(Type.PLUIE_DEBUT, d)
             if (pluie !in j.conditions && pluie in veille.conditions) res += Rappel(Type.PLUIE_FIN, d)
             if (!sansGuechem && j.moisHebreu == TICHREI && j.jourHebreu == 22) res += Rappel(Type.GUECHEM_DEBUT, d)
@@ -61,7 +60,8 @@ object RappelsTefila {
             if (j.omer == 1) res += Rappel(Type.OMER, d)
             veille = j
         }
-        return res
+        // Un changement du soir dont le soir est déjà passé n'est plus annoncé (revue du 16/10).
+        return res.filter { !(it.type.leSoir && !it.date.isAfter(aujourdhui)) }
     }
 }
 

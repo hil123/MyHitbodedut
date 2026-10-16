@@ -1015,4 +1015,8 @@
     <string name="rappel_hier_soir">Since last night</string>
     <string name="rappel_aujourdhui">Today</string>
     <string name="rappel_demain">Tomorrow</string>
+    <!-- La bannière d’une prière (16/10) : son horaire du jour, aux bornes du widget. -->
+    <string name="banniere_chaharit">Until %1$s · end of the time for prayer</string>
+    <string name="banniere_minha">From %1$s until sunset, %2$s</string>
+    <string name="banniere_arvit">From nightfall, %1$s</string>
 </resources>

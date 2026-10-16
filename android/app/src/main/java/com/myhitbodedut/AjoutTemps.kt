@@ -30,7 +30,8 @@ object AjoutTemps {
             .setPositiveButton(R.string.jour_ajouter_temps) { _, _ ->
                 DureeSeance.choisir(activity, R.string.offline_how_long) { m ->
                     Store.addSession(activity, m, theme = null, date = iso)
-                    Celebrations.notification(activity)
+                    // L'application est ouverte : la fête se fait à l'écran, pas par une notification.
+                    Celebrations.marquerNotifies(activity)
                     StreakWidget.refresh(activity)
                     android.widget.Toast.makeText(activity,
                         activity.getString(R.string.jour_ajoute, Store.formatDuration(activity, m)), android.widget.Toast.LENGTH_SHORT).show()

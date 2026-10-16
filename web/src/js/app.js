@@ -17,7 +17,7 @@ import { FORMES } from './trophees-formes.js';
 import { pour as halakhotPour, recherche as rechercheHalakha, source as sourceHalakha } from './halakha.js';
 import { pour as yalkutPour, recherche as rechercheYalkut, source as sourceYalkut, texteCarte, titreCarte } from './yalkut.js';
 import { ajouts as ajoutsDuJour, dateHilloula, debutMoisHebreu, hilloulotPour, lienArticle, rechercheHilloula, horaires, illustration as illustrationDuJour, lienHalakha, lienHyomi, momentDuSiddour, moisHebreuVoisin, semaines, semainesHebreu } from './jour-affiche.js';
-import { ALLUMAGES, heure as heureZman } from './zmanim.js';
+import { ALLUMAGES, heure as heureZman, jour as zmanimDuJour } from './zmanim.js';
 
 // --- Stockage ---------------------------------------------------------------
 function stockageDuNavigateur() {
@@ -875,7 +875,7 @@ function appuiLongPourRamener(zone) {
  * Un écran de lecture de texte saint : le texte à la taille choisie, de
  * nuit si demandé, et le bouton de lecture au-dessus du pied d'écran.
  */
-function ecranLu(titre, contenu, { avecNusah = false, pied = null, bande = null } = {}) {
+function ecranLu(titre, contenu, { avecNusah = false, pied = null, bande = null, entete = null } = {}) {
   const defile = h('div', { class: 'defile' }, contenu);
   const ctrl = reglagesLecture({ avecNusah });
   let avant = 0;
@@ -892,7 +892,7 @@ function ecranLu(titre, contenu, { avecNusah = false, pied = null, bande = null 
   }, { passive: true });
   appuiLongPourRamener(defile);
   return h('div', { class: `ecran lu${store.lectureSombre() ? ' nuit' : ''}`, style: `--echelle: ${store.lectureEchelle()}` },
-    barre(titre),
+    entete ?? barre(titre),
     bande,
     h('div', { class: `lu-zone${pied ? '' : ' sans-pied'}` }, defile, ctrl),
     pied);
@@ -1097,7 +1097,6 @@ function ecranPriere() {
       h('span', {}, `${tr.t('siddur_aujourdhui')} : `), h('span', { lang: 'he', dir: 'rtl' }, a.texte))), ...renvois(si, i)];
   };
   const contenu = h('div', { class: 'contenu lecture siddour' },
-    h('p', { class: 'indice' }, sousTitre),
     annotations ? h('p', { class: 'indice note-ajouts' }, tr.t('siddur_jour_ajouts', jourDuTexte.dateHebraique,
       tr.t(store.inIsrael() ? 'region_israel' : 'region_diaspora'))) : null,
     ...x.sections.flatMap((s, si) => {
@@ -1124,7 +1123,8 @@ function ecranPriere() {
       return [t, ...corps, ...renvois(si)];
     }));
   const bande = titres.length > 1 ? bandeSignets(titres) : null;
-  const ecran = ecranLu(x.titre.he, contenu, { avecNusah: !livre, bande: bande?.nav });
+  const etiquettes = [titreTexte(x.titre) !== x.titre.he ? titreTexte(x.titre) : null, titreTexte(x.nusah ?? recueil._meta.nusah)].filter(Boolean);
+  const ecran = ecranLu(x.titre.he, contenu, { avecNusah: !livre, bande: bande?.nav, entete: bandeauPriere(x.titre.he, etiquettes, livre ? null : horairePriere(x.id)) });
   bande?.suivre(ecran.querySelector('.defile'));
   // Favori et reprise de lecture (14/10, RepriseFavoris.kt) : « s:id » ou « l:id ».
   const cle = `${livre ? 'l' : 's'}:${x.id}`;
@@ -1137,7 +1137,7 @@ function ecranPriere() {
     if (!l.length) { signale(tr.t('marques_aucun')); return; }
     choisirDans(tr.t('marques_titre'), l.map((m) => `${m.apercu}…`), -1, (k) => allerAMarque(ecran, l[k]));
   } }, iconeMarque(livre));
-  ecran.querySelector('.barre')?.append(listeMarques, etoile);
+  ecran.querySelector('.bandeau-actions')?.append(listeMarques, etoile);
   if (marqueAOuvrir?.cle === cleMarque) { const m = marqueAOuvrir; marqueAOuvrir = null; requestAnimationFrame(() => allerAMarque(ecran, m)); return ecran; }
   const defile = ecran.querySelector('.defile');
   if (defile) {
@@ -1468,6 +1468,35 @@ function onglets() {
 }
 
 // --- Rendu : écrans secondaires ---------------------------------------------------------
+/**
+ * La bannière d'une prière ou d'un livre (16/10) : le titre hébreu dans la police du siddour,
+ * des étiquettes courtes (le nom traduit, le nusah) au lieu d'une phrase coupée, l'horaire du
+ * jour de la prière, et les actions (marque-pages, favori). Jamais d'image : on ne prie pas
+ * devant une image (Choul'han Aroukh, O.H. 90, 23).
+ */
+function bandeauPriere(titreHe, etiquettes, horaire) {
+  return h('header', { class: 'bandeau bandeau-priere' },
+    h('div', { class: 'bandeau-haut' },
+      h('button', { class: 'retour', 'aria-label': tr.t('action_back'), onclick: retour }),
+      h('div', { class: 'bandeau-actions' })),
+    h('div', { class: 'bandeau-corps' },
+      h('h1', { lang: 'he', dir: 'rtl', class: 'titre-priere' }, titreHe),
+      etiquettes.length ? h('div', { class: 'etiquettes-bandeau' }, etiquettes.map((e) => h('span', { class: 'etiquette-bandeau' }, e))) : null,
+      horaire ? h('p', { class: 'horaire-bandeau' }, horaire) : null));
+}
+
+/** L'horaire du jour d'une prière, aux bornes du widget (ZmanimWidget.prochaine) ; null sans lieu. */
+function horairePriere(id) {
+  const lieu = store.lieu();
+  if (!lieu || !['chaharit', 'minha', 'arvit'].includes(id)) return null;
+  const iso = new Intl.DateTimeFormat('en-CA', { timeZone: lieu.fuseau, year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date());
+  const z = Object.fromEntries(zmanimDuJour(lieu, iso).map((x) => [x.cle, x.instant]));
+  const hh = (c) => (z[c] ? heureZman(z[c], lieu.fuseau) : null);
+  if (id === 'chaharit') return hh('szt_gra') && tr.t('banniere_chaharit', hh('szt_gra'));
+  if (id === 'minha') return hh('minha_gedola') && hh('chkia') && tr.t('banniere_minha', hh('minha_gedola'), hh('chkia'));
+  return hh('tset') && tr.t('banniere_arvit', hh('tset'));
+}
+
 function barre(titre) {
   return h('header', { class: 'barre' },
     h('button', { class: 'retour', 'aria-label': tr.t('action_back'), onclick: retour }),
@@ -2283,7 +2312,7 @@ function ecranPaliers() {
   const banniere = (m, k, atteint) => h('div', { class: `grade-banniere ${atteint ? m : 'avenir'}` }, medailleGrade(atteint ? m : null, 34),
     h('div', {}, h('strong', {}, tr.t(atteint ? 'grade_atteint' : 'grade_titre', nomMetal(m))), h('small', {}, tr.t('grade_au', k))));
   const etape = (e, m, sous, gagne) => h('button', { type: 'button', class: `ligne-etape${gagne ? ' gagne' : ''}${neufs.has(e.cle) ? ' neuf' : ''}`, onclick: () => ouvrirDetail(e) },
-    h('span', { class: `ligne-noeud ${m ?? 'avenir'}` }, h('span', { class: 'ligne-trait' }), h('span', { class: 'ligne-objet' }, dessinTrophee(e, m, gagne ? 52 : 44))),
+    h('span', { class: `ligne-noeud ${m ?? 'avenir'}` }, h('span', { class: 'ligne-trait' }), h('span', { class: 'ligne-objet', 'data-metal': m ?? '' }, dessinTrophee(e, m, gagne ? 52 : 44))),
     h('span', { class: 'trophee-texte' }, h('span', { class: 'trophee-but' }, descTrophee(e)), sous ? h('span', { class: 'trophee-compte petit' }, sous) : null));
   const ligne = [];
   const faitsVus = faits.filter(dans);
@@ -2338,7 +2367,7 @@ function ecranPaliers() {
     const cpt = ecran.querySelector('.ligne-ici .trophee-compte');
     if (cpt && prochain) monteNombre(cpt, Number(cpt.dataset.valeur), (x) => tr.t('trophee_encore', x, prochain.seuil, prochain.seuil - x));
     // A + E : les nouveaux se retournent et scintillent.
-    ecran.querySelectorAll('.ligne-etape.neuf .ligne-objet').forEach((o, i) => setTimeout(() => etincelles(o, Trophees.grade(rangDe.get(faits.find((e) => neufs.has(e.cle))?.cle) ?? n)), 500 + i * 120));
+    ecran.querySelectorAll('.ligne-etape.neuf .ligne-objet').forEach((o, i) => setTimeout(() => etincelles(o, o.dataset.metal || g), 500 + i * 120));
   });
   if (fete) ecran.append(feteGrade(Trophees.grade(Math.max(0, Trophees.SEUILS_GRADES[Trophees.METAUX.indexOf(g) - 1])), g, n, suivant));
   return ecran;
@@ -2359,6 +2388,8 @@ function feteGrade(ancien, g, n, suivant) {
 
 /** Le bilan de la semaine écoulée (16/10, point 7) : à la première ouverture de la semaine, une fois. */
 function bilanDeLaSemaine() {
+  // Pas par-dessus la présentation du premier lancement (revue du 16/10) : il attendra la prochaine ouverture.
+  if (document.querySelector('.presentation')) return;
   // Rien à calculer quand le bilan de cette semaine a déjà été montré.
   const debut = Trophees.debutSemaine(store.today());
   const semaineResumee = new Date(`${debut}T12:00:00Z`); semaineResumee.setUTCDate(semaineResumee.getUTCDate() - 7);
@@ -2374,7 +2405,7 @@ function bilanDeLaSemaine() {
       b.ecart > 0 && b.precedente > 0 ? h('p', { class: 'message' }, tr.t('bilan_plus', tr.duree(b.ecart))) : null,
       b.record ? h('p', { class: 'bilan-record' }, tr.t('bilan_record')) : null,
       b.trophees.length ? h('p', { class: 'message' }, tr.t('bilan_trophees')) : null,
-      b.trophees.length ? h('div', { class: 'bilan-trophees' }, ...b.trophees.slice(0, 8).map((e) => h('span', { class: 'bilan-trophee', title: descTrophee(e) }, dessinTrophee(e, Trophees.grade(Trophees.chemin.filter((x) => Trophees.gagne(pratique(), x)).indexOf(e) + 1), 40)))) : null,
+      b.trophees.length ? h('div', { class: 'bilan-trophees' }, ...b.trophees.slice(0, 6).map((e) => h('span', { class: 'bilan-trophee', title: descTrophee(e) }, dessinTrophee(e, Trophees.grade(Trophees.chemin.filter((x) => Trophees.gagne(pratique(), x)).indexOf(e) + 1), 40)))) : null,
       h('div', { class: 'actions' }, h('button', { type: 'button', onclick: fermer }, tr.t('celebration_continue')))].filter(Boolean));
   });
 }
@@ -2804,11 +2835,15 @@ function compteur() {
 const CALME_MS = 6000;
 let minuteurCalme = null;
 let gesteAvale = false;
+const feuilleOuverte = () => !!document.querySelector('.voile, .presentation, .grade-fete');
 function attendreCalme() {
   clearTimeout(minuteurCalme);
   minuteurCalme = setTimeout(() => {
     const e = app.querySelector('.ecran.seance');
-    if (e && store.isSessionRunning()) e.classList.add('calme');
+    if (!e || !store.isSessionRunning()) return;
+    // Une fenêtre ouverte (« Terminer ? ») : pas de calme derrière elle (revue du 16/10).
+    if (feuilleOuverte()) { attendreCalme(); return; }
+    e.classList.add('calme');
   }, CALME_MS);
 }
 function arreteCalme() {
@@ -2818,16 +2853,23 @@ function arreteCalme() {
 function reveilCalme(ev) {
   if (ecranCourant() !== 'seance' || !store.isSessionRunning()) return;
   const e = app.querySelector('.ecran.seance');
+  // Seul un toucher sur l'écran calme est avalé ; une touche réveille sans rien perdre.
   if (e?.classList.contains('calme')) {
     e.classList.remove('calme');
-    gesteAvale = true;
-    ev.preventDefault();
-    ev.stopPropagation();
+    if (ev.type === 'pointerdown' && e.contains(ev.target)) {
+      gesteAvale = true;
+      ev.preventDefault();
+      ev.stopPropagation();
+    }
   }
   attendreCalme();
 }
 addEventListener('pointerdown', reveilCalme, { capture: true });
 addEventListener('keydown', reveilCalme, { capture: true });
+// Le geste avalé ne vaut que pour son propre clic : rien ne reste en suspens après lui.
+const relache = () => { if (gesteAvale) setTimeout(() => { gesteAvale = false; }, 0); };
+addEventListener('pointerup', relache, { capture: true });
+addEventListener('pointercancel', relache, { capture: true });
 addEventListener('click', (ev) => {
   if (!gesteAvale) return;
   gesteAvale = false;

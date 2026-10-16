@@ -279,7 +279,8 @@ export function rappelsTefila(aujourdhui, enIsrael, avance = 3, jourDe = (iso) =
     if (j.omer === 1) res.push({ type: 'omer', date: d });
     veille = j;
   }
-  return res;
+  // Un changement du soir dont le soir est déjà passé n'est plus annoncé (revue du 16/10).
+  return res.filter((r) => !(RAPPELS_TEFILA[r.type].leSoir && r.date <= aujourdhui));
 }
 
 // --- Israël ou diaspora d'après la position (TerritoireIsrael.kt, 16/10) ---------------------

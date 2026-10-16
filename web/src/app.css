@@ -1173,3 +1173,34 @@ button.corps { min-height: 44px; }
 .rappel-titre { margin: 0; font-size: 20px; color: var(--ink); text-wrap: balance; }
 .rappel-corps { margin: 8px 0 0; font-size: 16px; line-height: 1.5; color: var(--ink); text-wrap: pretty; }
 .rappel-source { margin: 8px 0 0; font-size: 12px; color: var(--muted); }
+
+/* --- Les bannières, lot du 16/10 ------------------------------------------------------------
+   Toutes : un dégradé profond plutôt qu'un aplat, un halo doux du côté de l'illustration, une
+   ligne de lumière en bas ; la couleur reste celle choisie (brand-dark, brand). */
+.bandeau {
+  position: relative; isolation: isolate;
+  background:
+    radial-gradient(120% 140% at 100% 0%, color-mix(in srgb, var(--brand) 55%, transparent) 0%, transparent 55%),
+    linear-gradient(160deg, color-mix(in srgb, var(--brand-dark) 88%, var(--brand)) 0%, var(--brand-dark) 70%);
+  box-shadow: 0 6px 18px -10px color-mix(in srgb, var(--brand-dark) 70%, transparent);
+}
+.bandeau::after {
+  content: ""; position: absolute; z-index: -1; left: 24px; right: 24px; bottom: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--mint) 45%, transparent), transparent);
+}
+.bandeau h1 { letter-spacing: -0.01em; text-wrap: balance; }
+.plateau-bandeau { box-shadow: 0 0 0 3px color-mix(in srgb, var(--mint) 25%, transparent), 0 8px 18px -8px rgba(0, 0, 0, .45); }
+/* La bannière d'une prière : titre hébreu, étiquettes, horaire, actions. */
+.bandeau-priere { flex-direction: column; align-items: stretch; gap: 2px; padding-top: calc(6px + env(safe-area-inset-top)); }
+.bandeau-haut { display: flex; align-items: center; justify-content: space-between; }
+.bandeau-priere .retour { margin-top: 0; }
+.bandeau-priere .bandeau-corps { padding-inline: 10px 0; }
+.titre-priere { font-family: var(--police-texte); font-size: 30px !important; line-height: 1.2 !important; text-align: right; }
+.etiquettes-bandeau { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 6px; margin-top: 8px; }
+.etiquette-bandeau { padding: 3px 10px; border-radius: 999px; font-size: 13px; color: var(--white);
+  background: rgba(255, 255, 255, .13); border: 1px solid rgba(255, 255, 255, .25); }
+.horaire-bandeau { margin: 8px 0 0; font-size: 14px; color: var(--mint); text-align: right; }
+.horaire-bandeau::before { content: "◷ "; opacity: .8; }
+.bandeau-actions { display: flex; gap: 8px; }
+.bandeau-actions .favori { display: grid; place-items: center; padding: 0; margin: 0; color: var(--white); background: rgba(255, 255, 255, .12); border: 1px solid rgba(255, 255, 255, .22); border-radius: 50%; width: 44px; height: 44px; }
+[dir="ltr"] .titre-priere, [dir="ltr"] .horaire-bandeau { text-align: right; }

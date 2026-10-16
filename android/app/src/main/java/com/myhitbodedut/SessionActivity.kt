@@ -192,6 +192,8 @@ class SessionActivity : AppCompatActivity() {
 
     override fun onPause() {
         handler.removeCallbacks(tick)
+        // La lueur s'arrête avec l'écran ; render() la relance au retour.
+        souffle.actif = false
         super.onPause()
     }
 
@@ -203,6 +205,11 @@ class SessionActivity : AppCompatActivity() {
     /** Un toucher réveille l'écran calme ; ce premier geste ne touche rien d'autre. */
     override fun dispatchTouchEvent(ev: MotionEvent): Boolean =
         calme.toucher(ev) || super.dispatchTouchEvent(ev)
+
+    override fun dispatchKeyEvent(event: android.view.KeyEvent): Boolean {
+        if (event.action == android.view.KeyEvent.ACTION_DOWN) calme.touche()
+        return super.dispatchKeyEvent(event)
+    }
 
     private fun render() {
         renderMusicLine()

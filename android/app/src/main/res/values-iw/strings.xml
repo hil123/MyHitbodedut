@@ -1043,4 +1043,8 @@
     <string name="rappel_hier_soir">מאתמול בערב</string>
     <string name="rappel_aujourdhui">היום</string>
     <string name="rappel_demain">מחר</string>
+    <!-- La bannière d’une prière (16/10) : son horaire du jour, aux bornes du widget. -->
+    <string name="banniere_chaharit">עד %1$s · סוף זמן תפילה</string>
+    <string name="banniere_minha">מ־%1$s עד השקיעה, %2$s</string>
+    <string name="banniere_arvit">מצאת הכוכבים, %1$s</string>
 </resources>

@@ -28,7 +28,7 @@ class SouffleView @JvmOverloads constructor(
 
     var cible: View? = null
     var couleur: Int = 0xFFDFF5E8.toInt()
-        set(v) { field = v; invalidate() }
+        set(v) { field = v; base = 0f; post { mesurer() } }
 
     private val pinceau = Paint(Paint.ANTI_ALIAS_FLAG)
     private var phase = 0.5f
@@ -71,28 +71,41 @@ class SouffleView @JvmOverloads constructor(
         super.onDetachedFromWindow()
     }
 
-    override fun onDraw(canvas: Canvas) {
-        if (!actif) return
+    /** Le centre et le rayon, calculés à la mise en page ; le dégradé, une fois (revue du 16/10 : plus rien n'est alloué par image). */
+    private var cx = 0f
+    private var cy = 0f
+    private var base = 0f
+
+    override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
+        super.onLayout(changed, left, top, right, bottom)
+        post { mesurer() }
+    }
+
+    private fun mesurer() {
         val c = cible ?: return
-        if (c.visibility != VISIBLE || width == 0) return
-        // Le centre du minuteur, dans le repère de cette vue.
         val ici = IntArray(2).also { getLocationInWindow(it) }
         val la = IntArray(2).also { c.getLocationInWindow(it) }
-        val cx = la[0] - ici[0] + c.width / 2f
-        val cy = la[1] - ici[1] + c.height / 2f
-        val base = minOf(width, resources.displayMetrics.heightPixels) * 0.42f
-        val rayon = base * (0.78f + 0.22f * phase)
-        val alpha = (0.16f + 0.26f * phase)
-        pinceau.shader = RadialGradient(
-            cx, cy, rayon,
-            intArrayOf(
-                ColorUtils.setAlphaComponent(couleur, (alpha * 255).toInt()),
-                ColorUtils.setAlphaComponent(couleur, (alpha * 0.35f * 255).toInt()),
-                ColorUtils.setAlphaComponent(couleur, 0),
-            ),
-            floatArrayOf(0f, 0.55f, 1f), Shader.TileMode.CLAMP,
-        )
-        canvas.drawCircle(cx, cy, rayon, pinceau)
+        cx = la[0] - ici[0] + c.width / 2f
+        cy = la[1] - ici[1] + c.height / 2f
+        val r = minOf(width, resources.displayMetrics.heightPixels) * 0.42f
+        if (r > 0f && r != base) {
+            base = r
+            pinceau.shader = RadialGradient(0f, 0f, r,
+                intArrayOf(ColorUtils.setAlphaComponent(couleur, 255), ColorUtils.setAlphaComponent(couleur, 90), ColorUtils.setAlphaComponent(couleur, 0)),
+                floatArrayOf(0f, 0.55f, 1f), Shader.TileMode.CLAMP)
+        }
+        invalidate()
+    }
+
+    override fun onDraw(canvas: Canvas) {
+        if (!actif || base <= 0f || cible?.visibility != VISIBLE) return
+        val echelle = 0.78f + 0.22f * phase
+        pinceau.alpha = ((0.16f + 0.26f * phase) * 255).toInt()
+        canvas.save()
+        canvas.translate(cx, cy)
+        canvas.scale(echelle, echelle)
+        canvas.drawCircle(0f, 0f, base, pinceau)
+        canvas.restore()
     }
 
     companion object {

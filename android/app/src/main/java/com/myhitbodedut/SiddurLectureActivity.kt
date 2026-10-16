@@ -163,10 +163,37 @@ class SiddurLectureActivity : AppCompatActivity() {
             text = texte.titre.he
             PoliceHebraique.appliquer(this)
         }
-        findViewById<TextView>(R.id.siddur_lecture_subtitle).text = listOfNotNull(
+        val etiquettes = listOfNotNull(
             texte.titre.forLanguage(langue).takeIf { it != texte.titre.he },
             (texte.emprunt ?: siddur.nusah).forLanguage(langue),
-        ).joinToString(" · ")
+        )
+        findViewById<TextView>(R.id.siddur_lecture_subtitle).text = etiquettes.joinToString(" · ")
+        // La bannière (16/10) : des étiquettes courtes plutôt qu'une phrase coupée, et l'horaire du jour.
+        findViewById<com.google.android.material.chip.ChipGroup>(R.id.siddur_lecture_etiquettes).apply {
+            removeAllViews()
+            contentDescription = etiquettes.joinToString(", ")
+            etiquettes.forEach { e ->
+                addView(com.google.android.material.chip.Chip(context).apply {
+                    text = e
+                    isClickable = false
+                    isCheckable = false
+                    isFocusable = false
+                    setEnsureMinTouchTargetSize(false)
+                    chipMinHeight = 28 * resources.displayMetrics.density
+                    textSize = 13f
+                    setTextColor(android.graphics.Color.WHITE)
+                    chipBackgroundColor = android.content.res.ColorStateList.valueOf(0x22FFFFFF)
+                    chipStrokeColor = android.content.res.ColorStateList.valueOf(0x40FFFFFF)
+                    chipStrokeWidth = resources.displayMetrics.density
+                    importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO
+                })
+            }
+        }
+        findViewById<TextView>(R.id.siddur_lecture_horaire).apply {
+            val h = if (livre) null else HorairePriere.texte(this@SiddurLectureActivity, id)
+            text = h?.let { "◷ $it" }
+            visibility = if (h == null) View.GONE else View.VISIBLE
+        }
 
         // Le jour hébreu de cette prière : Arvit, l'après-midi, est déjà celui de demain.
         val israel = Store.inIsrael(this)

@@ -37,14 +37,15 @@ object AnimationsTrophees {
     val actives: Boolean get() = ValueAnimator.areAnimatorsEnabled()
 
     /** E : une dizaine d'étincelles du grade, autour du centre de [ancre], 0,9 s. */
-    fun etincelles(activity: Activity, ancre: View?, m: Trophees.Metal?) {
+    fun etincelles(activity: Activity, ancre: View?, m: Trophees.Metal?, dans: android.view.ViewGroup? = null) {
         if (!actives || ancre == null || !ancre.isAttachedToWindow) return
-        val racine = activity.findViewById<FrameLayout>(android.R.id.content) ?: return
+        // [dans] : un cadre de la même fenêtre que l'ancre (une boîte de dialogue a la sienne ; revue du 16/10).
+        val racine = dans ?: activity.findViewById<FrameLayout>(android.R.id.content) ?: return
         val ici = IntArray(2).also { racine.getLocationInWindow(it) }
         val la = IntArray(2).also { ancre.getLocationInWindow(it) }
         val vue = Etincelles(activity, la[0] - ici[0] + ancre.width / 2f, la[1] - ici[1] + ancre.height / 2f,
             TropheeDessin.teintes(m ?: Trophees.Metal.OR))
-        racine.addView(vue, FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT))
+        racine.addView(vue, ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT))
         vue.lancer()
     }
 

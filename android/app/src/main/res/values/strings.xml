@@ -1061,4 +1061,8 @@
     <string name="rappel_hier_soir">Depuis hier soir</string>
     <string name="rappel_aujourdhui">Aujourd’hui</string>
     <string name="rappel_demain">Demain</string>
+    <!-- La bannière d’une prière (16/10) : son horaire du jour, aux bornes du widget. -->
+    <string name="banniere_chaharit">Jusqu’à %1$s · fin du temps de la tefila</string>
+    <string name="banniere_minha">De %1$s au coucher du soleil, %2$s</string>
+    <string name="banniere_arvit">Dès la sortie des étoiles, %1$s</string>
 </resources>

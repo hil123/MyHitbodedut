@@ -172,6 +172,13 @@ object Celebrations {
         Store.setTropheesVus(activity, r.trophees)
     }
 
+    /** Ce qui est neuf est su sans notification (ajout de temps, application ouverte ; 16/10). */
+    fun marquerNotifies(context: Context) {
+        val r = neuf(context, Store.paliersNotifies(context), Store.tropheesNotifies(context))
+        Store.setPaliersNotifies(context, r.marques)
+        Store.setTropheesNotifies(context, r.trophees)
+    }
+
     /** Après une séance enregistrée : la notification, même l'application fermée. */
     fun notification(context: Context) {
         val r = neuf(context, Store.paliersNotifies(context), Store.tropheesNotifies(context))
