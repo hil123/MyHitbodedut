@@ -630,6 +630,32 @@ def main():
 
     etape("20 tailles d'ecran", lambda: tailles())
 
+    # Les nouveautes du 16/10 : la ligne des trophees (en-tete, detail), puis la pratique
+    # calme (la lueur, puis tout efface apres six secondes), en francais.
+    def s21():
+        langue("fr")
+        lancer()
+        capture("21a-accueil-grade-prochain")
+        ok = activite("PaliersActivity")
+        capture("21b-trophees-ici", ok=ok, attente=2.5)
+        ok = ok and toucher(text="TU ES ICI", contains=True, attente=2.0)
+        capture("21c-trophee-detail", ok=ok)
+        retour(2)
+        ok = activite("PaliersActivity")
+        for i in range(12):
+            defiler(False)
+        capture("21d-trophees-tete", ok=ok)
+        retour()
+        ok = activite("SessionActivity", "--ez start_now true")
+        capture("21e-pratique-debut", ok=ok, attente=2.0)
+        capture("21f-pratique-calme", ok=ok, attente=7.5)
+        sh("input tap 540 300")
+        capture("21g-pratique-reveil", ok=ok, attente=0.8)
+        if ok and toucher(rid="session_secondary", attente=1.0):
+            toucher(rid="button1", attente=1.5)
+        retour()
+    etape("21 trophees et pratique calme", s21)
+
     log("\ncaptures :", sorted(os.listdir(OUT)))
 
 
