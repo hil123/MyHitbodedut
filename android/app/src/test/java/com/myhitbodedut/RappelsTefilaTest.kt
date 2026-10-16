@@ -43,4 +43,18 @@ class RappelsTefilaTest {
         assertTrue(rappels(LocalDate.of(2027, 9, 30), israel = false).any { it.type == RappelsTefila.Type.DIX_JOURS && it.date == LocalDate.of(2027, 10, 2) })
         assertTrue(rappels(LocalDate.of(2027, 10, 21), israel = true).any { it.type == RappelsTefila.Type.GUECHEM_DEBUT && it.date == LocalDate.of(2027, 10, 23) })
     }
+
+    @Test
+    fun `nord et sud, Israel et diaspora`() {
+        val chemini = LocalDate.of(2027, 10, 21) // deux jours avant le 22 Tichri 5788
+        val types = { israel: Boolean, sud: Boolean ->
+            RappelsTefila.prochains(chemini, 3, sansGuechem = sud) { CalendrierJuif.jour(it, israel) }.map { it.type }.toSet() }
+        // Nord : Israël et diaspora annoncent מַשִּׁיב הָרוּחַ ; sud (Edot) : rien à annoncer.
+        assertTrue(RappelsTefila.Type.GUECHEM_DEBUT in types(true, false))
+        assertTrue(RappelsTefila.Type.GUECHEM_DEBUT in types(false, false))
+        assertTrue(RappelsTefila.Type.GUECHEM_DEBUT !in types(false, true))
+        // La demande de pluie suit la diaspora au sud : début en décembre, pas le 7 'Hechvan.
+        val hechvan = RappelsTefila.prochains(LocalDate.of(2026, 10, 16), 3, sansGuechem = true) { CalendrierJuif.jour(it, false) }
+        assertTrue(hechvan.none { it.type == RappelsTefila.Type.PLUIE_DEBUT })
+    }
 }

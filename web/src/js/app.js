@@ -9,7 +9,7 @@ import { ART_DU_MOMENT, ChizukBag, ChizukRules } from './chizuk.js';
 import { DanseMesure } from './seance.js';
 import { creeStore, memoire } from './store.js';
 import { isoLocal } from './calendrier.js';
-import { JERUSALEM_GEONAMES, RAPPELS_TEFILA, USAGES_LEVANA, aJerusalem, calendrier, jour as jourJuif, jourDeLaPriere, levana, rappelsTefila, usageLevana } from './calendrier-juif.js';
+import { JERUSALEM_GEONAMES, RAPPELS_TEFILA, dansIsrael, USAGES_LEVANA, aJerusalem, calendrier, jour as jourJuif, jourDeLaPriere, levana, rappelsTefila, usageLevana } from './calendrier-juif.js';
 import { conditionsPour, index as indexAjouts, libelleJour, vrai as ajoutVrai } from './siddur-jour.js';
 import * as Paliers from './paliers.js';
 import * as Trophees from './trophees.js';
@@ -538,7 +538,8 @@ function rappelsDeTefila() {
     guechem_debut: ['rappel_guechem_titre', 'rappel_guechem_debut'], guechem_fin: ['rappel_guechem_titre', 'rappel_guechem_fin'],
     dix_jours: ['rappel_dix_jours_titre', 'rappel_dix_jours'], omer: ['rappel_omer_titre', 'rappel_omer'],
   };
-  return rappelsTefila(aujourdhui, israel, 3, (iso) => jourJuif(iso, israel, muk)).map((r) => {
+  const sansGuechem = edot && (store.lieu()?.latitude ?? 0) < 0;
+  return rappelsTefila(aujourdhui, israel, 3, (iso) => jourJuif(iso, israel, muk), sansGuechem).map((r) => {
     const [titre, corps] = TEXTES[r.type];
     return h('div', { class: 'carte rappel-tefila' },
       h('h3', { class: 'rappel-titre' }, tr.t(titre)),
@@ -1534,16 +1535,16 @@ function choisirLieu() {
         if (!navigator.geolocation) { etat.textContent = tr.t('zmanim_position_refusee'); return; }
         etat.textContent = tr.t('zmanim_position_attente');
         // La position (16/10) : basse précision d'abord (plus rapide, et assez pour des zmanim) ;
-        // sans réponse, la dernière connue, même ancienne. La ville la plus proche nomme le lieu,
-        // donne l'altitude et dit Israël ou diaspora.
+        // sans réponse, la dernière connue, même ancienne. La ville la plus proche nomme le lieu.
         const poser = (p, ancienne) => {
           const proche = villePlusProche(villes ?? [], p.coords.latitude, p.coords.longitude);
           store.setLieu({
             nom: proche ? tr.t('zmanim_position_pres', titreTexte(proche.nom)) : tr.t('zmanim_position'),
             latitude: p.coords.latitude, longitude: p.coords.longitude,
-            altitude: proche?.altitude ?? 0, fuseau: proche?.fuseau ?? Intl.DateTimeFormat().resolvedOptions().timeZone,
+            // Le fuseau du téléphone ; Israël ou diaspora d'après le territoire (TerritoireIsrael, 16/10).
+            altitude: proche?.altitude ?? 0, fuseau: Intl.DateTimeFormat().resolvedOptions().timeZone,
           });
-          if (proche) store.setInIsrael(proche.pays === 'IL');
+          store.setInIsrael(dansIsrael(p.coords.latitude, p.coords.longitude));
           if (ancienne) signale(tr.t('zmanim_position_ancienne'));
           fermer();
           rendre();

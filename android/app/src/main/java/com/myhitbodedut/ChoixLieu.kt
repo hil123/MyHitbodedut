@@ -128,15 +128,16 @@ class ChoixLieu(private val activite: AppCompatActivity, private val apres: () -
 
     private fun enregistrer(position: Location) {
         if (activite.isFinishing || activite.isDestroyed) return
-        // La ville la plus proche nomme la position, donne l'altitude et dit Israël ou diaspora.
+        // La ville la plus proche ne fait que nommer la position et donner l'altitude. Le fuseau
+        // reste celui du téléphone (celui d'une ville voisine fausserait les zmanim près d'une
+        // frontière), et Israël ou diaspora se lit sur le territoire, pas sur la ville (16/10).
         val proche = Villes.plusProche(Data.villes(activite), position.latitude, position.longitude)
         val langue = ChizukCard.language(activite)
         val nom = proche?.let { activite.getString(R.string.zmanim_position_pres, it.nom.forLanguage(langue)) }
             ?: activite.getString(R.string.zmanim_position)
-        val lieu = Zmanim.Lieu(nom, position.latitude, position.longitude, proche?.altitude ?: 0.0,
-            proche?.fuseau ?: TimeZone.getDefault().id)
+        val lieu = Zmanim.Lieu(nom, position.latitude, position.longitude, proche?.altitude ?: 0.0, TimeZone.getDefault().id)
         Store.setLieuZmanim(activite, lieu, null)
-        if (proche != null) Store.setInIsrael(activite, proche.enIsrael)
+        Store.setInIsrael(activite, TerritoireIsrael.contient(position.latitude, position.longitude))
         apres()
     }
 

@@ -262,7 +262,7 @@ export const RAPPELS_TEFILA = {
   guechem_debut: { source: '114, 1', leSoir: false }, guechem_fin: { source: '114, 1', leSoir: false },
   dix_jours: { source: '582, 1', leSoir: true }, omer: { source: '489, 1', leSoir: true },
 };
-export function rappelsTefila(aujourdhui, enIsrael, avance = 3, jourDe = (iso) => jour(iso, enIsrael)) {
+export function rappelsTefila(aujourdhui, enIsrael, avance = 3, jourDe = (iso) => jour(iso, enIsrael), sansGuechem = false) {
   const ajoute = (iso, n) => { const d = new Date(`${iso}T12:00:00Z`); d.setUTCDate(d.getUTCDate() + n); return d.toISOString().slice(0, 10); };
   const res = [];
   let veille = jourDe(ajoute(aujourdhui, -1));
@@ -272,11 +272,25 @@ export function rappelsTefila(aujourdhui, enIsrael, avance = 3, jourDe = (iso) =
     const pluie = 'tal_oumatar';
     if (j.conditions.has(pluie) && !veille.conditions.has(pluie)) res.push({ type: 'pluie_debut', date: d });
     if (!j.conditions.has(pluie) && veille.conditions.has(pluie)) res.push({ type: 'pluie_fin', date: d });
-    if (j.moisHebreu === 7 && j.jourHebreu === 22) res.push({ type: 'guechem_debut', date: d });
-    if (j.moisHebreu === 1 && j.jourHebreu === 15) res.push({ type: 'guechem_fin', date: d });
+    // Les Edot de l'hémisphère sud disent מוריד הטל toute l'année (sansGuechem).
+    if (!sansGuechem && j.moisHebreu === 7 && j.jourHebreu === 22) res.push({ type: 'guechem_debut', date: d });
+    if (!sansGuechem && j.moisHebreu === 1 && j.jourHebreu === 15) res.push({ type: 'guechem_fin', date: d });
     if (j.moisHebreu === 7 && j.jourHebreu === 1) res.push({ type: 'dix_jours', date: d });
     if (j.omer === 1) res.push({ type: 'omer', date: d });
     veille = j;
   }
   return res;
+}
+
+// --- Israël ou diaspora d'après la position (TerritoireIsrael.kt, 16/10) ---------------------
+// Contour simplifié (précision de 2 à 3 km) : l'État d'Israël avec Jérusalem, la Judée-Samarie et le Golan.
+const CONTOUR_ISRAEL = [[31.23, 34.21], [31.36, 34.24], [31.55, 34.40], [31.72, 34.50], [31.95, 34.66], [32.10, 34.72], [32.33, 34.80], [32.55, 34.86], [32.75, 34.92], [32.84, 34.93], [32.93, 35.03], [33.09, 35.08], [33.10, 35.20], [33.09, 35.33], [33.08, 35.45], [33.11, 35.52], [33.20, 35.55], [33.28, 35.57], [33.31, 35.63], [33.33, 35.79], [33.22, 35.86], [33.08, 35.86], [32.93, 35.87], [32.78, 35.80], [32.70, 35.72], [32.66, 35.62], [32.45, 35.57], [32.20, 35.56], [31.95, 35.55], [31.76, 35.56], [31.45, 35.50], [31.15, 35.45], [30.85, 35.36], [30.50, 35.22], [30.15, 35.14], [29.90, 35.09], [29.70, 35.03], [29.55, 34.98], [29.49, 34.90], [29.80, 34.76], [30.20, 34.60], [30.60, 34.50], [30.95, 34.37], [31.22, 34.26]];
+export function dansIsrael(latitude, longitude) {
+  let dedans = false;
+  for (let i = 0, j = CONTOUR_ISRAEL.length - 1; i < CONTOUR_ISRAEL.length; j = i++) {
+    const [yi, xi] = CONTOUR_ISRAEL[i];
+    const [yj, xj] = CONTOUR_ISRAEL[j];
+    if ((yi > latitude) !== (yj > latitude) && longitude < ((xj - xi) * (latitude - yi)) / (yj - yi) + xi) dedans = !dedans;
+  }
+  return dedans;
 }

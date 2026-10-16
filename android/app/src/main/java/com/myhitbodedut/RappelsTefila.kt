@@ -40,8 +40,12 @@ object RappelsTefila {
     private const val NISSAN = 1
     private const val TICHREI = 7
 
-    /** Les changements des [avance] jours à venir (aujourd'hui compris), du plus proche au plus lointain. */
-    fun prochains(aujourdhui: LocalDate, avance: Int = 3, jour: (LocalDate) -> CalendrierJuif.Jour): List<Rappel> {
+    /**
+     * Les changements des [avance] jours à venir (aujourd'hui compris), du plus proche au plus lointain.
+     * [sansGuechem] : les Edot de l'hémisphère sud disent מוריד הטל toute l'année (SiddurJour.conditionsPour,
+     * Yalkut Yosef O.H. 117) ; ni début ni fin de מַשִּׁיב הָרוּחַ à annoncer.
+     */
+    fun prochains(aujourdhui: LocalDate, avance: Int = 3, sansGuechem: Boolean = false, jour: (LocalDate) -> CalendrierJuif.Jour): List<Rappel> {
         val res = mutableListOf<Rappel>()
         var veille = jour(aujourdhui.minusDays(1))
         for (k in 0..avance) {
@@ -51,8 +55,8 @@ object RappelsTefila {
             // Un changement du soir dont le soir est déjà passé (hier soir) reste annoncé aujourd'hui.
             if (pluie in j.conditions && pluie !in veille.conditions) res += Rappel(Type.PLUIE_DEBUT, d)
             if (pluie !in j.conditions && pluie in veille.conditions) res += Rappel(Type.PLUIE_FIN, d)
-            if (j.moisHebreu == TICHREI && j.jourHebreu == 22) res += Rappel(Type.GUECHEM_DEBUT, d)
-            if (j.moisHebreu == NISSAN && j.jourHebreu == 15) res += Rappel(Type.GUECHEM_FIN, d)
+            if (!sansGuechem && j.moisHebreu == TICHREI && j.jourHebreu == 22) res += Rappel(Type.GUECHEM_DEBUT, d)
+            if (!sansGuechem && j.moisHebreu == NISSAN && j.jourHebreu == 15) res += Rappel(Type.GUECHEM_FIN, d)
             if (j.moisHebreu == TICHREI && j.jourHebreu == 1) res += Rappel(Type.DIX_JOURS, d)
             if (j.omer == 1) res += Rappel(Type.OMER, d)
             veille = j
@@ -69,7 +73,8 @@ object RappelsTefilaVue {
         val israel = Store.inIsrael(c)
         val muk = Store.mukafChoma(c)
         val edot = Store.siddurNusah(c) == Nusah.EDOT
-        return RappelsTefila.prochains(aujourdhui) { CalendrierJuif.jour(it, israel, muk) }.map { r ->
+        val sansGuechem = edot && Store.hemisphereSud(c)
+        return RappelsTefila.prochains(aujourdhui, sansGuechem = sansGuechem) { CalendrierJuif.jour(it, israel, muk) }.map { r ->
             val (titre, corps) = when (r.type) {
                 RappelsTefila.Type.PLUIE_DEBUT -> R.string.rappel_pluie_debut_titre to if (edot) R.string.rappel_pluie_debut_edot else R.string.rappel_pluie_debut
                 RappelsTefila.Type.PLUIE_FIN -> R.string.rappel_pluie_fin_titre to if (edot) R.string.rappel_pluie_fin_edot else R.string.rappel_pluie_fin

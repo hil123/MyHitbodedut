@@ -345,3 +345,18 @@ test('rappels de tefila : mêmes cas que RappelsTefilaTest', () => {
   assert.ok(rappelsTefila('2027-09-30', false).some((r) => r.type === 'dix_jours' && r.date === '2027-10-02'));
   assert.ok(rappelsTefila('2027-10-21', true).some((r) => r.type === 'guechem_debut' && r.date === '2027-10-23'));
 });
+
+// --- Israël ou diaspora d'après la position (TerritoireIsraelTest, 16/10) ---
+import { dansIsrael } from '../src/js/calendrier-juif.js';
+test('territoire d’Israël : mêmes villes que TerritoireIsraelTest', () => {
+  for (const [lat, lon] of [[31.7769, 35.2224], [32.0853, 34.7818], [29.5577, 34.9519], [33.2073, 35.57], [32.993, 35.69], [32.106, 35.171], [29.895, 35.06]]) assert.ok(dansIsrael(lat, lon), `${lat},${lon}`);
+  for (const [lat, lon] of [[31.9539, 35.9106], [29.5321, 35.0063], [33.2705, 35.2038], [31.1316, 33.7984], [29.49, 34.876], [48.8566, 2.3522]]) assert.ok(!dansIsrael(lat, lon), `${lat},${lon}`);
+});
+
+test('rappels de tefila : nord et sud, Israël et diaspora', () => {
+  const t = (israel, sud) => new Set(rappelsTefila('2027-10-21', israel, 3, undefined, sud).map((r) => r.type));
+  assert.ok(t(true, false).has('guechem_debut'));
+  assert.ok(t(false, false).has('guechem_debut'));
+  assert.ok(!t(false, true).has('guechem_debut'));
+  assert.ok(!rappelsTefila('2026-10-16', false, 3, undefined, true).some((r) => r.type === 'pluie_debut'));
+});
