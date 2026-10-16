@@ -7,7 +7,7 @@
     android:background="@drawable/bg_widget"
     android:gravity="center_vertical"
     android:orientation="vertical"
-    android:padding="14dp">
+    android:padding="12dp">
 
     <TextView
         android:id="@+id/wz_date"
@@ -30,7 +30,7 @@
         android:id="@+id/wz_chkia"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="2dp"
+        android:layout_marginTop="0dp"
         android:textColor="@color/muted"
         android:textSize="13sp" />
 
@@ -38,7 +38,7 @@
         android:id="@+id/wz_serie"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="2dp"
+        android:layout_marginTop="0dp"
         android:textColor="@color/muted"
         android:textSize="13sp" />
 </LinearLayout>

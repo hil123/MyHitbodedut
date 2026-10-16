@@ -13,7 +13,7 @@ import { JERUSALEM_GEONAMES, RAPPELS_TEFILA, dansIsrael, USAGES_LEVANA, aJerusal
 import { conditionsPour, index as indexAjouts, libelleJour, vrai as ajoutVrai } from './siddur-jour.js';
 import * as Paliers from './paliers.js';
 import * as Trophees from './trophees.js';
-import { FORMES } from './trophees-formes.js';
+import { FORMES, ICONES } from './trophees-formes.js';
 import { pour as halakhotPour, recherche as rechercheHalakha, source as sourceHalakha } from './halakha.js';
 import { pour as yalkutPour, recherche as rechercheYalkut, source as sourceYalkut, texteCarte, titreCarte } from './yalkut.js';
 import { ajouts as ajoutsDuJour, dateHilloula, debutMoisHebreu, hilloulotPour, lienArticle, rechercheHilloula, horaires, illustration as illustrationDuJour, lienHalakha, lienHyomi, momentDuSiddour, moisHebreuVoisin, semaines, semainesHebreu } from './jour-affiche.js';
@@ -2162,7 +2162,11 @@ function objetTrophee(forme, metal, icone, taille) {
       el('linearGradient', { id: `${id}m`, x1: '0', y1: '0', x2: '1', y2: '1' }, el('stop', { offset: '0', 'stop-color': clair }), el('stop', { offset: '1', 'stop-color': fonce })),
       el('radialGradient', { id: `${id}r`, cx: '.35', cy: '.3', r: '.75' }, el('stop', { offset: '0', 'stop-color': '#FFFFFF' }), el('stop', { offset: '.35', 'stop-color': clair }), el('stop', { offset: '1', 'stop-color': fonce }))),
     ...f.parts.map(([matiere, d]) => el('path', { d, fill: remplis[matiere] })),
-    el('text', { x: ex, y: ey, 'font-size': et, 'text-anchor': 'middle', 'dominant-baseline': 'central', opacity: metal ? '1' : '.45' }, icone));
+    ICONES[icone]
+      // L'icône de la famille au trait (16/10), du ton sombre du métal, centrée sur l'emblème.
+      ? el('path', { d: ICONES[icone], transform: `translate(${ex - et * 0.575} ${ey - et * 0.575}) scale(${et * 1.15 / 24})`,
+        fill: 'none', stroke: sombre, 'stroke-width': 2, 'stroke-linecap': 'round', 'stroke-linejoin': 'round', opacity: metal ? '1' : '.55' })
+      : el('text', { x: ex, y: ey, 'font-size': et, 'text-anchor': 'middle', 'dominant-baseline': 'central', opacity: metal ? '1' : '.45' }, icone));
 }
 
 // --- Les trophées : outils partagés par l'écran, l'accueil et le bilan (16/10) ---------------

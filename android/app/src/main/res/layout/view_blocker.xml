@@ -11,17 +11,17 @@
         android:gravity="center"
         android:minHeight="400dp"
         android:orientation="vertical"
-        android:paddingHorizontal="28dp"
+        android:paddingHorizontal="24dp"
         android:paddingVertical="24dp">
 
         <TextView
             android:id="@+id/blocker_preview_badge"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="14dp"
+            android:layout_marginBottom="12dp"
             android:background="@drawable/bg_badge"
-            android:paddingHorizontal="14dp"
-            android:paddingVertical="6dp"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="4dp"
             android:text="@string/blocker_preview_badge"
             android:textColor="@color/white"
             android:textSize="12sp"
@@ -31,7 +31,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/bg_stage"
-            android:padding="10dp">
+            android:padding="8dp">
 
             <ImageView
                 android:id="@+id/blocker_character"
@@ -46,7 +46,7 @@
             android:id="@+id/blocker_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="22dp"
+            android:layout_marginTop="24dp"
             android:textAlignment="center"
             android:textColor="@color/white"
             android:textSize="27sp"
@@ -56,7 +56,7 @@
             android:id="@+id/blocker_subtitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="8dp"
             android:textAlignment="center"
             android:textColor="?attr/mhMint"
             android:textSize="15sp" />
@@ -65,7 +65,7 @@
             android:id="@+id/blocker_streak"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="14dp"
+            android:layout_marginTop="12dp"
             android:textAlignment="center"
             android:textColor="?attr/mhMint"
             android:textSize="14sp" />
@@ -83,7 +83,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
-            android:paddingVertical="14dp"
+            android:paddingVertical="12dp"
             android:textSize="16sp" />
 
         <Button
@@ -91,7 +91,7 @@
             style="@style/Widget.Material3.Button.OutlinedButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="8dp"
             android:paddingVertical="12dp"
             android:textColor="?attr/mhMint"
             android:textSize="15sp" />

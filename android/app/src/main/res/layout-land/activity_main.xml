@@ -37,7 +37,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:paddingHorizontal="@dimen/edge_inner"
-                android:paddingTop="6dp"
+                android:paddingTop="4dp"
                 android:paddingBottom="16dp">
 
                 <!-- Les anneaux à part, au début de la ligne (à droite en hébreu). -->
@@ -63,14 +63,14 @@
                             android:id="@+id/hero_plate"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:layout_margin="34dp"
+                            android:layout_margin="32dp"
                             android:clickable="true"
                             android:focusable="true"
                             android:contentDescription="@string/rings_character_hint"
                             android:background="@drawable/bg_gauge_plate"
                             android:paddingHorizontal="16dp"
-                            android:paddingTop="14dp"
-                            android:paddingBottom="6dp">
+                            android:paddingTop="12dp"
+                            android:paddingBottom="4dp">
 
                             <ImageView
                                 android:id="@+id/hero_character"
@@ -105,7 +105,7 @@
                                     android:id="@+id/hero_face_caption"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginTop="2dp"
+                                    android:layout_marginTop="0dp"
                                     android:gravity="center"
                                     android:maxLines="3"
                                     android:textColor="?attr/mhMuted"
@@ -118,7 +118,7 @@
                         android:id="@+id/week_gauge_label"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="6dp"
+                        android:layout_marginTop="4dp"
                         android:gravity="center"
                         android:textColor="?attr/mhMuted"
                         android:textSize="16sp" />
@@ -133,7 +133,7 @@
                         android:layout_marginTop="4dp"
                         android:background="?attr/selectableItemBackground"
                         android:gravity="center"
-                        android:paddingVertical="6dp"
+                        android:paddingVertical="4dp"
                         android:textColor="?attr/mhBrand"
                         android:textSize="15sp"
                         android:textStyle="bold" />
@@ -224,7 +224,7 @@
                         android:id="@+id/start_session"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
+                        android:layout_marginTop="8dp"
                         android:paddingVertical="12dp"
                         android:textSize="17sp" />
 
@@ -294,14 +294,14 @@
                         layout="@layout/view_chizuk"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="14dp" />
+                        android:layout_marginTop="12dp" />
 
                     <Button
                         android:id="@+id/today_note"
                         style="@style/Widget.Material3.Button.TextButton"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="6dp"
+                        android:layout_marginTop="4dp"
                         android:text="@string/action_write_note"
                         android:visibility="gone" />
 
@@ -314,7 +314,7 @@
                         style="@style/Widget.Material3.Button.TextButton"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="6dp"
+                        android:layout_marginTop="4dp"
                         android:text="@string/action_done_offline"
                         android:visibility="gone" />
 
@@ -331,7 +331,7 @@
                         style="@style/Widget.Material3.Button.OutlinedButton"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="14dp"
+                        android:layout_marginTop="12dp"
                         android:layout_marginBottom="8dp"
                         android:text="@string/trophees_paliers" />
                 </LinearLayout>
@@ -362,7 +362,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingHorizontal="@dimen/edge_inner"
-                    android:paddingTop="20dp"
+                    android:paddingTop="16dp"
                     android:text="@string/nav_texts"
                     android:textColor="?attr/mhInk"
                     android:textSize="24sp"
@@ -561,7 +561,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="16dp"
                     android:letterSpacing="0.08"
                     android:paddingHorizontal="@dimen/edge_inner"
                     android:text="@string/section_around"

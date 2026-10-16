@@ -8,7 +8,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginHorizontal="12dp"
-    android:layout_marginTop="10dp"
+    android:layout_marginTop="8dp"
     android:background="@drawable/bg_card"
     android:orientation="vertical"
     android:padding="16dp">
@@ -24,8 +24,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/bg_chip_mint"
-            android:paddingHorizontal="10dp"
-            android:paddingVertical="2dp"
+            android:paddingHorizontal="8dp"
+            android:paddingVertical="0dp"
             android:textColor="?attr/mhOnPlate"
             android:textSize="11sp" />
 
@@ -35,8 +35,8 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:background="@drawable/bg_badge_warning"
-            android:paddingHorizontal="10dp"
-            android:paddingVertical="2dp"
+            android:paddingHorizontal="8dp"
+            android:paddingVertical="0dp"
             android:textColor="@color/warning"
             android:textSize="11sp" />
     </LinearLayout>
@@ -54,7 +54,7 @@
         android:id="@+id/proofread_ref"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="2dp"
+        android:layout_marginTop="0dp"
         android:textColor="?attr/mhInk"
         android:textSize="14sp"
         android:textStyle="bold" />
@@ -93,7 +93,7 @@
         android:id="@+id/proofread_meta"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="8dp"
         android:textColor="?attr/mhMuted"
         android:textSize="11sp" />
 

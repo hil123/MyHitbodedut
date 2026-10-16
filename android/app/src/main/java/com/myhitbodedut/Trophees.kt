@@ -23,16 +23,17 @@ object Trophees {
     /** L'objet (12/10, d'après les planches envoyées) : pas que des pièces. Clé de res/raw/trophees_formes.json. */
     enum class Forme(val cle: String) { COUPE("coupe"), ECUSSON("ecusson"), ETOILE("etoile"), ROSETTE("rosette"), MEDAILLE("medaille"), PIECES("pieces"), CRISTAL("cristal"), GEMME("gemme") }
 
+    /** [icone] : clé de l'icône au trait dans res/raw/trophees_formes.json (variante B choisie le 16/10). */
     enum class Famille(val cle: String, val icone: String, val seuils: IntArray, val forme: Forme) {
-        PREMIER_PAS("premier_pas", "🌱", intArrayOf(1, 2, 3, 4, 5), Forme.ROSETTE),
-        SEANCE_LONGUE("seance_longue", "⏳", intArrayOf(10, 15, 20, 30, 40, 45, 50, 60, 75, 90, 105, 120, 150, 180), Forme.COUPE),
-        JOURS("jours", "🌳", intArrayOf(7, 10, 15, 18, 20, 30, 40, 45, 50, 60, 70, 80, 90, 100, 120, 150, 180, 200, 250, 300, 365, 400, 500, 613), Forme.MEDAILLE),
-        SERIE("serie", "🔥", intArrayOf(3, 5, 7, 10, 15, 18, 20, 30, 40, 45, 50, 60, 70, 80, 90, 100), Forme.ETOILE),
-        HEURES("heures", "⭐", intArrayOf(1, 2, 5, 10, 15, 20, 25, 30, 40, 45, 50, 60, 75, 100, 150, 200, 250, 300), Forme.PIECES),
-        SEMAINES("semaines", "🏅", intArrayOf(1, 2, 3, 4, 5, 6, 8, 10, 12, 15, 20, 26, 30, 40, 45, 52), Forme.ECUSSON),
-        EREV_CHABBAT("erev_chabbat", "🕯️", intArrayOf(1, 4, 12, 26, 52), Forme.CRISTAL),
-        RETOUR("retour", "🔄", intArrayOf(1, 3, 5, 10), Forme.GEMME),
-        PLUME("plume", "✍️", intArrayOf(1, 10, 25, 50, 100, 150), Forme.COUPE),
+        PREMIER_PAS("premier_pas", "premier_pas", intArrayOf(1, 2, 3, 4, 5), Forme.ROSETTE),
+        SEANCE_LONGUE("seance_longue", "seance_longue", intArrayOf(10, 15, 20, 30, 40, 45, 50, 60, 75, 90, 105, 120, 150, 180), Forme.COUPE),
+        JOURS("jours", "jours", intArrayOf(7, 10, 15, 18, 20, 30, 40, 45, 50, 60, 70, 80, 90, 100, 120, 150, 180, 200, 250, 300, 365, 400, 500, 613), Forme.MEDAILLE),
+        SERIE("serie", "serie", intArrayOf(3, 5, 7, 10, 15, 18, 20, 30, 40, 45, 50, 60, 70, 80, 90, 100), Forme.ETOILE),
+        HEURES("heures", "heures", intArrayOf(1, 2, 5, 10, 15, 20, 25, 30, 40, 45, 50, 60, 75, 100, 150, 200, 250, 300), Forme.PIECES),
+        SEMAINES("semaines", "semaines", intArrayOf(1, 2, 3, 4, 5, 6, 8, 10, 12, 15, 20, 26, 30, 40, 45, 52), Forme.ECUSSON),
+        EREV_CHABBAT("erev_chabbat", "erev_chabbat", intArrayOf(1, 4, 12, 26, 52), Forme.CRISTAL),
+        RETOUR("retour", "retour", intArrayOf(1, 3, 5, 10), Forme.GEMME),
+        PLUME("plume", "plume", intArrayOf(1, 10, 25, 50, 100, 150), Forme.COUPE),
     }
 
     /** Un niveau atteint : [rang] de 1 au nombre de seuils de la famille. */

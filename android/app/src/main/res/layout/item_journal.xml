@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginHorizontal="16dp"
-    android:layout_marginTop="10dp"
+    android:layout_marginTop="8dp"
     android:background="@drawable/bg_card"
     android:orientation="vertical"
     android:padding="16dp">
@@ -26,7 +26,7 @@
             android:id="@+id/entry_duration"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
+            android:layout_marginStart="8dp"
             android:textColor="?attr/mhBrand"
             android:textSize="14sp"
             android:textStyle="bold" />

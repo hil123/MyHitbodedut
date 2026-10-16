@@ -16,7 +16,7 @@
     android:background="@drawable/bg_card"
     android:orientation="vertical"
     android:paddingHorizontal="16dp"
-    android:paddingVertical="14dp">
+    android:paddingVertical="12dp">
 
     <!-- L'illustration et le nom du moment : la carte dit d'abord où l'on est. -->
     <LinearLayout
@@ -61,10 +61,10 @@
                 android:id="@+id/chizuk_badge"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="4dp"
                 android:background="@drawable/bg_badge_warning"
-                android:paddingHorizontal="10dp"
-                android:paddingVertical="3dp"
+                android:paddingHorizontal="8dp"
+                android:paddingVertical="4dp"
                 android:text="@string/chizuk_badge_to_proofread"
                 android:textColor="@color/warning"
                 android:textSize="11sp"
@@ -89,7 +89,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginVertical="10dp"
+        android:layout_marginVertical="8dp"
         android:background="?attr/mhLine" />
 
     <TextView

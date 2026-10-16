@@ -101,10 +101,16 @@ object Confettis {
             if (r.nextInt(4) == 0) c.drawCircle(x, y, s / 2, p) else c.drawRect(x - s / 2, y - s / 4, x + s / 2, y + s / 4, p)
             c.restore()
         }
-        p.color = Color.WHITE
-        p.textSize = 150f
-        p.textAlign = Paint.Align.CENTER
-        c.drawText(icone, l / 2f, h / 2f - (p.descent() + p.ascent()) / 2, p)
+        val trace = TropheeDessin.icones(context)[icone]
+        if (trace != null) {
+            // L'icône de la famille au trait (16/10), blanche sur les confettis.
+            TropheeDessin.dessinerIcone(c, trace, l / 2f, h / 2f, 170f, TropheeDessin.traitIcone().apply { color = Color.WHITE })
+        } else {
+            p.color = Color.WHITE
+            p.textSize = 150f
+            p.textAlign = Paint.Align.CENTER
+            c.drawText(icone, l / 2f, h / 2f - (p.descent() + p.ascent()) / 2, p)
+        }
         return b
     }
 

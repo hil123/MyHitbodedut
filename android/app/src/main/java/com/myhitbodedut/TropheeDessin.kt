@@ -42,6 +42,8 @@ class TropheeDessin(context: Context, forme: Trophees.Forme, private val metal: 
 
     private val pinceau = Paint(Paint.ANTI_ALIAS_FLAG)
     private val texte = Paint(Paint.ANTI_ALIAS_FLAG).apply { textAlign = Paint.Align.CENTER }
+    private val trait = traitIcone()
+    private val traces = Companion.icones(context)
 
     override fun draw(c: Canvas) {
         val (clair, fonce, sombre) = teintes(metal)
@@ -64,23 +66,57 @@ class TropheeDessin(context: Context, forme: Trophees.Forme, private val metal: 
             }
             c.drawPath(p.chemin, pinceau)
         }
-        texte.textSize = embleme[2]
-        texte.alpha = if (metal != null) 0xFF else 0x73
-        val fm = texte.fontMetrics
-        c.drawText(icone, embleme[0], embleme[1] - (fm.ascent + fm.descent) / 2, texte)
+        val trace = traces[icone]
+        if (trace != null) {
+            // L'icône de la famille, au trait, du ton sombre du métal (16/10) ; estompée sans métal.
+            trait.color = sombre
+            trait.alpha = if (metal != null) 0xFF else 0x8C
+            dessinerIcone(c, trace, embleme[0], embleme[1], embleme[2] * 1.15f, trait)
+        } else {
+            texte.textSize = embleme[2]
+            texte.alpha = if (metal != null) 0xFF else 0x73
+            val fm = texte.fontMetrics
+            c.drawText(icone, embleme[0], embleme[1] - (fm.ascent + fm.descent) / 2, texte)
+        }
         c.restore()
     }
 
     override fun setAlpha(alpha: Int) { pinceau.alpha = alpha }
-    override fun setColorFilter(cf: ColorFilter?) { pinceau.colorFilter = cf; texte.colorFilter = cf }
+    override fun setColorFilter(cf: ColorFilter?) { pinceau.colorFilter = cf; texte.colorFilter = cf; trait.colorFilter = cf }
     @Deprecated("Deprecated in Java")
     override fun getOpacity() = PixelFormat.TRANSLUCENT
 
     companion object {
         @Volatile private var cache: JSONObject? = null
+        @Volatile private var cacheIcones: Map<String, Path>? = null
+
+        private fun racine(c: Context): JSONObject = JSONObject(Json.readRaw(c.applicationContext, R.raw.trophees_formes))
 
         private fun formes(c: Context): JSONObject =
-            cache ?: JSONObject(Json.readRaw(c.applicationContext, R.raw.trophees_formes)).getJSONObject("formes").also { cache = it }
+            cache ?: racine(c).getJSONObject("formes").also { cache = it }
+
+        /** Les icônes des familles au trait (boîte 24 × 24), par clé. */
+        fun icones(c: Context): Map<String, Path> = cacheIcones ?: racine(c).getJSONObject("icones").let { o ->
+            o.keys().asSequence().associateWith { PathParser.createPathFromPathData(o.getString(it)) }
+        }.also { cacheIcones = it }
+
+        /** Le pinceau des icônes : trait de 2 (sur 24), bouts et angles ronds. */
+        fun traitIcone() = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+            style = Paint.Style.STROKE
+            strokeWidth = 2f
+            strokeCap = Paint.Cap.ROUND
+            strokeJoin = Paint.Join.ROUND
+        }
+
+        /** Dessine [trace] (boîte 24) centré en ([cx], [cy]), de côté [taille]. */
+        fun dessinerIcone(c: Canvas, trace: Path, cx: Float, cy: Float, taille: Float, trait: Paint) {
+            val k = taille / 24f
+            c.save()
+            c.translate(cx - taille / 2, cy - taille / 2)
+            c.scale(k, k)
+            c.drawPath(trace, trait)
+            c.restore()
+        }
 
         /** Clair, foncé, sombre : la face, le bord, la tranche et le socle. Gris sans métal. */
         fun teintes(m: Trophees.Metal?): Triple<Int, Int, Int> = when (m) {

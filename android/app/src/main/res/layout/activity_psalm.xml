@@ -63,11 +63,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="16dp"
-            android:layout_marginTop="14dp"
-            android:layout_marginBottom="14dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="12dp"
             android:background="@drawable/bg_card"
             android:orientation="vertical"
-            android:padding="18dp" />
+            android:padding="16dp" />
     </ScrollView>
 
     <LinearLayout
@@ -83,7 +83,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:paddingVertical="13dp"
+            android:paddingVertical="12dp"
             android:textSize="15sp" />
 
         <Button
@@ -93,7 +93,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_weight="1"
-            android:paddingVertical="13dp"
+            android:paddingVertical="12dp"
             android:text="@string/tikkun_next"
             android:textSize="15sp" />
     </LinearLayout>

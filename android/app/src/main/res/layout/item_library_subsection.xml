@@ -4,10 +4,10 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginHorizontal="16dp"
-    android:layout_marginTop="10dp"
+    android:layout_marginTop="8dp"
     android:background="@drawable/bg_card"
     android:orientation="vertical"
-    android:padding="18dp">
+    android:padding="16dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -19,7 +19,7 @@
             android:layout_width="66dp"
             android:layout_height="80dp"
             android:background="@drawable/bg_stage_soft"
-            android:padding="5dp">
+            android:padding="4dp">
 
             <ImageView
                 android:layout_width="match_parent"
@@ -51,7 +51,7 @@
                 android:id="@+id/subsection_translation"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
+                android:layout_marginTop="0dp"
                 android:textColor="?attr/mhMuted"
                 android:textSize="14sp" />
 

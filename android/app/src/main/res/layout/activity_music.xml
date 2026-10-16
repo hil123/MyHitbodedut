@@ -11,8 +11,8 @@
         android:tag="bandeau"
         android:orientation="vertical"
         android:paddingHorizontal="@dimen/edge"
-        android:paddingTop="26dp"
-        android:paddingBottom="20dp">
+        android:paddingTop="24dp"
+        android:paddingBottom="16dp">
 
         <TextView
             android:layout_width="wrap_content"
@@ -26,7 +26,7 @@
             android:id="@+id/music_summary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
+            android:layout_marginTop="4dp"
             android:textColor="?attr/mhMint"
             android:textSize="14sp" />
     </LinearLayout>
@@ -89,7 +89,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="24dp"
-        android:layout_marginTop="18dp"
+        android:layout_marginTop="16dp"
         android:text="@string/music_library"
         android:textColor="?attr/mhInk"
         android:textSize="17sp"
@@ -99,7 +99,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="24dp"
-        android:layout_marginTop="2dp"
+        android:layout_marginTop="0dp"
         android:text="@string/music_library_hint"
         android:textColor="?attr/mhMuted"
         android:textSize="13sp" />

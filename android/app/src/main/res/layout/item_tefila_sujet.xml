@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginHorizontal="16dp"
-    android:layout_marginTop="18dp"
+    android:layout_marginTop="16dp"
     android:orientation="vertical">
 
     <TextView
@@ -19,7 +19,7 @@
         android:id="@+id/tefila_sujet_count"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="2dp"
+        android:layout_marginTop="0dp"
         android:textColor="?attr/mhMuted"
         android:textSize="13sp" />
 </LinearLayout>

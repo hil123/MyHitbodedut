@@ -37,7 +37,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:paddingHorizontal="14dp"
+            android:paddingHorizontal="12dp"
             android:paddingVertical="12dp">
 
             <LinearLayout
@@ -86,7 +86,7 @@
                             android:id="@+id/widget_badge"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="6dp">
+                            android:layout_marginStart="4dp">
 
                             <ImageView
                                 android:id="@+id/widget_badge_fond"
@@ -103,7 +103,7 @@
                                 android:gravity="center_vertical"
                                 android:orientation="horizontal"
                                 android:paddingHorizontal="8dp"
-                                android:paddingVertical="2dp">
+                                android:paddingVertical="0dp">
 
                                 <ImageView
                                     android:id="@+id/widget_flame"
@@ -117,7 +117,7 @@
                                     android:id="@+id/widget_streak"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginStart="3dp"
+                                    android:layout_marginStart="4dp"
                                     android:fontFamily="sans-serif-medium"
                                     android:includeFontPadding="false"
                                     android:maxLines="1"
@@ -134,7 +134,7 @@
                         android:id="@+id/widget_minutes"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="2dp"
+                        android:layout_marginTop="0dp"
                         android:fontFamily="sans-serif"
                         android:maxLines="1"
                         android:text="@string/widget_apercu_minutes"
@@ -147,7 +147,7 @@
                         android:id="@+id/widget_chrono"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="2dp"
+                        android:layout_marginTop="0dp"
                         android:fontFamily="sans-serif"
                         android:textColor="@color/white"
                         android:textSize="26sp"
@@ -188,7 +188,7 @@
                             android:maxLines="1"
                             android:minWidth="88dp"
                             android:paddingHorizontal="16dp"
-                            android:paddingVertical="7dp"
+                            android:paddingVertical="8dp"
                             android:text="@string/widget_start"
                             android:textColor="@color/on_plate"
                             android:textSize="13sp"

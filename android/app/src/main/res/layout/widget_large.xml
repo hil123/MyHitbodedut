@@ -86,7 +86,7 @@
                             android:id="@+id/widget_badge"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="6dp">
+                            android:layout_marginStart="4dp">
 
                             <ImageView
                                 android:id="@+id/widget_badge_fond"
@@ -103,7 +103,7 @@
                                 android:gravity="center_vertical"
                                 android:orientation="horizontal"
                                 android:paddingHorizontal="8dp"
-                                android:paddingVertical="2dp">
+                                android:paddingVertical="0dp">
 
                                 <ImageView
                                     android:id="@+id/widget_flame"
@@ -117,7 +117,7 @@
                                     android:id="@+id/widget_streak"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginStart="3dp"
+                                    android:layout_marginStart="4dp"
                                     android:fontFamily="sans-serif-medium"
                                     android:includeFontPadding="false"
                                     android:maxLines="1"
@@ -134,7 +134,7 @@
                         android:id="@+id/widget_minutes"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="2dp"
+                        android:layout_marginTop="0dp"
                         android:fontFamily="sans-serif"
                         android:maxLines="1"
                         android:text="@string/widget_apercu_minutes"
@@ -147,7 +147,7 @@
                         android:id="@+id/widget_chrono"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="2dp"
+                        android:layout_marginTop="0dp"
                         android:fontFamily="sans-serif"
                         android:textColor="@color/white"
                         android:textSize="28sp"
@@ -188,7 +188,7 @@
                             android:maxLines="1"
                             android:minWidth="88dp"
                             android:paddingHorizontal="16dp"
-                            android:paddingVertical="7dp"
+                            android:paddingVertical="8dp"
                             android:text="@string/widget_start"
                             android:textColor="@color/on_plate"
                             android:textSize="13sp"
@@ -223,7 +223,7 @@
                     <FrameLayout
                         android:layout_width="24dp"
                         android:layout_height="24dp"
-                        android:layout_marginTop="3dp">
+                        android:layout_marginTop="4dp">
 
                         <ImageView
                             android:id="@+id/widget_day_fond_0"
@@ -250,7 +250,7 @@
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="2dp"
+                    android:layout_marginStart="0dp"
                     android:layout_weight="1"
                     android:gravity="center_horizontal"
                     android:orientation="vertical">
@@ -267,7 +267,7 @@
                     <FrameLayout
                         android:layout_width="24dp"
                         android:layout_height="24dp"
-                        android:layout_marginTop="3dp">
+                        android:layout_marginTop="4dp">
 
                         <ImageView
                             android:id="@+id/widget_day_fond_1"
@@ -294,7 +294,7 @@
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="2dp"
+                    android:layout_marginStart="0dp"
                     android:layout_weight="1"
                     android:gravity="center_horizontal"
                     android:orientation="vertical">
@@ -311,7 +311,7 @@
                     <FrameLayout
                         android:layout_width="24dp"
                         android:layout_height="24dp"
-                        android:layout_marginTop="3dp">
+                        android:layout_marginTop="4dp">
 
                         <ImageView
                             android:id="@+id/widget_day_fond_2"
@@ -338,7 +338,7 @@
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="2dp"
+                    android:layout_marginStart="0dp"
                     android:layout_weight="1"
                     android:gravity="center_horizontal"
                     android:orientation="vertical">
@@ -355,7 +355,7 @@
                     <FrameLayout
                         android:layout_width="24dp"
                         android:layout_height="24dp"
-                        android:layout_marginTop="3dp">
+                        android:layout_marginTop="4dp">
 
                         <ImageView
                             android:id="@+id/widget_day_fond_3"
@@ -382,7 +382,7 @@
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="2dp"
+                    android:layout_marginStart="0dp"
                     android:layout_weight="1"
                     android:gravity="center_horizontal"
                     android:orientation="vertical">
@@ -399,7 +399,7 @@
                     <FrameLayout
                         android:layout_width="24dp"
                         android:layout_height="24dp"
-                        android:layout_marginTop="3dp">
+                        android:layout_marginTop="4dp">
 
                         <ImageView
                             android:id="@+id/widget_day_fond_4"
@@ -426,7 +426,7 @@
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="2dp"
+                    android:layout_marginStart="0dp"
                     android:layout_weight="1"
                     android:gravity="center_horizontal"
                     android:orientation="vertical">
@@ -443,7 +443,7 @@
                     <FrameLayout
                         android:layout_width="24dp"
                         android:layout_height="24dp"
-                        android:layout_marginTop="3dp">
+                        android:layout_marginTop="4dp">
 
                         <ImageView
                             android:id="@+id/widget_day_fond_5"
@@ -470,7 +470,7 @@
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="2dp"
+                    android:layout_marginStart="0dp"
                     android:layout_weight="1"
                     android:gravity="center_horizontal"
                     android:orientation="vertical">
@@ -487,7 +487,7 @@
                     <FrameLayout
                         android:layout_width="24dp"
                         android:layout_height="24dp"
-                        android:layout_marginTop="3dp">
+                        android:layout_marginTop="4dp">
 
                         <ImageView
                             android:id="@+id/widget_day_fond_6"
@@ -533,8 +533,8 @@
                     android:layout_height="match_parent"
                     android:gravity="center_vertical"
                     android:orientation="vertical"
-                    android:paddingHorizontal="14dp"
-                    android:paddingVertical="10dp">
+                    android:paddingHorizontal="12dp"
+                    android:paddingVertical="8dp">
 
                     <!--
                         « serif » et non la police hébraïque de l’application : le lanceur gonfle la

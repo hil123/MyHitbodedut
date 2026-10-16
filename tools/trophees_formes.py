@@ -120,15 +120,40 @@ FORMES = {
 }
 
 
+# Les icônes des familles (16/10, variante B choisie sur planche) : au trait, boîte 24 × 24,
+# trait de 2, bouts et angles arrondis — le style des marque-pages. Cercles et rectangles
+# écrits en tracés, pour que PathParser (Android) et SVG (web) lisent la même chaîne.
+ICONES = {
+    "premier_pas": "M8 4.5c1.7 0 2.5 1.8 2.5 4s-.8 4.5-2.5 4.5S5.5 10.7 5.5 8.5 6.3 4.5 8 4.5z"
+                   "M6.5 15.5h3v2a1.5 1.5 0 0 1-3 0z"
+                   "M16 8.5c1.7 0 2.5 1.8 2.5 4s-.8 4.5-2.5 4.5-2.5-2.3-2.5-4.5.8-4 2.5-4z"
+                   "M14.5 19.5h3",
+    "seance_longue": "M4 13a8 8 0 1 0 16 0a8 8 0 1 0-16 0z" "M12 9v4l2.5 2.5" "M10 2.5h4",
+    "jours": "M5.5 5h13a2 2 0 0 1 2 2v11.5a2 2 0 0 1-2 2h-13a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2z"
+             "M3.5 10h17" "M8 3v4" "M16 3v4" "M8.5 15l2.2 2.2 4.8-4.7",
+    "serie": "M5.5 9h2a3 3 0 0 1 0 6h-2a3 3 0 0 1 0-6z"
+             "M11 9h2a3 3 0 0 1 0 6h-2a3 3 0 0 1 0-6z"
+             "M16.5 9h2a3 3 0 0 1 0 6h-2a3 3 0 0 1 0-6z",
+    "heures": "M5 3.5h14" "M5 20.5h14" "M6.5 12a5.5 5.5 0 1 0 11 0a5.5 5.5 0 1 0-11 0z" "M12 9.5V12l1.8 1.2",
+    "semaines": "M12 3l7.5 3v5.5c0 4.5-3.2 8-7.5 9.5-4.3-1.5-7.5-5-7.5-9.5V6z" "M8.5 12l2.5 2.5 4.5-5",
+    "erev_chabbat": "M10.5 10h3a1 1 0 0 1 1 1v8.5a1 1 0 0 1-1 1h-3a1 1 0 0 1-1-1V11a1 1 0 0 1 1-1z"
+                    "M12 7.5c-1.2 0-2-.9-2-2C10 4 12 2.5 12 2.5s2 1.5 2 3c0 1.1-.8 2-2 2z" "M6.5 20.5h11",
+    "retour": "M14 5l-6 7 6 7" "M8 12h8.5a4 4 0 0 1 4 4v3",
+    "plume": "M12 3l5 6-5 12-5-12z" "M10.6 11a1.4 1.4 0 1 0 2.8 0a1.4 1.4 0 1 0-2.8 0z" "M12 12.4V21",
+}
+
+
 def main():
     donnees = {"_meta": {"outil": "tools/trophees_formes.py", "boite": 100,
                          "matieres": "m métal, mr métal bombé, md métal sombre, v verre, vc verre clair, r ruban, w reflet"},
-               "formes": FORMES}
+               "formes": FORMES, "icones": ICONES}
     json.dump(donnees, open(os.path.join(RACINE, "android/app/src/main/res/raw/trophees_formes.json"), "w", encoding="utf-8"),
               ensure_ascii=False, separators=(",", ":"))
     with open(os.path.join(RACINE, "web/src/js/trophees-formes.js"), "w", encoding="utf-8") as f:
         f.write("// Généré par tools/trophees_formes.py : les objets des trophées, en tracés SVG (boîte 100 × 100).\n")
         f.write("export const FORMES = " + json.dumps(FORMES, ensure_ascii=False) + ";\n")
+        f.write("// Les icônes des familles, au trait (boîte 24 × 24).\n")
+        f.write("export const ICONES = " + json.dumps(ICONES, ensure_ascii=False) + ";\n")
     print({k: len(v["parts"]) for k, v in FORMES.items()})
 
 

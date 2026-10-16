@@ -2,17 +2,18 @@
 // familles qui montent par niveaux, la médaille passant du bronze à
 // l'argent, à l'or puis au platine. Mêmes règles que l'application Android.
 
+// L'icône : clé de ICONES (trophees-formes.js), au trait, variante B choisie le 16/10.
 // L'objet (12/10) : coupe, écusson, étoile, rosette, médaille, pièces, cristal, gemme (tools/trophees_formes.py).
 export const FAMILLES = [
-  ['premier_pas', '🌱', [1, 2, 3, 4, 5], 'rosette'],
-  ['seance_longue', '⏳', [10, 15, 20, 30, 40, 45, 50, 60, 75, 90, 105, 120, 150, 180], 'coupe'],
-  ['jours', '🌳', [7, 10, 15, 18, 20, 30, 40, 45, 50, 60, 70, 80, 90, 100, 120, 150, 180, 200, 250, 300, 365, 400, 500, 613], 'medaille'],
-  ['serie', '🔥', [3, 5, 7, 10, 15, 18, 20, 30, 40, 45, 50, 60, 70, 80, 90, 100], 'etoile'],
-  ['heures', '⭐', [1, 2, 5, 10, 15, 20, 25, 30, 40, 45, 50, 60, 75, 100, 150, 200, 250, 300], 'pieces'],
-  ['semaines', '🏅', [1, 2, 3, 4, 5, 6, 8, 10, 12, 15, 20, 26, 30, 40, 45, 52], 'ecusson'],
-  ['erev_chabbat', '🕯️', [1, 4, 12, 26, 52], 'cristal'],
-  ['retour', '🔄', [1, 3, 5, 10], 'gemme'],
-  ['plume', '✍️', [1, 10, 25, 50, 100, 150], 'coupe'],
+  ['premier_pas', 'premier_pas', [1, 2, 3, 4, 5], 'rosette'],
+  ['seance_longue', 'seance_longue', [10, 15, 20, 30, 40, 45, 50, 60, 75, 90, 105, 120, 150, 180], 'coupe'],
+  ['jours', 'jours', [7, 10, 15, 18, 20, 30, 40, 45, 50, 60, 70, 80, 90, 100, 120, 150, 180, 200, 250, 300, 365, 400, 500, 613], 'medaille'],
+  ['serie', 'serie', [3, 5, 7, 10, 15, 18, 20, 30, 40, 45, 50, 60, 70, 80, 90, 100], 'etoile'],
+  ['heures', 'heures', [1, 2, 5, 10, 15, 20, 25, 30, 40, 45, 50, 60, 75, 100, 150, 200, 250, 300], 'pieces'],
+  ['semaines', 'semaines', [1, 2, 3, 4, 5, 6, 8, 10, 12, 15, 20, 26, 30, 40, 45, 52], 'ecusson'],
+  ['erev_chabbat', 'erev_chabbat', [1, 4, 12, 26, 52], 'cristal'],
+  ['retour', 'retour', [1, 3, 5, 10], 'gemme'],
+  ['plume', 'plume', [1, 10, 25, 50, 100, 150], 'coupe'],
 ].map(([cle, icone, seuils, forme]) => ({ cle, icone, seuils, forme }));
 
 export const METAUX = ['bronze', 'argent', 'or', 'platine'];

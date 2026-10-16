@@ -45,7 +45,7 @@
                 android:foreground="?attr/selectableItemBackgroundBorderless"
                 android:gravity="center_vertical"
                 android:minHeight="36dp"
-                android:paddingStart="14dp"
+                android:paddingStart="12dp"
                 android:paddingEnd="8dp"
                 android:text="@string/siddur_nusah"
                 android:textColor="@color/white"
@@ -57,7 +57,7 @@
             android:layout_height="@dimen/hero_art_h"
             android:layout_marginStart="12dp"
             android:background="@drawable/bg_stage"
-            android:padding="5dp">
+            android:padding="4dp">
 
             <ImageView
                 android:layout_width="match_parent"

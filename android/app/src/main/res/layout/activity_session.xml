@@ -41,7 +41,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:background="@drawable/bg_stage"
-                android:padding="10dp">
+                android:padding="8dp">
 
                 <ImageView
                     android:id="@+id/session_character"
@@ -56,7 +56,7 @@
                 android:id="@+id/session_countdown"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="18dp"
+                android:layout_marginTop="16dp"
                 android:textColor="@color/white"
                 android:textSize="56sp"
                 android:textStyle="bold" />
@@ -74,7 +74,7 @@
                 android:id="@+id/session_music"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
+                android:layout_marginTop="4dp"
                 android:textAlignment="center"
                 android:textColor="?attr/mhMint"
                 android:textSize="13sp"
@@ -90,8 +90,8 @@
                 android:id="@+id/session_primary"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:paddingVertical="14dp"
+                android:layout_marginTop="16dp"
+                android:paddingVertical="12dp"
                 android:textSize="16sp" />
 
             <Button
@@ -112,7 +112,7 @@
                 style="@style/Widget.Material3.Button.TextButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="14dp"
+                android:layout_marginTop="12dp"
                 android:textColor="?attr/mhMint" />
 
             <!--
@@ -123,7 +123,7 @@
                 android:id="@+id/session_durations"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="16dp"
                 android:orientation="vertical">
 
                 <LinearLayout
@@ -139,20 +139,20 @@
                     <Button
                         android:id="@+id/duration_10"
                         style="@style/DurationButton"
-                        android:layout_marginStart="6dp"
+                        android:layout_marginStart="4dp"
                         android:tag="10" />
 
                     <Button
                         android:id="@+id/duration_15"
                         style="@style/DurationButton"
-                        android:layout_marginStart="6dp"
+                        android:layout_marginStart="4dp"
                         android:tag="15" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="6dp"
+                    android:layout_marginTop="4dp"
                     android:orientation="horizontal">
 
                     <Button
@@ -163,13 +163,13 @@
                     <Button
                         android:id="@+id/duration_60"
                         style="@style/DurationButton"
-                        android:layout_marginStart="6dp"
+                        android:layout_marginStart="4dp"
                         android:tag="60" />
 
                     <Button
                         android:id="@+id/duration_90"
                         style="@style/DurationButton"
-                        android:layout_marginStart="6dp"
+                        android:layout_marginStart="4dp"
                         android:tag="90" />
                 </LinearLayout>
             </LinearLayout>
@@ -179,7 +179,7 @@
                 style="@style/Widget.Material3.Button.TextButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
+                android:layout_marginTop="0dp"
                 android:text="@string/duration_custom"
                 android:textColor="?attr/mhMint" />
 
@@ -189,7 +189,7 @@
                 style="@style/Widget.Material3.Button.TextButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
+                android:layout_marginTop="0dp"
                 android:text="@string/session_open"
                 android:textColor="?attr/mhMint" />
 
@@ -199,7 +199,7 @@
                 layout="@layout/view_chizuk"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="18dp" />
+                android:layout_marginTop="16dp" />
 
             <!-- La hitbodedout guidée, quand elle est demandée. -->
             <include
@@ -214,7 +214,7 @@
                 style="@style/Widget.Material3.Button.TextButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
+                android:layout_marginTop="0dp"
                 android:text="@string/chizuk_stuck"
                 android:textColor="?attr/mhMint"
                 android:visibility="gone" />

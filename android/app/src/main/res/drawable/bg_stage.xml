@@ -3,5 +3,5 @@
      illustrations s'y fond, alors qu'il trancherait sur le vert foncé. -->
 <shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
     <solid android:color="?attr/mhMint" />
-    <corners android:radius="28dp" />
+    <corners android:radius="20dp" />
 </shape>

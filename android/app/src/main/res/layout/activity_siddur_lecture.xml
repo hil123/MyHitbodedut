@@ -37,7 +37,7 @@
                 android:background="@drawable/bg_rond_bandeau"
                 android:contentDescription="@string/marques_titre"
                 android:foreground="?attr/selectableItemBackgroundBorderless"
-                android:padding="13dp"
+                android:padding="12dp"
                 android:src="@drawable/ic_marque_priere" />
 
             <!-- Favori (14/10) : l'étoile ajoute ou retire le texte de la liste de la Bibliothèque. -->
@@ -56,7 +56,7 @@
             android:id="@+id/siddur_lecture_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
+            android:layout_marginTop="0dp"
             android:gravity="right"
             android:textColor="@color/white"
             android:textDirection="rtl"
@@ -67,7 +67,7 @@
             android:id="@+id/siddur_lecture_etiquettes"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
+            android:layout_marginTop="4dp"
             android:layoutDirection="rtl"
             app:chipSpacingHorizontal="6dp"
             app:chipSpacingVertical="2dp" />
@@ -76,7 +76,7 @@
             android:id="@+id/siddur_lecture_horaire"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
+            android:layout_marginTop="4dp"
             android:gravity="right"
             android:textColor="?attr/mhMint"
             android:textSize="14sp"
@@ -111,7 +111,7 @@
             android:layoutDirection="rtl"
             android:orientation="horizontal"
             android:paddingHorizontal="8dp"
-            android:paddingVertical="3dp" />
+            android:paddingVertical="4dp" />
     </HorizontalScrollView>
 
     <View
