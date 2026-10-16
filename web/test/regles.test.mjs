@@ -601,3 +601,34 @@ test('trophées à niveaux : mêmes règles que TropheesTest (12/10)', () => {
   const n = Trophees.nouveaux(g, new Set(['premier_pas:1']));
   assert.ok(n.some((x) => x.famille.cle === 'jours' && x.rang === 5));
 });
+
+// --- Dates de gain, trophées proches, bilan de la semaine (BilanTropheesTest, 16/10) ---
+import { Plaque as PlaqueB } from '../src/js/regles.js';
+test('dates de gain, proches et bilan de la semaine : mêmes cas que BilanTropheesTest', () => {
+  const ajoute = (iso, n) => { const d = new Date(`${iso}T12:00:00Z`); d.setUTCDate(d.getUTCDate() + n); return d.toISOString().slice(0, 10); };
+  const d0 = '2026-09-06'; // un dimanche
+  const jours = (n, min = 15, depuis = d0) => Object.fromEntries(Array.from({ length: n }, (_, i) => [ajoute(depuis, i), min]));
+  const serie = (faits) => PlaqueB.meilleureSerie(faits, () => false);
+  const m = jours(10);
+  const dates = Trophees.datesGain(m, new Set(), serie);
+  assert.equal(dates['premier_pas:1'], d0);
+  assert.equal(dates['premier_pas:3'], ajoute(d0, 2));
+  assert.equal(dates['jours:1'], ajoute(d0, 6));
+  assert.equal(dates['serie:1'], ajoute(d0, 2));
+  assert.deepEqual(new Set(Object.keys(dates)), Trophees.gagnes({ minutes: m, notes: 0, meilleureSerie: 10 }));
+  assert.equal(Trophees.datesGain(jours(2), new Set([ajoute(d0, 5)]), serie)['plume:1'], ajoute(d0, 5));
+  const p6 = { minutes: jours(6), notes: 0, meilleureSerie: 6 };
+  const n = Trophees.proche(p6);
+  assert.equal(n.seuil - Trophees.valeur(p6, n.f.cle), 1);
+  const p8 = { minutes: jours(8), notes: 0, meilleureSerie: 8 };
+  const l = Trophees.plusProches(p8);
+  assert.equal(l.length, 3);
+  assert.ok(l.every((e) => !Trophees.gagne(p8, e)));
+  const deux = { ...jours(3, 20, ajoute(d0, -7)), ...jours(4, 30) };
+  const b = Trophees.bilanSemaine(ajoute(d0, 8), deux, Trophees.datesGain(deux, new Set(), serie));
+  assert.equal(b.debut, d0); assert.equal(b.minutes, 120); assert.equal(b.jours, 4);
+  assert.equal(b.precedente, 60); assert.equal(b.ecart, 60); assert.equal(b.record, true);
+  assert.equal(Trophees.bilanSemaine(ajoute(d0, 30), jours(3), {}), null);
+  const premier = Trophees.bilanSemaine(ajoute(d0, 7), jours(3), {});
+  assert.equal(premier.record, false); assert.equal(premier.precedente, 0);
+});

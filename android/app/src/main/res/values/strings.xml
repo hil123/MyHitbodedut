@@ -1004,4 +1004,21 @@
         <item quantity="one">Série : %d jour</item>
         <item quantity="other">Série : %d jours</item>
     </plurals>
+    <!-- Les trophées, lot du 16/10 : détail, date, proches, filtre, accueil, partage, bilan, rappel. -->
+    <string name="trophee_gagne_le">Gagné le %1$s</string>
+    <string name="trophee_a_gagner">À gagner · %1$d / %2$d</string>
+    <string name="trophee_detail_grade">En %1$s : c’était ton %2$dᵉ trophée.</string>
+    <string name="trophees_proches_titre">Les plus proches</string>
+    <string name="trophees_filtre_tous">Tous</string>
+    <string name="trophees_filtre">Montrer les trophées : %1$s</string>
+    <string name="accueil_prochain_trophee">Prochain trophée : %1$s · encore %2$d</string>
+    <string name="grade_partager">Partager mon grade</string>
+    <string name="grade_partage_texte">Grade %1$s sur MyHitbodedut : %2$d trophées, jour après jour.</string>
+    <string name="bilan_titre">Ta semaine</string>
+    <string name="bilan_minutes">%1$s de hitbodedout, sur %2$s.</string>
+    <string name="bilan_plus">%1$s de plus que la semaine d’avant.</string>
+    <string name="bilan_record">Ta meilleure semaine jusqu’ici.</string>
+    <string name="bilan_trophees">Trophées gagnés cette semaine :</string>
+    <string name="rappel_trophee_proche">Plus que %1$d pour « %2$s ».</string>
+    <string name="rappel_trophee_reglage">Dire dans le rappel qu’un trophée est tout proche</string>
 </resources>

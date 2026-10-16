@@ -986,4 +986,21 @@
         <item quantity="two">רצף: יומיים</item>
         <item quantity="other">רצף: %d ימים</item>
     </plurals>
+    <!-- Les trophées, lot du 16/10 : détail, date, proches, filtre, accueil, partage, bilan, rappel. -->
+    <string name="trophee_gagne_le">הושג ב־%1$s</string>
+    <string name="trophee_a_gagner">להשגה · %1$d / %2$d</string>
+    <string name="trophee_detail_grade">ב%1$s: זה היה הגביע ה־%2$d שלך.</string>
+    <string name="trophees_proches_titre">הכי קרובים</string>
+    <string name="trophees_filtre_tous">הכול</string>
+    <string name="trophees_filtre">להציג גביעים: %1$s</string>
+    <string name="accueil_prochain_trophee">הגביע הבא: %1$s · עוד %2$d</string>
+    <string name="grade_partager">לשתף את הדרגה שלי</string>
+    <string name="grade_partage_texte">דרגת %1$s ב־MyHitbodedut: %2$d גביעים, יום אחר יום.</string>
+    <string name="bilan_titre">השבוע שלך</string>
+    <string name="bilan_minutes">%1$s של התבודדות, ב־%2$s.</string>
+    <string name="bilan_plus">%1$s יותר מהשבוע הקודם.</string>
+    <string name="bilan_record">השבוע הטוב ביותר שלך עד עכשיו.</string>
+    <string name="bilan_trophees">גביעים שהושגו השבוע:</string>
+    <string name="rappel_trophee_proche">נשארו רק %1$d ל„%2$s”.</string>
+    <string name="rappel_trophee_reglage">לומר בתזכורת כשגביע ממש קרוב</string>
 </resources>

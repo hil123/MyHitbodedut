@@ -124,6 +124,41 @@ object Trophees {
     fun prochain(p: Pratique): Niveau? = chemin.filterNot { gagne(p, it) }
         .maxWithOrNull(compareBy<Niveau> { fraction(p, it) }.thenByDescending { cout(it.famille, it.seuil) })
 
+    /**
+     * Les plus proches (16/10) : les [k] trophées à gagner les plus avancés ; à égalité, les
+     * plus faciles. L'en-tête du grade les montre, pour dire comment y monter.
+     */
+    fun plusProches(p: Pratique, k: Int = 3): List<Niveau> = chemin.filterNot { gagne(p, it) }
+        .sortedWith(compareByDescending<Niveau> { fraction(p, it) }.thenBy { cout(it.famille, it.seuil) })
+        .take(k)
+
+    /**
+     * Le prochain trophée, s'il est tout proche (16/10) : à un dixième du seuil, ou à une
+     * unité pour les petits seuils (« 7 jours d'affilée » à 6). Le rappel du jour le dit.
+     */
+    fun proche(p: Pratique): Niveau? = prochain(p)?.takeIf {
+        val reste = it.seuil - valeur(p, it.famille)
+        reste in 1..maxOf(1, it.seuil / 10)
+    }
+
+    /**
+     * Le jour où chaque niveau a été gagné (16/10) : l'historique rejoué jour après jour,
+     * le premier jour où la pratique atteint le seuil. [notes] : les jours qui portent une
+     * note ; [exempt] : les jours qui ne cassent pas la série (Plaque.meilleureSerie).
+     */
+    fun datesGain(minutes: Map<LocalDate, Int>, notes: Set<LocalDate>, exempt: (LocalDate) -> Boolean): Map<String, LocalDate> {
+        val res = mutableMapOf<String, LocalDate>()
+        val restants = chemin.toMutableList()
+        for (d in (minutes.filterValues { it > 0 }.keys + notes).toSortedSet()) {
+            val m = minutes.filterKeys { !it.isAfter(d) }
+            val faits = m.filterValues { it > 0 }.keys
+            val p = Pratique(m, notes.count { !it.isAfter(d) }, Plaque.meilleureSerie(faits, exempt))
+            restants.removeAll { n -> gagne(p, n).also { if (it) res[n.cle] = d } }
+            if (restants.isEmpty()) break
+        }
+        return res
+    }
+
     /** Où l'on en est vers le niveau suivant ; au sommet, le dernier seuil. */
     data class Progres(val valeur: Int, val cible: Int) {
         val fraction: Float get() = if (cible <= 0) 1f else (valeur.coerceAtMost(cible).toFloat() / cible)

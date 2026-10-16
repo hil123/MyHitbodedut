@@ -107,3 +107,59 @@ export function prochain(p) {
 /** Le grade (15/10, Trophees.grade) selon le nombre de trophées gagnés : bronze, argent dès 10, or dès 25, platine dès 50. */
 export const SEUILS_GRADES = [0, 10, 25, 50];
 export const grade = (compte) => METAUX[SEUILS_GRADES.filter((s) => compte >= s).length - 1];
+
+/** Les plus proches (16/10, Trophees.plusProches) : les k trophées à gagner les plus avancés ; à égalité, les plus faciles. */
+export function plusProches(p, k = 3) {
+  return chemin.filter((e) => !gagne(p, e))
+    .sort((a, b) => fraction(p, b) - fraction(p, a) || cout(a.f, a.seuil) - cout(b.f, b.seuil))
+    .slice(0, k);
+}
+
+/** Le prochain, s'il est tout proche (Trophees.proche) : à un dixième du seuil, ou à une unité pour les petits seuils. */
+export function proche(p) {
+  const e = prochain(p);
+  if (!e) return null;
+  const reste = e.seuil - valeur(p, e.f.cle);
+  return reste >= 1 && reste <= Math.max(1, Math.floor(e.seuil / 10)) ? e : null;
+}
+
+/**
+ * Le jour où chaque niveau a été gagné (Trophees.datesGain) : l'historique rejoué jour
+ * après jour. minutes : { iso: min } ; notes : Set d'iso ; serie(faits) : la meilleure série.
+ */
+export function datesGain(minutes, notes, serie) {
+  const res = {};
+  let restants = [...chemin];
+  const jours = [...new Set([...Object.keys(minutes).filter((k) => minutes[k] > 0), ...notes])].sort();
+  for (const d of jours) {
+    const m = Object.fromEntries(Object.entries(minutes).filter(([k]) => k <= d));
+    const faits = new Set(Object.keys(m).filter((k) => m[k] > 0));
+    const p = { minutes: m, notes: [...notes].filter((k) => k <= d).length, meilleureSerie: serie(faits) };
+    restants = restants.filter((e) => { if (gagne(p, e)) { res[e.cle] = d; return false; } return true; });
+    if (!restants.length) break;
+  }
+  return res;
+}
+
+// --- Le bilan de la semaine (BilanSemaine.kt, 16/10) --------------------------------------
+const ajoute = (iso, n) => { const d = new Date(`${iso}T12:00:00Z`); d.setUTCDate(d.getUTCDate() + n); return d.toISOString().slice(0, 10); };
+export const debutSemaine = (iso) => ajoute(iso, -semaineDe(iso));
+
+/** Le bilan de la semaine écoulée (dimanche → samedi) vue depuis aujourdhui ; null si elle n'a rien compté. */
+export function bilanSemaine(aujourdhui, minutes, dates) {
+  const debut = ajoute(debutSemaine(aujourdhui), -7);
+  const fin = ajoute(debut, 6);
+  const somme = (a, b) => Object.entries(minutes).filter(([k]) => k >= a && k <= b).reduce((s, [, v]) => s + v, 0);
+  const total = somme(debut, fin);
+  if (total <= 0) return null;
+  const avant = {};
+  for (const [k, v] of Object.entries(minutes)) if (k < debut) avant[debutSemaine(k)] = (avant[debutSemaine(k)] ?? 0) + v;
+  const meilleureAvant = Math.max(0, ...Object.values(avant));
+  const precedente = somme(ajoute(debut, -7), ajoute(debut, -1));
+  return {
+    debut, minutes: total, precedente, ecart: total - precedente,
+    jours: Object.entries(minutes).filter(([k, v]) => k >= debut && k <= fin && v > 0).length,
+    record: meilleureAvant > 0 && total > meilleureAvant,
+    trophees: chemin.filter((e) => dates[e.cle] && dates[e.cle] >= debut && dates[e.cle] <= fin),
+  };
+}

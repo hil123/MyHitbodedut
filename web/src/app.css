@@ -1095,3 +1095,71 @@ button.corps { min-height: 44px; }
 .presentation .principal { margin-top: 8px; }
 .presentation-bas { display: flex; justify-content: space-between; }
 .presentation-bas .texte-lien { background: none; border: 0; color: var(--brand); font: inherit; font-weight: 600; min-height: 44px; padding: 0 8px; cursor: pointer; }
+
+/* --- Les trophées, lot du 16/10 -------------------------------------------------------- */
+.grade-tete { display: block; }
+.grade-ligne { display: flex; align-items: center; gap: 12px; }
+.grade-barre span, .trophee-barre span[data-largeur] { width: 0; transition: width 700ms cubic-bezier(.2, .7, .2, 1); }
+.grade-proches { margin-top: 14px; display: flex; flex-direction: column; gap: 2px; }
+.grade-proches-titre { margin: 0 0 4px; font-size: 12px; font-weight: 700; letter-spacing: .04em; color: var(--muted); text-transform: uppercase; }
+.proche { display: flex; align-items: center; gap: 10px; min-height: 44px; padding: 4px 0; background: none; border: 0; font: inherit; color: var(--ink); text-align: start; cursor: pointer; }
+.proche-objet { flex: none; display: inline-flex; opacity: .6; }
+.proche-texte { flex: 1; min-width: 0; font-size: 14px; }
+.proche-compte { flex: none; font-size: 13px; font-weight: 700; color: var(--brand); font-variant-numeric: tabular-nums; }
+.grade-partager { display: block; margin: 10px auto 0; color: var(--brand); }
+.filtre-trophees { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; margin: 12px -16px 0; padding: 4px 16px; }
+.filtre-trophees::-webkit-scrollbar { display: none; }
+.filtre-trophees .puce-choix { flex: none; min-height: 40px; white-space: nowrap; }
+.ligne-etape, .ligne-ici { width: 100%; background: none; border: 0; padding: 0; font: inherit; color: inherit; text-align: start; cursor: pointer; }
+.ligne-ici { display: block; background: var(--card); padding: 14px 16px; border: 2px solid var(--brand); }
+.ligne-etape .trophee-but, .ligne-etape .trophee-compte, .ligne-ici .trophee-but, .ligne-ici .trophee-compte, .ici-tag, .ligne-ici .trophee-barre { display: block; }
+.ligne-objet { position: relative; z-index: 1; display: inline-flex; }
+.ligne-grade { display: flex; align-items: center; justify-content: center; gap: 8px; }
+/* B : la ligne se remplit — chaque trait pousse vers le bas, la médaille apparaît. */
+.ligne-etape.pousse .ligne-trait { animation: trait-pousse 260ms ease-out both; animation-delay: var(--retard, 0ms); transform-origin: top; }
+.ligne-etape.pousse .ligne-objet { animation: objet-parait 300ms ease-out both; animation-delay: calc(var(--retard, 0ms) + 120ms); }
+@keyframes trait-pousse { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+@keyframes objet-parait { from { opacity: 0; transform: scale(.7); } to { opacity: 1; transform: none; } }
+/* A : le nouveau trophée se retourne, puis un reflet le traverse. */
+.ligne-etape.neuf .ligne-objet, .neuf-retourne { animation: retourne 650ms cubic-bezier(.3, .7, .3, 1) 400ms both; overflow: hidden; border-radius: 50%; }
+.ligne-etape.neuf .ligne-objet::after, .neuf-retourne::after {
+  content: ""; position: absolute; inset: 0; background: linear-gradient(110deg, transparent 35%, rgba(255,255,255,.75) 50%, transparent 65%);
+  transform: translateX(-120%); animation: reflet 700ms ease-out 1050ms both; pointer-events: none;
+}
+.detail-objet { position: relative; display: flex; justify-content: center; margin: 4px auto 8px; width: 120px; }
+@keyframes retourne { from { transform: perspective(400px) rotateY(-180deg); } to { transform: perspective(400px) rotateY(0); } }
+@keyframes reflet { to { transform: translateX(120%); } }
+/* D : le presque-atteint pulse une fois. */
+.ligne-ici.presque .trophee-barre { animation: pulse 900ms ease-in-out 900ms 1; }
+@keyframes pulse { 50% { box-shadow: 0 0 0 5px color-mix(in srgb, var(--brand) 25%, transparent); } }
+/* E : des étincelles du grade. */
+.etincelle { position: absolute; left: 50%; top: 50%; width: 7px; height: 7px; margin: -3.5px; border-radius: 50%; z-index: 3; pointer-events: none;
+  animation: etincelle 900ms ease-out both; }
+@keyframes etincelle { 0% { transform: translate(0, 0) scale(.4); opacity: 0; } 25% { opacity: 1; } 100% { transform: translate(var(--dx), var(--dy)) scale(1); opacity: 0; } }
+.medaille-grade, .grade-morph { position: relative; }
+/* C : le changement de grade — rayons lents, l'ancien matériau se fond dans le nouveau. */
+.grade-morph { width: 140px; height: 140px; display: grid; place-items: center; }
+.grade-morph > span:not(.rayons) { grid-area: 1 / 1; position: relative; }
+.grade-fete-carte h2 { position: relative; }
+.rayons { position: absolute; left: 50%; top: 50%; width: 300px; height: 300px; margin: -150px 0 0 -150px; border-radius: 50%; opacity: .55; pointer-events: none;
+  background: repeating-conic-gradient(from 0deg, color-mix(in srgb, #f6d86b 70%, transparent) 0 6deg, transparent 6deg 18deg);
+  -webkit-mask: radial-gradient(closest-side, #000 35%, transparent); mask: radial-gradient(closest-side, #000 35%, transparent);
+  animation: rayons 12s linear infinite, rayons-entree 1.5s ease-out both; }
+.morph-ancien { animation: morph-sort 1.2s ease-in-out 300ms both; }
+.morph-nouveau { animation: morph-entre 1.2s ease-in-out 300ms both; }
+@keyframes rayons { to { rotate: 360deg; } }
+@keyframes rayons-entree { from { opacity: 0; scale: .6; } to { opacity: .55; scale: 1; } }
+@keyframes morph-sort { from { opacity: 1; transform: scale(1); } to { opacity: 0; transform: scale(.85); } }
+@keyframes morph-entre { from { opacity: 0; transform: scale(1.15); } to { opacity: 1; transform: scale(1); } }
+.feuille-trophee h2, .feuille-bilan h2 { text-align: center; }
+.detail-famille { margin: 0; text-align: center; color: var(--muted); font-size: 14px; }
+.detail-date { margin: 8px 0 0; text-align: center; font-weight: 700; color: var(--brand); }
+.bilan-total { margin: 0; font-size: 17px; font-weight: 700; color: var(--ink); }
+.bilan-record { margin: 6px 0 0; font-weight: 700; color: var(--brand); }
+.bilan-trophees { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+@media (prefers-reduced-motion: reduce) {
+  .grade-barre span, .trophee-barre span[data-largeur] { transition: none; }
+  .ligne-etape.pousse .ligne-trait, .ligne-etape.pousse .ligne-objet, .ligne-etape.neuf .ligne-objet, .neuf-retourne,
+  .ligne-etape.neuf .ligne-objet::after, .neuf-retourne::after, .ligne-ici.presque .trophee-barre, .rayons, .morph-ancien, .morph-nouveau { animation: none; }
+  .morph-ancien { opacity: 0; }
+}

@@ -117,6 +117,11 @@ export function creeStore(stockage, { maintenant = () => new Date(), fuseau } = 
     tropheesVus: () => { const v = get('trophees_vus', null); return Array.isArray(v) ? new Set(v) : null; },
     setTropheesVus: (cles) => set('trophees_vus', [...cles]),
     nombreNotes: () => Object.values(days()).filter((r) => (r.note ?? '').trim()).length,
+    /** Les jours qui portent une note (Trophees.datesGain, 16/10). */
+    joursAvecNote: () => new Set(Object.values(days()).filter((r) => (r.note ?? '').trim()).map((r) => r.date)),
+    /** Le dernier bilan de semaine montré : le dimanche de la semaine résumée (16/10). */
+    bilanVu: () => get('bilan_vu', null),
+    setBilanVu: (iso) => set('bilan_vu', iso),
     /** La hilloula du jour sur la carte du jour (11/10) : affichée par défaut. */
     hilloulotAffichees: () => get('hilloulot_affichees', true) !== false,
     setHilloulotAffichees: (v) => set('hilloulot_affichees', !!v),

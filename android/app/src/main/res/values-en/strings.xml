@@ -958,4 +958,21 @@
         <item quantity="one">Streak: %d day</item>
         <item quantity="other">Streak: %d days</item>
     </plurals>
+    <!-- Les trophées, lot du 16/10 : détail, date, proches, filtre, accueil, partage, bilan, rappel. -->
+    <string name="trophee_gagne_le">Earned on %1$s</string>
+    <string name="trophee_a_gagner">To earn · %1$d / %2$d</string>
+    <string name="trophee_detail_grade">In %1$s: it was your trophy no. %2$d.</string>
+    <string name="trophees_proches_titre">Closest</string>
+    <string name="trophees_filtre_tous">All</string>
+    <string name="trophees_filtre">Show trophies: %1$s</string>
+    <string name="accueil_prochain_trophee">Next trophy: %1$s · %2$d to go</string>
+    <string name="grade_partager">Share my grade</string>
+    <string name="grade_partage_texte">%1$s grade on MyHitbodedut: %2$d trophies, day after day.</string>
+    <string name="bilan_titre">Your week</string>
+    <string name="bilan_minutes">%1$s of hitbodedut, over %2$s.</string>
+    <string name="bilan_plus">%1$s more than the week before.</string>
+    <string name="bilan_record">Your best week so far.</string>
+    <string name="bilan_trophees">Trophies earned this week:</string>
+    <string name="rappel_trophee_proche">Only %1$d left for “%2$s”.</string>
+    <string name="rappel_trophee_reglage">Say in the reminder when a trophy is very close</string>
 </resources>
