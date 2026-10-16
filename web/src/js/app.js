@@ -99,14 +99,25 @@ function appliqueApparence() {
 // --- Feuille de choix : ce que sont les AlertDialog d'Android -----------------------
 function feuille(titre, construire) {
   const voile = h('div', { class: 'voile', role: 'presentation' });
-  const fermer = () => voile.remove();
+  // Le focus revient où il était ; Échap ferme ; Tab reste dans la feuille (audit du 16/10).
+  const avant = document.activeElement;
+  const fermer = () => { voile.remove(); if (avant?.isConnected) avant.focus(); };
   const f = h('div', { class: 'feuille', role: 'dialog', 'aria-modal': 'true', 'aria-label': titre },
     h('h2', {}, titre));
   construire(f, fermer);
   voile.addEventListener('click', (e) => { if (e.target === voile) fermer(); });
+  voile.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') { e.preventDefault(); fermer(); return; }
+    if (e.key !== 'Tab') return;
+    const l = [...f.querySelectorAll('button, input, textarea, select, a[href], [tabindex]:not([tabindex="-1"])')].filter((x) => !x.disabled && x.offsetParent !== null);
+    if (!l.length) return;
+    const premier = l[0], dernier = l[l.length - 1];
+    if (e.shiftKey && document.activeElement === premier) { e.preventDefault(); dernier.focus(); }
+    else if (!e.shiftKey && document.activeElement === dernier) { e.preventDefault(); premier.focus(); }
+  });
   voile.append(f);
   document.body.append(voile);
-  f.querySelector('button, input')?.focus();
+  (f.querySelector('textarea, input') ?? f.querySelector('button'))?.focus();
 }
 
 function choisirDans(titre, options, courante, onChoisi) {
@@ -119,10 +130,10 @@ function choisirDans(titre, options, courante, onChoisi) {
 }
 
 /** DureeSeance.choisir : les durées proposées, puis « Durée réglable… ». */
-function choisirDuree(onChoisi) {
+function choisirDuree(onChoisi, titre = tr.t('settings_target')) {
   const libelles = [...DureeSeance.PROPOSEES.map((m) => tr.duree(m)), tr.t('duration_custom')];
   const i = DureeSeance.PROPOSEES.indexOf(store.targetMinutes());
-  choisirDans(tr.t('settings_target'), libelles, i, (choix) => {
+  choisirDans(titre, libelles, i, (choix) => {
     if (choix < DureeSeance.PROPOSEES.length) onChoisi(DureeSeance.PROPOSEES[choix]);
     else saisirDuree(onChoisi);
   });
@@ -188,7 +199,19 @@ const morceauChoisi = () => morceaux.find((m) => m.id === store.musicTrackId()) 
  * Un message bref en bas de l'écran (le Toast d'Android), qui ne bloque
  * rien : une boîte d'alerte interromprait la séance.
  */
+// Un message à la fois : le suivant attend la fin du précédent au lieu de l'effacer (audit du 16/10).
+let finToast = 0;
 function signale(texte) {
+  const attente = finToast - Date.now();
+  if (attente > 0 && document.querySelector('.toast')) {
+    finToast += 3500;
+    setTimeout(() => montreToast(texte), attente);
+    return;
+  }
+  finToast = Date.now() + 3500;
+  montreToast(texte);
+}
+function montreToast(texte) {
   document.querySelector('.toast')?.remove();
   const t = h('div', { class: 'toast', role: 'status' }, texte);
   document.body.append(t);
@@ -2166,8 +2189,10 @@ function objetTrophee(forme, metal, icone, taille) {
     ...f.parts.map(([matiere, d]) => el('path', { d, fill: remplis[matiere] })),
     ICONES[icone]
       // L'icône de la famille au trait (16/10), du ton sombre du métal, centrée sur l'emblème.
-      ? el('path', { d: ICONES[icone], transform: `translate(${ex - et * 0.575} ${ey - et * 0.575}) scale(${et * 1.15 / 24})`,
-        fill: 'none', stroke: sombre, 'stroke-width': 2, 'stroke-linecap': 'round', 'stroke-linejoin': 'round', opacity: metal ? '1' : '.55' })
+      // Trait d'épaisseur constante à l'écran (au moins 1,3 px) et emblème d'au moins 20 % : lisible en liste (audit du 16/10).
+      ? ((cote) => el('path', { d: ICONES[icone], transform: `translate(${ex - cote / 2} ${ey - cote / 2}) scale(${cote / 24})`,
+        fill: 'none', stroke: sombre, 'stroke-width': Math.max(1.3, taille / 45), 'vector-effect': 'non-scaling-stroke',
+        'stroke-linecap': 'round', 'stroke-linejoin': 'round', opacity: metal ? '1' : '.7' }))(Math.max(et * 1.15, 20))
       : el('text', { x: ex, y: ey, 'font-size': et, 'text-anchor': 'middle', 'dominant-baseline': 'central', opacity: metal ? '1' : '.45' }, icone));
 }
 
@@ -2635,7 +2660,7 @@ function ajoutTemps(iso, montrer = null) {
             store.addSession(m, { date: iso });
             signale(tr.t('jour_ajoute', tr.duree(m)));
             rendre();
-          });
+          }, tr.t('offline_how_long'));
         } }, tr.t('jour_ajouter_temps'))));
   });
 }
@@ -3119,7 +3144,9 @@ function rendre() {
   // La position de défilement survit à un nouveau rendu du même écran.
   const avant = app.querySelector('.defile')?.scrollTop ?? 0;
   const ecran = ecranCourant();
-  if (ecran !== 'seance') arreteTic();
+  // L'horloge tourne tant qu'une hitbodedout est en cours, quel que soit l'écran : sinon sa fin
+  // n'était vue qu'au toucher suivant (audit du 16/10).
+  if (ecran !== 'seance' && !store.isSessionRunning()) arreteTic();
   if (ecran !== 'bravo') arreteDanse();
   const memeEcran = app.dataset.ecran === `${ecran}/${onglet}`;
   app.replaceChildren();
@@ -3157,7 +3184,7 @@ function rendre() {
   // En quittant la lecture, le bouton se replie ; l'écran suivant le retrouve en pastille.
   if (!ECRANS_LUS.includes(ecran)) { reglagesOuverts = false; choixNusahOuvert = false; }
   ajusteLesTextes();
-  if (ecran === 'seance') demarreTic();
+  if (ecran === 'seance' || store.isSessionRunning()) demarreTic();
   if (ecran === 'seance' && store.isSessionRunning()) attendreCalme(); else arreteCalme();
   if (ecran === 'bravo') danse();
 }

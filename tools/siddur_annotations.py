@@ -148,6 +148,28 @@ def annoter(texte_id, sections, nusah):
             if bi > 0 and cons[bi - 1] and all(m in txt[bi - 1] for m in mots_cles):
                 prend(bi - 1, c, libelle)
 
+        # Ta'hanoun du siddour ashkénaze (audit du 16/10) : il n'a pas de section à lui, il est
+        # dans « אחר העמידה » autour d'Avinou malkénou. Le Vidouï et les treize attributs avant ;
+        # après, la consigne « בשני וחמישי יאמר והוא רחום », le long והוא רחום (lundi et jeudi),
+        # puis la chute sur la face (« ויאמר דוד ») jusqu'au demi-Kaddich, qui se dit toujours.
+        if nusah == "ashkenaz" and office and titre == "אחר העמידה":
+            am = next((k for k, y in enumerate(txt) if cons[k] and "אומרים כאן אבינו מלכנו" in y), None)
+            lj = next((k for k, y in enumerate(txt) if cons[k] and y.startswith("בשני וחמישי יאמר והוא רחום")), None)
+            dd = next((k for k, y in enumerate(txt) if not cons[k] and y.startswith("ויאמר דוד")), None)
+            # La fin : la consigne du demi-Kaddich (Cha'harit) ou le Kaddich lui-même (Min'ha).
+            kd = next((k for k, y in enumerate(txt) if dd is not None and k > dd
+                       and ((cons[k] and "קדיש" in y) or (not cons[k] and commence(y, "יתגדל")))), None)
+            if am is not None and txt[0].startswith("טעם נכון למה נתקן הוידוי"):
+                for k in range(0, am):
+                    prend(k, "tahanoun_" + office)
+            if lj is not None and dd is not None and lj < dd:
+                prend(lj, "tahanoun_" + office)
+                for k in range(lj + 1, dd):
+                    prend(k, "lundi_jeudi")
+            if dd is not None and kd is not None:
+                for k in range(dd, kd):
+                    prend(k, "tahanoun_" + office)
+
         # Anénou : l'officiant le dit dans sa répétition, bénédiction à part
         # entre « גואל ישראל » et « רפאנו » ; le particulier, dans « שומע
         # תפלה ». On les distingue par leur place : avant ou après « רפאנו ».

@@ -33,3 +33,12 @@ test('Jérusalem (Pourim le 15) : la ville, pas les localités voisines', async 
   for (const [n, [la, lo]] of Object.entries(dedans)) assert.ok(aJerusalem(la, lo), n);
   for (const [n, [la, lo]] of Object.entries(dehors)) assert.ok(!aJerusalem(la, lo), n);
 });
+
+test('Ta\'hanoun du siddour ashkénaze annoté, comme Edot et Sfard (audit du 16/10)', async () => {
+  const { readFileSync } = await import('node:fs');
+  const a = JSON.parse(readFileSync(new URL('../../android/app/src/main/res/raw/siddur_annotations.json', import.meta.url), 'utf8'));
+  for (const office of ['chaharit', 'minha']) {
+    assert.ok(a.ashkenaz[office].some((e) => e.si === `tahanoun_${office}` && e.empreinte.startsWith('ויאמר דוד')), office);
+  }
+  assert.ok(a.ashkenaz.chaharit.some((e) => e.si === 'lundi_jeudi' && e.empreinte.startsWith('והוא רחום')));
+});

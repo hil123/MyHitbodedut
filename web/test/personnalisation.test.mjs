@@ -21,3 +21,14 @@ test('écran d\'ouverture et Levana', () => {
   s.setLevanaAffichee(false);
   assert.equal(s.levanaAffichee(), false);
 });
+
+test('Réinitialiser efface réglages et journal (audit du 16/10)', () => {
+  const m = memoire();
+  const s = creeStore(m);
+  s.setSourceHalakha('ben_ish_hai');
+  s.addSession(15);
+  assert.ok(m.getItem('myhitbodedut') && m.getItem('myhitbodedut-journal'));
+  s.reinitialiser();
+  assert.equal(m.getItem('myhitbodedut'), null);
+  assert.equal(m.getItem('myhitbodedut-journal'), null);
+});

@@ -44,6 +44,7 @@ class TropheeDessin(context: Context, forme: Trophees.Forme, private val metal: 
     private val texte = Paint(Paint.ANTI_ALIAS_FLAG).apply { textAlign = Paint.Align.CENTER }
     private val trait = traitIcone()
     private val traces = Companion.icones(context)
+    private val densite = context.resources.displayMetrics.density
 
     override fun draw(c: Canvas) {
         val (clair, fonce, sombre) = teintes(metal)
@@ -70,8 +71,11 @@ class TropheeDessin(context: Context, forme: Trophees.Forme, private val metal: 
         if (trace != null) {
             // L'icône de la famille, au trait, du ton sombre du métal (16/10) ; estompée sans métal.
             trait.color = sombre
-            trait.alpha = if (metal != null) 0xFF else 0x8C
-            dessinerIcone(c, trace, embleme[0], embleme[1], embleme[2] * 1.15f, trait)
+            trait.alpha = if (metal != null) 0xFF else 0xB3
+            // Emblème d'au moins 20 % et trait d'au moins 1,3 dp à l'écran : lisible en liste (audit du 16/10).
+            val taille = maxOf(embleme[2] * 1.15f, 20f)
+            trait.strokeWidth = maxOf(2f, 1.3f * densite / ((cote / 100f) * (taille / 24f)))
+            dessinerIcone(c, trace, embleme[0], embleme[1], taille, trait)
         } else {
             texte.textSize = embleme[2]
             texte.alpha = if (metal != null) 0xFF else 0x73

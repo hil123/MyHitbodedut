@@ -38,8 +38,6 @@ const PREFS_JOURNAL = 'myhitbodedut-journal';
 export function memoire() {
   const m = new Map();
   return {
-    /** Réinitialiser l'application (12/10) : réglages et journal effacés de ce navigateur. */
-    reinitialiser: () => { try { stockage.removeItem(PREFS); stockage.removeItem(PREFS_JOURNAL); } catch { /* rien à effacer */ } },
     getItem: (k) => (m.has(k) ? m.get(k) : null),
     setItem: (k, v) => m.set(k, String(v)),
     removeItem: (k) => m.delete(k),
@@ -97,6 +95,8 @@ export function creeStore(stockage, { maintenant = () => new Date(), fuseau } = 
   };
 
   const store = {
+    /** Réinitialiser l'application (12/10) : réglages et journal effacés de ce navigateur (audit du 16/10 : la méthode manquait). */
+    reinitialiser: () => { try { stockage.removeItem(PREFS); stockage.removeItem(PREFS_JOURNAL); } catch { /* rien à effacer */ } },
     today,
     days,
     record: (date = today()) => days()[date] ?? null,
