@@ -219,6 +219,8 @@ object VueJour {
 
     private fun lien(c: Context, libelle: String, action: View.OnClickListener) = texte(c, libelle, 15f, R.color.brand, gras = true, haut = 4).apply {
         setPadding(0, dp(c, 6), 0, dp(c, 6))
+        minHeight = dp(c, 48)
+        gravity = android.view.Gravity.CENTER_VERTICAL or android.view.Gravity.START
         foreground = c.getDrawable(android.R.drawable.list_selector_background)
         setOnClickListener(action)
     }

@@ -218,6 +218,9 @@ class SiddurLectureActivity : AppCompatActivity() {
                 text = (lignes[position] as SiddurJour.Ligne.Titre).texte
                 textSize = 13f
                 setPadding(dp(10), dp(4), dp(10), dp(4))
+                // 48 dp de haut : une cible qu'on touche sans viser (audit du 16/10).
+                minHeight = dp(48)
+                gravity = android.view.Gravity.CENTER
                 setTextColor(rendu.discret)
                 PoliceHebraique.appliquer(this)
                 foreground = ContextCompat.getDrawable(context, ondulation)

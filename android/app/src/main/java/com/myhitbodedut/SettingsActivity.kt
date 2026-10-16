@@ -8,6 +8,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.LinearLayout
@@ -344,9 +345,25 @@ class SettingsActivity : AppCompatActivity() {
     /** Pose la valeur sans déclencher l'écouteur, puis le réarme. */
     private fun bindSwitch(id: Int, checked: Boolean, onChange: (Boolean) -> Unit) {
         val view = findViewById<MaterialSwitch>(id)
+        // Sans texte propre, l'interrupteur prend le libellé de sa ligne : TalkBack le lisait
+        // sans nom (audit du 16/10).
+        if (view.text.isNullOrBlank() && view.contentDescription.isNullOrBlank()) {
+            (view.parent as? ViewGroup)?.let { libelleDe(it, view) }?.let { view.contentDescription = it }
+        }
         view.setOnCheckedChangeListener(null)
         view.isChecked = checked
         view.setOnCheckedChangeListener { _, value -> onChange(value) }
+    }
+
+    /** Le premier texte d'une ligne, hors l'interrupteur lui-même. */
+    private fun libelleDe(g: ViewGroup, sauf: View): CharSequence? {
+        for (i in 0 until g.childCount) {
+            val v = g.getChildAt(i)
+            if (v === sauf) continue
+            if (v is TextView && v !is android.widget.CompoundButton && !v.text.isNullOrBlank()) return v.text
+            if (v is ViewGroup) libelleDe(v, sauf)?.let { return it }
+        }
+        return null
     }
 
     private fun renderValues() {

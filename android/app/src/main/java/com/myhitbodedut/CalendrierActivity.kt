@@ -153,11 +153,11 @@ class CalendrierActivity : AppCompatActivity() {
                             background = GradientDrawable().apply { shape = GradientDrawable.OVAL; setColor(brand) }
                         })
                         addView(bas)
-                        background = GradientDrawable().apply {
+                        background = android.graphics.drawable.InsetDrawable(GradientDrawable().apply {
                             cornerRadius = dp(10).toFloat()
                             setColor(if (j.chome) ColorUtils.setAlphaComponent(brand, 0x1A) else 0)
                             if (d == choisi) setStroke(dp(2), brand)
-                        }
+                        }, dp(2), 0, dp(2), 0)
                         contentDescription = listOf(d.toString(), j.dateHebraique).plus(
                             j.fetes.mapNotNull { Libelles.res("fete_$it")?.let(::getString) }).joinToString(" · ")
                         setOnClickListener { choisi = d; afficher() }
@@ -196,7 +196,9 @@ class CalendrierActivity : AppCompatActivity() {
     private fun case() = LinearLayout(this).apply {
         orientation = LinearLayout.VERTICAL
         gravity = Gravity.CENTER
-        layoutParams = LinearLayout.LayoutParams(0, dp(52), 1f).apply { marginStart = dp(2); marginEnd = dp(2) }
+        // Sans marges : l'écart entre les cases est dans le fond (InsetDrawable), et la case
+        // touchable garde toute la largeur, 48 dp au moins (audit du 16/10).
+        layoutParams = LinearLayout.LayoutParams(0, dp(52), 1f)
     }
 
     private fun choixVue(texte: Int, actif: Boolean, action: () -> Unit) = TextView(this).apply {
