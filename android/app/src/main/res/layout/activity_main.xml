@@ -125,7 +125,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent" />
 
-                    <!-- 34dp : trois anneaux de 8dp, deux écarts de 3dp, et un peu d'air. -->
+                    <!-- 32dp (échelle du 16/10) : trois anneaux de 8dp, deux écarts de 3dp, et un peu d’air. -->
                     <FrameLayout
                         android:id="@+id/hero_plate"
                         android:layout_width="match_parent"

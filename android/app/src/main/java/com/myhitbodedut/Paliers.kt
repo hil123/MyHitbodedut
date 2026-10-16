@@ -87,7 +87,7 @@ object Paliers {
         etat(Piste.SEMAINE, b.entre(b.debutSemaine)),
         etat(Piste.MOIS, b.entre(b.debutMoisHebreu)),
         etat(Piste.CUMUL, b.minutes.values.sum()),
-        etat(Piste.JOURS, b.minutes.count { it.value > 0 }),
+        etat(Piste.JOURS, b.minutes.size),
     )
 
     /**

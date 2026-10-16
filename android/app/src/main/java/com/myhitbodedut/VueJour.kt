@@ -21,7 +21,7 @@ import java.util.Locale
  */
 object VueJour {
 
-    private fun dp(c: Context, v: Int) = (v * c.resources.displayMetrics.density).toInt()
+    fun dp(c: Context, v: Int) = (v * c.resources.displayMetrics.density).toInt()
     private fun couleur(c: Context, id: Int) = Apparence.couleur(c, id)
 
     /** Une carte, comme le style Card. */
@@ -43,8 +43,8 @@ object VueJour {
                 .apply { topMargin = dp(c, espace(haut)) }
         }
 
-    /** L'échelle des espacements (16/10, validée) : 0, 4, 8, 12, 16, 24, 32 ; la valeur la plus proche. */
-    fun espace(v: Int): Int = ECHELLE.minByOrNull { kotlin.math.abs(it - v) * 100 + ECHELLE.indexOf(it) }!!
+    /** L'échelle des espacements (16/10, validée) : 0, 4, 8, 12, 16, 24, 32, 40 ; la valeur la plus proche, un petit écart non nul restant de 4. */
+    fun espace(v: Int): Int = if (v in 1..3) 4 else ECHELLE.minByOrNull { kotlin.math.abs(it - v) * 100 + ECHELLE.indexOf(it) }!!
     private val ECHELLE = intArrayOf(0, 4, 8, 12, 16, 24, 32, 40)
 
     private fun locale(langue: String): Locale = Locale.forLanguageTag(langue)
@@ -183,6 +183,7 @@ object VueJour {
             textDirection = View.TEXT_DIRECTION_RTL
             PoliceHebraique.appliquer(this)
             setOnClickListener(ouvrirHilloulot)
+            touchable(this)
         })
         carte.addView(lien(c, c.getString(R.string.hilloulot_tout), ouvrirHilloulot))
         return true
@@ -219,6 +220,12 @@ object VueJour {
 
     fun ouvrirHalakha(c: Context, date: LocalDate) {
         c.startActivity(Intent(c, HalakhaActivity::class.java).putExtra(HalakhaActivity.EXTRA_DATE, date.toString()))
+    }
+
+    /** Un texte touchable : au moins 48 dp de haut, centré verticalement (audit du 16/10). */
+    fun touchable(v: TextView): TextView = v.apply {
+        minHeight = dp(context, 48)
+        gravity = (gravity and android.view.Gravity.RELATIVE_HORIZONTAL_GRAVITY_MASK) or android.view.Gravity.CENTER_VERTICAL
     }
 
     private fun lien(c: Context, libelle: String, action: View.OnClickListener) = texte(c, libelle, 15f, R.color.brand, gras = true, haut = 4).apply {

@@ -258,9 +258,9 @@ export function levana(iso, zone, { usage = 'sept_mi_mois' } = {}) {
  * Sources : Choul'han Aroukh, O.H. 117, 1 (pluie), 114, 1 (machiv harouah), 582, 1 (dix jours), 489, 1 (omer).
  */
 export const RAPPELS_TEFILA = {
-  pluie_debut: { source: '117, 1', leSoir: true }, pluie_fin: { source: '117, 1', leSoir: false },
-  guechem_debut: { source: '114, 1', leSoir: false }, guechem_fin: { source: '114, 1', leSoir: false },
-  dix_jours: { source: '582, 1', leSoir: true }, omer: { source: '489, 1', leSoir: true },
+  pluie_debut: { source: '117:1', leSoir: true }, pluie_fin: { source: '117:1', leSoir: false },
+  guechem_debut: { source: '114:1', leSoir: false }, guechem_fin: { source: '114:1', leSoir: false },
+  dix_jours: { source: '582:1', leSoir: true }, omer: { source: '489:1', leSoir: true },
 };
 export function rappelsTefila(aujourdhui, enIsrael, avance = 3, jourDe = (iso) => jour(iso, enIsrael), sansGuechem = false) {
   const ajoute = (iso, n) => { const d = new Date(`${iso}T12:00:00Z`); d.setUTCDate(d.getUTCDate() + n); return d.toISOString().slice(0, 10); };

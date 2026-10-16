@@ -90,7 +90,7 @@
     <string name="settings_all_granted">כל ההרשאות ניתנו.</string>
     <string name="permission_notifications">התראות</string>
     <string name="permission_notifications_why">בלעדיהן התזכורת נקבעת ולעולם אינה מופיעה, וההתבודדות לא מציגה דבר כשהטלפון מונח.</string>
-    <string name="permission_battery_why">בלעדיה אנדרויד עלול לעכב את התזכורת בשעות, כדי לחסוך בסוללה.</string>
+    <string name="permission_battery_why">בלעדיה אנדרואיד עלול לעכב את התזכורת בשעות, כדי לחסוך בסוללה.</string>
     <string name="permission_overlay_why">כדי להציג את מסך החסימה מעל האפליקציה שנפתחת בבוקר.</string>
     <string name="permission_usage_why">כדי לדעת איזו אפליקציה נפתחה זה עתה. שום דבר אינו נשמר ואינו נשלח.</string>
     <string name="permission_granted">אושרה</string>
@@ -146,7 +146,7 @@
     <string name="widget_resume">חזרה להתבודדות</string>
     <string name="widget_minutes">%1$d / %2$d דק׳</string>
     <string name="settings_hitbodedut">התבודדות מודרכת</string>
-    <string name="settings_hitbodedut_hint">חמישה שלבים, כדי לדעת במה להמשיך — על פי ליקוטי מוהר״ן תניינא, כ״ה, והרמב״ם.</string>
+    <string name="settings_hitbodedut_hint">חמישה שלבים, כדי לדעת במה להמשיך — על פי ליקוטי מוהר״ן תניינא, כ״ה, והרמב״ם (הלכות תפילה א, ב).</string>
     <string name="hitbodedut_step">%1$d / %2$d</string>
     <string name="hitbodedut_previous">הקודם</string>
     <string name="hitbodedut_next">הבא</string>
@@ -689,7 +689,7 @@
     <string name="ajout_roch_hodech">ראש חודש</string>
     <string name="ajout_hallel_annonce">הלל</string>
     <string name="ajout_anenou_officiant">עננו של שליח הציבור (חזרת הש״ץ)</string>
-    <string name="ajout_anenou_particulier">עננו של היחיד (שומע תפלה)</string>
+    <string name="ajout_anenou_particulier">עננו של היחיד (שומע תפילה)</string>
     <string name="ajout_anenou_particulier_matin_minha">עננו של היחיד, בשחרית ובמנחה</string>
     <string name="ajout_anenou_particulier_trois">עננו של היחיד, בערבית, בשחרית ובמנחה</string>
     <string name="ajout_anenou_particulier_minha">עננו של היחיד, במנחה בלבד</string>
@@ -739,7 +739,7 @@
     <string name="fete_chouchan_pourim_katan">שושן פורים קטן</string>
     <string name="fete_isrou_hag">אסרו חג</string>
     <!-- La hilloula et la halakha du jour (11/10) -->
-    <string name="hilloula_titre">הילולא</string>
+    <string name="hilloula_titre">הילולה</string>
     <plurals name="hilloula_autres">
         <item quantity="one">ועוד אחד</item>
         <item quantity="two">ועוד %1$d</item>
@@ -776,9 +776,9 @@
     </plurals>
     <!-- L'écran des hilloulot (11/10) -->
     <string name="hilloulot_title">הילולות</string>
-    <string name="hilloulot_afficher">הצג הילולות</string>
+    <string name="hilloulot_afficher">הצגת הילולות</string>
     <string name="hilloulot_recherche">חיפוש צדיק</string>
-    <string name="hilloula_annee">נפטר בשנת %1$s</string>
+    <string name="hilloula_annee">פטירה: %1$s</string>
     <string name="hilloulot_aucune">אין הילולה ביום זה</string>
     <string name="hilloulot_resultats">תוצאות: %1$d</string>
     <string name="hilloula_source_wiki">ויקיפדיה (CC BY-SA)</string>
@@ -792,7 +792,7 @@
     <string name="hilloulot_tout">כל ההילולות ›</string>
     <!-- La halakha du jour hors ligne : le Ben Ish 'Haï (11/10) -->
     <string name="halakha_title">הלכה יומית</string>
-    <string name="halakha_afficher">הצג הלכה יומית</string>
+    <string name="halakha_afficher">הצגת הלכה יומית</string>
     <string name="halakha_recherche">חיפוש בהלכה</string>
     <string name="halakha_aucune">אין הלכה ליום זה</string>
     <string name="halakha_tout">כל ההלכה היומית ›</string>
@@ -808,7 +808,7 @@
     <string name="grade_atteint">הגעת לדרגת %1$s</string>
     <string name="grade_au">בגביע ה־%1$d</string>
     <string name="trophee_gagne">הושג ✓</string>
-    <string name="trophees_ici">אתה כאן · היעד הבא</string>
+    <string name="trophees_ici">אתם כאן · היעד הבא</string>
     <string name="trophee_encore">%1$d / %2$d · עוד %3$d</string>
     <string name="trophees_autres">… ועוד %1$d גביעים בהמשך</string>
     <string name="grade_nouveau">דרגה חדשה: %1$s</string>
@@ -920,7 +920,7 @@
     <string name="halakha_yalkut_source">ילקוט יוסף – קיצור שולחן ערוך, מו״ר הרב יצחק יוסף (הוכן מתוכנת תורת אמת, CC BY-NC-SA 2.5): מבחר, לא הספר כולו.</string>
     <!-- Birkat haLevana sur la carte du jour (13/10) -->
     <string name="levana_titre">ברכת הלבנה</string>
-    <string name="levana_fenetre">מ%1$s עד %2$s</string>
+    <string name="levana_fenetre">מ־%1$s עד %2$s</string>
     <string name="levana_ce_soir">אפשר לברך הלילה</string>
     <string name="levana_dernier_soir">הלילה האחרון</string>
     <plurals name="levana_dans">
@@ -928,7 +928,7 @@
         <item quantity="two">בעוד יומיים</item>
         <item quantity="other">בעוד %d ימים</item>
     </plurals>
-    <string name="levana_source">שולחן ערוך או\"ח תכ\"ו; משנה ברורה תכ\"ו. מנהג: %s.</string>
+    <string name="levana_source">שולחן ערוך או״ח תכ״ו; משנה ברורה תכ״ו. מנהג: %s.</string>
     <!-- Polices hébraïques supplémentaires (14/10) -->
     <string name="police_frank">פרנק רוהל (קלאסי)</string>
     <string name="police_david">דוד</string>
@@ -939,7 +939,7 @@
     <string name="settings_ouverture">מסך פתיחה</string>
     <string name="section_zmanim_ecran">מסך הזמנים</string>
     <string name="section_zmanim_ecran_hint">מה שמוצג מתחת לזמנים, וספר ההלכה היומית.</string>
-    <string name="reglage_levana">הצג ברכת הלבנה</string>
+    <string name="reglage_levana">הצגת ברכת הלבנה</string>
     <string name="halakha_source_titre">ספר ההלכה</string>
     <string name="halakha_source_yalkut">ילקוט יוסף</string>
     <string name="halakha_source_bih">בן איש חי</string>
@@ -950,14 +950,14 @@
     <string name="levana_lune">הלבנה הערב: %1$s מוארת, %2$s</string>
     <string name="levana_croissante">מתמלאת</string>
     <string name="levana_decroissante">מתמעטת</string>
-    <string name="levana_motsae">מומלץ: מוצאי שבת %s (רמ\"א תכ\"ו ב)</string>
-    <string name="levana_kippour">לא לפני מוצאי יום הכיפורים (רמ\"א תכ\"ו ב)</string>
-    <string name="levana_tisha">לא לפני מוצאי תשעה באב (רמ\"א תכ\"ו ב; משנה ברורה תכ\"ו יא)</string>
+    <string name="levana_motsae">מומלץ: מוצאי שבת %s (שו״ע תכ״ו, ב ורמ״א)</string>
+    <string name="levana_kippour">לא לפני מוצאי יום הכיפורים (שו״ע תכ״ו, ב ורמ״א)</string>
+    <string name="levana_tisha">לא לפני מוצאי תשעה באב (רמ״א תכ״ו ב; משנה ברורה תכ״ו יא)</string>
     <string name="levana_usage_titre">ברכת הלבנה: מנהג</string>
     <string name="levana_usage_auto">לפי הנוסח</string>
-    <string name="levana_usage_trois_mi_mois">מ־3 ימים עד חצי החודש (משנה ברורה, רמ\"א)</string>
-    <string name="levana_usage_sept_mi_mois">מ־7 ימים עד חצי החודש (האר\"י)</string>
-    <string name="levana_usage_sept_quinze">מ־7 ימים עד ט\"ו יום (שולחן ערוך)</string>
+    <string name="levana_usage_trois_mi_mois">מ־3 ימים עד חצי החודש (משנה ברורה, רמ״א)</string>
+    <string name="levana_usage_sept_mi_mois">מ־7 ימים עד חצי החודש (האר״י)</string>
+    <string name="levana_usage_sept_quinze">מ־7 ימים עד ט״ו יום (שולחן ערוך)</string>
     <!-- Les dix améliorations du 14/10. -->
     <string name="levana_rappel_premier">ברכת הלבנה: הלילה הראשון</string>
     <string name="levana_rappel_motsae">ברכת הלבנה: מוצאי שבת הערב</string>
@@ -973,7 +973,7 @@
     <string name="widget_zmanim_jusqua">%1$s עד %2$s</string>
     <string name="widget_zmanim_chkia">שקיעה %s</string>
     <string name="settings_ne_pas_deranger">נא לא להפריע בזמן ההתבודדות</string>
-    <string name="settings_ne_pas_deranger_hint">הטלפון עובר למצב \"עדיפות\" בזמן ההתבודדות וחוזר אחר כך כפי שהיה. אנדרואיד מבקש הרשאה בפעם הראשונה.</string>
+    <string name="settings_ne_pas_deranger_hint">הטלפון עובר למצב „עדיפות” בזמן ההתבודדות וחוזר אחר כך כפי שהיה. אנדרואיד מבקש הרשאה בפעם הראשונה.</string>
     <string name="recherche_titre">חיפוש</string>
     <string name="recherche_indice">חיפוש בסידור, בספרים, בהלכה ובהילולות</string>
     <string name="recherche_livres">ספרים</string>

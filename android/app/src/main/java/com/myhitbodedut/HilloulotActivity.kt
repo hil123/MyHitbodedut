@@ -108,7 +108,8 @@ class HilloulotActivity : AppCompatActivity() {
         du.forEach { liste.addView(carte(it, null)) }
         liste.addView(VueJour.texte(this, getString(R.string.hilloula_lien) + " ↗", 15f, R.color.brand, gras = true, haut = 14).apply {
             gravity = Gravity.CENTER
-            setPadding(0, 12, 0, 12)
+            setPadding(0, VueJour.dp(context, 4), 0, VueJour.dp(context, 4))
+            minHeight = VueJour.dp(context, 48)
             setOnClickListener { ouvrir(Hilloulot.lienHyomi(jour)) }
         })
     }
@@ -131,7 +132,7 @@ class HilloulotActivity : AppCompatActivity() {
         }
         // La source : Wikipédia (l'article s'il existe), החכם היומי.
         if ('w' in h.sources) addView(VueJour.texte(context, getString(R.string.hilloula_source_wiki), 12f, R.color.brand, haut = 8).apply {
-            h.article?.let { a -> setOnClickListener { ouvrir(Hilloulot.lienArticle(a)) } }
+            h.article?.let { a -> setOnClickListener { ouvrir(Hilloulot.lienArticle(a)) }; VueJour.touchable(this) }
         })
         if ('h' in h.sources) addView(VueJour.texte(context, getString(R.string.hilloula_source_hyomi), 12f, R.color.brand, haut = 2))
         if ('e' in h.sources) addView(VueJour.texte(context, getString(R.string.hilloula_source_toratemet), 12f, R.color.brand, haut = 2))
@@ -151,15 +152,16 @@ class HilloulotActivity : AppCompatActivity() {
                         texte.maxLines = if (replie) Int.MAX_VALUE else 8
                         text = getString(if (replie) R.string.hilloula_reduire else R.string.hilloula_lire_plus)
                     }
+                    VueJour.touchable(this)
                 })
             }
             val nom = getString(if (b.source == "m") R.string.hilloula_source_mytzadik else R.string.hilloula_source_hameir)
             addView(VueJour.texte(context, if (b.lien != null) "$nom ↗" else nom, 12f, R.color.brand, haut = 6).apply {
-                b.lien?.let { l -> setOnClickListener { ouvrir(l) } }
+                b.lien?.let { l -> setOnClickListener { ouvrir(l) }; VueJour.touchable(this) }
             })
         }
         h.hidabroot?.let { l ->
-            addView(VueJour.texte(context, getString(R.string.hilloula_source_hidabroot) + " ↗", 12f, R.color.brand, haut = 8).apply { setOnClickListener { ouvrir(l) } })
+            addView(VueJour.texte(context, getString(R.string.hilloula_source_hidabroot) + " ↗", 12f, R.color.brand, haut = 8).apply { setOnClickListener { ouvrir(l) }; VueJour.touchable(this) })
         }
     }
 

@@ -544,7 +544,7 @@ function rappelsDeTefila() {
     return h('div', { class: 'carte rappel-tefila' },
       h('h3', { class: 'rappel-titre' }, tr.t(titre)),
       h('p', { class: 'rappel-corps' }, tr.t(corps, moment(r))),
-      h('p', { class: 'rappel-source' }, tr.t('rappel_source', RAPPELS_TEFILA[r.type].source)));
+      h('p', { class: 'rappel-source' }, tr.t('rappel_source', sourceRappel(RAPPELS_TEFILA[r.type].source))));
   });
 }
 
@@ -617,6 +617,8 @@ function jourHebreu(date = new Date()) {
   return { jour: j, longueur: j === 29 && jour(demain) === 1 ? 29 : 30 };
 }
 
+/** « 117:1 » ; en hébreu « קי״ז, א׳ » (RappelsTefilaVue.sourceLocale). */
+const sourceRappel = (s) => (tr.langue === 'he' ? s.split(':').map((n) => Reference.lettres(+n)).join(', ') : s);
 const nombreTehilim = (n) => (tr.langue === 'he' ? Reference.lettres(n) : String(n));
 
 function libellePortion(p) {

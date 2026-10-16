@@ -135,7 +135,8 @@ class HalakhaActivity : AppCompatActivity() {
         // Le site de Rav Ovadia Yossef : un lien seulement (tous droits réservés sur ses textes).
         liste.addView(VueJour.texte(this, getString(R.string.halakha_yomit_lien) + " ↗", 15f, R.color.brand, gras = true, haut = 10).apply {
             gravity = Gravity.CENTER
-            setPadding(0, 12, 0, 12)
+            setPadding(0, VueJour.dp(context, 4), 0, VueJour.dp(context, 4))
+            minHeight = VueJour.dp(context, 48)
             setOnClickListener { ouvrir(Hilloulot.lienHalakha(ChizukCard.language(context))) }
         })
     }

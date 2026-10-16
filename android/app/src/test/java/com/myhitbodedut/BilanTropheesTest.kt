@@ -96,4 +96,12 @@ class BilanTropheesTest {
             assertFalse("$cle déjà gagné avant $d", Trophees.gagne(pAvant, n))
         }
     }
+
+    @Test
+    fun `un jour valide a 0 min compte comme un jour de pratique`() {
+        // « Terminer » avant la première minute valide le jour : la série le compte, les trophées aussi (audit du 16/10).
+        val m = mapOf(d0 to 0)
+        assertEquals(1, Trophees.valeur(Trophees.Pratique(m, 0, 1), Trophees.Famille.JOURS))
+        assertEquals(d0, Trophees.datesGain(m, emptySet()) { false }["premier_pas:1"])
+    }
 }

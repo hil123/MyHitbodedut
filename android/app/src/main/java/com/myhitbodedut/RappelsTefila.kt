@@ -22,12 +22,12 @@ import java.time.LocalDate
 object RappelsTefila {
 
     enum class Type(val source: String, val leSoir: Boolean) {
-        PLUIE_DEBUT("117, 1", true),
-        PLUIE_FIN("117, 1", false),
-        GUECHEM_DEBUT("114, 1", false),
-        GUECHEM_FIN("114, 1", false),
-        DIX_JOURS("582, 1", true),
-        OMER("489, 1", true),
+        PLUIE_DEBUT("117:1", true),
+        PLUIE_FIN("117:1", false),
+        GUECHEM_DEBUT("114:1", false),
+        GUECHEM_FIN("114:1", false),
+        DIX_JOURS("582:1", true),
+        OMER("489:1", true),
     }
 
     /**
@@ -68,6 +68,13 @@ object RappelsTefila {
 /** La carte d'un rappel de tefila, et la phrase du moment (« Motsaé Chabbat », « Demain soir »…). */
 object RappelsTefilaVue {
 
+    /** « 117:1 » ; en hébreu « קי״ז, א׳ », comme les autres références de l'app. */
+    fun sourceLocale(c: android.content.Context, source: String): String {
+        if (ChizukCard.language(c) != "he") return source
+        val (s, a) = source.split(":").map { it.toInt() }
+        return "${Reference.lettres(s)}, ${Reference.lettres(a)}"
+    }
+
     fun cartes(c: android.content.Context): List<android.view.View> {
         val aujourdhui = LocalDate.now()
         val israel = Store.inIsrael(c)
@@ -90,7 +97,7 @@ object RappelsTefilaVue {
                     gravity = android.view.Gravity.CENTER
                     setLineSpacing(0f, 1.25f)
                 })
-                addView(VueJour.texte(c, c.getString(R.string.rappel_source, r.type.source), 12f, R.color.muted, haut = 8)
+                addView(VueJour.texte(c, c.getString(R.string.rappel_source, sourceLocale(c, r.type.source)), 12f, R.color.muted, haut = 8)
                     .apply { gravity = android.view.Gravity.CENTER })
             }
         }

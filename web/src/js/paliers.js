@@ -46,7 +46,7 @@ export function etats({ aujourdhui, minutes, serie, debutMoisHebreu, objectifJou
     etat('semaine', entre(debutSemaineDe(aujourdhui))),
     etat('mois', entre(debutMoisHebreu)),
     etat('cumul', Object.values(minutes).reduce((s, m) => s + m, 0)),
-    etat('jours', Object.values(minutes).filter((m) => m > 0).length),
+    etat('jours', Object.keys(minutes).length),
   ];
 }
 

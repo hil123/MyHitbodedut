@@ -47,6 +47,8 @@ class RechercheActivity : AppCompatActivity() {
     }
 
     override fun onDestroy() {
+        // L'attente de 300 ms d'abord : lancée après l'arrêt du fil, elle plantait (RejectedExecutionException).
+        principal.removeCallbacksAndMessages(null)
         fil.shutdownNow()
         super.onDestroy()
     }
@@ -54,7 +56,7 @@ class RechercheActivity : AppCompatActivity() {
     private fun lancer(texte: String) {
         val n = ++demande
         principal.postDelayed({
-            if (n != demande) return@postDelayed
+            if (n != demande || fil.isShutdown) return@postDelayed
             val c = applicationContext
             val langue = ChizukCard.language(this)
             fil.execute {

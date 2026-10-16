@@ -41,7 +41,8 @@ export function retours(jours) {
 
 /** La valeur que compte une famille. pratique = { minutes: { iso: min }, notes, meilleureSerie }. */
 export function valeur({ minutes, notes, meilleureSerie }, cle) {
-  const jours = Object.keys(minutes).filter((k) => minutes[k] > 0);
+  // Un jour validé compte, même à 0 min (Trophees.valeur) : comme la série.
+  const jours = Object.keys(minutes);
   const valeurs = Object.values(minutes);
   switch (cle) {
     case 'premier_pas': return Math.min(jours.length, 5);
@@ -138,10 +139,10 @@ export function datesGain(minutes, notes, exempt) {
   let jours = 0; let plusLongue = 0; let total = 0; let vendredis = 0; let nbRetours = 0;
   let semaines = 0; let notesVues = 0; let courante = 0; let meilleure = 0; let precedent = null;
   const notesSet = new Set(notes);
-  for (const d of [...new Set([...Object.keys(minutes).filter((k) => minutes[k] > 0), ...notesSet])].sort()) {
+  for (const d of [...new Set([...Object.keys(minutes), ...notesSet])].sort()) {
     if (notesSet.has(d)) notesVues++;
     const m = minutes[d] ?? 0;
-    if (m > 0) {
+    if (d in minutes) {
       faits.add(d);
       jours++; total += m; plusLongue = Math.max(plusLongue, m);
       if (semaineDe(d) === 5) vendredis++;
@@ -182,7 +183,7 @@ export function bilanSemaine(aujourdhui, minutes, dates) {
   const precedente = somme(ajoute(debut, -7), ajoute(debut, -1));
   return {
     debut, minutes: total, precedente, ecart: total - precedente,
-    jours: Object.entries(minutes).filter(([k, v]) => k >= debut && k <= fin && v > 0).length,
+    jours: Object.entries(minutes).filter(([k]) => k >= debut && k <= fin).length,
     record: meilleureAvant > 0 && total > meilleureAvant,
     trophees: chemin.filter((e) => dates[e.cle] && dates[e.cle] >= debut && dates[e.cle] <= fin),
   };

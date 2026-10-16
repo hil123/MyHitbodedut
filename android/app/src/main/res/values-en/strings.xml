@@ -145,7 +145,7 @@
     <string name="widget_resume">Back to the hitbodedut</string>
     <string name="widget_minutes">%1$d / %2$d min</string>
     <string name="settings_hitbodedut">Guided hitbodedut</string>
-    <string name="settings_hitbodedut_hint">Five movements, so you know what comes next — from Likutei Moharan II, 25 and the Rambam.</string>
+    <string name="settings_hitbodedut_hint">Five movements, so you know what comes next — from Likutei Moharan II, 25 and the Rambam (Hilchot Tefillah 1:2).</string>
     <string name="hitbodedut_step">%1$d / %2$d</string>
     <string name="hitbodedut_previous">Back</string>
     <string name="hitbodedut_next">Next</string>
@@ -324,7 +324,7 @@
 
     <!-- Section Tikoun HaKlali -->
     <string name="tikkun_title">Tikkun HaKlali</string>
-    <string name="tikkun_hint">The ten psalms of Rabbi Nahman, in order: 16, 32, 41, 42, 59, 77, 90, 105, 137, 150.</string>
+    <string name="tikkun_hint">The ten psalms of Rabbi Nachman, in order: 16, 32, 41, 42, 59, 77, 90, 105, 137, 150.</string>
     <string name="tikkun_open">Open the Tikkun</string>
     <string name="tikkun_psalm_he">תהילים %1$s</string>
     <string name="tikkun_verses">%1$d verses</string>
@@ -419,7 +419,7 @@
 
     <!-- Présentation détaillée, bravo de fin de séance, apparence (28/09). -->
     <string name="onboarding_session">Your hitbodedut</string>
-    <string name="onboarding_session_body">Pick a length, or an open hitbodedut, and a subject if you like. A niggun can play along. A word of hizuk opens and closes the hitbodedut, and if the words won’t come, a button is there to help.</string>
+    <string name="onboarding_session_body">Pick a length, or an open hitbodedut, and a subject if you like. A niggun can play along. A word of chizuk opens and closes the hitbodedut, and if the words won’t come, a button is there to help.</string>
     <string name="onboarding_days">Day after day</string>
     <string name="onboarding_days_body">The streak counts your days in a row, and the week shows at a glance. After each hitbodedut, a note can go into your journal. Reminders nudge you at the time you choose.</string>
     <string name="onboarding_texts">Texts to pray with</string>
@@ -555,9 +555,9 @@
 
     <!-- Le siddour (SiddurActivity, 04/10). -->
     <string name="siddur_title">Siddur</string>
-    <string name="siddur_hint">Shaharit, Minha, Arvit, blessings…</string>
+    <string name="siddur_hint">Shacharit, Mincha, Arvit, blessings…</string>
     <string name="siddur_books">Books</string>
-    <string name="siddur_nusah">Sephardi nusah (Edot HaMizrah)</string>
+    <string name="siddur_nusah">Sephardi nusach (Edot HaMizrah)</string>
     <string name="lecture_reglages">Reading settings</string>
     <string name="lecture_nuit">Read on a black background</string>
     <string name="lecture_replier">Fold away</string>
@@ -731,8 +731,8 @@
         <item quantity="other">and %1$d more</item>
     </plurals>
     <string name="hilloula_lien">Sages of the day on hyomi.org.il</string>
-    <string name="halakha_yomit_titre">Halacha Yomit</string>
-    <string name="halakha_yomit_lien">Today’s halacha on halachayomit.co.il</string>
+    <string name="halakha_yomit_titre">Halakha Yomit</string>
+    <string name="halakha_yomit_lien">Today’s halakha on halakhayomit.co.il</string>
     <!-- Les paliers d'objectifs (11/10) -->
     <string name="paliers_title">My milestones</string>
     <string name="paliers_sous_titre">Each milestone leads to the next</string>
@@ -761,7 +761,7 @@
     <!-- L'écran des hilloulot (11/10) -->
     <string name="hilloulot_title">Hillulot</string>
     <string name="hilloulot_afficher">Show hillulot</string>
-    <string name="hilloulot_recherche">Search a tzaddik</string>
+    <string name="hilloulot_recherche">Search for a tzaddik</string>
     <string name="hilloula_annee">Passed away: %1$s</string>
     <string name="hilloulot_aucune">No hillula on this day</string>
     <string name="hilloulot_resultats">Results: %1$d</string>
@@ -775,11 +775,11 @@
     <string name="hilloula_reduire">Show less</string>
     <string name="hilloulot_tout">All hillulot ›</string>
     <!-- La halakha du jour hors ligne : le Ben Ish 'Haï (11/10) -->
-    <string name="halakha_title">Halacha of the day</string>
-    <string name="halakha_afficher">Show the halacha of the day</string>
+    <string name="halakha_title">Halakha of the day</string>
+    <string name="halakha_afficher">Show the halakha of the day</string>
     <string name="halakha_recherche">Search the halakha</string>
-    <string name="halakha_aucune">No halacha for this day</string>
-    <string name="halakha_tout">The whole halacha of the day ›</string>
+    <string name="halakha_aucune">No halakha for this day</string>
+    <string name="halakha_tout">The whole halakha of the day ›</string>
     <string name="halakha_livre">Yalkut Yosef, Kitzur Shulchan Aruch</string>
     <string name="halakha_note">Original Hebrew text, verbatim. For practice, ask a rabbi.</string>
     <!-- Les trophées et la fête (11/10) -->
@@ -837,7 +837,7 @@
     <string name="trophee_plume">The pen</string>
     <plurals name="trophee_premier_pas_desc">
         <item quantity="one">A first hitbodedut</item>
-        <item quantity="other">%1$d first hitbodeduts</item>
+        <item quantity="other">%1$d first hitbodedut</item>
     </plurals>
     <plurals name="trophee_seance_longue_desc">
         <item quantity="one">%1$d minute in one day</item>
@@ -896,7 +896,7 @@
     <string name="levana_titre">Birkat HaLevana</string>
     <string name="levana_fenetre">From %1$s to %2$s</string>
     <string name="levana_ce_soir">Possible tonight</string>
-    <string name="levana_dernier_soir">Last night</string>
+    <string name="levana_dernier_soir">Final night</string>
     <plurals name="levana_dans">
         <item quantity="one">In %d day</item>
         <item quantity="other">In %d days</item>
@@ -923,7 +923,7 @@
     <string name="levana_lune">Moon tonight: %1$s lit, %2$s</string>
     <string name="levana_croissante">waxing</string>
     <string name="levana_decroissante">waning</string>
-    <string name="levana_motsae">Best: Motzaei Shabbat %s (Rema 426:2)</string>
+    <string name="levana_motsae">Best: Motzaei Shabbat %s (Shulchan Aruch 426:2 and Rema)</string>
     <string name="levana_kippour">Not before Yom Kippur ends (Rema 426:2)</string>
     <string name="levana_tisha">Not before Tisha B’Av ends (Rema 426:2; Mishnah Berurah 426:11)</string>
     <string name="levana_usage_titre">Birkat HaLevana: custom</string>
@@ -934,7 +934,7 @@
     <!-- Les dix améliorations du 14/10. -->
     <string name="levana_rappel_premier">Birkat HaLevana: first night</string>
     <string name="levana_rappel_motsae">Birkat HaLevana: tonight, Motzaei Shabbat</string>
-    <string name="levana_rappel_dernier">Birkat HaLevana: last night</string>
+    <string name="levana_rappel_dernier">Birkat HaLevana: final night</string>
     <string name="levana_rappel_texte">Tap to open the text.</string>
     <string name="levana_rappel_reglage">Birkat HaLevana reminder</string>
     <string name="levana_lire">Read Birkat HaLevana ›</string>

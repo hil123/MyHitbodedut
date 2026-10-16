@@ -261,7 +261,8 @@ class MainActivity : AppCompatActivity() {
         DureeSeance.choisir(this, R.string.offline_how_long) { minutes ->
             // Sans sujet : celui des puces est celui de la PROCHAINE séance.
             Store.addSession(this, minutes, theme = null, date = date)
-            Celebrations.notification(this)
+            // L'application est ouverte : la fête se fait à l'écran, pas par une notification (comme AjoutTemps).
+            Celebrations.marquerNotifies(this)
             if (date == Store.today()) Store.setPendingCelebration(this, minutes, date)
             refresh()
             StreakWidget.refresh(this)

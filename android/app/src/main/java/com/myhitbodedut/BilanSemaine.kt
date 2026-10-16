@@ -42,7 +42,7 @@ object BilanSemaine {
         return Bilan(
             debut = debut,
             minutes = total,
-            jours = semaine.count { it.value > 0 },
+            jours = semaine.size,
             precedente = entre(debut.minusDays(7), debut.minusDays(1)).values.sum(),
             record = meilleureAvant > 0 && total > meilleureAvant,
             trophees = Trophees.chemin.filter { n -> dates[n.cle]?.let { !it.isBefore(debut) && !it.isAfter(fin) } == true },

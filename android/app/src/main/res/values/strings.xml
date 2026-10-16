@@ -47,7 +47,7 @@
     <string name="gate_done_title">Journée validée</string>
     <string name="gate_done_detail">Plus rien ne sera bloqué aujourd’hui. La barrière reprendra demain.</string>
     <string name="gate_exempt_title">Jour sans obligation</string>
-    <string name="gate_exempt_detail">Shabbat, Yom Tov ou pause : la barrière se tait et la série reste intacte.</string>
+    <string name="gate_exempt_detail">Chabbat, Yom Tov ou pause : la barrière se tait et la série reste intacte.</string>
     <string name="gate_snoozed_title">Report en cours</string>
     <string name="gate_snoozed_detail">Vous avez demandé un délai. La barrière revient à la fin du report.</string>
     <string name="gate_window_title">Hors de la fenêtre</string>
@@ -83,7 +83,7 @@
     <string name="ring_streak_detail">Série : %1$d jours sur %2$d</string>
     <string name="ring_streak_reached">Palier de %2$d jours atteint !</string>
     <string name="rings_description">Anneaux. Aujourd’hui : %1$s sur %2$s. Semaine : %3$d jours sur %4$d. Série : %5$d jours sur %6$d.</string>
-    <string name="settings_shabbat">Shabbat et Yom Tov</string>
+    <string name="settings_shabbat">Chabbat et Yom Tov</string>
     <string name="settings_shabbat_hint">Ces jours-là : pas de blocage, pas de rappel, et la série reste intacte.</string>
     <string name="settings_exempt_today">Pause aujourd’hui</string>
     <string name="settings_exempt_today_hint">Pour un Yom Tov, un voyage, une maladie : la journée ne compte pas contre vous.</string>
@@ -128,7 +128,7 @@
     <!-- Séance -->
     <string name="session_screen_title">HITBODEDOUT</string>
     <string name="session_idle_caption">Choisissez une durée, posez le téléphone.</string>
-    <string name="session_idle_done">Fait aujourd’hui : %1$s. Le chiffre ci-dessus est la durée de la prochaine.</string>
+    <string name="session_idle_done">Fait aujourd’hui : %1$s. Le chiffre ci-dessus est la durée de la prochaine.</string>
     <string name="session_start">Commencer, %1$s</string>
     <string name="session_target">Hitbodedout de %1$s</string>
     <string name="session_finish_now">Terminer maintenant</string>
@@ -161,7 +161,7 @@
     <string name="widget_apercu_minutes" translatable="false">15 / 20</string>
     <string name="widget_apercu_serie" translatable="false">7</string>
     <string name="settings_hitbodedut">Hitbodedout guidée</string>
-    <string name="settings_hitbodedut_hint">Cinq temps pour savoir par quoi continuer, d’après Likoutei Moharan II, 25 et le Rambam.</string>
+    <string name="settings_hitbodedut_hint">Cinq temps pour savoir par quoi continuer, d’après Likoutei Moharan II, 25 et le Rambam (Hilkhot Tefila 1, 2).</string>
     <string name="hitbodedut_step">%1$d / %2$d</string>
     <string name="hitbodedut_previous">Précédent</string>
     <string name="hitbodedut_next">Suivant</string>
@@ -506,10 +506,10 @@
     <string name="onboarding_adresse_body">À la fin de chaque hitbodedout, l’application vous félicite. Choisissez le mot qui vous convient ; vous pourrez le changer dans les réglages.</string>
     <string name="onboarding_rappel">Me le rappeler chaque jour</string>
     <string name="onboarding_rappel_heure">à %1$s</string>
-    <string name="onboarding_rappel_heure_desc">Heure du rappel : %1$s</string>
+    <string name="onboarding_rappel_heure_desc">Heure du rappel : %1$s</string>
     <!-- Pour la version web (16/10) : pas de rappels, et un navigateur plutôt qu’un téléphone sans Internet. -->
     <string name="onboarding_days_body_web">La série compte les jours de pratique d’affilée, et la semaine se lit d’un coup d’œil. Après chaque hitbodedout, une note peut rejoindre votre journal.</string>
-    <string name="onboarding_private_body_web">Ce que vous écrivez reste dans ce navigateur, sur cet appareil : rien n’est envoyé nulle part.</string>
+    <string name="onboarding_private_body_web">Ce que vous écrivez reste dans ce navigateur, sur cet appareil : rien n’est envoyé nulle part.</string>
     <string name="adresse_tsadik">Tsadik</string>
     <string name="adresse_tsadeket">Tsadeket</string>
     <string name="adresse_none">Pas choisi</string>
@@ -634,18 +634,18 @@
     <string name="zmanim_choisir_lieu">Choisir le lieu</string>
     <string name="zmanim_position">Ma position</string>
     <string name="zmanim_position_attente">Recherche de la position…</string>
-    <string name="zmanim_position_refusee">Position indisponible : choisissez une ville.</string>
+    <string name="zmanim_position_refusee">Position indisponible : choisissez une ville.</string>
     <string name="zmanim_position_pres">Ma position · près de %1$s</string>
-    <string name="zmanim_position_ancienne">Pas de position fraîche : la dernière connue est utilisée.</string>
+    <string name="zmanim_position_ancienne">Pas de position fraîche : la dernière connue est utilisée.</string>
     <string name="zmanim_calendrier">Calendrier</string>
     <string name="zmanim_absent">n’a pas lieu ce jour</string>
     <string name="zmanim_erreur">calcul impossible</string>
     <string name="zmanim_a_valider">La méthode est écrite sous chaque horaire. Profil à valider par un Rav. Calcul au niveau de la mer, sur l’appareil, sans réseau.</string>
     <string name="zmanim_ajouts_titre">Dans les prières</string>
     <string name="zmanim_aucun_ajout">Rien de particulier</string>
-    <string name="zmanim_omer">Omer : jour %1$d</string>
+    <string name="zmanim_omer">Omer : jour %1$d</string>
     <string name="zmanim_paracha">Paracha %1$s</string>
-    <string name="zmanim_source_villes">Villes : GeoNames (CC-BY 4.0)</string>
+    <string name="zmanim_source_villes">Villes : GeoNames (CC-BY 4.0)</string>
     <string name="zmanim_lieu_detail">%1$s · %2$s</string>
     <string name="calendrier_title">Calendrier</string>
     <string name="calendrier_precedent">Mois précédent</string>
@@ -699,7 +699,7 @@
     <string name="ajout_hallel_complet">Hallel complet</string>
     <string name="ajout_tahanoun">Ta’hanoun</string>
     <string name="ajout_sans_tahanoun">Pas de Ta’hanoun</string>
-    <string name="ajout_asseret_yemei_techouva">Dix jours de pénitence</string>
+    <string name="ajout_asseret_yemei_techouva">Dix jours de techouva</string>
     <string name="ajout_jeune">Anénou</string>
     <string name="ajout_jeune_public">Jeûne public</string>
     <string name="ajout_avinou_malkenou">Avinou malkénou</string>
@@ -727,12 +727,12 @@
     <string name="ajout_anenou_particulier_minha">Anénou du particulier, à Min’ha seulement</string>
     <string name="ajout_hallel_partiel_sans_berakha">Hallel partiel, sans bénédiction</string>
     <string name="ajout_hallel_partiel_avec_berakha">Hallel partiel, avec bénédiction</string>
-    <string name="zmanim_omer_ce_soir">Omer ce soir : jour %1$d</string>
+    <string name="zmanim_omer_ce_soir">Omer ce soir : jour %1$d</string>
     <string name="ajout_omer">Compte de l’omer</string>
     <string name="siddur_aujourdhui">Aujourd’hui</string>
     <string name="siddur_pas_aujourdhui">Pas aujourd’hui · toucher pour lire</string>
     <string name="siddur_replier">Replier</string>
-    <string name="siddur_jour_ajouts">Ajouts du %1$s (%2$s), indicatifs : le texte et ses consignes font foi.</string>
+    <string name="siddur_jour_ajouts">Ajouts du %1$s (%2$s), indicatifs : le texte et ses consignes font foi.</string>
     <string name="fete_erev_pessah">Veille de Pessa’h</string>
     <string name="fete_pessah">Pessa’h</string>
     <string name="fete_hol_hamoed_pessah">’Hol hamoèd Pessa’h</string>
@@ -754,7 +754,7 @@
     <string name="fete_chemini_atseret">Chemini atsérèt</string>
     <string name="fete_simhat_torah">Sim’hat Torah</string>
     <string name="fete_hanouka">’Hanouka</string>
-    <string name="fete_tevet_10">Jeûne du 10 Tévèt</string>
+    <string name="fete_tevet_10">Jeûne du 10 Tévet</string>
     <string name="fete_tou_bichvat">Tou biChvat</string>
     <string name="fete_jeune_esther">Jeûne d’Esther</string>
     <string name="fete_pourim">Pourim</string>
@@ -788,18 +788,18 @@
     <string name="palier_mois">Ce mois-ci · %1$s</string>
     <string name="palier_cumul">Temps cumulé</string>
     <string name="palier_jours">Jours de pratique</string>
-    <string name="palier_prochain">Prochain palier : %1$s · encore %2$s</string>
-    <string name="palier_atteints">Paliers atteints : %1$d</string>
-    <string name="palier_nouveau">Palier atteint : %1$s — %2$s !</string>
+    <string name="palier_prochain">Prochain palier : %1$s · encore %2$s</string>
+    <string name="palier_atteints">Paliers atteints : %1$d</string>
+    <string name="palier_nouveau">Palier atteint : %1$s — %2$s !</string>
     <string name="palier_une_serie">Encore %1$s pour %2$s d’affilée</string>
     <string name="palier_une_jour">Encore %1$s pour %2$s aujourd’hui</string>
     <string name="palier_une_semaine">Encore %1$s pour %2$s cette semaine</string>
     <string name="palier_une_mois">Encore %1$s pour %2$s ce mois-ci</string>
     <string name="paliers_records">Records</string>
-    <string name="record_serie">Plus longue série : %1$s</string>
-    <string name="record_jour">Meilleure journée : %1$s</string>
-    <string name="record_semaine">Meilleure semaine : %1$s</string>
-    <string name="record_mois">Meilleur mois : %1$s</string>
+    <string name="record_serie">Plus longue série : %1$s</string>
+    <string name="record_jour">Meilleure journée : %1$s</string>
+    <string name="record_semaine">Meilleure semaine : %1$s</string>
+    <string name="record_mois">Meilleur mois : %1$s</string>
     <plurals name="palier_n_jours">
         <item quantity="one">%1$d jour</item>
         <item quantity="other">%1$d jours</item>
@@ -808,9 +808,9 @@
     <string name="hilloulot_title">Hilloulot</string>
     <string name="hilloulot_afficher">Afficher les hilloulot</string>
     <string name="hilloulot_recherche">Rechercher un tsadik</string>
-    <string name="hilloula_annee">Décès : %1$s</string>
+    <string name="hilloula_annee">Décès : %1$s</string>
     <string name="hilloulot_aucune">Aucune hilloula ce jour</string>
-    <string name="hilloulot_resultats">Résultats : %1$d</string>
+    <string name="hilloulot_resultats">Résultats : %1$d</string>
     <string name="hilloula_source_wiki">Wikipédia (CC BY-SA)</string>
     <string name="hilloula_source_hyomi">החכם היומי</string>
     <string name="hilloula_source_mytzadik">MyTzadik</string>
@@ -826,10 +826,10 @@
     <string name="halakha_recherche">Rechercher dans la halakha</string>
     <string name="halakha_aucune">Pas de halakha pour ce jour</string>
     <string name="halakha_tout">Toute la halakha du jour ›</string>
-    <string name="halakha_livre">Yalkut Yosef, Kitsour Choulhan Aroukh</string>
+    <string name="halakha_livre">Yalkut Yosef, Kitsour Choul’han Aroukh</string>
     <string name="halakha_note">Texte original en hébreu, verbatim. Pour la pratique, consultez un rav.</string>
     <!-- Les trophées et la fête (11/10) -->
-    <string name="celebration_titre">Mazal tov !</string>
+    <string name="celebration_titre">Mazal tov !</string>
     <string name="trophees_paliers_titre">Trophées et paliers</string>
     <string name="trophees_titre">Trophées</string>
     <string name="grade_titre">Grade %1$s</string>
@@ -838,38 +838,38 @@
     <string name="grade_atteint">Grade %1$s atteint</string>
     <string name="grade_au">au %1$dᵉ trophée</string>
     <string name="trophee_gagne">Gagné ✓</string>
-    <string name="trophees_ici">TU ES ICI · PROCHAIN OBJECTIF</string>
+    <string name="trophees_ici">VOUS ÊTES ICI · PROCHAIN OBJECTIF</string>
     <string name="trophee_encore">%1$d / %2$d · encore %3$d</string>
     <string name="trophees_autres">… et %1$d autres trophées plus loin</string>
-    <string name="grade_nouveau">Nouveau grade : %1$s</string>
-    <string name="grade_prochain">Prochain grade : %1$s, au %2$dᵉ trophée.</string>
+    <string name="grade_nouveau">Nouveau grade : %1$s</string>
+    <string name="grade_prochain">Prochain grade : %1$s, au %2$dᵉ trophée.</string>
     <string name="trophees_prochain">Prochain trophée</string>
     <string name="trophees_gagnes">Gagnés · %1$d</string>
     <string name="trophees_a_venir">À venir · %1$d</string>
-    <string name="trophees_aucun_gagne">Pas encore de trophée : le premier arrive avec ta première hitbodedout.</string>
-    <string name="trophees_tous">Tous les trophées sont gagnés !</string>
+    <string name="trophees_aucun_gagne">Pas encore de trophée : le premier arrive avec votre première hitbodedout.</string>
+    <string name="trophees_tous">Tous les trophées sont gagnés !</string>
     <string name="trophees_compte">%1$d sur %2$d</string>
     <string name="trophees_paliers">🏆  Trophées et paliers</string>
     <string name="channel_celebration">Paliers et trophées</string>
     <string name="channel_celebration_description">Une fête quand un palier ou un trophée est atteint</string>
     <string name="reset_title">Réinitialiser l’application</string>
-    <string name="reset_hint">Efface tout ce que l’application garde sur ce téléphone : journal, hitbodedouts, séries, trophées, réglages et rappels. Exportez d’abord vos données si vous voulez les garder.</string>
+    <string name="reset_hint">Efface tout ce que l’application garde sur ce téléphone : journal, hitbodedout, séries, trophées, réglages et rappels. Exportez d’abord vos données si vous voulez les garder.</string>
     <string name="reset_action">Réinitialiser l’application</string>
-    <string name="reset_confirm_title">Tout effacer ?</string>
-    <string name="reset_confirm_text">Le journal, les hitbodedouts, les séries, les trophées, les réglages et les rappels seront effacés de ce téléphone. Cela ne peut pas être annulé.</string>
+    <string name="reset_confirm_title">Tout effacer ?</string>
+    <string name="reset_confirm_text">Le journal, les hitbodedout, les séries, les trophées, les réglages et les rappels seront effacés de ce téléphone. Cela ne peut pas être annulé.</string>
     <string name="reset_confirm_yes">Tout effacer</string>
     <string name="reset_confirm_no">Annuler</string>
     <string name="partage_action">Partager ma hitbodedout</string>
     <string name="partage_texte">Aujourd’hui, j’ai fait %1$s de hitbodedout, un moment seul à seul avec Hachem.</string>
-    <string name="partage_serie">Série : %1$d jours d’affilée.</string>
-    <string name="partage_lien">Essaie toi aussi, gratuitement : %1$s</string>
+    <string name="partage_serie">Série : %1$d jours d’affilée.</string>
+    <string name="partage_lien">Essaie toi aussi, gratuitement : %1$s</string>
     <string name="partage_choix">Partager</string>
     <plurals name="partage_minutes">
         <item quantity="one">%1$d minute</item>
         <item quantity="other">%1$d minutes</item>
     </plurals>
     <!-- Web : le partage sans feuille de partage du navigateur, par le presse-papiers. -->
-    <string name="partage_copie">Texte copié : collez-le où vous voulez.</string>
+    <string name="partage_copie">Texte copié : collez-le où vous voulez.</string>
     <string name="trophee_progres">%1$d / %2$d</string>
     <!-- Les trophées à niveaux (12/10). -->
     <string name="trophee_premier_pas">Premier pas</string>
@@ -883,7 +883,7 @@
     <string name="trophee_plume">La plume</string>
     <plurals name="trophee_premier_pas_desc">
         <item quantity="one">Une première hitbodedout</item>
-        <item quantity="other">%1$d premières hitbodedouts</item>
+        <item quantity="other">%1$d premières hitbodedout</item>
     </plurals>
     <plurals name="trophee_seance_longue_desc">
         <item quantity="one">%1$d minute en un jour</item>
@@ -923,21 +923,21 @@
     <string name="metal_platine">Platine</string>
     <string name="trophee_niveau">Niveau %1$d sur %2$d · %3$s</string>
     <string name="trophee_niveau_court">Niveau %1$d sur %2$d</string>
-    <string name="trophees_explication">Chaque trophée monte de niveau en niveau, du bronze à l’argent, à l’or puis au platine. Sous chacun : votre niveau, ce que demande le suivant, et où vous en êtes.</string>
+    <string name="trophees_explication">Chaque trophée monte de niveau en niveau, du bronze à l’argent, à l’or puis au platine. Sous chacun : votre niveau, ce que demande le suivant, et où vous en êtes.</string>
     <string name="trophee_a_venir">À gagner</string>
-    <string name="trophee_niveau_gagne">Trophée « %1$s » : niveau %2$d, %3$s !</string>
-    <string name="trophee_prochain">Prochain niveau : %1$s</string>
+    <string name="trophee_niveau_gagne">Trophée « %1$s » : niveau %2$d, %3$s !</string>
+    <string name="trophee_prochain">Prochain niveau : %1$s</string>
     <string name="trophee_sommet">Niveau le plus haut atteint</string>
-    <string name="trophee_vedette">Ton plus beau trophée</string>
-    <string name="trophee_vedette_aucune">Ton premier trophée t’attend</string>
-    <string name="chabbat_alerte_titre">Chabbat dans 3 h, prépare-toi au kiff !</string>
-    <string name="chabbat_alerte_texte">Double neshama, double simha et double repas ! Tente une double hitbodedout.</string>
+    <string name="trophee_vedette">Votre plus beau trophée</string>
+    <string name="trophee_vedette_aucune">Votre premier trophée vous attend</string>
+    <string name="chabbat_alerte_titre">Chabbat dans 3 h, prépare-toi au kiff !</string>
+    <string name="chabbat_alerte_texte">Double neshama, double simha et double repas ! Tente une double hitbodedout.</string>
     <!-- L’onglet Bibliothèque : les livres entiers (13/10) -->
     <string name="livres_title">Livres</string>
     <string name="livres_hint">Likoutei Moharan, Hichtapkhout HaNefech, Kokhvei Or, méguilot, Perek Chira, Nichmat…</string>
     <!-- La halakha du jour : le Yalkut Yosef, puis le Ben Ish 'Haï (13/10) -->
-    <string name="halakha_ben_ish_hai">Ben Ish \'Haï, paracha de la semaine</string>
-    <string name="halakha_yalkut_source">Yalkut Yosef – Kitsour Choulhan Aroukh, Rav Yitzhak Yosef (texte de Torat Emet, CC BY-NC-SA 2.5) : une sélection, non le livre entier.</string>
+    <string name="halakha_ben_ish_hai">Ben Ish ’Haï, paracha de la semaine</string>
+    <string name="halakha_yalkut_source">Yalkut Yosef – Kitsour Choul’han Aroukh, Rav Yitzhak Yosef (texte de Torat Emet, CC BY-NC-SA 2.5) : une sélection, non le livre entier.</string>
     <!-- Birkat haLevana sur la carte du jour (13/10) -->
     <string name="levana_titre">Birkat haLevana</string>
     <string name="levana_fenetre">Du %1$s au %2$s</string>
@@ -947,7 +947,7 @@
         <item quantity="one">Dans %d jour</item>
         <item quantity="other">Dans %d jours</item>
     </plurals>
-    <string name="levana_source">Choulhan Aroukh O.H. 426 ; Michna Beroura 426. Usage : %s.</string>
+    <string name="levana_source">Choul’han Aroukh O.H. 426 ; Michna Beroura 426. Usage : %s.</string>
     <!-- Polices hébraïques supplémentaires (14/10) -->
     <string name="police_frank">Frank Ruhl (classique)</string>
     <string name="police_david">David</string>
@@ -966,21 +966,21 @@
     <string name="zmanim_bouton_halakha">Halakha yomit</string>
     <string name="zmanim_bouton_hilloulot">Hilloulot</string>
     <!-- Birkat haLevana revue sur le texte (14/10). -->
-    <string name="levana_lune">Lune ce soir : %1$s éclairée, %2$s</string>
+    <string name="levana_lune">Lune ce soir : %1$s éclairée, %2$s</string>
     <string name="levana_croissante">croissante</string>
     <string name="levana_decroissante">décroissante</string>
-    <string name="levana_motsae">Conseillé : motsaé Chabbat %s (Rema 426:2)</string>
+    <string name="levana_motsae">Conseillé : motsaé Chabbat %s (Choul’han Aroukh 426:2 et Rema)</string>
     <string name="levana_kippour">Pas avant la sortie de Kippour (Rema 426:2)</string>
-    <string name="levana_tisha">Pas avant la sortie de Tich’a beAv (Rema 426:2 ; Michna Beroura 426:11)</string>
-    <string name="levana_usage_titre">Birkat haLevana : usage</string>
+    <string name="levana_tisha">Pas avant la sortie de Ticha bèAv (Rema 426:2 ; Michna Beroura 426:11)</string>
+    <string name="levana_usage_titre">Birkat haLevana : usage</string>
     <string name="levana_usage_auto">Selon le noussa’h</string>
     <string name="levana_usage_trois_mi_mois">Dès 3 jours, jusqu’à la mi-mois (Michna Beroura, Rema)</string>
     <string name="levana_usage_sept_mi_mois">Dès 7 jours, jusqu’à la mi-mois (Ari)</string>
-    <string name="levana_usage_sept_quinze">Dès 7 jours, jusqu’au 15ᵉ jour (Choulhan Aroukh)</string>
+    <string name="levana_usage_sept_quinze">Dès 7 jours, jusqu’au 15ᵉ jour (Choul’han Aroukh)</string>
     <!-- Les dix améliorations du 14/10. -->
-    <string name="levana_rappel_premier">Birkat haLevana : premier soir</string>
-    <string name="levana_rappel_motsae">Birkat haLevana : ce motsaé Chabbat</string>
-    <string name="levana_rappel_dernier">Birkat haLevana : dernier soir</string>
+    <string name="levana_rappel_premier">Birkat haLevana : premier soir</string>
+    <string name="levana_rappel_motsae">Birkat haLevana : ce motsaé Chabbat</string>
+    <string name="levana_rappel_dernier">Birkat haLevana : dernier soir</string>
     <string name="levana_rappel_texte">Touchez pour ouvrir le texte.</string>
     <string name="levana_rappel_reglage">Rappel de Birkat haLevana</string>
     <string name="levana_lire">Lire Birkat haLevana ›</string>
@@ -992,7 +992,7 @@
     <string name="widget_zmanim_jusqua">%1$s jusqu’à %2$s</string>
     <string name="widget_zmanim_chkia">Chki’a %s</string>
     <string name="settings_ne_pas_deranger">Ne pas déranger pendant la hitbodedout</string>
-    <string name="settings_ne_pas_deranger_hint">Le téléphone passe en mode « priorité » le temps de la hitbodedout, puis revient comme avant. Android demande une autorisation la première fois.</string>
+    <string name="settings_ne_pas_deranger_hint">Le téléphone passe en mode « priorité » le temps de la hitbodedout, puis revient comme avant. Android demande une autorisation la première fois.</string>
     <string name="recherche_titre">Recherche</string>
     <string name="recherche_indice">Rechercher dans le siddour, les livres, la halakha, les hilloulot</string>
     <string name="recherche_livres">Livres</string>
@@ -1001,7 +1001,7 @@
     <string name="reprise_titre">Reprendre la lecture</string>
     <string name="favoris_titre">Favoris</string>
     <string name="marques_titre">Marque-pages</string>
-    <string name="marques_aucun">Aucun marque-page dans ce texte. Un appui long sur un paragraphe en pose un ; un autre le retire.</string>
+    <string name="marques_aucun">Aucun marque-page dans ce texte. Un appui long sur un paragraphe en pose un ; un autre le retire.</string>
     <string name="marque_posee">Marque-page posé</string>
     <string name="marque_retiree">Marque-page retiré</string>
     <string name="fond_contraste">Contraste élevé</string>
@@ -1013,25 +1013,25 @@
     <string name="journal_graphique">Les minutes de chaque jour, %s</string>
     <string name="partage_jour">Partager ce jour</string>
     <plurals name="widget_zmanim_serie">
-        <item quantity="one">Série : %d jour</item>
-        <item quantity="other">Série : %d jours</item>
+        <item quantity="one">Série : %d jour</item>
+        <item quantity="other">Série : %d jours</item>
     </plurals>
     <!-- Les trophées, lot du 16/10 : détail, date, proches, filtre, accueil, partage, bilan, rappel. -->
     <string name="trophee_gagne_le">Gagné le %1$s</string>
     <string name="trophee_a_gagner">À gagner · %1$d / %2$d</string>
-    <string name="trophee_detail_grade">En %1$s : c’était ton %2$dᵉ trophée.</string>
+    <string name="trophee_detail_grade">En %1$s : c’était votre %2$dᵉ trophée.</string>
     <string name="trophees_proches_titre">Les plus proches</string>
     <string name="trophees_filtre_tous">Tous</string>
-    <string name="trophees_filtre">Montrer les trophées : %1$s</string>
-    <string name="accueil_prochain_trophee">Prochain trophée : %1$s · encore %2$d</string>
+    <string name="trophees_filtre">Montrer les trophées : %1$s</string>
+    <string name="accueil_prochain_trophee">Prochain trophée : %1$s · encore %2$d</string>
     <string name="grade_partager">Partager mon grade</string>
-    <string name="grade_partage_texte">Grade %1$s sur MyHitbodedut : %2$d trophées, jour après jour.</string>
-    <string name="bilan_titre">Ta semaine</string>
+    <string name="grade_partage_texte">Grade %1$s sur MyHitbodedut : %2$d trophées, jour après jour.</string>
+    <string name="bilan_titre">Votre semaine</string>
     <string name="bilan_minutes">%1$s de hitbodedout, sur %2$s.</string>
     <string name="bilan_plus">%1$s de plus que la semaine d’avant.</string>
-    <string name="bilan_record">Ta meilleure semaine jusqu’ici.</string>
-    <string name="bilan_trophees">Trophées gagnés cette semaine :</string>
-    <string name="rappel_trophee_proche">Plus que %1$d pour « %2$s ».</string>
+    <string name="bilan_record">Votre meilleure semaine jusqu’ici.</string>
+    <string name="bilan_trophees">Trophées gagnés cette semaine :</string>
+    <string name="rappel_trophee_proche">Plus que %1$d pour « %2$s ».</string>
     <string name="rappel_trophee_reglage">Dire dans le rappel qu’un trophée est tout proche</string>
     <!-- Ajouter du temps à un jour passé (16/10). -->
     <string name="jour_ajouter_temps">Ajouter du temps fait hors du téléphone</string>
@@ -1041,16 +1041,16 @@
     <string name="jour_ajoute">%1$s ajoutées.</string>
     <!-- Les rappels de tefila (16/10) : un changement dans la prière, annoncé quelques jours avant. -->
     <string name="rappel_pluie_debut_titre">Bénédiction d’hiver dans la Amida</string>
-    <string name="rappel_pluie_debut_edot">%1$s, à la Amida d’Arvit, on commence à dire la bénédiction d’hiver « בָּרֵךְ עָלֵינוּ ».</string>
-    <string name="rappel_pluie_debut">%1$s, à la Amida d’Arvit, on commence à demander la pluie : « וְתֵן טַל וּמָטָר לִבְרָכָה ».</string>
+    <string name="rappel_pluie_debut_edot">%1$s, à la Amida d’Arvit, on commence à dire la bénédiction d’hiver « בָּרֵךְ עָלֵינוּ ».</string>
+    <string name="rappel_pluie_debut">%1$s, à la Amida d’Arvit, on commence à demander la pluie : « וְתֵן טַל וּמָטָר לִבְרָכָה ».</string>
     <string name="rappel_pluie_fin_titre">Bénédiction d’été dans la Amida</string>
-    <string name="rappel_pluie_fin_edot">À partir de Pessa’h, on revient à la bénédiction d’été « בָּרְכֵנוּ ».</string>
-    <string name="rappel_pluie_fin">À partir de Pessa’h, on ne demande plus la pluie : « וְתֵן בְּרָכָה ».</string>
-    <string name="rappel_guechem_titre">« מַשִּׁיב הָרוּחַ » dans la Amida</string>
-    <string name="rappel_guechem_debut">%1$s, à Moussaf de Chemini Atseret, on commence à dire « מַשִּׁיב הָרוּחַ וּמוֹרִיד הַגֶּשֶׁם ».</string>
-    <string name="rappel_guechem_fin">%1$s, à Moussaf du premier jour de Pessa’h, on cesse de dire « מַשִּׁיב הָרוּחַ וּמוֹרִיד הַגֶּשֶׁם ».</string>
+    <string name="rappel_pluie_fin_edot">À partir de Pessa’h, on revient à la bénédiction d’été « בָּרְכֵנוּ ».</string>
+    <string name="rappel_pluie_fin">À partir de Pessa’h, on ne demande plus la pluie : « וְתֵן בְּרָכָה ».</string>
+    <string name="rappel_guechem_titre">« מַשִּׁיב הָרוּחַ » dans la Amida</string>
+    <string name="rappel_guechem_debut">%1$s, à Moussaf de Chemini Atsérèt, on commence à dire « מַשִּׁיב הָרוּחַ וּמוֹרִיד הַגֶּשֶׁם ».</string>
+    <string name="rappel_guechem_fin">%1$s, à Moussaf du premier jour de Pessa’h, on cesse de dire « מַשִּׁיב הָרוּחַ וּמוֹרִיד הַגֶּשֶׁם ».</string>
     <string name="rappel_dix_jours_titre">Dix jours de techouva</string>
-    <string name="rappel_dix_jours">%1$s commencent les dix jours de techouva : « הַמֶּלֶךְ הַקָּדוֹשׁ », « הַמֶּלֶךְ הַמִּשְׁפָּט » et les ajouts de la Amida (« זָכְרֵנוּ »…).</string>
+    <string name="rappel_dix_jours">%1$s commencent les dix jours de techouva : « הַמֶּלֶךְ הַקָּדוֹשׁ », « הַמֶּלֶךְ הַמִּשְׁפָּט » et les ajouts de la Amida (« זָכְרֵנוּ »…).</string>
     <string name="rappel_omer_titre">Compte de l’Omer</string>
     <string name="rappel_omer">%1$s, après Arvit, on commence à compter l’Omer.</string>
     <string name="rappel_source">Choul’han Aroukh, Ora’h ’Haïm %1$s</string>

@@ -63,7 +63,8 @@ object Trophees {
 
     /** La valeur que la famille compte : minutes, jours, heures, semaines, vendredis, retours, notes. */
     fun valeur(p: Pratique, f: Famille): Int {
-        val jours = p.minutes.filterValues { it > 0 }.keys
+        // Un jour validé compte, même à 0 min (« Terminer » avant la première minute, déjà fait) : comme la série.
+        val jours = p.minutes.keys
         return when (f) {
             Famille.PREMIER_PAS -> jours.size.coerceAtMost(5)
             Famille.SEANCE_LONGUE -> p.minutes.values.maxOrNull() ?: 0
@@ -158,10 +159,10 @@ object Trophees {
         var semaines = 0; var notesVues = 0; var courante = 0; var meilleure = 0
         var precedent: LocalDate? = null
         val semainesPleines = mutableSetOf<LocalDate>()
-        for (d in (minutes.filterValues { it > 0 }.keys + notes).toSortedSet()) {
+        for (d in (minutes.keys + notes).toSortedSet()) {
             if (d in notes) notesVues++
             val m = minutes[d] ?: 0
-            if (m > 0) {
+            if (d in minutes) {
                 faits += d
                 jours++; total += m; plusLongue = maxOf(plusLongue, m)
                 if (d.dayOfWeek == DayOfWeek.FRIDAY) vendredis++
