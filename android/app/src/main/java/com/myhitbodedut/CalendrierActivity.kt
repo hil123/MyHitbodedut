@@ -67,7 +67,7 @@ class CalendrierActivity : AppCompatActivity() {
             orientation = LinearLayout.HORIZONTAL
             layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
                 .apply { gravity = Gravity.CENTER_HORIZONTAL; bottomMargin = dp(8) }
-            setPadding(dp(3), dp(3), dp(3), dp(3))
+            setPadding(dp(4), dp(4), dp(4), dp(4))
             background = GradientDrawable().apply {
                 cornerRadius = dp(999).toFloat()
                 setColor(ColorUtils.setAlphaComponent(Apparence.couleur(context, R.color.brand), 0x17))
@@ -113,7 +113,7 @@ class CalendrierActivity : AppCompatActivity() {
                 val jour = DayOfWeek.SUNDAY.plus(i.toLong())
                 addView(TextView(this@CalendrierActivity).apply {
                     gravity = Gravity.CENTER
-                    layoutParams = LinearLayout.LayoutParams(0, dp(24), 1f).apply { marginStart = dp(2); marginEnd = dp(2) }
+                    layoutParams = LinearLayout.LayoutParams(0, dp(24), 1f).apply { marginStart = dp(0); marginEnd = dp(0) }
                     text = jour.getDisplayName(TextStyle.NARROW, locale)
                     textSize = 12f
                     setTextColor(Apparence.couleur(context, R.color.muted))
@@ -167,7 +167,7 @@ class CalendrierActivity : AppCompatActivity() {
         }
         carte.addView(VueJour.texte(this, getString(R.string.calendrier_aujourdhui), 15f, R.color.brand, gras = true, haut = 10).apply {
             gravity = Gravity.CENTER
-            setPadding(0, dp(6), 0, dp(6))
+            setPadding(0, dp(4), 0, dp(4))
             setOnClickListener { choisi = aujourdhui; mois = YearMonth.from(aujourdhui); moisHebreu = null; afficher() }
         })
         contenu.addView(carte)
@@ -204,7 +204,7 @@ class CalendrierActivity : AppCompatActivity() {
     private fun choixVue(texte: Int, actif: Boolean, action: () -> Unit) = TextView(this).apply {
         setText(texte)
         textSize = 14f
-        setPadding(dp(16), dp(6), dp(16), dp(6))
+        setPadding(dp(16), dp(4), dp(16), dp(4))
         setTextColor(Apparence.couleur(context, if (actif) R.color.on_brand else R.color.brand))
         if (actif) {
             setTypeface(typeface, Typeface.BOLD)

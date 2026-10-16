@@ -75,7 +75,7 @@ class TehilimActivity : AppCompatActivity() {
             numeros.forEach { n ->
                 ligne.addView(TextView(this).apply {
                     layoutParams = LinearLayout.LayoutParams(0, dp(48), 1f).apply {
-                        setMargins(dp(3), dp(3), dp(3), dp(3))
+                        setMargins(dp(4), dp(4), dp(4), dp(4))
                     }
                     gravity = Gravity.CENTER
                     text = TehilimTexte.nombre(this@TehilimActivity, n)

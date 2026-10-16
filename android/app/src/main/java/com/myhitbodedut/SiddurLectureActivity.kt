@@ -249,7 +249,7 @@ class SiddurLectureActivity : AppCompatActivity() {
             rang.addView(TextView(this).apply {
                 text = (lignes[position] as SiddurJour.Ligne.Titre).texte
                 textSize = 13f
-                setPadding(dp(10), dp(4), dp(10), dp(4))
+                setPadding(dp(8), dp(4), dp(8), dp(4))
                 // 48 dp de haut : une cible qu'on touche sans viser (audit du 16/10).
                 minHeight = dp(48)
                 gravity = android.view.Gravity.CENTER
@@ -339,14 +339,14 @@ class SiddurLectureActivity : AppCompatActivity() {
                 is Note -> vue.apply {
                     layoutDirection = View.LAYOUT_DIRECTION_LOCALE
                     textDirection = View.TEXT_DIRECTION_LOCALE
-                    setPadding(dp(20), dp(10), dp(20), dp(2))
+                    setPadding(dp(16), dp(8), dp(16), dp(0))
                     text = ligne.texte
                     textSize = 12f
                     setTextColor(rendu.discret)
                 }
                 is SiddurJour.Ligne.Titre -> vue.apply {
                     PoliceHebraique.appliquer(this)
-                    setPadding(dp(20), dp(if (position == 0) 6 else 26), dp(20), dp(4))
+                    setPadding(dp(16), dp(if (position == 0) 6 else 26), dp(16), dp(4))
                     text = ligne.texte
                     textSize = 20f * e
                     setTypeface(typeface, android.graphics.Typeface.BOLD)
@@ -356,7 +356,7 @@ class SiddurLectureActivity : AppCompatActivity() {
                     PoliceHebraique.appliquer(this)
                     val consigne = ligne.bloc.consigne
                     // Des paragraphes aérés ; les consignes, petites, collées au texte qu'elles annoncent (12/10).
-                    setPadding(dp(20), dp(if (consigne) 18 else 14), dp(20), dp(if (consigne) 2 else 12))
+                    setPadding(dp(16), dp(if (consigne) 18 else 14), dp(16), dp(if (consigne) 2 else 12))
                     text = Html.fromHtml(ligne.bloc.texte, Html.FROM_HTML_MODE_LEGACY)
                     textSize = (if (consigne) 12f else 19f) * e
                     setLineSpacing(dp(if (consigne) 2 else 10).toFloat() * e, 1f)
@@ -379,7 +379,7 @@ class SiddurLectureActivity : AppCompatActivity() {
                 is SiddurJour.Ligne.Etiquette -> vue.apply {
                     layoutDirection = View.LAYOUT_DIRECTION_LOCALE
                     textDirection = View.TEXT_DIRECTION_LOCALE
-                    setPadding(dp(20), dp(10), dp(20), dp(2))
+                    setPadding(dp(16), dp(8), dp(16), dp(0))
                     text = getString(R.string.siddur_aujourdhui) + " · " + nom(ligne.libelle)
                     textSize = 12f
                     setTypeface(typeface, android.graphics.Typeface.BOLD)
@@ -388,7 +388,7 @@ class SiddurLectureActivity : AppCompatActivity() {
                 }
                 is SiddurJour.Ligne.Indice -> vue.apply {
                     PoliceHebraique.appliquer(this)
-                    setPadding(dp(20), dp(0), dp(20), dp(8))
+                    setPadding(dp(16), dp(0), dp(16), dp(8))
                     text = getString(R.string.siddur_aujourdhui) + " : " + ligne.texte
                     textSize = 12f * e
                     setTextColor(rendu.titre)
@@ -397,7 +397,7 @@ class SiddurLectureActivity : AppCompatActivity() {
                     // « Aujourd'hui · הַלֵּל › » : le texte de ce jour, à cet endroit, ouvert d'un geste.
                     val cible = recueil().texte(ligne.cible)
                     PoliceHebraique.appliquer(this)
-                    setPadding(dp(20), dp(12), dp(20), dp(12))
+                    setPadding(dp(16), dp(12), dp(16), dp(12))
                     text = getString(R.string.siddur_aujourdhui) + " · " + (cible?.titre?.he ?: ligne.cible) + "  ›"
                     textSize = 15f * e
                     setTypeface(typeface, android.graphics.Typeface.BOLD)
@@ -409,7 +409,7 @@ class SiddurLectureActivity : AppCompatActivity() {
                 is SiddurJour.Ligne.Replie -> vue.apply {
                     layoutDirection = View.LAYOUT_DIRECTION_LOCALE
                     textDirection = View.TEXT_DIRECTION_LOCALE
-                    setPadding(dp(20), dp(10), dp(20), dp(10))
+                    setPadding(dp(16), dp(8), dp(16), dp(8))
                     val rtl = resources.configuration.layoutDirection == View.LAYOUT_DIRECTION_RTL
                     val fleche = if (ligne.ouvert) "▾" else if (rtl) "◂" else "▸"
                     val etat = getString(if (ligne.ouvert) R.string.siddur_replier else R.string.siddur_pas_aujourdhui)

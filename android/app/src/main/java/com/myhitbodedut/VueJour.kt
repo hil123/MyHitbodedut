@@ -28,9 +28,9 @@ object VueJour {
     fun carte(c: Context): LinearLayout = LinearLayout(c).apply {
         orientation = LinearLayout.VERTICAL
         setBackgroundResource(R.drawable.bg_card)
-        setPadding(dp(c, 18), dp(c, 16), dp(c, 18), dp(c, 16))
+        setPadding(dp(c, 16), dp(c, 16), dp(c, 16), dp(c, 16))
         layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-            .apply { setMargins(dp(c, 16), dp(c, 14), dp(c, 16), 0) }
+            .apply { setMargins(dp(c, 16), dp(c, 12), dp(c, 16), 0) }
     }
 
     fun texte(c: Context, valeur: CharSequence, taille: Float, couleurId: Int, gras: Boolean = false, haut: Int = 0) =
@@ -40,8 +40,12 @@ object VueJour {
             setTextColor(couleur(c, couleurId))
             if (gras) setTypeface(typeface, Typeface.BOLD)
             layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-                .apply { topMargin = dp(c, haut) }
+                .apply { topMargin = dp(c, espace(haut)) }
         }
+
+    /** L'échelle des espacements (16/10, validée) : 0, 4, 8, 12, 16, 24, 32 ; la valeur la plus proche. */
+    fun espace(v: Int): Int = ECHELLE.minByOrNull { kotlin.math.abs(it - v) * 100 + ECHELLE.indexOf(it) }!!
+    private val ECHELLE = intArrayOf(0, 4, 8, 12, 16, 24, 32, 40)
 
     private fun locale(langue: String): Locale = Locale.forLanguageTag(langue)
 
@@ -72,7 +76,7 @@ object VueJour {
             addView(Levana.Dessin(c, lune, sud = (lieu?.latitude ?: 1.0) < 0).apply {
                 contentDescription = null
                 layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-                    .apply { marginEnd = dp(c, 14) }
+                    .apply { marginEnd = dp(c, 12) }
             })
             addView(LinearLayout(c).apply {
                 orientation = LinearLayout.VERTICAL
@@ -117,7 +121,7 @@ object VueJour {
                 adjustViewBounds = true
                 contentDescription = null
                 layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, dp(c, 150))
-                    .apply { gravity = Gravity.CENTER_HORIZONTAL; bottomMargin = dp(c, 10) }
+                    .apply { gravity = Gravity.CENTER_HORIZONTAL; bottomMargin = dp(c, 8) }
             })
         }
         carte.addView(texte(c, j.dateHebraique, 26f, R.color.brand, gras = true).apply {
@@ -218,7 +222,7 @@ object VueJour {
     }
 
     private fun lien(c: Context, libelle: String, action: View.OnClickListener) = texte(c, libelle, 15f, R.color.brand, gras = true, haut = 4).apply {
-        setPadding(0, dp(c, 6), 0, dp(c, 6))
+        setPadding(0, dp(c, 4), 0, dp(c, 4))
         minHeight = dp(c, 48)
         gravity = android.view.Gravity.CENTER_VERTICAL or android.view.Gravity.START
         foreground = c.getDrawable(android.R.drawable.list_selector_background)
@@ -285,7 +289,7 @@ object VueJour {
     /** Le pied : la méthode est à valider ; la source des villes, comme CC-BY le demande. */
     fun pied(c: Context): View = LinearLayout(c).apply {
         orientation = LinearLayout.VERTICAL
-        setPadding(dp(c, 20), dp(c, 18), dp(c, 20), 0)
+        setPadding(dp(c, 16), dp(c, 16), dp(c, 16), 0)
         addView(texte(c, c.getString(R.string.zmanim_a_valider), 12f, R.color.muted))
         addView(texte(c, c.getString(R.string.zmanim_source_villes), 12f, R.color.muted, haut = 6))
     }

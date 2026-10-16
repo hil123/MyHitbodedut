@@ -64,7 +64,7 @@ class LiturgyActivity : AppCompatActivity() {
             layoutParams = LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT,
-            ).apply { topMargin = if (premier) 0 else dp(14) }
+            ).apply { topMargin = if (premier) 0 else dp(12) }
             text = texte
             layoutDirection = View.LAYOUT_DIRECTION_RTL
             textAlignment =

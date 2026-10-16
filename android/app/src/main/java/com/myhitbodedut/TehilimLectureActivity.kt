@@ -78,10 +78,10 @@ class TehilimLectureActivity : AppCompatActivity() {
         layoutParams = LinearLayout.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT,
         ).apply {
-            topMargin = if (premier) 0 else dp(26)
+            topMargin = if (premier) 0 else dp(24)
             bottomMargin = dp(12)
-            marginStart = dp(20)
-            marginEnd = dp(20)
+            marginStart = dp(16)
+            marginEnd = dp(16)
         }
         text = texte
         layoutDirection = View.LAYOUT_DIRECTION_RTL
@@ -98,8 +98,8 @@ class TehilimLectureActivity : AppCompatActivity() {
             ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT,
         ).apply {
             topMargin = dp(4)
-            marginStart = dp(20)
-            marginEnd = dp(20)
+            marginStart = dp(16)
+            marginEnd = dp(16)
         }
         val discret = rendu.discret
         val bloc = SpannableStringBuilder()

@@ -79,7 +79,7 @@ class PaliersActivity : AppCompatActivity() {
                         TropheesVue.metal(context, Trophees.grade(suivant))) else getString(R.string.grade_sous_max, n), 13f, R.color.muted, haut = 2))
                     if (suivant != null) {
                         val de = Trophees.SEUILS_GRADES.last { it <= n }
-                        addView(barre((n - de).toFloat() / (suivant - de), dp(6), grade).apply { (layoutParams as LinearLayout.LayoutParams).topMargin = dp(6) })
+                        addView(barre((n - de).toFloat() / (suivant - de), dp(6), grade).apply { (layoutParams as LinearLayout.LayoutParams).topMargin = dp(4) })
                     }
                 })
             })
@@ -99,7 +99,7 @@ class PaliersActivity : AppCompatActivity() {
                 foreground = ondulation()
                 setOnClickListener { partager(grade, n) }
                 layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply {
-                    gravity = Gravity.CENTER_HORIZONTAL; topMargin = dp(6)
+                    gravity = Gravity.CENTER_HORIZONTAL; topMargin = dp(4)
                 }
             })
         })
@@ -230,7 +230,7 @@ class PaliersActivity : AppCompatActivity() {
         addView(View(context).apply { background = TropheeDessin(context, t.famille.forme, null, t.famille.icone); alpha = 0.6f },
             LinearLayout.LayoutParams(dp(30), dp(30)))
         addView(VueJour.texte(context, TropheesVue.description(context, t.famille, t.seuil), 14f, R.color.ink).apply {
-            layoutParams = LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f).apply { marginStart = dp(10) }
+            layoutParams = LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f).apply { marginStart = dp(8) }
         })
         // VueJour.texte pose MATCH_PARENT : ici le compte doit rester à sa taille, sinon il prend
         // toute la ligne et le titre pondéré tombe à zéro (une lettre par ligne, captures du 16/10).
@@ -304,7 +304,7 @@ class PaliersActivity : AppCompatActivity() {
                     orientation = LinearLayout.VERTICAL
                     layoutParams = LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f).apply { marginStart = dp(12) }
                     addView(VueJour.texte(context, TropheesVue.description(context, t.famille, t.seuil), 19f, R.color.ink, gras = true))
-                    b = barre(Trophees.fraction(p, t), dp(10), null).apply { (layoutParams as LinearLayout.LayoutParams).topMargin = dp(10) }
+                    b = barre(Trophees.fraction(p, t), dp(10), null).apply { (layoutParams as LinearLayout.LayoutParams).topMargin = dp(8) }
                     addView(b)
                     val v = Trophees.valeur(p, t.famille).coerceAtMost(t.seuil)
                     compte = VueJour.texte(context, getString(R.string.trophee_encore, v, t.seuil, t.seuil - v), 14f, R.color.brand, gras = true, haut = 4)
@@ -384,14 +384,14 @@ class PaliersActivity : AppCompatActivity() {
         orientation = LinearLayout.HORIZONTAL
         gravity = Gravity.CENTER_VERTICAL
         setPadding(dp(12), dp(8), dp(12), dp(8))
-        layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply { setMargins(0, dp(6), 0, dp(6)) }
+        layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply { setMargins(0, dp(4), 0, dp(4)) }
         val (clair, fonce, _) = TropheeDessin.teintes(g)
         background = GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT,
             if (atteint) intArrayOf(clair, fonce) else intArrayOf(0x1AFFFFFF, 0x1AFFFFFF)).apply { cornerRadius = dp(14).toFloat() }
         addView(medaille(if (atteint) g else null, "★", 34))
         addView(LinearLayout(context).apply {
             orientation = LinearLayout.VERTICAL
-            layoutParams = LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f).apply { marginStart = dp(10) }
+            layoutParams = LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f).apply { marginStart = dp(8) }
             val encre = if (atteint) Color.rgb(0x1A, 0x13, 0x06) else Apparence.couleur(context, R.color.muted)
             addView(TextView(context).apply {
                 text = getString(if (atteint) R.string.grade_atteint else R.string.grade_titre, TropheesVue.metal(context, g))

@@ -121,7 +121,7 @@ class ZmanimActivity : AppCompatActivity() {
             letterSpacing = 0f
             androidx.core.widget.TextViewCompat.setAutoSizeTextTypeUniformWithConfiguration(
                 this, 9, 14, 1, android.util.TypedValue.COMPLEX_UNIT_SP)
-            setPadding(dp(6), paddingTop, dp(6), paddingBottom)
+            setPadding(dp(4), paddingTop, dp(4), paddingBottom)
             layoutParams = LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f).apply { marginStart = dp(marge) }
             setOnClickListener { action() }
         }

@@ -57,7 +57,7 @@ object RepriseFavoris {
             textDirection = View.TEXT_DIRECTION_RTL
             textAlignment = View.TEXT_ALIGNMENT_VIEW_START
             setTextColor(Apparence.couleur(c, R.color.ink))
-            setPadding(0, dp(c, 6), 0, dp(c, 6))
+            setPadding(0, dp(c, 4), 0, dp(c, 4))
             PoliceHebraique.appliquer(this)
             foreground = c.getDrawable(android.R.drawable.list_selector_background)
             setOnClickListener { action() }

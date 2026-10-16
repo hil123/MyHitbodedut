@@ -105,7 +105,7 @@ class PsalmActivity : AppCompatActivity() {
                 setTextColor(Apparence.couleur(context, R.color.brand))
                 // Large selon le nombre : « 45 » tient sur une ligne même à 200 %.
                 layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-                    .apply { topMargin = dp(5); marginEnd = dp(6) }
+                    .apply { topMargin = dp(4); marginEnd = dp(4) }
                 minWidth = dp(22)
             }, Role.TITRE)
         )
@@ -136,9 +136,9 @@ class PsalmActivity : AppCompatActivity() {
             ViewGroup.LayoutParams.MATCH_PARENT,
             ViewGroup.LayoutParams.WRAP_CONTENT,
         ).apply {
-            topMargin = dp(6)
+            topMargin = dp(4)
             // Aligne sur le texte du verset, pas sur son numero.
-            marginEnd = dp(22)
+            marginEnd = dp(24)
         }
         text = arret.note
         layoutDirection = View.LAYOUT_DIRECTION_RTL

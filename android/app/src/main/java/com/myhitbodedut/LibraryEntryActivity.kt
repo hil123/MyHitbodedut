@@ -82,7 +82,7 @@ class LibraryEntryActivity : AppCompatActivity() {
             layoutParams = LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT,
-            ).apply { topMargin = if (first) 0 else dp(14) }
+            ).apply { topMargin = if (first) 0 else dp(12) }
             this.text = text
             layoutDirection = View.LAYOUT_DIRECTION_RTL
             textAlignment = View.TEXT_ALIGNMENT_VIEW_START
@@ -160,8 +160,8 @@ class LibraryEntryActivity : AppCompatActivity() {
     private fun separator(): View = View(this).apply {
         layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, dp(1))
             .apply {
-                topMargin = dp(14)
-                bottomMargin = dp(18)
+                topMargin = dp(12)
+                bottomMargin = dp(16)
             }
         setBackgroundColor(Apparence.couleur(context, R.color.line))
     }

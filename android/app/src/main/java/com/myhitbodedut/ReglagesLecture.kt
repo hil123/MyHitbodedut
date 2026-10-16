@@ -79,7 +79,7 @@ class ReglagesLecture private constructor(
         setTextColor(surAccent)
         background = fondArrondi(18)
         minWidth = dp(56)
-        setPadding(dp(14), 0, dp(14), 0)
+        setPadding(dp(12), 0, dp(12), 0)
         elevation = dp(6).toFloat()
         contentDescription = contexte.getString(R.string.lecture_reglages)
         setOnClickListener { deplier(true) }
@@ -92,7 +92,7 @@ class ReglagesLecture private constructor(
         orientation = LinearLayout.HORIZONTAL
         gravity = Gravity.CENTER_VERTICAL
         background = fondArrondi(24)
-        setPadding(dp(6), 0, dp(6), 0)
+        setPadding(dp(4), 0, dp(4), 0)
         elevation = dp(6).toFloat()
         // A− à gauche et A+ à droite, quelle que soit la langue.
         layoutDirection = View.LAYOUT_DIRECTION_LTR

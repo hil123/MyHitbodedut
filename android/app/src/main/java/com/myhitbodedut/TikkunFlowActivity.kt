@@ -84,10 +84,10 @@ class TikkunFlowActivity : AppCompatActivity() {
             ViewGroup.LayoutParams.MATCH_PARENT,
             ViewGroup.LayoutParams.WRAP_CONTENT,
         ).apply {
-            topMargin = if (premier) 0 else dp(26)
-            bottomMargin = dp(6)
-            marginStart = dp(20)
-            marginEnd = dp(20)
+            topMargin = if (premier) 0 else dp(24)
+            bottomMargin = dp(4)
+            marginStart = dp(16)
+            marginEnd = dp(16)
         }
         text = texte
         layoutDirection = View.LAYOUT_DIRECTION_RTL
@@ -136,9 +136,9 @@ class TikkunFlowActivity : AppCompatActivity() {
         ViewGroup.LayoutParams.WRAP_CONTENT,
     ).apply {
         // Des lignes aérées (12/10), comme le siddour.
-        topMargin = dp(14)
-        marginStart = dp(20)
-        marginEnd = dp(20)
+        topMargin = dp(12)
+        marginStart = dp(16)
+        marginEnd = dp(16)
     }
 
     private fun dp(value: Int): Int = (value * resources.displayMetrics.density).toInt()

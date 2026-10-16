@@ -90,8 +90,8 @@ class SiddurActivity : AppCompatActivity() {
         // Les seules mentions que les licences demandent (CC-BY du siddour Metsudah, Wikipédia).
         if (siddur.mentions.isNotEmpty()) liste.addView(TextView(this).apply {
             layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-                .apply { topMargin = dp(20) }
-            setPadding(dp(20), 0, dp(20), 0)
+                .apply { topMargin = dp(16) }
+            setPadding(dp(16), 0, dp(16), 0)
             text = getString(R.string.siddur_sources, siddur.mentions.joinToString(" ; "))
             textSize = 12f
             setTextColor(Apparence.couleur(context, R.color.muted))
@@ -154,7 +154,7 @@ class SiddurActivity : AppCompatActivity() {
         setBackgroundResource(R.drawable.bg_card)
         layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
             .apply { setMargins(dp(16), dp(16), dp(16), 0) }
-        setPadding(dp(14), dp(14), dp(18), dp(14))
+        setPadding(dp(12), dp(12), dp(16), dp(12))
         ondulation(this)
         setOnClickListener { ouvrir() }
         addView(scene(image, 72, 86))
@@ -168,7 +168,7 @@ class SiddurActivity : AppCompatActivity() {
                 letterSpacing = 0.06f
                 setTextColor(Apparence.couleur(context, R.color.brand))
             })
-            addView(texteHebreu(texte.titre.he, 26f).apply { setPadding(0, dp(2), 0, 0) })
+            addView(texteHebreu(texte.titre.he, 26f).apply { setPadding(0, dp(0), 0, 0) })
             texte.titre.forLanguage(langue).takeIf { it != texte.titre.he }?.let { traduction ->
                 addView(TextView(context).apply {
                     text = traduction
@@ -191,8 +191,8 @@ class SiddurActivity : AppCompatActivity() {
             gravity = Gravity.CENTER_HORIZONTAL
             setBackgroundResource(R.drawable.bg_card)
             layoutParams = LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 1f)
-                .apply { if (fin) marginStart = dp(10) }
-            setPadding(dp(12), dp(14), dp(12), dp(14))
+                .apply { if (fin) marginStart = dp(8) }
+            setPadding(dp(12), dp(12), dp(12), dp(12))
             ondulation(this)
             setOnClickListener { ouvrir() }
             addView(scene(dessin, 56, 66))
@@ -213,8 +213,8 @@ class SiddurActivity : AppCompatActivity() {
         orientation = LinearLayout.HORIZONTAL
         gravity = Gravity.BOTTOM
         layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-            .apply { topMargin = dp(22) }
-        setPadding(dp(20), 0, dp(20), 0)
+            .apply { topMargin = dp(24) }
+        setPadding(dp(16), 0, dp(16), 0)
         addView(TextView(context).apply {
             text = hebreu
             textSize = 17f
@@ -225,7 +225,7 @@ class SiddurActivity : AppCompatActivity() {
         traduction?.let {
             addView(TextView(context).apply {
                 layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-                    .apply { marginStart = dp(10); bottomMargin = dp(2) }
+                    .apply { marginStart = dp(8); bottomMargin = dp(0) }
                 text = it
                 textSize = 13f
                 setTextColor(Apparence.couleur(context, R.color.muted))
@@ -238,7 +238,7 @@ class SiddurActivity : AppCompatActivity() {
         setBackgroundResource(R.drawable.bg_card)
         layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
             .apply { setMargins(dp(16), dp(8), dp(16), 0) }
-        setPadding(dp(18), dp(2), dp(12), dp(2))
+        setPadding(dp(16), dp(0), dp(12), dp(0))
         lignes.forEachIndexed { i, v ->
             if (i > 0) addView(View(context).apply {
                 layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, dp(1))
@@ -269,7 +269,7 @@ class SiddurActivity : AppCompatActivity() {
                 })
             })
             addView(ImageView(context).apply {
-                layoutParams = LinearLayout.LayoutParams(dp(22), dp(22)).apply { marginStart = dp(10) }
+                layoutParams = LinearLayout.LayoutParams(dp(22), dp(22)).apply { marginStart = dp(8) }
                 setImageResource(R.drawable.ic_chevron)
                 contentDescription = null
             })
