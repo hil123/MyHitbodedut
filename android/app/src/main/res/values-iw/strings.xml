@@ -603,6 +603,8 @@
     <string name="zmanim_position">המיקום שלי</string>
     <string name="zmanim_position_attente">מאתר את המיקום…</string>
     <string name="zmanim_position_refusee">המיקום אינו זמין: בחרו עיר.</string>
+    <string name="zmanim_position_pres">המיקום שלי · ליד %1$s</string>
+    <string name="zmanim_position_ancienne">אין מיקום עדכני: נעשה שימוש במיקום הידוע האחרון.</string>
     <string name="zmanim_calendrier">לוח שנה</string>
     <string name="zmanim_absent">אינו מתרחש היום</string>
     <string name="zmanim_erreur">החישוב נכשל</string>

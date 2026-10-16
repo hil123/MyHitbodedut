@@ -55,7 +55,14 @@ class ChoixLieu(private val activite: AppCompatActivity, private val apres: () -
         if (accordee) localiser() else autorisation.launch(Manifest.permission.ACCESS_COARSE_LOCATION)
     }
 
-    /** La dernière position connue si elle date de moins d'une heure, sinon une position fraîche. */
+    /**
+     * La position (16/10, « la position ne marche pas très bien ») : une position connue de
+     * moins d'une heure sert telle quelle ; sinon tous les fournisseurs permis et allumés
+     * (réseau, GPS, passif) sont interrogés ensemble, le premier qui répond l'emporte, et au
+     * bout de 25 s sans réponse la dernière position connue, même ancienne, sert encore — pour
+     * des zmanim, quelques kilomètres ne changent rien. Avant, seul le premier fournisseur
+     * était interrogé, et un réseau sans localisation suffisait à tout faire échouer.
+     */
     @SuppressLint("MissingPermission") // vérifiée par demanderPosition
     private fun localiser() {
         val lm = activite.getSystemService(LocationManager::class.java) ?: return echec()
@@ -66,41 +73,70 @@ class ChoixLieu(private val activite: AppCompatActivity, private val apres: () -
         val permis = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) tous else listOf(LocationManager.NETWORK_PROVIDER)
         val connue = tous.mapNotNull { runCatching { lm.getLastKnownLocation(it) }.getOrNull() }.maxByOrNull { it.time }
         if (connue != null && System.currentTimeMillis() - connue.time < UNE_HEURE) return enregistrer(connue)
-        val fournisseur = permis.firstOrNull { runCatching { lm.isProviderEnabled(it) }.getOrDefault(false) } ?: return echec()
+        val actifs = permis.filter { runCatching { lm.isProviderEnabled(it) }.getOrDefault(false) }
+        if (actifs.isEmpty()) return connue?.let { ancienne(it) } ?: echec()
         Toast.makeText(activite, activite.getString(R.string.zmanim_position_attente), Toast.LENGTH_SHORT).show()
-        try {
-            demanderUneFois(lm, fournisseur)
-        } catch (e: SecurityException) {
-            echec()
-        } catch (e: IllegalArgumentException) {
-            echec()
+        var fini = false
+        var reponses = 0
+        val ecouteurs = mutableListOf<LocationListener>()
+        val delai = android.os.Handler(Looper.getMainLooper())
+        fun conclure(position: Location?) {
+            if (fini) return
+            if (position == null && ++reponses < actifs.size) return
+            fini = true
+            delai.removeCallbacksAndMessages(null)
+            ecouteurs.forEach { runCatching { lm.removeUpdates(it) } }
+            when {
+                position != null -> enregistrer(position)
+                connue != null -> ancienne(connue)
+                else -> echec()
+            }
+        }
+        delai.postDelayed({ reponses = actifs.size - 1; conclure(null) }, DELAI_MS)
+        actifs.forEach { f ->
+            try {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                    lm.getCurrentLocation(f, null, activite.mainExecutor) { conclure(it) }
+                } else {
+                    // Avant Android 11, les quatre méthodes de LocationListener sont
+                    // abstraites sur l'appareil : un lambda n'en fournirait qu'une.
+                    val e = object : LocationListener {
+                        override fun onLocationChanged(location: Location) = conclure(location)
+                        override fun onProviderEnabled(provider: String) = Unit
+                        override fun onProviderDisabled(provider: String) = conclure(null)
+
+                        @Deprecated("Android 10 et avant seulement")
+                        override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) = Unit
+                    }
+                    ecouteurs += e
+                    @Suppress("DEPRECATION")
+                    lm.requestSingleUpdate(f, e, Looper.getMainLooper())
+                }
+            } catch (e: SecurityException) {
+                conclure(null)
+            } catch (e: IllegalArgumentException) {
+                conclure(null)
+            }
         }
     }
 
-    @SuppressLint("MissingPermission") // vérifiée par demanderPosition
-    private fun demanderUneFois(lm: LocationManager, fournisseur: String) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            lm.getCurrentLocation(fournisseur, null, activite.mainExecutor) { it?.let(::enregistrer) ?: echec() }
-        } else {
-            // Avant Android 11, les quatre méthodes de LocationListener sont
-            // abstraites sur l'appareil : un lambda n'en fournirait qu'une.
-            @Suppress("DEPRECATION")
-            lm.requestSingleUpdate(fournisseur, object : LocationListener {
-                override fun onLocationChanged(location: Location) = enregistrer(location)
-                override fun onProviderEnabled(provider: String) = Unit
-                override fun onProviderDisabled(provider: String) = echec()
-
-                @Deprecated("Android 10 et avant seulement")
-                override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) = Unit
-            }, Looper.getMainLooper())
-        }
+    /** Pas de position fraîche : la dernière connue, et on le dit. */
+    private fun ancienne(position: Location) {
+        Toast.makeText(activite, activite.getString(R.string.zmanim_position_ancienne), Toast.LENGTH_LONG).show()
+        enregistrer(position)
     }
 
     private fun enregistrer(position: Location) {
         if (activite.isFinishing || activite.isDestroyed) return
-        val lieu = Zmanim.Lieu(activite.getString(R.string.zmanim_position), position.latitude, position.longitude, 0.0,
-            TimeZone.getDefault().id)
+        // La ville la plus proche nomme la position, donne l'altitude et dit Israël ou diaspora.
+        val proche = Villes.plusProche(Data.villes(activite), position.latitude, position.longitude)
+        val langue = ChizukCard.language(activite)
+        val nom = proche?.let { activite.getString(R.string.zmanim_position_pres, it.nom.forLanguage(langue)) }
+            ?: activite.getString(R.string.zmanim_position)
+        val lieu = Zmanim.Lieu(nom, position.latitude, position.longitude, proche?.altitude ?: 0.0,
+            proche?.fuseau ?: TimeZone.getDefault().id)
         Store.setLieuZmanim(activite, lieu, null)
+        if (proche != null) Store.setInIsrael(activite, proche.enIsrael)
         apres()
     }
 
@@ -111,5 +147,6 @@ class ChoixLieu(private val activite: AppCompatActivity, private val apres: () -
 
     private companion object {
         const val UNE_HEURE = 3_600_000L
+        const val DELAI_MS = 25_000L
     }
 }

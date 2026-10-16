@@ -37,4 +37,23 @@ object Villes {
                 fuseau = v.getString("fuseau"),
             )
         }
+
+    /** La distance en kilomètres entre deux points (haversine, rayon moyen de la Terre). */
+    fun distanceKm(lat1: Double, lon1: Double, lat2: Double, lon2: Double): Double {
+        val r = 6371.0
+        val dLat = Math.toRadians(lat2 - lat1)
+        val dLon = Math.toRadians(lon2 - lon1)
+        val a = Math.sin(dLat / 2).let { it * it } +
+            Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) * Math.sin(dLon / 2).let { it * it }
+        return 2 * r * Math.asin(Math.sqrt(a.coerceIn(0.0, 1.0)))
+    }
+
+    /**
+     * La ville de la liste la plus proche d'une position, à moins de [maxKm] (16/10) : elle
+     * nomme la position (« près de Jérusalem »), donne son altitude et dit Israël ou diaspora,
+     * que le seul fuseau devinait mal.
+     */
+    fun plusProche(villes: List<Ville>, lat: Double, lon: Double, maxKm: Double = 60.0): Ville? =
+        villes.minByOrNull { distanceKm(lat, lon, it.latitude, it.longitude) }
+            ?.takeIf { distanceKm(lat, lon, it.latitude, it.longitude) <= maxKm }
 }

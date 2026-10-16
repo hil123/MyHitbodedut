@@ -589,6 +589,8 @@
     <string name="zmanim_position">My location</string>
     <string name="zmanim_position_attente">Finding your location…</string>
     <string name="zmanim_position_refusee">Location unavailable: choose a city.</string>
+    <string name="zmanim_position_pres">My location · near %1$s</string>
+    <string name="zmanim_position_ancienne">No fresh location: the last known one is used.</string>
     <string name="zmanim_calendrier">Calendar</string>
     <string name="zmanim_absent">does not occur today</string>
     <string name="zmanim_erreur">cannot be calculated</string>

@@ -635,6 +635,8 @@
     <string name="zmanim_position">Ma position</string>
     <string name="zmanim_position_attente">Recherche de la position…</string>
     <string name="zmanim_position_refusee">Position indisponible : choisissez une ville.</string>
+    <string name="zmanim_position_pres">Ma position · près de %1$s</string>
+    <string name="zmanim_position_ancienne">Pas de position fraîche : la dernière connue est utilisée.</string>
     <string name="zmanim_calendrier">Calendrier</string>
     <string name="zmanim_absent">n’a pas lieu ce jour</string>
     <string name="zmanim_erreur">calcul impossible</string>
