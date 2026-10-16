@@ -147,13 +147,50 @@ object Trophees {
      * note ; [exempt] : les jours qui ne cassent pas la série (Plaque.meilleureSerie).
      */
     fun datesGain(minutes: Map<LocalDate, Int>, notes: Set<LocalDate>, exempt: (LocalDate) -> Boolean): Map<String, LocalDate> {
+        // Le rejeu est incrémental (16/10) : chaque valeur avance jour après jour, sans rien
+        // recalculer — rejouer la pratique entière à chaque jour gelait l'accueil. Mêmes règles
+        // que valeur() et Plaque.meilleureSerie (un jour exempté ne compte pas et ne casse pas).
         val res = mutableMapOf<String, LocalDate>()
-        val restants = chemin.toMutableList()
+        val restants = chemin.groupBy { it.famille }.mapValues { it.value.sortedBy { n -> n.seuil }.toMutableList() }.toMutableMap()
+        val faits = sortedSetOf<LocalDate>()
+        var jours = 0; var plusLongue = 0; var total = 0; var vendredis = 0; var retours = 0
+        var semaines = 0; var notesVues = 0; var courante = 0; var meilleure = 0
+        var precedent: LocalDate? = null
+        val semainesPleines = mutableSetOf<LocalDate>()
         for (d in (minutes.filterValues { it > 0 }.keys + notes).toSortedSet()) {
-            val m = minutes.filterKeys { !it.isAfter(d) }
-            val faits = m.filterValues { it > 0 }.keys
-            val p = Pratique(m, notes.count { !it.isAfter(d) }, Plaque.meilleureSerie(faits, exempt))
-            restants.removeAll { n -> gagne(p, n).also { if (it) res[n.cle] = d } }
+            if (d in notes) notesVues++
+            val m = minutes[d] ?: 0
+            if (m > 0) {
+                faits += d
+                jours++; total += m; plusLongue = maxOf(plusLongue, m)
+                if (d.dayOfWeek == DayOfWeek.FRIDAY) vendredis++
+                val avant = precedent
+                if (avant != null && d.toEpochDay() - avant.toEpochDay() > 7) retours++
+                // La série : les jours entre le précédent et celui-ci doivent tous être exemptés.
+                courante = if (avant != null && generateSequence(avant.plusDays(1)) { it.plusDays(1) }
+                        .takeWhile { it.isBefore(d) }.all(exempt)) courante + 1 else 1
+                meilleure = maxOf(meilleure, courante)
+                precedent = d
+                val dimanche = d.minusDays((d.dayOfWeek.value % 7).toLong())
+                if (dimanche !in semainesPleines && (0L..5L).all { dimanche.plusDays(it) in faits }) { semainesPleines += dimanche; semaines++ }
+            }
+            val vides = mutableListOf<Famille>()
+            for ((f, niveaux) in restants) {
+                val v = when (f) {
+                    Famille.PREMIER_PAS -> jours.coerceAtMost(5)
+                    Famille.SEANCE_LONGUE -> plusLongue
+                    Famille.JOURS -> jours
+                    Famille.SERIE -> meilleure
+                    Famille.HEURES -> total / 60
+                    Famille.SEMAINES -> semaines
+                    Famille.EREV_CHABBAT -> vendredis
+                    Famille.RETOUR -> retours
+                    Famille.PLUME -> notesVues
+                }
+                while (niveaux.isNotEmpty() && niveaux.first().seuil <= v) res[niveaux.removeAt(0).cle] = d
+                if (niveaux.isEmpty()) vides += f
+            }
+            vides.forEach { restants.remove(it) }
             if (restants.isEmpty()) break
         }
         return res

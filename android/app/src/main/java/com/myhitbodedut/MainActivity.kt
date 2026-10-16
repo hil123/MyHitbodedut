@@ -563,9 +563,12 @@ class MainActivity : AppCompatActivity() {
 
     /** Le bilan de la semaine écoulée (16/10, point 7) : à la première ouverture de la semaine, une fois. */
     private fun bilanDeLaSemaine() {
+        // Rien à calculer quand le bilan de cette semaine a déjà été montré.
+        val debut = BilanSemaine.debutSemaine(java.time.LocalDate.now()).minusDays(7)
+        if (Store.bilanVu(this) == debut.toString()) return
         val minutes = Store.bilan(this).minutes
-        val b = BilanSemaine.precedente(java.time.LocalDate.now(), minutes, Store.datesTrophees(this)) ?: return
-        if (Store.bilanVu(this) == b.debut.toString()) return
+        val b = BilanSemaine.precedente(java.time.LocalDate.now(), minutes, Store.datesTrophees(this))
+        if (b == null) { Store.setBilanVu(this, debut.toString()); return }
         Store.setBilanVu(this, b.debut.toString())
         val d = resources.displayMetrics.density
         val vue = android.widget.LinearLayout(this).apply {

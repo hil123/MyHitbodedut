@@ -608,7 +608,8 @@ test('dates de gain, proches et bilan de la semaine : mêmes cas que BilanTrophe
   const ajoute = (iso, n) => { const d = new Date(`${iso}T12:00:00Z`); d.setUTCDate(d.getUTCDate() + n); return d.toISOString().slice(0, 10); };
   const d0 = '2026-09-06'; // un dimanche
   const jours = (n, min = 15, depuis = d0) => Object.fromEntries(Array.from({ length: n }, (_, i) => [ajoute(depuis, i), min]));
-  const serie = (faits) => PlaqueB.meilleureSerie(faits, () => false);
+  const serie = () => false; // aucun jour exempté
+  void PlaqueB;
   const m = jours(10);
   const dates = Trophees.datesGain(m, new Set(), serie);
   assert.equal(dates['premier_pas:1'], d0);
@@ -631,4 +632,26 @@ test('dates de gain, proches et bilan de la semaine : mêmes cas que BilanTrophe
   assert.equal(Trophees.bilanSemaine(ajoute(d0, 30), jours(3), {}), null);
   const premier = Trophees.bilanSemaine(ajoute(d0, 7), jours(3), {});
   assert.equal(premier.record, false); assert.equal(premier.precedente, 0);
+});
+
+test('datesGain incrémental : mêmes niveaux que le calcul complet, trous, notes et samedis exemptés (16/10)', () => {
+  const m = {}; const notes = new Set();
+  for (let i = 0; i < 400; i++) {
+    const iso = new Date(Date.UTC(2025, 2, 1 + i)).toISOString().slice(0, 10);
+    const samedi = new Date(`${iso}T12:00:00Z`).getUTCDay() === 6;
+    if (!samedi && (i * 37) % 11 !== 3 && !(i > 120 && i < 132)) m[iso] = 5 + ((i * 13) % 70);
+    if (i % 9 === 0) notes.add(iso);
+  }
+  const exempt = (iso) => new Date(`${iso}T12:00:00Z`).getUTCDay() === 6;
+  const dates = Trophees.datesGain(m, notes, exempt);
+  const p = { minutes: m, notes: notes.size, meilleureSerie: PlaqueB.meilleureSerie(new Set(Object.keys(m)), exempt) };
+  assert.deepEqual(new Set(Object.keys(dates)), Trophees.gagnes(p));
+  // Chaque date est le premier jour où le niveau est atteint : la veille, il ne l'est pas.
+  for (const [cle, d] of Object.entries(dates)) {
+    const e = Trophees.chemin.find((x) => x.cle === cle);
+    const avant = Object.fromEntries(Object.entries(m).filter(([k]) => k < d));
+    const nAvant = [...notes].filter((k) => k < d).length;
+    const pAvant = { minutes: avant, notes: nAvant, meilleureSerie: PlaqueB.meilleureSerie(new Set(Object.keys(avant)), exempt) };
+    assert.ok(!Trophees.gagne(pAvant, e), `${cle} déjà gagné avant ${d}`);
+  }
 });

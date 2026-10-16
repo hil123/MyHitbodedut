@@ -2095,7 +2095,7 @@ const medailleGrade = (m, taille) => h('span', { class: 'medaille-grade', 'aria-
 const moinsAnime = () => !!window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
 /** Le jour de gain de chaque trophée gagné (Trophees.datesGain) : l'historique rejoué. */
 function datesTrophees() {
-  return Trophees.datesGain(store.minutesParJour(), store.joursAvecNote(), (faits) => Plaque.meilleureSerie(faits, (d) => store.isExempt(d)));
+  return Trophees.datesGain(store.minutesParJour(), store.joursAvecNote(), (d) => store.isExempt(d));
 }
 const dateLongue = (iso) => new Intl.DateTimeFormat(tr.langue, { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' }).format(new Date(`${iso}T12:00:00Z`));
 
@@ -2310,9 +2310,14 @@ function feteGrade(ancien, g, n, suivant) {
 
 /** Le bilan de la semaine écoulée (16/10, point 7) : à la première ouverture de la semaine, une fois. */
 function bilanDeLaSemaine() {
+  // Rien à calculer quand le bilan de cette semaine a déjà été montré.
+  const debut = Trophees.debutSemaine(store.today());
+  const semaineResumee = new Date(`${debut}T12:00:00Z`); semaineResumee.setUTCDate(semaineResumee.getUTCDate() - 7);
+  const vue = semaineResumee.toISOString().slice(0, 10);
+  if (store.bilanVu() === vue) return;
+  store.setBilanVu(vue);
   const b = Trophees.bilanSemaine(store.today(), store.minutesParJour(), datesTrophees());
-  if (!b || store.bilanVu() === b.debut) return;
-  store.setBilanVu(b.debut);
+  if (!b) return;
   feuille(tr.t('bilan_titre'), (f, fermer) => {
     f.classList.add('feuille-bilan');
     f.append(...[

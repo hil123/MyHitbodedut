@@ -75,4 +75,25 @@ class BilanTropheesTest {
         assertFalse(b.record)
         assertEquals(0, b.precedente)
     }
+
+    @Test
+    fun `le rejeu incremental rend les memes niveaux que le calcul complet`() {
+        val exempt = { d: LocalDate -> d.dayOfWeek == java.time.DayOfWeek.SATURDAY }
+        val m = mutableMapOf<LocalDate, Int>()
+        val notes = mutableSetOf<LocalDate>()
+        for (i in 0 until 400) {
+            val d = LocalDate.of(2025, 3, 1).plusDays(i.toLong())
+            if (!exempt(d) && (i * 37) % 11 != 3 && i !in 121..131) m[d] = 5 + (i * 13) % 70
+            if (i % 9 == 0) notes += d
+        }
+        val dates = Trophees.datesGain(m, notes, exempt)
+        val p = Trophees.Pratique(m, notes.size, Plaque.meilleureSerie(m.keys, exempt))
+        assertEquals(Trophees.gagnes(p).map { it.cle }.toSet(), dates.keys)
+        dates.forEach { (cle, d) ->
+            val n = Trophees.chemin.first { it.cle == cle }
+            val avant = m.filterKeys { it.isBefore(d) }
+            val pAvant = Trophees.Pratique(avant, notes.count { it.isBefore(d) }, Plaque.meilleureSerie(avant.keys, exempt))
+            assertFalse("$cle déjà gagné avant $d", Trophees.gagne(pAvant, n))
+        }
+    }
 }

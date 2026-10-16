@@ -127,16 +127,39 @@ export function proche(p) {
  * Le jour où chaque niveau a été gagné (Trophees.datesGain) : l'historique rejoué jour
  * après jour. minutes : { iso: min } ; notes : Set d'iso ; serie(faits) : la meilleure série.
  */
-export function datesGain(minutes, notes, serie) {
+export function datesGain(minutes, notes, exempt) {
+  // Rejeu incrémental (16/10, comme Trophees.datesGain) : chaque valeur avance jour après jour.
+  // exempt(iso) : un jour exempté ne compte pas et ne casse pas la série.
   const res = {};
-  let restants = [...chemin];
-  const jours = [...new Set([...Object.keys(minutes).filter((k) => minutes[k] > 0), ...notes])].sort();
-  for (const d of jours) {
-    const m = Object.fromEntries(Object.entries(minutes).filter(([k]) => k <= d));
-    const faits = new Set(Object.keys(m).filter((k) => m[k] > 0));
-    const p = { minutes: m, notes: [...notes].filter((k) => k <= d).length, meilleureSerie: serie(faits) };
-    restants = restants.filter((e) => { if (gagne(p, e)) { res[e.cle] = d; return false; } return true; });
-    if (!restants.length) break;
+  const restants = new Map(FAMILLES.map((f) => [f.cle, chemin.filter((e) => e.f === f).sort((a, b) => a.seuil - b.seuil)]));
+  const faits = new Set();
+  const pleines = new Set();
+  let jours = 0; let plusLongue = 0; let total = 0; let vendredis = 0; let nbRetours = 0;
+  let semaines = 0; let notesVues = 0; let courante = 0; let meilleure = 0; let precedent = null;
+  const notesSet = new Set(notes);
+  for (const d of [...new Set([...Object.keys(minutes).filter((k) => minutes[k] > 0), ...notesSet])].sort()) {
+    if (notesSet.has(d)) notesVues++;
+    const m = minutes[d] ?? 0;
+    if (m > 0) {
+      faits.add(d);
+      jours++; total += m; plusLongue = Math.max(plusLongue, m);
+      if (semaineDe(d) === 5) vendredis++;
+      if (precedent && jourDe(d) - jourDe(precedent) > 7) nbRetours++;
+      let suite = !!precedent;
+      for (let x = precedent && ajoute(precedent, 1); suite && x < d; x = ajoute(x, 1)) if (!exempt(x)) suite = false;
+      courante = suite ? courante + 1 : 1;
+      meilleure = Math.max(meilleure, courante);
+      precedent = d;
+      const dimanche = ajoute(d, -semaineDe(d));
+      if (!pleines.has(dimanche) && [0, 1, 2, 3, 4, 5].every((k) => faits.has(ajoute(dimanche, k)))) { pleines.add(dimanche); semaines++; }
+    }
+    const v = { premier_pas: Math.min(jours, 5), seance_longue: plusLongue, jours, serie: meilleure, heures: Math.floor(total / 60),
+      semaines, erev_chabbat: vendredis, retour: nbRetours, plume: notesVues };
+    for (const [cle, niveaux] of restants) {
+      while (niveaux.length && niveaux[0].seuil <= v[cle]) res[niveaux.shift().cle] = d;
+      if (!niveaux.length) restants.delete(cle);
+    }
+    if (!restants.size) break;
   }
   return res;
 }
