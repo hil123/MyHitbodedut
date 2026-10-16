@@ -25,10 +25,12 @@ export function libelle(condition) {
  */
 export function conditionsPour(nusah, enIsrael, conditions, sansTahanounFinTichri = nusah === 'edot', sud = false) {
   const c = new Set(conditions);
+  if (c.has('bascule_pluie')) { c.add('machiv_harouah'); c.add('morid_hatal'); }
   if (nusah === 'ashkenaz' && !enIsrael) c.delete('morid_hatal');
   // Hémisphère sud, Edot (14/10) : « מוריד הטל » toute l'année, jamais « מוריד הגשם » ;
-  // ותן טל ומטר suit la diaspora. Yalkut Yosef, Kitsour Choulhan Aroukh, O.H. 117:20
-  // (Chéérit Yossef III p. 105 ; Yalkut Yosef Tefila II, 117 note 20).
+  // ותן טל ומטר suit la diaspora. Yalkut Yosef, Kitsour Choulhan Aroukh, O.H. 117:19
+  // (Chéérit Yossef III p. 105 ; Yalkut Yosef Tefila II, 117 note 19, p. 100) ; recoupé le 16/10
+  // avec Halakha Yomit (site de Rav Ovadia Yossef).
   if (sud && nusah === 'edot' && c.delete('machiv_harouah')) c.add('morid_hatal');
   // Pas de Ta'hanoun du lendemain de Kippour jusqu'au 2 'Hechvan : Edot, et Sfard au choix.
   if (sansTahanounFinTichri && c.has('fin_tichri')) for (const k of ['tahanoun_chaharit', 'tahanoun_minha', 'lundi_jeudi']) c.delete(k);
@@ -38,7 +40,7 @@ export function conditionsPour(nusah, enIsrael, conditions, sansTahanounFinTichr
 
 /** Les conditions déduites (SiddurJour, CalendrierJuif.C.DERIVEES), hors des vecteurs KosherJava. */
 export const DERIVEES = ['avinou_malkenou', 'kriat_hatorah', 'jour_1', 'jour_2', 'jour_3', 'jour_4', 'jour_5', 'jour_6',
-  'tsom_guedalia_tevet', 'lendemain_kippour', 'esther_pourim', 'chiva_assar_tamouz'];
+  'tsom_guedalia_tevet', 'lendemain_kippour', 'esther_pourim', 'chiva_assar_tamouz', 'bascule_pluie', 'erev_kippour_vendredi'];
 
 /**
  * Avinou malkénou (SiddurJour.avinouMalkenou) : jeûnes publics sauf le 9 Av, dix
@@ -48,6 +50,7 @@ export const DERIVEES = ['avinou_malkenou', 'kriat_hatorah', 'jour_1', 'jour_2',
 export function avinouMalkenou(conditions) {
   const c = conditions instanceof Set ? conditions : new Set(conditions);
   if (c.has('chabbat')) return false;
+  if (c.has('erev_kippour_vendredi')) return true;
   if (c.has('jeune') && !c.has('ticha_beav')) return true;
   return c.has('asseret_yemei_techouva') && (c.has('tahanoun_chaharit') || c.has('roch_hachana') || c.has('kippour'));
 }

@@ -169,10 +169,12 @@ object SiddurJour {
         sud: Boolean = false,
     ): Set<String> {
         var c = conditions
+        if (CalendrierJuif.C.BASCULE_PLUIE in c) c = c + CalendrierJuif.C.MACHIV_HAROUAH + CalendrierJuif.C.MORID_HATAL
         if (nusah == "ashkenaz" && !enIsrael) c = c - CalendrierJuif.C.MORID_HATAL
         // Hémisphère sud, Edot (14/10) : « מוריד הטל » toute l'année, jamais « מוריד הגשם » ;
-        // ותן טל ומטר suit la diaspora. Yalkut Yosef, Kitsour Choulhan Aroukh, O.H. 117:20
-        // (Chéérit Yossef III p. 105 ; Yalkut Yosef Tefila II, 117 note 20).
+        // ותן טל ומטר suit la diaspora. Yalkut Yosef, Kitsour Choulhan Aroukh, O.H. 117:19
+        // (Chéérit Yossef III p. 105 ; Yalkut Yosef Tefila II, 117 note 19, p. 100) ; recoupé
+        // le 16/10 avec Halakha Yomit (site de Rav Ovadia Yossef) : pas de « משיב הרוח » là-bas.
         if (sud && nusah == "edot" && CalendrierJuif.C.MACHIV_HAROUAH in c) c = c - CalendrierJuif.C.MACHIV_HAROUAH + CalendrierJuif.C.MORID_HATAL
         // Pas de Ta'hanoun du lendemain de Kippour jusqu'au 2 'Hechvan : la
         // coutume des Edot, au choix en Sfard (Store.sansTahanounFinTichri) ;
@@ -194,6 +196,7 @@ object SiddurJour {
     fun avinouMalkenou(conditions: Set<String>): Boolean {
         val c = CalendrierJuif.C
         if (c.CHABBAT in conditions) return false
+        if (c.EREV_KIPPOUR_VENDREDI in conditions) return true
         if (c.JEUNE in conditions && c.TICHA_BEAV !in conditions) return true
         return c.ASSERET_YEMEI_TECHOUVA in conditions &&
             (c.TAHANOUN_CHAHARIT in conditions || c.ROCH_HACHANA in conditions || c.KIPPOUR in conditions)

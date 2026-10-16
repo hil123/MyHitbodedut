@@ -165,7 +165,7 @@ object VueJour {
 
     /** La hilloula du jour (comme CalJ) : les noms, cinq au plus, puis l'écran des hilloulot. Faux s'il n'y a rien. */
     private fun blocHilloula(c: Context, carte: LinearLayout, date: LocalDate, enIsrael: Boolean, haut: Int = 14): Boolean {
-        val hilloulot = if (Store.hilloulotAffichees(c)) Hilloulot.pour(Hilloulot.table(c), date, enIsrael) else emptyList()
+        val hilloulot = if (Store.hilloulotAffichees(c)) Hilloulot.pour(Hilloulot.table(c), date, enIsrael, Store.siddurNusah(c).cle == "ashkenaz") else emptyList()
         if (hilloulot.isEmpty()) return false
         carte.addView(texte(c, c.getString(R.string.hilloula_titre), 12f, R.color.muted, gras = true, haut = haut))
         val reste = hilloulot.size - 5

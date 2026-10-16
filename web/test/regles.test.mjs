@@ -518,6 +518,9 @@ test('carte du jour : illustration, hilloula et liens', async () => {
   assert.deepEqual(J.clesHilloula(12, 7, false, false), ['adar-7', 'adar1-7', 'adar2-7']);
   assert.deepEqual(J.clesHilloula(12, 7, true, false), ['adar1-7']);
   assert.deepEqual(J.clesHilloula(13, 7, true, false), ['adar-7', 'adar2-7']);
+  // Ashkénazes : « adar » en Adar I (Rema OH 568:7).
+  assert.deepEqual(J.clesHilloula(12, 7, true, false, true), ['adar-7', 'adar1-7']);
+  assert.deepEqual(J.clesHilloula(13, 7, true, false, true), ['adar2-7']);
   assert.deepEqual(J.clesHilloula(8, 29, false, true), ['8-29', '8-30']);
   const table = JSON.parse(readFileSync(join(RES, 'raw', 'hilloulot.json'), 'utf8')).jours;
   // Chaque jour d'une année simple (5786) a au moins une hilloula ; en année

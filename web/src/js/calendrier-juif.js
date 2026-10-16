@@ -58,6 +58,8 @@ export const JERUSALEM_GEONAMES = 281184;
 
 /** Une position dans Jérusalem : à 10 km au plus de la Vieille Ville (choix de l'application, CalendrierJuif.aJerusalem). */
 export function aJerusalem(latitude, longitude) {
+  // Hors de la ville (CalendrierJuif.aJerusalem, audit du 16/10) : Abou Dis, Ma'alé Adoumim, Bethléem, Mevasseret.
+  if (longitude > 35.258 || latitude < 31.72 || (longitude < 35.165 && latitude > 31.785)) return false;
   const rad = (x) => (x * Math.PI) / 180;
   const dLat = rad(latitude - 31.7767), dLon = rad(longitude - 35.2345);
   const a = Math.sin(dLat / 2) ** 2 + Math.cos(rad(31.7767)) * Math.cos(rad(latitude)) * Math.sin(dLon / 2) ** 2;
@@ -117,6 +119,10 @@ export function jour(iso, enIsrael, mukafChoma = false) {
   si(regles.getJewishMonth() === JewishDate.TISHREI && regles.getJewishDayOfMonth() === 11, 'lendemain_kippour');
   si(index === JewishCalendar.FAST_OF_ESTHER || c.has('pourim'), 'esther_pourim');
   si(index === JewishCalendar.SEVENTEEN_OF_TAMMUZ, 'chiva_assar_tamouz');
+  // Les jours de bascule et la veille de Kippour un vendredi (CalendrierJuif.C.BASCULE_PLUIE, EREV_KIPPOUR_VENDREDI).
+  const mois = regles.getJewishMonth(), quantieme = regles.getJewishDayOfMonth();
+  si((mois === JewishDate.TISHREI && quantieme === 22) || (mois === JewishDate.NISSAN && quantieme === 15), 'bascule_pluie');
+  si(mois === JewishDate.TISHREI && quantieme === 9 && semaine === 5, 'erev_kippour_vendredi');
 
   const fetes = [];
   const fete = FETES.get(affiche.getYomTovIndex());
@@ -285,7 +291,7 @@ export function rappelsTefila(aujourdhui, enIsrael, avance = 3, jourDe = (iso) =
 
 // --- Israël ou diaspora d'après la position (TerritoireIsrael.kt, 16/10) ---------------------
 // Contour simplifié (précision de 2 à 3 km) : l'État d'Israël avec Jérusalem, la Judée-Samarie et le Golan.
-const CONTOUR_ISRAEL = [[31.23, 34.21], [31.36, 34.24], [31.55, 34.40], [31.72, 34.50], [31.95, 34.66], [32.10, 34.72], [32.33, 34.80], [32.55, 34.86], [32.75, 34.92], [32.84, 34.93], [32.93, 35.03], [33.09, 35.08], [33.10, 35.20], [33.09, 35.33], [33.08, 35.45], [33.11, 35.52], [33.20, 35.55], [33.28, 35.57], [33.31, 35.63], [33.33, 35.79], [33.22, 35.86], [33.08, 35.86], [32.93, 35.87], [32.78, 35.80], [32.70, 35.72], [32.66, 35.62], [32.45, 35.57], [32.20, 35.56], [31.95, 35.55], [31.76, 35.56], [31.45, 35.50], [31.15, 35.45], [30.85, 35.36], [30.50, 35.22], [30.15, 35.14], [29.90, 35.09], [29.70, 35.03], [29.55, 34.98], [29.49, 34.90], [29.80, 34.76], [30.20, 34.60], [30.60, 34.50], [30.95, 34.37], [31.22, 34.26]];
+const CONTOUR_ISRAEL = [[31.23, 34.21], [31.36, 34.24], [31.55, 34.40], [31.72, 34.50], [31.95, 34.66], [32.10, 34.72], [32.33, 34.80], [32.55, 34.86], [32.75, 34.92], [32.84, 34.93], [32.93, 35.03], [33.09, 35.08], [33.10, 35.20], [33.09, 35.33], [33.08, 35.45], [33.11, 35.52], [33.20, 35.55], [33.28, 35.57], [33.31, 35.63], [33.33, 35.79], [33.22, 35.82], [33.13, 35.815], [33.05, 35.86], [32.93, 35.87], [32.78, 35.80], [32.70, 35.72], [32.66, 35.62], [32.45, 35.57], [32.20, 35.56], [31.95, 35.55], [31.76, 35.56], [31.45, 35.50], [31.15, 35.45], [30.85, 35.36], [30.50, 35.22], [30.15, 35.14], [29.90, 35.09], [29.70, 35.03], [29.55, 34.98], [29.49, 34.90], [29.80, 34.76], [30.20, 34.60], [30.60, 34.50], [30.95, 34.37], [31.22, 34.26]];
 export function dansIsrael(latitude, longitude) {
   let dedans = false;
   for (let i = 0, j = CONTOUR_ISRAEL.length - 1; i < CONTOUR_ISRAEL.length; j = i++) {

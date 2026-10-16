@@ -649,6 +649,8 @@
     <string name="ajout_morid_hatal">Morid hatal</string>
     <string name="ajout_tal_oumatar">Veten tal umatar</string>
     <string name="ajout_berakha">Veten beracha</string>
+    <string name="ajout_barekh_alenou">Barech alenu</string>
+    <string name="ajout_barkhenou">Barchenu</string>
     <string name="ajout_hallel">Partial Hallel</string>
     <string name="ajout_hallel_complet">Full Hallel</string>
     <string name="ajout_tahanoun">Tachanun</string>

@@ -55,14 +55,15 @@ object Hilloulot {
     /**
      * Les clés d'un jour hébreu ([mois] de KosherJava, NISSAN = 1 … ADAR_II = 13).
      * Un « adar » sans précision se dit en Adar II les années embolismiques
-     * (Choul'han Aroukh OH 568:7) ; un 30 absent cette année ([dernierJour]
-     * le 29), le 29.
+     * (Choul'han Aroukh OH 568:7) ; en Adar I pour les Ashkénazes, comme le Rema
+     * l'y note (« וכן המנהג », audit du 16/10). Un 30 absent cette année
+     * ([dernierJour] le 29), le 29.
      */
-    fun cles(mois: Int, jour: Int, embolismique: Boolean, dernierJour: Boolean): List<String> {
+    fun cles(mois: Int, jour: Int, embolismique: Boolean, dernierJour: Boolean, ashkenaz: Boolean = false): List<String> {
         val m = when {
             mois == 12 && !embolismique -> listOf("adar", "adar1", "adar2")
-            mois == 12 -> listOf("adar1")
-            mois == 13 -> listOf("adar", "adar2")
+            mois == 12 -> if (ashkenaz) listOf("adar", "adar1") else listOf("adar1")
+            mois == 13 -> if (ashkenaz) listOf("adar2") else listOf("adar", "adar2")
             else -> listOf(mois.toString())
         }
         val jours = if (jour == 29 && dernierJour) listOf(29, 30) else listOf(jour)
@@ -77,10 +78,10 @@ object Hilloulot {
     /** Cycle de Méton : 7 années embolismiques sur 19 (3, 6, 8, 11, 14, 17, 19). */
     fun embolismique(annee: Int): Boolean = (7 * annee + 1) % 19 < 7
 
-    fun pour(table: Map<String, List<Hilloula>>, date: LocalDate, enIsrael: Boolean): List<Hilloula> {
+    fun pour(table: Map<String, List<Hilloula>>, date: LocalDate, enIsrael: Boolean, ashkenaz: Boolean = false): List<Hilloula> {
         val j = CalendrierJuif.jour(date, enIsrael)
         val dernier = CalendrierJuif.jour(date.plusDays(1), enIsrael).jourHebreu == 1
-        return duJour(table, cles(j.moisHebreu, j.jourHebreu, embolismique(j.anneeHebraique), dernier))
+        return duJour(table, cles(j.moisHebreu, j.jourHebreu, embolismique(j.anneeHebraique), dernier, ashkenaz))
     }
 
     private val MOIS = mapOf(

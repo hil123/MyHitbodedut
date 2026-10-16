@@ -32,7 +32,7 @@ object Holidays {
      * Israël par défaut si le téléphone est à l'heure de Jérusalem,
      * diaspora partout ailleurs. Réglable ensuite à la main.
      */
-    fun defaultInIsrael(timeZoneId: String): Boolean = timeZoneId == "Asia/Jerusalem"
+    fun defaultInIsrael(timeZoneId: String): Boolean = timeZoneId in setOf("Asia/Jerusalem", "Asia/Tel_Aviv", "Israel")
 
     private fun calendar(date: LocalDate, inIsrael: Boolean): JewishCalendar =
         JewishCalendar(date).apply { setInIsrael(inIsrael) }

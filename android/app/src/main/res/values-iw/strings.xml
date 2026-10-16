@@ -663,6 +663,8 @@
     <string name="ajout_morid_hatal">מוריד הטל</string>
     <string name="ajout_tal_oumatar">ותן טל ומטר</string>
     <string name="ajout_berakha">ותן ברכה</string>
+    <string name="ajout_barekh_alenou">ברך עלינו</string>
+    <string name="ajout_barkhenou">ברכנו</string>
     <string name="ajout_hallel">הלל בדילוג</string>
     <string name="ajout_hallel_complet">הלל שלם</string>
     <string name="ajout_tahanoun">תחנון</string>

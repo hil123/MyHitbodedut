@@ -8,7 +8,9 @@ package com.myhitbodedut
  * Contour simplifié (une quarantaine de points relevés sur la carte, précision de l'ordre
  * de 2 à 3 km) : suffisant pour savoir si l'on est en Israël, pas pour arbitrer à quelques
  * centaines de mètres d'une frontière — le réglage « Israël / diaspora » reste là pour ça.
- * La question halakhique des limites de la Terre d'Israël n'est pas tranchée ici.
+ * La question halakhique des limites de la Terre d'Israël n'est pas tranchée ici. La bande
+ * de Gaza est dans le contour, qui suit la côte depuis Rafia'h : choix géographique, sans
+ * prise de position sur son statut pour le deuxième jour de fête.
  *
  * Rien d'Android ici.
  */
@@ -22,8 +24,8 @@ object TerritoireIsrael {
         // La frontière libanaise, de Roch Hanikra à Metoula, puis l'Hermon.
         doubleArrayOf(33.10, 35.20), doubleArrayOf(33.09, 35.33), doubleArrayOf(33.08, 35.45), doubleArrayOf(33.11, 35.52),
         doubleArrayOf(33.20, 35.55), doubleArrayOf(33.28, 35.57), doubleArrayOf(33.31, 35.63), doubleArrayOf(33.33, 35.79),
-        // Le Golan, à l'est, jusqu'à 'Hamat Gader.
-        doubleArrayOf(33.22, 35.86), doubleArrayOf(33.08, 35.86), doubleArrayOf(32.93, 35.87), doubleArrayOf(32.78, 35.80),
+        // Le Golan, à l'est, jusqu'à 'Hamat Gader ; la ligne passe entre Ein Zivan et Kuneitra (audit du 16/10).
+        doubleArrayOf(33.22, 35.82), doubleArrayOf(33.13, 35.815), doubleArrayOf(33.05, 35.86), doubleArrayOf(32.93, 35.87), doubleArrayOf(32.78, 35.80),
         doubleArrayOf(32.70, 35.72), doubleArrayOf(32.66, 35.62),
         // Le Jourdain et la mer Morte.
         doubleArrayOf(32.45, 35.57), doubleArrayOf(32.20, 35.56), doubleArrayOf(31.95, 35.55), doubleArrayOf(31.76, 35.56),

@@ -365,9 +365,9 @@ object Store {
 
     /**
      * Choisir le lieu règle aussi Israël ou diaspora : le deuxième jour de
-     * fête suit le lieu des zmanim. Une ville le dit ; la position du
-     * téléphone suit son fuseau, comme la valeur par défaut
-     * (Holidays.defaultInIsrael).
+     * fête suit le lieu des zmanim. Une ville le dit ; une position, le
+     * contour du territoire (TerritoireIsrael, 16/10). Sans lieu, le fuseau
+     * du téléphone (Holidays.defaultInIsrael).
      */
     fun setLieuZmanim(context: Context, lieu: Zmanim.Lieu, ville: Ville?) {
         prefs(context).edit()

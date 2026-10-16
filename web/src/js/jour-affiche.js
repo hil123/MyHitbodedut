@@ -16,9 +16,14 @@ export function ajouts(c0, nusah = 'edot', enIsrael = false, sansTahanounFinTich
   const c = conditionsPour(nusah, enIsrael, c0, sansTahanounFinTichri, sud);
   const l = [];
   if (c.has(C.ASSERET_YEMEI_TECHOUVA)) l.push('ajout_asseret_yemei_techouva');
+  // Les jours de bascule, les deux formules (bascule_pluie) ; sinon l'une ou l'autre.
   if (c.has(C.MACHIV_HAROUAH)) l.push('ajout_machiv_harouah');
-  else if (c.has(C.MORID_HATAL)) l.push('ajout_morid_hatal');
-  l.push(c.has(C.TAL_OUMATAR) ? 'ajout_tal_oumatar' : 'ajout_berakha');
+  if (c.has(C.MORID_HATAL) && (!c.has(C.MACHIV_HAROUAH) || c.has('bascule_pluie'))) l.push('ajout_morid_hatal');
+  // La 9ᵉ bénédiction (JourAffiche.ajouts) : texte des Edot ; rien le Chabbat.
+  if (!c.has(C.CHABBAT)) {
+    if (nusah === 'edot') l.push(c.has(C.TAL_OUMATAR) ? 'ajout_barekh_alenou' : 'ajout_barkhenou');
+    else l.push(c.has(C.TAL_OUMATAR) ? 'ajout_tal_oumatar' : 'ajout_berakha');
+  }
   if (c.has(C.JEUNE)) {
     l.push('ajout_anenou_officiant');
     // Edot : à Tich'a bèAv, le jeûne commence la veille au soir, et Arvit en est.
@@ -156,8 +161,10 @@ export const embolismique = (annee) => (7 * annee + 1) % 19 < 7;
  * NISSAN = 1 … ADAR_II = 13). « adar » sans précision : Adar II les années
  * embolismiques (OH 568:7) ; un 30 absent cette année, le 29.
  */
-export function clesHilloula(mois, jourH, emb, dernierJour) {
-  const m = mois === 12 && !emb ? ['adar', 'adar1', 'adar2'] : mois === 12 ? ['adar1'] : mois === 13 ? ['adar', 'adar2'] : [String(mois)];
+export function clesHilloula(mois, jourH, emb, dernierJour, ashkenaz = false) {
+  // Ashkénazes : « adar » en Adar I, comme le note le Rema (Hilloulot.cles).
+  const m = mois === 12 && !emb ? ['adar', 'adar1', 'adar2'] : mois === 12 ? (ashkenaz ? ['adar', 'adar1'] : ['adar1'])
+    : mois === 13 ? (ashkenaz ? ['adar2'] : ['adar', 'adar2']) : [String(mois)];
   const jours = jourH === 29 && dernierJour ? [29, 30] : [jourH];
   return m.flatMap((k) => jours.map((j) => `${k}-${j}`));
 }
@@ -169,11 +176,11 @@ export function hilloulotDuJour(table, cles) {
     .sort((x, y) => rang(x[0]) - rang(y[0]) || x[1] - y[1]).map(([h]) => h);
 }
 
-export function hilloulotPour(table, iso, enIsrael) {
+export function hilloulotPour(table, iso, enIsrael, ashkenaz = false) {
   const j = jour(iso, enIsrael);
   const [a, m, d] = iso.split('-').map(Number);
   const demain = new Date(Date.UTC(a, m - 1, d + 1, 12)).toISOString().slice(0, 10);
-  return hilloulotDuJour(table, clesHilloula(j.moisHebreu, j.jourHebreu, embolismique(j.anneeHebraique), jour(demain, enIsrael).jourHebreu === 1));
+  return hilloulotDuJour(table, clesHilloula(j.moisHebreu, j.jourHebreu, embolismique(j.anneeHebraique), jour(demain, enIsrael).jourHebreu === 1, ashkenaz));
 }
 
 /** La page du jour de החכם היומי, qui prend la date civile. */

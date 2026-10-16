@@ -45,7 +45,7 @@ export function estJourChome(iso, enIsrael) {
 
 /** Israël par défaut si le téléphone est à l'heure de Jérusalem. */
 export function israelParDefaut(fuseau) {
-  return fuseau === 'Asia/Jerusalem';
+  return ['Asia/Jerusalem', 'Asia/Tel_Aviv', 'Israel'].includes(fuseau); // les anciens noms aussi (Holidays.defaultInIsrael)
 }
 
 // --- Dates civiles locales ------------------------------------------------

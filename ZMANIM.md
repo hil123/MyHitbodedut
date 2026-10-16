@@ -167,7 +167,8 @@ siddour Edot, Avinou malkénou suit la consigne du texte (« בעשרת ימי �
   diaspora.
 - **La position du téléphone** : sur Android, l'autorisation de localisation
   approximative, demandée seulement à ce moment-là ; sur le web,
-  `navigator.geolocation`. La région suit alors le fuseau du téléphone.
+  `navigator.geolocation`. Depuis le 16/10, la région suit la position
+  (contour du territoire, `TerritoireIsrael`) ; le fuseau reste celui du téléphone.
 
 Le lieu reste sur l'appareil. Choisir une ville revient sur la décision du
 21/09 (« sans ville ni coucher du soleil »), à la demande du propriétaire.

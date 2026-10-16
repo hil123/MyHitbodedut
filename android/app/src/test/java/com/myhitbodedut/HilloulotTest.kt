@@ -24,6 +24,9 @@ class HilloulotTest {
         assertEquals(listOf("adar-7", "adar1-7", "adar2-7"), Hilloulot.cles(12, 7, embolismique = false, dernierJour = false))
         assertEquals(listOf("adar1-7"), Hilloulot.cles(12, 7, embolismique = true, dernierJour = false))
         assertEquals(listOf("adar-7", "adar2-7"), Hilloulot.cles(13, 7, embolismique = true, dernierJour = false))
+        // Ashkénazes : « adar » en Adar I (Rema OH 568:7).
+        assertEquals(listOf("adar-7", "adar1-7"), Hilloulot.cles(12, 7, embolismique = true, dernierJour = false, ashkenaz = true))
+        assertEquals(listOf("adar2-7"), Hilloulot.cles(13, 7, embolismique = true, dernierJour = false, ashkenaz = true))
         assertEquals(listOf("8-29", "8-30"), Hilloulot.cles(8, 29, embolismique = false, dernierJour = true))
     }
 

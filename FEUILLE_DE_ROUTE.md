@@ -972,9 +972,9 @@ Michna Beroura 426:6, 11, 17, 19, 20.
 
 ## Hémisphère sud, Tal ou-matar (14/10)
 
-- Yalkut Yosef, Kitsour Choulhan Aroukh O.H. 117:20 (texte lu sur
+- Yalkut Yosef, Kitsour Choulhan Aroukh O.H. 117:19 (texte lu sur
   moreshet-maran.com ; renvoie à Chéérit Yossef III p. 105 et Yalkut Yosef Tefila II,
-  117 note 20) : au Brésil, en Australie…, ותן טל ומטר dans ברך עלינו du 60ᵉ jour
+  117 note 19, p. 100) : au Brésil, en Australie…, ותן טל ומטר dans ברך עלינו du 60ᵉ jour
   après la tekoufa jusqu'à la veille de Pessa'h, comme la diaspora ; « מוריד הטל »
   toute l'année. Codé pour le noussa'h Edot quand le lieu est au sud.
 - Recoupé pour « מוריד הטל toute l'année » : R. Y. Kaganoff (yeshiva.co,

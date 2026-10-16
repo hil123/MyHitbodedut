@@ -103,7 +103,7 @@ class HilloulotActivity : AppCompatActivity() {
             })
             addView(fleche(if (rtl) "‹" else "›") { jour = jour.plusDays(1); afficher() })
         })
-        val du = Hilloulot.pour(table, jour, israel)
+        val du = Hilloulot.pour(table, jour, israel, Store.siddurNusah(this).cle == "ashkenaz")
         if (du.isEmpty()) liste.addView(VueJour.texte(this, getString(R.string.hilloulot_aucune), 15f, R.color.muted, haut = 14).apply { gravity = Gravity.CENTER })
         du.forEach { liste.addView(carte(it, null)) }
         liste.addView(VueJour.texte(this, getString(R.string.hilloula_lien) + " ↗", 15f, R.color.brand, gras = true, haut = 14).apply {

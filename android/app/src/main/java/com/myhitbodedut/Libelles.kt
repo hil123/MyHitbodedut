@@ -19,6 +19,8 @@ object Libelles {
         "ajout_anenou_particulier_trois" -> R.string.ajout_anenou_particulier_trois
         "ajout_asseret_yemei_techouva" -> R.string.ajout_asseret_yemei_techouva
         "ajout_berakha" -> R.string.ajout_berakha
+        "ajout_barekh_alenou" -> R.string.ajout_barekh_alenou
+        "ajout_barkhenou" -> R.string.ajout_barkhenou
         "ajout_chabbat" -> R.string.ajout_chabbat
         "ajout_hallel" -> R.string.ajout_hallel
         "ajout_hallel_annonce" -> R.string.ajout_hallel_annonce

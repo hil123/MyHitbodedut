@@ -36,7 +36,7 @@ object PartageJour {
         val langue = ChizukCard.language(c)
         val marques = j.fetes.mapNotNull { Libelles.res("fete_$it")?.let(c::getString) } +
             listOfNotNull(j.paracha?.let { c.getString(R.string.zmanim_paracha, it) })
-        val hilloulot = Hilloulot.pour(Hilloulot.table(c), date, israel).take(3).joinToString(" · ") { it.he }
+        val hilloulot = Hilloulot.pour(Hilloulot.table(c), date, israel, Store.siddurNusah(c).cle == "ashkenaz").take(3).joinToString(" · ") { it.he }
         val (livre, debut) = VueJour.apercuHalakha(c, date, israel) ?: ("" to "")
         return Contenu(
             j.dateHebraique,

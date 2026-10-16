@@ -1726,7 +1726,7 @@ async function partagerJour(iso) {
   const j = jourJuif(iso, store.inIsrael(), mukafChoma());
   const civil = new Intl.DateTimeFormat(tr.langue, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' }).format(new Date(`${iso}T12:00:00Z`));
   const marques = [...j.fetes.map((f) => tr.t(`fete_${f}`)), j.paracha ? tr.t('zmanim_paracha', j.paracha) : null].filter(Boolean).join('  ·  ');
-  const hil = tableHilloulot() ? hilloulotPour(tableHilloulot(), iso, store.inIsrael()).slice(0, 3).map((x) => x.he).join(' · ') : '';
+  const hil = tableHilloulot() ? hilloulotPour(tableHilloulot(), iso, store.inIsrael(), store.siddurNusah() === 'ashkenaz').slice(0, 3).map((x) => x.he).join(' · ') : '';
   const [livre, debut] = apercuHalakha(iso) ?? ['', ''];
   const c = document.createElement('canvas');
   c.width = 1080; c.height = 1350;
@@ -1950,7 +1950,7 @@ function mentionsObligatoires(sources) {
 function blocHilloula(iso) {
   const table = tableHilloulot();
   if (!table || !store.hilloulotAffichees()) return [];
-  const liste = hilloulotPour(table, iso, store.inIsrael());
+  const liste = hilloulotPour(table, iso, store.inIsrael(), store.siddurNusah() === 'ashkenaz');
   if (!liste.length) return [];
   const reste = liste.length - 5;
   const versHilloulot = () => { jourHilloulot = iso; rechercheHilloulot = ''; ouvrir('hilloulot'); };
@@ -2005,7 +2005,7 @@ function ecranHilloulot() {
   } else {
     const j = jourJuif(iso, store.inIsrael());
     const decale = (n) => { const [a, m, d] = iso.split('-').map(Number); jourHilloulot = new Date(Date.UTC(a, m - 1, d + n, 12)).toISOString().slice(0, 10); rendre(); };
-    const liste = hilloulotPour(table, iso, store.inIsrael());
+    const liste = hilloulotPour(table, iso, store.inIsrael(), store.siddurNusah() === 'ashkenaz');
     corps = [
       h('div', { class: 'mois-tete' },
         h('button', { class: 'icone-bouton mois-precedent', dir: 'ltr', 'aria-label': tr.t('calendrier_precedent'), onclick: () => decale(-1) }, tr.rtl ? '›' : '‹'),

@@ -36,6 +36,11 @@ class DixAmeliorationsTest {
         assertEquals("minha" to t(17, 50), ZmanimWidget.prochaine(horaires, t(13, 0)))
         assertEquals("arvit" to t(23, 40), ZmanimWidget.prochaine(horaires, t(19, 0)))
         assertEquals("arvit" to null, ZmanimWidget.prochaine(horaires, t(23, 50)))
+        // Après minuit, avant l'aube : encore Arvit (jusqu'au milieu de la nuit d'hier s'il n'est pas passé).
+        val nuit = mapOf("alot" to t(5, 20), "szt_gra" to t(10, 30), "chkia" to t(17, 50), "chatsot_layla" to t(23, 40).plusMinutes(70))
+        assertEquals("arvit" to t(0, 50), ZmanimWidget.prochaine(nuit, t(0, 20)))
+        assertEquals("arvit" to null, ZmanimWidget.prochaine(nuit, t(2, 0)))
+        assertEquals("chaharit" to t(10, 30), ZmanimWidget.prochaine(nuit, t(6, 0)))
     }
 
     @Test

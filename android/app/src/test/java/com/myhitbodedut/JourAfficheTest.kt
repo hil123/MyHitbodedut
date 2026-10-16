@@ -43,10 +43,12 @@ class JourAfficheTest {
     @Test
     fun `les ajouts nommes suivent les conditions`() {
         val rc = JourAffiche.ajouts(CalendrierJuif.jour(LocalDate.parse("2026-10-12"), false).conditions)
-        assertEquals(listOf("ajout_machiv_harouah", "ajout_berakha", "ajout_yaale_veyavo", "ajout_hallel_partiel_sans_berakha",
+        assertEquals(listOf("ajout_machiv_harouah", "ajout_barkhenou", "ajout_yaale_veyavo", "ajout_hallel_partiel_sans_berakha",
             "ajout_sans_tahanoun"), rc)
+        // Les Edot disent ברכנו / ברך עלינו ; les autres noussa'h ותן ברכה / ותן טל ומטר ; rien le Chabbat.
+        assertTrue("ajout_berakha" in JourAffiche.ajouts(CalendrierJuif.jour(LocalDate.parse("2026-10-12"), false).conditions, "ashkenaz"))
         val hanouka = JourAffiche.ajouts(CalendrierJuif.jour(LocalDate.parse("2026-12-07"), false).conditions)
-        assertTrue("ajout_al_hanissim" in hanouka && "ajout_hallel_complet" in hanouka && "ajout_tal_oumatar" in hanouka)
+        assertTrue("ajout_al_hanissim" in hanouka && "ajout_hallel_complet" in hanouka && "ajout_barekh_alenou" in hanouka)
         val chabbat = JourAffiche.ajouts(CalendrierJuif.jour(LocalDate.parse("2026-10-10"), false).conditions)
         assertTrue(chabbat.none { it.contains("tahanoun") })
         // Chaque clé a son libellé dans la table.

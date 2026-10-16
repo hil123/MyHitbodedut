@@ -214,7 +214,11 @@ test('JourAffiche : allumage, sortie, ajouts nommés et grille, comme Android', 
   assert.equal(rh1.allumage.methode, 'apres_tset');
   assert.ok('sortie' in parIndex(A.horaires(paris, '2026-09-13', false, 18)));
   assert.deepEqual(A.ajouts(jour('2026-10-12', false).conditions),
-    ['ajout_machiv_harouah', 'ajout_berakha', 'ajout_yaale_veyavo', 'ajout_hallel_partiel_sans_berakha', 'ajout_sans_tahanoun']);
+    ['ajout_machiv_harouah', 'ajout_barkhenou', 'ajout_yaale_veyavo', 'ajout_hallel_partiel_sans_berakha', 'ajout_sans_tahanoun']);
+  // Les Edot disent ברכנו / ברך עלינו ; les autres noussa'h ותן ברכה / ותן טל ומטר.
+  assert.ok(A.ajouts(jour('2026-10-12', false).conditions, 'ashkenaz').includes('ajout_berakha'));
+  assert.ok(A.ajouts(jour('2026-12-07', false).conditions).includes('ajout_barekh_alenou'));
+  assert.ok(!A.ajouts(jour('2026-10-10', false).conditions).some((k) => ['ajout_barkhenou', 'ajout_berakha'].includes(k)));
   // Le nusah (JourAfficheTest) : bénédiction du Hallel partiel (OC 422:2),
   // Morid hatal ashkénaze hors d'Israël, Anénou du particulier (OC 565:3).
   const rc = jour('2026-10-12', false).conditions;
@@ -349,8 +353,8 @@ test('rappels de tefila : mêmes cas que RappelsTefilaTest', () => {
 // --- Israël ou diaspora d'après la position (TerritoireIsraelTest, 16/10) ---
 import { dansIsrael } from '../src/js/calendrier-juif.js';
 test('territoire d’Israël : mêmes villes que TerritoireIsraelTest', () => {
-  for (const [lat, lon] of [[31.7769, 35.2224], [32.0853, 34.7818], [29.5577, 34.9519], [33.2073, 35.57], [32.993, 35.69], [32.106, 35.171], [29.895, 35.06]]) assert.ok(dansIsrael(lat, lon), `${lat},${lon}`);
-  for (const [lat, lon] of [[31.9539, 35.9106], [29.5321, 35.0063], [33.2705, 35.2038], [31.1316, 33.7984], [29.49, 34.876], [48.8566, 2.3522]]) assert.ok(!dansIsrael(lat, lon), `${lat},${lon}`);
+  for (const [lat, lon] of [[31.7769, 35.2224], [32.0853, 34.7818], [29.5577, 34.9519], [33.2073, 35.57], [32.993, 35.69], [32.106, 35.171], [29.895, 35.06], [33.106, 35.806], [33.27, 35.77]]) assert.ok(dansIsrael(lat, lon), `${lat},${lon}`);
+  for (const [lat, lon] of [[31.9539, 35.9106], [29.5321, 35.0063], [33.2705, 35.2038], [31.1316, 33.7984], [29.49, 34.876], [48.8566, 2.3522], [33.1256, 35.8244]]) assert.ok(!dansIsrael(lat, lon), `${lat},${lon}`);
 });
 
 test('rappels de tefila : nord et sud, Israël et diaspora', () => {

@@ -77,8 +77,16 @@ object CalendrierJuif {
         const val LENDEMAIN_KIPPOUR = "lendemain_kippour"
         const val ESTHER_POURIM = "esther_pourim"
         const val CHIVA_ASSAR_TAMOUZ = "chiva_assar_tamouz"
+        /**
+         * Les deux jours de bascule (audit du 16/10) : le 22 Tichri, Cha'harit dit מוריד הטל et
+         * Moussaf commence משיב הרוח ; le 15 Nissan, Cha'harit dit encore משיב הרוח et Moussaf
+         * passe au טל (Choul'han Aroukh O.H. 114:1). Les deux formules valent ce jour-là.
+         */
+        const val BASCULE_PLUIE = "bascule_pluie"
+        /** La veille de Kippour un vendredi (Kippour le Chabbat) : Avinou malkénou à Cha'harit (Rema O.H. 604:2). */
+        const val EREV_KIPPOUR_VENDREDI = "erev_kippour_vendredi"
         val DERIVEES = listOf(AVINOU_MALKENOU, KRIAT_HATORAH) + JOURS_SEMAINE +
-            listOf(TSOM_GUEDALIA_TEVET, LENDEMAIN_KIPPOUR, ESTHER_POURIM, CHIVA_ASSAR_TAMOUZ)
+            listOf(TSOM_GUEDALIA_TEVET, LENDEMAIN_KIPPOUR, ESTHER_POURIM, CHIVA_ASSAR_TAMOUZ, BASCULE_PLUIE, EREV_KIPPOUR_VENDREDI)
     }
 
     /**
@@ -157,8 +165,12 @@ object CalendrierJuif {
      * Une position dans Jérusalem (13/10) : à 10 km au plus de la Vieille Ville
      * (31,7767 N ; 35,2345 E). Le rayon est un choix de l'application, qui
      * approche l'agglomération ; ce n'est pas une limite halakhique.
+     * Hors de la ville (audit du 16/10) : à l'est de 35,258 E (Abou Dis, Ma'alé Adoumim),
+     * au sud de 31,72 N (Bethléem, Beit Jala), et Mevasseret (ouest de 35,165 E au nord
+     * de 31,785 N) — Ramot, Gilo, Ein Kerem, Har Homa et Pisgat Zeev restent dedans.
      */
     fun aJerusalem(latitude: Double, longitude: Double): Boolean {
+        if (longitude > 35.258 || latitude < 31.72 || (longitude < 35.165 && latitude > 31.785)) return false
         val r = 6371.0
         val dLat = Math.toRadians(latitude - 31.7767)
         val dLon = Math.toRadians(longitude - 35.2345)
@@ -232,6 +244,9 @@ object CalendrierJuif {
             if (regles.jewishMonth == JewishDate.TISHREI && regles.jewishDayOfMonth == 11) add(C.LENDEMAIN_KIPPOUR)
             if (index == JewishCalendar.FAST_OF_ESTHER || C.POURIM in this) add(C.ESTHER_POURIM)
             if (index == JewishCalendar.SEVENTEEN_OF_TAMMUZ) add(C.CHIVA_ASSAR_TAMOUZ)
+            if ((regles.jewishMonth == JewishDate.TISHREI && regles.jewishDayOfMonth == 22) ||
+                (regles.jewishMonth == JewishDate.NISSAN && regles.jewishDayOfMonth == 15)) add(C.BASCULE_PLUIE)
+            if (regles.jewishMonth == JewishDate.TISHREI && regles.jewishDayOfMonth == 9 && semaine == DayOfWeek.FRIDAY) add(C.EREV_KIPPOUR_VENDREDI)
         }
 
         val fetes = buildList {
