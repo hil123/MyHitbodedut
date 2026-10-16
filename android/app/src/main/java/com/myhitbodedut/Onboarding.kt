@@ -10,7 +10,11 @@ data class OnboardingEcran(
     @StringRes val corps: Int,
     @DrawableRes val illustration: Int,
     /** L'écran porte les deux boutons צדיק / צדקת. */
-    val choixAdresse: Boolean = false
+    val choixAdresse: Boolean = false,
+    /** L'écran propose la durée habituelle (16/10, point 10) : 5, 10, 15 ou 30 min. */
+    val choixDuree: Boolean = false,
+    /** L'écran propose le rappel quotidien et son heure (16/10, point 10). */
+    val choixRappel: Boolean = false,
 )
 
 /**
@@ -36,6 +40,9 @@ object Onboarding {
      */
     const val VERSION = 2
 
+    /** Les durées proposées à l'accueil : les quatre premières de l'écran de pratique. */
+    val DUREES = intArrayOf(5, 10, 15, 30)
+
     val ECRANS: List<OnboardingEcran> = listOf(
         OnboardingEcran(
             "pratique",
@@ -47,13 +54,15 @@ object Onboarding {
             "seance",
             R.string.onboarding_session,
             R.string.onboarding_session_body,
-            R.drawable.char_praying
+            R.drawable.char_praying,
+            choixDuree = true
         ),
         OnboardingEcran(
             "jours",
             R.string.onboarding_days,
             R.string.onboarding_days_body,
-            R.drawable.char_writing
+            R.drawable.char_writing,
+            choixRappel = true
         ),
         OnboardingEcran(
             "textes",

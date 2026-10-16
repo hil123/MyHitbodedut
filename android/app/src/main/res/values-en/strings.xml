@@ -427,6 +427,12 @@
     <string name="onboarding_yours_body">In Settings: the language (French, English or Hebrew), the screen colors, your first name and your usual hitbodedut length. Music has its own section.</string>
     <string name="onboarding_adresse">What should we call you?</string>
     <string name="onboarding_adresse_body">At the end of each hitbodedut, the app congratulates you. Pick the word that fits you; you can change it in Settings.</string>
+    <string name="onboarding_rappel">Remind me every day</string>
+    <string name="onboarding_rappel_heure">at %1$s</string>
+    <string name="onboarding_rappel_heure_desc">Reminder time: %1$s</string>
+    <!-- Pour la version web (16/10) : pas de rappels, et un navigateur plutôt qu’un téléphone sans Internet. -->
+    <string name="onboarding_days_body_web">The streak counts your days in a row, and the week shows at a glance. After each hitbodedut, a note can go into your journal.</string>
+    <string name="onboarding_private_body_web">What you write stays in this browser, on this device: nothing is sent anywhere.</string>
     <string name="adresse_tsadik">Tsadik</string>
     <string name="adresse_tsadeket">Tsadeket</string>
     <string name="adresse_none">Not chosen</string>

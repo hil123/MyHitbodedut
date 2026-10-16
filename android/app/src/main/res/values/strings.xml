@@ -503,6 +503,12 @@
     <string name="onboarding_yours_body">Dans les réglages : la langue (français, anglais ou hébreu), les couleurs de l’écran, votre prénom et la durée habituelle d’une hitbodedout. La musique a sa propre section.</string>
     <string name="onboarding_adresse">Comment vous appeler ?</string>
     <string name="onboarding_adresse_body">À la fin de chaque hitbodedout, l’application vous félicite. Choisissez le mot qui vous convient ; vous pourrez le changer dans les réglages.</string>
+    <string name="onboarding_rappel">Me le rappeler chaque jour</string>
+    <string name="onboarding_rappel_heure">à %1$s</string>
+    <string name="onboarding_rappel_heure_desc">Heure du rappel : %1$s</string>
+    <!-- Pour la version web (16/10) : pas de rappels, et un navigateur plutôt qu’un téléphone sans Internet. -->
+    <string name="onboarding_days_body_web">La série compte les jours de pratique d’affilée, et la semaine se lit d’un coup d’œil. Après chaque hitbodedout, une note peut rejoindre votre journal.</string>
+    <string name="onboarding_private_body_web">Ce que vous écrivez reste dans ce navigateur, sur cet appareil : rien n’est envoyé nulle part.</string>
     <string name="adresse_tsadik">Tsadik</string>
     <string name="adresse_tsadeket">Tsadeket</string>
     <string name="adresse_none">Pas choisi</string>

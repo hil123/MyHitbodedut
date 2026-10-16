@@ -92,9 +92,9 @@ class OnboardingTest {
     fun `le gabarit porte toutes les vues que l ecran remplit`() {
         val gabarit = File("src/main/res/layout/activity_onboarding.xml").readText()
         val code = File("src/main/java/com/myhitbodedut/OnboardingActivity.kt").readText()
-        val attendues = Regex("""R\.id\.(onboarding_[a-z_]+)""").findAll(code)
+        val attendues = Regex("""R\.id\.(onboarding_[a-z0-9_]+)""").findAll(code)
             .map { it.groupValues[1] }.toSet()
-        assertEquals(10, attendues.size)
+        assertEquals(18, attendues.size)
         attendues.forEach {
             assertTrue("« $it » manque dans activity_onboarding.xml",
                 gabarit.contains("""android:id="@+id/$it""""))
@@ -133,5 +133,13 @@ class OnboardingTest {
         assertEquals(1, avecChoix.size)
         assertEquals("prive", Onboarding.ECRANS.last().cle)
         assertFalse(Onboarding.ECRANS.last().choixAdresse)
+    }
+
+    @Test
+    fun `la duree et le rappel se choisissent chacun sur un seul ecran`() {
+        assertEquals(listOf("seance"), Onboarding.ECRANS.filter { it.choixDuree }.map { it.cle })
+        assertEquals(listOf("jours"), Onboarding.ECRANS.filter { it.choixRappel }.map { it.cle })
+        // Les durées proposées existent sur l'écran de pratique.
+        Onboarding.DUREES.forEach { assertTrue(it in intArrayOf(5, 10, 15, 30, 60, 90)) }
     }
 }

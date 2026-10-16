@@ -437,6 +437,12 @@
     <string name="onboarding_yours_body">בהגדרות: השפה (צרפתית, אנגלית או עברית), צבעי המסך, השם הפרטי ומשך ההתבודדות הרגיל. למוזיקה יש מסך משלה.</string>
     <string name="onboarding_adresse">איך לפנות אליכם?</string>
     <string name="onboarding_adresse_body">בסוף כל התבודדות האפליקציה מברכת אתכם. בחרו את המילה שמתאימה לכם; אפשר לשנות אותה בהגדרות.</string>
+    <string name="onboarding_rappel">להזכיר לי כל יום</string>
+    <string name="onboarding_rappel_heure">ב־%1$s</string>
+    <string name="onboarding_rappel_heure_desc">שעת התזכורת: %1$s</string>
+    <!-- Pour la version web (16/10) : pas de rappels, et un navigateur plutôt qu’un téléphone sans Internet. -->
+    <string name="onboarding_days_body_web">הרצף סופר את הימים ברציפות, והשבוע כולו נראה במבט אחד. אחרי כל התבודדות אפשר להשאיר הערה ביומן.</string>
+    <string name="onboarding_private_body_web">מה שתכתבו נשאר בדפדפן הזה, במכשיר הזה: שום דבר לא נשלח לשום מקום.</string>
     <string name="adresse_tsadik">צדיק</string>
     <string name="adresse_tsadeket">צדקת</string>
     <string name="adresse_none">לא נבחר</string>

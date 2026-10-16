@@ -51,6 +51,8 @@ async function capture(nom, { langue, mode = 'clair', fond = 'vert', accent = 'v
   page.on('dialog', (d) => { erreurs.push(`${nom} : boîte « ${d.message()} »`); d.dismiss().catch(() => {}); });
   page.on('request', (r) => { if (!r.url().startsWith(base)) erreurs.push(`${nom} : requête hors du site ${r.url()}`); });
   const prefs = JSON.stringify({
+    // La présentation du premier lancement (16/10) est capturée à part ; ailleurs, déjà vue.
+    onboarded_version: 2,
     langue_app: langue, apparence_mode: mode, apparence_fond: fond, apparence_accent: accent, first_name: prenom,
     ...(adresse ? { adresse } : {}),
     ...extra,
@@ -145,6 +147,9 @@ async function capture(nom, { langue, mode = 'clair', fond = 'vert', accent = 'v
 }
 
 await capture('accueil-fr', { langue: 'fr' });
+// La présentation du premier lancement (16/10) : le premier écran, puis celui de la durée.
+await capture('presentation-fr', { langue: 'fr', extra: { onboarded_version: 0 } });
+await capture('presentation-he-duree', { langue: 'he', extra: { onboarded_version: 0 }, actions: (p) => p.click('.presentation .principal') });
 await capture('accueil-he', { langue: 'he', prenom: 'אברהם' });
 await capture('accueil-en-sombre', { langue: 'en', mode: 'sombre' });
 // Un jour fait touché : sa durée à la place du ✓ (14/10).

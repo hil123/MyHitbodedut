@@ -17,6 +17,7 @@
     Couché, l'écran a sa propre disposition (layout-land).
 -->
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/mhPaper"
@@ -100,6 +101,74 @@
                 android:layout_marginStart="12dp"
                 android:checkable="true"
                 android:text="@string/adresse_tsadeket" />
+        </LinearLayout>
+
+        <!-- Seulement sur l'écran de la pratique : la durée habituelle (16/10). -->
+        <com.google.android.material.button.MaterialButtonToggleGroup
+            android:id="@+id/onboarding_durees"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:visibility="gone"
+            app:selectionRequired="true"
+            app:singleSelection="true">
+
+            <Button
+                android:id="@+id/onboarding_duree_0"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <Button
+                android:id="@+id/onboarding_duree_1"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <Button
+                android:id="@+id/onboarding_duree_2"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <Button
+                android:id="@+id/onboarding_duree_3"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+        </com.google.android.material.button.MaterialButtonToggleGroup>
+
+        <!-- Seulement sur l'écran « jour après jour » : le rappel quotidien, facultatif (16/10). -->
+        <LinearLayout
+            android:id="@+id/onboarding_rappel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:gravity="center_vertical"
+            android:minHeight="48dp"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <com.google.android.material.materialswitch.MaterialSwitch
+                android:id="@+id/onboarding_rappel_switch"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:minHeight="48dp"
+                android:text="@string/onboarding_rappel"
+                android:textColor="?attr/mhInk"
+                android:textSize="15sp" />
+
+            <Button
+                android:id="@+id/onboarding_rappel_heure"
+                style="@style/Widget.Material3.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp" />
         </LinearLayout>
 
         <Button

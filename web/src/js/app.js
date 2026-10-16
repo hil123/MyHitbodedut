@@ -2285,6 +2285,7 @@ function ecranReglages() {
         ligne({ nom: tr.t('halakha_source_titre'), etat: tr.t(SOURCES_HALAKHA.find(([c]) => c === store.sourceHalakha())[1]),
           onclick: () => choisirDans(tr.t('halakha_source_titre'), SOURCES_HALAKHA.map(([, n]) => tr.t(n)), SOURCES_HALAKHA.findIndex(([c]) => c === store.sourceHalakha()),
             (j) => { store.setSourceHalakha(SOURCES_HALAKHA[j][0]); rendre(); }) })),
+      h('div', { class: 'carte' }, ligne({ nom: tr.t('settings_onboarding'), onclick: presentation })),
       // Réinitialiser l'application (12/10) : en dernier, avec une confirmation.
       h('div', { class: 'carte carte-reinit' },
         h('h3', {}, tr.t('reset_title')),
@@ -2293,6 +2294,55 @@ function ecranReglages() {
           store.reinitialiser();
           location.replace(location.pathname);
         }) }, tr.t('reset_action'))))));
+}
+
+// --- La présentation du premier lancement (Onboarding.kt, 16/10) --------------------------
+// Les mêmes écrans qu'Android, un à la fois, avec une sortie à tout moment ; sur l'écran de
+// la pratique, la durée habituelle se choisit d'un toucher. Le site n'a pas de rappels :
+// l'écran « jour après jour » n'en parle pas, et l'écran de la promesse parle du navigateur.
+const PRESENTATION_VERSION = 2;
+const PRESENTATION = [
+  { cle: 'pratique', titre: 'onboarding_practice', corps: 'onboarding_practice_body', image: 'char_open_arms' },
+  { cle: 'seance', titre: 'onboarding_session', corps: 'onboarding_session_body', image: 'char_praying', duree: true },
+  { cle: 'jours', titre: 'onboarding_days', corps: 'onboarding_days_body_web', image: 'char_writing' },
+  { cle: 'textes', titre: 'onboarding_texts', corps: 'onboarding_texts_body', image: 'char_tehilim' },
+  { cle: 'reglages', titre: 'onboarding_yours', corps: 'onboarding_yours_body', image: 'char_pointing' },
+  { cle: 'adresse', titre: 'onboarding_adresse', corps: 'onboarding_adresse_body', image: 'char_dancing', adresse: true },
+  { cle: 'prive', titre: 'onboarding_private', corps: 'onboarding_private_body_web', image: 'char_thumbs_up' },
+];
+const DUREES_PRESENTATION = [5, 10, 15, 30];
+
+function presentation() {
+  let i = 0;
+  const voile = h('div', { class: 'presentation', role: 'dialog', 'aria-modal': 'true' });
+  const fermer = () => {
+    store.setOnboardedVersion(PRESENTATION_VERSION);
+    voile.remove();
+    rendre();
+  };
+  const dessiner = () => {
+    const e = PRESENTATION[i];
+    const dernier = i === PRESENTATION.length - 1;
+    const puces = (valeurs, courante, libelle, choisir) => h('div', { class: 'presentation-choix', role: 'radiogroup' },
+      valeurs.map((v) => h('button', { class: 'puce-choix', role: 'radio', 'aria-checked': String(v === courante),
+        onclick: () => { choisir(v); dessiner(); } }, libelle(v))));
+    voile.setAttribute('aria-label', tr.t(e.titre));
+    voile.replaceChildren(h('div', { class: 'presentation-page' },
+      h('span', { class: 'presentation-etape', dir: 'ltr' }, tr.t('onboarding_step', i + 1, PRESENTATION.length)),
+      h('div', { class: 'presentation-scene' }, h('img', { src: `img/${e.image}.webp`, alt: '' })),
+      h('h1', { class: 'presentation-titre' }, tr.t(e.titre)),
+      h('p', { class: 'presentation-corps' }, tr.t(e.corps)),
+      e.duree ? puces(DUREES_PRESENTATION, store.targetMinutes(), (m) => tr.duree(m), (m) => store.setTargetMinutes(m)) : null,
+      e.adresse ? puces(['m', 'f'], store.adresse(), (a) => tr.t(a === 'm' ? 'adresse_tsadik' : 'adresse_tsadeket'), (a) => store.setAdresse(a)) : null,
+      h('button', { class: 'principal', onclick: () => { if (dernier) fermer(); else { i++; dessiner(); } } },
+        tr.t(dernier ? 'onboarding_start' : 'onboarding_next')),
+      h('div', { class: 'presentation-bas' },
+        h('button', { class: 'texte-lien', style: i === 0 ? 'visibility:hidden' : '', onclick: () => { i--; dessiner(); } }, tr.t('onboarding_back')),
+        h('button', { class: 'texte-lien', style: dernier ? 'visibility:hidden' : '', onclick: fermer }, tr.t('onboarding_skip')))));
+    voile.querySelector('.principal').focus();
+  };
+  dessiner();
+  document.body.append(voile);
 }
 
 // --- Boîtes de dialogue ---------------------------------------------------------------
@@ -2809,6 +2859,8 @@ async function demarrer() {
   if (ecranCourant() === 'seance') tireChizuk('ouverture');
   if (store.ouverture() === 'zmanim' && ecranCourant() === 'accueil') history.pushState({ interne: true }, '', '#zmanim');
   rendre();
+  // Le premier lancement, ou une présentation qui a changé depuis (Onboarding.VERSION).
+  if (store.onboardedVersion() < PRESENTATION_VERSION) presentation();
   // Revenir à l'application redessine l'écran : un autre jour, une séance
   // arrivée à son terme, le décompte qui a continué pendant le sommeil.
   document.addEventListener('visibilitychange', () => {
