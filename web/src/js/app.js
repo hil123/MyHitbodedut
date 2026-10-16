@@ -2476,6 +2476,46 @@ function compteur() {
   };
 }
 
+/**
+ * La pratique calme (16/10, point 2, comme PratiqueCalme d'Android) : six
+ * secondes sans toucher, et tout s'efface sauf le minuteur, sa lueur et
+ * « Terminer » ; le fond s'assombrit. Un toucher n'importe où ramène tout
+ * pour six secondes, sans déclencher ce qu'il y avait dessous.
+ */
+const CALME_MS = 6000;
+let minuteurCalme = null;
+let gesteAvale = false;
+function attendreCalme() {
+  clearTimeout(minuteurCalme);
+  minuteurCalme = setTimeout(() => {
+    const e = app.querySelector('.ecran.seance');
+    if (e && store.isSessionRunning()) e.classList.add('calme');
+  }, CALME_MS);
+}
+function arreteCalme() {
+  clearTimeout(minuteurCalme);
+  minuteurCalme = null;
+}
+function reveilCalme(ev) {
+  if (ecranCourant() !== 'seance' || !store.isSessionRunning()) return;
+  const e = app.querySelector('.ecran.seance');
+  if (e?.classList.contains('calme')) {
+    e.classList.remove('calme');
+    gesteAvale = true;
+    ev.preventDefault();
+    ev.stopPropagation();
+  }
+  attendreCalme();
+}
+addEventListener('pointerdown', reveilCalme, { capture: true });
+addEventListener('keydown', reveilCalme, { capture: true });
+addEventListener('click', (ev) => {
+  if (!gesteAvale) return;
+  gesteAvale = false;
+  ev.preventDefault();
+  ev.stopPropagation();
+}, { capture: true });
+
 /** Chaque seconde : le décompte, et la fin quand elle arrive, écran allumé ou au retour. */
 function demarreTic() {
   if (tic) return;
@@ -2517,7 +2557,9 @@ function ecranSeance() {
     h('div', { class: 'seance-titre' }, tr.t('session_screen_title')),
     h('div', { class: 'scene' }, h('img', { src: `img/${enCours ? pendant() : fait ? joie() : appel()}.webp`, alt: '' })),
     enCours
-      ? (c.texte ? h('div', { class: 'decompte', role: 'timer' }, c.texte) : null)
+      // La lueur de la pratique (16/10) respire derrière le minuteur.
+      ? h('div', { class: 'decompte-cadre' }, h('div', { class: 'souffle', 'aria-hidden': 'true' }),
+        c.texte ? h('div', { class: 'decompte', role: 'timer' }, c.texte) : h('div', { class: 'decompte-vide' }))
       : h('div', { class: 'decompte' }, tr.duree(store.targetMinutes())),
     // Fait, le grand chiffre reste la durée de la prochaine : la légende dit ce qui a été fait (13/10).
     h('p', { class: 'legende' }, enCours ? c.legende : fait ? tr.t('session_idle_done', tr.duree(store.record()?.minutes ?? 0)) : tr.t('session_idle_caption')),
@@ -2747,6 +2789,7 @@ function rendre() {
   if (!ECRANS_LUS.includes(ecran)) { reglagesOuverts = false; choixNusahOuvert = false; }
   ajusteLesTextes();
   if (ecran === 'seance') demarreTic();
+  if (ecran === 'seance' && store.isSessionRunning()) attendreCalme(); else arreteCalme();
   if (ecran === 'bravo') danse();
 }
 

@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.view.MotionEvent
 import android.view.View
 import android.view.WindowManager
 import android.widget.Button
@@ -31,6 +32,8 @@ class SessionActivity : AppCompatActivity() {
     private lateinit var stuck: Button
     private lateinit var theme: Button
     private lateinit var guide: View
+    private lateinit var souffle: SouffleView
+    private lateinit var calme: PratiqueCalme
 
     /**
      * Le temps courant de la hitbodedout guidée. Il appartient à la séance
@@ -78,6 +81,19 @@ class SessionActivity : AppCompatActivity() {
         guide = findViewById(R.id.session_hitbodedut)
         theme = findViewById(R.id.session_theme)
         theme.setOnClickListener { pickTheme() }
+
+        // La pratique calme (16/10) : la lueur derrière le minuteur, et ce qui
+        // s'efface après six secondes sans toucher. Restent le minuteur,
+        // « Terminer » et, si elle est demandée, la hitbodedout guidée.
+        souffle = findViewById(R.id.session_souffle)
+        souffle.cible = countdown
+        souffle.couleur = Apparence.couleur(this, R.color.mint)
+        val fond = findViewById<View>(R.id.session_fond)
+        calme = PratiqueCalme(this, fond, Apparence.couleur(this, R.color.brand_dark)) {
+            listOf(R.id.session_titre, R.id.session_scene, R.id.session_caption, R.id.session_music,
+                R.id.session_secondary, R.id.session_theme, R.id.session_chizuk, R.id.session_stuck)
+                .map { findViewById(it) }
+        }
 
         // Une rotation, un passage en écran partagé ou le redimensionnement
         // d'une fenêtre recréent l'écran. Sans cela, le guide repartirait au
@@ -179,6 +195,15 @@ class SessionActivity : AppCompatActivity() {
         super.onPause()
     }
 
+    override fun onDestroy() {
+        calme.liberer()
+        super.onDestroy()
+    }
+
+    /** Un toucher réveille l'écran calme ; ce premier geste ne touche rien d'autre. */
+    override fun dispatchTouchEvent(ev: MotionEvent): Boolean =
+        calme.toucher(ev) || super.dispatchTouchEvent(ev)
+
     private fun render() {
         renderMusicLine()
         renderTheme()
@@ -190,6 +215,8 @@ class SessionActivity : AppCompatActivity() {
             if (cancelling) cancelling = false else ChizukCard.show(chizuk, Moment.CLOTURE)
         }
         wasRunning = running
+        souffle.actif = running
+        calme.suivre(running)
         // Chaque seconde, et pas au seul passage à « terminée » : c'est le
         // service qui clôt la séance, et il peut le faire quelques secondes
         // après que le décompte a touché zéro ici.

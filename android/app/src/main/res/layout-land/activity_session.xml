@@ -7,220 +7,235 @@
     repoussait « Commencer » loin sous le pli.
 -->
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/session_fond"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/mhBrandDark"
     android:fillViewport="true">
 
-    <LinearLayout
+    <!-- La lueur de la pratique (16/10) couvre tout, derrière le contenu (SouffleView). -->
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:baselineAligned="false"
-        android:orientation="horizontal"
-        android:paddingHorizontal="@dimen/edge"
-        android:paddingVertical="16dp">
+        android:layout_height="wrap_content">
+
+        <com.myhitbodedut.SouffleView
+            android:id="@+id/session_souffle"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:importantForAccessibility="no" />
 
         <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center_horizontal"
-            android:orientation="vertical">
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:baselineAligned="false"
+            android:orientation="horizontal"
+            android:paddingHorizontal="@dimen/edge"
+            android:paddingVertical="16dp">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:letterSpacing="0.14"
-                android:text="@string/session_screen_title"
-                android:textColor="?attr/mhMint"
-                android:textSize="13sp" />
-
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:background="@drawable/bg_stage"
-                android:padding="10dp">
-
-                <ImageView
-                    android:id="@+id/session_character"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/art_height"
-                    android:adjustViewBounds="true"
-                    android:contentDescription="@null"
-                    android:scaleType="fitCenter" />
-            </FrameLayout>
-
-            <TextView
-                android:id="@+id/session_countdown"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="18dp"
-                android:textColor="@color/white"
-                android:textSize="56sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/session_caption"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:textAlignment="center"
-                android:textColor="?attr/mhMint"
-                android:textSize="15sp" />
-
-            <TextView
-                android:id="@+id/session_music"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
-                android:textAlignment="center"
-                android:textColor="?attr/mhMint"
-                android:textSize="13sp"
-                android:visibility="gone" />
-
-            <!-- Point 4 : ouverture au début de la séance, blocage pendant. -->
-            <include
-                android:id="@+id/session_chizuk"
-                layout="@layout/view_chizuk"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="18dp" />
-
-            <!-- La hitbodedout guidée, quand elle est demandée. -->
-            <include
-                android:id="@+id/session_hitbodedut"
-                layout="@layout/view_hitbodedut"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp" />
-
-            <Button
-                android:id="@+id/session_stuck"
-                style="@style/Widget.Material3.Button.TextButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
-                android:text="@string/chizuk_stuck"
-                android:textColor="?attr/mhMint"
-                android:visibility="gone" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:paddingTop="24dp">
-
-            <Button
-                android:id="@+id/session_primary"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="0dp"
-                android:paddingVertical="14dp"
-                android:textSize="16sp" />
-
-            <Button
-                android:id="@+id/session_secondary"
-                style="@style/Widget.Material3.Button.TextButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:textColor="?attr/mhMint" />
-            <!--
-                Le sujet de la séance. Facultatif : « Aucun » est la valeur de
-                départ et une réponse recevable — on vient souvent sans savoir
-                de quoi on va parler.
-            -->
-            <Button
-                android:id="@+id/session_theme"
-                style="@style/Widget.Material3.Button.TextButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:textColor="?attr/mhMint" />
-
-            <!--
-                Les durées proposées (demande du 28/09) : 5, 10, 15, 30 min,
-                1 h, 1 h 30, en deux rangées de trois, puis la durée réglable.
-            -->
             <LinearLayout
-                android:id="@+id/session_durations"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
                 android:orientation="vertical">
 
-                <LinearLayout
+                <TextView
+                    android:id="@+id/session_titre"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:letterSpacing="0.14"
+                    android:text="@string/session_screen_title"
+                    android:textColor="?attr/mhMint"
+                    android:textSize="13sp" />
+
+                <FrameLayout
+                    android:id="@+id/session_scene"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:layout_marginTop="16dp"
+                    android:background="@drawable/bg_stage"
+                    android:padding="10dp">
 
-                    <Button
-                        android:id="@+id/duration_5"
-                        style="@style/DurationButton"
-                        android:tag="5" />
+                    <ImageView
+                        android:id="@+id/session_character"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/art_height"
+                        android:adjustViewBounds="true"
+                        android:contentDescription="@null"
+                        android:scaleType="fitCenter" />
+                </FrameLayout>
 
-                    <Button
-                        android:id="@+id/duration_10"
-                        style="@style/DurationButton"
-                        android:layout_marginStart="6dp"
-                        android:tag="10" />
+                <TextView
+                    android:id="@+id/session_countdown"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="18dp"
+                    android:textColor="@color/white"
+                    android:textSize="56sp"
+                    android:textStyle="bold" />
 
-                    <Button
-                        android:id="@+id/duration_15"
-                        style="@style/DurationButton"
-                        android:layout_marginStart="6dp"
-                        android:tag="15" />
-                </LinearLayout>
+                <TextView
+                    android:id="@+id/session_caption"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:textAlignment="center"
+                    android:textColor="?attr/mhMint"
+                    android:textSize="15sp" />
 
-                <LinearLayout
+                <TextView
+                    android:id="@+id/session_music"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="6dp"
-                    android:orientation="horizontal">
+                    android:textAlignment="center"
+                    android:textColor="?attr/mhMint"
+                    android:textSize="13sp"
+                    android:visibility="gone" />
 
-                    <Button
-                        android:id="@+id/duration_30"
-                        style="@style/DurationButton"
-                        android:tag="30" />
+                <!-- Point 4 : ouverture au début de la séance, blocage pendant. -->
+                <include
+                    android:id="@+id/session_chizuk"
+                    layout="@layout/view_chizuk"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="18dp" />
 
-                    <Button
-                        android:id="@+id/duration_60"
-                        style="@style/DurationButton"
-                        android:layout_marginStart="6dp"
-                        android:tag="60" />
+                <!-- La hitbodedout guidée, quand elle est demandée. -->
+                <include
+                    android:id="@+id/session_hitbodedut"
+                    layout="@layout/view_hitbodedut"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp" />
 
-                    <Button
-                        android:id="@+id/duration_90"
-                        style="@style/DurationButton"
-                        android:layout_marginStart="6dp"
-                        android:tag="90" />
-                </LinearLayout>
+                <Button
+                    android:id="@+id/session_stuck"
+                    style="@style/Widget.Material3.Button.TextButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:text="@string/chizuk_stuck"
+                    android:textColor="?attr/mhMint"
+                    android:visibility="gone" />
+
             </LinearLayout>
 
-            <Button
-                android:id="@+id/session_custom"
-                style="@style/Widget.Material3.Button.TextButton"
-                android:layout_width="match_parent"
+            <LinearLayout
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
-                android:text="@string/duration_custom"
-                android:textColor="?attr/mhMint" />
+                android:layout_marginStart="24dp"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:paddingTop="24dp">
 
-            <!-- La séance sans durée : on s'arrête quand on s'arrête. -->
-            <Button
-                android:id="@+id/session_open"
-                style="@style/Widget.Material3.Button.TextButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
-                android:text="@string/session_open"
-                android:textColor="?attr/mhMint" />
+                <Button
+                    android:id="@+id/session_primary"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="0dp"
+                    android:paddingVertical="14dp"
+                    android:textSize="16sp" />
 
+                <Button
+                    android:id="@+id/session_secondary"
+                    style="@style/Widget.Material3.Button.TextButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:textColor="?attr/mhMint" />
+                <!--
+                    Le sujet de la séance. Facultatif : « Aucun » est la valeur de
+                    départ et une réponse recevable — on vient souvent sans savoir
+                    de quoi on va parler.
+                -->
+                <Button
+                    android:id="@+id/session_theme"
+                    style="@style/Widget.Material3.Button.TextButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:textColor="?attr/mhMint" />
+
+                <!--
+                    Les durées proposées (demande du 28/09) : 5, 10, 15, 30 min,
+                    1 h, 1 h 30, en deux rangées de trois, puis la durée réglable.
+                -->
+                <LinearLayout
+                    android:id="@+id/session_durations"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <Button
+                            android:id="@+id/duration_5"
+                            style="@style/DurationButton"
+                            android:tag="5" />
+
+                        <Button
+                            android:id="@+id/duration_10"
+                            style="@style/DurationButton"
+                            android:layout_marginStart="6dp"
+                            android:tag="10" />
+
+                        <Button
+                            android:id="@+id/duration_15"
+                            style="@style/DurationButton"
+                            android:layout_marginStart="6dp"
+                            android:tag="15" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:orientation="horizontal">
+
+                        <Button
+                            android:id="@+id/duration_30"
+                            style="@style/DurationButton"
+                            android:tag="30" />
+
+                        <Button
+                            android:id="@+id/duration_60"
+                            style="@style/DurationButton"
+                            android:layout_marginStart="6dp"
+                            android:tag="60" />
+
+                        <Button
+                            android:id="@+id/duration_90"
+                            style="@style/DurationButton"
+                            android:layout_marginStart="6dp"
+                            android:tag="90" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/session_custom"
+                    style="@style/Widget.Material3.Button.TextButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:text="@string/duration_custom"
+                    android:textColor="?attr/mhMint" />
+
+                <!-- La séance sans durée : on s'arrête quand on s'arrête. -->
+                <Button
+                    android:id="@+id/session_open"
+                    style="@style/Widget.Material3.Button.TextButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:text="@string/session_open"
+                    android:textColor="?attr/mhMint" />
+
+            </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
+    </FrameLayout>
 </ScrollView>

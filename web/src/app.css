@@ -1049,3 +1049,32 @@ button.corps { min-height: 44px; }
   .onglet { font-size: 10px; overflow-wrap: anywhere; }
 }
 .champ-recherche { min-height: 44px; }
+
+/* --- La pratique calme (16/10) ---------------------------------------------------------
+   Après six secondes sans toucher : le reste s'efface, le fond s'assombrit, le minuteur
+   reste avec sa lueur, qui grandit en quatre secondes et décroît en six. */
+.seance { transition: background-color 250ms ease-out; }
+.seance .barre, .seance-titre, .seance .scene, .seance .legende, .seance .chizuk, .seance .texte-clair { transition: opacity 250ms ease-out; }
+.seance.calme { background: color-mix(in srgb, var(--brand-dark) 45%, #000); transition-duration: 900ms; }
+.seance.calme .barre, .seance.calme .seance-titre, .seance.calme .scene, .seance.calme .legende,
+.seance.calme .chizuk, .seance.calme .texte-clair { transition-duration: 900ms; }
+.seance.calme .barre, .seance.calme .seance-titre, .seance.calme .scene, .seance.calme .legende,
+.seance.calme .chizuk, .seance.calme .texte-clair { opacity: 0; pointer-events: none; }
+.decompte-cadre { position: relative; isolation: isolate; }
+.decompte-vide { height: 64px; }
+.souffle {
+  position: absolute; z-index: -1; left: 50%; top: 50%; width: min(84vmin, 380px); aspect-ratio: 1;
+  border-radius: 50%; pointer-events: none; translate: -50% -50%;
+  background: radial-gradient(closest-side, color-mix(in srgb, var(--mint) 42%, transparent),
+    color-mix(in srgb, var(--mint) 15%, transparent) 55%, transparent);
+  animation: souffle 10s infinite;
+}
+@keyframes souffle {
+  0% { transform: scale(0.78); opacity: 0.38; animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1); }
+  40% { transform: scale(1); opacity: 1; animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1); }
+  100% { transform: scale(0.78); opacity: 0.38; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .souffle { animation: none; transform: scale(0.9); opacity: 0.7; }
+  .seance, .seance .barre, .seance-titre, .seance .scene, .seance .legende, .seance .chizuk, .seance .texte-clair { transition: none; }
+}
