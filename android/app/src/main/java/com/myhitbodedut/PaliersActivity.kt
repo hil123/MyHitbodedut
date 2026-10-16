@@ -225,8 +225,6 @@ class PaliersActivity : AppCompatActivity() {
         orientation = LinearLayout.HORIZONTAL
         gravity = Gravity.CENTER_VERTICAL
         minimumHeight = dp(48)
-        // Pleine largeur : en largeur « wrap_content », le titre pondéré (largeur 0) tombait à rien
-        // et la ligne s'étirait sur un écran (captures du 16/10).
         layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
         val v = Trophees.valeur(p, t.famille).coerceAtMost(t.seuil)
         addView(View(context).apply { background = TropheeDessin(context, t.famille.forme, null, t.famille.icone); alpha = 0.6f },
@@ -234,7 +232,11 @@ class PaliersActivity : AppCompatActivity() {
         addView(VueJour.texte(context, TropheesVue.description(context, t.famille, t.seuil), 14f, R.color.ink).apply {
             layoutParams = LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f).apply { marginStart = dp(10) }
         })
-        addView(VueJour.texte(context, getString(R.string.trophee_progres, v, t.seuil), 13f, R.color.brand, gras = true))
+        // VueJour.texte pose MATCH_PARENT : ici le compte doit rester à sa taille, sinon il prend
+        // toute la ligne et le titre pondéré tombe à zéro (une lettre par ligne, captures du 16/10).
+        addView(VueJour.texte(context, getString(R.string.trophee_progres, v, t.seuil), 13f, R.color.brand, gras = true).apply {
+            layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply { marginStart = dp(8) }
+        })
         isClickable = true
         isFocusable = true
         foreground = ondulation()
