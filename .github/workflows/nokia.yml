@@ -23,6 +23,12 @@ on:
 permissions:
   contents: read
 
+# Une nouvelle poussée annule le run encore en cours de la même branche : seul le dernier
+# commit compte, et il passe sans attendre (16/10).
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}-${{ github.event_name }}
+  cancel-in-progress: true
+
 jobs:
   nokia:
     runs-on: ubuntu-24.04
