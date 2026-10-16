@@ -540,14 +540,57 @@ class MainActivity : AppCompatActivity() {
      * jour, semaine ou mois pour les paliers de durée).
      */
     private fun renderPaliers() {
-        val bilan = Store.bilan(this)
-        val etats = Paliers.etats(bilan)
+        // L'accueil montre le grade et le prochain trophée (16/10, points 3 et 4) : les paliers
+        // ont rejoint la ligne des trophées, et deux objectifs côte à côte se disputaient l'attention.
+        val p = Store.pratique(this)
+        val grade = Trophees.grade(Trophees.gagnes(p).size)
+        val prochain = Trophees.prochain(p)
         findViewById<TextView>(R.id.paliers_line).apply {
-            text = PaliersVue.aLaUne(this@MainActivity, Paliers.aLaUne(etats)) + "  ›"
+            val texte = if (prochain == null) getString(R.string.trophees_tous) else getString(R.string.accueil_prochain_trophee,
+                TropheesVue.description(context, prochain.famille, prochain.seuil),
+                prochain.seuil - Trophees.valeur(p, prochain.famille).coerceAtMost(prochain.seuil))
+            text = "$texte  ›"
+            val taille = (26 * resources.displayMetrics.density).toInt()
+            setCompoundDrawablesRelative(TropheeDessin(context, Trophees.Forme.MEDAILLE, grade, "★").apply { setBounds(0, 0, taille, taille) }, null, null, null)
+            compoundDrawablePadding = (8 * resources.displayMetrics.density).toInt()
+            contentDescription = getString(R.string.grade_titre, TropheesVue.metal(context, grade)) + ". " + texte
             setOnClickListener { startActivity(Intent(this@MainActivity, PaliersActivity::class.java)) }
         }
-        // Un palier ou un trophée neuf : les confettis (11/10).
+        // Un palier ou un trophée neuf : des étincelles du grade (16/10, animation E).
         Celebrations.ecran(this)
+        bilanDeLaSemaine()
+    }
+
+    /** Le bilan de la semaine écoulée (16/10, point 7) : à la première ouverture de la semaine, une fois. */
+    private fun bilanDeLaSemaine() {
+        val minutes = Store.bilan(this).minutes
+        val b = BilanSemaine.precedente(java.time.LocalDate.now(), minutes, Store.datesTrophees(this)) ?: return
+        if (Store.bilanVu(this) == b.debut.toString()) return
+        Store.setBilanVu(this, b.debut.toString())
+        val d = resources.displayMetrics.density
+        val vue = android.widget.LinearLayout(this).apply {
+            orientation = android.widget.LinearLayout.VERTICAL
+            setPadding((24 * d).toInt(), (8 * d).toInt(), (24 * d).toInt(), 0)
+            addView(VueJour.texte(context, getString(R.string.bilan_minutes, Store.formatDuration(context, b.minutes),
+                resources.getQuantityString(R.plurals.palier_n_jours, b.jours, b.jours)), 17f, R.color.ink, gras = true))
+            if (b.ecart > 0 && b.precedente > 0) addView(VueJour.texte(context, getString(R.string.bilan_plus, Store.formatDuration(context, b.ecart)), 15f, R.color.muted, haut = 6))
+            if (b.record) addView(VueJour.texte(context, getString(R.string.bilan_record), 15f, R.color.brand, gras = true, haut = 6))
+            if (b.trophees.isNotEmpty()) {
+                addView(VueJour.texte(context, getString(R.string.bilan_trophees), 15f, R.color.muted, haut = 10))
+                val faits = Trophees.chemin.filter { Trophees.gagne(Store.pratique(context), it) }
+                addView(android.widget.LinearLayout(context).apply {
+                    orientation = android.widget.LinearLayout.HORIZONTAL
+                    b.trophees.take(6).forEach { t ->
+                        addView(View(context).apply {
+                            background = TropheeDessin(context, t.famille.forme, Trophees.grade(faits.indexOf(t) + 1), t.famille.icone)
+                            contentDescription = TropheesVue.description(context, t.famille, t.seuil)
+                        }, android.widget.LinearLayout.LayoutParams((40 * d).toInt(), (40 * d).toInt()).apply { marginEnd = (6 * d).toInt() })
+                    }
+                })
+            }
+        }
+        com.google.android.material.dialog.MaterialAlertDialogBuilder(this).setTitle(R.string.bilan_titre).setView(vue)
+            .setPositiveButton(R.string.celebration_continue, null).show()
     }
 
     /** Le compteur qui fait monter le chiffre de la face ; arrêté quand la face change. */

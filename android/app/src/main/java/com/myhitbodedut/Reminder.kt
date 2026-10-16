@@ -130,6 +130,18 @@ class ReminderReceiver : BroadcastReceiver() {
         Reminder.reschedule(context)
     }
 
+    /** La phrase du trophée tout proche, s'il y en a un pas encore signalé ; il est alors noté. */
+    private fun tropheeProche(context: Context): String? {
+        if (!Store.rappelTropheeProche(context)) return null
+        val p = Store.pratique(context)
+        val n = Trophees.proche(p) ?: return null
+        val signales = Store.tropheesProchesSignales(context)
+        if (n.cle in signales) return null
+        Store.setTropheesProchesSignales(context, signales + n.cle)
+        return context.getString(R.string.rappel_trophee_proche, n.seuil - Trophees.valeur(p, n.famille),
+            TropheesVue.description(context, n.famille, n.seuil))
+    }
+
     private fun build(context: Context): Notification {
         Notifications.ensureChannels(context)
         val duree = Store.formatDuration(context, Store.targetMinutes(context))
@@ -164,9 +176,14 @@ class ReminderReceiver : BroadcastReceiver() {
             )
         ).build()
 
+        // Un trophée tout proche (16/10) : le rappel le dit, une fois par trophée. Le rappel
+        // lui-même se tait déjà les jours de repos (ReminderRule).
+        val texte = context.getString(R.string.reminder_text, duree) + (tropheeProche(context)?.let { "\n$it" } ?: "")
+
         return Notification.Builder(context, Notifications.CHANNEL_REMINDER)
             .setContentTitle(context.getString(R.string.reminder_title))
-            .setContentText(context.getString(R.string.reminder_text, duree))
+            .setContentText(texte)
+            .setStyle(Notification.BigTextStyle().bigText(texte))
             .setSmallIcon(R.drawable.ic_notification)
             // Les anneaux du jour, vides ou pleins : on voit d'un coup d'œil
             // ce qui reste à faire (demande du 01/10).

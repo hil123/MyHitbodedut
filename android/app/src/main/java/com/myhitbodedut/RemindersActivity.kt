@@ -58,6 +58,11 @@ class RemindersActivity : AppCompatActivity() {
 
         findViewById<Button>(R.id.reminders_add).setOnClickListener { ajoute() }
 
+        findViewById<MaterialSwitch>(R.id.reminders_trophee).apply {
+            isChecked = Store.rappelTropheeProche(this@RemindersActivity)
+            setOnCheckedChangeListener { _, coche -> Store.setRappelTropheeProche(this@RemindersActivity, coche) }
+        }
+
         findViewById<TextView>(R.id.reminders_permission).setOnClickListener {
             demandeNotificationsSiBesoin()
         }

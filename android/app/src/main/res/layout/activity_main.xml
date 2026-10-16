@@ -193,7 +193,9 @@
                 <!-- Le palier le plus proche (11/10) : touché, il ouvre « Mes paliers ». -->
                 <TextView
                     android:id="@+id/paliers_line"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:minHeight="48dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
                     android:background="?attr/selectableItemBackground"

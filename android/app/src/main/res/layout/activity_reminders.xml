@@ -82,6 +82,16 @@
             android:layout_marginTop="10dp"
             android:textColor="@color/warning"
             android:visibility="gone" />
+
+        <!-- Le trophée tout proche, dit dans le rappel (16/10). -->
+        <com.google.android.material.materialswitch.MaterialSwitch
+            android:id="@+id/reminders_trophee"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:minHeight="48dp"
+            android:text="@string/rappel_trophee_reglage"
+            android:textColor="?attr/mhInk" />
     </LinearLayout>
 
     <TextView

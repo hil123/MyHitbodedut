@@ -755,6 +755,38 @@ object Store {
         return Trophees.Pratique(minutes, tous.count { it.note.isNotBlank() }, meilleureSerie(context))
     }
 
+    /**
+     * Le jour où chaque trophée gagné l'a été (16/10) : l'historique rejoué
+     * (Trophees.datesGain), les jours exemptés ne cassant pas la série.
+     */
+    fun datesTrophees(context: Context): Map<String, LocalDate> {
+        val tous = days(context).values
+        val minutes = tous.filter { it.faite }.mapNotNull { r -> dateValide(r.date)?.let { it to r.minutes } }.toMap()
+        val notes = tous.filter { it.note.isNotBlank() }.mapNotNull { dateValide(it.date) }.toSet()
+        return Trophees.datesGain(minutes, notes) { isExempt(context, it) }
+    }
+
+    /** Le dernier bilan de semaine montré : le dimanche de la semaine résumée (16/10). */
+    fun bilanVu(context: Context): String? = prefs(context).getString("bilan_vu", null)
+
+    fun setBilanVu(context: Context, iso: String) {
+        prefs(context).edit().putString("bilan_vu", iso).apply()
+    }
+
+    /** Le rappel dit qu'un trophée est tout proche (16/10) ; activé par défaut, une fois par trophée. */
+    fun rappelTropheeProche(context: Context): Boolean = prefs(context).getBoolean("rappel_trophee_proche", true)
+
+    fun setRappelTropheeProche(context: Context, oui: Boolean) {
+        prefs(context).edit().putBoolean("rappel_trophee_proche", oui).apply()
+    }
+
+    fun tropheesProchesSignales(context: Context): Set<String> =
+        prefs(context).getStringSet("trophees_proches_signales", emptySet())!!.toSet()
+
+    fun setTropheesProchesSignales(context: Context, cles: Set<String>) {
+        prefs(context).edit().putStringSet("trophees_proches_signales", cles.toSet()).apply()
+    }
+
     /** Les trophées déjà fêtés à l'écran (null : jamais encore regardés, le premier passage ne fête rien). */
     /** Le dernier grade fêté (15/10) : null la première fois, pour ne pas fêter un grade ancien. */
     fun gradeVu(context: Context): Int? = prefs(context).getInt("grade_vu", -1).takeIf { it >= 0 }
