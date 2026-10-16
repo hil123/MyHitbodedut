@@ -225,6 +225,9 @@ class PaliersActivity : AppCompatActivity() {
         orientation = LinearLayout.HORIZONTAL
         gravity = Gravity.CENTER_VERTICAL
         minimumHeight = dp(48)
+        // Pleine largeur : en largeur « wrap_content », le titre pondéré (largeur 0) tombait à rien
+        // et la ligne s'étirait sur un écran (captures du 16/10).
+        layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
         val v = Trophees.valeur(p, t.famille).coerceAtMost(t.seuil)
         addView(View(context).apply { background = TropheeDessin(context, t.famille.forme, null, t.famille.icone); alpha = 0.6f },
             LinearLayout.LayoutParams(dp(30), dp(30)))

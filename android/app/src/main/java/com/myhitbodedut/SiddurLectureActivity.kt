@@ -173,18 +173,23 @@ class SiddurLectureActivity : AppCompatActivity() {
             removeAllViews()
             contentDescription = etiquettes.joinToString(", ")
             etiquettes.forEach { e ->
-                addView(com.google.android.material.chip.Chip(context).apply {
+                // Une pastille simple, pas une Chip : la Chip Material pose sa couleur de surface
+                // (opaque) sous le fond translucide — pastilles blanches, texte blanc invisible (captures du 16/10).
+                val d = resources.displayMetrics.density
+                addView(TextView(context).apply {
                     text = e
-                    isClickable = false
-                    isCheckable = false
-                    isFocusable = false
-                    setEnsureMinTouchTargetSize(false)
-                    chipMinHeight = 28 * resources.displayMetrics.density
                     textSize = 13f
+                    maxLines = 1
+                    ellipsize = android.text.TextUtils.TruncateAt.END
                     setTextColor(android.graphics.Color.WHITE)
-                    chipBackgroundColor = android.content.res.ColorStateList.valueOf(0x22FFFFFF)
-                    chipStrokeColor = android.content.res.ColorStateList.valueOf(0x40FFFFFF)
-                    chipStrokeWidth = resources.displayMetrics.density
+                    gravity = android.view.Gravity.CENTER_VERTICAL
+                    minHeight = (28 * d).toInt()
+                    setPadding((12 * d).toInt(), (4 * d).toInt(), (12 * d).toInt(), (4 * d).toInt())
+                    background = android.graphics.drawable.GradientDrawable().apply {
+                        cornerRadius = 14 * d
+                        setColor(0x26FFFFFF)
+                        setStroke(d.toInt().coerceAtLeast(1), 0x55FFFFFF)
+                    }
                     importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO
                 })
             }
