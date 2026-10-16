@@ -153,7 +153,10 @@ await capture('presentation-he-duree', { langue: 'he', extra: { onboarded_versio
 await capture('accueil-he', { langue: 'he', prenom: 'אברהם' });
 await capture('accueil-en-sombre', { langue: 'en', mode: 'sombre' });
 // Un jour fait touché : sa durée à la place du ✓ (14/10).
-await capture('accueil-fr-durees', { langue: 'fr', actions: async (p) => { const n = await p.locator('button.jour.fait').count(); for (let i = 0; i < n; i++) await p.locator('button.jour.fait').nth(i).click(); } });
+// Un jour fait touché ouvre sa feuille (16/10) ; « Montrer la durée » la met sur la bande.
+await capture('accueil-fr-durees', { langue: 'fr', actions: async (p) => { const n = await p.locator('button.jour.fait').count(); for (let i = 0; i < n; i++) { await p.locator('button.jour.fait').nth(i).click(); await p.locator('.feuille .actions button').first().click(); } } });
+// Un jour passé sans rien : la feuille pour y ajouter du temps fait hors du téléphone (16/10).
+await capture('accueil-fr-ajout-temps', { langue: 'fr', actions: (p) => p.locator('button.jour:not(.fait)').first().click() });
 await capture('accueil-fr-sable-violet', { langue: 'fr', fond: 'sable', accent: 'violet', prenom: 'Hillel' });
 await capture('textes-he', { langue: 'he', onglet: 'textes' });
 await capture('musique-fr', { langue: 'fr', ecran: 'musique' });

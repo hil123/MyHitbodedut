@@ -1003,4 +1003,10 @@
     <string name="bilan_trophees">גביעים שהושגו השבוע:</string>
     <string name="rappel_trophee_proche">נשארו רק %1$d ל„%2$s”.</string>
     <string name="rappel_trophee_reglage">לומר בתזכורת כשגביע ממש קרוב</string>
+    <!-- Ajouter du temps à un jour passé (16/10). -->
+    <string name="jour_ajouter_temps">להוסיף זמן שנעשה בלי הטלפון</string>
+    <string name="jour_rien">לא נרשם דבר ביום הזה.</string>
+    <string name="jour_fait">%1$s נרשמו ביום הזה.</string>
+    <string name="jour_montrer_duree">להציג את משך הזמן</string>
+    <string name="jour_ajoute">נוספו %1$s.</string>
 </resources>

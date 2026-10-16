@@ -823,13 +823,17 @@ class MainActivity : AppCompatActivity() {
                 day.exempt -> "—"
                 else -> day.date.dayOfMonth.toString()
             }
-            if (day.done) {
-                mark.setTextSize(android.util.TypedValue.COMPLEX_UNIT_PX, mark.textSize * if (montre) 0.75f else 1f)
+            if (day.done) mark.setTextSize(android.util.TypedValue.COMPLEX_UNIT_PX, mark.textSize * if (montre) 0.75f else 1f)
+            // Tout jour jusqu'à aujourd'hui s'ouvre (16/10) : y ajouter du temps fait hors du
+            // téléphone ; un jour fait peut aussi montrer sa durée sur la bande (14/10).
+            if (AjoutTemps.possible(day.date)) {
                 cell.isClickable = true
                 cell.foreground = getDrawable(android.R.drawable.list_selector_background)
                 cell.setOnClickListener {
-                    if (!joursMontres.remove(day.date)) joursMontres.add(day.date)
-                    renderWeek()
+                    AjoutTemps.ouvrir(this, day.date, montrer = {
+                        if (!joursMontres.remove(day.date)) joursMontres.add(day.date)
+                        renderWeek()
+                    }) { refresh() }
                 }
             }
             cell.contentDescription = when {

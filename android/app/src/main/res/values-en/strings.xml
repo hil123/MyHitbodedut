@@ -975,4 +975,10 @@
     <string name="bilan_trophees">Trophies earned this week:</string>
     <string name="rappel_trophee_proche">Only %1$d left for “%2$s”.</string>
     <string name="rappel_trophee_reglage">Say in the reminder when a trophy is very close</string>
+    <!-- Ajouter du temps à un jour passé (16/10). -->
+    <string name="jour_ajouter_temps">Add time done away from the phone</string>
+    <string name="jour_rien">Nothing recorded on this day.</string>
+    <string name="jour_fait">%1$s recorded on this day.</string>
+    <string name="jour_montrer_duree">Show the duration</string>
+    <string name="jour_ajoute">%1$s added.</string>
 </resources>

@@ -172,6 +172,17 @@ class CalendrierActivity : AppCompatActivity() {
         })
         contenu.addView(carte)
         contenu.addView(VueJour.carteJour(this, choisi, israel))
+        // Un jour passé : y ajouter du temps fait hors du téléphone (16/10).
+        if (AjoutTemps.possible(choisi)) contenu.addView(android.widget.TextView(this).apply {
+            text = getString(R.string.jour_ajouter_temps)
+            textSize = 15f
+            setTypeface(typeface, android.graphics.Typeface.BOLD)
+            setTextColor(Apparence.couleur(context, R.color.brand))
+            gravity = android.view.Gravity.CENTER
+            minHeight = dp(48)
+            setBackgroundResource(android.util.TypedValue().also { theme.resolveAttribute(android.R.attr.selectableItemBackground, it, true) }.resourceId)
+            setOnClickListener { AjoutTemps.ouvrir(this@CalendrierActivity, choisi) { afficher() } }
+        })
         contenu.addView(VueJour.horaires(this, choisi, israel) { choixLieu.montrer() })
         contenu.addView(VueJour.pied(this))
     }

@@ -495,7 +495,11 @@ function panneauAujourdhui() {
         !j.done && !j.exempt && j.date === store.today() ? 'aujourdhui' : '', j.future ? 'avenir' : ''].join(' ').replace(/\s+/g, ' ').trim();
       const nom = `${nomJour.format(new Date(`${j.date}T12:00:00Z`))} : ${etiquette}`;
       const bascule = () => { if (!joursMontres.delete(j.date)) joursMontres.add(j.date); rendre(); };
-      return h(j.done ? 'button' : 'div', { class: `${classe}${montre ? ' montre-duree' : ''}`, ...(j.done ? { type: 'button', onclick: bascule, 'aria-pressed': String(montre) } : { role: 'img' }), 'aria-label': nom },
+      // Tout jour jusqu'à aujourd'hui s'ouvre (16/10) : y ajouter du temps fait hors du téléphone ;
+      // un jour fait peut aussi montrer sa durée sur la bande (14/10).
+      const ouvrable = !j.future && j.date <= store.today();
+      return h(ouvrable ? 'button' : 'div', { class: `${classe}${montre ? ' montre-duree' : ''}`,
+        ...(ouvrable ? { type: 'button', onclick: () => ajoutTemps(j.date, j.done ? bascule : null) } : { role: 'img' }), 'aria-label': nom },
         h('span', { class: 'nom', 'aria-hidden': 'true' }, nomJour.format(new Date(`${j.date}T12:00:00Z`))),
         h('span', { class: 'marque-jour', 'aria-hidden': 'true' }, marque));
     })),
@@ -2388,6 +2392,8 @@ function ecranCalendrier() {
           })),
         h('button', { class: 'lien-aujourdhui', onclick: () => { jourCalendrier = aujourdhui; moisCalendrier = null; moisHebreuCalendrier = null; rendre(); } }, tr.t('calendrier_aujourdhui'))),
       carteJour(choisi),
+      // Un jour passé : y ajouter du temps fait hors du téléphone (16/10).
+      choisi <= aujourdhui ? h('button', { type: 'button', class: 'secondaire ajout-temps', onclick: () => ajoutTemps(choisi) }, tr.t('jour_ajouter_temps')) : null,
       listeZmanim(choisi),
       ...piedZmanim())));
 }
@@ -2517,6 +2523,32 @@ function presentation() {
 }
 
 // --- Boîtes de dialogue ---------------------------------------------------------------
+/**
+ * Ajouter du temps à un jour passé (16/10, AjoutTemps.kt) : une hitbodedout faite hors du
+ * téléphone s'inscrit après coup, sur n'importe quel jour jusqu'à aujourd'hui, même un jour déjà
+ * fait (les minutes s'ajoutent). montrer : l'action « montrer la durée sur la bande ».
+ */
+function ajoutTemps(iso, montrer = null) {
+  if (iso > store.today()) return;
+  const r = store.record(iso);
+  const minutes = r?.faite ? r.minutes : null;
+  const titre = new Intl.DateTimeFormat(tr.langue, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' }).format(new Date(`${iso}T12:00:00Z`));
+  feuille(titre, (f, fermer) => {
+    f.append(h('p', { class: 'message' }, minutes === null ? tr.t('jour_rien') : tr.t('jour_fait', tr.duree(minutes))),
+      h('div', { class: 'actions' },
+        montrer && minutes !== null ? h('button', { type: 'button', onclick: () => { fermer(); montrer(); } }, tr.t('jour_montrer_duree')) : '',
+        h('button', { type: 'button', onclick: fermer }, tr.t('action_back')),
+        h('button', { type: 'button', class: 'fort', onclick: () => {
+          fermer();
+          choisirDuree((m) => {
+            store.addSession(m, { date: iso });
+            signale(tr.t('jour_ajoute', tr.duree(m)));
+            rendre();
+          });
+        } }, tr.t('jour_ajouter_temps'))));
+  });
+}
+
 /** Une confirmation : titre, message, « Retour » et l'action (les AlertDialog de SessionActivity). */
 function confirmer(titre, message, action, onConfirme) {
   feuille(titre, (f, fermer) => {
