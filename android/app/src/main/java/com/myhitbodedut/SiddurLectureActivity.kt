@@ -190,7 +190,7 @@ class SiddurLectureActivity : AppCompatActivity() {
             }
         }
         findViewById<TextView>(R.id.siddur_lecture_horaire).apply {
-            val h = if (livre) null else HorairePriere.texte(this@SiddurLectureActivity, id)
+            val h = if (livre) null else HorairePriere.texte(this@SiddurLectureActivity, this@SiddurLectureActivity.id)
             text = h?.let { "◷ $it" }
             visibility = if (h == null) View.GONE else View.VISIBLE
         }
