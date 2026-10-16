@@ -1497,14 +1497,26 @@ function choisirLieu() {
       onclick: () => {
         if (!navigator.geolocation) { etat.textContent = tr.t('zmanim_position_refusee'); return; }
         etat.textContent = tr.t('zmanim_position_attente');
-        navigator.geolocation.getCurrentPosition((p) => {
+        // La position (16/10) : basse précision d'abord (plus rapide, et assez pour des zmanim) ;
+        // sans réponse, la dernière connue, même ancienne. La ville la plus proche nomme le lieu,
+        // donne l'altitude et dit Israël ou diaspora.
+        const poser = (p, ancienne) => {
+          const proche = villePlusProche(villes ?? [], p.coords.latitude, p.coords.longitude);
           store.setLieu({
-            nom: tr.t('zmanim_position'), latitude: p.coords.latitude, longitude: p.coords.longitude,
-            altitude: 0, fuseau: Intl.DateTimeFormat().resolvedOptions().timeZone,
+            nom: proche ? tr.t('zmanim_position_pres', titreTexte(proche.nom)) : tr.t('zmanim_position'),
+            latitude: p.coords.latitude, longitude: p.coords.longitude,
+            altitude: proche?.altitude ?? 0, fuseau: proche?.fuseau ?? Intl.DateTimeFormat().resolvedOptions().timeZone,
           });
+          if (proche) store.setInIsrael(proche.pays === 'IL');
+          if (ancienne) signale(tr.t('zmanim_position_ancienne'));
           fermer();
           rendre();
-        }, () => { etat.textContent = tr.t('zmanim_position_refusee'); }, { maximumAge: 3_600_000, timeout: 20_000 });
+        };
+        const refus = () => { etat.textContent = tr.t('zmanim_position_refusee'); };
+        navigator.geolocation.getCurrentPosition((p) => poser(p, false), (e) => {
+          if (e.code === 1) { refus(); return; } // refusée : inutile d'insister
+          navigator.geolocation.getCurrentPosition((p) => poser(p, true), refus, { maximumAge: Infinity, timeout: 10_000 });
+        }, { enableHighAccuracy: false, maximumAge: 3_600_000, timeout: 20_000 });
       },
     }, tr.t('zmanim_position')), etat);
     const courant = store.lieu()?.ville;
@@ -2552,6 +2564,18 @@ function ajoutTemps(iso, montrer = null) {
           });
         } }, tr.t('jour_ajouter_temps'))));
   });
+}
+
+/** La ville de la liste la plus proche, à moins de 60 km (Villes.plusProche). */
+function villePlusProche(liste, lat, lon, maxKm = 60) {
+  const rad = (x) => (x * Math.PI) / 180;
+  const km = (v) => {
+    const a = Math.sin(rad(v.latitude - lat) / 2) ** 2 + Math.cos(rad(lat)) * Math.cos(rad(v.latitude)) * Math.sin(rad(v.longitude - lon) / 2) ** 2;
+    return 2 * 6371 * Math.asin(Math.sqrt(Math.min(1, a)));
+  };
+  let m = null; let dm = Infinity;
+  for (const v of liste) { const d = km(v); if (d < dm) { dm = d; m = v; } }
+  return dm <= maxKm ? m : null;
 }
 
 /** Une confirmation : titre, message, « Retour » et l'action (les AlertDialog de SessionActivity). */
