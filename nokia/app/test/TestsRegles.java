@@ -46,7 +46,8 @@ public final class TestsRegles {
         egal(new Integer(20 * 60), new Integer(r.rappel), "heure du rappel relue");
         egal(new Integer(3), new Integer(r.joursFaits()), "une journée à 0 min ne compte pas");
         egal(new Integer(40), new Integer(r.totalMinutes()), "total");
-        egal(new Integer(2), new Integer(r.serie()), "série : aujourd'hui et hier");
+        // Un Chabbat vide ne casse pas la série : si avant-hier est un samedi, la série va jusqu'au jour 3.
+        egal(new Integer(Journal.chabbat(Journal.ilYa(2)) ? 3 : 2), new Integer(r.serie()), "série : aujourd'hui et hier");
 
         Journal hier = new Journal();
         hier.ajoute(Journal.ilYa(1), 10);
@@ -63,6 +64,16 @@ public final class TestsRegles {
         egal("29 20:00", p.get(Calendar.DAY_OF_MONTH) + " " + p.get(Calendar.HOUR_OF_DAY) + ":" + p.get(Calendar.MINUTE) + "0", "rappel plus tard le jour même");
         p.setTime(new Date(Regles.prochain(7 * 60, maintenant)));
         egal("30 7:00", p.get(Calendar.DAY_OF_MONTH) + " " + p.get(Calendar.HOUR_OF_DAY) + ":" + p.get(Calendar.MINUTE) + "0", "rappel passé : demain");
+        p.setTime(new Date(Regles.prochain(7 * 60, maintenant - 3600000L * 10, true)));
+        egal("30 7:00", p.get(Calendar.DAY_OF_MONTH) + " " + p.get(Calendar.HOUR_OF_DAY) + ":" + p.get(Calendar.MINUTE) + "0", "déjà faite aujourd'hui : demain");
+        // Vendredi 16/10/2026 à 18 h, rappel à 20 h : ni vendredi soir ni Chabbat, dimanche 18.
+        c.set(2026, Calendar.OCTOBER, 16, 18, 0, 0);
+        p.setTime(new Date(Regles.prochain(20 * 60, c.getTime().getTime())));
+        egal("18 20:00", p.get(Calendar.DAY_OF_MONTH) + " " + p.get(Calendar.HOUR_OF_DAY) + ":" + p.get(Calendar.MINUTE) + "0", "pas de rappel vendredi soir ni Chabbat");
+        // Jeudi 15/10 à 8 h, rappel à 7 h : vendredi matin reste permis.
+        c.set(2026, Calendar.OCTOBER, 15, 8, 0, 0);
+        p.setTime(new Date(Regles.prochain(7 * 60, c.getTime().getTime())));
+        egal("16 7:00", p.get(Calendar.DAY_OF_MONTH) + " " + p.get(Calendar.HOUR_OF_DAY) + ":" + p.get(Calendar.MINUTE) + "0", "vendredi matin permis");
 
         if (echecs > 0) {
             System.out.println(echecs + " échec(s)");

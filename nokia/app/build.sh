@@ -51,7 +51,9 @@ cp -R "$ICI/res/." "$TRAVAIL/res/"
   -bootclasspath "$API" -d "$TRAVAIL/classes" $(find "$ICI/src" -name '*.java')
 
 # 3. Le manifeste : ce que le téléphone lit avant d'installer.
-VERSION="1.0.$(git -C "$RACINE" rev-list --count HEAD 2>/dev/null || echo 0)"
+# MIDP : chaque partie de la version va de 0 à 99 (1.0.361 était refusée par les téléphones conformes).
+N="$(git -C "$RACINE" rev-list --count HEAD 2>/dev/null || echo 0)"
+VERSION="1.$((N / 100)).$((N % 100))"
 cat > "$TRAVAIL/MANIFEST.MF" <<MF
 Manifest-Version: 1.0
 MIDlet-Name: MyHitbodedut

@@ -22,7 +22,7 @@ jobs:
   build:
     # Une demande de captures ne reconstruit pas les releases.
     if: github.event_name != 'workflow_dispatch' || !inputs.captures
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
 
@@ -80,7 +80,7 @@ jobs:
       - name: Show lint findings
         if: always()
         working-directory: android
-        run: cat app/build/reports/lint-results-debug.txt || echo "aucun rapport texte"
+        run: cat app/build/reports/lint-results-*.txt 2>/dev/null || echo "aucun rapport texte"
 
       # Plus de copie des APK en artefact (retiree le 28/09, demande du
       # proprietaire) : deux a trois APK d'environ 130 Mo par construction
@@ -116,7 +116,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: lint-report
-          path: android/app/build/reports/lint-results-debug.html
+          path: android/app/build/reports/lint-results-*.html
           if-no-files-found: ignore
 
   # Captures d'ecran reelles, sur un emulateur, pour montrer les changements
@@ -125,7 +125,7 @@ jobs:
   # .github/captures/ ; il ne fait jamais echouer le job.
   captures:
     if: github.event_name == 'workflow_dispatch' && inputs.captures
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     # Le passage des six tailles (20) prend a lui seul pres d'une heure.
     timeout-minutes: 120
     steps:

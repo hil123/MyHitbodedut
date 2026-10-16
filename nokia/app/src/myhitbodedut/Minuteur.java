@@ -71,6 +71,14 @@ final class Minuteur extends Ecran {
         termine(false);
     }
 
+    /** Arrêt sans rappel (fermeture par le téléphone) : les minutes déjà faites, à inscrire tout de suite. */
+    synchronized int coupe() {
+        if (terminee) return 0;
+        terminee = true;
+        if (timer != null) timer.cancel();
+        return (int) (ecoule() / 60000L);
+    }
+
     private synchronized void termine(boolean complete) {
         if (terminee) return;
         terminee = true;
@@ -80,7 +88,7 @@ final class Minuteur extends Ecran {
     }
 
     protected void touche(int code) {
-        if (getGameAction(code) == FIRE) {
+        if (jeu(code) == FIRE) {
             basculePause();
             fin.pauseBasculee();
         }

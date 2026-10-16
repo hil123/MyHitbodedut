@@ -89,7 +89,13 @@ public final class MyHitbodedut extends MIDlet implements CommandListener, Minut
     }
 
     protected void destroyApp(boolean inconditionnel) {
-        if (minuteur != null) minuteur.arrete();
+        // callSerially ne passerait plus : les minutes faites s'inscrivent ici, tout de suite.
+        Minuteur m = minuteur;
+        minuteur = null;
+        if (m != null) {
+            journal.ajoute(jourDebut, m.coupe());
+            journal.ecrit();
+        }
         if (musique != null) musique.arrete();
     }
 
@@ -201,7 +207,11 @@ public final class MyHitbodedut extends MIDlet implements CommandListener, Minut
         display.setCurrent(avant);
     }
 
+    /** Le jour où la hitbodedout a commencé : c'est lui qui la reçoit, même finie après minuit (comme Android). */
+    private int jourDebut;
+
     private void lance() {
+        jourDebut = Journal.aujourdhui();
         minuteur = new Minuteur(dureeChoisie, this);
         ecoute(minuteur, new Command[] {pause, bloque, arreter});
         display.setCurrent(minuteur);
@@ -210,7 +220,9 @@ public final class MyHitbodedut extends MIDlet implements CommandListener, Minut
 
     /** La touche écran dit ce qu'elle fera : « Pause » ou « Reprendre ». */
     private void basculePause() {
-        minuteur.basculePause();
+        Minuteur m = minuteur;
+        if (m == null) return;
+        m.basculePause();
         suitPause();
     }
 
@@ -236,8 +248,9 @@ public final class MyHitbodedut extends MIDlet implements CommandListener, Minut
 
     private void termine(int minutes, boolean complete) {
         minuteur = null;
-        journal.ajoute(Journal.aujourdhui(), minutes);
+        journal.ajoute(jourDebut, minutes);
         journal.ecrit();
+        reprogrammeRappel();
         if (complete) sonne();
         int m = textes.moment("cloture");
         int t = m < 0 ? -1 : textes.tire(m);
@@ -346,9 +359,17 @@ public final class MyHitbodedut extends MIDlet implements CommandListener, Minut
         reglage.append(actif);
         heure = new DateField("Heure", DateField.TIME);
         int m = journal.rappel >= 0 ? journal.rappel : 20 * 60;
+        // MIDP : un champ TIME attend le 1er janvier 1970 ; une autre date le laisse « non initialisé »
+        // sur un vrai téléphone, et l'enregistrement désactivait le rappel.
         Calendar c = Calendar.getInstance();
+        c.setTime(new Date(0));
+        c.set(Calendar.YEAR, 1970);
+        c.set(Calendar.MONTH, Calendar.JANUARY);
+        c.set(Calendar.DAY_OF_MONTH, 1);
         c.set(Calendar.HOUR_OF_DAY, m / 60);
         c.set(Calendar.MINUTE, m % 60);
+        c.set(Calendar.SECOND, 0);
+        c.set(Calendar.MILLISECOND, 0);
         heure.setDate(c.getTime());
         reglage.append(heure);
         reglage.append("Le téléphone ouvre MyHitbodedut à l'heure choisie. S'il le refuse, règle plutôt son alarme.");
@@ -375,7 +396,8 @@ public final class MyHitbodedut extends MIDlet implements CommandListener, Minut
     /** Une alarme ne sonne qu'une fois : on la reprogramme à chaque ouverture. */
     private String reprogrammeRappel() {
         try {
-            long quand = journal.rappel >= 0 ? Regles.prochain(journal.rappel, System.currentTimeMillis()) : 0;
+            long quand = journal.rappel >= 0
+                ? Regles.prochain(journal.rappel, System.currentTimeMillis(), journal.minutesDu(Journal.aujourdhui()) > 0) : 0;
             PushRegistry.registerAlarm(getClass().getName(), quand);
             return journal.rappel >= 0 ? "Rappel chaque jour à " + Regles.heure(journal.rappel) + "." : "Rappel désactivé.";
         } catch (Throwable t) {

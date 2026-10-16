@@ -13,6 +13,15 @@ import javax.microedition.lcdui.Image;
  * et le texte coupé aux espaces.
  */
 abstract class Ecran extends Canvas {
+    /** getGameAction sans exception : sur S40, une touche logicielle ou « Effacer » la fait lever, et la MIDlet s'arrête. */
+    protected final int jeu(int code) {
+        try {
+            return getGameAction(code);
+        } catch (RuntimeException e) {
+            return 0;
+        }
+    }
+
     // Couleurs de l'application (values/colors.xml).
     static final int BRAND = 0x16775A;
     static final int BRAND_DARK = 0x173C32;
@@ -43,7 +52,7 @@ abstract class Ecran extends Canvas {
     private static boolean feuAppuye;
 
     protected final void keyPressed(int code) {
-        if (getGameAction(code) == FIRE) feuAppuye = true;
+        if (jeu(code) == FIRE) feuAppuye = true;
         touche(code);
     }
 
@@ -51,7 +60,7 @@ abstract class Ecran extends Canvas {
         // Un relâchement tout juste arrivé sur cet écran vient d'un appui fait
         // ailleurs (l'écran d'avant, un menu du téléphone) : il ne compte pas.
         boolean recent = System.currentTimeMillis() - montreDepuis < 400;
-        if (getGameAction(code) == FIRE && !feuAppuye && !recent) touche(code);
+        if (jeu(code) == FIRE && !feuAppuye && !recent) touche(code);
         feuAppuye = false;
     }
 
@@ -62,7 +71,7 @@ abstract class Ecran extends Canvas {
     }
 
     protected void keyRepeated(int code) {
-        int a = getGameAction(code);
+        int a = jeu(code);
         if (a == UP || a == DOWN) touche(code);
     }
 

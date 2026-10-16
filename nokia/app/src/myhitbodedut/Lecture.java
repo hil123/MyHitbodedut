@@ -31,7 +31,7 @@ final class Lecture extends Ecran {
     }
 
     protected void touche(int code) {
-        int a = getGameAction(code);
+        int a = jeu(code);
         int pas = MOYENNE.getHeight() * 3;
         int max = Math.max(0, hauteurTotale - getHeight() + 8);
         if (a == DOWN) decalage = Math.min(max, decalage + pas);

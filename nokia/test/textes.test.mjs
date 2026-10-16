@@ -3,7 +3,7 @@
 //   node --test nokia/test/
 
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
+import { readdirSync, readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { test } from 'node:test';
 import { fileURLToPath } from 'node:url';
@@ -68,8 +68,10 @@ test('textes.bin se relit à l’identique, comme DataInputStream', () => {
 });
 
 test('les mots de l’application : hitbodedout, jamais séance', () => {
-  const java = ['MyHitbodedut', 'Minuteur', 'Journal', 'Textes']
-    .map((n) => readFileSync(join(ICI, '..', 'app', 'src', 'myhitbodedut', `${n}.java`), 'utf8')).join('\n');
+  // Tous les fichiers Java (audit du 16/10 : seuls quatre sur dix étaient lus).
+  const dossier = join(ICI, '..', 'app', 'src', 'myhitbodedut');
+  const java = readdirSync(dossier).filter((n) => n.endsWith('.java'))
+    .map((n) => readFileSync(join(dossier, n), 'utf8')).join('\n');
   // Les clés de strings.xml (session_done_title…) ne s'affichent pas : leur texte, si.
   const chainesAffichees = [...java.matchAll(/"([^"\n]*)"/g)].map((m) => m[1])
     .filter((c) => !CLES_INTERFACE.includes(c)).join('\n');

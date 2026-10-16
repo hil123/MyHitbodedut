@@ -214,6 +214,9 @@ await capture('bravo-danse-fr', {
   actions: async (p) => {
     await p.click('.duree');
     await finDeSeance(p);
+    // La danse démarre à la première image d'animation : attendre qu'elle ait posé un mouvement,
+    // sinon le premier relevé est vide et le contrôle échoue au hasard (CI du 16/10).
+    if (moteur === 'chromium') await p.waitForFunction(() => document.querySelector('.danseur')?.style.transform, null, { timeout: 3000 }).catch(() => {});
     const a = await p.evaluate(() => document.querySelector('.danseur').style.transform);
     await p.waitForTimeout(250);
     const b = await p.evaluate(() => document.querySelector('.danseur').style.transform);

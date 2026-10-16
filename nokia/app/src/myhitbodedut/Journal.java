@@ -34,9 +34,25 @@ final class Journal {
         return jour(new Date());
     }
 
-    /** Le jour qui précède de n jours aujourd'hui. */
+    /** Le jour qui précède de n jours aujourd'hui (compté depuis midi : l'heure d'été ne saute aucun jour). */
     static int ilYa(int n) {
-        return jour(new Date(System.currentTimeMillis() - n * JOUR));
+        Calendar c = Calendar.getInstance();
+        c.setTime(new Date());
+        c.set(Calendar.HOUR_OF_DAY, 12);
+        c.set(Calendar.MINUTE, 0);
+        c.set(Calendar.SECOND, 0);
+        c.set(Calendar.MILLISECOND, 0);
+        return jour(new Date(c.getTime().getTime() - n * JOUR));
+    }
+
+    /** Samedi : un Chabbat sans hitbodedout ne casse pas la série et ne la compte pas (comme Android). */
+    static boolean chabbat(int jour) {
+        Calendar c = Calendar.getInstance();
+        c.set(Calendar.YEAR, jour / 10000);
+        c.set(Calendar.MONTH, jour / 100 % 100 - 1);
+        c.set(Calendar.DAY_OF_MONTH, jour % 100);
+        c.set(Calendar.HOUR_OF_DAY, 12);
+        return c.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY;
     }
 
     int minutesDu(int jour) {
@@ -53,9 +69,10 @@ final class Journal {
     int serie() {
         int n = minutesDu(aujourdhui()) > 0 ? 0 : 1;
         int s = 0;
-        while (minutesDu(ilYa(n)) > 0) {
-            s++;
-            n++;
+        for (;; n++) {
+            int j = ilYa(n);
+            if (minutesDu(j) > 0) s++;
+            else if (!chabbat(j)) break;
         }
         return s;
     }

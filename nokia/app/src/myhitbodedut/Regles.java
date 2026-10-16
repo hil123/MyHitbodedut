@@ -38,13 +38,34 @@ final class Regles {
 
     /** La prochaine heure de rappel, en millisecondes, après maintenant. */
     static long prochain(int minutesApresMinuit, long maintenant) {
+        return prochain(minutesApresMinuit, maintenant, false);
+    }
+
+    /**
+     * La prochaine heure de rappel après maintenant, à l'heure de l'horloge (les jours se
+     * comptent depuis midi : un passage à l'heure d'été ne décale ni le jour ni l'heure).
+     * Pas de rappel le Chabbat, ni le vendredi après midi (comme ReminderRule sur Android) ;
+     * [faitAujourdhui] : la hitbodedout du jour est faite, le rappel passe à demain.
+     */
+    static long prochain(int minutesApresMinuit, long maintenant, boolean faitAujourdhui) {
         Calendar c = Calendar.getInstance();
         c.setTime(new Date(maintenant));
-        c.set(Calendar.HOUR_OF_DAY, minutesApresMinuit / 60);
-        c.set(Calendar.MINUTE, minutesApresMinuit % 60);
+        c.set(Calendar.HOUR_OF_DAY, 12);
+        c.set(Calendar.MINUTE, 0);
         c.set(Calendar.SECOND, 0);
         c.set(Calendar.MILLISECOND, 0);
-        long t = c.getTime().getTime();
-        return t > maintenant ? t : t + 86400000L;
+        long midi = c.getTime().getTime();
+        for (int j = faitAujourdhui ? 1 : 0; j < 9; j++) {
+            c.setTime(new Date(midi + j * 86400000L));
+            int jour = c.get(Calendar.DAY_OF_WEEK);
+            c.set(Calendar.HOUR_OF_DAY, minutesApresMinuit / 60);
+            c.set(Calendar.MINUTE, minutesApresMinuit % 60);
+            long t = c.getTime().getTime();
+            if (t <= maintenant) continue;
+            if (jour == Calendar.SATURDAY) continue;
+            if (jour == Calendar.FRIDAY && minutesApresMinuit >= 12 * 60) continue;
+            return t;
+        }
+        return maintenant + 86400000L;
     }
 }

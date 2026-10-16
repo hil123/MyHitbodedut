@@ -1,7 +1,7 @@
 // Hors connexion.
 //
-// La coquille (code, chaînes, textes, illustrations : ~1 Mo) est gardée à
-// l'installation. La musique ne l'est pas d'office : chaque morceau est
+// La coquille (code, chaînes, textes, illustrations, livres et biographies : ~24 Mo) est gardée à
+// l'installation, pour que tout se lise hors connexion. La musique ne l'est pas d'office : chaque morceau est
 // gardé la première fois qu'on l'écoute, puis servi depuis le téléphone.
 //
 // Safari lit un morceau par tranches (en-tête Range) et exige qu'on lui

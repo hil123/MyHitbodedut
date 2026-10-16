@@ -124,7 +124,7 @@ final class Musique extends Ecran {
     }
 
     protected void touche(int code) {
-        if (getGameAction(code) == FIRE) bascule();
+        if (jeu(code) == FIRE) bascule();
     }
 
     protected void paint(Graphics g) {

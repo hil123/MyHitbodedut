@@ -45,7 +45,7 @@ final class Menu extends Ecran {
             }
             return;
         }
-        int action = getGameAction(code);
+        int action = jeu(code);
         if (action == UP) selection = (selection + items.length - 1) % items.length;
         else if (action == DOWN) selection = (selection + 1) % items.length;
         else if (action == FIRE) choix.choisi(this, selection);
