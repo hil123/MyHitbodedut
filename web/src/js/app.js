@@ -229,6 +229,14 @@ function ecouter(m) {
 // semaine, puis série. Un toucher met un anneau en avant ; la légende suit.
 let anneauEnAvant = null;
 
+/** Un dessin rendu lisible : une image et sa description, au lieu de aria-hidden. */
+function decrire(svg, texte) {
+  svg.removeAttribute('aria-hidden');
+  svg.setAttribute('role', 'img');
+  svg.setAttribute('aria-label', texte);
+  return svg;
+}
+
 function anneaux(etat) {
   const EPAISSEUR = 8 / 2.36; // 8 dp sur 236 dp
   const ECART = 3 / 2.36;
@@ -457,9 +465,10 @@ function panneauAujourdhui() {
     fait ? h('div', { class: 'detail' },
       record.minutes > 0 ? tr.t('today_minutes', tr.duree(record.minutes)) : tr.t('today_declared')) : null),
 
-    h('div', { class: 'accueil-jauge' }, h('div', { class: 'jauge', role: 'img', 'aria-label': tr.t('rings_description',
-      tr.duree(etat.jour.fait), tr.duree(etat.jour.objectif), etat.semaine.fait, etat.semaine.objectif, etat.serie.fait, etat.serie.objectif) },
-    anneaux(etat),
+    h('div', { class: 'accueil-jauge' }, h('div', { class: 'jauge' },
+    // L'image des anneaux porte la description ; la plaque, touchable, reste à part (audit du 16/10).
+    decrire(anneaux(etat), tr.t('rings_description',
+      tr.duree(etat.jour.fait), tr.duree(etat.jour.objectif), etat.semaine.fait, etat.semaine.objectif, etat.serie.fait, etat.serie.objectif)),
     plaqueAccueil()),
     h('div', { class: `jauge-legende${anneauEnAvant ? ` legende-${anneauEnAvant}` : ''}` }, legendeAnneaux(etat, progression)),
     lignePaliers()),
@@ -2124,7 +2133,7 @@ function ecranPaliers() {
   store.setGradeVu(niveau);
   store.setTropheesVus(Trophees.gagnes(p));
   const ecran = h('div', { class: 'ecran avec-bandeau' }, bandeau(tr.t('trophees_paliers_titre'), { dessin: 'char_arms_raised' }),
-    h('div', { class: 'defile' }, h('div', { class: 'contenu' },
+    h('div', { class: 'defile', tabindex: '0' }, h('div', { class: 'contenu' },
       tete,
       h('div', { class: 'ligne-trophees' }, ...ligne),
       h('div', { class: 'carte carte-palier' }, h('p', { class: 'palier-nom' }, tr.t('paliers_records')),
@@ -2189,7 +2198,7 @@ function ecranCalendrier() {
           h('button', { class: 'icone-bouton mois-precedent', 'aria-label': tr.t('calendrier_precedent'), dir: 'ltr', onclick: () => decale(-1) }, tr.rtl ? '›' : '‹'),
           h('div', { class: 'mois-titres' }, titre, sousTitre),
           h('button', { class: 'icone-bouton mois-suivant', 'aria-label': tr.t('calendrier_suivant'), dir: 'ltr', onclick: () => decale(1) }, tr.rtl ? '‹' : '›')),
-        h('div', { class: 'grille-jours', role: 'grid' },
+        h('div', { class: 'grille-jours' },
           initiales.map((x) => h('span', { class: 'jour-initiale', 'aria-hidden': 'true' }, x)),
           grille.flat().map((d) => {
             if (!d) return h('span', { class: 'case vide' });
