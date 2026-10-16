@@ -185,12 +185,47 @@ def retour(n=1):
         pause(1.0)
 
 
+DENSITE = None
+
+
+def accessibilite(racine, nom):
+    """Audit d'accessibilite (16/10, point 9) : cibles touchables de moins de
+    48 dp, et elements touchables sans texte ni description (muets pour
+    TalkBack). Note dans accessibilite.txt, sans jamais faire echouer."""
+    global DENSITE
+    if racine is None:
+        return
+    if DENSITE is None:
+        m = re.search(r"(\d+)\s*$", sh("wm density").strip())
+        DENSITE = (int(m.group(1)) / 160.0) if m else 2.625
+    lignes = []
+    for n in racine.iter("node"):
+        if n.get("clickable") != "true" and n.get("long-clickable") != "true" and n.get("checkable") != "true":
+            continue
+        b = bornes(n)
+        if not b:
+            continue
+        l, h = (b[2] - b[0]) / DENSITE, (b[3] - b[1]) / DENSITE
+        etiquette = (n.get("text") or n.get("content-desc") or "").strip()
+        if not etiquette:
+            etiquette = " ".join((c.get("text") or c.get("content-desc") or "").strip() for c in n.iter("node") if c is not n).strip()
+        cls = n.get("class", "").rsplit(".", 1)[-1]
+        rid = n.get("resource-id", "").rsplit("/", 1)[-1]
+        if l < 47.5 or h < 47.5:
+            lignes.append(f"PETIT {round(l)}x{round(h)}dp {cls} {rid} «{etiquette[:30]}»")
+        if not etiquette:
+            lignes.append(f"MUET {cls} {rid} {b}")
+    with open(os.path.join(OUT, "accessibilite.txt"), "a") as f:
+        f.write(f"== {nom}\n" + "".join(x + "\n" for x in lignes))
+
+
 def capture(nom, attente=1.2, ok=True):
     pause(attente)
     try:
-        fermer_anr(dump())
-    except Exception:
-        pass
+        racine = fermer_anr(dump())
+        accessibilite(racine, nom)
+    except Exception as e:
+        log("  audit:", e)
     if not ok:
         nom += "-INTROUVABLE"
     chemin = os.path.join(OUT, nom + ".png")
