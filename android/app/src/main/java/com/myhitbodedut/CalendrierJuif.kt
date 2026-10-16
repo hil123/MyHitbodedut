@@ -67,7 +67,18 @@ object CalendrierJuif {
         const val AVINOU_MALKENOU = "avinou_malkenou"
         /** Jour de lecture de la Torah (15/10) : déduite, hors des vecteurs KosherJava comme Avinou malkénou. */
         const val KRIAT_HATORAH = "kriat_hatorah"
-        val DERIVEES = listOf(AVINOU_MALKENOU, KRIAT_HATORAH)
+        /**
+         * Le psaume du jour (16/10) : « jour_1 » le dimanche … « jour_6 » le vendredi ; et les
+         * jours où l'on en ajoute un (Edot) : le jeûne de Guedalia et le 10 Tévet, le lendemain
+         * de Kippour, le jeûne d'Esther et Pourim, le 17 Tamouz. Déduites, hors des vecteurs.
+         */
+        val JOURS_SEMAINE = (1..6).map { "jour_$it" }
+        const val TSOM_GUEDALIA_TEVET = "tsom_guedalia_tevet"
+        const val LENDEMAIN_KIPPOUR = "lendemain_kippour"
+        const val ESTHER_POURIM = "esther_pourim"
+        const val CHIVA_ASSAR_TAMOUZ = "chiva_assar_tamouz"
+        val DERIVEES = listOf(AVINOU_MALKENOU, KRIAT_HATORAH) + JOURS_SEMAINE +
+            listOf(TSOM_GUEDALIA_TEVET, LENDEMAIN_KIPPOUR, ESTHER_POURIM, CHIVA_ASSAR_TAMOUZ)
     }
 
     /**
@@ -214,6 +225,13 @@ object CalendrierJuif {
             if (semaine == DayOfWeek.MONDAY || semaine == DayOfWeek.THURSDAY ||
                 listOf(C.CHABBAT, C.ROCH_HODECH, C.PESSAH, C.SOUKKOT, C.CHAVOUOT, C.ROCH_HACHANA, C.KIPPOUR,
                     C.CHEMINI_ATSERET, C.HANOUKA, C.POURIM, C.JEUNE, C.TICHA_BEAV).any { it in this }) add(C.KRIAT_HATORAH)
+            // Le psaume du jour et les jours qui en ajoutent un (16/10).
+            if (semaine != DayOfWeek.SATURDAY) add("jour_${semaine.value % 7 + 1}")
+            val index = regles.yomTovIndex
+            if (index == JewishCalendar.FAST_OF_GEDALYAH || index == JewishCalendar.TENTH_OF_TEVES) add(C.TSOM_GUEDALIA_TEVET)
+            if (regles.jewishMonth == JewishDate.TISHREI && regles.jewishDayOfMonth == 11) add(C.LENDEMAIN_KIPPOUR)
+            if (index == JewishCalendar.FAST_OF_ESTHER || C.POURIM in this) add(C.ESTHER_POURIM)
+            if (index == JewishCalendar.SEVENTEEN_OF_TAMMUZ) add(C.CHIVA_ASSAR_TAMOUZ)
         }
 
         val fetes = buildList {

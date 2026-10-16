@@ -110,6 +110,13 @@ export function jour(iso, enIsrael, mukafChoma = false) {
   // La lecture de la Torah à Cha'harit (15/10, CalendrierJuif.kt) : hors de TOUTES, comme dans DERIVEES.
   si(semaine === 1 || semaine === 4 || ['chabbat', 'roch_hodech', 'pessah', 'soukkot', 'chavouot', 'roch_hachana', 'kippour',
     'chemini_atseret', 'hanouka', 'pourim', 'jeune', 'ticha_beav'].some((k) => c.has(k)), 'kriat_hatorah');
+  // Le psaume du jour et les jours qui en ajoutent un (16/10, CalendrierJuif.kt).
+  si(semaine !== 6, `jour_${semaine + 1}`);
+  const index = regles.getYomTovIndex();
+  si(index === JewishCalendar.FAST_OF_GEDALYAH || index === JewishCalendar.TENTH_OF_TEVES, 'tsom_guedalia_tevet');
+  si(regles.getJewishMonth() === JewishDate.TISHREI && regles.getJewishDayOfMonth() === 11, 'lendemain_kippour');
+  si(index === JewishCalendar.FAST_OF_ESTHER || c.has('pourim'), 'esther_pourim');
+  si(index === JewishCalendar.SEVENTEEN_OF_TAMMUZ, 'chiva_assar_tamouz');
 
   const fetes = [];
   const fete = FETES.get(affiche.getYomTovIndex());

@@ -672,6 +672,16 @@
     <string name="ajout_jeune_public">תענית ציבור</string>
     <string name="ajout_avinou_malkenou">אבינו מלכנו</string>
     <string name="ajout_kriat_hatorah">קריאת התורה</string>
+    <string name="ajout_jour_1">שיר של יום ראשון</string>
+    <string name="ajout_jour_2">שיר של יום שני</string>
+    <string name="ajout_jour_3">שיר של יום שלישי</string>
+    <string name="ajout_jour_4">שיר של יום רביעי</string>
+    <string name="ajout_jour_5">שיר של יום חמישי</string>
+    <string name="ajout_jour_6">שיר של יום שישי</string>
+    <string name="ajout_tsom_guedalia_tevet">צום גדליה ועשרה בטבת</string>
+    <string name="ajout_lendemain_kippour">למחרת יום הכיפורים</string>
+    <string name="ajout_esther_pourim">תענית אסתר ופורים</string>
+    <string name="ajout_chiva_assar_tamouz">שבעה עשר בתמוז</string>
     <string name="ajout_ticha_beav">נחם</string>
     <string name="ajout_chabbat">שבת</string>
     <string name="ajout_lundi_jeudi">שני וחמישי</string>

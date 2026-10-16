@@ -776,10 +776,154 @@
    {
     "sorte": "bloc",
     "s": 15,
+    "si": "jour_1",
+    "b": 1,
+    "empreinte": "מזמור ליום ראשון היום יום אחד בשבת קודש,",
+    "g": 11,
+    "racine": "jour_1"
+   },
+   {
+    "sorte": "bloc",
+    "s": 15,
+    "si": "jour_1",
+    "b": 2,
+    "empreinte": "לדוד (תהילים כ״ד:א׳-ב׳) מזמור ליהוה הארץ",
+    "g": 11,
+    "racine": "jour_1"
+   },
+   {
+    "sorte": "bloc",
+    "s": 15,
+    "si": "jour_2",
+    "b": 3,
+    "empreinte": "מזמור ליום שני היום יום שני בשבת קודש, ה",
+    "g": 12,
+    "racine": "jour_2"
+   },
+   {
+    "sorte": "bloc",
+    "s": 15,
+    "si": "jour_2",
+    "b": 4,
+    "empreinte": "שיר (תהילים מ״ח:א׳-ג׳) מזמור לבניקרח גדו",
+    "g": 12,
+    "racine": "jour_2"
+   },
+   {
+    "sorte": "bloc",
+    "s": 15,
+    "si": "jour_3",
+    "b": 5,
+    "empreinte": "מזמור ליום שלישי היום יום שלישי בשבת קוד",
+    "g": 13,
+    "racine": "jour_3"
+   },
+   {
+    "sorte": "bloc",
+    "s": 15,
+    "si": "jour_3",
+    "b": 6,
+    "empreinte": "מזמור (תהילים פ״ב:א׳-ב׳) לאסף אלהים נצב ",
+    "g": 13,
+    "racine": "jour_3"
+   },
+   {
+    "sorte": "bloc",
+    "s": 15,
+    "si": "jour_4",
+    "b": 7,
+    "empreinte": "מזמור ליום רביעי היום יום רביעי בשבת קוד",
+    "g": 14,
+    "racine": "jour_4"
+   },
+   {
+    "sorte": "bloc",
+    "s": 15,
+    "si": "jour_4",
+    "b": 8,
+    "empreinte": "אלנקמות (תהילים צ״ד:א׳-ג׳) יהוה אל נקמות",
+    "g": 14,
+    "racine": "jour_4"
+   },
+   {
+    "sorte": "bloc",
+    "s": 15,
+    "si": "jour_5",
+    "b": 9,
+    "empreinte": "מזמור ליום חמישי היום יום חמישי בשבת קוד",
+    "g": 15,
+    "racine": "jour_5"
+   },
+   {
+    "sorte": "bloc",
+    "s": 15,
+    "si": "jour_5",
+    "b": 10,
+    "empreinte": "למנצח (תהילים פ״א:א׳-ג׳) עלהגתית לאסף הר",
+    "g": 15,
+    "racine": "jour_5"
+   },
+   {
+    "sorte": "bloc",
+    "s": 15,
+    "si": "jour_6",
+    "b": 11,
+    "empreinte": "מזמור ליום ששי היום יום הששי בשבת קודש, ",
+    "g": 16,
+    "racine": "jour_6"
+   },
+   {
+    "sorte": "bloc",
+    "s": 15,
+    "si": "jour_6",
+    "b": 12,
+    "empreinte": "(תהילים צ״ג:א׳-ב׳) יהוה מלך גאות לבש לבש",
+    "g": 16,
+    "racine": "jour_6"
+   },
+   {
+    "sorte": "bloc",
+    "s": 15,
+    "si": "tsom_guedalia_tevet",
+    "b": 13,
+    "empreinte": "בצום גדליה ובעשרה בטבת אומרים",
+    "g": 17,
+    "racine": "tsom_guedalia_tevet"
+   },
+   {
+    "sorte": "bloc",
+    "s": 15,
+    "si": "tsom_guedalia_tevet",
+    "b": 14,
+    "empreinte": "שיר (תהילים פ״ג:א׳-ג׳) מזמור לאסף אלהים ",
+    "g": 17,
+    "racine": "tsom_guedalia_tevet"
+   },
+   {
+    "sorte": "bloc",
+    "s": 15,
+    "si": "lendemain_kippour",
+    "b": 15,
+    "empreinte": "למחרת יום הכיפורים אומרים",
+    "g": 18,
+    "racine": "lendemain_kippour"
+   },
+   {
+    "sorte": "bloc",
+    "s": 15,
+    "si": "lendemain_kippour",
+    "b": 16,
+    "empreinte": "למנצח (תהילים פ״ה:א׳-ג׳) לבניקרח מזמור ר",
+    "g": 18,
+    "racine": "lendemain_kippour"
+   },
+   {
+    "sorte": "bloc",
+    "s": 15,
     "si": "hanouka",
     "b": 17,
     "empreinte": "בחנוכה אומרים",
-    "g": 11,
+    "g": 19,
     "racine": "hanouka"
    },
    {
@@ -788,8 +932,44 @@
     "si": "hanouka",
     "b": 18,
     "empreinte": "מזמור (תהילים ל׳:א׳-ב׳) שירחנכת הבית לדו",
-    "g": 11,
+    "g": 19,
     "racine": "hanouka"
+   },
+   {
+    "sorte": "bloc",
+    "s": 15,
+    "si": "esther_pourim",
+    "b": 19,
+    "empreinte": "בתענית אסתר ובפורים אומרים",
+    "g": 20,
+    "racine": "esther_pourim"
+   },
+   {
+    "sorte": "bloc",
+    "s": 15,
+    "si": "esther_pourim",
+    "b": 20,
+    "empreinte": "למנצח (תהילים כ״ב:א׳-ב׳) עלאילת השחר מזמ",
+    "g": 20,
+    "racine": "esther_pourim"
+   },
+   {
+    "sorte": "bloc",
+    "s": 15,
+    "si": "chiva_assar_tamouz",
+    "b": 21,
+    "empreinte": "בשבעה עשר בתמוז אומרים",
+    "g": 21,
+    "racine": "chiva_assar_tamouz"
+   },
+   {
+    "sorte": "bloc",
+    "s": 15,
+    "si": "chiva_assar_tamouz",
+    "b": 22,
+    "empreinte": "מזמור (תהילים ע״ט:א׳) לאסף אלהים באו גוי",
+    "g": 21,
+    "racine": "chiva_assar_tamouz"
    },
    {
     "sorte": "renvoi",
@@ -3105,6 +3285,213 @@
     "empreinte": "אחינו כל בית ישראל הנתונים בצרה ובשביה ה",
     "g": 15,
     "racine": "kriat_hatorah"
+   },
+   {
+    "sorte": "bloc",
+    "s": 15,
+    "si": "jour_1",
+    "b": 1,
+    "empreinte": "בראשון בשבת:",
+    "g": 16,
+    "racine": "jour_1"
+   },
+   {
+    "sorte": "bloc",
+    "s": 15,
+    "si": "jour_1",
+    "b": 2,
+    "empreinte": "היום יום ראשון בשבת שבו היו הלוים אומרים",
+    "g": 16,
+    "racine": "jour_1"
+   },
+   {
+    "sorte": "bloc",
+    "s": 15,
+    "si": "jour_1",
+    "b": 3,
+    "empreinte": "לדוד מזמור ליהוה הארץ ומלואה תבל וישבי ב",
+    "g": 16,
+    "racine": "jour_1"
+   },
+   {
+    "sorte": "bloc",
+    "s": 15,
+    "si": "jour_1",
+    "b": 4,
+    "empreinte": "(הושיענו וכו׳. קדיש יתום.)",
+    "g": 16,
+    "racine": "jour_1"
+   },
+   {
+    "sorte": "bloc",
+    "s": 15,
+    "si": "jour_2",
+    "b": 5,
+    "empreinte": "בשני בשבת:",
+    "g": 17,
+    "racine": "jour_2"
+   },
+   {
+    "sorte": "bloc",
+    "s": 15,
+    "si": "jour_2",
+    "b": 6,
+    "empreinte": "היום יום שני בשבת שבו היו הלוים אומרים ב",
+    "g": 17,
+    "racine": "jour_2"
+   },
+   {
+    "sorte": "bloc",
+    "s": 15,
+    "si": "jour_2",
+    "b": 7,
+    "empreinte": "שיר מזמור לבני קרח: גדול יהוה ומהלל מאד ",
+    "g": 17,
+    "racine": "jour_2"
+   },
+   {
+    "sorte": "bloc",
+    "s": 15,
+    "si": "jour_2",
+    "b": 8,
+    "empreinte": "(הושיענו וכו׳. קדיש יתום.)",
+    "g": 17,
+    "racine": "jour_2"
+   },
+   {
+    "sorte": "bloc",
+    "s": 15,
+    "si": "jour_3",
+    "b": 9,
+    "empreinte": "בשלישי בשבת:",
+    "g": 18,
+    "racine": "jour_3"
+   },
+   {
+    "sorte": "bloc",
+    "s": 15,
+    "si": "jour_3",
+    "b": 10,
+    "empreinte": "היום יום שלישי בשבת שבו היו הלוים אומרים",
+    "g": 18,
+    "racine": "jour_3"
+   },
+   {
+    "sorte": "bloc",
+    "s": 15,
+    "si": "jour_3",
+    "b": 11,
+    "empreinte": "מזמור לאסף אלהים נצב בעדת אל בקרב אלהים ",
+    "g": 18,
+    "racine": "jour_3"
+   },
+   {
+    "sorte": "bloc",
+    "s": 15,
+    "si": "jour_3",
+    "b": 12,
+    "empreinte": "(הושיענו וכו׳. קדיש יתום.)",
+    "g": 18,
+    "racine": "jour_3"
+   },
+   {
+    "sorte": "bloc",
+    "s": 15,
+    "si": "jour_4",
+    "b": 13,
+    "empreinte": "ברביעי בשבת:",
+    "g": 19,
+    "racine": "jour_4"
+   },
+   {
+    "sorte": "bloc",
+    "s": 15,
+    "si": "jour_4",
+    "b": 14,
+    "empreinte": "היום יום רביעי בשבת שבו היו הלוים אומרים",
+    "g": 19,
+    "racine": "jour_4"
+   },
+   {
+    "sorte": "bloc",
+    "s": 15,
+    "si": "jour_4",
+    "b": 15,
+    "empreinte": "אל נקמות יהוה אל נקמות הופיע: הנשא שפט ה",
+    "g": 19,
+    "racine": "jour_4"
+   },
+   {
+    "sorte": "bloc",
+    "s": 15,
+    "si": "jour_4",
+    "b": 16,
+    "empreinte": "(הושיענו וכו׳. קדיש יתום.)",
+    "g": 19,
+    "racine": "jour_4"
+   },
+   {
+    "sorte": "bloc",
+    "s": 15,
+    "si": "jour_5",
+    "b": 17,
+    "empreinte": "בחמישי בשבת:",
+    "g": 20,
+    "racine": "jour_5"
+   },
+   {
+    "sorte": "bloc",
+    "s": 15,
+    "si": "jour_5",
+    "b": 18,
+    "empreinte": "היום יום חמישי בשבת שבו היו הלוים אומרים",
+    "g": 20,
+    "racine": "jour_5"
+   },
+   {
+    "sorte": "bloc",
+    "s": 15,
+    "si": "jour_5",
+    "b": 19,
+    "empreinte": "למנצח על הגתית לאסף: הרנינו לאלהים עזנו ",
+    "g": 20,
+    "racine": "jour_5"
+   },
+   {
+    "sorte": "bloc",
+    "s": 15,
+    "si": "jour_5",
+    "b": 20,
+    "empreinte": "(הושיענו וכו׳. קדיש יתום.)",
+    "g": 20,
+    "racine": "jour_5"
+   },
+   {
+    "sorte": "bloc",
+    "s": 15,
+    "si": "jour_6",
+    "b": 21,
+    "empreinte": "בשישי בשבת:",
+    "g": 21,
+    "racine": "jour_6"
+   },
+   {
+    "sorte": "bloc",
+    "s": 15,
+    "si": "jour_6",
+    "b": 22,
+    "empreinte": "היום יום ששי בשבת שבו היו הלוים אומרים ב",
+    "g": 21,
+    "racine": "jour_6"
+   },
+   {
+    "sorte": "bloc",
+    "s": 15,
+    "si": "jour_6",
+    "b": 23,
+    "empreinte": "יהוה מלך גאות לבש לבש יהוה עז התאזר אף ת",
+    "g": 21,
+    "racine": "jour_6"
    },
    {
     "sorte": "section",
@@ -5687,6 +6074,240 @@
     "empreinte": "ובנחה יאמר שובה יהוה רבבות אלפי ישראל: ק",
     "g": 16,
     "racine": "kriat_hatorah"
+   },
+   {
+    "sorte": "bloc",
+    "s": 6,
+    "si": "jour_1",
+    "b": 32,
+    "empreinte": "בראשון בשבת:",
+    "g": 17,
+    "racine": "jour_1"
+   },
+   {
+    "sorte": "bloc",
+    "s": 6,
+    "si": "jour_1",
+    "b": 33,
+    "empreinte": "היום יום ראשון בשבת שבו היו הלוים אומרים",
+    "g": 17,
+    "racine": "jour_1"
+   },
+   {
+    "sorte": "bloc",
+    "s": 6,
+    "si": "jour_1",
+    "b": 34,
+    "empreinte": "לדוד מזמור ליהוה הארץ ומלואה תבל וישבי ב",
+    "g": 17,
+    "racine": "jour_1"
+   },
+   {
+    "sorte": "bloc",
+    "s": 6,
+    "si": "jour_2",
+    "b": 35,
+    "empreinte": "בשני בשבת:",
+    "g": 18,
+    "racine": "jour_2"
+   },
+   {
+    "sorte": "bloc",
+    "s": 6,
+    "si": "jour_2",
+    "b": 36,
+    "empreinte": "היום יום שני בשבת שבו היו הלוים אומרים ב",
+    "g": 18,
+    "racine": "jour_2"
+   },
+   {
+    "sorte": "bloc",
+    "s": 6,
+    "si": "jour_2",
+    "b": 37,
+    "empreinte": "שיר מזמור לבני קרח: גדול יהוה ומהלל מאד ",
+    "g": 18,
+    "racine": "jour_2"
+   },
+   {
+    "sorte": "bloc",
+    "s": 6,
+    "si": "jour_3",
+    "b": 38,
+    "empreinte": "בשלישי בשבת:",
+    "g": 19,
+    "racine": "jour_3"
+   },
+   {
+    "sorte": "bloc",
+    "s": 6,
+    "si": "jour_3",
+    "b": 39,
+    "empreinte": "היום יום שלישי בשבת שבו היו הלוים אומרים",
+    "g": 19,
+    "racine": "jour_3"
+   },
+   {
+    "sorte": "bloc",
+    "s": 6,
+    "si": "jour_3",
+    "b": 40,
+    "empreinte": "מזמור לאסף אלהים נצב בעדת אל בקרב אלהים ",
+    "g": 19,
+    "racine": "jour_3"
+   },
+   {
+    "sorte": "bloc",
+    "s": 6,
+    "si": "jour_4",
+    "b": 41,
+    "empreinte": "ברביעי בשבת:",
+    "g": 20,
+    "racine": "jour_4"
+   },
+   {
+    "sorte": "bloc",
+    "s": 6,
+    "si": "jour_4",
+    "b": 42,
+    "empreinte": "היום יום רביעי בשבת שבו היו הלוים אומרים",
+    "g": 20,
+    "racine": "jour_4"
+   },
+   {
+    "sorte": "bloc",
+    "s": 6,
+    "si": "jour_4",
+    "b": 43,
+    "empreinte": "אל נקמות יהוה אל נקמות הופיע: הנשא שפט ה",
+    "g": 20,
+    "racine": "jour_4"
+   },
+   {
+    "sorte": "bloc",
+    "s": 6,
+    "si": "jour_5",
+    "b": 44,
+    "empreinte": "בחמישי בשבת:",
+    "g": 21,
+    "racine": "jour_5"
+   },
+   {
+    "sorte": "bloc",
+    "s": 6,
+    "si": "jour_5",
+    "b": 45,
+    "empreinte": "היום יום חמישי בשבת שבו היו הלוים אומרים",
+    "g": 21,
+    "racine": "jour_5"
+   },
+   {
+    "sorte": "bloc",
+    "s": 6,
+    "si": "jour_5",
+    "b": 46,
+    "empreinte": "למנצח על הגתית לאסף: הרנינו לאלהים עזנו ",
+    "g": 21,
+    "racine": "jour_5"
+   },
+   {
+    "sorte": "bloc",
+    "s": 6,
+    "si": "jour_6",
+    "b": 47,
+    "empreinte": "בשישי בשבת:",
+    "g": 22,
+    "racine": "jour_6"
+   },
+   {
+    "sorte": "bloc",
+    "s": 6,
+    "si": "jour_6",
+    "b": 48,
+    "empreinte": "היום יום ששי בשבת שבו היו הלוים אומרים ב",
+    "g": 22,
+    "racine": "jour_6"
+   },
+   {
+    "sorte": "bloc",
+    "s": 6,
+    "si": "jour_6",
+    "b": 49,
+    "empreinte": "יהוה מלך גאות לבש לבש יהוה עז התאזר אף ת",
+    "g": 22,
+    "racine": "jour_6"
+   },
+   {
+    "sorte": "bloc",
+    "s": 6,
+    "si": "roch_hodech",
+    "b": 50,
+    "empreinte": "נוהגין בספרד לומר מזמור ברכי נפשי בראש ח",
+    "g": 23,
+    "racine": "roch_hodech"
+   },
+   {
+    "sorte": "bloc",
+    "s": 6,
+    "si": "roch_hodech",
+    "b": 51,
+    "empreinte": "ברכי נפשי אתיהוה יהוה אלהי גדלת מאד, הוד",
+    "g": 23,
+    "racine": "roch_hodech"
+   },
+   {
+    "sorte": "bloc",
+    "s": 6,
+    "si": "roch_hodech",
+    "b": 52,
+    "empreinte": "תהום כלבוש כסיתו, עלהרים יעמדו מים: מןגע",
+    "g": 23,
+    "racine": "roch_hodech"
+   },
+   {
+    "sorte": "bloc",
+    "s": 6,
+    "si": "roch_hodech",
+    "b": 53,
+    "empreinte": "המשלח מעינים בנחלים, בין הרים יהלכון: יש",
+    "g": 23,
+    "racine": "roch_hodech"
+   },
+   {
+    "sorte": "bloc",
+    "s": 6,
+    "si": "roch_hodech",
+    "b": 54,
+    "empreinte": "מצמיח חציר לבהמה ועשב לעבדת האדם, להוציא",
+    "g": 23,
+    "racine": "roch_hodech"
+   },
+   {
+    "sorte": "bloc",
+    "s": 6,
+    "si": "roch_hodech",
+    "b": 55,
+    "empreinte": "עשה ירח למועדים שמש ידע מבואו: תשת חשך ו",
+    "g": 23,
+    "racine": "roch_hodech"
+   },
+   {
+    "sorte": "bloc",
+    "s": 6,
+    "si": "roch_hodech",
+    "b": 56,
+    "empreinte": "מהרבו מעשיך יהוה כלם בחכמה עשית, מלאה הא",
+    "g": 23,
+    "racine": "roch_hodech"
+   },
+   {
+    "sorte": "bloc",
+    "s": 6,
+    "si": "roch_hodech",
+    "b": 57,
+    "empreinte": "יהי כבוד יהוה לעולם, ישמח יהוה במעשיו: ה",
+    "g": 23,
+    "racine": "roch_hodech"
    },
    {
     "sorte": "renvoi",

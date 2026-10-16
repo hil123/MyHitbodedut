@@ -658,6 +658,16 @@
     <string name="ajout_jeune_public">Public fast</string>
     <string name="ajout_avinou_malkenou">Avinu Malkeinu</string>
     <string name="ajout_kriat_hatorah">Torah reading</string>
+    <string name="ajout_jour_1">Sunday’s psalm</string>
+    <string name="ajout_jour_2">Monday’s psalm</string>
+    <string name="ajout_jour_3">Tuesday’s psalm</string>
+    <string name="ajout_jour_4">Wednesday’s psalm</string>
+    <string name="ajout_jour_5">Thursday’s psalm</string>
+    <string name="ajout_jour_6">Friday’s psalm</string>
+    <string name="ajout_tsom_guedalia_tevet">Fast of Gedaliah and 10 Tevet</string>
+    <string name="ajout_lendemain_kippour">Day after Yom Kippur</string>
+    <string name="ajout_esther_pourim">Fast of Esther and Purim</string>
+    <string name="ajout_chiva_assar_tamouz">17 Tammuz</string>
     <string name="ajout_ticha_beav">Nachem</string>
     <string name="ajout_chabbat">Shabbat</string>
     <string name="ajout_lundi_jeudi">Monday and Thursday</string>

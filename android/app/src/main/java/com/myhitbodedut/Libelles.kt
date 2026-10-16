@@ -29,6 +29,16 @@ object Libelles {
         "ajout_jeune_public" -> R.string.ajout_jeune_public
         "ajout_avinou_malkenou" -> R.string.ajout_avinou_malkenou
         "ajout_kriat_hatorah" -> R.string.ajout_kriat_hatorah
+        "ajout_jour_1" -> R.string.ajout_jour_1
+        "ajout_jour_2" -> R.string.ajout_jour_2
+        "ajout_jour_3" -> R.string.ajout_jour_3
+        "ajout_jour_4" -> R.string.ajout_jour_4
+        "ajout_jour_5" -> R.string.ajout_jour_5
+        "ajout_jour_6" -> R.string.ajout_jour_6
+        "ajout_tsom_guedalia_tevet" -> R.string.ajout_tsom_guedalia_tevet
+        "ajout_lendemain_kippour" -> R.string.ajout_lendemain_kippour
+        "ajout_esther_pourim" -> R.string.ajout_esther_pourim
+        "ajout_chiva_assar_tamouz" -> R.string.ajout_chiva_assar_tamouz
         "ajout_lundi_jeudi" -> R.string.ajout_lundi_jeudi
         "ajout_machiv_harouah" -> R.string.ajout_machiv_harouah
         "ajout_morid_hatal" -> R.string.ajout_morid_hatal

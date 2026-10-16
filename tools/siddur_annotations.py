@@ -252,6 +252,36 @@ def annoter(texte_id, sections, nusah):
                     j += 1
                 bi = j
                 continue
+            # Le psaume du jour (16/10) : seul celui du jour reste ouvert. Ashkenaz et Sfard :
+            # « בראשון בשבת: », son en-tête et son psaume, et le renvoi « (הושיענו וכו׳…) » qui
+            # suit ; Edot : « מזמור ליום ראשון … » et son psaume.
+            elif cons[bi] and re.fullmatch(r"ב(ראשון|שני|שלישי|רביעי|חמישי|שישי|ששי) בשבת:?", x):
+                c = JOURS_SEMAINE[re.fullmatch(r"ב(\S+) בשבת:?", x).group(1)]
+                prend(bi, c)
+                j = bi + 1
+                while j < n and not cons[j] and j <= bi + 2:
+                    prend(j, c)
+                    j += 1
+                if j < n and cons[j] and txt[j].startswith("(הושיענו"):
+                    prend(j, c)
+                    j += 1
+                bi = j
+                continue
+            elif not cons[bi] and re.match(r"מזמור ליום (ראשון|שני|שלישי|רביעי|חמישי|שישי|ששי)\b", x) and bi + 1 < n and not cons[bi + 1]:
+                c = JOURS_SEMAINE[re.match(r"מזמור ליום (\S+)", x).group(1)]
+                prend(bi, c)
+                prend(bi + 1, c)
+                bi += 2
+                continue
+            # Barekhi nafchi à Roch 'Hodech, dans la même section que le psaume du jour (Ashkenaz).
+            elif cons[bi] and "ברכי נפשי בראש חדש" in x:
+                prend(bi, "roch_hodech")
+                j = bi + 1
+                while j < n and not cons[j]:
+                    prend(j, "roch_hodech")
+                    j += 1
+                bi = j
+                continue
             # Na'hem, le 9 Av.
             elif not cons[bi] and commence(x, "נחם יהוה אלהינו"):
                 en_tete(bi, "ticha_beav", "באב")
@@ -349,7 +379,16 @@ SOUS = {
 
 # Une consigne courte annonce les blocs de prière qui la suivent, jusqu'à la
 # consigne suivante (relevé du 14/10 : ces passages restaient ouverts tous les jours).
+# Le psaume du jour (16/10) : le nom du jour, en hébreu, et sa condition (CalendrierJuif.C.JOURS_SEMAINE).
+JOURS_SEMAINE = {"ראשון": "jour_1", "שני": "jour_2", "שלישי": "jour_3", "רביעי": "jour_4", "חמישי": "jour_5",
+                 "שישי": "jour_6", "ששי": "jour_6"}
+
 CONSIGNES_COURTES = [
+    # Les psaumes ajoutés certains jours (Edot, 16/10) : seulement le jour dit.
+    (r"בצום גדליה ובעשרה בטבת אומרים:?", "tsom_guedalia_tevet"),
+    (r"למחרת יום הכיפורים אומרים:?", "lendemain_kippour"),
+    (r"בתענית אסתר ובפורים אומרים:?", "esther_pourim"),
+    (r"בשבעה עשר בתמוז אומרים:?", "chiva_assar_tamouz"),
     (r"בחנוכה( (אומרים|אומר|מוסיפים))?( זה)?:?", "hanouka"),
     (r"(בראש חודש|בראש חדש|בר״ח)( (אומרים|אומר|מוסיפים|מוסיפין))?:?", "roch_hodech"),
     (r"בשבת( (אומרים|אומר))?:?", "chabbat"),

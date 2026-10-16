@@ -704,6 +704,16 @@
     <string name="ajout_jeune_public">Jeûne public</string>
     <string name="ajout_avinou_malkenou">Avinou malkénou</string>
     <string name="ajout_kriat_hatorah">Lecture de la Torah</string>
+    <string name="ajout_jour_1">Psaume du dimanche</string>
+    <string name="ajout_jour_2">Psaume du lundi</string>
+    <string name="ajout_jour_3">Psaume du mardi</string>
+    <string name="ajout_jour_4">Psaume du mercredi</string>
+    <string name="ajout_jour_5">Psaume du jeudi</string>
+    <string name="ajout_jour_6">Psaume du vendredi</string>
+    <string name="ajout_tsom_guedalia_tevet">Jeûne de Guedalia et 10 Tévet</string>
+    <string name="ajout_lendemain_kippour">Lendemain de Kippour</string>
+    <string name="ajout_esther_pourim">Jeûne d’Esther et Pourim</string>
+    <string name="ajout_chiva_assar_tamouz">17 Tamouz</string>
     <string name="ajout_ticha_beav">Na’hem</string>
     <string name="ajout_chabbat">Chabbat</string>
     <string name="ajout_lundi_jeudi">Lundi et jeudi</string>
