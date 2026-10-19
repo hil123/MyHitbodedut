@@ -1017,6 +1017,10 @@
     <string name="settings_ne_pas_deranger_hint">Le téléphone passe en mode « priorité » le temps de la hitbodedout, puis revient comme avant. Android demande une autorisation la première fois.</string>
     <string name="recherche_titre">Recherche</string>
     <string name="recherche_indice">Rechercher dans le siddour, les livres, la halakha, les hilloulot</string>
+    <string name="recherche_tout">Tout</string>
+    <string name="recherche_tefilot">Prières</string>
+    <string name="recherche_halakhot">Halakhot</string>
+    <string name="recherche_sefarim">Livres</string>
     <string name="recherche_livres">Livres</string>
     <string name="favori_ajouter">Ajouter aux favoris</string>
     <string name="favori_retirer">Retirer des favoris</string>

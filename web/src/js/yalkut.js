@@ -54,7 +54,7 @@ export function pour(livre, iso, il) {
 }
 
 export function recherche(livre, texte) {
-  const nu = (t) => t.replace(/[֑-ׇ"'״׳]/g, '');
+  const nu = (t) => t.replace(/[־׀]/g, ' ').replace(/[֑-ׇ"'״׳]/g, '');
   const q = nu(texte.trim());
   if (q.length < 2) return [];
   const vus = new Set();

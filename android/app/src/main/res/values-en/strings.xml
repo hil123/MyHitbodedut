@@ -971,6 +971,10 @@
     <string name="settings_ne_pas_deranger_hint">The phone switches to priority mode for the hitbodedut, then returns to how it was. Android asks for permission the first time.</string>
     <string name="recherche_titre">Search</string>
     <string name="recherche_indice">Search the siddur, books, halakha, hillulot</string>
+    <string name="recherche_tout">All</string>
+    <string name="recherche_tefilot">Prayers</string>
+    <string name="recherche_halakhot">Halachot</string>
+    <string name="recherche_sefarim">Books</string>
     <string name="recherche_livres">Books</string>
     <string name="favori_ajouter">Add to favorites</string>
     <string name="favori_retirer">Remove from favorites</string>

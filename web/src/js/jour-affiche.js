@@ -205,7 +205,7 @@ export function dateHilloula(cle, lettres) {
 
 /** La recherche par nom, sans voyelles ni guillemets, dans toute l'année. */
 export function rechercheHilloula(table, texte) {
-  const nu = (t) => t.replace(/[\u0591-\u05C7"'״׳]/g, '').toLowerCase();
+  const nu = (t) => t.replace(/[־׀]/g, ' ').replace(/[\u0591-\u05C7"'״׳]/g, '').toLowerCase();
   const q = nu(texte.trim());
   if (q.length < 2) return [];
   return Object.entries(table).flatMap(([cle, l]) => l.map((x) => [cle, x]))

@@ -1176,7 +1176,9 @@ function ecranPriere() {
 
 // --- La recherche dans toute l'application (RechercheActivity.kt, 14/10) ------------------
 let texteRecherche = '';
-const nuRecherche = (t) => t.replace(/<[^>]+>/g, ' ').replace(/[\u0591-\u05C7"'״׳]/g, '').replace(/\s+/g, ' ').trim().toLowerCase();
+/** Où chercher (19/10) : tout, les prières, les halakhot ou les livres (RechercheGlobale.Portee). */
+let porteeRecherche = 'tout';
+const nuRecherche = (t) => t.replace(/<[^>]+>/g, ' ').replace(/[־׀]/g, ' ').replace(/[\u0591-\u05C7"'״׳]/g, '').replace(/\s+/g, ' ').trim().toLowerCase();
 function extraitRecherche(texte, q) {
   const t = nuRecherche(texte);
   const i = Math.max(0, t.indexOf(q));
@@ -1204,11 +1206,13 @@ function ecranRecherche() {
     h('span', { class: 'resultat-titre', dir: 'auto' }, titre), extrait ? h('span', { class: 'resultat-extrait', dir: 'auto' }, extrait) : null);
   const groupes = [];
   if (q.length >= 2) {
-    const sid = chargeSiddur() ? dansRecueil(siddur, q, false) : [];
-    const liv = livres ? dansRecueil(livres, q, true) : [];
-    const yy = livreYalkut ? rechercheYalkut(livreYalkut, texteRecherche).slice(0, 30) : [];
-    const bih = livreHalakha ? rechercheHalakha(livreHalakha, texteRecherche).slice(0, 30) : [];
-    const hil = tableHilloulot() ? rechercheHilloula(tableHilloulot(), texteRecherche).slice(0, 30) : [];
+    const p = porteeRecherche;
+    const sid = (p === 'tout' || p === 'tefilot') && chargeSiddur() ? dansRecueil(siddur, q, false) : [];
+    const liv = (p === 'tout' || p === 'sefarim') && livres ? dansRecueil(livres, q, true) : [];
+    const halakhot = p === 'tout' || p === 'halakhot';
+    const yy = halakhot && livreYalkut ? rechercheYalkut(livreYalkut, texteRecherche).slice(0, 30) : [];
+    const bih = halakhot && livreHalakha ? rechercheHalakha(livreHalakha, texteRecherche).slice(0, 30) : [];
+    const hil = p === 'tout' && tableHilloulot() ? rechercheHilloula(tableHilloulot(), texteRecherche).slice(0, 30) : [];
     yalkutDuJour(); livreDuJour();
     const total = sid.length + liv.length + yy.length + bih.length + hil.length;
     groupes.push(h('p', { class: 'jour-sous-titre' }, tr.t('hilloulot_resultats', total)));
@@ -1220,7 +1224,11 @@ function ecranRecherche() {
     groupes.push(...groupe('hilloulot_title', hil.map(([, x]) => resultat(x.he, x.a ?? '', () => { rechercheHilloulot = texteRecherche; ouvrir('hilloulot'); }))));
   }
   return h('div', { class: 'ecran' }, barre(tr.t('recherche_titre')),
-    h('div', { class: 'defile' }, h('div', { class: 'contenu' }, h('div', { class: 'carte' }, champ), ...groupes)));
+    h('div', { class: 'defile' }, h('div', { class: 'contenu' }, h('div', { class: 'carte' }, champ,
+      h('div', { class: 'puces-recherche', role: 'radiogroup', 'aria-label': tr.t('recherche_titre') },
+        [['tout', 'recherche_tout'], ['tefilot', 'recherche_tefilot'], ['halakhot', 'recherche_halakhot'], ['sefarim', 'recherche_sefarim']]
+          .map(([cle, nom]) => h('button', { type: 'button', class: 'puce-choix', role: 'radio', 'aria-checked': String(cle === porteeRecherche),
+            onclick: () => { porteeRecherche = cle; rendre(); } }, tr.t(nom))))), ...groupes)));
 }
 
 /** L'icône des marque-pages (15/10) : ruban en contour pour une prière, livre ouvert et ruban pour une étude. */
@@ -1244,7 +1252,7 @@ function iconeMarque(etude, taille = 22) {
 }
 
 /** Les premiers mots d'un paragraphe, sans balises ni voyelles (MarquesPages.apercu). */
-const apercuMarque = (t) => t.replace(/<[^>]+>/g, ' ').replace(/[\u0591-\u05C7]/g, '').trim().split(/\s+/).slice(0, 6).join(' ');
+const apercuMarque = (t) => t.replace(/<[^>]+>/g, ' ').replace(/[־׀]/g, ' ').replace(/[\u0591-\u05C7]/g, '').trim().split(/\s+/).slice(0, 6).join(' ');
 /** Le marque-page à rejoindre à l'ouverture du texte (depuis la Bibliothèque). */
 let marqueAOuvrir = null;
 /** Va au paragraphe marqué ; replié aujourd'hui, à sa section (le premier paragraphe qui suit). */

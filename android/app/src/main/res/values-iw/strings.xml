@@ -998,6 +998,10 @@
     <string name="settings_ne_pas_deranger_hint">הטלפון עובר למצב „עדיפות” בזמן ההתבודדות וחוזר אחר כך כפי שהיה. אנדרואיד מבקש הרשאה בפעם הראשונה.</string>
     <string name="recherche_titre">חיפוש</string>
     <string name="recherche_indice">חיפוש בסידור, בספרים, בהלכה ובהילולות</string>
+    <string name="recherche_tout">הכל</string>
+    <string name="recherche_tefilot">תפילות</string>
+    <string name="recherche_halakhot">הלכות</string>
+    <string name="recherche_sefarim">ספרים</string>
     <string name="recherche_livres">ספרים</string>
     <string name="favori_ajouter">הוספה למועדפים</string>
     <string name="favori_retirer">הסרה מהמועדפים</string>

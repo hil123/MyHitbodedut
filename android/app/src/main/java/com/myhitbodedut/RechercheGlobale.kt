@@ -14,7 +14,7 @@ object RechercheGlobale {
 
     const val PAR_SORTE = 30
 
-    fun nu(t: String): String = t.replace(Regex("<[^>]+>"), " ").replace(Regex("[֑-ׇ\"'״׳]"), "").replace(Regex("\\s+"), " ").trim().lowercase()
+    fun nu(t: String): String = t.replace(Regex("<[^>]+>"), " ").replace(Regex("[־׀]"), " ").replace(Regex("[֑-ׇ\"'״׳]"), "").replace(Regex("\\s+"), " ").trim().lowercase()
 
     /** Un extrait d'une quarantaine de caractères autour de la trouvaille, dans le texte sans voyelles. */
     fun extrait(texte: String, q: String): String {
@@ -32,18 +32,25 @@ object RechercheGlobale {
             ?.let { Resultat(sorte, t.id, titre, extrait(it.texte, q)) }
     }.take(PAR_SORTE)
 
+    /** Où chercher (19/10) : tout, ou seulement les prières, les halakhot ou les livres. */
+    enum class Portee(val sortes: Set<Sorte>) {
+        TOUT(Sorte.values().toSet()), TEFILOT(setOf(Sorte.SIDDOUR)), HALAKHOT(setOf(Sorte.HALAKHA)), SEFARIM(setOf(Sorte.LIVRE))
+    }
+
     fun chercher(
         texte: String, langue: String, siddur: Siddur, livres: Siddur?,
         yalkut: YalkutYosef.Livre?, benIshHai: Halakha.Livre?, hilloulot: Map<String, List<Hilloulot.Hilloula>>?,
+        portee: Portee = Portee.TOUT,
     ): List<Resultat> {
         val q = nu(texte.trim())
         if (q.length < 2) return emptyList()
+        val s = portee.sortes
         return buildList {
-            addAll(dansRecueil(siddur, q, Sorte.SIDDOUR, langue))
-            livres?.let { addAll(dansRecueil(it, q, Sorte.LIVRE, langue)) }
-            yalkut?.let { y -> addAll(YalkutYosef.recherche(y, texte).take(PAR_SORTE).map { Resultat(Sorte.HALAKHA, texte, YalkutYosef.source(it), extrait(it.texte, q)) }) }
-            benIshHai?.let { b -> addAll(Halakha.recherche(b, texte).take(PAR_SORTE).map { Resultat(Sorte.HALAKHA, texte, HalakhaActivity.source(it), extrait(it.texte, q)) }) }
-            hilloulot?.let { h -> addAll(Hilloulot.recherche(h, texte).take(PAR_SORTE).map { (_, x) -> Resultat(Sorte.HILLOULA, texte, x.he, x.annee) }) }
+            if (Sorte.SIDDOUR in s) addAll(dansRecueil(siddur, q, Sorte.SIDDOUR, langue))
+            if (Sorte.LIVRE in s) livres?.let { addAll(dansRecueil(it, q, Sorte.LIVRE, langue)) }
+            if (Sorte.HALAKHA in s) yalkut?.let { y -> addAll(YalkutYosef.recherche(y, texte).take(PAR_SORTE).map { Resultat(Sorte.HALAKHA, texte, YalkutYosef.source(it), extrait(it.texte, q)) }) }
+            if (Sorte.HALAKHA in s) benIshHai?.let { b -> addAll(Halakha.recherche(b, texte).take(PAR_SORTE).map { Resultat(Sorte.HALAKHA, texte, HalakhaActivity.source(it), extrait(it.texte, q)) }) }
+            if (Sorte.HILLOULA in s) hilloulot?.let { h -> addAll(Hilloulot.recherche(h, texte).take(PAR_SORTE).map { (_, x) -> Resultat(Sorte.HILLOULA, texte, x.he, x.annee) }) }
         }
     }
 }

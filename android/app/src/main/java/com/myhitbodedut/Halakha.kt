@@ -108,7 +108,7 @@ object Halakha {
 
     /** La recherche dans tout le livre, sans voyelles ni guillemets. */
     fun recherche(livre: Livre, texte: String): List<Choisie> {
-        val nu = { t: String -> t.replace(Regex("[֑-ׇ\"'״׳]"), "") }
+        val nu = { t: String -> t.replace(Regex("[־׀]"), " ").replace(Regex("[֑-ׇ\"'״׳]"), "") }
         val q = nu(texte.trim())
         if (q.length < 2) return emptyList()
         val tout = livre.annees.entries.sortedBy { it.key }.flatMap { (a, secs) ->

@@ -1235,3 +1235,4 @@ button.corps { min-height: 44px; }
 .mini-commandes .mini-lecture { width: 64px; height: 64px; background: #fff; color: #121a17; }
 .mini-commandes .mini-lecture svg { width: 32px; height: 32px; }
 .seance .contenu { padding-bottom: 104px; }
+.puces-recherche { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }

@@ -24,6 +24,8 @@ class RechercheActivity : AppCompatActivity() {
     private val fil = Executors.newSingleThreadExecutor()
     private val principal = Handler(Looper.getMainLooper())
     private var demande = 0
+    private var portee = RechercheGlobale.Portee.TOUT
+    private var dernier = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,6 +44,25 @@ class RechercheActivity : AppCompatActivity() {
                 })
             })
         })
+        // Où chercher (19/10) : tout, les prières, les halakhot ou les livres.
+        contenu.addView(com.google.android.material.chip.ChipGroup(this).apply {
+            isSingleSelection = true
+            isSelectionRequired = true
+            RechercheGlobale.Portee.values().forEach { p ->
+                addView(com.google.android.material.chip.Chip(context).apply {
+                    id = View.generateViewId()
+                    text = getString(when (p) {
+                        RechercheGlobale.Portee.TOUT -> R.string.recherche_tout
+                        RechercheGlobale.Portee.TEFILOT -> R.string.recherche_tefilot
+                        RechercheGlobale.Portee.HALAKHOT -> R.string.recherche_halakhot
+                        RechercheGlobale.Portee.SEFARIM -> R.string.recherche_sefarim
+                    })
+                    isCheckable = true
+                    isChecked = p == portee
+                    setOnCheckedChangeListener { _, coche -> if (coche) { portee = p; lancer(dernier) } }
+                })
+            }
+        })
         liste = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
         contenu.addView(liste)
     }
@@ -54,14 +75,16 @@ class RechercheActivity : AppCompatActivity() {
     }
 
     private fun lancer(texte: String) {
+        dernier = texte
         val n = ++demande
+        val ou = portee
         principal.postDelayed({
             if (n != demande || fil.isShutdown) return@postDelayed
             val c = applicationContext
             val langue = ChizukCard.language(this)
             fil.execute {
                 val r = runCatching {
-                    RechercheGlobale.chercher(texte, langue, Data.siddur(c), Data.livres(c), YalkutYosef.livre(c), Halakha.livre(c), Hilloulot.table(c))
+                    RechercheGlobale.chercher(texte, langue, Data.siddur(c), Data.livres(c), YalkutYosef.livre(c), Halakha.livre(c), Hilloulot.table(c), ou)
                 }.getOrDefault(emptyList())
                 principal.post { if (n == demande && !isFinishing) afficher(texte, r) }
             }

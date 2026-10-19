@@ -22,7 +22,7 @@ object MarquesPages {
 
     /** Les premiers mots d'un paragraphe, sans balises ni voyelles. */
     fun apercu(texte: String, mots: Int = 6): String =
-        texte.replace(Regex("<[^>]+>"), " ").replace(Regex("[\\u0591-\\u05C7]"), "")
+        texte.replace(Regex("<[^>]+>"), " ").replace(Regex("[־׀]"), " ").replace(Regex("[\\u0591-\\u05C7]"), "")
             .replace(Regex("[|\\n\\t]"), " ").trim().split(Regex("\\s+")).take(mots).joinToString(" ")
 
     fun encoder(l: List<Marque>): String = l.joinToString("\n") { "${it.cle}\t${it.nusah}\t${it.section}\t${it.bloc}\t${it.apercu}" }

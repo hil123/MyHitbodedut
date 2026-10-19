@@ -90,7 +90,7 @@ object YalkutYosef {
     }
 
     fun recherche(livre: Livre, texte: String): List<Seif> {
-        val nu = { t: String -> t.replace(Regex("[֑-ׇ\"'״׳]"), "") }
+        val nu = { t: String -> t.replace(Regex("[־׀]"), " ").replace(Regex("[֑-ׇ\"'״׳]"), "") }
         val q = nu(texte.trim())
         if (q.length < 2) return emptyList()
         return livre.periodes.values.flatten().distinct().filter { nu(it.texte).contains(q) || nu(it.siman).contains(q) }
