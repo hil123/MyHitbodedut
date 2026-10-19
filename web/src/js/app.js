@@ -1926,7 +1926,7 @@ function ecranHalakha() {
   const yalkut = yalkutDuJour() ?? { periodes: {} };
   const fiche = (titre, texte) => h('div', { class: 'carte carte-hilloula' },
     h('p', { class: 'halakha-source', lang: 'he', dir: 'rtl' }, titre),
-    h('p', { class: 'halakha-texte', lang: 'he', dir: 'rtl' }, texte));
+    h('p', { class: 'halakha-texte', lang: 'he', dir: 'rtl' }, paragraphes(texte)));
   const carte = (x) => fiche(sourceHalakha(x, (n) => Reference.lettres(n)), x.texte);
   const carteYalkut = (x) => fiche(sourceYalkut(x), x.t);
   const champ = h('input', { type: 'search', class: 'champ-recherche', placeholder: tr.t('halakha_recherche'), value: rechercheHalakhaTexte,
@@ -2007,7 +2007,7 @@ function ecranHilloulot() {
     // Isolés (FSI … PDI) : la date et l'année hébraïques ne renversent pas la ligne.
     [date, x.a].some(Boolean)
       ? h('p', { class: 'hilloula-annee' }, [date ? `\u2068${date}\u2069` : null, x.a ? tr.t('hilloula_annee', `\u2068${x.a}\u2069`) : null].filter(Boolean).join(' · ')) : null,
-    x.t ? h('p', { class: 'hilloula-description', lang: 'he', dir: 'rtl' }, x.t) : null,
+    x.t ? h('p', { class: 'hilloula-description', lang: 'he', dir: 'rtl' }, paragraphes(x.t)) : null,
     x.s.includes('w') ? (x.w ? h('a', { class: 'hilloula-source', href: lienArticle(x.w), target: '_blank', rel: 'noopener' }, tr.t('hilloula_source_wiki'))
       : h('p', { class: 'hilloula-source' }, tr.t('hilloula_source_wiki'))) : null,
     x.s.includes('h') ? h('p', { class: 'hilloula-source' }, tr.t('hilloula_source_hyomi')) : null,
@@ -2017,7 +2017,7 @@ function ecranHilloulot() {
       const nom = tr.t(src === 'm' ? 'hilloula_source_mytzadik' : 'hilloula_source_hameir');
       // Une longue biographie se replie à huit lignes ; « Lire la suite » la déplie.
       const long = texte.length > 500;
-      const p = h('p', { class: `hilloula-description${long ? ' replie' : ''}`, lang: 'he', dir: 'rtl' }, texte);
+      const p = h('p', { class: `hilloula-description${long ? ' replie' : ''}`, lang: 'he', dir: 'rtl' }, paragraphes(texte));
       const bascule = long ? h('button', { type: 'button', class: 'lien-bouton hilloula-plus', 'aria-expanded': 'false', onclick: (e) => {
         const ouvert = p.classList.toggle('replie') === false;
         e.currentTarget.setAttribute('aria-expanded', String(ouvert));
@@ -2218,6 +2218,9 @@ function datesTrophees() {
   return Trophees.datesGain(store.minutesParJour(), store.joursAvecNote(), (d) => store.isExempt(d));
 }
 const dateLongue = (iso) => new Intl.DateTimeFormat(tr.langue, { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' }).format(new Date(`${iso}T12:00:00Z`));
+
+/** Un texte en plusieurs paragraphes (VueJour.paragraphes, 19/10) : un bloc par paragraphe, un écart entre eux. */
+const paragraphes = (t) => String(t ?? '').split(/\n+/).map((x) => x.trim()).filter(Boolean).map((x) => h('span', { class: 'para' }, x));
 
 /** Le détail d'un trophée (16/10, point 1) : l'objet, ce qu'il demande, le jour gagné ou la progression. */
 function detailTrophee(e, p, dates, rangGlobal, apres = null) {

@@ -126,7 +126,7 @@ class HilloulotActivity : AppCompatActivity() {
         listOfNotNull(date?.let { "\u2068$it\u2069" }, h.annee.takeIf { it.isNotBlank() }?.let { getString(R.string.hilloula_annee, "\u2068$it\u2069") })
             .joinToString(" · ").takeIf { it.isNotBlank() }?.let { addView(VueJour.texte(context, it, 12f, R.color.muted, haut = 4)) }
         h.description?.let { d ->
-            addView(VueJour.texte(context, d, 14f, R.color.ink, haut = 8).apply {
+            addView(VueJour.texte(context, VueJour.paragraphes(d), 14f, R.color.ink, haut = 8).apply {
                 textDirection = View.TEXT_DIRECTION_RTL; PoliceHebraique.appliquer(this)
             })
         }
@@ -138,7 +138,7 @@ class HilloulotActivity : AppCompatActivity() {
         if ('e' in h.sources) addView(VueJour.texte(context, getString(R.string.hilloula_source_toratemet), 12f, R.color.brand, haut = 2))
         // Les autres biographies (MyTzadik, המאיר לארץ), chacune suivie de sa source, comme le demande l'accord.
         h.bios.forEach { b ->
-            val texte = VueJour.texte(context, b.texte, 14f, R.color.ink, haut = 14).apply {
+            val texte = VueJour.texte(context, VueJour.paragraphes(b.texte), 14f, R.color.ink, haut = 14).apply {
                 textDirection = View.TEXT_DIRECTION_RTL; PoliceHebraique.appliquer(this)
             }
             addView(texte)

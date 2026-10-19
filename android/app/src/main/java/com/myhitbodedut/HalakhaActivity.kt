@@ -145,7 +145,7 @@ class HalakhaActivity : AppCompatActivity() {
         addView(VueJour.texte(context, titre, 13f, R.color.brand, gras = true).apply {
             textDirection = View.TEXT_DIRECTION_RTL; PoliceHebraique.appliquer(this)
         })
-        addView(VueJour.texte(context, texte, 18f, R.color.ink, haut = 8).apply {
+        addView(VueJour.texte(context, VueJour.paragraphes(texte), 18f, R.color.ink, haut = 8).apply {
             textDirection = View.TEXT_DIRECTION_RTL
             PoliceHebraique.appliquer(this)
             setLineSpacing(0f, 1.4f)

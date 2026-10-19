@@ -33,6 +33,26 @@ object VueJour {
             .apply { setMargins(dp(c, 16), dp(c, 12), dp(c, 16), 0) }
     }
 
+    /**
+     * Un texte en plusieurs paragraphes (19/10) : entre deux paragraphes, une demi-ligne vide,
+     * pour que chacun se détache sans écarter les lignes d'un même paragraphe.
+     */
+    fun paragraphes(texte: String): CharSequence {
+        val parties = texte.split(Regex("\\n+")).map { it.trim() }.filter { it.isNotEmpty() }
+        if (parties.size < 2) return texte.trim()
+        val s = android.text.SpannableStringBuilder()
+        parties.forEachIndexed { i, x ->
+            if (i > 0) {
+                s.append("\n")
+                val vide = s.length
+                s.append("\n")
+                s.setSpan(android.text.style.RelativeSizeSpan(0.5f), vide, s.length, android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+            }
+            s.append(x)
+        }
+        return s
+    }
+
     fun texte(c: Context, valeur: CharSequence, taille: Float, couleurId: Int, gras: Boolean = false, haut: Int = 0) =
         TextView(c).apply {
             text = valeur
