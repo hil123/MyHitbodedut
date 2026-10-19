@@ -18,12 +18,14 @@ class LivresTest {
     fun `les livres sont la, chapitre par chapitre`() {
         assertEquals(
             listOf("likoutei_etsot", "sefer_hamidot", "likoutei_moharan", "hichtapkhout", "kokhvei_or",
-                "meguilat_esther", "chir_hachirim", "nichmat", "perek_chira"),
+                "meguilat_esther", "chir_hachirim", "nichmat", "perek_chira", "yalkut_yosef_kitsour"),
             livres.textes.map { it.id },
         )
         // Le nombre de chapitres de chaque livre, tel que l'imprime son édition (13/10).
         val chapitres = mapOf("likoutei_moharan" to 286 + 125, "hichtapkhout" to 105, "meguilat_esther" to 10,
-            "chir_hachirim" to 8, "nichmat" to 1, "perek_chira" to 7)
+            "chir_hachirim" to 8, "nichmat" to 1, "perek_chira" to 7,
+            // Les 1 048 simanim du Kitsour Yalkut Yosef, le crédit en tête du premier (19/10).
+            "yalkut_yosef_kitsour" to 1048)
         chapitres.forEach { (id, n) -> assertEquals(id, n, livres.texte(id)!!.sections.size) }
         assertTrue(livres.texte("likoutei_etsot")!!.sections.size > 50)
         assertTrue(livres.texte("sefer_hamidot")!!.sections.size > 50)
@@ -49,7 +51,7 @@ class LivresTest {
             val blocs = livres.texte(id)!!.sections.flatMap { it.blocs }.filter { !it.consigne && it.texte.length > 40 }
             assertTrue(id, blocs.count { voyelles.containsMatchIn(it.texte) } > blocs.size * 9 / 10)
         }
-        assertEquals(listOf("livres", "meguilot"), livres.groupes.map { it.cle })
+        assertEquals(listOf("livres", "meguilot", "halakha"), livres.groupes.map { it.cle })
         assertTrue(livres.texte("meguilat_esther")!!.sections[0].blocs[0].texte.startsWith("(א) וַיְהִי בִּימֵי אֲחַשְׁוֵרוֹשׁ"))
         assertTrue(livres.texte("nichmat")!!.sections[0].blocs[0].texte.contains("נִשְׁמַת כָּל חַי"))
     }

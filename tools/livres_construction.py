@@ -244,7 +244,7 @@ def main(dossier):
     sortie = {
         "_meta": {
             "version": "1.0", "date": "2026-10-12",
-            "nusah": {"he": "ספרי ברסלב", "fr": "Livres de Breslev", "en": "Breslov books"},
+            "nusah": {"he": "ספרים", "fr": "Livres", "en": "Books"},
             "sources": [src_midot, src["lm"], src["tanakh"], src["ps"], src["nishmat"], src["orb"]],
             "outil": "tools/livres_construction.py",
         },
