@@ -110,7 +110,7 @@ class TehilimLectureActivity : AppCompatActivity() {
                 bloc.append("\n")
                 val vide = bloc.length
                 bloc.append("\n")
-                bloc.setSpan(RelativeSizeSpan(0.6f), vide, bloc.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                bloc.setSpan(RelativeSizeSpan(0.4f), vide, bloc.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
             }
             val debut = bloc.length
             bloc.append(Reference.lettres(v)).append(" ")
