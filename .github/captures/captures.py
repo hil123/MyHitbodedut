@@ -656,6 +656,61 @@ def main():
         retour()
     etape("21 trophees et pratique calme", s21)
 
+    # Les nouveautes du 19/10 : la source du jour, « J'ai besoin de 'hizouk »,
+    # « Mon parcours », les ambiances, les questions une a une, « Commencer
+    # simplement », le guide et les prieres du Yanuka, « Je suis avec Hachem ».
+    def s22():
+        langue("fr")
+        lancer()
+        defiler(True)
+        defiler(True)
+        capture("22a-accueil-moment-source-du-jour")
+        defiler(True)
+        capture("22a2-accueil-parcours")
+        ok = activite("ChizukActivity")
+        capture("22b-hizouk", ok=ok, attente=2.0)
+        ok = ok and toucher(rid="chizuk_garder", attente=1.0)
+        defiler(True)
+        capture("22c-hizouk-garde", ok=ok)
+        retour()
+        ok = activite("ParcoursActivity")
+        capture("22d-parcours", ok=ok, attente=2.0)
+        retour()
+        ok = activite("MusicActivity")
+        ok = ok and toucher(rid="music_ambiance", attente=1.5)
+        capture("22e-ambiance-choix", ok=ok)
+        ok = ok and toucher(text="Pluie", attente=1.5)
+        capture("22f-ambiance-pluie", ok=ok)
+        retour()
+        ok = activite("SessionActivity")
+        defiler(True)
+        defiler(True)
+        capture("22g-seance-commencer-simplement", ok=ok, attente=1.5)
+        ok = ok and toucher(rid="simplement_question", defilements=3, attente=2.5)
+        defiler(True)
+        defiler(True)
+        capture("22h-seance-question", ok=ok)
+        ok = ok and toucher(rid="session_question_suivante", attente=1.0)
+        capture("22i-seance-question-suivante", ok=ok)
+        for i in range(4):
+            defiler(False)
+        if toucher(rid="session_secondary", attente=1.0):
+            toucher(rid="button1", attente=1.5)
+        retour()
+        ok = activite("LibraryActivity", "--ez livres true")
+        capture("22j-livres", ok=ok, attente=2.0)
+        ok = ok and toucher(text="המדריך המקיף", contains=True, attente=2.5)
+        capture("22k-guide", ok=ok)
+        retour()
+        ok = toucher(text="תפילה לשלמה", contains=True, defilements=3, attente=2.5)
+        capture("22l-tefila-lishlomo", ok=ok)
+        retour(2)
+        lancer()
+        ok = toucher(rid="nav_settings", attente=2.0)
+        ok = ok and trouver(text="Je suis avec Hachem", defilements=8) is not None
+        capture("22m-reglages-avec-hachem", ok=ok)
+    etape("22 nouveautes du 19/10", s22)
+
     log("\ncaptures :", sorted(os.listdir(OUT)))
 
 
