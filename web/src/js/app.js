@@ -1128,7 +1128,7 @@ function ecranPriere() {
       const t = plusieurs && s.titre ? h('h2', { class: 'psaume-titre', lang: 'he', dir: 'rtl' }, s.titre) : null;
       if (t) titres.push({ titre: s.titre, el: t });
       const section = idx.sections.get(si);
-      if (section) return [t, ajout(nom(section, section.si), ajoutVrai(section.si, c), s.blocs.map((_, i) => paragraphe(s, i))), ...renvois(si)];
+      if (section) return [t, ajout(nom(section, section.si), ajoutVrai(section.si, c), s.blocs.map((_, i) => paragraphe(s, i)), section.si), ...renvois(si)];
       const corps = [];
       for (let i = 0; i < s.blocs.length; i++) {
         const a = idx.blocs.get(`${si}:${i}`);
@@ -1143,7 +1143,7 @@ function ecranPriere() {
           i++;
         }
         i--;
-        corps.push(ajout(nom(a, a.racine ?? a.si), ajoutVrai(a.racine ?? a.si, c), membres));
+        corps.push(ajout(nom(a, a.racine ?? a.si), ajoutVrai(a.racine ?? a.si, c), membres, a.racine ?? a.si));
       }
       return [t, ...corps, ...renvois(si)];
     }));
@@ -1304,21 +1304,45 @@ function chargeAnnotations() {
  * évidence. Sinon : replié en une ligne ; la flèche l'ouvre et le referme.
  * Rien n'est jamais retiré : l'annotation n'est qu'indicative.
  */
-function ajout(nom, applique, blocs) {
+function ajout(nom, applique, blocs, cond = '') {
   if (applique) {
-    return h('div', { class: 'ajout du-jour' }, h('p', { class: 'ajout-etiquette' }, `${tr.t('siddur_aujourdhui')} · ${nom}`), blocs);
+    return h('div', { class: 'ajout du-jour' },
+      h('p', { class: 'ajout-etiquette' }, h('span', { class: 'ajout-pastille' }, tr.t('siddur_aujourdhui')), h('span', {}, nom)), blocs);
   }
+  // Le bandeau (19/10) : le nom de l'ajout, dessous ce qu'un toucher fait ; déplié, un panneau
+  // qui s'ouvre en glissant, fermé en bas par « Replier ».
+  const ferme = tr.t(JAMAIS_DU_JOUR.has(cond) ? 'siddur_toucher_lire' : 'siddur_pas_aujourdhui');
   const corps = h('div', { class: 'ajout-corps', hidden: true }, blocs);
   const bouton = h('button', { type: 'button', class: 'replie-bouton', 'aria-expanded': 'false' },
-    h('span', { class: 'replie-nom' }, nom), h('span', { class: 'replie-etat' }, tr.t('siddur_pas_aujourdhui')));
-  bouton.addEventListener('click', () => {
-    const ouvert = corps.hidden;
-    corps.hidden = !ouvert;
-    bouton.setAttribute('aria-expanded', String(ouvert));
-    bouton.querySelector('.replie-etat').textContent = tr.t(ouvert ? 'siddur_replier' : 'siddur_pas_aujourdhui');
-  });
-  return h('div', { class: 'ajout replie' }, bouton, corps);
+    h('span', { class: 'replie-icone', 'aria-hidden': 'true' }, icone('replier')),
+    h('span', { class: 'replie-texte' }, h('span', { class: 'replie-nom' }, nom), h('span', { class: 'replie-etat' }, ferme)));
+  const bas = h('button', { type: 'button', class: 'replie-bas' }, h('span', { class: 'replie-icone', 'aria-hidden': 'true' }, icone('replier')), tr.t('siddur_replier'));
+  corps.append(bas);
+  const boite = h('div', { class: 'ajout replie' }, bouton, corps);
+  const basculer = (depuisBas) => {
+    const ouvrir = corps.hidden;
+    bouton.setAttribute('aria-expanded', String(ouvrir));
+    boite.classList.toggle('ouvert', ouvrir);
+    bouton.querySelector('.replie-etat').textContent = ouvrir ? tr.t('siddur_replier') : ferme;
+    corps.getAnimations?.().forEach((x) => x.cancel());
+    if (ouvrir) {
+      corps.hidden = false;
+      if (!sansMouvement() && corps.animate) corps.animate([{ height: '0px', opacity: 0 }, { height: `${corps.scrollHeight}px`, opacity: 1 }],
+        { duration: Math.min(520, 220 + corps.scrollHeight / 12), easing: 'cubic-bezier(.2,.7,.2,1)' });
+      return;
+    }
+    const fin = () => { corps.hidden = true; if (depuisBas && bouton.getBoundingClientRect().top < 0) bouton.scrollIntoView({ block: 'start', behavior: sansMouvement() ? 'auto' : 'smooth' }); };
+    if (sansMouvement() || !corps.animate) return fin();
+    corps.animate([{ height: `${corps.offsetHeight}px`, opacity: 1 }, { height: '0px', opacity: 0 }],
+      { duration: 200, easing: 'cubic-bezier(.4,0,.6,1)' }).onfinish = fin;
+  };
+  bouton.addEventListener('click', () => basculer(false));
+  bas.addEventListener('click', () => basculer(true));
+  return boite;
 }
+
+/** Les ajouts qui ne sont jamais « du jour » : « toucher pour lire », pas « pas aujourd'hui ». */
+const JAMAIS_DU_JOUR = new Set(['minyan', 'beit_avel', 'oubli']);
 
 /**
  * La bande de signets en tête de la lecture (demande du 10/10, comme

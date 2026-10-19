@@ -104,10 +104,13 @@ object CalendrierJuif {
         const val MOTSAE_CHABBAT_YT = "motsae_chabbat_yt"
         const val BEIT_AVEL = "beit_avel"
         const val OUBLI = "oubli"
+
+        /** Ce qui ne se dit qu'avec un minyan (Kaddich, Barekhou, Kedoucha…) : jamais du jour, replié. */
+        const val MINYAN = "minyan"
         val DERIVEES = listOf(AVINOU_MALKENOU, KRIAT_HATORAH) + JOURS_SEMAINE +
             listOf(TSOM_GUEDALIA_TEVET, LENDEMAIN_KIPPOUR, ESTHER_POURIM, CHIVA_ASSAR_TAMOUZ, BASCULE_PLUIE, EREV_KIPPOUR_VENDREDI,
                 LAMNATSEAH, LEDAVID, TECHOUVA_HOCHAANA, YOM_TOV, MOED, CHABBAT_ROCH_HODECH, YOM_TOV_CHABBAT, ROCH_HACHANA_CHABBAT,
-                MOTSAE_CHABBAT_YT, BEIT_AVEL, OUBLI)
+                MOTSAE_CHABBAT_YT, BEIT_AVEL, OUBLI, MINYAN)
     }
 
     /**

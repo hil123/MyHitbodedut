@@ -45,6 +45,9 @@ class SiddurLectureActivity : AppCompatActivity() {
     /** La note du jour en tête : la date hébraïque qui décide des ajouts. */
     private data class Note(val texte: String)
 
+    /** Le pied d'un ajout déplié (19/10) : « Replier », pour ne pas remonter le chercher. */
+    private data class Pied(val cle: String)
+
     /** Les ajouts repliés que l'on a ouverts, pour ce texte. */
     private val ouverts = mutableSetOf<String>()
 
@@ -217,12 +220,36 @@ class SiddurLectureActivity : AppCompatActivity() {
         places = java.util.IdentityHashMap<SiddurBloc, Pair<Int, Int>>().apply {
             texte.sections.forEachIndexed { si, s -> s.blocs.forEachIndexed { bi, b -> put(b, si to bi) } }
         }
-        lignesAffichees = lignes
+        // Un ajout déplié se lit dans un panneau, fermé par un pied « Replier » (19/10).
+        val avecPieds = ArrayList<Any>(lignes.size + 4)
+        val panneau = HashSet<Int>()
+        var ouvert: String? = null
+        for (l in lignes) {
+            val dedans = l is SiddurJour.Ligne.Bloc && l.style == SiddurJour.Style.HORS
+            if (ouvert != null && !dedans) { avecPieds += Pied(ouvert); ouvert = null }
+            if (ouvert != null) panneau += avecPieds.size
+            avecPieds += l
+            if (l is SiddurJour.Ligne.Replie && l.ouvert) ouvert = l.cle
+        }
+        ouvert?.let { avecPieds += Pied(it) }
+        lignesAffichees = avecPieds
         liste.setBackgroundColor(rendu.fond)
-        liste.adapter = Adaptateur(lignes, rendu)
-        if (garderPlace && place in lignes.indices) gestion.scrollToPositionWithOffset(place, decalage)
-        debuts = lignes.indices.filter { lignes[it] is SiddurJour.Ligne.Titre }
-        bande(lignes, rendu)
+        // Déplier, replier : les paragraphes glissent en place au lieu d'apparaître d'un coup.
+        liste.itemAnimator = if (AnimationsTrophees.actives) androidx.recyclerview.widget.DefaultItemAnimator().apply {
+            supportsChangeAnimations = false
+            addDuration = 260
+            removeDuration = 180
+            moveDuration = 260
+        } else null
+        val ancien = liste.adapter as? Adaptateur
+        if (garderPlace && ancien != null && ancien.rendu == rendu) {
+            ancien.remplacer(avecPieds, panneau)
+        } else {
+            liste.adapter = Adaptateur(avecPieds, panneau, rendu)
+            if (garderPlace && place in avecPieds.indices) gestion.scrollToPositionWithOffset(place, decalage)
+        }
+        debuts = avecPieds.indices.filter { avecPieds[it] is SiddurJour.Ligne.Titre }
+        bande(avecPieds, rendu)
         liste.post { suivre() }
     }
 
@@ -300,12 +327,71 @@ class SiddurLectureActivity : AppCompatActivity() {
     /** Un libellé (clé de chaîne) dans la langue de l'application. */
     private fun nom(libelle: String): String = Libelles.res(libelle)?.let { getString(it) } ?: libelle
 
+    /** Les ajouts qui ne sont jamais « du jour » : on dit « toucher pour lire », pas « pas aujourd'hui ». */
+    private val jamaisDuJour = setOf(CalendrierJuif.C.MINYAN, CalendrierJuif.C.BEIT_AVEL, CalendrierJuif.C.OUBLI)
+
+    /** Le chevron d'un repli, tourné d'un quart de tour quand l'ajout est ouvert ; [haut] : vers le haut. */
+    private fun chevron(couleur: Int, ouvert: Boolean, haut: Boolean = false): android.graphics.drawable.RotateDrawable {
+        val rtl = resources.configuration.layoutDirection == View.LAYOUT_DIRECTION_RTL
+        val sens = if (rtl) -1f else 1f
+        return android.graphics.drawable.RotateDrawable().apply {
+            drawable = ContextCompat.getDrawable(this@SiddurLectureActivity, R.drawable.ic_chevron)?.mutate()?.apply { setTint(couleur) }
+            fromDegrees = if (haut) -90f * sens else 0f
+            toDegrees = if (haut) -90f * sens else 90f * sens
+            level = if (ouvert || haut) 10000 else 0
+            setBounds(0, 0, dp(22), dp(22))
+        }
+    }
+
+    /** Un fond en panneau : [haut], [bas] arrondis ou non, en retrait des bords. */
+    private fun panneau(couleur: Int, haut: Boolean, bas: Boolean, trait: Int? = null, marge: Int = 0): android.graphics.drawable.Drawable {
+        val r = dp(16).toFloat()
+        val forme = GradientDrawable().apply {
+            setColor(couleur)
+            cornerRadii = floatArrayOf(if (haut) r else 0f, if (haut) r else 0f, if (haut) r else 0f, if (haut) r else 0f,
+                if (bas) r else 0f, if (bas) r else 0f, if (bas) r else 0f, if (bas) r else 0f)
+            if (trait != null) setStroke(dp(1), trait)
+        }
+        // Un LayerDrawable plutôt qu'un InsetDrawable : ses retraits ne deviennent pas le padding de la vue.
+        return android.graphics.drawable.LayerDrawable(arrayOf(forme)).apply {
+            setLayerInset(0, dp(8), if (haut) marge else 0, dp(8), if (bas) marge else 0)
+        }
+    }
+
+    private fun basculer(cle: String) {
+        if (!ouverts.remove(cle)) ouverts.add(cle)
+        afficher(garderPlace = true)
+    }
+
     private inner class Adaptateur(
-        private val lignes: List<Any>,
-        private val rendu: ReglagesLecture.Rendu,
+        private var lignes: List<Any>,
+        private var dansPanneau: Set<Int>,
+        val rendu: ReglagesLecture.Rendu,
     ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
         override fun getItemCount() = lignes.size
+
+        /** Le nouveau texte, à la place de l'ancien : seules les lignes changées bougent, animées. */
+        fun remplacer(nouvelles: List<Any>, panneau: Set<Int>) {
+            val anciennes = lignes
+            val diff = androidx.recyclerview.widget.DiffUtil.calculateDiff(object : androidx.recyclerview.widget.DiffUtil.Callback() {
+                override fun getOldListSize() = anciennes.size
+                override fun getNewListSize() = nouvelles.size
+                override fun areItemsTheSame(a: Int, b: Int): Boolean {
+                    val x = anciennes[a]
+                    val y = nouvelles[b]
+                    return when {
+                        x is SiddurJour.Ligne.Bloc && y is SiddurJour.Ligne.Bloc -> x.bloc === y.bloc
+                        x is SiddurJour.Ligne.Replie && y is SiddurJour.Ligne.Replie -> x.cle == y.cle
+                        else -> x == y
+                    }
+                }
+                override fun areContentsTheSame(a: Int, b: Int) = anciennes[a] == nouvelles[b] && (a in dansPanneau) == (b in panneau)
+            })
+            lignes = nouvelles
+            dansPanneau = panneau
+            diff.dispatchUpdatesTo(this)
+        }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
             val vue = TextView(parent.context).apply {
@@ -329,6 +415,9 @@ class SiddurLectureActivity : AppCompatActivity() {
                 setOnLongClickListener(null)
                 isClickable = false
                 isLongClickable = false
+                minHeight = 0
+                gravity = android.view.Gravity.TOP or android.view.Gravity.START
+                compoundDrawablePadding = 0
                 layoutDirection = View.LAYOUT_DIRECTION_RTL
                 textDirection = View.TEXT_DIRECTION_RTL
                 textAlignment = View.TEXT_ALIGNMENT_VIEW_START
@@ -362,7 +451,10 @@ class SiddurLectureActivity : AppCompatActivity() {
                     setLineSpacing(dp(if (consigne) 3 else 8).toFloat() * e, 1f)
                     setTextColor(if (consigne) rendu.discret else rendu.texte)
                     if (ligne.style == SiddurJour.Style.DU_JOUR) setBackgroundColor(teinte)
-                    if (ligne.style == SiddurJour.Style.HORS) alpha = 0.55f
+                    // Déplié : le texte entier, lisible, dans le panneau de son repli ; une variante
+                    // hors du jour au milieu d'un ajout du jour reste estompée.
+                    if (position in dansPanneau) background = panneau(voile, haut = false, bas = false)
+                    else if (ligne.style == SiddurJour.Style.HORS) alpha = 0.55f
                     // Le marque-page : un trait de la couleur des titres au début du paragraphe.
                     if (marquee(ligne.bloc)) background = android.graphics.drawable.LayerDrawable(arrayOf(
                         background ?: android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT),
@@ -407,27 +499,77 @@ class SiddurLectureActivity : AppCompatActivity() {
                     if (cible != null) setOnClickListener { ouvrir(context, cible.id) }
                 }
                 is SiddurJour.Ligne.Replie -> vue.apply {
+                    // Le bandeau d'un ajout replié (19/10) : son nom, et dessous ce qu'un toucher fait.
                     layoutDirection = View.LAYOUT_DIRECTION_LOCALE
                     textDirection = View.TEXT_DIRECTION_LOCALE
-                    setPadding(dp(16), dp(8), dp(16), dp(8))
-                    val rtl = resources.configuration.layoutDirection == View.LAYOUT_DIRECTION_RTL
-                    val fleche = if (ligne.ouvert) "▾" else if (rtl) "◂" else "▸"
-                    val etat = getString(if (ligne.ouvert) R.string.siddur_replier else R.string.siddur_pas_aujourdhui)
-                    text = "$fleche  ${nom(ligne.libelle)}  ·  $etat"
-                    textSize = 14f
-                    setTextColor(rendu.discret)
-                    background = GradientDrawable().apply {
-                        cornerRadius = dp(12).toFloat()
-                        setStroke(dp(1), ColorUtils.setAlphaComponent(rendu.discret, 0x73), dp(5).toFloat(), dp(4).toFloat())
+                    val etat = getString(when {
+                        ligne.ouvert -> R.string.siddur_replier
+                        ligne.condition in jamaisDuJour -> R.string.siddur_toucher_lire
+                        else -> R.string.siddur_pas_aujourdhui
+                    })
+                    val titre = nom(ligne.libelle)
+                    text = android.text.SpannableStringBuilder(titre).apply {
+                        setSpan(android.text.style.StyleSpan(android.graphics.Typeface.BOLD), 0, length, android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                        append("\n")
+                        val d = length
+                        append(etat)
+                        setSpan(android.text.style.RelativeSizeSpan(0.82f), d, length, android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                        setSpan(android.text.style.ForegroundColorSpan(rendu.discret), d, length, android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
                     }
-                    contentDescription = "${nom(ligne.libelle)}, $etat"
+                    textSize = 15f
+                    setTextColor(rendu.texte)
+                    setLineSpacing(dp(2).toFloat(), 1f)
+                    gravity = android.view.Gravity.CENTER_VERTICAL or android.view.Gravity.START
+                    background = if (ligne.ouvert) panneau(fondOuvert, haut = true, bas = false, marge = dp(6))
+                    else panneau(fondFerme, haut = true, bas = true, trait = traitFerme, marge = dp(6))
+                    setPadding(dp(24), dp(18), dp(24), dp(if (ligne.ouvert) 12 else 18))
+                    minHeight = dp(64)
+                    val fleche = chevron(rendu.titre, ligne.ouvert)
+                    setCompoundDrawablesRelative(fleche, null, null, null)
+                    compoundDrawablePadding = dp(14)
+                    contentDescription = "$titre, $etat"
                     setOnClickListener {
-                        if (!ouverts.remove(ligne.cle)) ouverts.add(ligne.cle)
-                        afficher(garderPlace = true)
+                        // Le chevron tourne d'abord, puis le texte se déplie (ou se replie).
+                        if (!AnimationsTrophees.actives) return@setOnClickListener basculer(ligne.cle)
+                        isClickable = false
+                        android.animation.ObjectAnimator.ofInt(fleche, "level", fleche.level, if (ligne.ouvert) 0 else 10000).apply {
+                            duration = 160
+                            interpolator = android.view.animation.DecelerateInterpolator()
+                            addListener(object : android.animation.AnimatorListenerAdapter() {
+                                override fun onAnimationEnd(animation: android.animation.Animator) = basculer(ligne.cle)
+                            })
+                        }.start()
+                    }
+                }
+                is Pied -> vue.apply {
+                    layoutDirection = View.LAYOUT_DIRECTION_LOCALE
+                    textDirection = View.TEXT_DIRECTION_LOCALE
+                    text = getString(R.string.siddur_replier)
+                    textSize = 14f
+                    setTypeface(typeface, android.graphics.Typeface.BOLD)
+                    setTextColor(rendu.titre)
+                    gravity = android.view.Gravity.CENTER
+                    background = panneau(voile, haut = false, bas = true, marge = dp(10))
+                    setPadding(dp(24), dp(8), dp(24), dp(18))
+                    minHeight = dp(56)
+                    setCompoundDrawablesRelative(chevron(rendu.titre, ouvert = false, haut = true), null, null, null)
+                    compoundDrawablePadding = dp(6)
+                    contentDescription = getString(R.string.siddur_replier)
+                    setOnClickListener {
+                        basculer(ligne.cle)
+                        // Replié depuis le bas : on revient à son bandeau s'il est passé au-dessus de l'écran.
+                        val i = lignesAffichees.indexOfFirst { it is SiddurJour.Ligne.Replie && it.cle == ligne.cle }
+                        val gestion = liste.layoutManager as LinearLayoutManager
+                        if (i >= 0 && i < gestion.findFirstVisibleItemPosition()) liste.post { liste.smoothScrollToPosition(i) }
                     }
                 }
             }
         }
+
+        private val voile = ColorUtils.setAlphaComponent(rendu.titre, 0x10)
+        private val fondOuvert = ColorUtils.setAlphaComponent(rendu.titre, 0x1E)
+        private val fondFerme = ColorUtils.setAlphaComponent(rendu.titre, 0x12)
+        private val traitFerme = ColorUtils.setAlphaComponent(rendu.titre, 0x38)
     }
 
     private fun dp(value: Int): Int = (value * resources.displayMetrics.density).toInt()

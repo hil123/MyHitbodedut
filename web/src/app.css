@@ -642,28 +642,70 @@ input[type="range"] { width: 100%; accent-color: var(--brand); }
 .ajout.du-jour {
   margin: 4px -8px 8px; padding: 4px 8px 0px; border-radius: 12px;
   border-inline-start: 3px solid var(--brand); background: color-mix(in srgb, var(--brand) 8%, transparent);
+  animation: ajout-lueur 1.8s ease-out 1;
 }
-.ajout-etiquette { margin: 4px 0 0px; color: var(--brand); font-size: 12px; font-weight: 600; letter-spacing: .02em; }
-.ajout.replie { margin: 4px 0 8px; }
+/* À l'ouverture du texte, l'ajout du jour s'éclaire une fois, puis se pose. */
+@keyframes ajout-lueur {
+  0% { background: color-mix(in srgb, var(--brand) 0%, transparent); }
+  35% { background: color-mix(in srgb, var(--brand) 20%, transparent); }
+  100% { background: color-mix(in srgb, var(--brand) 8%, transparent); }
+}
+.ajout-etiquette { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; margin: 4px 0 0px; color: var(--brand); font-size: 12px; font-weight: 600; letter-spacing: .02em; }
+.ajout-pastille { padding: 2px 8px; border-radius: 999px; background: var(--brand); color: var(--on-brand); }
+/* Les ajouts repliés (19/10) : un bandeau franc, un chevron qui tourne, un panneau qui glisse. */
+.ajout.replie { margin: 8px 0 12px; }
 .replie-bouton {
-  display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 8px; width: 100%; margin: 0; padding: 8px 12px;
-  border: 1px dashed color-mix(in srgb, var(--muted) 45%, transparent); border-radius: 12px;
-  background: none; color: var(--muted); font-size: 14px; text-align: start; cursor: pointer;
+  display: flex; align-items: center; gap: 12px; width: 100%; min-height: 56px; margin: 0; padding: 10px 16px;
+  border: 1px solid color-mix(in srgb, var(--brand) 22%, transparent); border-radius: 16px;
+  background: color-mix(in srgb, var(--brand) 6%, transparent); color: var(--muted);
+  font: inherit; font-size: 14px; text-align: start; cursor: pointer;
+  transition: background .2s ease, border-radius .25s ease, transform .12s ease;
 }
-.replie-bouton::before { content: "▸"; color: var(--brand); }
-:root[dir="rtl"] .replie-bouton::before { content: "◂"; }
-.replie-bouton[aria-expanded="true"]::before { content: "▾"; }
-.replie-nom { color: var(--ink); font-weight: 600; }
-.replie-etat { font-size: 13px; }
-.ajout-corps { padding-top: 4px; }
+.replie-bouton:hover { background: color-mix(in srgb, var(--brand) 11%, transparent); }
+.replie-bouton:active { transform: scale(.985); }
+.replie-bouton:focus-visible, .replie-bas:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+.replie-icone {
+  flex: none; display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%;
+  background: color-mix(in srgb, var(--brand) 14%, transparent); color: var(--brand);
+  transition: transform .3s cubic-bezier(.2,.7,.2,1);
+}
+.replie-icone svg { width: 20px; height: 20px; }
+.replie-bouton .replie-icone { transform: rotate(-90deg); }
+:root[dir="rtl"] .replie-bouton .replie-icone { transform: rotate(90deg); }
+.replie-bouton[aria-expanded="true"] .replie-icone, :root[dir="rtl"] .replie-bouton[aria-expanded="true"] .replie-icone { transform: none; }
+.replie-texte { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.replie-nom { color: var(--ink); font-size: 15px; font-weight: 600; }
+.replie-etat { font-size: 12.5px; }
+.ajout.ouvert .replie-bouton { border-end-start-radius: 0; border-end-end-radius: 0; border-bottom-color: transparent; background: color-mix(in srgb, var(--brand) 12%, transparent); }
+.ajout-corps {
+  overflow: clip; padding: 8px 12px 0; border: 1px solid color-mix(in srgb, var(--brand) 22%, transparent); border-top: 0;
+  border-radius: 0 0 16px 16px; background: color-mix(in srgb, var(--brand) 4%, transparent);
+}
+.replie-bas {
+  display: flex; align-items: center; justify-content: center; gap: 6px; width: 100%; min-height: 48px; margin: 4px 0 0; padding: 8px;
+  border: 0; border-top: 1px dashed color-mix(in srgb, var(--brand) 25%, transparent); background: none;
+  color: var(--brand); font: inherit; font-size: 14px; font-weight: 600; cursor: pointer;
+}
+.replie-bas .replie-icone { width: 24px; height: 24px; background: none; transform: rotate(180deg); }
+.ajout-corps .hors-jour { opacity: .9; }
 .hors-jour { opacity: .55; }
+@media (prefers-reduced-motion: reduce) {
+  .ajout.du-jour { animation: none; }
+  .replie-bouton, .replie-icone { transition: none; }
+}
 .indice-jour {
   display: inline-block; margin: -0px 0 8px; padding: 4px 12px; border-radius: 999px;
   background: color-mix(in srgb, var(--brand) 14%, transparent); color: var(--brand); font-size: 12px;
 }
 .ecran.lu.nuit .ajout.du-jour { border-inline-start-color: var(--lecture-nuit-titre, #D6C28C); background: color-mix(in srgb, var(--lecture-nuit-titre, #D6C28C) 10%, transparent); }
-.ecran.lu.nuit .ajout-etiquette, .ecran.lu.nuit .replie-bouton::before { color: var(--lecture-nuit-titre, #D6C28C); }
-.ecran.lu.nuit .replie-bouton { color: var(--lecture-nuit-discret, #A3A8A5); border-color: color-mix(in srgb, var(--lecture-nuit-discret, #A3A8A5) 40%, transparent); }
+.ecran.lu.nuit .ajout-etiquette, .ecran.lu.nuit .replie-icone, .ecran.lu.nuit .replie-bas { color: var(--lecture-nuit-titre, #D6C28C); }
+.ecran.lu.nuit .ajout-pastille { background: var(--lecture-nuit-titre, #D6C28C); color: var(--lecture-nuit-fond, #000); }
+.ecran.lu.nuit .replie-bouton { color: var(--lecture-nuit-discret, #A3A8A5); border-color: color-mix(in srgb, var(--lecture-nuit-titre, #D6C28C) 30%, transparent); background: color-mix(in srgb, var(--lecture-nuit-titre, #D6C28C) 7%, transparent); }
+.ecran.lu.nuit .ajout.ouvert .replie-bouton { background: color-mix(in srgb, var(--lecture-nuit-titre, #D6C28C) 13%, transparent); border-bottom-color: transparent; }
+.ecran.lu.nuit .replie-icone { background: color-mix(in srgb, var(--lecture-nuit-titre, #D6C28C) 15%, transparent); }
+.ecran.lu.nuit .replie-bas .replie-icone { background: none; }
+.ecran.lu.nuit .ajout-corps { border-color: color-mix(in srgb, var(--lecture-nuit-titre, #D6C28C) 30%, transparent); background: color-mix(in srgb, var(--lecture-nuit-titre, #D6C28C) 4%, transparent); }
+.ecran.lu.nuit .replie-bas { border-top-color: color-mix(in srgb, var(--lecture-nuit-titre, #D6C28C) 30%, transparent); }
 .ecran.lu.nuit .replie-nom { color: var(--lecture-nuit-texte, #F2F0EA); }
 .renvoi-jour { display: block; width: 100%; margin: 4px 0 16px; padding: 12px 12px; border: 0; border-radius: 12px; text-align: start; cursor: pointer;
   font: inherit; font-family: var(--police-texte); font-size: calc(16px * var(--echelle, 1)); font-weight: 700;

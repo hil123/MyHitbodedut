@@ -497,10 +497,87 @@ def annoter(texte_id, sections, nusah):
                     note("indice", si, bi, "morid_hatal", {"texte": "מוריד הטל"})
                     note("indice", si, bi, "machiv_harouah", {"texte": "משיב הרוח ומוריד הגשם"})
             bi += 1
+        if office or texte_id == "arvit":
+            minyan(txt, cons, pris, prend)
+    # La passe « minyan » ajoute ses blocs après les autres : grouper veut l'ordre du texte.
+    sortie.sort(key=lambda e: (e["s"], e.get("b", -1)))
     grouper(sortie)
     for e in sortie:
         e.pop("_force", None)
     return sortie
+
+
+# Ce qui ne se dit qu'avec un minyan (demande du 19/10) : « כל דבר שבקדושה, כגון קדיש וברכו
+# וקדושה, אין אומרים אותו בפחות מי׳ » (Choul'han Aroukh OC 55:1 ; Berakhot 21b) ; la
+# bénédiction des Cohanim et Modim derabanan n'existent que dans la répétition de l'officiant.
+# « minyan » n'est jamais une condition du jour : ces passages restent repliés, dépliables.
+CONSIGNES_MINYAN = ("קהל וחזן:", "שליח ציבור:", "קהל:", "חזן:", "קדושה", "ברכת כהנים", "מודים דרבנן")
+KEDOUCHA = ["נקדש", "נקדישך", "נעריצך", "כתר יתנו", "קדוש קדוש קדוש", "לעמתם", "ברוך כבוד",
+            "ובדברי קדשך", "ימלך יהוה לעולם", "לדור ודור נגיד"]
+BAREKHOU = re.compile(r"^(ואומר החזן: (\(רבנן\) )?|חזן: |קהל וחזן: |ועונים הקהל: |אומרים: )?(ברכו את יהוה המברך|ברוך יהוה המברך לעולם ועד)")
+FIN_COHANIM = ("שים שלום", "שלום רב")
+
+
+def colle(s, debut):
+    """Comme commence, sans tenir compte des mots soudés du siddour (« כבודיהוה », « אתשמך »)."""
+    return "".join(mots(s)).startswith(debut.replace(" ", ""))
+
+
+def minyan(txt, cons, pris, prend):
+    n = len(txt)
+
+    def debut(bi):
+        """Les consignes d'officiant juste avant (« שליח ציבור: », « קדושה »…) suivent le passage."""
+        k = bi
+        while k > 0 and k - 1 not in pris and cons[k - 1] and (
+                txt[k - 1] in CONSIGNES_MINYAN or txt[k - 1].startswith(("בחזרת הש״ץ", "קדושה"))
+                or re.fullmatch(r"\(?[^()]{0,30}קדיש[^()]{0,25}\)?:?", txt[k - 1])):
+            k -= 1
+        return k
+
+    bi = 0
+    while bi < n:
+        x = txt[bi]
+        if bi in pris:
+            bi += 1
+            continue
+        fin = None
+        # La Kedoucha de la répétition, de « נקדש / נקדישך » à « ימלך » (et « לדור ודור » ashkénaze).
+        if not cons[bi] and any(colle(x, k) for k in KEDOUCHA[:4]):
+            fin = bi + 1
+            while fin < n and fin not in pris and (
+                    (cons[fin] and txt[fin] in CONSIGNES_MINYAN[:4])
+                    or (not cons[fin] and any(colle(txt[fin], k) for k in KEDOUCHA))):
+                fin += 1
+        # Barekhou et sa réponse.
+        elif not cons[bi] and BAREKHOU.match(x):
+            fin = bi + 1
+            while fin < n and fin not in pris and not cons[fin] and BAREKHOU.match(txt[fin]):
+                fin += 1
+        # Le Kaddich : du « יתגדל » à sa dernière partie.
+        elif not cons[bi] and (commence(x, "יתגדל") or commence(x, "קדיש יתום יתגדל")):
+            fin = bi + 1
+            while fin < n and fin not in pris and not cons[fin] and any(commence(txt[fin], k) for k in KADDICH[1:]):
+                fin += 1
+        # Modim derabanan, que l'assemblée dit pendant le « מודים » de l'officiant.
+        elif (cons[bi] and txt[bi].startswith("בחזרת הש״ץ כשהחזן אומר מודים")) or x.startswith("מודים דרבנן בחזרת"):
+            fin = bi + 1
+            if cons[bi] and fin < n and not cons[fin] and commence(txt[fin], "מודים אנחנו לך"):
+                fin += 1
+        # La bénédiction des Cohanim de la répétition, jusqu'à « שים שלום ».
+        elif (cons[bi] and (x == "ברכת כהנים" or x.startswith("הטעם שתקנו לברך את ישראל"))) or \
+                (not cons[bi] and commence(x, "אלהינו ואלהי אבותינו ברכנו בברכה")):
+            fin = bi + 1
+            while fin < n and fin not in pris and not (
+                    (not cons[fin] and any(commence(txt[fin], k) for k in FIN_COHANIM))
+                    or (cons[fin] and txt[fin] in ("שלום", "שים שלום"))):
+                fin += 1
+        if fin is None:
+            bi += 1
+            continue
+        for j in range(debut(bi), fin):
+            prend(j, "minyan")
+        bi = fin
 
 
 # Les variantes qui suivent leur ajout : repliées avec lui quand il est replié.

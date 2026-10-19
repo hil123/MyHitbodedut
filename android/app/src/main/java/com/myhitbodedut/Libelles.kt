@@ -57,6 +57,7 @@ object Libelles {
         "ajout_motsae_chabbat_yt" -> R.string.ajout_motsae_chabbat_yt
         "ajout_beit_avel" -> R.string.ajout_beit_avel
         "ajout_oubli" -> R.string.ajout_oubli
+        "ajout_minyan" -> R.string.ajout_minyan
         "ajout_chol" -> R.string.ajout_chol
         "ajout_roch_hodech" -> R.string.ajout_roch_hodech
         "ajout_sans_tahanoun" -> R.string.ajout_sans_tahanoun

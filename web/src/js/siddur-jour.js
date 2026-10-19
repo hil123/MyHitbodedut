@@ -42,7 +42,7 @@ export function conditionsPour(nusah, enIsrael, conditions, sansTahanounFinTichr
 export const DERIVEES = ['avinou_malkenou', 'kriat_hatorah', 'jour_1', 'jour_2', 'jour_3', 'jour_4', 'jour_5', 'jour_6',
   'tsom_guedalia_tevet', 'lendemain_kippour', 'esther_pourim', 'chiva_assar_tamouz', 'bascule_pluie', 'erev_kippour_vendredi',
   'lamnatseah', 'ledavid', 'techouva_hochaana', 'yom_tov', 'moed', 'chabbat_roch_hodech', 'yom_tov_chabbat', 'roch_hachana_chabbat',
-  'motsae_chabbat_yt', 'beit_avel', 'oubli'];
+  'motsae_chabbat_yt', 'beit_avel', 'oubli', 'minyan'];
 
 /**
  * Avinou malkénou (SiddurJour.avinouMalkenou) : jeûnes publics sauf le 9 Av, dix
