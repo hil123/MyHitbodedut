@@ -101,7 +101,7 @@
     <string name="apps_loading">האפליקציות נטענות…</string>
     <string name="apps_select_all">לבחור הכול</string>
     <string name="apps_clear">לנקות הכול</string>
-    <string name="apps_none_warning">לא נבחרה אפליקציה: דבר לא ייחסם.</string>
+    <string name="apps_none_warning">לא נבחרה אפליקציה: דבר לא יעוכב.</string>
 
     <string name="blocker_question">התבודדתם היום?</string>
     <string name="blocker_subtitle">רגע של התבודדות לפני כל השאר.</string>
