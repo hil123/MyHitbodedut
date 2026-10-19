@@ -104,7 +104,7 @@ class TikkunFlowActivity : AppCompatActivity() {
         layoutDirection = View.LAYOUT_DIRECTION_RTL
         textAlignment = View.TEXT_ALIGNMENT_VIEW_START
         textSize = 19f
-        setLineSpacing(dp(9).toFloat(), 1f)
+        setLineSpacing(dp(13).toFloat(), 1f)
         setTextColor(Apparence.couleur(context, R.color.ink))
         PoliceHebraique.appliquer(this)
     }, Role.TEXTE)
@@ -115,7 +115,7 @@ class TikkunFlowActivity : AppCompatActivity() {
         layoutDirection = View.LAYOUT_DIRECTION_RTL
         textAlignment = View.TEXT_ALIGNMENT_VIEW_START
         textSize = 18f
-        setLineSpacing(dp(9).toFloat(), 1f)
+        setLineSpacing(dp(13).toFloat(), 1f)
         setTextColor(Apparence.couleur(context, R.color.ink))
         PoliceHebraique.appliquer(this)
     }, Role.TEXTE)

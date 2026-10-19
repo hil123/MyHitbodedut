@@ -176,7 +176,7 @@ object VueJour {
         carte.addView(texte(c, hilloulot.take(5).joinToString("\n") { it.he }, 14f, R.color.ink, haut = 2).apply {
             textDirection = View.TEXT_DIRECTION_RTL
             PoliceHebraique.appliquer(this)
-            setLineSpacing(0f, 1.15f)
+            setLineSpacing(0f, 1.25f)
         })
         // « ועוד אחד › » : plus petit, plus discret, et la flèche mène aux autres.
         if (reste > 0) carte.addView(texte(c, c.resources.getQuantityString(R.plurals.hilloula_autres, reste, reste) + " ›", 12f, R.color.muted, haut = 2).apply {

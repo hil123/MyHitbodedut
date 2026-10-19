@@ -70,7 +70,7 @@ class LiturgyActivity : AppCompatActivity() {
             textAlignment =
                 if (centre) View.TEXT_ALIGNMENT_CENTER else View.TEXT_ALIGNMENT_VIEW_START
             textSize = if (centre) 20f else 18f
-            setLineSpacing(dp(9).toFloat(), 1f)
+            setLineSpacing(dp(13).toFloat(), 1f)
             setTextColor(Apparence.couleur(context, R.color.ink))
             PoliceHebraique.appliquer(this)
         }, Role.TEXTE)

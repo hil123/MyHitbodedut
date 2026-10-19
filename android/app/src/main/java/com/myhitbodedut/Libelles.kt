@@ -46,6 +46,18 @@ object Libelles {
         "ajout_morid_hatal" -> R.string.ajout_morid_hatal
         "ajout_motsae_chabbat" -> R.string.ajout_motsae_chabbat
         "ajout_omer" -> R.string.ajout_omer
+        "ajout_lamnatseah" -> R.string.ajout_lamnatseah
+        "ajout_ledavid" -> R.string.ajout_ledavid
+        "ajout_techouva_hochaana" -> R.string.ajout_techouva_hochaana
+        "ajout_yom_tov" -> R.string.ajout_yom_tov
+        "ajout_moed" -> R.string.ajout_moed
+        "ajout_chabbat_roch_hodech" -> R.string.ajout_chabbat_roch_hodech
+        "ajout_yom_tov_chabbat" -> R.string.ajout_yom_tov_chabbat
+        "ajout_roch_hachana_chabbat" -> R.string.ajout_roch_hachana_chabbat
+        "ajout_motsae_chabbat_yt" -> R.string.ajout_motsae_chabbat_yt
+        "ajout_beit_avel" -> R.string.ajout_beit_avel
+        "ajout_oubli" -> R.string.ajout_oubli
+        "ajout_chol" -> R.string.ajout_chol
         "ajout_roch_hodech" -> R.string.ajout_roch_hodech
         "ajout_sans_tahanoun" -> R.string.ajout_sans_tahanoun
         "ajout_tahanoun" -> R.string.ajout_tahanoun

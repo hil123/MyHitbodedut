@@ -36,4 +36,19 @@ class BasculeTest {
         dedans.forEach { (la, lo) -> assertTrue("$la,$lo", CalendrierJuif.aJerusalem(la, lo)) }
         dehors.forEach { (la, lo) -> assertFalse("$la,$lo", CalendrierJuif.aJerusalem(la, lo)) }
     }
+
+    @Test
+    fun `conditions deduites du releve du 19-10`() {
+        val C = CalendrierJuif.C
+        assertTrue(C.LAMNATSEAH in c("2026-10-19"))
+        assertFalse(C.LAMNATSEAH in c("2026-10-11"))
+        assertFalse(C.LAMNATSEAH in c("2027-04-21"))
+        assertTrue(C.LEDAVID in c("2026-08-20") && C.LEDAVID in c("2026-10-02"))
+        assertFalse(C.LEDAVID in c("2026-10-19"))
+        assertTrue(C.TECHOUVA_HOCHAANA in c("2026-10-02"))
+        assertTrue(C.YOM_TOV in c("2027-04-22") && C.MOED in c("2027-04-22"))
+        assertTrue(C.MOTSAE_CHABBAT_YT in c("2027-04-23"))
+        assertFalse(C.MOTSAE_CHABBAT_YT in c("2027-04-24"))
+        assertFalse(C.BEIT_AVEL in c("2026-10-19") || C.OUBLI in c("2026-10-19"))
+    }
 }

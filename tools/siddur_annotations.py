@@ -134,7 +134,8 @@ def annoter(texte_id, sections, nusah):
             continue
 
         blocs = sec["blocs"]
-        txt = [nu(b.get("t") or b.get("c")) for b in blocs]
+        # Les guillemets doubles ASCII du siddour Edot (« ברה''ש », « ביו''ט ») lus comme gershayim.
+        txt = [nu(b.get("t") or b.get("c")).replace("''", "״") for b in blocs]
         cons = ["c" in b for b in blocs]
         pris = set()
 
@@ -188,6 +189,119 @@ def annoter(texte_id, sections, nusah):
         bi = 0
         while bi < n:
             x = txt[bi]
+            # --- Relevé du 19/10 : ce qui restait ouvert tous les jours ---------------------
+            # Les bénédictions de qui a oublié רצה ou יעלה ויבא : jamais du jour, toujours repliées.
+            # Ashkenaz, Sfard : « דיני שכחה: » jusqu'à la fin de la section ; Edot : « אם שכח לומר
+            # "רצה"… » jusqu'à la bénédiction הטוב והמטיב, qui se dit toujours.
+            if cons[bi] and x.startswith("דיני שכחה"):
+                for j in range(bi, n):
+                    prend(j, "oubli")
+                bi = n
+                continue
+            if cons[bi] and x.startswith('אם שכח לומר "רצה"'):
+                j = bi
+                while j < n and (j == bi or not commence(txt[j], "ברוך אתה יהוה אלהינו מלך העולם לעד")):
+                    prend(j, "oubli")
+                    j += 1
+                bi = j
+                continue
+            # Barekhi nafchi la veille de Roch 'Hodech (Edot, Arvit : « בליל ראש חודש יש הנוהגים
+            # לומר ») : la consigne et le psaume ; Arvit relève déjà du jour hébreu suivant.
+            if cons[bi] and x.startswith("בליל ראש חודש") and bi + 1 < n and not cons[bi + 1]:
+                prend(bi, "roch_hodech")
+                prend(bi + 1, "roch_hodech")
+                bi += 2
+                continue
+            # « אתה חוננתנו » (Edot) : le seul bloc annoncé ; « וחננו מאתך » suit tous les soirs.
+            if cons[bi] and x.startswith("במוצאי שבת ויום טוב אומרים") and bi + 1 < n and not cons[bi + 1]:
+                prend(bi, "motsae_chabbat_yt")
+                prend(bi + 1, "motsae_chabbat_yt")
+                bi += 2
+                continue
+            # La fin d'Arvit du motsaé Chabbat (Edot) : jusqu'au Kaddich titkabal des autres soirs.
+            if cons[bi] and x.startswith("בכל לילות החול מלבד מוצאי שבת מדלגים"):
+                j = bi
+                while j < n and not (cons[j] and "קדיש תתקבל" in txt[j] and j > bi):
+                    prend(j, "motsae_chabbat")
+                    j += 1
+                bi = j
+                continue
+            # « ה׳ הוא האלהים » des dix jours et de Hochaana Rabba (Edot, Hodou).
+            if cons[bi] and x.startswith("בעשרת ימי תשובה והושענא רבה") and bi + 1 < n and not cons[bi + 1]:
+                prend(bi, "techouva_hochaana")
+                prend(bi + 1, "techouva_hochaana")
+                bi += 2
+                continue
+            # Ce que le siddour fait sauter les jours sans Ta'hanoun : למנצח (Edot), תפלה לדוד
+            # (Edot, Sfard ; Sfard ajoute : sans אל ארך אפים, pas de בית יעקב non plus), le
+            # « רבונו של עולם » après la Akéda (Sfard).
+            if office and cons[bi] and bi + 1 < n and not cons[bi + 1] and (
+                    x.startswith("ביום שאין אומרים בו תחנון מדלגים למנצח")
+                    or x.startswith("בימים שאין אומרים תחנון אין אומרים תפלה לדוד")
+                    or x.startswith("ביום שאין אומרים תחנון אין אומרים זה")):
+                prend(bi, "tahanoun_" + office)
+                prend(bi + 1, "tahanoun_" + office)
+                j = bi + 2
+                if "גם בית יעקב אין אומרים" in x and j < n and not cons[j] and commence(txt[j], "בית יעקב"):
+                    prend(j, "lamnatseah")
+                    j += 1
+                bi = j
+                continue
+            # למנצח (Ashkenaz, Sfard) : pas les jours que le siddour énumère (Sfard, Achré :
+            # « ר״ח חנוכה ופורים ערב פסח וערב יו״כ ותשעה באב… י״ד וט״ו באדר ראשון ») ; avec lui,
+            # les consignes qui le précèdent.
+            if nusah != "edot" and office == "chaharit" and not cons[bi] and commence(x, "למנצח מזמור לדוד יענך"):
+                k = bi
+                while k > 0 and cons[k - 1] and k - 1 not in pris:
+                    k -= 1
+                for m in range(k, bi + 1):
+                    prend(m, "lamnatseah")
+                bi += 1
+                continue
+            # « לדוד ה׳ אורי » : « ובפרט מר״ח אלול עד הושענא רבא » dit la consigne ; le psaume et
+            # son Kaddich, repliés le reste de l'année.
+            if cons[bi] and x.startswith("מנהג טוב לומר אחר כל תפלה מזמור לדוד"):
+                prend(bi, "ledavid")
+                j = bi + 1
+                if j < n and not cons[j] and commence(txt[j], "לדוד יהוה אורי"):
+                    prend(j, "ledavid")
+                    j += 1
+                    while j < n and ((cons[j] and txt[j] == "(קדיש יתום)") or
+                                     (not cons[j] and any(commence(txt[j], k) for k in KADDICH))):
+                        prend(j, "ledavid")
+                        j += 1
+                bi = j
+                continue
+            # La maison endeuillée : jamais un jour du calendrier, toujours replié (dépliable).
+            if cons[bi] and x.startswith("בבית האבל"):
+                j = bi
+                while j < n and (j == bi or not cons[j] or txt[j] == "(קדיש יתום)"
+                                 or txt[j].startswith("ובימים שאין בהם תחנון")):
+                    prend(j, "beit_avel")
+                    j += 1
+                bi = j
+                continue
+            # La bénédiction des Cohanim à Min'ha, les jeûnes publics seulement, jusqu'à « שים שלום ».
+            if cons[bi] and re.search(r"בתענית ציבור.*ברכת כהנים", x):
+                if bi > 0 and cons[bi - 1] and txt[bi - 1] == "ברכת כהנים" and bi - 1 not in pris:
+                    prend(bi - 1, "jeune", JEUNE)
+                j = bi
+                while j < n and (j == bi or not (
+                        (not cons[j] and (commence(txt[j], "שים שלום") or commence(txt[j], "שלום רב")
+                                          or txt[j].startswith("לתענית ציבור")))
+                        or (cons[j] and (txt[j] in ("שלום", "שים שלום") or txt[j].startswith("בעשי״ת"))))):
+                    prend(j, "jeune", JEUNE)
+                    j += 1
+                bi = j
+                continue
+            # Les versets ajoutés après le Hallel de Roch 'Hodech (Sfard).
+            if cons[bi] and x.startswith("יש נוהגין לומר בר״ח אחר הלל"):
+                j = bi
+                while j < n and (j == bi or not cons[j]):
+                    prend(j, "roch_hodech")
+                    j += 1
+                bi = j
+                continue
             # Ya'alé véyavo, ses variantes, jusqu'à « חנון ורחום אתה ».
             if not cons[bi] and commence(x, "אלהינו ואלהי אבותינו יעלה ויבא"):
                 en_tete(bi, "yaale_veyavo", "אומרים")
@@ -264,12 +378,13 @@ def annoter(texte_id, sections, nusah):
             # Une consigne courte (« בחנוכה אומרים », « בראש חודש: », « בשבת אומר: »…) et ses blocs.
             elif cons[bi] and any(re.fullmatch(m, x) for m, _ in CONSIGNES_COURTES) and bi + 1 < n and not cons[bi + 1]:
                 c = next(c for m, c in CONSIGNES_COURTES if re.fullmatch(m, x))
-                lib = JEUNE if c == "jeune" else None
+                lib = LIBELLES_CONSIGNE.get(c)
                 prend(bi, c, lib)
                 j = bi + 1
                 # Le Hallel partiel ne saute que le premier bloc annoncé (Ps 115:1-11, 116:1-11) :
-                # « יהוה זכרנו » et « מה אשיב » se disent tous les jours de Hallel.
-                while j < n and not cons[j] and (c != "hallel_complet" or j == bi + 1):
+                # « יהוה זכרנו » et « מה אשיב » se disent tous les jours de Hallel ; de même,
+                # un « הרחמן » de fête n'annonce que sa ligne.
+                while j < n and not cons[j] and ((c != "hallel_complet" and c not in UNE_LIGNE) or j == bi + 1):
                     prend(j, c, lib)
                     j += 1
                 bi = j
@@ -312,7 +427,7 @@ def annoter(texte_id, sections, nusah):
             elif not cons[bi] and re.match(r"בתשעה באב (יש )?אומרים:? ?נחם", x):
                 prend(bi, "ticha_beav")
             # Avinou malkénou des jeûnes (Ashkenaz : « בתענית ציבור: אבינו מלכנו ברך עלינו » ; relevé le 14/10).
-            elif not cons[bi] and x.startswith("בתענית ציבור:"):
+            elif not cons[bi] and (x.startswith("בתענית ציבור:") or x.startswith("לתענית ציבור:")):
                 prend(bi, "jeune", JEUNE)
             # Les ajouts de Chabbat et de Roch 'Hodech annoncés dans leur bloc (Méèn chaloch, relevé le 14/10).
             elif not cons[bi] and re.match(r"בשבת ורצה", x):
@@ -344,7 +459,7 @@ def annoter(texte_id, sections, nusah):
                 prend(bi, c)
             # Les dix jours : la consigne courte, puis son bloc ; ou le bloc qui
             # s'annonce lui-même (« בעשי״ת: זכרנו לחיים »).
-            elif cons[bi] and re.fullmatch(r"(בעשי״ת|בעשרת ימי תשובה)( (מסיים|יסיים|אומרים|מוסיפים))?:?", x) \
+            elif cons[bi] and re.fullmatch(r"(בעשי״ת|בעשרת ימי תשובה)( (מסיים|יסיים|אומרים|מוסיפים|מוסיפין))?:?", x) \
                     and bi + 1 < n and not cons[bi + 1]:
                 prend(bi, "asseret_yemei_techouva")
                 j = bi + 1
@@ -405,7 +520,26 @@ SOUS = {
 JOURS_SEMAINE = {"ראשון": "jour_1", "שני": "jour_2", "שלישי": "jour_3", "רביעי": "jour_4", "חמישי": "jour_5",
                  "שישי": "jour_6", "ששי": "jour_6"}
 
+# Les fragments du Kaddich, pour le replier avec le psaume qu'il clôt.
+KADDICH = ["יתגדל", "בעלמא", "יהא שמה", "יתברך", "לעלא", "יהא שלמא", "עושה שלום", "על ישראל", "קדיש יתום"]
+
+# Les consignes dont un seul bloc suit (les « הרחמן » et les bénédictions d'oubli des fêtes).
+UNE_LIGNE = {"yom_tov", "moed", "roch_hachana", "yom_tov_chabbat", "chabbat_roch_hodech", "roch_hachana_chabbat"}
+
+LIBELLES_CONSIGNE = {"jeune": JEUNE, "!chabbat": "ajout_chol"}
+
 CONSIGNES_COURTES = [
+    # Le Birkat hamazone (relevé du 19/10) : les psaumes d'avant, les « הרחמן » des fêtes,
+    # les bénédictions de qui a oublié רצה ou יעלה ויבא.
+    (r"בחול קודם ברכת המזון אומרים:?", "!chabbat"),
+    (r"בשבת קודם ברכת המזון אומרים:?", "chabbat"),
+    (r"(בראש חודש|בר״ח) שחל בשבת:?", "chabbat_roch_hodech"),
+    (r"(ביו״ט|ביום טוב) שחל בשבת:?", "yom_tov_chabbat"),
+    (r"(בראש השנה|ברה״ש) שחל בשבת:?", "roch_hachana_chabbat"),
+    (r"(בראש השנה|ברה״ש):?", "roch_hachana"),
+    (r"(ביו״ט|ביום טוב)( אומר)?:?", "yom_tov"),
+    (r"במועדים:?", "moed"),
+    (r"לחנוכה:?", "hanouka"),
     # Les psaumes ajoutés certains jours (Edot, 16/10) : seulement le jour dit.
     (r"בצום גדליה ובעשרה בטבת אומרים:?", "tsom_guedalia_tevet"),
     (r"למחרת יום הכיפורים אומרים:?", "lendemain_kippour"),

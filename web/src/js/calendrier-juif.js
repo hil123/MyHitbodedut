@@ -123,6 +123,22 @@ export function jour(iso, enIsrael, mukafChoma = false) {
   const mois = regles.getJewishMonth(), quantieme = regles.getJewishDayOfMonth();
   si((mois === JewishDate.TISHREI && quantieme === 22) || (mois === JewishDate.NISSAN && quantieme === 15), 'bascule_pluie');
   si(mois === JewishDate.TISHREI && quantieme === 9 && semaine === 5, 'erev_kippour_vendredi');
+  // Relevé du 19/10 (CalendrierJuif.C.LAMNATSEAH…).
+  const adar1415 = (mois === JewishDate.ADAR || mois === JewishDate.ADAR_II) && quantieme >= 14 && quantieme <= 15;
+  si(!(regles.isRoshChodesh() || regles.isChanukah() || adar1415 || regles.isTishaBav() || regles.isAssurBemelacha() ||
+    index === JewishCalendar.EREV_PESACH || index === JewishCalendar.EREV_YOM_KIPPUR), 'lamnatseah');
+  si(mois === JewishDate.ELUL || (mois === JewishDate.TISHREI && quantieme <= 21), 'ledavid');
+  si(regles.isAseresYemeiTeshuva() || (mois === JewishDate.TISHREI && quantieme === 21), 'techouva_hochaana');
+  const yomTov = regles.isYomTovAssurBemelacha();
+  si(yomTov, 'yom_tov');
+  si(['pessah', 'soukkot', 'chavouot', 'chemini_atseret'].some((k) => c.has(k)), 'moed');
+  si(c.has('chabbat') && regles.isRoshChodesh(), 'chabbat_roch_hodech');
+  si(c.has('chabbat') && yomTov, 'yom_tov_chabbat');
+  si(c.has('chabbat') && regles.isRoshHashana(), 'roch_hachana_chabbat');
+  const hier = new Date(`${iso}T12:00:00Z`);
+  hier.setUTCDate(hier.getUTCDate() - 1);
+  const hierYomTov = calendrier(hier.toISOString().slice(0, 10), enIsrael, false, mukafChoma).isYomTovAssurBemelacha();
+  si(c.has('motsae_chabbat') || (hierYomTov && !regles.isAssurBemelacha()), 'motsae_chabbat_yt');
 
   const fetes = [];
   const fete = FETES.get(affiche.getYomTovIndex());

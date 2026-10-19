@@ -116,7 +116,7 @@ class PsalmActivity : AppCompatActivity() {
                 PoliceHebraique.appliquer(this)
                 textDirection = View.TEXT_DIRECTION_RTL
                 textAlignment = View.TEXT_ALIGNMENT_VIEW_START
-                setLineSpacing(dp(9).toFloat(), 1f)
+                setLineSpacing(dp(13).toFloat(), 1f)
                 setTextColor(Apparence.couleur(context, R.color.ink))
                 layoutParams = LinearLayout.LayoutParams(
                     0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f
@@ -144,7 +144,7 @@ class PsalmActivity : AppCompatActivity() {
         layoutDirection = View.LAYOUT_DIRECTION_RTL
         textAlignment = View.TEXT_ALIGNMENT_VIEW_START
         textSize = 15f
-        setLineSpacing(dp(7).toFloat(), 1f)
+        setLineSpacing(dp(10).toFloat(), 1f)
         setTextColor(Apparence.couleur(context, R.color.muted))
     }, Role.DISCRET)
 

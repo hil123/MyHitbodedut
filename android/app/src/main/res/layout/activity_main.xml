@@ -61,13 +61,15 @@
                     android:fontFamily="@font/varela_round"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
+                    android:layout_marginTop="8dp"
+                    android:lineSpacingMultiplier="1.2"
                     android:textColor="?attr/mhMuted"
                     android:textSize="17sp" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
                     android:orientation="horizontal">
 
                     <TextView
@@ -99,7 +101,8 @@
                         android:layout_marginStart="8dp"
                         android:fontFeatureSettings="tnum"
                         android:layout_weight="1"
-                                                android:maxLines="2"
+                        android:lineSpacingMultiplier="1.2"
+                        android:maxLines="2"
                         android:textColor="?attr/mhMuted"
                         android:textSize="17sp" />
                 </LinearLayout>
@@ -109,7 +112,7 @@
                     android:fontFamily="@font/varela_round"
                     style="@style/CardHint"
                     android:textSize="16sp"
-                    android:layout_marginTop="4dp"
+                    android:layout_marginTop="8dp"
                     android:textColor="?attr/mhBrand"
                     android:visibility="gone" />
 

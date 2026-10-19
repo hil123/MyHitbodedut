@@ -85,8 +85,29 @@ object CalendrierJuif {
         const val BASCULE_PLUIE = "bascule_pluie"
         /** La veille de Kippour un vendredi (Kippour le Chabbat) : Avinou malkénou à Cha'harit (Rema O.H. 604:2). */
         const val EREV_KIPPOUR_VENDREDI = "erev_kippour_vendredi"
+        /**
+         * Relevé du 19/10, ce que le siddour annonce et qui restait ouvert : למנצח hors des jours que
+         * le siddour Sfard énumère (Roch 'Hodech, 'Hanouka, Pourim, 14-15 Adar I, veilles de Pessa'h
+         * et de Kippour, 9 Av) ; « לדוד ה׳ אורי » de Roch 'Hodech Eloul à Hochaana Rabba (consigne
+         * du siddour) ; les dix jours et Hochaana Rabba ; Yom tov et 'Hol hamoed (« במועדים ») ;
+         * les fêtes un Chabbat ; le motsaé Chabbat ou Yom tov. « beit_avel » et « oubli » ne sont
+         * jamais du jour : la maison endeuillée et la bénédiction de qui a oublié restent repliées.
+         */
+        const val LAMNATSEAH = "lamnatseah"
+        const val LEDAVID = "ledavid"
+        const val TECHOUVA_HOCHAANA = "techouva_hochaana"
+        const val YOM_TOV = "yom_tov"
+        const val MOED = "moed"
+        const val CHABBAT_ROCH_HODECH = "chabbat_roch_hodech"
+        const val YOM_TOV_CHABBAT = "yom_tov_chabbat"
+        const val ROCH_HACHANA_CHABBAT = "roch_hachana_chabbat"
+        const val MOTSAE_CHABBAT_YT = "motsae_chabbat_yt"
+        const val BEIT_AVEL = "beit_avel"
+        const val OUBLI = "oubli"
         val DERIVEES = listOf(AVINOU_MALKENOU, KRIAT_HATORAH) + JOURS_SEMAINE +
-            listOf(TSOM_GUEDALIA_TEVET, LENDEMAIN_KIPPOUR, ESTHER_POURIM, CHIVA_ASSAR_TAMOUZ, BASCULE_PLUIE, EREV_KIPPOUR_VENDREDI)
+            listOf(TSOM_GUEDALIA_TEVET, LENDEMAIN_KIPPOUR, ESTHER_POURIM, CHIVA_ASSAR_TAMOUZ, BASCULE_PLUIE, EREV_KIPPOUR_VENDREDI,
+                LAMNATSEAH, LEDAVID, TECHOUVA_HOCHAANA, YOM_TOV, MOED, CHABBAT_ROCH_HODECH, YOM_TOV_CHABBAT, ROCH_HACHANA_CHABBAT,
+                MOTSAE_CHABBAT_YT, BEIT_AVEL, OUBLI)
     }
 
     /**
@@ -247,6 +268,22 @@ object CalendrierJuif {
             if ((regles.jewishMonth == JewishDate.TISHREI && regles.jewishDayOfMonth == 22) ||
                 (regles.jewishMonth == JewishDate.NISSAN && regles.jewishDayOfMonth == 15)) add(C.BASCULE_PLUIE)
             if (regles.jewishMonth == JewishDate.TISHREI && regles.jewishDayOfMonth == 9 && semaine == DayOfWeek.FRIDAY) add(C.EREV_KIPPOUR_VENDREDI)
+            // Relevé du 19/10 (C.LAMNATSEAH…).
+            val mois = regles.jewishMonth
+            val quantieme = regles.jewishDayOfMonth
+            val adar1415 = (mois == JewishDate.ADAR || mois == JewishDate.ADAR_II) && quantieme in 14..15
+            if (!(regles.isRoshChodesh || regles.isChanukah || adar1415 || regles.isTishaBav || regles.isAssurBemelacha ||
+                    index == JewishCalendar.EREV_PESACH || index == JewishCalendar.EREV_YOM_KIPPUR)) add(C.LAMNATSEAH)
+            if (mois == JewishDate.ELUL || (mois == JewishDate.TISHREI && quantieme <= 21)) add(C.LEDAVID)
+            if (regles.isAseresYemeiTeshuva || (mois == JewishDate.TISHREI && quantieme == 21)) add(C.TECHOUVA_HOCHAANA)
+            val yomTov = regles.isYomTovAssurBemelacha
+            if (yomTov) add(C.YOM_TOV)
+            if (listOf(C.PESSAH, C.SOUKKOT, C.CHAVOUOT, C.CHEMINI_ATSERET).any { it in this }) add(C.MOED)
+            if (C.CHABBAT in this && regles.isRoshChodesh) add(C.CHABBAT_ROCH_HODECH)
+            if (C.CHABBAT in this && yomTov) add(C.YOM_TOV_CHABBAT)
+            if (C.CHABBAT in this && regles.isRoshHashana) add(C.ROCH_HACHANA_CHABBAT)
+            val hierYomTov = calendrier(date.minusDays(1), enIsrael, modernes = false).isYomTovAssurBemelacha
+            if (C.MOTSAE_CHABBAT in this || (hierYomTov && !regles.isAssurBemelacha)) add(C.MOTSAE_CHABBAT_YT)
         }
 
         val fetes = buildList {

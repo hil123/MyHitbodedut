@@ -346,7 +346,7 @@ class SiddurLectureActivity : AppCompatActivity() {
                 }
                 is SiddurJour.Ligne.Titre -> vue.apply {
                     PoliceHebraique.appliquer(this)
-                    setPadding(dp(16), dp(if (position == 0) 6 else 26), dp(16), dp(4))
+                    setPadding(dp(16), dp(if (position == 0) 8 else 32), dp(16), dp(8))
                     text = ligne.texte
                     textSize = 20f * e
                     setTypeface(typeface, android.graphics.Typeface.BOLD)
@@ -356,10 +356,10 @@ class SiddurLectureActivity : AppCompatActivity() {
                     PoliceHebraique.appliquer(this)
                     val consigne = ligne.bloc.consigne
                     // Des paragraphes aérés ; les consignes, petites, collées au texte qu'elles annoncent (12/10).
-                    setPadding(dp(16), dp(if (consigne) 18 else 14), dp(16), dp(if (consigne) 2 else 12))
+                    setPadding(dp(16), dp(if (consigne) 24 else 20), dp(16), dp(if (consigne) 4 else 20))
                     text = Html.fromHtml(ligne.bloc.texte, Html.FROM_HTML_MODE_LEGACY)
                     textSize = (if (consigne) 12f else 19f) * e
-                    setLineSpacing(dp(if (consigne) 2 else 10).toFloat() * e, 1f)
+                    setLineSpacing(dp(if (consigne) 4 else 14).toFloat() * e, 1f)
                     setTextColor(if (consigne) rendu.discret else rendu.texte)
                     if (ligne.style == SiddurJour.Style.DU_JOUR) setBackgroundColor(teinte)
                     if (ligne.style == SiddurJour.Style.HORS) alpha = 0.55f
