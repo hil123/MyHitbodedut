@@ -1046,3 +1046,45 @@ Non vérifié : Eretz Hemdah (avis de Rav Ovadia sur le sud), le site ne répond
 - Pour la trace : de qui vient l'accord du 13/10 (or-breslev, Yalkut Yosef),
   quand, et sur quoi il porte.
 - Les icônes signalées le 12/10 : lesquelles.
+
+## Mise à jour (19/10) : « oui tout »
+
+Réponse du propriétaire aux sept questions du 05/10 : « oui tout ».
+
+**Fait** (branche `claude/tout`) :
+
+- **Articles de la bibliothèque** : plus d'encadrés « Droits » ni « Erreurs
+  relevées » (les données restent dans bibliotheque.json).
+- **Tikoun et Tehilim** : « Tehilim » (fr) / « Tehillim » (en) au lieu de
+  psaumes / psalms.
+- **המלך בשדה** de retour dans l'APK ; `niggoun_08` (sans titre, 2,4 Mo) passe
+  dans `musique/`. Audio embarqué : 129,8 Mo.
+- **Le guide « המדריך המקיף להתבודדות »** (texte du propriétaire) et **les dix
+  feuillets « תפילה לשלמה » du Yanuka** dans les Livres
+  (tools/livres_textes_proprietaire.py). Les quatre renvois invérifiables du
+  guide restent tels quels, à la demande. Pour 'Habaqouq, les versets seuls :
+  le commentaire entrelacé n'a pas d'ordre sûr. Le Nom en entier dans les
+  prières, y compris אֱ-לֹהִים / הָאֵ-ל / אֲ-דֹנָי.
+- **Les onze propositions** :
+  - 2 : la hitbodedout guidée suit le sujet choisi (neuf sujets × cinq temps,
+    trois langues ; Android) ;
+  - 3 / 15 : « Je n'arrive pas à parler » ouvre aussi dix questions, une à la
+    fois, tirées de « מה אומרים? » du guide ; avant de commencer : Parler,
+    Écrire, Prier, Une question (Android et web) ;
+  - 5 : journal — la chose à travailler, et le sujet de chaque jour (Android) ;
+  - 6 : « Mon parcours » (Android et web) ;
+  - 7 : le mot du moment (matin, journée, soir, nuit) sous la prière de l'heure ;
+  - 9 : ambiances calculées — pluie, mer, forêt, feu, nuit, silence — sans
+    fichier, sous la musique (Android et web) ;
+  - 10 : la source du jour sur l'accueil, Commencer / Lire la suite ;
+  - 11 : « J'ai besoin de 'hizouk » hors séance, favoris et partage ;
+  - 12 : le blocage du matin s'appelle « Je suis avec Hachem », et la séance se
+    clôt par « Vous avez parlé avec Hachem aujourd'hui ».
+
+**Reste** :
+
+- web : le journal (donc 5 et l'humeur de 6), la carte de la hitbodedout
+  guidée (donc 2), les Tefilot ;
+- iPhone : l'ambiance se tait écran verrouillé (Web Audio) ;
+- Android : « Je suis avec Hachem » jamais éprouvé sur un vrai téléphone ;
+- les textes du Rav Arush : toujours aucun fourni.
