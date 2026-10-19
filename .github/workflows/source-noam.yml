@@ -1,0 +1,36 @@
+# Les morceaux de Noam Shpayer (נעם שפייר), autorisés par l'artiste (déclaration du
+# propriétaire, 19/10), lus sur noam-shpayer.pologi.org et poussés sur la branche
+# claude/source-noam. L'environnement de développement n'atteint pas ce site.
+name: Source Noam Shpayer
+on: workflow_dispatch
+permissions:
+  contents: write
+jobs:
+  telecharger:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Télécharger la page et les morceaux
+        run: |
+          mkdir source && cd source
+          UA="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124 Safari/537.36"
+          curl -fsSL -A "$UA" -o page.html https://noam-shpayer.pologi.org/ || true
+          grep -oE '(href|data-url|data-src|src)="[^"]+"' page.html | sed -E 's/^[a-z-]+="//; s/"$//' | sort -u > liens.txt || true
+          grep -iE 'mp3|download|dl|track|song' liens.txt > candidats.txt || true
+          mkdir -p mp3 pages
+          n=0
+          while read -r u; do
+            case "$u" in http*) ;; //*) u="https:$u";; /*) u="https://noam-shpayer.pologi.org$u";; *) continue;; esac
+            n=$((n+1)); [ $n -gt 60 ] && break
+            f="pages/$n.html"
+            curl -fsSL -A "$UA" -e https://noam-shpayer.pologi.org/ -o "$f" "$u" || { rm -f "$f"; continue; }
+            if file "$f" | grep -qiE 'audio|MPEG'; then mv "$f" "mp3/$n.mp3"; echo "$n $u" >> mp3/index.txt; fi
+          done < candidats.txt
+          ls -la mp3 | head -40; du -sh .
+      - name: Pousser sur claude/source-noam
+        run: |
+          cd source
+          git init -q -b claude/source-noam
+          git config user.name "github-actions"
+          git config user.email "github-actions@users.noreply.github.com"
+          git add -A && git commit -qm "source: Noam Shpayer (pologi.org)"
+          git push -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" claude/source-noam
