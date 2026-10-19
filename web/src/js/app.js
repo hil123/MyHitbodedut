@@ -97,11 +97,11 @@ function appliqueApparence() {
 }
 
 // --- Feuille de choix : ce que sont les AlertDialog d'Android -----------------------
-function feuille(titre, construire) {
+function feuille(titre, construire, apres = null) {
   const voile = h('div', { class: 'voile', role: 'presentation' });
   // Le focus revient où il était ; Échap ferme ; Tab reste dans la feuille (audit du 16/10).
   const avant = document.activeElement;
-  const fermer = () => { voile.remove(); if (avant?.isConnected) avant.focus(); };
+  const fermer = () => { if (!voile.isConnected) return; voile.remove(); if (avant?.isConnected) avant.focus(); apres?.(); };
   const f = h('div', { class: 'feuille', role: 'dialog', 'aria-modal': 'true', 'aria-label': titre },
     h('h2', {}, titre));
   construire(f, fermer);
@@ -2122,12 +2122,15 @@ function lignePaliers() {
   const vus = store.paliersVus();
   // Un trophée neuf d'abord, sinon le plus haut palier neuf : les confettis (11/10).
   const gagnes = Trophees.gagnes(pratique());
-  const trophee = Trophees.nouveaux(gagnes, store.tropheesVus())[0];
+  const tropheesNeufs = Trophees.nouveaux(gagnes, store.tropheesVus());
+  const trophee = tropheesNeufs[0];
   const neuf = vus ? Paliers.nouveaux(etats, bilan, vus).sort((a, b) => b.rang - a.rang)[0] : null;
   const message = trophee ? tr.t('trophee_niveau_gagne', tr.t(`trophee_${trophee.famille.cle}`), trophee.rang, tr.t(`metal_${trophee.metal}`))
     : neuf ? tr.t('palier_nouveau', libellePalier(neuf.piste, bilan), valeurPalier(neuf.piste, neuf.atteint)) : null;
   // Des étincelles du grade plutôt que des confettis multicolores (16/10, animation E).
-  if (message) setTimeout(() => { signale(message); etincelles(app.querySelector('.ligne-grade .medaille-grade'), Trophees.grade(gagnes.size)); }, 600);
+  // Un trophée neuf ouvre sa fiche, avec la fête (19/10) ; un palier seul garde le message et les étincelles.
+  if (trophee) setTimeout(() => feterTrophees(tropheesNeufs), 600);
+  else if (message) setTimeout(() => { signale(message); etincelles(app.querySelector('.ligne-grade .medaille-grade'), Trophees.grade(gagnes.size)); }, 600);
   store.setPaliersVus(Paliers.marques(etats, bilan));
   store.setTropheesVus(new Set(gagnes));
   // L'accueil montre le grade et le prochain trophée (16/10, points 3 et 4) : les paliers ont
@@ -2217,7 +2220,7 @@ function datesTrophees() {
 const dateLongue = (iso) => new Intl.DateTimeFormat(tr.langue, { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' }).format(new Date(`${iso}T12:00:00Z`));
 
 /** Le détail d'un trophée (16/10, point 1) : l'objet, ce qu'il demande, le jour gagné ou la progression. */
-function detailTrophee(e, p, dates, rangGlobal) {
+function detailTrophee(e, p, dates, rangGlobal, apres = null) {
   const gagne = Trophees.gagne(p, e);
   const m = gagne ? Trophees.grade(rangGlobal) : null;
   const v = Math.min(Trophees.valeur(p, e.f.cle), e.seuil);
@@ -2232,7 +2235,28 @@ function detailTrophee(e, p, dates, rangGlobal) {
           h('p', { class: 'trophee-compte' }, tr.t('trophee_encore', v, e.seuil, e.seuil - v))),
       gagne ? h('p', { class: 'indice' }, tr.t('trophee_detail_grade', nomMetal(m), rangGlobal)) : '',
       h('div', { class: 'actions' }, h('button', { type: 'button', onclick: fermer }, tr.t('celebration_continue'))));
-  });
+  }, apres);
+}
+
+/**
+ * Un trophée gagné (19/10) : sa fiche s'ouvre d'elle-même, l'objet se retourne, des
+ * confettis tombent et des étincelles du métal jaillissent ; plusieurs, l'une après l'autre.
+ */
+function feterTrophees(nouveaux) {
+  const p = pratique();
+  const dates = datesTrophees();
+  const faits = Trophees.chemin.filter((x) => Trophees.gagne(p, x));
+  const suivant = (i) => {
+    const n = nouveaux[i];
+    if (!n) return;
+    const e = Trophees.chemin.find((x) => x.cle === `${n.famille.cle}:${n.rang}`);
+    if (!e) { suivant(i + 1); return; }
+    const rang = faits.indexOf(e) + 1 || faits.length;
+    detailTrophee(e, p, dates, rang, () => suivant(i + 1));
+    confettis();
+    setTimeout(() => etincelles(document.querySelector('.feuille-trophee .detail-objet'), Trophees.grade(rang)), 700);
+  };
+  suivant(0);
 }
 
 /** Une image du grade à partager (16/10, point 9) : dessinée ici, rien n'est envoyé. */

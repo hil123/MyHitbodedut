@@ -164,11 +164,17 @@ object Celebrations {
         return Neuf(icone, message, Paliers.marques(etats, bilan), gagnes.map { it.cle }.toSet())
     }
 
-    /** À l'accueil : des étincelles si un palier ou un trophée est neuf pour l'écran. */
+    /**
+     * À l'accueil : un trophée neuf ouvre sa fiche, avec confettis et étincelles (19/10) ;
+     * un palier seul, des étincelles autour de la ligne du grade.
+     */
     fun ecran(activity: Activity) {
-        val r = neuf(activity, Store.paliersVus(activity), Store.tropheesVus(activity))
-        // Des étincelles du grade autour de la ligne du trophée, plutôt que des confettis multicolores (16/10).
-        if (r.message.isNotEmpty()) {
+        val vus = Store.tropheesVus(activity)
+        val r = neuf(activity, Store.paliersVus(activity), vus)
+        val trophees = Trophees.nouveaux(Trophees.gagnes(Store.pratique(activity)), vus)
+        if (trophees.isNotEmpty()) {
+            activity.window.decorView.postDelayed({ FicheTrophee.feter(activity, trophees) }, 500)
+        } else if (r.message.isNotEmpty()) {
             android.widget.Toast.makeText(activity, r.message, android.widget.Toast.LENGTH_LONG).show()
             val ligne = activity.findViewById<View>(R.id.paliers_line)
             val grade = Trophees.grade(r.trophees.size)
