@@ -34,4 +34,15 @@ class SalutationTest {
         val accueil = File("src/main/java/com/myhitbodedut/MainActivity.kt").readText()
         assertTrue(accueil.contains("Salutation.chaine("))
     }
+
+    /** Le mot du moment (proposition 7, 19/10) : matin, journée, soir, et la nuit. */
+    @Test
+    fun `le mot du moment couvre les quatre moments`() {
+        assertEquals(R.string.moment_mot_matin, Salutation.mot(5))
+        assertEquals(R.string.moment_mot_journee, Salutation.mot(12))
+        assertEquals(R.string.moment_mot_soir, Salutation.mot(18))
+        assertEquals(R.string.moment_mot_nuit, Salutation.mot(23))
+        assertEquals(R.string.moment_mot_nuit, Salutation.mot(2))
+        assertTrue(File("src/main/java/com/myhitbodedut/AccueilMoment.kt").readText().contains("Salutation.mot("))
+    }
 }

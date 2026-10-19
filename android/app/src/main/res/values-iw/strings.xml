@@ -18,8 +18,8 @@
     <string name="today_declared">אושר בלי טיימר</string>
 
     <string name="section_practice">ההתבודדות שלי</string>
-    <string name="section_gate_state">מצב החסימה</string>
-    <string name="section_gate">חסימת הבוקר</string>
+    <string name="section_gate_state">מצב הפעולה</string>
+    <string name="section_gate">אני עם השם</string>
     <string name="section_gate_hint">האפליקציות שתבחרו יישארו סגורות עד שתתבודדו.</string>
     <string name="section_rhythm">קצב</string>
     <string name="section_permissions">הרשאות נדרשות</string>
@@ -27,7 +27,7 @@
     <string name="section_data">הנתונים שלי</string>
     <string name="section_data_hint">הכול נשמר בטלפון הזה בלבד. כדאי לייצא מדי פעם.</string>
 
-    <string name="gate_armed_title">החסימה פעילה</string>
+    <string name="gate_armed_title">«אני עם השם» פעיל</string>
     <plurals name="gate_armed_detail">
         <item quantity="one">אפליקציה אחת חסומה עד %2$s או עד להתבודדות.</item>
         <item quantity="two">%1$d אפליקציות חסומות עד %2$s או עד להתבודדות.</item>
@@ -35,25 +35,25 @@
     </plurals>
     <string name="gate_permissions_title">חסרות הרשאות</string>
     <string name="gate_permissions_detail">אשרו הצגה מעל אפליקציות אחרות וגישה לנתוני שימוש, למטה.</string>
-    <string name="gate_disabled_title">החסימה כבויה</string>
-    <string name="gate_disabled_detail">הפעילו את מתג חסימת הבוקר כדי שהחסימה תפעל.</string>
+    <string name="gate_disabled_title">המצב כבוי</string>
+    <string name="gate_disabled_detail">הפעילו את המתג «אני עם השם» כדי שהמצב יפעל.</string>
     <string name="gate_no_apps_title">לא נבחרה אפליקציה</string>
-    <string name="gate_no_apps_detail">אין מה לחסום. בחרו לפחות אפליקציה אחת.</string>
+    <string name="gate_no_apps_detail">אין מה לעכב. בחרו לפחות אפליקציה אחת.</string>
     <string name="gate_done_title">היום אושר</string>
-    <string name="gate_done_detail">היום כבר לא ייחסם דבר. החסימה תחזור מחר.</string>
+    <string name="gate_done_detail">היום כבר לא יעוכב דבר. המצב יחזור מחר.</string>
     <string name="gate_exempt_title">יום ללא חובה</string>
-    <string name="gate_exempt_detail">שבת, יום טוב או הפסקה: החסימה שותקת והרצף נשמר.</string>
+    <string name="gate_exempt_detail">שבת, יום טוב או הפסקה: המצב שותק והרצף נשמר.</string>
     <string name="gate_snoozed_title">נדחה</string>
-    <string name="gate_snoozed_detail">התבקשה דחייה. החסימה תחזור בסיומה.</string>
+    <string name="gate_snoozed_detail">התבקשה דחייה. המצב יחזור בסיומה.</string>
     <string name="gate_window_title">מחוץ לחלון</string>
-    <string name="gate_window_detail">החסימה פועלת בין %1$s ל־%2$s. מחוץ לזה דבר לא נחסם.</string>
+    <string name="gate_window_detail">המצב פועל בין %1$s ל־%2$s. מחוץ לזה דבר לא מעוכב.</string>
 
     <string name="action_start_session">להתחיל התבודדות של %1$s</string>
     <string name="action_another_session">עוד התבודדות</string>
     <string name="action_back_to_session">חזרה להתבודדות</string>
     <string name="action_write_note">לכתוב הערה</string>
     <string name="action_journal">לפתוח את היומן</string>
-    <string name="action_preview_gate">להציג את מסך החסימה עכשיו</string>
+    <string name="action_preview_gate">להציג את מסך «אני עם השם» עכשיו</string>
     <string name="action_pick_apps">בחירת אפליקציות</string>
     <string name="action_grant">אישור</string>
     <string name="action_export">ייצוא</string>
@@ -62,7 +62,7 @@
     <string name="action_later">אחר כך</string>
     <string name="action_back">חזרה</string>
 
-    <string name="settings_window">חלון החסימה</string>
+    <string name="settings_window">שעות המצב</string>
     <string name="settings_snooze">משך הדחייה</string>
     <string name="settings_target">משך ההתבודדות</string>
     <string name="settings_daily_goal">יעד יומי</string>
@@ -77,7 +77,7 @@
     <string name="ring_streak_reached">הגעתם ליעד של %2$d ימים!</string>
     <string name="rings_description">טבעות. היום: %1$s מתוך %2$s. השבוע: %3$d ימים מתוך %4$d. רצף: %5$d ימים מתוך %6$d.</string>
     <string name="settings_shabbat">שבת ויום טוב</string>
-    <string name="settings_shabbat_hint">בימים אלה: אין חסימה, אין תזכורת, והרצף נשמר.</string>
+    <string name="settings_shabbat_hint">בימים אלה: המצב שותק, אין תזכורת, והרצף נשמר.</string>
     <string name="settings_exempt_today">הפסקה היום</string>
     <string name="settings_exempt_today_hint">ליום טוב, נסיעה או מחלה: היום לא נספר לרעתכם.</string>
     <string name="settings_screen_missing">מסך ההגדרות הזה לא קיים בטלפון.</string>
@@ -91,7 +91,7 @@
     <string name="permission_notifications">התראות</string>
     <string name="permission_notifications_why">בלעדיהן התזכורת נקבעת ולעולם אינה מופיעה, וההתבודדות לא מציגה דבר כשהטלפון מונח.</string>
     <string name="permission_battery_why">בלעדיה אנדרואיד עלול לעכב את התזכורת בשעות, כדי לחסוך בסוללה.</string>
-    <string name="permission_overlay_why">כדי להציג את מסך החסימה מעל האפליקציה שנפתחת בבוקר.</string>
+    <string name="permission_overlay_why">כדי להציג את מסך «אני עם השם» מעל האפליקציה שנפתחת בבוקר.</string>
     <string name="permission_usage_why">כדי לדעת איזו אפליקציה נפתחה זה עתה. שום דבר אינו נשמר ואינו נשלח.</string>
     <string name="permission_granted">אושרה</string>
     <string name="permission_missing">חסרה</string>
@@ -170,7 +170,7 @@
     <string name="onboarding_private">כלום לא יוצא מכאן</string>
     <string name="onboarding_private_body">האפליקציה אינה מבקשת שום גישה לאינטרנט. מה שתכתבו נשאר בטלפון הזה, ורק אתם יכולים להוציא אותו, דרך הייצוא.</string>
     <string name="blocker_session_open_subtitle">התבודדות פתוחה, כבר %1$s. הטלפון יכול לחכות.</string>
-    <string name="session_done_title">ההתבודדות הסתיימה</string>
+    <string name="session_done_title">דיברתם היום עם השם</string>
     <string name="session_done_text">%1$s של התבודדות. הקישו כדי להוסיף הערה.</string>
 
     <string name="journal_title">יומן</string>
@@ -181,8 +181,8 @@
 
     <string name="reminder_title">הגיע זמן ההתבודדות</string>
     <string name="reminder_text">התבודדות של %1$s מחכה.</string>
-    <string name="channel_gate">חסימת הבוקר</string>
-    <string name="channel_gate_description">התראה קבועה שאנדרואיד דורש כל עוד חסימת הבוקר פעילה.</string>
+    <string name="channel_gate">אני עם השם</string>
+    <string name="channel_gate_description">התראה קבועה שאנדרואיד דורש כל עוד «אני עם השם» פעיל.</string>
     <string name="channel_session">התבודדות בעיצומה</string>
     <string name="channel_session_description">ספירה לאחור בזמן ההתבודדות.</string>
     <string name="channel_reminder">תזכורות</string>
@@ -408,7 +408,7 @@
     <string name="start_duration">משך</string>
     <string name="start_theme">נושא</string>
     <string name="start_music">מוזיקה</string>
-    <string name="start_focus">ריכוז</string>
+    <string name="start_focus">עם השם</string>
     <string name="start_music_off">ללא</string>
     <string name="start_focus_on">פעיל</string>
     <string name="start_focus_off">כבוי</string>
@@ -1070,4 +1070,8 @@
     <string name="banniere_chaharit">עד %1$s · סוף זמן תפילה</string>
     <string name="banniere_minha">מ־%1$s עד השקיעה, %2$s</string>
     <string name="banniere_arvit">מצאת הכוכבים, %1$s</string>
+    <string name="moment_mot_matin">לפני שהיום מתחיל, כמה מילים להשם.</string>
+    <string name="moment_mot_journee">באמצע היום, רגע של התבודדות עם השם.</string>
+    <string name="moment_mot_soir">לעת ערב, ספרו להשם על היום שעבר.</string>
+    <string name="moment_mot_nuit">בלילה, כשהכול שקט, דברו עם השם.</string>
 </resources>

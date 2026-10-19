@@ -18,8 +18,8 @@
     <string name="today_declared">Confirmed without a timer</string>
 
     <string name="section_practice">My practice</string>
-    <string name="section_gate_state">Gate status</string>
-    <string name="section_gate">Morning gate</string>
+    <string name="section_gate_state">Mode status</string>
+    <string name="section_gate">I am with Hashem</string>
     <string name="section_gate_hint">The apps you choose stay closed until the practice is done.</string>
     <string name="section_rhythm">Rhythm</string>
     <string name="section_permissions">Required permissions</string>
@@ -27,32 +27,32 @@
     <string name="section_data">My data</string>
     <string name="section_data_hint">Everything is stored on this phone only. Export from time to time.</string>
 
-    <string name="gate_armed_title">The gate is watching</string>
+    <string name="gate_armed_title">“I am with Hashem” is watching</string>
     <plurals name="gate_armed_detail">
         <item quantity="one">%1$d app is blocked until %2$s or until your hitbodedut.</item>
         <item quantity="other">%1$d apps are blocked until %2$s or until your hitbodedut.</item>
     </plurals>
     <string name="gate_permissions_title">Permissions missing</string>
     <string name="gate_permissions_detail">Grant display over other apps and usage access, further down.</string>
-    <string name="gate_disabled_title">Gate switched off</string>
-    <string name="gate_disabled_detail">Turn on the morning gate switch for it to act.</string>
+    <string name="gate_disabled_title">Mode switched off</string>
+    <string name="gate_disabled_detail">Turn on the “I am with Hashem” switch for the mode to act.</string>
     <string name="gate_no_apps_title">No app selected</string>
-    <string name="gate_no_apps_detail">The gate has nothing to block. Choose at least one app.</string>
+    <string name="gate_no_apps_detail">The mode has nothing to hold back. Choose at least one app.</string>
     <string name="gate_done_title">Day confirmed</string>
-    <string name="gate_done_detail">Nothing will be blocked today. The gate returns tomorrow.</string>
+    <string name="gate_done_detail">Nothing will be held back today. The mode returns tomorrow.</string>
     <string name="gate_exempt_title">Rest day</string>
-    <string name="gate_exempt_detail">Shabbat, Yom Tov or a pause: the gate is silent and the streak stays intact.</string>
+    <string name="gate_exempt_detail">Shabbat, Yom Tov or a pause: the mode is silent and the streak stays intact.</string>
     <string name="gate_snoozed_title">Snoozed</string>
-    <string name="gate_snoozed_detail">You asked for a delay. The gate returns when it ends.</string>
+    <string name="gate_snoozed_detail">You asked for a delay. The mode returns when it ends.</string>
     <string name="gate_window_title">Outside the window</string>
-    <string name="gate_window_detail">The gate acts between %1$s and %2$s. Outside that, nothing is blocked.</string>
+    <string name="gate_window_detail">The mode acts between %1$s and %2$s. Outside that, nothing is held back.</string>
 
     <string name="action_start_session">Start a %1$s hitbodedut</string>
     <string name="action_another_session">Another hitbodedut</string>
     <string name="action_back_to_session">Back to the hitbodedut in progress</string>
     <string name="action_write_note">Write a note</string>
     <string name="action_journal">Open the journal</string>
-    <string name="action_preview_gate">Preview the gate screen now</string>
+    <string name="action_preview_gate">Preview the “I am with Hashem” screen now</string>
     <string name="action_pick_apps">Choose apps</string>
     <string name="action_grant">Grant</string>
     <string name="action_export">Export</string>
@@ -61,7 +61,7 @@
     <string name="action_later">Later</string>
     <string name="action_back">Back</string>
 
-    <string name="settings_window">Gate window</string>
+    <string name="settings_window">Mode hours</string>
     <string name="settings_snooze">Snooze length</string>
     <string name="settings_target">Hitbodedut length</string>
     <string name="settings_daily_goal">Daily goal</string>
@@ -76,7 +76,7 @@
     <string name="ring_streak_reached">%2$d-day milestone reached!</string>
     <string name="rings_description">Rings. Today: %1$s of %2$s. Week: %3$d of %4$d days. Streak: %5$d of %6$d days.</string>
     <string name="settings_shabbat">Shabbat and Yom Tov</string>
-    <string name="settings_shabbat_hint">On those days: no blocking, no reminder, and the streak stays intact.</string>
+    <string name="settings_shabbat_hint">On those days: the mode is silent, no reminder, and the streak stays intact.</string>
     <string name="settings_exempt_today">Rest day today</string>
     <string name="settings_exempt_today_hint">For a Yom Tov, a trip or illness: the day does not count against you.</string>
     <string name="settings_screen_missing">This settings screen does not exist on this phone.</string>
@@ -90,7 +90,7 @@
     <string name="permission_notifications">Notifications</string>
     <string name="permission_notifications_why">Without them the reminder is scheduled and never appears, and the hitbodedut shows nothing once the phone is down.</string>
     <string name="permission_battery_why">Without it, Android may hold the reminder back for hours to save power.</string>
-    <string name="permission_overlay_why">To show the gate screen over the app you open in the morning.</string>
+    <string name="permission_overlay_why">To show the “I am with Hashem” screen over the app you open in the morning.</string>
     <string name="permission_usage_why">To know which app has just opened. Nothing is recorded or sent.</string>
     <string name="permission_granted">Granted</string>
     <string name="permission_missing">Missing</string>
@@ -169,7 +169,7 @@
     <string name="onboarding_private">Nothing leaves this phone</string>
     <string name="onboarding_private_body">The app asks for no Internet access at all. What you write stays on this phone, and only you can take it out, through the export.</string>
     <string name="blocker_session_open_subtitle">Open hitbodedut, %1$s so far. The phone can wait.</string>
-    <string name="session_done_title">Hitbodedut complete</string>
+    <string name="session_done_title">You spoke with Hashem today</string>
     <string name="session_done_text">%1$s of hitbodedut. Tap to leave a note.</string>
 
     <string name="journal_title">Journal</string>
@@ -180,8 +180,8 @@
 
     <string name="reminder_title">Time for hitbodedut</string>
     <string name="reminder_text">A %1$s hitbodedut is waiting.</string>
-    <string name="channel_gate">Morning gate</string>
-    <string name="channel_gate_description">Ongoing notification Android requires while the morning gate is on.</string>
+    <string name="channel_gate">I am with Hashem</string>
+    <string name="channel_gate_description">Ongoing notification Android requires while “I am with Hashem” is on.</string>
     <string name="channel_session">Hitbodedut in progress</string>
     <string name="channel_session_description">Countdown shown during a hitbodedut.</string>
     <string name="channel_reminder">Reminders</string>
@@ -398,7 +398,7 @@
     <string name="start_duration">Length</string>
     <string name="start_theme">Subject</string>
     <string name="start_music">Music</string>
-    <string name="start_focus">Focus</string>
+    <string name="start_focus">With Hashem</string>
     <string name="start_music_off">none</string>
     <string name="start_focus_on">on</string>
     <string name="start_focus_off">off</string>
@@ -1042,4 +1042,8 @@
     <string name="banniere_chaharit">Until %1$s · end of the time for prayer</string>
     <string name="banniere_minha">From %1$s until sunset, %2$s</string>
     <string name="banniere_arvit">From nightfall, %1$s</string>
+    <string name="moment_mot_matin">Before the day begins, a few words to Hashem.</string>
+    <string name="moment_mot_journee">In the middle of the day, a moment apart with Hashem.</string>
+    <string name="moment_mot_soir">As evening comes, tell Hashem about your day.</string>
+    <string name="moment_mot_nuit">At night, when all is quiet, speak to Hashem.</string>
 </resources>

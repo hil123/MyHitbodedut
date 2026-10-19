@@ -118,6 +118,13 @@ export const Salutation = {
     if (heure >= 12 && heure < 18) return 'hero_greeting_afternoon';
     return 'hero_greeting_evening';
   },
+  /** Le mot du moment sous la prière de l'heure (Salutation.mot) : la nuit comprise. */
+  mot(heure) {
+    if (heure >= 5 && heure < 12) return 'moment_mot_matin';
+    if (heure >= 12 && heure < 18) return 'moment_mot_journee';
+    if (heure >= 18 && heure < 23) return 'moment_mot_soir';
+    return 'moment_mot_nuit';
+  },
 };
 
 /**

@@ -578,7 +578,7 @@ function momentAccueil() {
   const moment = store.lieu() ? momentDuSiddour(store.lieu(), heure) : SiddurMoment.suggestion(heure.getHours(), heure.getMinutes());
   const cartes = [...rappels];
   const t = moment ? siddur.textes.find((x) => x.id === moment) : null;
-  if (t) cartes.push(carteMaintenant(t));
+  if (t) cartes.push(carteMaintenant(t, undefined, undefined, tr.t(Salutation.mot(heure.getHours()))));
   const zone = store.lieu()?.fuseau ?? Intl.DateTimeFormat().resolvedOptions().timeZone;
   const l = levana(isoLocal(heure), zone, { usage: usageLevanaCourant() });
   const lv = siddur.textes.find((x) => x.id === 'birkat_halevana');
@@ -1008,14 +1008,15 @@ function choisirNusah() {
 }
 
 /** La suggestion de l'heure : le hassid, l'heure dite en clair, le texte. */
-function carteMaintenant(x, dessin = SiddurMoment.illustration(x.id), action = () => { priere = x.id; ouvrir('priere'); }) {
+function carteMaintenant(x, dessin = SiddurMoment.illustration(x.id), action = () => { priere = x.id; ouvrir('priere'); }, mot = null) {
   const traduction = titreTexte(x.titre) !== x.titre.he ? titreTexte(x.titre) : null;
   return h('button', { class: 'maintenant', onclick: action },
     plateau(dessin, 'plateau-maintenant'),
     h('span', { class: 'maintenant-corps' },
       h('span', { class: 'maintenant-libelle' }, tr.t('siddur_maintenant')),
       h('span', { class: 'maintenant-he', lang: 'he', dir: 'rtl' }, x.titre.he),
-      traduction ? h('span', { class: 'maintenant-trad' }, traduction) : null),
+      traduction ? h('span', { class: 'maintenant-trad' }, traduction) : null,
+      mot ? h('span', { class: 'maintenant-mot' }, mot) : null),
     h('span', { class: 'chevron', 'aria-hidden': 'true' }));
 }
 

@@ -518,6 +518,7 @@ input[type="range"] { width: 100%; accent-color: var(--brand); }
 .maintenant-corps { flex: 1; min-width: 0; display: flex; flex-direction: column; }
 .maintenant-libelle { font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--brand); }
 .maintenant-he { padding-top: 0px; font-size: 26px; line-height: 1.3; color: var(--ink); text-align: start; }
+.maintenant-mot { font-size: 13px; color: var(--muted); text-align: start; }
 .maintenant-trad { font-size: 14px; color: var(--muted); }
 
 .livres { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; }

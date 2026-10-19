@@ -274,6 +274,10 @@ test('un fichier qui n’est pas une sauvegarde est refusé', () => {
 });
 
 test('la salutation suit l\'heure : bonjour le jour, bonsoir le soir et la nuit', () => {
+  assert.equal(Salutation.mot(6), 'moment_mot_matin');
+  assert.equal(Salutation.mot(15), 'moment_mot_journee');
+  assert.equal(Salutation.mot(20), 'moment_mot_soir');
+  assert.equal(Salutation.mot(1), 'moment_mot_nuit');
   assert.equal(Salutation.cle(7), 'hero_greeting_morning');
   assert.equal(Salutation.cle(11), 'hero_greeting_morning');
   assert.equal(Salutation.cle(12), 'hero_greeting_afternoon');
