@@ -248,6 +248,14 @@
     <string name="music_add">Ajouter un morceau du téléphone</string>
     <string name="music_add_failed">Ce fichier n’a pas pu être ajouté durablement.</string>
     <string name="music_play_failed">Ce morceau n’a pas pu être lu.</string>
+    <string name="lecteur_ouvrir">Ouvrir le lecteur de musique</string>
+    <string name="lecteur_replier">Replier le lecteur</string>
+    <string name="lecteur_lecture">Lecture</string>
+    <string name="lecteur_pause">Pause</string>
+    <string name="lecteur_suivant">Morceau suivant</string>
+    <string name="lecteur_precedent">Morceau précédent</string>
+    <string name="lecteur_aleatoire">Lecture aléatoire</string>
+    <string name="lecteur_position">Position dans le morceau</string>
     <string name="music_unnamed">Sans titre</string>
     <string name="music_origin_bundled">Livré avec l’application</string>
     <string name="music_origin_device">Depuis le téléphone</string>

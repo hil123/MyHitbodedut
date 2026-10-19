@@ -24,7 +24,8 @@
             android:minHeight="400dp"
             android:orientation="vertical"
             android:paddingHorizontal="@dimen/edge"
-            android:paddingVertical="24dp">
+            android:paddingTop="24dp"
+            android:paddingBottom="104dp">
 
             <TextView
                 android:id="@+id/session_titre"

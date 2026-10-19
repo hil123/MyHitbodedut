@@ -228,6 +228,14 @@
     <string name="music_add">Add a track from the phone</string>
     <string name="music_add_failed">This file could not be added permanently.</string>
     <string name="music_play_failed">This track could not be played.</string>
+    <string name="lecteur_ouvrir">Open the music player</string>
+    <string name="lecteur_replier">Collapse the player</string>
+    <string name="lecteur_lecture">Play</string>
+    <string name="lecteur_pause">Pause</string>
+    <string name="lecteur_suivant">Next track</string>
+    <string name="lecteur_precedent">Previous track</string>
+    <string name="lecteur_aleatoire">Shuffle</string>
+    <string name="lecteur_position">Position in the track</string>
     <string name="music_unnamed">Untitled</string>
     <string name="music_origin_bundled">Shipped with the app</string>
     <string name="music_origin_device">From the phone</string>

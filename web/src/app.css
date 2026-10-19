@@ -1205,3 +1205,33 @@ button.corps { min-height: 44px; }
 .bandeau-actions { display: flex; gap: 8px; }
 .bandeau-actions .favori { display: grid; place-items: center; padding: 0; margin: 0; color: var(--white); background: rgba(255, 255, 255, .12); border: 1px solid rgba(255, 255, 255, .22); border-radius: 50%; width: 44px; height: 44px; }
 [dir="ltr"] .titre-priere, [dir="ltr"] .horaire-bandeau { text-align: right; }
+
+/* --- Le mini-lecteur de la pratique (MiniLecteur.kt, 19/10) --- */
+.mini-lecteur { position: fixed; inset-inline: 0; bottom: 0; z-index: 30; display: flex; justify-content: flex-end;
+  padding: 16px; padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px)); pointer-events: none; }
+.mini-lecteur > * { pointer-events: auto; }
+.mini-disque { width: 64px; height: 64px; padding: 4px 4px 2px; border: 2px solid var(--mint); border-radius: 50%;
+  background: var(--mint); overflow: hidden; cursor: pointer; box-shadow: 0 4px 12px rgb(0 0 0 / 0.35); flex: none; }
+.mini-disque img { width: 100%; height: 100%; object-fit: contain; display: block; }
+.mini-disque img.pochette { object-fit: cover; }
+.mini-lecteur:has(.pochette) .mini-disque { padding: 0; }
+.mini-petit { width: 48px; height: 48px; box-shadow: none; cursor: default; }
+.mini-lecteur.joue .mini-disque { animation: mini-tourne 12s linear infinite; }
+@keyframes mini-tourne { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .mini-lecteur.joue .mini-disque { animation: none; } }
+.mini-panneau { display: none; width: 100%; max-width: 480px; margin-inline: auto; padding: 12px 16px; direction: ltr;
+  border-radius: 20px; background: #121a17; border: 1px solid rgb(255 255 255 / 0.2); color: #fff;
+  box-shadow: 0 8px 24px rgb(0 0 0 / 0.4); }
+.mini-lecteur.deplie .mini-panneau { display: block; }
+.mini-lecteur.deplie .mini-replie { display: none; }
+.mini-tete { display: flex; align-items: center; gap: 12px; }
+.mini-titre { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 15px; unicode-bidi: plaintext; }
+.mini-bouton { width: 48px; height: 48px; display: grid; place-items: center; border: 0; border-radius: 50%; background: none; color: #fff; cursor: pointer; }
+.mini-bouton svg { width: 28px; height: 28px; }
+.mini-tete .mini-bouton { color: rgb(255 255 255 / 0.7); }
+.mini-barre { width: 100%; margin: 8px 0 0; accent-color: var(--mint); }
+.mini-temps { display: flex; justify-content: space-between; font-size: 12px; color: rgb(255 255 255 / 0.7); font-variant-numeric: tabular-nums; }
+.mini-commandes { display: flex; align-items: center; justify-content: center; gap: 24px; margin-top: 4px; }
+.mini-commandes .mini-lecture { width: 64px; height: 64px; background: #fff; color: #121a17; }
+.mini-commandes .mini-lecture svg { width: 32px; height: 32px; }
+.seance .contenu { padding-bottom: 104px; }

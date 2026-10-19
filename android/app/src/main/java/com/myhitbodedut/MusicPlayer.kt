@@ -20,7 +20,32 @@ class MusicPlayer(private val context: Context) {
     private var focusRequest: AudioFocusRequest? = null
     private var volume = 1f
 
-    val isPlaying: Boolean get() = player?.isPlaying == true
+    val isPlaying: Boolean get() = runCatching { player?.isPlaying == true }.getOrDefault(false)
+
+    /** Un morceau est chargé, qu'il joue ou qu'on l'ait mis en pause (mini-lecteur, 19/10). */
+    val charge: Boolean get() = player != null
+
+    /** Mis en pause par le mini-lecteur : ni le service ni le focus audio ne le relancent. */
+    var enPause = false
+        private set
+
+    /** Position et durée du morceau, en millisecondes ; 0 sans morceau. */
+    val position: Int get() = runCatching { player?.currentPosition ?: 0 }.getOrDefault(0)
+    val duree: Int get() = runCatching { player?.duration ?: 0 }.getOrDefault(0).coerceAtLeast(0)
+
+    fun pause() {
+        enPause = true
+        runCatching { player?.pause() }
+    }
+
+    fun reprendre() {
+        enPause = false
+        if (player != null && requestFocus()) runCatching { player?.start() }
+    }
+
+    fun aller(ms: Int) {
+        runCatching { player?.seekTo(ms.coerceIn(0, duree)) }
+    }
 
     /**
      * Joue `track`. Avec `onEnd`, le morceau ne boucle pas : la fin appelle
@@ -33,6 +58,7 @@ class MusicPlayer(private val context: Context) {
         onEnd: (() -> Unit)? = null
     ): Boolean {
         stop(fade = false)
+        enPause = false
         // Les attributs audio se posent avant prepare(), sans quoi certains
         // appareils lèvent une exception d'état.
         val created = runCatching {
@@ -122,7 +148,7 @@ class MusicPlayer(private val context: Context) {
                 when (change) {
                     AudioManager.AUDIOFOCUS_LOSS -> stop(fade = false)
                     AudioManager.AUDIOFOCUS_LOSS_TRANSIENT -> runCatching { player?.pause() }
-                    AudioManager.AUDIOFOCUS_GAIN -> runCatching { player?.start() }
+                    AudioManager.AUDIOFOCUS_GAIN -> if (!enPause) runCatching { player?.start() }
                 }
             }
             .build()

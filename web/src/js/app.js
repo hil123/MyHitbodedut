@@ -2785,6 +2785,101 @@ function arreteMusique() {
   }, 60);
 }
 
+// --- Le mini-lecteur de la pratique (MiniLecteur.kt, 19/10) ----------------------------
+// Changer de morceau sans quitter la hitbodedout. Déplié : la pochette, le titre, la
+// position, précédent, lecture, suivant. Replié : un disque qui tourne pendant la lecture,
+// avec la photo du morceau ou, à défaut, le hassid à la guitare. Il vit hors de #app :
+// le rendu de chaque seconde ne le reconstruit pas, et la barre ne saute pas sous le doigt.
+const ICONES_LECTEUR = {
+  lecture: 'M8 5v14l11-7z', pause: 'M6 19h4V5H6v14zm8-14v14h4V5h-4z',
+  precedent: 'M6 6h2v12H6zm3.5 6 8.5 6V6z', suivant: 'M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z',
+  replier: 'M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z',
+};
+function iconeLecteur(nom) {
+  const svg = s('svg', { viewBox: '0 0 24 24', 'aria-hidden': 'true' });
+  svg.append(s('path', { d: ICONES_LECTEUR[nom], fill: 'currentColor' }));
+  return svg;
+}
+let mini = null;
+let miniDeplie = false;
+let miniGlisse = false;
+
+const minSec = (t) => { const x = Math.max(0, Math.floor(t || 0)); return `${Math.floor(x / 60)}:${String(x % 60).padStart(2, '0')}`; };
+
+function morceauSuivant(sens) {
+  if (!morceaux.length) return;
+  const ici = Math.max(0, morceaux.findIndex((m) => m.id === morceauChoisi()?.id));
+  const m = morceaux[(ici + sens + morceaux.length) % morceaux.length];
+  store.setMusicEnabled(true);
+  store.setMusicTrackId(m.id);
+  demarreMusique();
+  majMini();
+}
+
+function construireMini() {
+  const disque = (cls) => h('button', { class: `mini-disque ${cls}` }, h('img', { alt: '' }));
+  const ferme = disque('mini-replie');
+  ferme.setAttribute('aria-label', tr.t('lecteur_ouvrir'));
+  ferme.onclick = () => { miniDeplie = true; majMini(); mini.querySelector('.mini-panneau button')?.focus(); };
+  const petit = disque('mini-petit');
+  petit.tabIndex = -1;
+  petit.setAttribute('aria-hidden', 'true');
+  const barre = h('input', { type: 'range', class: 'mini-barre', min: 0, max: 1, step: 0.1, value: 0, 'aria-label': tr.t('lecteur_position') });
+  barre.addEventListener('input', () => { miniGlisse = true; mini.querySelector('.mini-ecoule').textContent = minSec(barre.value); });
+  barre.addEventListener('change', () => { miniGlisse = false; if (Number.isFinite(lecteur.duration)) lecteur.currentTime = Number(barre.value); });
+  const bouton = (nom, libelle, action, cls = '') =>
+    h('button', { class: `mini-bouton ${cls}`, 'aria-label': tr.t(libelle), onclick: action }, iconeLecteur(nom));
+  const lecture = bouton('lecture', 'lecteur_lecture', () => {
+    if (!lecteur.paused) { lecteur.pause(); majMini(); return; }
+    if (!store.musicEnabled() || !lecteur.src) { store.setMusicEnabled(true); demarreMusique(); } else lecteur.play().catch(echecLecture);
+    majMini();
+  }, 'mini-lecture');
+  mini = h('div', { class: 'mini-lecteur', hidden: true },
+    ferme,
+    h('div', { class: 'mini-panneau', role: 'region', 'aria-label': tr.t('music_title') },
+      h('div', { class: 'mini-tete' }, petit, h('div', { class: 'mini-titre' }),
+        bouton('replier', 'lecteur_replier', () => { miniDeplie = false; majMini(); ferme.focus(); })),
+      barre,
+      h('div', { class: 'mini-temps' }, h('span', { class: 'mini-ecoule' }), h('span', { class: 'mini-total' })),
+      h('div', { class: 'mini-commandes' },
+        bouton('precedent', 'lecteur_precedent', () => {
+          if (lecteur.currentTime > 3) { lecteur.currentTime = 0; return; }
+          morceauSuivant(-1);
+        }),
+        lecture,
+        bouton('suivant', 'lecteur_suivant', () => morceauSuivant(1)))));
+  document.body.append(mini);
+  for (const ev of ['timeupdate', 'play', 'pause', 'loadedmetadata', 'ended']) lecteur.addEventListener(ev, majMini);
+}
+
+function majMini() {
+  const montrer = store.isSessionRunning() && ecranCourant() === 'seance';
+  if (!montrer) { if (mini) mini.hidden = true; return; }
+  if (!mini) construireMini();
+  mini.hidden = false;
+  mini.classList.toggle('deplie', miniDeplie);
+  const m = store.musicEnabled() ? morceauChoisi() : null;
+  const joue = !lecteur.paused && !lecteur.ended;
+  mini.classList.toggle('joue', joue);
+  mini.querySelector('.mini-titre').textContent = m ? titreMorceau(m) : tr.t('music_off_short');
+  const image = m?.image ?? 'img/char_guitar.webp';
+  for (const img of mini.querySelectorAll('.mini-disque img')) {
+    if (img.getAttribute('src') !== image) img.src = image;
+    img.classList.toggle('pochette', !!m?.image);
+  }
+  const lecture = mini.querySelector('.mini-lecture');
+  lecture.replaceChildren(iconeLecteur(joue ? 'pause' : 'lecture'));
+  lecture.setAttribute('aria-label', tr.t(joue ? 'lecteur_pause' : 'lecteur_lecture'));
+  const duree = Number.isFinite(lecteur.duration) ? lecteur.duration : 0;
+  const barre = mini.querySelector('.mini-barre');
+  if (!miniGlisse) {
+    barre.max = Math.max(duree, 1);
+    barre.value = lecteur.currentTime || 0;
+    mini.querySelector('.mini-ecoule').textContent = minSec(lecteur.currentTime);
+  }
+  mini.querySelector('.mini-total').textContent = minSec(duree);
+}
+
 /** Lance une séance ; une durée choisie devient aussi la durée habituelle. */
 function commencer(minutes) {
   if (minutes > 0) store.setTargetMinutes(minutes);
@@ -3148,6 +3243,7 @@ function rendre() {
   // n'était vue qu'au toucher suivant (audit du 16/10).
   if (ecran !== 'seance' && !store.isSessionRunning()) arreteTic();
   if (ecran !== 'bravo') arreteDanse();
+  queueMicrotask(majMini);
   const memeEcran = app.dataset.ecran === `${ecran}/${onglet}`;
   app.replaceChildren();
   if (ecran === 'musique') app.append(ecranMusique());

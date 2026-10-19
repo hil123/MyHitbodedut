@@ -34,6 +34,7 @@ class SessionActivity : AppCompatActivity() {
     private lateinit var guide: View
     private lateinit var souffle: SouffleView
     private lateinit var calme: PratiqueCalme
+    private lateinit var miniLecteur: MiniLecteur
 
     /**
      * Le temps courant de la hitbodedout guidée. Il appartient à la séance
@@ -103,6 +104,9 @@ class SessionActivity : AppCompatActivity() {
             wasRunning = it.getBoolean(ETAT_EN_COURS, false)
             cancelling = it.getBoolean(ETAT_ABANDON, false)
         }
+
+        // Le mini-lecteur (19/10) : changer de morceau sans quitter la pratique.
+        miniLecteur = MiniLecteur(this)
 
         // « Je n'arrive pas à parler » : le moment « blocage ».
         stuck.setOnClickListener { ChizukCard.show(chizuk, Moment.BLOCAGE) }
@@ -199,6 +203,7 @@ class SessionActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         calme.liberer()
+        miniLecteur.fermer()
         super.onDestroy()
     }
 
@@ -213,6 +218,7 @@ class SessionActivity : AppCompatActivity() {
 
     private fun render() {
         renderMusicLine()
+        miniLecteur.maj()
         renderTheme()
 
         // « cloture » : au passage de « en cours » à « terminée », que la

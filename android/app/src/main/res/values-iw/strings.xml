@@ -234,6 +234,14 @@
     <string name="music_add">הוספת ניגון מהטלפון</string>
     <string name="music_add_failed">לא ניתן להוסיף את הקובץ באופן קבוע.</string>
     <string name="music_play_failed">לא ניתן לנגן את הקובץ.</string>
+    <string name="lecteur_ouvrir">פתיחת נגן המוזיקה</string>
+    <string name="lecteur_replier">מזעור הנגן</string>
+    <string name="lecteur_lecture">ניגון</string>
+    <string name="lecteur_pause">השהיה</string>
+    <string name="lecteur_suivant">השיר הבא</string>
+    <string name="lecteur_precedent">השיר הקודם</string>
+    <string name="lecteur_aleatoire">ניגון אקראי</string>
+    <string name="lecteur_position">מיקום בשיר</string>
     <string name="music_unnamed">ללא שם</string>
     <string name="music_origin_bundled">מגיע עם האפליקציה</string>
     <string name="music_origin_device">מהטלפון</string>

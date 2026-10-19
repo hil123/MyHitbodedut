@@ -90,6 +90,12 @@ class SessionService : Service() {
                 finishSession(early = true)
                 return START_NOT_STICKY
             }
+            ACTION_LECTEUR -> {
+                if (Store.isSessionRunning(this) && enMarche) {
+                    commande(intent?.getStringExtra(EXTRA_COMMANDE), intent?.getIntExtra(EXTRA_POSITION, 0) ?: 0)
+                    return START_STICKY
+                }
+            }
             ACTION_MUSIC -> {
                 if (!Store.isSessionRunning(this)) {
                     stopSelf()
@@ -112,6 +118,7 @@ class SessionService : Service() {
         }
         startForegroundNow()
         enMarche = true
+        lecteur = music
         garderEveille()
         // Ne pas déranger pendant la séance (14/10), si choisi.
         NePasDeranger.activer(this)
@@ -123,6 +130,7 @@ class SessionService : Service() {
     }
 
     override fun onDestroy() {
+        lecteur = null
         handler.removeCallbacks(tick)
         relacherEveil()
         enMarche = false
@@ -199,7 +207,7 @@ class SessionService : Service() {
 
     /** Lance le morceau retenu, si la musique est active et rien ne joue déjà. */
     private fun ensureMusic() {
-        if (!Store.musicEnabled(this) || music.isPlaying) return
+        if (!Store.musicEnabled(this) || music.isPlaying || music.charge) return
         if (!Store.isSessionRunning(this)) return
         modeAleatoire = Store.musicShuffle(this)
         if (Store.musicShuffle(this)) {
@@ -208,6 +216,7 @@ class SessionService : Service() {
         }
         val track = MusicLibrary.selected(this) ?: return
         Store.setMusicNow(this, track.id)
+        noterJoue(track.id)
         if (!music.start(track, Store.musicVolume(this))) {
             Toast.makeText(this, R.string.music_play_failed, Toast.LENGTH_LONG).show()
         }
@@ -223,6 +232,7 @@ class SessionService : Service() {
         val id = melange.suivant(morceaux.map { it.id }) ?: return
         val track = morceaux.first { it.id == id }
         Store.setMusicNow(this, track.id)
+        noterJoue(track.id)
         val lance = music.start(track, Store.musicVolume(this), loop = false) {
             if (Store.isSessionRunning(this) && Store.musicEnabled(this)) jouerAuHasard()
         }
@@ -230,6 +240,59 @@ class SessionService : Service() {
             if (essais > 1) jouerAuHasard(essais - 1)
             else Toast.makeText(this, R.string.music_play_failed, Toast.LENGTH_LONG).show()
         }
+    }
+
+    /** Les morceaux joués pendant la séance, pour « précédent » (mini-lecteur, 19/10). */
+    private val joues = ArrayDeque<String>()
+
+    private fun noterJoue(id: String) {
+        if (joues.lastOrNull() != id) joues.addLast(id)
+        while (joues.size > 50) joues.removeFirst()
+    }
+
+    /**
+     * Le mini-lecteur de la pratique (19/10) : pause, reprise, morceau suivant ou
+     * précédent, position. Hors lecture aléatoire, le morceau choisi devient le
+     * morceau retenu, qui boucle comme avant.
+     */
+    private fun commande(quoi: String?, position: Int) {
+        when (quoi) {
+            CMD_PAUSE -> music.pause()
+            CMD_REPRENDRE -> {
+                if (!Store.musicEnabled(this)) {
+                    Store.setMusicEnabled(this, true)
+                    ensureMusic()
+                } else if (music.charge) music.reprendre() else ensureMusic()
+            }
+            CMD_POSITION -> music.aller(position)
+            CMD_SUIVANT -> changer(+1)
+            CMD_PRECEDENT -> {
+                // Au-delà de trois secondes, « précédent » reprend le morceau, comme partout.
+                if (music.position > 3_000) music.aller(0) else changer(-1)
+            }
+        }
+    }
+
+    private fun changer(sens: Int) {
+        Store.setMusicEnabled(this, true)
+        val morceaux = MusicLibrary.all(this)
+        if (morceaux.isEmpty()) return
+        music.stop(fade = false)
+        if (Store.musicShuffle(this)) {
+            if (sens > 0) { jouerAuHasard(); return }
+            if (joues.size >= 2) joues.removeLast()
+            val id = joues.lastOrNull()
+            val track = morceaux.firstOrNull { it.id == id } ?: run { jouerAuHasard(); return }
+            Store.setMusicNow(this, track.id)
+            music.start(track, Store.musicVolume(this), loop = false) {
+                if (Store.isSessionRunning(this) && Store.musicEnabled(this)) jouerAuHasard()
+            }
+            return
+        }
+        val ici = morceaux.indexOfFirst { it.id == Store.musicNow(this) }.coerceAtLeast(0)
+        val track = morceaux[Math.floorMod(ici + sens, morceaux.size)]
+        Store.setMusicTrackId(this, track.id)
+        ensureMusic()
     }
 
     private fun stopSelfAndClear() {
@@ -365,6 +428,27 @@ class SessionService : Service() {
         const val ACTION_CANCEL = "com.myhitbodedut.CANCEL_SESSION"
         const val ACTION_FINISH = "com.myhitbodedut.FINISH_SESSION"
         const val ACTION_MUSIC = "com.myhitbodedut.MUSIC_CHANGED"
+        const val ACTION_LECTEUR = "com.myhitbodedut.LECTEUR"
+        const val EXTRA_COMMANDE = "commande"
+        const val EXTRA_POSITION = "position"
+        const val CMD_PAUSE = "pause"
+        const val CMD_REPRENDRE = "reprendre"
+        const val CMD_SUIVANT = "suivant"
+        const val CMD_PRECEDENT = "precedent"
+        const val CMD_POSITION = "position"
+
+        /** Le lecteur de la séance en cours, pour que le mini-lecteur en lise l'état ; null hors séance. */
+        @Volatile
+        var lecteur: MusicPlayer? = null
+            private set
+
+        fun lecteur(context: Context, commande: String, position: Int = 0) {
+            if (!Store.isSessionRunning(context)) return
+            context.startService(
+                Intent(context, SessionService::class.java).setAction(ACTION_LECTEUR)
+                    .putExtra(EXTRA_COMMANDE, commande).putExtra(EXTRA_POSITION, position)
+            )
+        }
 
         /** L'interrupteur de musique a bougé : la séance en cours doit suivre. */
         fun musicChanged(context: Context) {
