@@ -346,3 +346,28 @@ export const LibraryRules = {
     return null;
   },
 };
+
+/**
+ * La source du jour (SourceDuJour.kt, 19/10) : un paragraphe des sources
+ * libres de la bibliothèque, le même toute la journée, le même qu'Android.
+ */
+export const SourceDuJour = {
+  MIN: 80,
+  PAS: 37,
+  candidats(bibliotheque) {
+    return LibraryRules.sources(bibliotheque).flatMap((section) => section.sous_sections.flatMap((sous) => sous.entrees.flatMap((e) =>
+      LibraryRules.paragraphes(bibliotheque, e).filter((p) => p.length >= SourceDuJour.MIN).map((texte) => ({ source: e, texte })))));
+  },
+  /** iso : « AAAA-MM-JJ ». */
+  choix(bibliotheque, iso) {
+    const c = SourceDuJour.candidats(bibliotheque);
+    if (c.length === 0) return null;
+    const jour = Math.round(Date.UTC(+iso.slice(0, 4), +iso.slice(5, 7) - 1, +iso.slice(8, 10)) / 86400000);
+    return c[(((jour * SourceDuJour.PAS) % c.length) + c.length) % c.length];
+  },
+  extrait(texte, max = 320) {
+    if (texte.length <= max) return texte;
+    const coupe = texte.slice(0, max);
+    return `${coupe.slice(0, coupe.lastIndexOf(' ')).replace(/[,\s:;]+$/, '')}…`;
+  },
+};

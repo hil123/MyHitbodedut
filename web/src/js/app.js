@@ -4,7 +4,7 @@
 // n'existe pas encore est montré, mais inerte (classe « a-venir »).
 
 import { chargeTraduction, formate, langueInitiale, LANGUES } from './i18n.js';
-import { Anneaux, CycleTehilim, DureeSeance, JaugeSemaine, LibraryRules, Plaque, Reference, Salutation, SiddurMoment, SignetsSiddur } from './regles.js';
+import { Anneaux, CycleTehilim, DureeSeance, JaugeSemaine, LibraryRules, Plaque, Reference, Salutation, SiddurMoment, SignetsSiddur, SourceDuJour } from './regles.js';
 import { ART_DU_MOMENT, ChizukBag, ChizukRules } from './chizuk.js';
 import { DanseMesure } from './seance.js';
 import { creeStore, memoire } from './store.js';
@@ -589,6 +589,17 @@ function momentAccueil() {
         h('span', { class: 'maintenant-libelle' }, tr.t('levana_ce_soir')),
         h('span', { class: 'maintenant-he', lang: 'he', dir: 'rtl' }, lv.titre.he)),
       h('span', { class: 'chevron', 'aria-hidden': 'true' })));
+  }
+  // La source du jour (SourceDuJour, 19/10) : la même toute la journée, distincte du ’hizouk.
+  const p = chargeBibliotheque() ? SourceDuJour.choix(bibliotheque, store.today()) : null;
+  if (p) {
+    cartes.push(h('div', { class: 'carte source-du-jour' },
+      h('span', { class: 'maintenant-libelle' }, tr.t('source_du_jour')),
+      h('p', { class: 'source-du-jour-texte', lang: 'he', dir: 'rtl' }, SourceDuJour.extrait(p.texte)),
+      h('p', { class: 'source-du-jour-ref' }, Reference.localise(p.source.ref, tr.langue)),
+      h('div', { class: 'source-du-jour-actions' },
+        h('button', { class: 'secondaire', onclick: () => ouvrir('seance') }, tr.t('source_du_jour_commencer')),
+        h('button', { class: 'secondaire', onclick: () => { entreeBiblio = p.source.id; ouvrir('source'); } }, tr.t('source_du_jour_lire')))));
   }
   return cartes.length ? [h('div', { class: 'accueil-moment' }, ...cartes)] : [];
 }

@@ -1054,4 +1054,7 @@
     <string name="chizuk_partager">Share</string>
     <string name="chizuk_commencer">Start a hitbodedut</string>
     <string name="chizuk_favoris">Kept texts</string>
+    <string name="source_du_jour">Source of the day</string>
+    <string name="source_du_jour_commencer">Start</string>
+    <string name="source_du_jour_lire">Read more</string>
 </resources>

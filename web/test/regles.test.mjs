@@ -7,7 +7,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { Anneaux, CycleTehilim, DureeSeance, JaugeSemaine, LibraryRules, Plaque, Reference, RegleLangue, Salutation, SiddurMoment, SignetsSiddur } from '../src/js/regles.js';
+import { Anneaux, CycleTehilim, DureeSeance, JaugeSemaine, LibraryRules, Plaque, Reference, RegleLangue, Salutation, SiddurMoment, SignetsSiddur, SourceDuJour } from '../src/js/regles.js';
 import { estJourChome, israelParDefaut } from '../src/js/calendrier.js';
 import { creeStore, dateValide, memoire } from '../src/js/store.js';
 import { creeTraduction, formate, langueInitiale } from '../src/js/i18n.js';
@@ -661,4 +661,16 @@ test('datesGain incrémental : mêmes niveaux que le calcul complet, trous, note
     const pAvant = { minutes: avant, notes: nAvant, meilleureSerie: PlaqueB.meilleureSerie(new Set(Object.keys(avant)), exempt) };
     assert.ok(!Trophees.gagne(pAvant, e), `${cle} déjà gagné avant ${d}`);
   }
+});
+
+test('la source du jour : la même qu’Android, le même jour (19/10)', async () => {
+  const { readFile } = await import('node:fs/promises');
+  const b = JSON.parse(await readFile(new URL('../../android/app/src/main/res/raw/bibliotheque.json', import.meta.url), 'utf8'));
+  const c = SourceDuJour.candidats(b);
+  assert.ok(c.length > 50 && c.every((x) => x.texte.length >= 80));
+  const ici = (iso) => { const p = SourceDuJour.choix(b, iso); return [p.source.id, LibraryRules.paragraphes(b, p.source).indexOf(p.texte)]; };
+  assert.deepEqual(ici('2026-10-19'), ['src-lm2-25', 9]);
+  assert.deepEqual(ici('2026-10-20'), ['src-lt-zera', 1]);
+  assert.deepEqual(ici('2027-01-01'), ['src-lt-zera', 2]);
+  assert.ok(SourceDuJour.extrait('א'.repeat(10) + ' ' + 'ב'.repeat(400)).endsWith('…'));
 });

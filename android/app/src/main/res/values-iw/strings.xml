@@ -1082,4 +1082,7 @@
     <string name="chizuk_partager">לשתף</string>
     <string name="chizuk_commencer">להתחיל התבודדות</string>
     <string name="chizuk_favoris">טקסטים שמורים</string>
+    <string name="source_du_jour">מקור יומי</string>
+    <string name="source_du_jour_commencer">להתחיל</string>
+    <string name="source_du_jour_lire">להמשיך לקרוא</string>
 </resources>

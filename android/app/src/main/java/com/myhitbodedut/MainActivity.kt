@@ -314,6 +314,8 @@ class MainActivity : AppCompatActivity() {
             // Un changement dans la tefila, annoncé quelques jours avant (16/10).
             runCatching { RappelsTefilaVue.cartes(this@MainActivity) }.getOrDefault(emptyList()).forEach { addView(it) }
             runCatching { AccueilMoment.cartes(this@MainActivity) }.getOrDefault(emptyList()).forEach { addView(it) }
+            // La source du jour (19/10) : la même toute la journée, distincte du 'hizouk.
+            runCatching { SourceDuJour.carte(this@MainActivity) }.getOrNull()?.let { addView(it) }
         }
         renderGauge()
         renderSwitches()

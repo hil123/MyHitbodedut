@@ -1100,4 +1100,7 @@
     <string name="chizuk_partager">Partager</string>
     <string name="chizuk_commencer">Commencer une hitbodedout</string>
     <string name="chizuk_favoris">Textes gardés</string>
+    <string name="source_du_jour">Source du jour</string>
+    <string name="source_du_jour_commencer">Commencer</string>
+    <string name="source_du_jour_lire">Lire la suite</string>
 </resources>
