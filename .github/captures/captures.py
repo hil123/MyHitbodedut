@@ -303,6 +303,10 @@ def activite(classe, extras=""):
 
 
 def etape(titre, fonction):
+    # Sur demande (CAPTURES_ETAPES=« 17,22 ») : seulement ces etapes, par leur numero.
+    voulues = [e.strip() for e in os.environ.get("CAPTURES_ETAPES", "").split(",") if e.strip()]
+    if voulues and not any(titre.split(" ")[0].startswith(v) for v in voulues):
+        return
     log(f"\n=== {titre} ===")
     try:
         fonction()
@@ -499,13 +503,15 @@ def main():
     etape("14 bibliotheque", s14)
 
     def vitrine(nom):
-        resolu = sh(f"cmd package resolve-activity --brief -n {PKG}/com.myhitbodedut.VitrineWidgetActivity")
-        presente = "VitrineWidgetActivity" in sh(f"pm dump {PKG} | grep -i VitrineWidget")
-        log("  vitrine :", presente, resolu.strip()[:200])
-        if not presente:
+        # On l'ouvre, et c'est l'ecran au premier plan qui dit si elle existe :
+        # le controle par « pm dump » la disait absente alors qu'elle etait la (19/10).
+        sortie = sh(f"am start -W -n {PKG}/com.myhitbodedut.VitrineWidgetActivity", timeout=60)
+        pause(1.5)
+        devant = sh("dumpsys activity activities | grep -E 'mResumedActivity|topResumedActivity'")
+        log("  vitrine :", sortie.strip()[:200], "|", devant.strip()[:200])
+        if "VitrineWidgetActivity" not in devant and "Error" in sortie:
             log("  VitrineWidgetActivity absente : etape sautee")
             return
-        sh(f"am start -W -n {PKG}/com.myhitbodedut.VitrineWidgetActivity", timeout=60)
         capture(nom, attente=3.0)
         defiler(True)
         capture(nom + "-suite", attente=1.0)
@@ -661,6 +667,9 @@ def main():
     # simplement », le guide et les prieres du Yanuka, « Je suis avec Hachem ».
     def s22():
         langue("fr")
+        # Une seance laissee en cours par l'etape 21 cacherait « Commencer simplement ».
+        if activite("SessionActivity") and toucher(rid="session_secondary", defilements=3, attente=1.0):
+            toucher(rid="button1", attente=1.5)
         lancer()
         defiler(True)
         defiler(True)

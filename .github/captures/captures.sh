@@ -29,6 +29,8 @@ adb shell am broadcast -a com.android.systemui.demo -e command notifications -e 
 # Le lanceur Pixel de l'emulateur ne repondait plus (ANR) et sa fenetre
 # couvrait toutes les captures : pas de fenetres d'erreur, pas de lanceur.
 adb shell settings put global hide_error_dialogs 1 || true
+# Pas de bulle « Viewing full screen » par-dessus l'ecran de seance (19/10).
+adb shell settings put secure immersive_mode_confirmations confirmed || true
 adb shell pm disable-user --user 0 com.google.android.apps.nexuslauncher || true
 adb shell am broadcast -a android.intent.action.CLOSE_SYSTEM_DIALOGS || true
 
