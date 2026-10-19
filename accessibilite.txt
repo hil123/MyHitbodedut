@@ -1,0 +1,65 @@
+== 17-vitrine-vignettes
+PETIT 102x34dp TextView widget_start «Commencer»
+PETIT 102x34dp TextView widget_start «Commencer»
+== 17-vitrine-vignettes-suite
+PETIT 102x34dp TextView widget_start «Commencer»
+PETIT 102x34dp TextView widget_start «Commencer»
+== 17-vitrine-vignettes-fin
+PETIT 102x34dp TextView widget_start «Commencer»
+PETIT 102x34dp TextView widget_start «Commencer»
+== 17b-vitrine-vignettes-violet
+PETIT 102x34dp TextView widget_start «Commencer»
+PETIT 102x34dp TextView widget_start «Commencer»
+== 17b-vitrine-vignettes-violet-suite
+PETIT 102x34dp TextView widget_start «Commencer»
+PETIT 102x34dp TextView widget_start «Commencer»
+== 17b-vitrine-vignettes-violet-fin
+PETIT 102x34dp TextView widget_start «Commencer»
+PETIT 102x34dp TextView widget_start «Commencer»
+== 22a-accueil-moment-source-du-jour
+PETIT 108x40dp LinearLayout start_duration «Durée 15 min»
+PETIT 101x40dp LinearLayout start_theme «Sujet Aucun»
+PETIT 139x40dp LinearLayout start_music «Musique המלך בשדה»
+== 22a2-accueil-parcours
+PETIT 108x40dp LinearLayout start_duration «Durée 15 min»
+PETIT 101x40dp LinearLayout start_theme «Sujet Aucun»
+PETIT 139x40dp LinearLayout start_music «Musique המלך בשדה»
+== 22b-hizouk
+== 22c-hizouk-garde
+== 22d-parcours
+== 22e-ambiance-choix
+== 22f-ambiance-pluie
+MUET Switch music_switch (854, 477, 991, 603)
+MUET Switch music_shuffle (854, 890, 991, 1016)
+PETIT 344x40dp LinearLayout music_ambiance «Ambiance Pluie»
+MUET RadioButton track_radio (74, 1465, 200, 1591)
+MUET RadioButton track_radio (74, 1654, 200, 1780)
+MUET RadioButton track_radio (74, 1843, 200, 1969)
+PETIT 379x41dp LinearLayout  «Niggoun 03 Livré avec l’applic»
+PETIT 48x33dp RadioButton track_radio «»
+MUET RadioButton track_radio (74, 2032, 200, 2118)
+PETIT 48x33dp ImageButton track_rename «Renommer»
+PETIT 48x33dp ImageButton track_play «Écouter»
+== 22g-seance-commencer-simplement
+PETIT 108x40dp LinearLayout start_duration «Durée 15 min»
+PETIT 101x40dp LinearLayout start_theme «Sujet Aucun»
+PETIT 139x40dp LinearLayout start_music «Musique המלך בשדה»
+== 22h-seance-question
+PETIT 108x40dp LinearLayout start_duration «Durée 15 min»
+PETIT 101x40dp LinearLayout start_theme «Sujet Aucun»
+PETIT 139x40dp LinearLayout start_music «Musique המלך בשדה»
+== 22i-seance-question-suivante
+PETIT 108x40dp LinearLayout start_duration «Durée 15 min»
+PETIT 101x40dp LinearLayout start_theme «Sujet Aucun»
+PETIT 139x40dp LinearLayout start_music «Musique המלך בשדה»
+== 22j-livres
+PETIT 379x35dp LinearLayout  «כוכבי אור»
+== 22k-guide
+PETIT 411x34dp TextView  «האדם כמעט תמיד נמצא במצב של תג»
+PETIT 56x36dp TextView  «Aa»
+== 22l-tefila-lishlomo
+PETIT 411x28dp TextView  «מאת הגאון הינוקא רבנו שלמה יהו»
+PETIT 56x36dp TextView  «Aa»
+== 22m-reglages-avec-hachem
+PETIT 52x5dp Switch levana_rappel_switch «Rappel de Birkat haLevana»
+PETIT 344x24dp Button pick_apps «Choisir les applications»
