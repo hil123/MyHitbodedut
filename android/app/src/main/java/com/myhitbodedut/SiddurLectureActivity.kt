@@ -541,6 +541,35 @@ class SiddurLectureActivity : AppCompatActivity() {
                         }.start()
                     }
                 }
+                is SiddurJour.Ligne.Seul -> vue.apply {
+                    // Qui prie seul (19/10) : une carte à part, jamais repliée ; la consigne petite, la braïta en grand.
+                    PoliceHebraique.appliquer(this)
+                    val etiquette = getString(R.string.siddur_seul)
+                    text = android.text.SpannableStringBuilder(etiquette).apply {
+                        setSpan(android.text.style.StyleSpan(android.graphics.Typeface.BOLD), 0, length, android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                        setSpan(android.text.style.ForegroundColorSpan(rendu.titre), 0, length, android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                        setSpan(android.text.style.RelativeSizeSpan(0.68f), 0, length, android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                        ligne.consigne?.let { c ->
+                            append("\n")
+                            val d = length
+                            append(c)
+                            setSpan(android.text.style.RelativeSizeSpan(0.68f), d, length, android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                            setSpan(android.text.style.ForegroundColorSpan(rendu.discret), d, length, android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                        }
+                        append("\n")
+                        val d = length
+                        append(ligne.texte)
+                        if (ligne.consigne == null) {
+                            setSpan(android.text.style.RelativeSizeSpan(0.75f), d, length, android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                            setSpan(android.text.style.ForegroundColorSpan(rendu.discret), d, length, android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                        }
+                    }
+                    textSize = 19f * e
+                    setTextColor(rendu.texte)
+                    setLineSpacing(dp(6).toFloat() * e, 1f)
+                    background = panneau(voile, haut = true, bas = true, trait = traitFerme, marge = dp(8))
+                    setPadding(dp(24), dp(20), dp(24), dp(20))
+                }
                 is Pied -> vue.apply {
                     layoutDirection = View.LAYOUT_DIRECTION_LOCALE
                     textDirection = View.TEXT_DIRECTION_LOCALE

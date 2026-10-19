@@ -1111,6 +1111,12 @@ function ecranPriere() {
     return p;
   };
   // « Aujourd'hui · הַלֵּל › » : le texte à dire là ce jour-là, ouvert d'un geste ; rien hors du jour.
+  // Qui prie seul (19/10) : une carte à part, jamais repliée, après Barekhou.
+  const seuls = (si, i) => (idx.seuls.get(`${si}:${i}`) ?? []).filter((a) => ajoutVrai(a.si, c)).map((a) =>
+    h('div', { class: 'seul-carte', lang: 'he', dir: 'rtl' },
+      h('p', { class: 'seul-etiquette' }, tr.t('siddur_seul')),
+      a.consigne ? h('p', { class: 'seul-consigne' }, a.consigne) : null,
+      h('p', { class: a.consigne ? 'seul-texte' : 'seul-consigne' }, a.texte)));
   const renvois = (si, i) => (idx.renvois.get(`${si}:${i ?? ''}`) ?? []).filter((a) => ajoutVrai(a.si, c)).map((a) => {
     const cible = siddur.textes.find((y) => y.id === a.cible);
     return cible ? h('button', { type: 'button', class: 'renvoi-jour', lang: 'he', dir: 'rtl', onclick: () => ouvrirRenvoi(x.id, cible.id) },
@@ -1132,7 +1138,7 @@ function ecranPriere() {
       const corps = [];
       for (let i = 0; i < s.blocs.length; i++) {
         const a = idx.blocs.get(`${si}:${i}`);
-        if (!a) { corps.push(...avecIndices(si, i, paragraphe(s, i))); continue; }
+        if (!a) { corps.push(...avecIndices(si, i, paragraphe(s, i)), ...seuls(si, i)); continue; }
         // Le groupe : les blocs suivants de même groupe, variantes comprises.
         const membres = [];
         while (i < s.blocs.length && idx.blocs.get(`${si}:${i}`)?.g === a.g) {
@@ -1144,6 +1150,7 @@ function ecranPriere() {
         }
         i--;
         corps.push(ajout(nom(a, a.racine ?? a.si), ajoutVrai(a.racine ?? a.si, c), membres, a.racine ?? a.si));
+        corps.push(...seuls(si, i));
       }
       return [t, ...corps, ...renvois(si)];
     }));

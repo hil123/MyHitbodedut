@@ -87,11 +87,14 @@ export function index(annotations = []) {
   const indices = new Map();
   // Les renvois (« Aujourd'hui · Hallel › ») : après la section (« s: ») ou après tel bloc (« s:b »).
   const renvois = new Map();
+  // Qui prie seul (19/10) : la braïta à la place de Barekhou, après tel bloc (« s:b »).
+  const seuls = new Map();
   for (const a of annotations) {
     if (a.sorte === 'section') sections.set(a.s, a);
     else if (a.sorte === 'bloc') blocs.set(`${a.s}:${a.b}`, a);
+    else if (a.sorte === 'seul') seuls.set(`${a.s}:${a.b}`, [...(seuls.get(`${a.s}:${a.b}`) ?? []), a]);
     else if (a.sorte === 'renvoi') renvois.set(`${a.s}:${a.b ?? ''}`, [...(renvois.get(`${a.s}:${a.b ?? ''}`) ?? []), a]);
     else indices.set(`${a.s}:${a.b}`, [...(indices.get(`${a.s}:${a.b}`) ?? []), a]);
   }
-  return { sections, blocs, indices, renvois };
+  return { sections, blocs, indices, renvois, seuls };
 }

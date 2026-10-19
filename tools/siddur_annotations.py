@@ -502,6 +502,7 @@ def annoter(texte_id, sections, nusah):
     # La passe « minyan » ajoute ses blocs après les autres : grouper veut l'ordre du texte.
     sortie.sort(key=lambda e: (e["s"], e.get("b", -1)))
     grouper(sortie)
+    sortie += seul(texte_id, sections, sortie)
     for e in sortie:
         e.pop("_force", None)
     return sortie
@@ -511,7 +512,8 @@ def annoter(texte_id, sections, nusah):
 # וקדושה, אין אומרים אותו בפחות מי׳ » (Choul'han Aroukh OC 55:1 ; Berakhot 21b) ; la
 # bénédiction des Cohanim et Modim derabanan n'existent que dans la répétition de l'officiant.
 # « minyan » n'est jamais une condition du jour : ces passages restent repliés, dépliables.
-CONSIGNES_MINYAN = ("קהל וחזן:", "שליח ציבור:", "קהל:", "חזן:", "קדושה", "ברכת כהנים", "מודים דרבנן")
+CONSIGNES_MINYAN = ("קהל וחזן:", "שליח ציבור:", "קהל:", "חזן:", "קדושה", "ברכת כהנים", "מודים דרבנן",
+                    "ואומר שליח צבור:", "ואומר שליח ציבור:", "ועונין הקהל:", "ועונים הקהל:")
 KEDOUCHA = ["נקדש", "נקדישך", "נעריצך", "כתר יתנו", "קדוש קדוש קדוש", "לעמתם", "ברוך כבוד",
             "ובדברי קדשך", "ימלך יהוה לעולם", "לדור ודור נגיד"]
 BAREKHOU = re.compile(r"^(ואומר החזן: (\(רבנן\) )?|חזן: |קהל וחזן: |ועונים הקהל: |אומרים: )?(ברכו את יהוה המברך|ברוך יהוה המברך לעולם ועד)")
@@ -552,7 +554,8 @@ def minyan(txt, cons, pris, prend):
         # Barekhou et sa réponse.
         elif not cons[bi] and BAREKHOU.match(x):
             fin = bi + 1
-            while fin < n and fin not in pris and not cons[fin] and BAREKHOU.match(txt[fin]):
+            while fin < n and fin not in pris and (BAREKHOU.match(txt[fin]) if not cons[fin]
+                                                   else txt[fin] in ("ועונין הקהל:", "ועונים הקהל:")):
                 fin += 1
         # Le Kaddich : du « יתגדל » à sa dernière partie.
         elif not cons[bi] and (commence(x, "יתגדל") or commence(x, "קדיש יתום יתגדל")):
@@ -578,6 +581,54 @@ def minyan(txt, cons, pris, prend):
         for j in range(debut(bi), fin):
             prend(j, "minyan")
         bi = fin
+
+
+# Qui prie seul, à la place de Barekhou (demande du 19/10) : la braïta « חיה אחת ». Texte du
+# Ben Ich 'Haï, Vayigach, 1re année, 18 (Wikisource, « ברכו ») ; le même chez le 'Hida (Tsipporen
+# Chamir) cité par Halakha Yomit, et dans Torat Eliyahou (Hekhalot Rabbati 31). Rav Ovadia Yossef :
+# sans prononcer le Nom (« ה׳ ») ; pas entre ישתבח et יוצר, mais avant עלינו, et avant Arvit.
+BARAITA = ("אמר רבי עקיבא: חיה אחת עומדת ברקיע ושמה ישראל, וחקוק על מצחה ישראל, עומדת באמצע הרקיע "
+           "ואומרת: ברכו את ה׳ המבורך; וכל גדודי מעלה עונים ואומרים: ברוך ה׳ המבורך לעולם ועד.")
+BARAITA_CONSIGNE = "המתפלל ביחיד אומר במקום ברכו, בלי להזכיר את השם (בן איש חי, ויגש י״ח; חיד״א, צפורן שמיר):"
+BARAITA_RENVOI = ("המתפלל ביחיד אינו אומר כאן את הברייתא „חיה אחת“, שאין להפסיק בין ישתבח ליוצר; "
+                  "אומרה לפני עלינו לשבח (בן איש חי, ויגש י״ח; הרב עובדיה יוסף).")
+
+
+def seul(texte_id, sections, annotations):
+    """Les cartes « seul » : après les groupes « minyan » de Barekhou, ou avant עלינו."""
+    if texte_id not in ("chaharit", "arvit"):
+        return []
+    groupes = {}
+    for e in annotations:
+        if e["sorte"] == "bloc" and e["si"] == "minyan":
+            groupes.setdefault((e["s"], e["g"]), []).append(e)
+    barekhou = [max(g, key=lambda e: e["b"]) for g in groupes.values()
+                if any(BAREKHOU.match(e["empreinte"]) and "ברכו" in e["empreinte"] for e in g)]
+    barekhou.sort(key=lambda e: (e["s"], e["b"]))
+
+    def carte(e, texte, consigne=None):
+        c = {"sorte": "seul", "s": e["s"], "b": e["b"], "si": "!minyan", "empreinte": e["empreinte"], "texte": texte}
+        if consigne:
+            c["consigne"] = consigne
+        return c
+
+    if texte_id == "arvit":
+        return [carte(barekhou[0], BARAITA, BARAITA_CONSIGNE)] if barekhou else []
+    sortie = []
+    if barekhou:
+        sortie.append(carte(barekhou[0], BARAITA_RENVOI))
+    if len(barekhou) > 1:
+        sortie.append(carte(barekhou[-1], BARAITA, BARAITA_CONSIGNE))
+    else:
+        # Pas de Barekhou à la fin (Sfard) : la braïta juste avant la section עלינו.
+        k = next((i for i, x in enumerate(sections) if nu(x["titre"]) == "עלינו"), None)
+        if k:
+            b = len(sections[k - 1]["blocs"]) - 1
+            bloc = sections[k - 1]["blocs"][b]
+            sortie.append({"sorte": "seul", "s": k - 1, "b": b, "si": "!minyan",
+                           "empreinte": nu(bloc.get("t") or bloc.get("c"))[:40],
+                           "texte": BARAITA, "consigne": BARAITA_CONSIGNE})
+    return sortie
 
 
 # Les variantes qui suivent leur ajout : repliées avec lui quand il est replié.

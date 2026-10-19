@@ -13,7 +13,7 @@ import org.json.JSONObject
  */
 object SiddurJour {
 
-    enum class Sorte { BLOC, SECTION, INDICE, RENVOI }
+    enum class Sorte { BLOC, SECTION, INDICE, RENVOI, SEUL }
 
     data class Annotation(
         val sorte: Sorte,
@@ -32,6 +32,8 @@ object SiddurJour {
         val libelle: String? = null,
         /** Pour un renvoi : l'identifiant du texte à ouvrir (« hallel »). */
         val cible: String? = null,
+        /** Pour une carte « seul » : la consigne qui précède son texte. */
+        val consigne: String? = null,
     )
 
     /** Les annotations d'un nusah, par identifiant de texte. */
@@ -44,6 +46,7 @@ object SiddurJour {
                         "section" -> Sorte.SECTION
                         "indice" -> Sorte.INDICE
                         "renvoi" -> Sorte.RENVOI
+                        "seul" -> Sorte.SEUL
                         else -> Sorte.BLOC
                     },
                     section = a.getInt("s"),
@@ -55,6 +58,7 @@ object SiddurJour {
                     racine = a.optString("racine", "").ifBlank { null },
                     libelle = a.optString("libelle", "").ifBlank { null },
                     cible = a.optString("cible", "").ifBlank { null },
+                    consigne = a.optString("consigne", "").ifBlank { null },
                 )
             }
         }
@@ -75,6 +79,9 @@ object SiddurJour {
 
         /** « Aujourd'hui · Hallel › » : le texte à dire ici ce jour-là, ouvert d'un geste ; [cible] : son identifiant. */
         data class Renvoi(val condition: String, val cible: String) : Ligne()
+
+        /** Qui prie seul (19/10) : la braïta à la place de Barekhou, ou où la dire ; [consigne] avant. */
+        data class Seul(val texte: String, val consigne: String?) : Ligne()
 
         /** Un ajout hors du jour, replié ; [ouvert] quand on l'a déplié. */
         data class Replie(val cle: String, val condition: String, val ouvert: Boolean, val libelle: String) : Ligne()
@@ -105,7 +112,10 @@ object SiddurJour {
         // Les renvois du jour seulement : hors du jour, rien (le texte renvoyé n'est pas d'ici).
         val renvois = annotations.filter { it.sorte == Sorte.RENVOI && it.cible != null && vrai(it.condition, conditions) }
             .groupBy { it.section to it.bloc }
+        val seuls = annotations.filter { it.sorte == Sorte.SEUL && it.texte != null && vrai(it.condition, conditions) }
+            .groupBy { it.section to it.bloc }
         val sortie = mutableListOf<Ligne>()
+        fun seul(si: Int, bi: Int) = seuls[si to bi].orEmpty().forEach { sortie += Ligne.Seul(it.texte!!, it.consigne) }
         fun renvoyer(si: Int, bi: Int?) = renvois[si to bi].orEmpty().forEach { sortie += Ligne.Renvoi(it.condition, it.cible!!) }
         texte.sections.forEachIndexed { si, s ->
             // Une section seule porte déjà le nom du texte : pas de titre répété.
@@ -130,6 +140,7 @@ object SiddurJour {
                     sortie += Ligne.Bloc(s.blocs[i], Style.NORMAL)
                     indices[si to i].orEmpty().filter { it.texte != null && vrai(it.condition, conditions) }
                         .forEach { sortie += Ligne.Indice(it.texte!!) }
+                    seul(si, i)
                     renvoyer(si, i)
                     i++
                     continue
@@ -148,6 +159,7 @@ object SiddurJour {
                     sortie += Ligne.Replie(cle, racine, cle in ouverts, nom(a, racine))
                     if (cle in ouverts) membres.forEach { (b, _) -> sortie += Ligne.Bloc(b, Style.HORS) }
                 }
+                seul(si, i - 1)
             }
             renvoyer(si, null)
         }
