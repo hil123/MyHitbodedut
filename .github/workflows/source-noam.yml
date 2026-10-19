@@ -14,7 +14,7 @@ jobs:
         run: |
           mkdir -p source && cd source
           npm init -y >/dev/null && npm i -s playwright@1.48.2 && npx playwright install --with-deps chromium >/dev/null
-          node ../.github/source/noam.mjs
+          cp ../.github/source/noam.mjs . && node noam.mjs && rm noam.mjs
           rm -rf node_modules package*.json
           ls -la mp3 | head -40; du -sh .
       - name: Pousser sur claude/source-noam
