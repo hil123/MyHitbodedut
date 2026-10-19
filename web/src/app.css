@@ -335,7 +335,7 @@ input[type="range"] { width: 100%; accent-color: var(--brand); }
 /* --- Feuille de choix (les AlertDialog d'Android) --------------------------------------- */
 .voile {
   position: fixed; inset: 0; background: rgba(0, 0, 0, 0.4); display: flex; align-items: flex-end;
-  justify-content: center; z-index: 10;
+  justify-content: center; z-index: 45; /* au-dessus du mini-lecteur (30) et des écrans plein cadre (40) */
 }
 .feuille {
   width: 100%; max-width: 560px; max-height: 80%; overflow-y: auto; background: var(--card);
