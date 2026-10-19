@@ -4,8 +4,9 @@
 // n'existe pas encore est montré, mais inerte (classe « a-venir »).
 
 import { chargeTraduction, formate, langueInitiale, LANGUES } from './i18n.js';
-import { Anneaux, CycleTehilim, DureeSeance, JaugeSemaine, LibraryRules, Plaque, Reference, Salutation, SiddurMoment, SignetsSiddur } from './regles.js';
+import { Anneaux, CycleTehilim, DureeSeance, JaugeSemaine, LibraryRules, Plaque, Reference, Salutation, SiddurMoment, SignetsSiddur, SourceDuJour, Parcours } from './regles.js';
 import { ART_DU_MOMENT, ChizukBag, ChizukRules } from './chizuk.js';
+import { AMBIANCES, arreter as arreteAmbiance, jouer as joueAmbiance } from './ambiance.js';
 import { DanseMesure } from './seance.js';
 import { creeStore, memoire } from './store.js';
 import { isoLocal } from './calendrier.js';
@@ -531,7 +532,69 @@ function panneauAujourdhui() {
     // L'accueil selon l'heure (14/10) : la prière du moment, Birkat haLevana les soirs de la fenêtre.
     ...momentAccueil(),
     // Les trophées et les paliers, en bas de la page (11/10).
-    h('button', { class: 'bouton-trophees', onclick: () => ouvrir('paliers') }, tr.t('trophees_paliers'))));
+    // Les trophées et « Mon parcours », côte à côte (19/10).
+    h('div', { class: 'boutons-bas' },
+      h('button', { class: 'bouton-trophees', onclick: () => ouvrir('paliers') }, tr.t('trophees_paliers')),
+      h('button', { class: 'bouton-trophees', onclick: () => ouvrir('parcours') }, tr.t('parcours_title')))));
+}
+
+/**
+ * Les effets d'entrée (19/10, « ajoute des effets professionnels ») : l'écran glisse
+ * et s'éclaircit, ses cartes suivent en cascade (app.css, « Effets ») ; dans « Mon
+ * parcours », les chiffres montent jusqu'à leur valeur. Rien de cela quand le
+ * téléphone demande moins de mouvement.
+ */
+const moinsDeMouvement = () => window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+function effetsEntree(ecran) {
+  if (moinsDeMouvement()) return;
+  const racine = app.firstElementChild;
+  if (!racine) return;
+  racine.classList.add('entree');
+  racine.querySelectorAll('.contenu > *').forEach((el, i) => el.style.setProperty('--rang', String(Math.min(i, 8))));
+  setTimeout(() => racine.classList.remove('entree'), 900);
+  if (ecran === 'parcours') racine.querySelectorAll('.tuile-valeur [data-compte]').forEach(compteMonte);
+}
+
+/** Un nombre qui monte de 0 à sa valeur en 0,7 s, en ralentissant. */
+function compteMonte(el) {
+  const fin = Number(el.dataset.compte);
+  if (!(fin > 0)) return;
+  const debut = performance.now();
+  const pas = (t) => {
+    const p = Math.min(1, (t - debut) / 700);
+    el.textContent = String(Math.round(fin * (1 - (1 - p) ** 3)));
+    if (p < 1) requestAnimationFrame(pas);
+  };
+  el.textContent = '0';
+  requestAnimationFrame(pas);
+}
+
+/** « Mon parcours » (ParcoursActivity) : les chiffres et les sujets ; l'humeur reste sur Android, qui a le journal. */
+function ecranParcours() {
+  const b = Parcours.bilan(store.jours());
+  const serie = store.streak();
+  const meilleure = store.meilleureSerie();
+  const tuile = (valeur, unite, cle, teinte) => h('div', { class: 'tuile-parcours' },
+    h('span', { class: 'tuile-pastille', style: `background: var(${teinte})` }),
+    h('div', { class: 'tuile-valeur' }, /^\d+$/.test(valeur) ? h('span', { 'data-compte': valeur }, valeur) : valeur,
+      unite ? h('span', { class: 'tuile-unite' }, ` ${unite}`) : null),
+    h('div', { class: 'tuile-libelle' }, tr.t(cle)));
+  const max = Math.max(1, ...b.sujets.map(([, n]) => n));
+  return h('div', { class: 'ecran avec-bandeau' },
+    bandeau(tr.t('parcours_title'), { puce: h('p', { class: 'bandeau-sous-titre' }, tr.t('parcours_hint')), dessin: 'char_praise' }),
+    h('div', { class: 'defile' }, h('div', { class: 'contenu parcours' },
+      h('div', { class: 'tuiles-parcours' },
+        tuile(String(serie), tr.p('parcours_unite_jours', serie), 'parcours_serie', '--ring-streak'),
+        tuile(String(meilleure), tr.p('parcours_unite_jours', meilleure), 'parcours_meilleure', '--ring-streak'),
+        tuile(String(b.jours), '', 'parcours_jours_faits', '--ring-week'),
+        tuile(tr.duree(b.minutes), '', 'parcours_total', '--brand')),
+      b.jours ? h('p', { class: 'parcours-moyenne' }, tr.t('parcours_moyenne_ligne', tr.duree(b.moyenne))) : null,
+      h('h2', { class: 'section' }, tr.t('parcours_sujets')),
+      h('div', { class: 'carte' }, b.sujets.length
+        ? b.sujets.map(([s, n]) => h('div', { class: 'sujet-parcours' },
+          h('div', { class: 'sujet-tete' }, h('span', {}, tr.t(`theme_${s}`)), h('span', { class: 'sujet-fois' }, tr.p('parcours_fois', n))),
+          h('div', { class: 'sujet-piste' }, h('div', { class: 'sujet-plein', style: `width: ${Math.max(4, Math.round((100 * n) / max))}%` }))))
+        : h('p', { class: 'parcours-vide' }, tr.t('parcours_sujets_vide'))))));
 }
 
 /** L'accueil selon l'heure (AccueilMoment.kt) : la prière du moment, et Birkat haLevana les soirs où elle se dit. */
@@ -578,7 +641,7 @@ function momentAccueil() {
   const moment = store.lieu() ? momentDuSiddour(store.lieu(), heure) : SiddurMoment.suggestion(heure.getHours(), heure.getMinutes());
   const cartes = [...rappels];
   const t = moment ? siddur.textes.find((x) => x.id === moment) : null;
-  if (t) cartes.push(carteMaintenant(t));
+  if (t) cartes.push(carteMaintenant(t, undefined, undefined, tr.t(Salutation.mot(heure.getHours()))));
   const zone = store.lieu()?.fuseau ?? Intl.DateTimeFormat().resolvedOptions().timeZone;
   const l = levana(isoLocal(heure), zone, { usage: usageLevanaCourant() });
   const lv = siddur.textes.find((x) => x.id === 'birkat_halevana');
@@ -589,6 +652,17 @@ function momentAccueil() {
         h('span', { class: 'maintenant-libelle' }, tr.t('levana_ce_soir')),
         h('span', { class: 'maintenant-he', lang: 'he', dir: 'rtl' }, lv.titre.he)),
       h('span', { class: 'chevron', 'aria-hidden': 'true' })));
+  }
+  // La source du jour (SourceDuJour, 19/10) : la même toute la journée, distincte du ’hizouk.
+  const p = chargeBibliotheque() ? SourceDuJour.choix(bibliotheque, store.today()) : null;
+  if (p) {
+    cartes.push(h('div', { class: 'carte source-du-jour' },
+      h('span', { class: 'maintenant-libelle' }, tr.t('source_du_jour')),
+      h('p', { class: 'source-du-jour-texte', lang: 'he', dir: 'rtl' }, SourceDuJour.extrait(p.texte)),
+      h('p', { class: 'source-du-jour-ref' }, Reference.localise(p.source.ref, tr.langue)),
+      h('div', { class: 'source-du-jour-actions' },
+        h('button', { class: 'principal', onclick: () => ouvrir('seance') }, tr.t('source_du_jour_commencer')),
+        h('button', { class: 'secondaire', onclick: () => { entreeBiblio = p.source.id; ouvrir('source'); } }, tr.t('source_du_jour_lire')))));
   }
   return cartes.length ? [h('div', { class: 'accueil-moment' }, ...cartes)] : [];
 }
@@ -1008,14 +1082,15 @@ function choisirNusah() {
 }
 
 /** La suggestion de l'heure : le hassid, l'heure dite en clair, le texte. */
-function carteMaintenant(x, dessin = SiddurMoment.illustration(x.id), action = () => { priere = x.id; ouvrir('priere'); }) {
+function carteMaintenant(x, dessin = SiddurMoment.illustration(x.id), action = () => { priere = x.id; ouvrir('priere'); }, mot = null) {
   const traduction = titreTexte(x.titre) !== x.titre.he ? titreTexte(x.titre) : null;
   return h('button', { class: 'maintenant', onclick: action },
     plateau(dessin, 'plateau-maintenant'),
     h('span', { class: 'maintenant-corps' },
       h('span', { class: 'maintenant-libelle' }, tr.t('siddur_maintenant')),
       h('span', { class: 'maintenant-he', lang: 'he', dir: 'rtl' }, x.titre.he),
-      traduction ? h('span', { class: 'maintenant-trad' }, traduction) : null),
+      traduction ? h('span', { class: 'maintenant-trad' }, traduction) : null,
+      mot ? h('span', { class: 'maintenant-mot' }, mot) : null),
     h('span', { class: 'chevron', 'aria-hidden': 'true' }));
 }
 
@@ -1454,6 +1529,43 @@ function ecranLivres() {
       ]) : []))));
 }
 
+/**
+ * « J'ai besoin de ’hizouk » (ChizukActivity, 19/10) : un texte à la demande,
+ * « Un autre », « Garder » (sur l'appareil) et « Partager » (le seul endroit
+ * où un texte de ’hizouk sort de l'appareil, d'un geste de l'utilisateur).
+ */
+let hizouk = null;
+let hizoukChange = false;
+function ecranHizouk() {
+  const change = hizoukChange;
+  hizoukChange = false;
+  if (chizuk && !hizouk) hizouk = ChizukBag.tirer(store, chizuk, 'demande');
+  const item = hizouk;
+  const garde = item && store.chizukFavoris().includes(item.id);
+  const gardes = chizuk ? store.chizukFavoris().map((id) => chizuk.items.find((x) => x.id === id)).filter(Boolean) : [];
+  const partager = async () => {
+    const texte = ChizukRules.partage(ChizukRules.hebreu(chizuk, item), ChizukRules.traduction(item, tr.langue),
+      Reference.localise(item.ref, tr.langue), tr.t('partage_lien', LIEN_WEB));
+    try { if (navigator.share) { await navigator.share({ text: texte }); return; } } catch (e) { if (e?.name === 'AbortError') return; }
+    try { await navigator.clipboard.writeText(texte); signale(tr.t('partage_copie')); } catch { /* rien d'autre à faire */ }
+  };
+  return h('div', { class: 'ecran avec-bandeau' },
+    bandeau(tr.t('chizuk_demande_title'), { puce: h('p', { class: 'bandeau-sous-titre' }, tr.t('chizuk_demande_hint')), dessin: 'char_open_arms' }),
+    h('div', { class: 'defile' }, h('div', { class: 'contenu hizouk' },
+      item ? (() => { const c = carteChizuk({ moment: 'demande', item }); if (change && !moinsDeMouvement()) c.classList.add('fondu-neuf'); return c; })() : null,
+      item ? h('div', { class: 'hizouk-actions' },
+        h('button', { class: 'secondaire', onclick: () => { hizouk = ChizukBag.tirer(store, chizuk, 'demande'); hizoukChange = true; rendre(); } }, tr.t('chizuk_autre')),
+        h('button', { class: 'secondaire', 'aria-pressed': garde ? 'true' : 'false', onclick: () => { store.basculerChizukFavori(item.id); rendre(); } },
+          tr.t(garde ? 'chizuk_garde' : 'chizuk_garder')),
+        h('button', { class: 'secondaire', onclick: partager }, tr.t('chizuk_partager'))) : null,
+      h('button', { class: 'principal', onclick: () => ouvrir('seance') }, tr.t('chizuk_commencer')),
+      gardes.length ? h('h2', { class: 'section' }, tr.t('chizuk_favoris')) : null,
+      gardes.length ? h('div', { class: 'carte' }, gardes.map((x) =>
+        h('button', { class: 'hizouk-garde', onclick: () => { hizouk = x; hizoukChange = true; rendre(); document.querySelector('.defile')?.scrollTo({ top: 0, behavior: moinsDeMouvement() ? 'auto' : 'smooth' }); } },
+          h('span', { class: 'hizouk-garde-texte' }, ChizukRules.traduction(x, tr.langue) || ChizukRules.hebreu(chizuk, x)),
+          h('span', { class: 'hizouk-ref' }, Reference.localise(x.ref, tr.langue))))) : null)));
+}
+
 /** Les sources de la hitbodedout. */
 function ecranBibliotheque() {
   const pret = chargeBibliotheque();
@@ -1506,6 +1618,7 @@ function panneauTextes() {
       // Les livres entiers (13/10), puis les sources de la hitbodedout.
       ligne({ nom: tr.t('livres_title'), etat: tr.t('livres_hint'), onclick: () => ouvrir('livres') }),
       ligne({ nom: tr.t('library_title'), etat: tr.t('library_hint'), onclick: () => ouvrir('bibliotheque') }),
+      ligne({ nom: tr.t('chizuk_demande_title'), etat: tr.t('chizuk_demande_hint'), onclick: () => { hizouk = null; ouvrir('hizouk'); } }),
       ligne({ nom: tr.t('tips_title'), etat: tr.t('tips_hint'), aVenir: true })),
     h('h2', { class: 'section' }, tr.t('section_around')),
     h('div', { class: 'carte' },
@@ -1567,6 +1680,7 @@ function barre(titre) {
     h('h1', {}, titre));
 }
 
+let apercuAmbiance = null;
 function ecranMusique() {
   const choisi = morceauChoisi();
   const interrupteur = h('input', {
@@ -1586,7 +1700,19 @@ function ecranMusique() {
             h('input', {
               type: 'range', min: 0, max: 100, value: store.musicVolume(), 'aria-label': tr.t('music_volume'),
               oninput: (e) => { store.setMusicVolume(Number(e.target.value)); lecteur.volume = store.musicVolume() / 100; },
-            }))) : null),
+            }))) : null,
+        // Les ambiances (19/10) : calculées, sous la musique ; cinq secondes d'aperçu hors séance.
+        h('button', {
+          class: 'ligne', onclick: () => choisirDans(tr.t('ambiance_title'), AMBIANCES.map((a) => tr.t(`ambiance_${a}`)),
+            AMBIANCES.indexOf(store.ambiance()), (i) => {
+              store.setAmbiance(AMBIANCES[i]);
+              if (store.isSessionRunning()) joueAmbiance(AMBIANCES[i], store.musicVolume());
+              else { joueAmbiance(AMBIANCES[i], store.musicVolume()); clearTimeout(apercuAmbiance); apercuAmbiance = setTimeout(arreteAmbiance, 5000); }
+              rendre();
+            }),
+        }, h('span', { class: 'corps' }, h('div', { class: 'nom' }, tr.t('ambiance_title')),
+          h('div', { class: 'etat' }, tr.t(`ambiance_${store.ambiance()}`))),
+        h('span', { class: 'chevron', 'aria-hidden': 'true' }))),
       h('h2', { class: 'section' }, tr.t('music_library')),
       h('div', { class: 'carte' }, morceaux.map((m) => h('div', { class: `ligne morceau${m === choisi ? ' choisi' : ''}` },
         h('button', {
@@ -2784,7 +2910,7 @@ function carteChizuk(tire, { compacte = false } = {}) {
   return h('section', { class: `chizuk${compacte ? ' compacte' : ''}` },
     h('div', { class: 'chizuk-tete' },
       h('div', { class: 'chizuk-art' }, h('img', { src: `img/${ART_DU_MOMENT[moment]}.webp`, alt: '' })),
-      h('h2', { class: 'chizuk-moment' }, tr.t(`moment_${moment}`))),
+      h('h2', { class: 'chizuk-moment' }, tr.t(moment === 'demande' ? 'chizuk_demande_title' : `moment_${moment}`))),
     // L'hébreu, de droite à gauche en toute langue.
     h('p', { class: 'chizuk-he ajuste', lang: 'he', dir: 'rtl' }, ChizukRules.hebreu(chizuk, item)),
     traduction ? h('hr', {}) : null,
@@ -2827,6 +2953,8 @@ function relacheEcran() {
 }
 
 function demarreMusique() {
+  // L'ambiance (19/10) suit son réglage, que la musique soit là ou non.
+  joueAmbiance(store.ambiance(), store.musicVolume());
   if (!store.musicEnabled()) return;
   const m = morceauChoisi();
   if (!m) return;
@@ -2840,6 +2968,7 @@ function demarreMusique() {
 
 /** Fondu court à la fin (MusicPlayer.stop) ; sur iPhone, où le volume ne se règle pas, l'arrêt est net. */
 function arreteMusique() {
+  arreteAmbiance();
   if (lecteur.paused) return;
   if (!volumeReglable) { lecteur.pause(); return; }
   const depart = lecteur.volume;
@@ -3099,8 +3228,18 @@ lecteur.addEventListener('timeupdate', () => {
   }
 });
 
+/**
+ * « Je ne sais pas quoi dire » (QuestionsBlocage.kt, propositions 3 et 15,
+ * 19/10) : une question à la fois, d'après « מה אומרים? » du guide du propriétaire.
+ */
+const QUESTIONS_BLOCAGE = ['question_merci', 'question_raconter', 'question_ressenti', 'question_besoins', 'question_force',
+  'question_bilan', 'question_pardon', 'question_decision', 'question_demain', 'question_fin'];
+let questionSeance = -1;
+let questionChange = false;
+
 function ecranSeance() {
   const enCours = store.isSessionRunning();
+  if (!enCours) questionSeance = -1;
   etaitEnCours = enCours;
   const fait = store.isDone();
   const sujet = store.sessionTheme();
@@ -3120,7 +3259,11 @@ function ecranSeance() {
     h('p', { class: 'legende' }, enCours ? c.legende : fait ? tr.t('session_idle_done', tr.duree(store.record()?.minutes ?? 0)) : tr.t('session_idle_caption')),
     morceau ? h('p', { class: 'legende petite' }, tr.t('session_music_line', titreMorceau(morceau))) : null,
     carteChizuk(chizukSeance),
-    enCours && aBlocage ? h('button', { class: 'texte-clair blocage', onclick: () => { tireChizuk('blocage'); rendre(); } }, tr.t('chizuk_stuck')) : null,
+    enCours && aBlocage ? h('button', { class: 'texte-clair blocage', onclick: () => { tireChizuk('blocage'); if (questionSeance < 0) questionSeance = 0; rendre(); } }, tr.t('chizuk_stuck')) : null,
+    enCours && questionSeance >= 0 ? h('div', { class: `question-seance${questionChange && !moinsDeMouvement() ? ' fondu-neuf' : ''}` },
+      h('p', { class: 'question-rang' }, tr.t('question_rang', questionSeance + 1, QUESTIONS_BLOCAGE.length)),
+      h('p', { class: 'question-texte' }, tr.t(QUESTIONS_BLOCAGE[questionSeance])),
+      h('button', { class: 'texte-clair', onclick: () => { questionSeance = (questionSeance + 1) % QUESTIONS_BLOCAGE.length; questionChange = true; rendre(); questionChange = false; } }, tr.t('question_suivante'))) : null,
     h('button', { class: 'texte-clair', onclick: choisirSujet },
       sujet ? tr.t('session_theme_chosen', tr.t(`theme_${sujet}`)) : tr.t('session_theme_none')),
   ];
@@ -3142,6 +3285,12 @@ function ecranSeance() {
         h('button', { class: 'duree', onclick: () => commencer(m) }, tr.duree(m)))),
       h('button', { class: 'texte-clair', onclick: () => saisirDuree(commencer) }, tr.t('duration_custom')),
       h('button', { class: 'texte-clair', onclick: () => commencer(0) }, tr.t('session_open')),
+      // « Commencer simplement » (proposition 15) : chacun démarre tout de suite.
+      h('div', { class: 'simplement' },
+        h('button', { class: 'texte-clair', onclick: () => commencer(store.targetMinutes()) }, tr.t('simplement_parler')),
+        h('button', { class: 'texte-clair', onclick: () => { commencer(store.targetMinutes()); ecrireNote(store.today(), rendre); } }, tr.t('simplement_ecrire')),
+        h('button', { class: 'texte-clair', onclick: () => { commencer(store.targetMinutes()); ouvrir('siddur'); } }, tr.t('simplement_prier')),
+        h('button', { class: 'texte-clair', onclick: () => { commencer(store.targetMinutes()); questionSeance = 0; rendre(); } }, tr.t('simplement_question'))),
       h('button', { class: 'principal', onclick: () => commencer(store.targetMinutes()) },
         tr.t('session_start', tr.duree(store.targetMinutes()))));
   }
@@ -3258,7 +3407,7 @@ function arreteDanse() {
 // et le geste de retour ramènent à l'accueil, sur l'onglet quitté.
 function ecranCourant() {
   const e = location.hash.slice(1);
-  return ['musique', 'reglages', 'seance', 'bravo', 'tehilim', 'lecture', 'siddur', 'priere', 'tikkun', 'bibliotheque', 'livres', 'source', 'zmanim', 'calendrier', 'paliers', 'hilloulot', 'halakha', 'recherche'].includes(e) ? e : 'accueil';
+  return ['musique', 'reglages', 'seance', 'bravo', 'tehilim', 'lecture', 'siddur', 'priere', 'tikkun', 'bibliotheque', 'livres', 'source', 'zmanim', 'calendrier', 'paliers', 'hilloulot', 'halakha', 'recherche', 'hizouk', 'parcours'].includes(e) ? e : 'accueil';
 }
 function ouvrir(ecran) {
   // L'entrée sur l'écran de séance tire le mot d'ouverture (SessionActivity.onCreate).
@@ -3323,6 +3472,8 @@ function rendre() {
   else if (ecran === 'halakha') app.append(ecranHalakha());
   else if (ecran === 'recherche') app.append(ecranRecherche());
   else if (ecran === 'seance') app.append(ecranSeance());
+  else if (ecran === 'hizouk') app.append(ecranHizouk());
+  else if (ecran === 'parcours') app.append(ecranParcours());
   else if (ecran === 'bravo') app.append(ecranBravo());
   else if (ecran === 'tehilim') app.append(ecranTehilim());
   else if (ecran === 'lecture') app.append(ecranLecture());
@@ -3339,6 +3490,9 @@ function rendre() {
   }
   app.dataset.ecran = `${ecran}/${onglet}`;
   if (memeEcran) app.querySelector('.defile').scrollTop = avant;
+  // Les effets (19/10) : un écran qu'on ouvre entre, ses cartes l'une après l'autre ;
+  // un écran redessiné sur place (chaque seconde pendant la séance) ne rejoue rien.
+  else effetsEntree(ecran);
   // L'accueil qui apparaît s'anime seul : anneaux, puis saut ou fête (04/10).
   const accueil = ecran === 'accueil' && onglet === 'aujourdhui';
   if (!accueil) { accueilAnime = false; facePlaque = 'hassid'; clearTimeout(minuteurPlaque); }

@@ -22,6 +22,18 @@ object Salutation {
         else -> Partie.SOIR
     }
 
+    /**
+     * Le mot du moment, sous la prière de l'heure (proposition 7 de la feuille
+     * de route, 19/10) : quatre moments, la nuit comprise cette fois — ce
+     * n'est plus une salutation, c'est une invitation.
+     */
+    fun mot(heure: Int): Int = when (heure) {
+        in 5 until 12 -> R.string.moment_mot_matin
+        in 12 until 18 -> R.string.moment_mot_journee
+        in 18 until 23 -> R.string.moment_mot_soir
+        else -> R.string.moment_mot_nuit
+    }
+
     fun chaine(heure: Int): Int = when (partie(heure)) {
         Partie.MATIN -> R.string.hero_greeting_morning
         Partie.APRES_MIDI -> R.string.hero_greeting_afternoon

@@ -14,6 +14,10 @@ on:
         description: "Avec captures : seulement le passage des six tailles d'ecran"
         type: boolean
         default: false
+      etapes:
+        description: "Avec captures : seulement ces etapes, par leur numero (ex. « 17,22 ») ; vide : toutes"
+        type: string
+        default: ""
 
 permissions:
   contents: write
@@ -175,6 +179,7 @@ jobs:
         uses: reactivecircus/android-emulator-runner@v2
         env:
           CAPTURES_TAILLES_SEULES: ${{ inputs.tailles_seules && '1' || '0' }}
+          CAPTURES_ETAPES: ${{ inputs.etapes }}
         with:
           api-level: 34
           target: google_apis

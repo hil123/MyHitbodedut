@@ -109,24 +109,11 @@ class LibraryEntryActivity : AppCompatActivity() {
 
         LibraryRules.summary(article, langue)?.let { addFact(R.string.library_summary, it) }
 
-        // Le texte intégral n'existe qu'avec une autorisation. Sans elle, on
-        // dit pourquoi il manque plutôt que de laisser croire à un oubli.
-        // Rien de tout cela ne retombe sur le français : le repli générique
-        // (déjà traduit) sert quand la langue en cours manque.
-        val integral = LibraryRules.fullText(article)
-        if (integral != null) {
-            addFact(R.string.library_full_text, integral)
-        } else {
-            addFact(
-                R.string.library_rights,
-                LibraryRules.rights(article, langue) ?: getString(R.string.library_full_text_withheld),
-            )
-        }
-
-        val erreurs = LibraryRules.errors(article, langue)
-        if (erreurs.isNotEmpty()) {
-            addFact(R.string.library_errors, erreurs.joinToString("\n") { "• $it" })
-        }
+        // Le texte intégral quand il est là ; sinon le résumé et le lien
+        // suffisent. Les encadrés « Droits » et « Erreurs relevées » sont
+        // retirés à la demande du propriétaire (19/10) : les données restent
+        // dans bibliotheque.json, l'écran ne les montre plus.
+        LibraryRules.fullText(article)?.let { addFact(R.string.library_full_text, it) }
         linkButton(R.string.library_read_on_site, article.url)
     }
 

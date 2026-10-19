@@ -35,6 +35,10 @@ la liste des morceaux à embarquer et remet tout le reste ici, en une fois.
 Les titres des morceaux écartés ne sont pas perdus — ils restent dans un
 bloc de réserve de `values/strings.xml` et reviennent tels quels.
 
+**Échange du 19/10, à la demande du propriétaire** : *המלך בשדה* (9,2 Mo)
+revient dans l'APK ; pour rester sous le plafond, `niggoun_08` (2,4 Mo, sans
+titre) vient ici. L'APK passe à 129,8 Mo.
+
 **Deux morceaux sans titre n'ont pas pu entrer** : `niggoun_09` (15,3 Mo) et
 `niggoun_16` (9,6 Mo). L'ensemble des sans-titre pèse 147 Mo, le plafond est
 à 130 ; le choix a été de garder le plus grand nombre de morceaux plutôt que
@@ -51,7 +55,6 @@ prochain échange, quand les autres auront un nom.
 | `breslov_playing_field_sea_waves` | 4,8 Mo |
 | `chabad_shabbos_shneor_lerer` | 4,7 Mo |
 | `chabad_yamim_noraim_shneor_lerer` | 8,6 Mo |
-| `hamelech_basade` | 9,2 Mo |
 | `nigun_abaal_shem_tov_for_babies` | 6,7 Mo |
 | `nigunim_for_neshama_shneor_lerer` | 27,8 Mo |
 | `relaxing_chabad_melodies_shneor_lerer` | 7,5 Mo |
@@ -77,7 +80,7 @@ prochain échange, quand les autres auront un nom.
 | `yanuka_the_truth_will_rise` | 2,4 Mo |
 | `yanuka_yearning` | 5,6 Mo |
 | `yosef_karduner` | 6,6 Mo |
-| `niggoun_09`, `niggoun_16` *(2 sans titre)* | 24,9 Mo |
+| `niggoun_08`, `niggoun_09`, `niggoun_16` *(3 sans titre)* | 27,4 Mo |
 
 **34 morceaux, 199,7 Mo.** L'APK est à 123,1 Mo d'audio sur 33 morceaux.
 

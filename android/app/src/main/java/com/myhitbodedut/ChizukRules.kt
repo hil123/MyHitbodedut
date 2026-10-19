@@ -32,7 +32,7 @@ object ChizukRules {
 
     /** Ce qu'un moment donné a le droit de tirer. */
     fun forMoment(chizuk: Chizuk, moment: Moment, debug: Boolean): List<ChizukItem> =
-        visible(chizuk, debug).filter { moment in it.moments }
+        if (moment == Moment.DEMANDE) visible(chizuk, debug) else visible(chizuk, debug).filter { moment in it.moments }
 
     /**
      * L'hébreu à afficher. `he_sans_nikkoud` est fourni exactement pour les

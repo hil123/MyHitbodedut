@@ -133,7 +133,7 @@ class HitbodedutTest {
         val code = File("src/main/java/com/myhitbodedut/HitbodedutCard.kt").readText()
         val attendues = Regex("""R\.id\.(hitbodedut_[a-z_]+)""").findAll(code)
             .map { it.groupValues[1] }.toSet()
-        assertEquals(8, attendues.size)
+        assertEquals(9, attendues.size) // hitbodedut_sujet, la ligne du sujet (19/10)
         attendues.forEach {
             assertTrue(
                 "« $it » manque dans view_hitbodedut.xml",

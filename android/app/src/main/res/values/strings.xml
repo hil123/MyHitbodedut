@@ -23,8 +23,8 @@
 
     <!-- Sections -->
     <string name="section_practice">Ma pratique</string>
-    <string name="section_gate_state">État de la barrière</string>
-    <string name="section_gate">Blocage du matin</string>
+    <string name="section_gate_state">État du mode</string>
+    <string name="section_gate">Je suis avec Hachem</string>
     <string name="section_gate_hint">Les applications choisies restent fermées tant que la pratique n’est pas faite.</string>
     <string name="section_rhythm">Rythme</string>
     <string name="section_permissions">Autorisations nécessaires</string>
@@ -33,25 +33,25 @@
     <string name="section_data_hint">Tout est stocké sur ce téléphone uniquement. Exportez de temps en temps.</string>
 
     <!-- Diagnostic -->
-    <string name="gate_armed_title">La barrière veille</string>
+    <string name="gate_armed_title">« Je suis avec Hachem » veille</string>
     <plurals name="gate_armed_detail">
         <item quantity="one">%1$d application est bloquée jusqu’à %2$s ou jusqu’à votre hitbodedout.</item>
         <item quantity="other">%1$d applications sont bloquées jusqu’à %2$s ou jusqu’à votre hitbodedout.</item>
     </plurals>
     <string name="gate_permissions_title">Autorisations manquantes</string>
     <string name="gate_permissions_detail">Accordez l’affichage par-dessus les autres applications et l’accès aux données d’utilisation, plus bas.</string>
-    <string name="gate_disabled_title">Blocage désactivé</string>
-    <string name="gate_disabled_detail">Activez l’interrupteur du blocage du matin pour que la barrière agisse.</string>
+    <string name="gate_disabled_title">Mode désactivé</string>
+    <string name="gate_disabled_detail">Activez l’interrupteur « Je suis avec Hachem » pour que le mode agisse.</string>
     <string name="gate_no_apps_title">Aucune application choisie</string>
-    <string name="gate_no_apps_detail">La barrière n’a rien à bloquer. Choisissez au moins une application.</string>
+    <string name="gate_no_apps_detail">Le mode n’a rien à retenir. Choisissez au moins une application.</string>
     <string name="gate_done_title">Journée validée</string>
-    <string name="gate_done_detail">Plus rien ne sera bloqué aujourd’hui. La barrière reprendra demain.</string>
+    <string name="gate_done_detail">Plus rien ne sera retenu aujourd’hui. Le mode reprendra demain.</string>
     <string name="gate_exempt_title">Jour sans obligation</string>
-    <string name="gate_exempt_detail">Chabbat, Yom Tov ou pause : la barrière se tait et la série reste intacte.</string>
+    <string name="gate_exempt_detail">Chabbat, Yom Tov ou pause : le mode se tait et la série reste intacte.</string>
     <string name="gate_snoozed_title">Report en cours</string>
-    <string name="gate_snoozed_detail">Vous avez demandé un délai. La barrière revient à la fin du report.</string>
+    <string name="gate_snoozed_detail">Vous avez demandé un délai. Le mode reprend à la fin du report.</string>
     <string name="gate_window_title">Hors de la fenêtre</string>
-    <string name="gate_window_detail">La barrière agit entre %1$s et %2$s. En dehors, rien n’est bloqué.</string>
+    <string name="gate_window_detail">Le mode agit entre %1$s et %2$s. En dehors, rien n’est retenu.</string>
 
     <!-- Actions -->
     <string name="action_start_session">Commencer une hitbodedout de %1$s</string>
@@ -59,7 +59,7 @@
     <string name="action_back_to_session">Revenir à la hitbodedout en cours</string>
     <string name="action_write_note">Écrire une note</string>
     <string name="action_journal">Voir le journal</string>
-    <string name="action_preview_gate">Voir l’écran de blocage maintenant</string>
+    <string name="action_preview_gate">Voir l’écran « Je suis avec Hachem » maintenant</string>
     <string name="action_pick_apps">Choisir les applications</string>
     <string name="action_grant">Accorder</string>
     <string name="action_export">Exporter</string>
@@ -69,7 +69,7 @@
     <string name="action_back">Retour</string>
 
     <!-- Réglages -->
-    <string name="settings_window">Fenêtre de blocage</string>
+    <string name="settings_window">Heures du mode</string>
     <string name="settings_snooze">Durée du report</string>
     <string name="settings_target">Durée d’une hitbodedout</string>
     <string name="settings_daily_goal">Objectif quotidien</string>
@@ -84,7 +84,7 @@
     <string name="ring_streak_reached">Palier de %2$d jours atteint !</string>
     <string name="rings_description">Anneaux. Aujourd’hui : %1$s sur %2$s. Semaine : %3$d jours sur %4$d. Série : %5$d jours sur %6$d.</string>
     <string name="settings_shabbat">Chabbat et Yom Tov</string>
-    <string name="settings_shabbat_hint">Ces jours-là : pas de blocage, pas de rappel, et la série reste intacte.</string>
+    <string name="settings_shabbat_hint">Ces jours-là : le mode se tait, pas de rappel, et la série reste intacte.</string>
     <string name="settings_exempt_today">Pause aujourd’hui</string>
     <string name="settings_exempt_today_hint">Pour un Yom Tov, un voyage, une maladie : la journée ne compte pas contre vous.</string>
     <string name="settings_screen_missing">Cet écran de réglages n’existe pas sur ce téléphone.</string>
@@ -99,7 +99,7 @@
     <string name="permission_notifications">Notifications</string>
     <string name="permission_notifications_why">Sans elles, le rappel se programme et n’apparaît jamais, et la hitbodedout n’affiche rien quand le téléphone est posé.</string>
     <string name="permission_battery_why">Sans elle, Android peut retarder le rappel de plusieurs heures pour économiser la batterie.</string>
-    <string name="permission_overlay_why">Pour afficher l’écran de blocage par-dessus l’application que vous ouvrez le matin.</string>
+    <string name="permission_overlay_why">Pour afficher l’écran « Je suis avec Hachem » par-dessus l’application que vous ouvrez le matin.</string>
     <string name="permission_usage_why">Pour savoir quelle application vient de s’ouvrir. Rien n’est enregistré ni envoyé.</string>
     <string name="permission_granted">Accordée</string>
     <string name="permission_missing">Manquante</string>
@@ -185,7 +185,7 @@
     <string name="onboarding_private">Rien ne sort d’ici</string>
     <string name="onboarding_private_body">L’application ne demande aucun accès à Internet. Ce que vous écrivez reste sur ce téléphone, et n’en sort que si vous l’exportez vous-même.</string>
     <string name="blocker_session_open_subtitle">Hitbodedout sans durée, depuis %1$s. Le téléphone peut attendre.</string>
-    <string name="session_done_title">Hitbodedout terminée</string>
+    <string name="session_done_title">Vous avez parlé avec Hachem aujourd’hui</string>
     <string name="session_done_text">%1$s de hitbodedout. Touchez pour laisser une note.</string>
 
     <!-- Journal et notes -->
@@ -198,8 +198,8 @@
     <!-- Rappel et notifications -->
     <string name="reminder_title">C’est l’heure de la hitbodedout</string>
     <string name="reminder_text">Une hitbodedout de %1$s vous attend.</string>
-    <string name="channel_gate">Barrière du matin</string>
-    <string name="channel_gate_description">Notification permanente qu’Android exige tant que le blocage du matin est actif.</string>
+    <string name="channel_gate">Je suis avec Hachem</string>
+    <string name="channel_gate_description">Notification permanente qu’Android exige tant que le mode « Je suis avec Hachem » est actif.</string>
     <string name="channel_session">Hitbodedout en cours</string>
     <string name="channel_session_description">Décompte affiché pendant une hitbodedout.</string>
     <string name="channel_reminder">Rappels</string>
@@ -269,6 +269,7 @@
     <string name="music_on_summary">%1$s, volume %2$d %%</string>
     <string name="session_music_line">Musique : %1$s</string>
     <!-- Morceaux livres. Titres non traduits : ce sont des noms propres. -->
+    <string name="track_hamelech_basade" translatable="false">המלך בשדה</string>
     <string name="track_niggoun_01">Niggoun 01</string>
     <string name="track_niggoun_02">Niggoun 02</string>
     <string name="track_niggoun_03">Niggoun 03</string>
@@ -276,7 +277,6 @@
     <string name="track_niggoun_05">Niggoun 05</string>
     <string name="track_niggoun_06">Niggoun 06</string>
     <string name="track_niggoun_07">Niggoun 07</string>
-    <string name="track_niggoun_08">Niggoun 08</string>
     <string name="track_niggoun_10">Niggoun 10</string>
     <string name="track_niggoun_11">Niggoun 11</string>
     <string name="track_niggoun_12">Niggoun 12</string>
@@ -305,7 +305,7 @@
 
     <!-- En reserve : ces morceaux sont dans musique/, hors de l'APK.
          Leurs titres restent ici pour ne pas etre perdus au retour. -->
-    <string name="track_hamelech_basade" translatable="false">המלך בשדה</string>
+    <string name="track_niggoun_08">Niggoun 08</string>
     <string name="track_ribo_ata_zocher" translatable="false">Ata Zocher — Ishay Ribo &amp; MBD</string>
     <string name="track_ribo_halev_sheli" translatable="false">Halev Sheli — Ishay Ribo</string>
     <string name="track_ribo_nafshi" translatable="false">Nafshi — Ishay Ribo &amp; Motty Steinmetz</string>
@@ -379,10 +379,7 @@
     <string name="library_kind_source">Source</string>
     <string name="library_kind_article">Article</string>
     <string name="library_summary">Résumé</string>
-    <string name="library_rights">Droits</string>
-    <string name="library_errors">Erreurs relevées</string>
     <string name="library_full_text">Texte intégral</string>
-    <string name="library_full_text_withheld">Article moderne protégé. Texte intégral non reproduit.</string>
     <string name="library_open">Ouvrir la bibliothèque</string>
     <string name="library_read_on_site">Lire sur le site</string>
     <string name="library_open_sefaria">Ouvrir sur Sefaria</string>
@@ -408,15 +405,15 @@
 
     <!-- Section Tikoun HaKlali -->
     <string name="tikkun_title">Tikoun HaKlali</string>
-    <string name="tikkun_hint">Les dix psaumes de Rabbi Na’hman, dans l’ordre : 16, 32, 41, 42, 59, 77, 90, 105, 137, 150.</string>
+    <string name="tikkun_hint">Les dix Tehilim de Rabbi Na’hman, dans l’ordre : 16, 32, 41, 42, 59, 77, 90, 105, 137, 150.</string>
     <string name="tikkun_open">Ouvrir le Tikoun</string>
     <string name="tikkun_psalm_he">תהילים %1$s</string>
     <string name="tikkun_verses">%1$d versets</string>
-    <string name="tikkun_position">Psaume %1$d sur %2$d · %3$d versets</string>
-    <string name="tikkun_progress_none">%1$d psaumes, %2$d versets</string>
-    <string name="tikkun_progress">Psaumes dits aujourd’hui : %1$d sur %2$d</string>
+    <string name="tikkun_position">Tehilim %1$d sur %2$d · %3$d versets</string>
+    <string name="tikkun_progress_none">%1$d Tehilim, %2$d versets</string>
+    <string name="tikkun_progress">Tehilim dits aujourd’hui : %1$d sur %2$d</string>
     <string name="tikkun_progress_all">Dit en entier aujourd’hui.</string>
-    <string name="tikkun_next">Psaume suivant</string>
+    <string name="tikkun_next">Tehilim suivant</string>
     <string name="tikkun_paragraphs">%1$d paragraphes</string>
     <string name="tikkun_flow_open">Tout lire d’un trait</string>
     <string name="tikkun_flow_done">J’ai dit le Tikoun en entier</string>
@@ -477,7 +474,7 @@
     <string name="start_duration">Durée</string>
     <string name="start_theme">Sujet</string>
     <string name="start_music">Musique</string>
-    <string name="start_focus">Concentration</string>
+    <string name="start_focus">Avec Hachem</string>
     <string name="start_music_off">aucune</string>
     <string name="start_focus_on">activée</string>
     <string name="start_focus_off">désactivée</string>
@@ -588,12 +585,12 @@
 
     <!-- Le livre de Tehilim (TehilimActivity, 04/10). -->
     <string name="tehilim_title">Tehilim</string>
-    <string name="tehilim_count">%1$d psaumes, %2$s versets</string>
+    <string name="tehilim_count">%1$d Tehilim, %2$s versets</string>
     <string name="tehilim_month">Selon le jour du mois</string>
     <string name="tehilim_month_state">Jour %1$s du mois : %2$s</string>
     <string name="tehilim_week">Selon le jour de la semaine</string>
     <string name="tehilim_week_state">%1$s : %2$s</string>
-    <string name="tehilim_all">Les 150 psaumes</string>
+    <string name="tehilim_all">Les 150 Tehilim</string>
     <string name="tehilim_single">Tehilim %1$s</string>
     <string name="tehilim_range">Tehilim %1$s à %2$s</string>
     <string name="tehilim_range_verses">Tehilim %1$s, versets %2$s à %3$s</string>
@@ -1094,4 +1091,79 @@
     <string name="banniere_chaharit">Jusqu’à %1$s · fin du temps de la tefila</string>
     <string name="banniere_minha">De %1$s au coucher du soleil, %2$s</string>
     <string name="banniere_arvit">Dès la sortie des étoiles, %1$s</string>
+    <string name="moment_mot_matin">Avant que la journée commence, quelques mots à Hachem.</string>
+    <string name="moment_mot_journee">Au milieu de la journée, un moment à l’écart avec Hachem.</string>
+    <string name="moment_mot_soir">Le soir venu, racontez à Hachem votre journée.</string>
+    <string name="moment_mot_nuit">La nuit, quand tout se tait, parlez à Hachem.</string>
+    <string name="chizuk_demande_title">J’ai besoin de ’hizouk</string>
+    <string name="chizuk_demande_hint">Un texte pour se relever, quand vous voulez.</string>
+    <string name="chizuk_autre">Un autre</string>
+    <string name="chizuk_garder">Garder</string>
+    <string name="chizuk_garde">Gardé ✓</string>
+    <string name="chizuk_partager">Partager</string>
+    <string name="chizuk_commencer">Commencer une hitbodedout</string>
+    <string name="chizuk_favoris">Textes gardés</string>
+    <string name="source_du_jour">Source du jour</string>
+    <string name="source_du_jour_commencer">Commencer</string>
+    <string name="source_du_jour_lire">Lire la suite</string>
+    <string name="journal_travail">À travailler</string>
+    <string name="journal_travail_hint">Une chose à travailler demain</string>
+    <string name="journal_sujets">Sujet : %1$s</string>
+    <string name="parcours_title">Mon parcours</string>
+    <string name="parcours_hint">Ce que vos hitbodedout disent de votre chemin.</string>
+    <string name="parcours_serie">Série actuelle</string>
+    <string name="parcours_meilleure">Meilleure série</string>
+    <string name="parcours_jours_faits">Jours de hitbodedout</string>
+    <string name="parcours_total">Temps total</string>
+    <string name="parcours_moyenne">En moyenne, par jour</string>
+    <string name="parcours_mois">Ce mois-ci</string>
+    <string name="parcours_sujets">Vos sujets les plus fréquents</string>
+    <string name="parcours_sujets_vide">Choisissez un sujet au début d’une hitbodedout : les plus fréquents apparaîtront ici.</string>
+    <string name="parcours_humeur">Humeur</string>
+    <plurals name="parcours_jours">
+        <item quantity="one">%d jour</item>
+        <item quantity="other">%d jours</item>
+    </plurals>
+    <plurals name="parcours_fois">
+        <item quantity="one">%d fois</item>
+        <item quantity="other">%d fois</item>
+    </plurals>
+    <plurals name="parcours_humeur_jours">
+        <item quantity="one">sur %d hitbodedout notée</item>
+        <item quantity="other">sur %d hitbodedout notées</item>
+    </plurals>
+    <string name="question_merci">Pour quoi voulez-vous remercier Hachem aujourd’hui ?</string>
+    <string name="question_raconter">Que s’est-il passé aujourd’hui ? Racontez-le-Lui simplement, avec vos mots.</string>
+    <string name="question_ressenti">Qu’avez-vous ressenti : de la joie, de la peur, de la colère, une blessure ?</string>
+    <string name="question_besoins">De quoi avez-vous besoin : parnassa, santé, chalom bayit, un chidoukh ?</string>
+    <string name="question_force">Quelle force intérieure voulez-vous Lui demander : émouna, joie, patience ?</string>
+    <string name="question_bilan">Où avez-vous été bien aujourd’hui ? Où avez-vous trébuché ?</string>
+    <string name="question_pardon">Pour quoi voulez-vous demander pardon, précisément ?</string>
+    <string name="question_decision">Quelle petite chose ferez-vous autrement demain ?</string>
+    <string name="question_demain">Que voulez-vous Lui dire de demain, de cette semaine ?</string>
+    <string name="question_fin">Pour finir : merci, même si tout n’est pas encore réglé.</string>
+    <string name="question_suivante">Question suivante</string>
+    <string name="question_rang">Question %1$d sur %2$d</string>
+    <string name="simplement_parler">Parler</string>
+    <string name="simplement_ecrire">Écrire</string>
+    <string name="simplement_prier">Prier</string>
+    <string name="simplement_question">Une question</string>
+    <string name="ambiance_title">Ambiance</string>
+    <string name="ambiance_silence">Silence</string>
+    <string name="ambiance_pluie">Pluie</string>
+    <string name="ambiance_mer">Mer</string>
+    <string name="ambiance_foret">Forêt</string>
+    <string name="ambiance_feu">Feu</string>
+    <string name="ambiance_nuit">Nuit</string>
+    <string name="parcours_moyenne_ligne">En moyenne, %1$s par jour de hitbodedout</string>
+    <string name="parcours_mois_vide">Pas encore de hitbodedout ce mois-ci.</string>
+    <string name="parcours_humeur_legende">Avant et après, en moyenne</string>
+    <plurals name="parcours_unite_jours">
+        <item quantity="one">jour</item>
+        <item quantity="other">jours</item>
+    </plurals>
+    <plurals name="parcours_mois_total">
+        <item quantity="one">%1$s ce mois-ci, en %2$d jour</item>
+        <item quantity="other">%1$s ce mois-ci, en %2$d jours</item>
+    </plurals>
 </resources>

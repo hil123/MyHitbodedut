@@ -118,6 +118,13 @@ export const Salutation = {
     if (heure >= 12 && heure < 18) return 'hero_greeting_afternoon';
     return 'hero_greeting_evening';
   },
+  /** Le mot du moment sous la prière de l'heure (Salutation.mot) : la nuit comprise. */
+  mot(heure) {
+    if (heure >= 5 && heure < 12) return 'moment_mot_matin';
+    if (heure >= 12 && heure < 18) return 'moment_mot_journee';
+    if (heure >= 18 && heure < 23) return 'moment_mot_soir';
+    return 'moment_mot_nuit';
+  },
 };
 
 /**
@@ -337,5 +344,47 @@ export const LibraryRules = {
       }
     }
     return null;
+  },
+};
+
+/**
+ * La source du jour (SourceDuJour.kt, 19/10) : un paragraphe des sources
+ * libres de la bibliothèque, le même toute la journée, le même qu'Android.
+ */
+export const SourceDuJour = {
+  MIN: 80,
+  PAS: 37,
+  candidats(bibliotheque) {
+    return LibraryRules.sources(bibliotheque).flatMap((section) => section.sous_sections.flatMap((sous) => sous.entrees.flatMap((e) =>
+      LibraryRules.paragraphes(bibliotheque, e).filter((p) => p.length >= SourceDuJour.MIN).map((texte) => ({ source: e, texte })))));
+  },
+  /** iso : « AAAA-MM-JJ ». */
+  choix(bibliotheque, iso) {
+    const c = SourceDuJour.candidats(bibliotheque);
+    if (c.length === 0) return null;
+    const jour = Math.round(Date.UTC(+iso.slice(0, 4), +iso.slice(5, 7) - 1, +iso.slice(8, 10)) / 86400000);
+    return c[(((jour * SourceDuJour.PAS) % c.length) + c.length) % c.length];
+  },
+  extrait(texte, max = 320) {
+    if (texte.length <= max) return texte;
+    const coupe = texte.slice(0, max);
+    return `${coupe.slice(0, coupe.lastIndexOf(' ')).replace(/[,\s:;]+$/, '')}…`;
+  },
+};
+
+/**
+ * « Mon parcours » (ParcoursActivity.kt, Parcours, 19/10) : les jours faits, le
+ * temps, la moyenne et les sujets les plus fréquents — dans l'ordre des sujets à
+ * égalité, comme ThemeRules.frequents.
+ */
+export const Parcours = {
+  SUJETS: ['emotions', 'gratitude', 'decisions', 'famille', 'zivoug', 'parnassa', 'avoda', 'difficultes', 'croissance', 'autre'],
+  bilan(jours, max = 5) {
+    const faits = jours.filter((r) => r.faite);
+    const minutes = faits.reduce((s, r) => s + r.minutes, 0);
+    const comptes = new Map(Parcours.SUJETS.map((s) => [s, 0]));
+    for (const r of jours) for (const s of r.themes ?? []) if (comptes.has(s)) comptes.set(s, comptes.get(s) + 1);
+    const sujets = [...comptes].filter(([, n]) => n > 0).sort((a, b) => b[1] - a[1]).slice(0, max);
+    return { jours: faits.length, minutes, moyenne: faits.length ? Math.round(minutes / faits.length) : 0, sujets };
   },
 };

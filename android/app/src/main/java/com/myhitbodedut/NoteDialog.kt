@@ -84,6 +84,13 @@ object NoteDialog {
             setHint(R.string.journal_gratitude_hint)
             setSingleLine()
         }
+        // La seconde question de fin (19/10) : une chose à travailler.
+        val travail = EditText(activity).apply {
+            filters = arrayOf(android.text.InputFilter.LengthFilter(JournalPlus.GRATITUDE_MAX))
+            setText(plus.travail)
+            setHint(R.string.journal_travail_hint)
+            setSingleLine()
+        }
 
         val layout = LinearLayout(activity).apply {
             orientation = LinearLayout.VERTICAL
@@ -93,6 +100,7 @@ object NoteDialog {
             addView(humeurs(R.string.journal_humeur_avant, avant) { avant = it })
             addView(humeurs(R.string.journal_humeur_apres, apres) { apres = it })
             addView(gratitude)
+            addView(travail)
         }
         val defile = android.widget.ScrollView(activity).apply { addView(layout) }
 
@@ -101,7 +109,7 @@ object NoteDialog {
             .setView(defile)
             .setPositiveButton(R.string.action_save) { _, _ ->
                 Store.setNote(activity, date, input.text.toString().trim())
-                JournalPlus.ecrire(activity, date, JournalPlus.Plus(avant, apres, gratitude.text.toString().trim()))
+                JournalPlus.ecrire(activity, date, JournalPlus.Plus(avant, apres, gratitude.text.toString().trim(), travail.text.toString().trim()))
                 onSaved()
             }
             .setNegativeButton(R.string.action_later, null)
