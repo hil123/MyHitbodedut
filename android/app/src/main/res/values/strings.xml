@@ -269,6 +269,7 @@
     <string name="music_on_summary">%1$s, volume %2$d %%</string>
     <string name="session_music_line">Musique : %1$s</string>
     <!-- Morceaux livres. Titres non traduits : ce sont des noms propres. -->
+    <string name="track_hamelech_basade" translatable="false">המלך בשדה</string>
     <string name="track_niggoun_01">Niggoun 01</string>
     <string name="track_niggoun_02">Niggoun 02</string>
     <string name="track_niggoun_03">Niggoun 03</string>
@@ -276,7 +277,6 @@
     <string name="track_niggoun_05">Niggoun 05</string>
     <string name="track_niggoun_06">Niggoun 06</string>
     <string name="track_niggoun_07">Niggoun 07</string>
-    <string name="track_niggoun_08">Niggoun 08</string>
     <string name="track_niggoun_10">Niggoun 10</string>
     <string name="track_niggoun_11">Niggoun 11</string>
     <string name="track_niggoun_12">Niggoun 12</string>
@@ -305,7 +305,7 @@
 
     <!-- En reserve : ces morceaux sont dans musique/, hors de l'APK.
          Leurs titres restent ici pour ne pas etre perdus au retour. -->
-    <string name="track_hamelech_basade" translatable="false">המלך בשדה</string>
+    <string name="track_niggoun_08">Niggoun 08</string>
     <string name="track_ribo_ata_zocher" translatable="false">Ata Zocher — Ishay Ribo &amp; MBD</string>
     <string name="track_ribo_halev_sheli" translatable="false">Halev Sheli — Ishay Ribo</string>
     <string name="track_ribo_nafshi" translatable="false">Nafshi — Ishay Ribo &amp; Motty Steinmetz</string>
@@ -379,10 +379,7 @@
     <string name="library_kind_source">Source</string>
     <string name="library_kind_article">Article</string>
     <string name="library_summary">Résumé</string>
-    <string name="library_rights">Droits</string>
-    <string name="library_errors">Erreurs relevées</string>
     <string name="library_full_text">Texte intégral</string>
-    <string name="library_full_text_withheld">Article moderne protégé. Texte intégral non reproduit.</string>
     <string name="library_open">Ouvrir la bibliothèque</string>
     <string name="library_read_on_site">Lire sur le site</string>
     <string name="library_open_sefaria">Ouvrir sur Sefaria</string>
@@ -408,15 +405,15 @@
 
     <!-- Section Tikoun HaKlali -->
     <string name="tikkun_title">Tikoun HaKlali</string>
-    <string name="tikkun_hint">Les dix psaumes de Rabbi Na’hman, dans l’ordre : 16, 32, 41, 42, 59, 77, 90, 105, 137, 150.</string>
+    <string name="tikkun_hint">Les dix Tehilim de Rabbi Na’hman, dans l’ordre : 16, 32, 41, 42, 59, 77, 90, 105, 137, 150.</string>
     <string name="tikkun_open">Ouvrir le Tikoun</string>
     <string name="tikkun_psalm_he">תהילים %1$s</string>
     <string name="tikkun_verses">%1$d versets</string>
-    <string name="tikkun_position">Psaume %1$d sur %2$d · %3$d versets</string>
-    <string name="tikkun_progress_none">%1$d psaumes, %2$d versets</string>
-    <string name="tikkun_progress">Psaumes dits aujourd’hui : %1$d sur %2$d</string>
+    <string name="tikkun_position">Tehilim %1$d sur %2$d · %3$d versets</string>
+    <string name="tikkun_progress_none">%1$d Tehilim, %2$d versets</string>
+    <string name="tikkun_progress">Tehilim dits aujourd’hui : %1$d sur %2$d</string>
     <string name="tikkun_progress_all">Dit en entier aujourd’hui.</string>
-    <string name="tikkun_next">Psaume suivant</string>
+    <string name="tikkun_next">Tehilim suivant</string>
     <string name="tikkun_paragraphs">%1$d paragraphes</string>
     <string name="tikkun_flow_open">Tout lire d’un trait</string>
     <string name="tikkun_flow_done">J’ai dit le Tikoun en entier</string>
@@ -588,12 +585,12 @@
 
     <!-- Le livre de Tehilim (TehilimActivity, 04/10). -->
     <string name="tehilim_title">Tehilim</string>
-    <string name="tehilim_count">%1$d psaumes, %2$s versets</string>
+    <string name="tehilim_count">%1$d Tehilim, %2$s versets</string>
     <string name="tehilim_month">Selon le jour du mois</string>
     <string name="tehilim_month_state">Jour %1$s du mois : %2$s</string>
     <string name="tehilim_week">Selon le jour de la semaine</string>
     <string name="tehilim_week_state">%1$s : %2$s</string>
-    <string name="tehilim_all">Les 150 psaumes</string>
+    <string name="tehilim_all">Les 150 Tehilim</string>
     <string name="tehilim_single">Tehilim %1$s</string>
     <string name="tehilim_range">Tehilim %1$s à %2$s</string>
     <string name="tehilim_range_verses">Tehilim %1$s, versets %2$s à %3$s</string>
