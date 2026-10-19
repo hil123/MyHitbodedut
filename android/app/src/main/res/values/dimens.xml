@@ -68,7 +68,7 @@
         values-h640dp rend 236dp, values-h720dp 268dp. 15/10 : 168dp coupaient encore
         « Commencer » sous les onglets (capture 480x854) ; 136dp le laissent entier.
     -->
-    <dimen name="gauge_size">136dp</dimen>
+    <dimen name="gauge_size">176dp</dimen>
     <!--
         La même jauge, posée à côté de l'en-tête (layout-land/activity_main.xml).
         Couché sur un 480x854, il reste 216dp sous la barre d'état et au-dessus
