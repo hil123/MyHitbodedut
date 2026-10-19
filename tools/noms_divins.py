@@ -74,6 +74,8 @@ def developpe(texte):
         compte += 1
         return m.group(1) + m.group(2)
     t = re.sub(f"(א{SIGNES}ד{SIGNES})[-־](נ{SIGNES}י)", adonai, t)
+    # אֱ-לֹהִים, הָאֵ-ל, אֲ-דֹנָי : le tiret juste après l'aleph (19/10, feuillets du Yanuka).
+    t = re.sub(DEBUT + PREFIXE + f"(א{SIGNES})[-־](?=[לד])", adonai, t)
     return NFC(t), compte
 
 
