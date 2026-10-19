@@ -15,8 +15,12 @@ import java.time.YearMonth
  */
 object JournalPlus {
 
-    data class Plus(val avant: Int = 0, val apres: Int = 0, val gratitude: String = "") {
-        val vide: Boolean get() = avant == 0 && apres == 0 && gratitude.isBlank()
+    /**
+     * [travail] : la chose à travailler (proposition 5, 19/10), seconde question
+     * de fin à côté de la gratitude.
+     */
+    data class Plus(val avant: Int = 0, val apres: Int = 0, val gratitude: String = "", val travail: String = "") {
+        val vide: Boolean get() = avant == 0 && apres == 0 && gratitude.isBlank() && travail.isBlank()
     }
 
     /** Les cinq humeurs, de la plus lourde à la plus légère. */
@@ -29,19 +33,23 @@ object JournalPlus {
 
     fun lire(context: Context, date: String): Plus {
         val o = tout(context).optJSONObject(date) ?: return Plus()
-        return Plus(o.optInt("avant", 0).coerceIn(0, 5), o.optInt("apres", 0).coerceIn(0, 5), o.optString("gratitude", "").take(GRATITUDE_MAX))
+        return Plus(o.optInt("avant", 0).coerceIn(0, 5), o.optInt("apres", 0).coerceIn(0, 5), o.optString("gratitude", "").take(GRATITUDE_MAX),
+            o.optString("travail", "").take(GRATITUDE_MAX))
     }
 
     fun ecrire(context: Context, date: String, plus: Plus) {
         val t = tout(context)
-        if (plus.vide) t.remove(date) else t.put(date, JSONObject().put("avant", plus.avant).put("apres", plus.apres).put("gratitude", plus.gratitude.take(GRATITUDE_MAX)))
+        if (plus.vide) t.remove(date) else t.put(date, JSONObject().put("avant", plus.avant).put("apres", plus.apres)
+            .put("gratitude", plus.gratitude.take(GRATITUDE_MAX)).put("travail", plus.travail.take(GRATITUDE_MAX)))
         Store.setJournalPlusBrut(context, t.toString())
     }
 
     /** « 🙁 → 🙂 · Gratitude » pour la ligne du journal ; vide s'il n'y a rien. */
-    fun resume(plus: Plus, gratitude: String): String = listOfNotNull(
+    fun resume(plus: Plus, gratitude: String, travail: String = "", sujets: String = ""): String = listOfNotNull(
+        sujets.takeIf { it.isNotBlank() },
         if (plus.avant > 0 || plus.apres > 0) "${HUMEURS.getOrNull(plus.avant - 1) ?: "·"} → ${HUMEURS.getOrNull(plus.apres - 1) ?: "·"}" else null,
         plus.gratitude.takeIf { it.isNotBlank() }?.let { "$gratitude : $it" },
+        plus.travail.takeIf { it.isNotBlank() }?.let { "$travail : $it" },
     ).joinToString("\n")
 
     /** Les minutes de chaque jour du mois, du 1er au dernier (0 sans hitbodedout). */

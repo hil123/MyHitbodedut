@@ -105,6 +105,8 @@ export function creeStore(stockage, { maintenant = () => new Date(), fuseau } = 
     joursFaits: () => new Set(Object.values(days()).filter((r) => r.faite).map((r) => r.date)),
     aDejaPratique: () => Object.values(days()).some((r) => r.faite),
     totalMinutes: () => Object.values(days()).reduce((s, r) => s + r.minutes, 0),
+    /** Toutes les journées, pour « Mon parcours » (19/10). */
+    jours: () => Object.values(days()),
     /** Les minutes des jours faits, par date (Store.bilan, paliers du 11/10). */
     minutesParJour: () => Object.fromEntries(Object.values(days()).filter((r) => r.faite).map((r) => [r.date, r.minutes])),
     /** null tant que les paliers n'ont jamais été regardés : le premier passage ne fête rien. */

@@ -371,3 +371,20 @@ export const SourceDuJour = {
     return `${coupe.slice(0, coupe.lastIndexOf(' ')).replace(/[,\s:;]+$/, '')}…`;
   },
 };
+
+/**
+ * « Mon parcours » (ParcoursActivity.kt, Parcours, 19/10) : les jours faits, le
+ * temps, la moyenne et les sujets les plus fréquents — dans l'ordre des sujets à
+ * égalité, comme ThemeRules.frequents.
+ */
+export const Parcours = {
+  SUJETS: ['emotions', 'gratitude', 'decisions', 'famille', 'zivoug', 'parnassa', 'avoda', 'difficultes', 'croissance', 'autre'],
+  bilan(jours, max = 5) {
+    const faits = jours.filter((r) => r.faite);
+    const minutes = faits.reduce((s, r) => s + r.minutes, 0);
+    const comptes = new Map(Parcours.SUJETS.map((s) => [s, 0]));
+    for (const r of jours) for (const s of r.themes ?? []) if (comptes.has(s)) comptes.set(s, comptes.get(s) + 1);
+    const sujets = [...comptes].filter(([, n]) => n > 0).sort((a, b) => b[1] - a[1]).slice(0, max);
+    return { jours: faits.length, minutes, moyenne: faits.length ? Math.round(minutes / faits.length) : 0, sujets };
+  },
+};

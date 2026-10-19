@@ -102,7 +102,12 @@ class JournalActivity : AppCompatActivity() {
                 else -> getString(R.string.today_declared)
             }
             // Le journal enrichi (14/10) : l'humeur et la gratitude sous la note.
-            val plus = JournalPlus.resume(JournalPlus.lire(holder.itemView.context, row.date), getString(R.string.journal_gratitude))
+            // Le sujet du jour (19/10), puis l'humeur, la gratitude et la chose à travailler.
+            val sujets = row.themes.mapNotNull { ThemeRules.parse(it) }.distinct().joinToString(" · ") { getString(it.titre) }
+            val plus = JournalPlus.resume(
+                JournalPlus.lire(holder.itemView.context, row.date), getString(R.string.journal_gratitude),
+                getString(R.string.journal_travail), if (sujets.isBlank()) "" else getString(R.string.journal_sujets, sujets),
+            )
             val texte = listOf(row.note, plus).filter { it.isNotBlank() }.joinToString("\n")
             holder.note.visibility = if (texte.isBlank()) View.GONE else View.VISIBLE
             holder.note.text = texte

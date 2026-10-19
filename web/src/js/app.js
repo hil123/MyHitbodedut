@@ -4,7 +4,7 @@
 // n'existe pas encore est montré, mais inerte (classe « a-venir »).
 
 import { chargeTraduction, formate, langueInitiale, LANGUES } from './i18n.js';
-import { Anneaux, CycleTehilim, DureeSeance, JaugeSemaine, LibraryRules, Plaque, Reference, Salutation, SiddurMoment, SignetsSiddur, SourceDuJour } from './regles.js';
+import { Anneaux, CycleTehilim, DureeSeance, JaugeSemaine, LibraryRules, Plaque, Reference, Salutation, SiddurMoment, SignetsSiddur, SourceDuJour, Parcours } from './regles.js';
 import { ART_DU_MOMENT, ChizukBag, ChizukRules } from './chizuk.js';
 import { DanseMesure } from './seance.js';
 import { creeStore, memoire } from './store.js';
@@ -531,7 +531,28 @@ function panneauAujourdhui() {
     // L'accueil selon l'heure (14/10) : la prière du moment, Birkat haLevana les soirs de la fenêtre.
     ...momentAccueil(),
     // Les trophées et les paliers, en bas de la page (11/10).
-    h('button', { class: 'bouton-trophees', onclick: () => ouvrir('paliers') }, tr.t('trophees_paliers'))));
+    h('button', { class: 'bouton-trophees', onclick: () => ouvrir('paliers') }, tr.t('trophees_paliers')),
+    // Mon parcours (19/10).
+    h('button', { class: 'bouton-trophees', onclick: () => ouvrir('parcours') }, tr.t('parcours_title'))));
+}
+
+/** « Mon parcours » (ParcoursActivity) : les chiffres et les sujets ; l'humeur reste sur Android, qui a le journal. */
+function ecranParcours() {
+  const b = Parcours.bilan(store.jours());
+  const ligneChiffre = (cle, valeur) => h('div', { class: 'parcours-ligne' }, h('span', {}, tr.t(cle)), h('strong', {}, valeur));
+  return h('div', { class: 'ecran avec-bandeau' },
+    bandeau(tr.t('parcours_title'), { puce: h('p', { class: 'bandeau-sous-titre' }, tr.t('parcours_hint')), dessin: 'char_arms_raised' }),
+    h('div', { class: 'defile' }, h('div', { class: 'contenu parcours' },
+      h('div', { class: 'carte' },
+        ligneChiffre('parcours_serie', tr.p('parcours_jours', store.streak())),
+        ligneChiffre('parcours_meilleure', tr.p('parcours_jours', store.meilleureSerie())),
+        ligneChiffre('parcours_jours_faits', String(b.jours)),
+        ligneChiffre('parcours_total', tr.duree(b.minutes)),
+        ligneChiffre('parcours_moyenne', tr.duree(b.moyenne))),
+      h('h2', { class: 'section' }, tr.t('parcours_sujets')),
+      h('div', { class: 'carte' }, b.sujets.length
+        ? b.sujets.map(([s, n]) => ligneChiffre(`theme_${s}`, tr.p('parcours_fois', n)))
+        : h('p', { class: 'parcours-vide' }, tr.t('parcours_sujets_vide'))))));
 }
 
 /** L'accueil selon l'heure (AccueilMoment.kt) : la prière du moment, et Birkat haLevana les soirs où elle se dit. */
@@ -1465,7 +1486,7 @@ function ecranHizouk() {
       gardes.length ? h('h2', { class: 'section' }, tr.t('chizuk_favoris')) : null,
       gardes.length ? h('div', { class: 'carte' }, gardes.map((x) =>
         h('button', { class: 'hizouk-garde', onclick: () => { hizouk = x; rendre(); document.querySelector('.defile')?.scrollTo(0, 0); } },
-          ChizukRules.traduction(x, tr.langue) || ChizukRules.hebreu(chizuk, x),
+          h('span', { class: 'hizouk-garde-texte' }, ChizukRules.traduction(x, tr.langue) || ChizukRules.hebreu(chizuk, x)),
           h('span', { class: 'hizouk-ref' }, Reference.localise(x.ref, tr.langue))))) : null)));
 }
 
@@ -3245,7 +3266,7 @@ function arreteDanse() {
 // et le geste de retour ramènent à l'accueil, sur l'onglet quitté.
 function ecranCourant() {
   const e = location.hash.slice(1);
-  return ['musique', 'reglages', 'seance', 'bravo', 'tehilim', 'lecture', 'siddur', 'priere', 'tikkun', 'bibliotheque', 'livres', 'source', 'zmanim', 'calendrier', 'paliers', 'hilloulot', 'halakha', 'recherche'].includes(e) ? e : 'accueil';
+  return ['musique', 'reglages', 'seance', 'bravo', 'tehilim', 'lecture', 'siddur', 'priere', 'tikkun', 'bibliotheque', 'livres', 'source', 'zmanim', 'calendrier', 'paliers', 'hilloulot', 'halakha', 'recherche', 'hizouk', 'parcours'].includes(e) ? e : 'accueil';
 }
 function ouvrir(ecran) {
   // L'entrée sur l'écran de séance tire le mot d'ouverture (SessionActivity.onCreate).
@@ -3311,6 +3332,7 @@ function rendre() {
   else if (ecran === 'recherche') app.append(ecranRecherche());
   else if (ecran === 'seance') app.append(ecranSeance());
   else if (ecran === 'hizouk') app.append(ecranHizouk());
+  else if (ecran === 'parcours') app.append(ecranParcours());
   else if (ecran === 'bravo') app.append(ecranBravo());
   else if (ecran === 'tehilim') app.append(ecranTehilim());
   else if (ecran === 'lecture') app.append(ecranLecture());

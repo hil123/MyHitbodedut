@@ -162,6 +162,7 @@ class MainActivity : AppCompatActivity() {
         }
         findViewById<Button>(R.id.today_offline).setOnClickListener { declarerHorsTelephone() }
         findViewById<Button>(R.id.trophees_paliers).setOnClickListener { startActivity(Intent(this, PaliersActivity::class.java)) }
+        findViewById<Button>(R.id.parcours_button).setOnClickListener { startActivity(Intent(this, ParcoursActivity::class.java)) }
         findViewById<View>(R.id.start_duration).setOnClickListener {
             pickDuration()
         }

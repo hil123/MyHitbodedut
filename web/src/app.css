@@ -1242,8 +1242,8 @@ button.corps { min-height: 44px; }
 .hizouk-actions { display: flex; gap: 8px; margin-top: 12px; }
 .hizouk-actions button { flex: 1; }
 .contenu.hizouk > .principal { width: 100%; margin-top: 8px; }
-.hizouk-garde { width: 100%; text-align: start; padding: 12px 4px; border: 0; background: none; color: var(--ink); font: inherit; font-size: 15px;
-  display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.hizouk-garde { display: block; width: 100%; text-align: start; padding: 12px 4px; border: 0; background: none; color: var(--ink); font: inherit; font-size: 15px; cursor: pointer; }
+.hizouk-garde-texte { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
 .hizouk-garde + .hizouk-garde { border-top: 1px solid var(--line); }
 .hizouk-ref { display: block; color: var(--muted); font-size: 13px; margin-top: 2px; }
 
@@ -1252,3 +1252,9 @@ button.corps { min-height: 44px; }
 .source-du-jour-texte { margin: 8px 0 4px; font-family: var(--police-texte); font-size: 19px; line-height: 1.6; color: var(--ink); text-align: start; }
 .source-du-jour-ref { margin: 0; color: var(--muted); font-size: 13px; font-style: italic; }
 .source-du-jour-actions { display: flex; gap: 8px; margin-top: 10px; }
+
+/* Mon parcours (19/10) */
+.parcours-ligne { display: flex; justify-content: space-between; gap: 12px; padding: 10px 0; }
+.parcours-ligne + .parcours-ligne { border-top: 1px solid var(--line); }
+.parcours-ligne strong { color: var(--brand); }
+.parcours-vide { margin: 8px 0; color: var(--muted); }

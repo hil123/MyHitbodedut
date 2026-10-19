@@ -1103,4 +1103,31 @@
     <string name="source_du_jour">Source du jour</string>
     <string name="source_du_jour_commencer">Commencer</string>
     <string name="source_du_jour_lire">Lire la suite</string>
+    <string name="journal_travail">À travailler</string>
+    <string name="journal_travail_hint">Une chose à travailler demain</string>
+    <string name="journal_sujets">Sujet : %1$s</string>
+    <string name="parcours_title">Mon parcours</string>
+    <string name="parcours_hint">Ce que vos hitbodedout disent de votre chemin.</string>
+    <string name="parcours_serie">Série actuelle</string>
+    <string name="parcours_meilleure">Meilleure série</string>
+    <string name="parcours_jours_faits">Jours de hitbodedout</string>
+    <string name="parcours_total">Temps total</string>
+    <string name="parcours_moyenne">En moyenne, par jour</string>
+    <string name="parcours_mois">Ce mois-ci</string>
+    <string name="parcours_sujets">Vos sujets les plus fréquents</string>
+    <string name="parcours_sujets_vide">Choisissez un sujet au début d’une hitbodedout : les plus fréquents apparaîtront ici.</string>
+    <string name="parcours_humeur">Humeur</string>
+    <string name="parcours_humeur_moyenne">En moyenne : %1$s avant, %2$s après</string>
+    <plurals name="parcours_jours">
+        <item quantity="one">%d jour</item>
+        <item quantity="other">%d jours</item>
+    </plurals>
+    <plurals name="parcours_fois">
+        <item quantity="one">%d fois</item>
+        <item quantity="other">%d fois</item>
+    </plurals>
+    <plurals name="parcours_humeur_jours">
+        <item quantity="one">sur %d hitbodedout notée</item>
+        <item quantity="other">sur %d hitbodedout notées</item>
+    </plurals>
 </resources>

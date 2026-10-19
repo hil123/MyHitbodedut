@@ -1085,4 +1085,34 @@
     <string name="source_du_jour">מקור יומי</string>
     <string name="source_du_jour_commencer">להתחיל</string>
     <string name="source_du_jour_lire">להמשיך לקרוא</string>
+    <string name="journal_travail">לעבוד על</string>
+    <string name="journal_travail_hint">דבר אחד לעבוד עליו מחר</string>
+    <string name="journal_sujets">נושא: %1$s</string>
+    <string name="parcours_title">הדרך שלי</string>
+    <string name="parcours_hint">מה ההתבודדויות שלכם מספרות על הדרך.</string>
+    <string name="parcours_serie">רצף נוכחי</string>
+    <string name="parcours_meilleure">הרצף הארוך ביותר</string>
+    <string name="parcours_jours_faits">ימי התבודדות</string>
+    <string name="parcours_total">זמן כולל</string>
+    <string name="parcours_moyenne">בממוצע, ליום</string>
+    <string name="parcours_mois">החודש</string>
+    <string name="parcours_sujets">הנושאים השכיחים שלכם</string>
+    <string name="parcours_sujets_vide">בחרו נושא בתחילת התבודדות: השכיחים יופיעו כאן.</string>
+    <string name="parcours_humeur">מצב רוח</string>
+    <string name="parcours_humeur_moyenne">בממוצע: %1$s לפני, %2$s אחרי</string>
+    <plurals name="parcours_jours">
+        <item quantity="one">יום אחד</item>
+        <item quantity="two">יומיים</item>
+        <item quantity="other">%d ימים</item>
+    </plurals>
+    <plurals name="parcours_fois">
+        <item quantity="one">פעם אחת</item>
+        <item quantity="two">פעמיים</item>
+        <item quantity="other">%d פעמים</item>
+    </plurals>
+    <plurals name="parcours_humeur_jours">
+        <item quantity="one">מתוך התבודדות אחת שדורגה</item>
+        <item quantity="two">מתוך שתי התבודדויות שדורגו</item>
+        <item quantity="other">מתוך %d התבודדויות שדורגו</item>
+    </plurals>
 </resources>

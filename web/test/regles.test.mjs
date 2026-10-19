@@ -7,7 +7,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { Anneaux, CycleTehilim, DureeSeance, JaugeSemaine, LibraryRules, Plaque, Reference, RegleLangue, Salutation, SiddurMoment, SignetsSiddur, SourceDuJour } from '../src/js/regles.js';
+import { Anneaux, CycleTehilim, DureeSeance, JaugeSemaine, LibraryRules, Plaque, Reference, RegleLangue, Salutation, SiddurMoment, SignetsSiddur, SourceDuJour, Parcours } from '../src/js/regles.js';
 import { estJourChome, israelParDefaut } from '../src/js/calendrier.js';
 import { creeStore, dateValide, memoire } from '../src/js/store.js';
 import { creeTraduction, formate, langueInitiale } from '../src/js/i18n.js';
@@ -673,4 +673,14 @@ test('la source du jour : la même qu’Android, le même jour (19/10)', async (
   assert.deepEqual(ici('2026-10-20'), ['src-lt-zera', 1]);
   assert.deepEqual(ici('2027-01-01'), ['src-lt-zera', 2]);
   assert.ok(SourceDuJour.extrait('א'.repeat(10) + ' ' + 'ב'.repeat(400)).endsWith('…'));
+});
+
+test('mon parcours : jours faits, temps, moyenne, sujets fréquents (19/10)', () => {
+  const b = Parcours.bilan([
+    { date: '2026-10-01', minutes: 20, faite: true, themes: ['famille', 'parnassa'] },
+    { date: '2026-10-02', minutes: 10, faite: true, themes: ['famille'] },
+    { date: '2026-10-03', minutes: 0, faite: false, themes: [] },
+  ]);
+  assert.deepEqual(b, { jours: 2, minutes: 30, moyenne: 15, sujets: [['famille', 2], ['parnassa', 1]] });
+  assert.equal(Parcours.bilan([]).moyenne, 0);
 });
