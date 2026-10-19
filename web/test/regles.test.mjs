@@ -7,7 +7,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { Anneaux, CycleTehilim, DureeSeance, JaugeSemaine, LibraryRules, Plaque, Reference, RegleLangue, Salutation, SiddurMoment, SignetsSiddur } from '../src/js/regles.js';
+import { Anneaux, CycleTehilim, DureeSeance, JaugeSemaine, LibraryRules, Plaque, Reference, RegleLangue, Salutation, SiddurMoment, SignetsSiddur, SourceDuJour, Parcours } from '../src/js/regles.js';
 import { estJourChome, israelParDefaut } from '../src/js/calendrier.js';
 import { creeStore, dateValide, memoire } from '../src/js/store.js';
 import { creeTraduction, formate, langueInitiale } from '../src/js/i18n.js';
@@ -274,6 +274,10 @@ test('un fichier qui n’est pas une sauvegarde est refusé', () => {
 });
 
 test('la salutation suit l\'heure : bonjour le jour, bonsoir le soir et la nuit', () => {
+  assert.equal(Salutation.mot(6), 'moment_mot_matin');
+  assert.equal(Salutation.mot(15), 'moment_mot_journee');
+  assert.equal(Salutation.mot(20), 'moment_mot_soir');
+  assert.equal(Salutation.mot(1), 'moment_mot_nuit');
   assert.equal(Salutation.cle(7), 'hero_greeting_morning');
   assert.equal(Salutation.cle(11), 'hero_greeting_morning');
   assert.equal(Salutation.cle(12), 'hero_greeting_afternoon');
@@ -657,4 +661,26 @@ test('datesGain incrémental : mêmes niveaux que le calcul complet, trous, note
     const pAvant = { minutes: avant, notes: nAvant, meilleureSerie: PlaqueB.meilleureSerie(new Set(Object.keys(avant)), exempt) };
     assert.ok(!Trophees.gagne(pAvant, e), `${cle} déjà gagné avant ${d}`);
   }
+});
+
+test('la source du jour : la même qu’Android, le même jour (19/10)', async () => {
+  const { readFile } = await import('node:fs/promises');
+  const b = JSON.parse(await readFile(new URL('../../android/app/src/main/res/raw/bibliotheque.json', import.meta.url), 'utf8'));
+  const c = SourceDuJour.candidats(b);
+  assert.ok(c.length > 50 && c.every((x) => x.texte.length >= 80));
+  const ici = (iso) => { const p = SourceDuJour.choix(b, iso); return [p.source.id, LibraryRules.paragraphes(b, p.source).indexOf(p.texte)]; };
+  assert.deepEqual(ici('2026-10-19'), ['src-lm2-25', 9]);
+  assert.deepEqual(ici('2026-10-20'), ['src-lt-zera', 1]);
+  assert.deepEqual(ici('2027-01-01'), ['src-lt-zera', 2]);
+  assert.ok(SourceDuJour.extrait('א'.repeat(10) + ' ' + 'ב'.repeat(400)).endsWith('…'));
+});
+
+test('mon parcours : jours faits, temps, moyenne, sujets fréquents (19/10)', () => {
+  const b = Parcours.bilan([
+    { date: '2026-10-01', minutes: 20, faite: true, themes: ['famille', 'parnassa'] },
+    { date: '2026-10-02', minutes: 10, faite: true, themes: ['famille'] },
+    { date: '2026-10-03', minutes: 0, faite: false, themes: [] },
+  ]);
+  assert.deepEqual(b, { jours: 2, minutes: 30, moyenne: 15, sujets: [['famille', 2], ['parnassa', 1]] });
+  assert.equal(Parcours.bilan([]).moyenne, 0);
 });

@@ -43,6 +43,9 @@ class SessionActivity : AppCompatActivity() {
      */
     private var guideStep = 0
 
+    /** La question en cours de « Je ne sais pas quoi dire » ; -1 : aucune (19/10). */
+    private var question = -1
+
     /**
      * Le bouton de blocage n'a de sens que s'il a un texte à donner. En
      * release, tant qu'aucun texte n'est relu, il n'y en a pas.
@@ -101,6 +104,7 @@ class SessionActivity : AppCompatActivity() {
         // premier temps et le mot de clôture serait tiré une seconde fois.
         savedInstanceState?.let {
             guideStep = it.getInt(ETAT_GUIDE, 0)
+            question = it.getInt(ETAT_QUESTION, -1)
             wasRunning = it.getBoolean(ETAT_EN_COURS, false)
             cancelling = it.getBoolean(ETAT_ABANDON, false)
         }
@@ -109,7 +113,37 @@ class SessionActivity : AppCompatActivity() {
         miniLecteur = MiniLecteur(this)
 
         // « Je n'arrive pas à parler » : le moment « blocage ».
-        stuck.setOnClickListener { ChizukCard.show(chizuk, Moment.BLOCAGE) }
+        // Puis, sous le texte, une question à la fois (propositions 3 et 15, 19/10).
+        stuck.setOnClickListener {
+            ChizukCard.show(chizuk, Moment.BLOCAGE)
+            if (question < 0) question = 0
+            renderQuestion()
+        }
+        findViewById<View>(R.id.session_question_suivante).setOnClickListener {
+            question = QuestionsBlocage.suivante(question)
+            renderQuestion()
+            Effets.fondu(findViewById(R.id.session_questions))
+        }
+
+        // « Commencer simplement » (proposition 15) : parler, écrire, prier ou
+        // recevoir une question ; chacun démarre la séance aussitôt.
+        fun demarrer(ensuite: () -> Unit = {}) {
+            SessionService.start(this, Store.targetMinutes(this))
+            guideStep = 0
+            drawOpening()
+            render()
+            ensuite()
+        }
+        findViewById<View>(R.id.simplement_parler).setOnClickListener { demarrer() }
+        findViewById<View>(R.id.simplement_ecrire).setOnClickListener {
+            demarrer { NoteDialog.show(this, Store.today(), onSaved = {}) }
+        }
+        findViewById<View>(R.id.simplement_prier).setOnClickListener {
+            demarrer { startActivity(android.content.Intent(this, TefilotActivity::class.java)) }
+        }
+        findViewById<View>(R.id.simplement_question).setOnClickListener {
+            demarrer { question = 0; renderQuestion() }
+        }
 
         // « ouverture » : le mot du début de séance.
         drawOpening()
@@ -190,6 +224,7 @@ class SessionActivity : AppCompatActivity() {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putInt(ETAT_GUIDE, guideStep)
+        outState.putInt(ETAT_QUESTION, question)
         outState.putBoolean(ETAT_EN_COURS, wasRunning)
         outState.putBoolean(ETAT_ABANDON, cancelling)
     }
@@ -265,6 +300,8 @@ class SessionActivity : AppCompatActivity() {
             openSession.visibility = View.GONE
             findViewById<View>(R.id.session_custom).visibility = View.GONE
             stuck.visibility = if (hasBlocage) View.VISIBLE else View.GONE
+            findViewById<View>(R.id.session_simplement).visibility = View.GONE
+            renderQuestion()
             renderGuide()
 
             primary.visibility = View.VISIBLE
@@ -289,6 +326,9 @@ class SessionActivity : AppCompatActivity() {
             openSession.visibility = View.VISIBLE
             findViewById<View>(R.id.session_custom).visibility = View.VISIBLE
             stuck.visibility = View.GONE
+            findViewById<View>(R.id.session_simplement).visibility = View.VISIBLE
+            question = -1
+            renderQuestion()
             HitbodedutCard.hide(guide)
 
             primary.visibility = View.VISIBLE
@@ -304,6 +344,19 @@ class SessionActivity : AppCompatActivity() {
             }
             secondary.visibility = View.GONE
         }
+    }
+
+    /** La question en cours, ou rien. */
+    private fun renderQuestion() {
+        val panneau = findViewById<View>(R.id.session_questions)
+        if (question < 0 || !Store.isSessionRunning(this)) {
+            panneau.visibility = View.GONE
+            return
+        }
+        panneau.visibility = View.VISIBLE
+        findViewById<android.widget.TextView>(R.id.session_question).setText(QuestionsBlocage.QUESTIONS[question])
+        findViewById<android.widget.TextView>(R.id.session_question_rang).text =
+            getString(R.string.question_rang, question + 1, QuestionsBlocage.QUESTIONS.size)
     }
 
     /**
@@ -412,6 +465,7 @@ class SessionActivity : AppCompatActivity() {
         const val EXTRA_DEPUIS_RAPPEL = "depuis_rappel"
 
         private const val ETAT_GUIDE = "guide_step"
+        private const val ETAT_QUESTION = "question"
         private const val ETAT_EN_COURS = "was_running"
         private const val ETAT_ABANDON = "cancelling"
     }

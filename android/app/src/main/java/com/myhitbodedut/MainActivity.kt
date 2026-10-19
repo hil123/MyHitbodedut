@@ -18,6 +18,9 @@ import java.time.format.DateTimeFormatter
 
 /** Écran principal : état du jour, diagnostic de la barrière, réglages. */
 class MainActivity : AppCompatActivity() {
+    /** Les cartes du moment n'entrent en cascade qu'une fois par ouverture de l'accueil (19/10). */
+    private var momentAnime = false
+
 
     /** Le texte de relance a déjà été tiré pour la rupture en cours. */
     private var relanceTiree = false
@@ -162,6 +165,7 @@ class MainActivity : AppCompatActivity() {
         }
         findViewById<Button>(R.id.today_offline).setOnClickListener { declarerHorsTelephone() }
         findViewById<Button>(R.id.trophees_paliers).setOnClickListener { startActivity(Intent(this, PaliersActivity::class.java)) }
+        findViewById<Button>(R.id.parcours_button).setOnClickListener { startActivity(Intent(this, ParcoursActivity::class.java)) }
         findViewById<View>(R.id.start_duration).setOnClickListener {
             pickDuration()
         }
@@ -180,6 +184,9 @@ class MainActivity : AppCompatActivity() {
         }
         findViewById<View>(R.id.music_button).setOnClickListener {
             startActivity(Intent(this, MusicActivity::class.java))
+        }
+        findViewById<View>(R.id.chizuk_button).setOnClickListener {
+            startActivity(Intent(this, ChizukActivity::class.java))
         }
         findViewById<View>(R.id.tips_button).setOnClickListener {
             startActivity(Intent(this, TipsActivity::class.java))
@@ -311,6 +318,10 @@ class MainActivity : AppCompatActivity() {
             // Un changement dans la tefila, annoncé quelques jours avant (16/10).
             runCatching { RappelsTefilaVue.cartes(this@MainActivity) }.getOrDefault(emptyList()).forEach { addView(it) }
             runCatching { AccueilMoment.cartes(this@MainActivity) }.getOrDefault(emptyList()).forEach { addView(it) }
+            // La source du jour (19/10) : la même toute la journée, distincte du 'hizouk.
+            runCatching { SourceDuJour.carte(this@MainActivity) }.getOrNull()?.let { addView(it) }
+            // Les effets (19/10) : à la première apparition de l'accueil, les cartes entrent en cascade.
+            if (!momentAnime) { momentAnime = true; Effets.enfants(this, depart = 450) }
         }
         renderGauge()
         renderSwitches()

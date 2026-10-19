@@ -18,8 +18,8 @@
     <string name="today_declared">Confirmed without a timer</string>
 
     <string name="section_practice">My practice</string>
-    <string name="section_gate_state">Gate status</string>
-    <string name="section_gate">Morning gate</string>
+    <string name="section_gate_state">Mode status</string>
+    <string name="section_gate">I am with Hashem</string>
     <string name="section_gate_hint">The apps you choose stay closed until the practice is done.</string>
     <string name="section_rhythm">Rhythm</string>
     <string name="section_permissions">Required permissions</string>
@@ -27,32 +27,32 @@
     <string name="section_data">My data</string>
     <string name="section_data_hint">Everything is stored on this phone only. Export from time to time.</string>
 
-    <string name="gate_armed_title">The gate is watching</string>
+    <string name="gate_armed_title">“I am with Hashem” is watching</string>
     <plurals name="gate_armed_detail">
         <item quantity="one">%1$d app is blocked until %2$s or until your hitbodedut.</item>
         <item quantity="other">%1$d apps are blocked until %2$s or until your hitbodedut.</item>
     </plurals>
     <string name="gate_permissions_title">Permissions missing</string>
     <string name="gate_permissions_detail">Grant display over other apps and usage access, further down.</string>
-    <string name="gate_disabled_title">Gate switched off</string>
-    <string name="gate_disabled_detail">Turn on the morning gate switch for it to act.</string>
+    <string name="gate_disabled_title">Mode switched off</string>
+    <string name="gate_disabled_detail">Turn on the “I am with Hashem” switch for the mode to act.</string>
     <string name="gate_no_apps_title">No app selected</string>
-    <string name="gate_no_apps_detail">The gate has nothing to block. Choose at least one app.</string>
+    <string name="gate_no_apps_detail">The mode has nothing to hold back. Choose at least one app.</string>
     <string name="gate_done_title">Day confirmed</string>
-    <string name="gate_done_detail">Nothing will be blocked today. The gate returns tomorrow.</string>
+    <string name="gate_done_detail">Nothing will be held back today. The mode returns tomorrow.</string>
     <string name="gate_exempt_title">Rest day</string>
-    <string name="gate_exempt_detail">Shabbat, Yom Tov or a pause: the gate is silent and the streak stays intact.</string>
+    <string name="gate_exempt_detail">Shabbat, Yom Tov or a pause: the mode is silent and the streak stays intact.</string>
     <string name="gate_snoozed_title">Snoozed</string>
-    <string name="gate_snoozed_detail">You asked for a delay. The gate returns when it ends.</string>
+    <string name="gate_snoozed_detail">You asked for a delay. The mode returns when it ends.</string>
     <string name="gate_window_title">Outside the window</string>
-    <string name="gate_window_detail">The gate acts between %1$s and %2$s. Outside that, nothing is blocked.</string>
+    <string name="gate_window_detail">The mode acts between %1$s and %2$s. Outside that, nothing is held back.</string>
 
     <string name="action_start_session">Start a %1$s hitbodedut</string>
     <string name="action_another_session">Another hitbodedut</string>
     <string name="action_back_to_session">Back to the hitbodedut in progress</string>
     <string name="action_write_note">Write a note</string>
     <string name="action_journal">Open the journal</string>
-    <string name="action_preview_gate">Preview the gate screen now</string>
+    <string name="action_preview_gate">Preview the “I am with Hashem” screen now</string>
     <string name="action_pick_apps">Choose apps</string>
     <string name="action_grant">Grant</string>
     <string name="action_export">Export</string>
@@ -61,7 +61,7 @@
     <string name="action_later">Later</string>
     <string name="action_back">Back</string>
 
-    <string name="settings_window">Gate window</string>
+    <string name="settings_window">Mode hours</string>
     <string name="settings_snooze">Snooze length</string>
     <string name="settings_target">Hitbodedut length</string>
     <string name="settings_daily_goal">Daily goal</string>
@@ -76,7 +76,7 @@
     <string name="ring_streak_reached">%2$d-day milestone reached!</string>
     <string name="rings_description">Rings. Today: %1$s of %2$s. Week: %3$d of %4$d days. Streak: %5$d of %6$d days.</string>
     <string name="settings_shabbat">Shabbat and Yom Tov</string>
-    <string name="settings_shabbat_hint">On those days: no blocking, no reminder, and the streak stays intact.</string>
+    <string name="settings_shabbat_hint">On those days: the mode is silent, no reminder, and the streak stays intact.</string>
     <string name="settings_exempt_today">Rest day today</string>
     <string name="settings_exempt_today_hint">For a Yom Tov, a trip or illness: the day does not count against you.</string>
     <string name="settings_screen_missing">This settings screen does not exist on this phone.</string>
@@ -90,7 +90,7 @@
     <string name="permission_notifications">Notifications</string>
     <string name="permission_notifications_why">Without them the reminder is scheduled and never appears, and the hitbodedut shows nothing once the phone is down.</string>
     <string name="permission_battery_why">Without it, Android may hold the reminder back for hours to save power.</string>
-    <string name="permission_overlay_why">To show the gate screen over the app you open in the morning.</string>
+    <string name="permission_overlay_why">To show the “I am with Hashem” screen over the app you open in the morning.</string>
     <string name="permission_usage_why">To know which app has just opened. Nothing is recorded or sent.</string>
     <string name="permission_granted">Granted</string>
     <string name="permission_missing">Missing</string>
@@ -169,7 +169,7 @@
     <string name="onboarding_private">Nothing leaves this phone</string>
     <string name="onboarding_private_body">The app asks for no Internet access at all. What you write stays on this phone, and only you can take it out, through the export.</string>
     <string name="blocker_session_open_subtitle">Open hitbodedut, %1$s so far. The phone can wait.</string>
-    <string name="session_done_title">Hitbodedut complete</string>
+    <string name="session_done_title">You spoke with Hashem today</string>
     <string name="session_done_text">%1$s of hitbodedut. Tap to leave a note.</string>
 
     <string name="journal_title">Journal</string>
@@ -180,8 +180,8 @@
 
     <string name="reminder_title">Time for hitbodedut</string>
     <string name="reminder_text">A %1$s hitbodedut is waiting.</string>
-    <string name="channel_gate">Morning gate</string>
-    <string name="channel_gate_description">Ongoing notification Android requires while the morning gate is on.</string>
+    <string name="channel_gate">I am with Hashem</string>
+    <string name="channel_gate_description">Ongoing notification Android requires while “I am with Hashem” is on.</string>
     <string name="channel_session">Hitbodedut in progress</string>
     <string name="channel_session_description">Countdown shown during a hitbodedut.</string>
     <string name="channel_reminder">Reminders</string>
@@ -303,10 +303,7 @@
     <string name="library_kind_source">Source</string>
     <string name="library_kind_article">Article</string>
     <string name="library_summary">Summary</string>
-    <string name="library_rights">Rights</string>
-    <string name="library_errors">Errors noted</string>
     <string name="library_full_text">Full text</string>
-    <string name="library_full_text_withheld">Modern article under copyright. Full text not reproduced.</string>
     <string name="library_open">Open the library</string>
     <string name="library_read_on_site">Read on the site</string>
     <string name="library_open_sefaria">Open on Sefaria</string>
@@ -332,15 +329,15 @@
 
     <!-- Section Tikoun HaKlali -->
     <string name="tikkun_title">Tikkun HaKlali</string>
-    <string name="tikkun_hint">The ten psalms of Rabbi Nachman, in order: 16, 32, 41, 42, 59, 77, 90, 105, 137, 150.</string>
+    <string name="tikkun_hint">The ten Tehillim of Rabbi Nahman, in order: 16, 32, 41, 42, 59, 77, 90, 105, 137, 150.</string>
     <string name="tikkun_open">Open the Tikkun</string>
     <string name="tikkun_psalm_he">תהילים %1$s</string>
     <string name="tikkun_verses">%1$d verses</string>
-    <string name="tikkun_position">Psalm %1$d of %2$d · %3$d verses</string>
-    <string name="tikkun_progress_none">%1$d psalms, %2$d verses</string>
-    <string name="tikkun_progress">%1$d of %2$d psalms said today</string>
+    <string name="tikkun_position">Tehillim %1$d of %2$d · %3$d verses</string>
+    <string name="tikkun_progress_none">%1$d Tehillim, %2$d verses</string>
+    <string name="tikkun_progress">%1$d of %2$d Tehillim said today</string>
     <string name="tikkun_progress_all">Said in full today.</string>
-    <string name="tikkun_next">Next psalm</string>
+    <string name="tikkun_next">Next Tehillim</string>
     <string name="tikkun_paragraphs">%1$d paragraphs</string>
     <string name="tikkun_flow_open">Read it all in one flow</string>
     <string name="tikkun_flow_done">I have said the whole Tikkun</string>
@@ -401,7 +398,7 @@
     <string name="start_duration">Length</string>
     <string name="start_theme">Subject</string>
     <string name="start_music">Music</string>
-    <string name="start_focus">Focus</string>
+    <string name="start_focus">With Hashem</string>
     <string name="start_music_off">none</string>
     <string name="start_focus_on">on</string>
     <string name="start_focus_off">off</string>
@@ -544,12 +541,12 @@
 
     <!-- Le livre de Tehilim (TehilimActivity, 04/10). -->
     <string name="tehilim_title">Tehillim</string>
-    <string name="tehilim_count">%1$d psalms, %2$s verses</string>
+    <string name="tehilim_count">%1$d Tehillim, %2$s verses</string>
     <string name="tehilim_month">By day of the month</string>
     <string name="tehilim_month_state">Day %1$s of the month: %2$s</string>
     <string name="tehilim_week">By day of the week</string>
     <string name="tehilim_week_state">%1$s: %2$s</string>
-    <string name="tehilim_all">All 150 psalms</string>
+    <string name="tehilim_all">All 150 Tehillim</string>
     <string name="tehilim_single">Tehillim %1$s</string>
     <string name="tehilim_range">Tehillim %1$s to %2$s</string>
     <string name="tehilim_range_verses">Tehillim %1$s, verses %2$s to %3$s</string>
@@ -1047,4 +1044,79 @@
     <string name="banniere_chaharit">Until %1$s · end of the time for prayer</string>
     <string name="banniere_minha">From %1$s until sunset, %2$s</string>
     <string name="banniere_arvit">From nightfall, %1$s</string>
+    <string name="moment_mot_matin">Before the day begins, a few words to Hashem.</string>
+    <string name="moment_mot_journee">In the middle of the day, a moment apart with Hashem.</string>
+    <string name="moment_mot_soir">As evening comes, tell Hashem about your day.</string>
+    <string name="moment_mot_nuit">At night, when all is quiet, speak to Hashem.</string>
+    <string name="chizuk_demande_title">I need hizuk</string>
+    <string name="chizuk_demande_hint">A text to lift you up, whenever you want.</string>
+    <string name="chizuk_autre">Another</string>
+    <string name="chizuk_garder">Keep</string>
+    <string name="chizuk_garde">Kept ✓</string>
+    <string name="chizuk_partager">Share</string>
+    <string name="chizuk_commencer">Start a hitbodedut</string>
+    <string name="chizuk_favoris">Kept texts</string>
+    <string name="source_du_jour">Source of the day</string>
+    <string name="source_du_jour_commencer">Start</string>
+    <string name="source_du_jour_lire">Read more</string>
+    <string name="journal_travail">To work on</string>
+    <string name="journal_travail_hint">One thing to work on tomorrow</string>
+    <string name="journal_sujets">Subject: %1$s</string>
+    <string name="parcours_title">My path</string>
+    <string name="parcours_hint">What your hitbodedut says about your path.</string>
+    <string name="parcours_serie">Current streak</string>
+    <string name="parcours_meilleure">Best streak</string>
+    <string name="parcours_jours_faits">Days of hitbodedut</string>
+    <string name="parcours_total">Total time</string>
+    <string name="parcours_moyenne">On average, per day</string>
+    <string name="parcours_mois">This month</string>
+    <string name="parcours_sujets">Your most frequent subjects</string>
+    <string name="parcours_sujets_vide">Choose a subject when you start a hitbodedut: the most frequent will appear here.</string>
+    <string name="parcours_humeur">Mood</string>
+    <plurals name="parcours_jours">
+        <item quantity="one">%d day</item>
+        <item quantity="other">%d days</item>
+    </plurals>
+    <plurals name="parcours_fois">
+        <item quantity="one">%d time</item>
+        <item quantity="other">%d times</item>
+    </plurals>
+    <plurals name="parcours_humeur_jours">
+        <item quantity="one">over %d rated hitbodedut</item>
+        <item quantity="other">over %d rated hitbodedut</item>
+    </plurals>
+    <string name="question_merci">What would you like to thank Hashem for today?</string>
+    <string name="question_raconter">What happened today? Tell Him simply, in your own words.</string>
+    <string name="question_ressenti">What did you feel: joy, fear, anger, hurt?</string>
+    <string name="question_besoins">What do you need: livelihood, health, peace at home, a match?</string>
+    <string name="question_force">What inner strength would you ask Him for: faith, joy, patience?</string>
+    <string name="question_bilan">Where did you do well today? Where did you stumble?</string>
+    <string name="question_pardon">What would you like to ask forgiveness for, precisely?</string>
+    <string name="question_decision">What one small thing will you do differently tomorrow?</string>
+    <string name="question_demain">What would you like to tell Him about tomorrow, about this week?</string>
+    <string name="question_fin">To finish: thank you, even if not everything is solved yet.</string>
+    <string name="question_suivante">Next question</string>
+    <string name="question_rang">Question %1$d of %2$d</string>
+    <string name="simplement_parler">Speak</string>
+    <string name="simplement_ecrire">Write</string>
+    <string name="simplement_prier">Pray</string>
+    <string name="simplement_question">A question</string>
+    <string name="ambiance_title">Ambience</string>
+    <string name="ambiance_silence">Silence</string>
+    <string name="ambiance_pluie">Rain</string>
+    <string name="ambiance_mer">Sea</string>
+    <string name="ambiance_foret">Forest</string>
+    <string name="ambiance_feu">Fire</string>
+    <string name="ambiance_nuit">Night</string>
+    <string name="parcours_moyenne_ligne">On average, %1$s per day of hitbodedut</string>
+    <string name="parcours_mois_vide">No hitbodedut yet this month.</string>
+    <string name="parcours_humeur_legende">Before and after, on average</string>
+    <plurals name="parcours_unite_jours">
+        <item quantity="one">day</item>
+        <item quantity="other">days</item>
+    </plurals>
+    <plurals name="parcours_mois_total">
+        <item quantity="one">%1$s this month, over %2$d day</item>
+        <item quantity="other">%1$s this month, over %2$d days</item>
+    </plurals>
 </resources>

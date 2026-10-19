@@ -26,7 +26,8 @@ object AccueilMoment {
         val lieu = Store.lieuZmanim(c)
         val moment = if (lieu != null) JourAffiche.momentDuSiddour(lieu, java.time.Instant.now()) else SiddurMoment.suggestion(LocalTime.now())
         val vues = mutableListOf<View>()
-        moment?.let(siddur::texte)?.let { t -> vues += carte(c, c.getString(R.string.siddur_maintenant), t.titre.he, SiddurMoment.illustration(t.id)) { SiddurLectureActivity.ouvrir(c, t.id) } }
+        val mot = c.getString(Salutation.mot(LocalTime.now().hour))
+        moment?.let(siddur::texte)?.let { t -> vues += carte(c, c.getString(R.string.siddur_maintenant), t.titre.he, SiddurMoment.illustration(t.id), mot) { SiddurLectureActivity.ouvrir(c, t.id) } }
         // Birkat haLevana : pendant la fenêtre, à partir de l'après-midi.
         val zone = lieu?.fuseau?.let { runCatching { ZoneId.of(it) }.getOrNull() } ?: ZoneId.systemDefault()
         val aujourdhui = LocalDate.now(zone)
@@ -39,13 +40,14 @@ object AccueilMoment {
         return vues
     }
 
-    private fun carte(c: Context, etiquette: String, hebreu: String, image: Int, ouvrir: () -> Unit): View = LinearLayout(c).apply {
+    private fun carte(c: Context, etiquette: String, hebreu: String, image: Int, mot: String? = null, ouvrir: () -> Unit): View = LinearLayout(c).apply {
         orientation = LinearLayout.HORIZONTAL
         gravity = Gravity.CENTER_VERTICAL
         setBackgroundResource(R.drawable.bg_card)
         layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply { topMargin = dp(c, 12) }
         setPadding(dp(c, 12), dp(c, 8), dp(c, 12), dp(c, 8))
         foreground = c.getDrawable(android.R.drawable.list_selector_background)
+        Effets.presse(this)
         setOnClickListener { ouvrir() }
         addView(ImageView(c).apply {
             setImageResource(image)
@@ -71,6 +73,11 @@ object AccueilMoment {
                 textAlignment = View.TEXT_ALIGNMENT_VIEW_START
                 setTextColor(Apparence.couleur(c, R.color.ink))
                 PoliceHebraique.appliquer(this)
+            })
+            if (mot != null) addView(TextView(c).apply {
+                text = mot
+                textSize = 13f
+                setTextColor(Apparence.couleur(c, R.color.muted))
             })
         })
         addView(ImageView(c).apply {

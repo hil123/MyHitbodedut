@@ -105,6 +105,8 @@ export function creeStore(stockage, { maintenant = () => new Date(), fuseau } = 
     joursFaits: () => new Set(Object.values(days()).filter((r) => r.faite).map((r) => r.date)),
     aDejaPratique: () => Object.values(days()).some((r) => r.faite),
     totalMinutes: () => Object.values(days()).reduce((s, r) => s + r.minutes, 0),
+    /** Toutes les journées, pour « Mon parcours » (19/10). */
+    jours: () => Object.values(days()),
     /** Les minutes des jours faits, par date (Store.bilan, paliers du 11/10). */
     minutesParJour: () => Object.fromEntries(Object.values(days()).filter((r) => r.faite).map((r) => [r.date, r.minutes])),
     /** null tant que les paliers n'ont jamais été regardés : le premier passage ne fête rien. */
@@ -142,6 +144,15 @@ export function creeStore(stockage, { maintenant = () => new Date(), fuseau } = 
     basculerFavori(cle) {
       const l = this.favoris().filter((x) => x !== cle);
       set('favoris', l.length === this.favoris().length ? [cle, ...l] : l);
+    },
+    /** L'ambiance des séances (19/10, Store.ambiance) : une clé d'AMBIANCES, le silence par défaut. */
+    ambiance: () => { const a = get('ambiance', 'silence'); return ['silence', 'pluie', 'mer', 'foret', 'feu', 'nuit'].includes(a) ? a : 'silence'; },
+    setAmbiance: (v) => set('ambiance', v),
+    /** Les textes de ’hizouk gardés (19/10, Store.chizukFavoris), le plus récent en tête. */
+    chizukFavoris: () => (Array.isArray(get('chizuk_favoris', [])) ? get('chizuk_favoris', []) : []),
+    basculerChizukFavori(id) {
+      const l = this.chizukFavoris().filter((x) => x !== id);
+      set('chizuk_favoris', l.length === this.chizukFavoris().length ? [id, ...l] : l);
     },
     /** Les marque-pages (15/10, MarquesPages.kt) : { cle, nusah, section, bloc, apercu }, le plus récent en tête. */
     marques: () => (Array.isArray(get('marques_pages', [])) ? get('marques_pages', []) : []),

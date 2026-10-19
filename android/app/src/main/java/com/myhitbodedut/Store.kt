@@ -681,6 +681,23 @@ object Store {
         prefs(context).edit().putString("favoris", l.joinToString("|")).apply()
     }
 
+    /** L'ambiance des séances (19/10) : la clé d'une Ambiance ; le silence par défaut. */
+    fun ambiance(context: Context): String = prefs(context).getString("ambiance", Ambiance.SILENCE.cle) ?: Ambiance.SILENCE.cle
+
+    fun setAmbiance(context: Context, cle: String) {
+        prefs(context).edit().putString("ambiance", cle).apply()
+    }
+
+    /** Les textes de 'hizouk gardés (19/10), le plus récent en tête ; sur l'appareil seulement. */
+    fun chizukFavoris(context: Context): List<String> =
+        prefs(context).getString("chizuk_favoris", "").orEmpty().split('|').filter { it.isNotBlank() }
+
+    fun basculerChizukFavori(context: Context, id: String) {
+        val l = chizukFavoris(context).toMutableList()
+        if (!l.remove(id)) l.add(0, id)
+        prefs(context).edit().putString("chizuk_favoris", l.joinToString("|")).apply()
+    }
+
     /** Les marque-pages des lectures (15/10) : MarquesPages. */
     fun marques(context: Context): List<MarquesPages.Marque> = MarquesPages.decoder(prefs(context).getString("marques_pages", null))
 

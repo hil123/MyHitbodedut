@@ -12,8 +12,11 @@ feuillets portent pour leur part, en pied de page, *כל הזכויות שמור
 למכון 'ים שלמה'*. Les deux mentions sont consignées côte à côte, ici et dans
 FEUILLE_DE_ROUTE.md.
 
-**Ces transcriptions ne sont pas dans l'APK.** Elles vivent dans ce dépôt,
-qui est privé. Les y faire entrer est une décision à part.
+**Dans l'application depuis le 19/10** (réponse « oui tout » du propriétaire) :
+livre « תפילה לשלמה — הינוקא » de la bibliothèque, construit par
+`tools/livres_textes_proprietaire.py`. Seul le texte des feuillets y passe,
+pas les notes de relecture ; pour 'Habaqouq, les versets seuls (le
+commentaire entrelacé n'a pas d'ordre sûr) ; le Nom y est écrit en entier.
 
 ## Méthode
 

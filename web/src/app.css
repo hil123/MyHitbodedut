@@ -335,7 +335,7 @@ input[type="range"] { width: 100%; accent-color: var(--brand); }
 /* --- Feuille de choix (les AlertDialog d'Android) --------------------------------------- */
 .voile {
   position: fixed; inset: 0; background: rgba(0, 0, 0, 0.4); display: flex; align-items: flex-end;
-  justify-content: center; z-index: 10;
+  justify-content: center; z-index: 45; /* au-dessus du mini-lecteur (30) et des écrans plein cadre (40) */
 }
 .feuille {
   width: 100%; max-width: 560px; max-height: 80%; overflow-y: auto; background: var(--card);
@@ -518,6 +518,7 @@ input[type="range"] { width: 100%; accent-color: var(--brand); }
 .maintenant-corps { flex: 1; min-width: 0; display: flex; flex-direction: column; }
 .maintenant-libelle { font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--brand); }
 .maintenant-he { padding-top: 0px; font-size: 26px; line-height: 1.3; color: var(--ink); text-align: start; }
+.maintenant-mot { font-size: 13px; color: var(--muted); text-align: start; }
 .maintenant-trad { font-size: 14px; color: var(--muted); }
 
 .livres { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; }
@@ -1282,3 +1283,74 @@ body.avec-mini .seance .contenu { padding-bottom: calc(104px + env(safe-area-ins
 /* Paragraphes d'un texte long (19/10) : un écart entre eux, pas entre les lignes. */
 .para { display: block; }
 .para + .para { margin-top: 0.7em; }
+
+/* « J'ai besoin de ’hizouk » (19/10) */
+.hizouk-actions { display: flex; gap: 8px; margin-top: 12px; }
+.hizouk-actions button { flex: 1; }
+.contenu.hizouk > .principal { width: 100%; margin-top: 8px; }
+.hizouk-garde { display: block; width: 100%; text-align: start; padding: 12px 4px; border: 0; background: none; color: var(--ink); font: inherit; font-size: 15px; cursor: pointer; }
+.hizouk-garde-texte { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.hizouk-garde + .hizouk-garde { border-top: 1px solid var(--line); }
+.hizouk-ref { display: block; color: var(--muted); font-size: 13px; margin-top: 2px; }
+
+/* La source du jour (19/10) */
+.source-du-jour { padding: 12px 16px 10px; }
+.source-du-jour-texte { margin: 8px 0 4px; font-family: var(--police-texte); font-size: 19px; line-height: 1.6; color: var(--ink); text-align: start; }
+.source-du-jour-ref { margin: 0; color: var(--muted); font-size: 13px; font-style: italic; }
+.source-du-jour-actions { display: flex; gap: 8px; margin-top: 10px; }
+
+/* Mon parcours (19/10) */
+.parcours-ligne { display: flex; justify-content: space-between; gap: 12px; padding: 10px 0; }
+.parcours-ligne + .parcours-ligne { border-top: 1px solid var(--line); }
+.parcours-ligne strong { color: var(--brand); }
+.parcours-vide { margin: 8px 0; color: var(--muted); }
+
+/* « Je ne sais pas quoi dire » et « Commencer simplement » (19/10) */
+.question-seance { order: 2; margin-top: 8px; padding: 12px 16px; border-radius: 16px; background: rgba(255, 255, 255, 0.08); text-align: start; }
+.question-rang { margin: 0; font-size: 12px; color: var(--mint); }
+.question-texte { margin: 6px 0 0; font-size: 19px; line-height: 1.5; color: #fff; }
+.question-seance .texte-clair { display: block; margin-inline-start: auto; }
+.simplement { display: flex; justify-content: center; flex-wrap: wrap; }
+.simplement .texte-clair { flex: 1 1 0; min-width: 0; }
+
+/* Design du 19/10 : boutons du bas côte à côte, « Mon parcours » en tuiles et en barres */
+.boutons-bas { display: flex; gap: 8px; }
+.boutons-bas .bouton-trophees { flex: 1 1 0; min-width: 0; }
+.tuiles-parcours { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 8px; }
+.tuile-parcours { background: var(--card); border: 1px solid var(--line); border-radius: 20px; padding: 14px 16px; }
+.tuile-pastille { display: block; width: 22px; height: 5px; border-radius: 3px; margin-bottom: 10px; }
+.tuile-valeur { font-size: 28px; font-weight: 700; color: var(--ink); line-height: 1.1; }
+.tuile-unite { font-size: 14px; font-weight: 400; color: var(--muted); }
+.tuile-libelle { margin-top: 4px; font-size: 13px; color: var(--muted); }
+.parcours-moyenne { margin: 10px 0 0; text-align: center; font-size: 13px; color: var(--muted); }
+.sujet-parcours { padding: 8px 0; }
+.sujet-tete { display: flex; justify-content: space-between; gap: 12px; color: var(--ink); }
+.sujet-fois { color: var(--muted); font-size: 13px; }
+.sujet-piste { margin-top: 6px; height: 8px; border-radius: 4px; background: var(--line); overflow: hidden; }
+.sujet-plein { height: 100%; border-radius: 4px; background: var(--brand); }
+.source-du-jour-actions button { flex: 1 1 0; }
+.source-du-jour-actions .principal { padding: 10px 16px; font-size: 15px; margin: 0; }
+.boutons-bas .bouton-trophees { font-size: 14px; padding: 10px 12px; }
+
+/* --- Effets (19/10, « ajoute des effets professionnels ») -----------------------------
+   Discrets et courts, sur la courbe des écrans Material (décélération) : l'écran qu'on
+   ouvre glisse de 12 px en s'éclaircissant, ses blocs suivent à 45 ms d'écart ; une
+   carte qui change de texte se fond ; un bouton se creuse sous le doigt ; les barres
+   de « Mon parcours » se remplissent. Rien ne bouge quand le téléphone le demande. */
+@keyframes ecran-entre { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+@keyframes bloc-entre { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+@keyframes fondu-neuf { from { opacity: 0; transform: translateY(6px) scale(.99); } to { opacity: 1; transform: none; } }
+@keyframes barre-remplit { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+.ecran.entree:not(.seance) .defile { animation: ecran-entre 280ms cubic-bezier(.2, .8, .2, 1) both; }
+.ecran.entree:not(.seance) .contenu > * { animation: bloc-entre 420ms cubic-bezier(.2, .8, .2, 1) both; animation-delay: calc(var(--rang, 0) * 45ms + 60ms); }
+.fondu-neuf { animation: fondu-neuf 320ms cubic-bezier(.2, .8, .2, 1) both; }
+.ecran.entree .sujet-plein { transform-origin: left center; animation: barre-remplit 700ms cubic-bezier(.2, .8, .2, 1) 300ms both; }
+[dir="rtl"] .ecran.entree .sujet-plein { transform-origin: right center; }
+.principal, .secondaire, .bouton-trophees, .duree, .maintenant, .livre, .ligne, .pastille { transition: transform 120ms ease-out, filter 120ms ease-out; }
+.principal:active, .secondaire:active, .bouton-trophees:active, .duree:active, .pastille:active { transform: scale(.97); }
+.maintenant:active, .livre:active { transform: scale(.985); }
+.tuile-parcours, .carte, .maintenant { box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), 0 8px 20px -12px rgba(0, 0, 0, 0.22); }
+@media (prefers-reduced-motion: reduce) {
+  .ecran.entree .defile, .ecran.entree:not(.seance) .contenu > *, .fondu-neuf, .ecran.entree .sujet-plein { animation: none; }
+  .principal:active, .secondaire:active, .bouton-trophees:active, .duree:active, .pastille:active, .maintenant:active, .livre:active { transform: none; }
+}

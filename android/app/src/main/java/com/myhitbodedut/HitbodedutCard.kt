@@ -32,6 +32,12 @@ object HitbodedutCard {
         card.findViewById<TextView>(R.id.hitbodedut_he).text = mouvement.he
         card.findViewById<TextView>(R.id.hitbodedut_title).setText(mouvement.titre)
         card.findViewById<TextView>(R.id.hitbodedut_invite).setText(mouvement.invite)
+        // Le temps, dit pour le sujet choisi (proposition 2, 19/10) ; sans sujet, rien de plus.
+        val sujet = GuideSujets.invitation(context, Store.sessionTheme(context), mouvement.cle, ChizukCard.language(context))
+        card.findViewById<TextView>(R.id.hitbodedut_sujet).apply {
+            text = sujet
+            visibility = if (sujet == null) View.GONE else View.VISIBLE
+        }
         card.findViewById<TextView>(R.id.hitbodedut_source).text = Reference.localise(context, mouvement.source)
 
         val previous = card.findViewById<TextView>(R.id.hitbodedut_previous)

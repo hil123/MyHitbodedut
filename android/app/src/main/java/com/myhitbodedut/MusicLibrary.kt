@@ -24,6 +24,7 @@ object MusicLibrary {
     private data class Bundled(val id: String, val rawRes: Int, val titleRes: Int)
 
     private val BUNDLED = listOf(
+        Bundled("hamelech_basade", R.raw.hamelech_basade, R.string.track_hamelech_basade),
         Bundled("niggoun_01", R.raw.niggoun_01, R.string.track_niggoun_01),
         Bundled("niggoun_02", R.raw.niggoun_02, R.string.track_niggoun_02),
         Bundled("niggoun_03", R.raw.niggoun_03, R.string.track_niggoun_03),
@@ -31,7 +32,6 @@ object MusicLibrary {
         Bundled("niggoun_05", R.raw.niggoun_05, R.string.track_niggoun_05),
         Bundled("niggoun_06", R.raw.niggoun_06, R.string.track_niggoun_06),
         Bundled("niggoun_07", R.raw.niggoun_07, R.string.track_niggoun_07),
-        Bundled("niggoun_08", R.raw.niggoun_08, R.string.track_niggoun_08),
         Bundled("niggoun_10", R.raw.niggoun_10, R.string.track_niggoun_10),
         Bundled("niggoun_11", R.raw.niggoun_11, R.string.track_niggoun_11),
         Bundled("niggoun_12", R.raw.niggoun_12, R.string.track_niggoun_12),
