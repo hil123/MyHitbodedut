@@ -1071,7 +1071,6 @@
     <string name="parcours_sujets">Your most frequent subjects</string>
     <string name="parcours_sujets_vide">Choose a subject when you start a hitbodedut: the most frequent will appear here.</string>
     <string name="parcours_humeur">Mood</string>
-    <string name="parcours_humeur_moyenne">On average: %1$s before, %2$s after</string>
     <plurals name="parcours_jours">
         <item quantity="one">%d day</item>
         <item quantity="other">%d days</item>
@@ -1107,4 +1106,15 @@
     <string name="ambiance_foret">Forest</string>
     <string name="ambiance_feu">Fire</string>
     <string name="ambiance_nuit">Night</string>
+    <string name="parcours_moyenne_ligne">On average, %1$s per day of hitbodedut</string>
+    <string name="parcours_mois_vide">No hitbodedut yet this month.</string>
+    <string name="parcours_humeur_legende">Before and after, on average</string>
+    <plurals name="parcours_unite_jours">
+        <item quantity="one">day</item>
+        <item quantity="other">days</item>
+    </plurals>
+    <plurals name="parcours_mois_total">
+        <item quantity="one">%1$s this month, over %2$d day</item>
+        <item quantity="other">%1$s this month, over %2$d days</item>
+    </plurals>
 </resources>

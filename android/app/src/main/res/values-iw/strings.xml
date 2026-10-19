@@ -1099,7 +1099,6 @@
     <string name="parcours_sujets">הנושאים השכיחים שלכם</string>
     <string name="parcours_sujets_vide">בחרו נושא בתחילת התבודדות: השכיחים יופיעו כאן.</string>
     <string name="parcours_humeur">מצב רוח</string>
-    <string name="parcours_humeur_moyenne">בממוצע: %1$s לפני, %2$s אחרי</string>
     <plurals name="parcours_jours">
         <item quantity="one">יום אחד</item>
         <item quantity="two">יומיים</item>
@@ -1138,4 +1137,17 @@
     <string name="ambiance_foret">יער</string>
     <string name="ambiance_feu">אש</string>
     <string name="ambiance_nuit">לילה</string>
+    <string name="parcours_moyenne_ligne">בממוצע, %1$s ליום התבודדות</string>
+    <string name="parcours_mois_vide">עדיין אין התבודדות החודש.</string>
+    <string name="parcours_humeur_legende">לפני ואחרי, בממוצע</string>
+    <plurals name="parcours_unite_jours">
+        <item quantity="one">יום</item>
+        <item quantity="two">ימים</item>
+        <item quantity="other">ימים</item>
+    </plurals>
+    <plurals name="parcours_mois_total">
+        <item quantity="one">%1$s החודש, ביום אחד</item>
+        <item quantity="two">%1$s החודש, ביומיים</item>
+        <item quantity="other">%1$s החודש, ב־%2$d ימים</item>
+    </plurals>
 </resources>

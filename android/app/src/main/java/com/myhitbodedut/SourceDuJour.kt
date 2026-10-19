@@ -80,12 +80,14 @@ object SourceDuJour {
             addView(LinearLayout(c).apply {
                 orientation = LinearLayout.HORIZONTAL
                 setPadding(0, dp(8), 0, 0)
-                addView(MaterialButton(c, null, com.google.android.material.R.attr.materialButtonOutlinedStyle).apply {
+                // « Commencer » d'abord, plein : c'est l'invitation ; « Lire la suite » à côté.
+                addView(MaterialButton(c).apply {
+                    layoutParams = LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f)
                     setText(R.string.source_du_jour_commencer)
                     setOnClickListener { c.startActivity(Intent(c, SessionActivity::class.java)) }
                 })
                 addView(MaterialButton(c, null, com.google.android.material.R.attr.materialButtonOutlinedStyle).apply {
-                    layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply { marginStart = dp(8) }
+                    layoutParams = LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f).apply { marginStart = dp(8) }
                     setText(R.string.source_du_jour_lire)
                     setOnClickListener {
                         c.startActivity(Intent(c, LibraryEntryActivity::class.java).putExtra(LibraryEntryActivity.EXTRA_ID, p.source.id))

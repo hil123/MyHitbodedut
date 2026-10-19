@@ -532,27 +532,36 @@ function panneauAujourdhui() {
     // L'accueil selon l'heure (14/10) : la prière du moment, Birkat haLevana les soirs de la fenêtre.
     ...momentAccueil(),
     // Les trophées et les paliers, en bas de la page (11/10).
-    h('button', { class: 'bouton-trophees', onclick: () => ouvrir('paliers') }, tr.t('trophees_paliers')),
-    // Mon parcours (19/10).
-    h('button', { class: 'bouton-trophees', onclick: () => ouvrir('parcours') }, tr.t('parcours_title'))));
+    // Les trophées et « Mon parcours », côte à côte (19/10).
+    h('div', { class: 'boutons-bas' },
+      h('button', { class: 'bouton-trophees', onclick: () => ouvrir('paliers') }, tr.t('trophees_paliers')),
+      h('button', { class: 'bouton-trophees', onclick: () => ouvrir('parcours') }, tr.t('parcours_title')))));
 }
 
 /** « Mon parcours » (ParcoursActivity) : les chiffres et les sujets ; l'humeur reste sur Android, qui a le journal. */
 function ecranParcours() {
   const b = Parcours.bilan(store.jours());
-  const ligneChiffre = (cle, valeur) => h('div', { class: 'parcours-ligne' }, h('span', {}, tr.t(cle)), h('strong', {}, valeur));
+  const serie = store.streak();
+  const meilleure = store.meilleureSerie();
+  const tuile = (valeur, unite, cle, teinte) => h('div', { class: 'tuile-parcours' },
+    h('span', { class: 'tuile-pastille', style: `background: var(${teinte})` }),
+    h('div', { class: 'tuile-valeur' }, valeur, unite ? h('span', { class: 'tuile-unite' }, ` ${unite}`) : null),
+    h('div', { class: 'tuile-libelle' }, tr.t(cle)));
+  const max = Math.max(1, ...b.sujets.map(([, n]) => n));
   return h('div', { class: 'ecran avec-bandeau' },
-    bandeau(tr.t('parcours_title'), { puce: h('p', { class: 'bandeau-sous-titre' }, tr.t('parcours_hint')), dessin: 'char_arms_raised' }),
+    bandeau(tr.t('parcours_title'), { puce: h('p', { class: 'bandeau-sous-titre' }, tr.t('parcours_hint')), dessin: 'char_praise' }),
     h('div', { class: 'defile' }, h('div', { class: 'contenu parcours' },
-      h('div', { class: 'carte' },
-        ligneChiffre('parcours_serie', tr.p('parcours_jours', store.streak())),
-        ligneChiffre('parcours_meilleure', tr.p('parcours_jours', store.meilleureSerie())),
-        ligneChiffre('parcours_jours_faits', String(b.jours)),
-        ligneChiffre('parcours_total', tr.duree(b.minutes)),
-        ligneChiffre('parcours_moyenne', tr.duree(b.moyenne))),
+      h('div', { class: 'tuiles-parcours' },
+        tuile(String(serie), tr.p('parcours_unite_jours', serie), 'parcours_serie', '--ring-streak'),
+        tuile(String(meilleure), tr.p('parcours_unite_jours', meilleure), 'parcours_meilleure', '--ring-streak'),
+        tuile(String(b.jours), '', 'parcours_jours_faits', '--ring-week'),
+        tuile(tr.duree(b.minutes), '', 'parcours_total', '--brand')),
+      b.jours ? h('p', { class: 'parcours-moyenne' }, tr.t('parcours_moyenne_ligne', tr.duree(b.moyenne))) : null,
       h('h2', { class: 'section' }, tr.t('parcours_sujets')),
       h('div', { class: 'carte' }, b.sujets.length
-        ? b.sujets.map(([s, n]) => ligneChiffre(`theme_${s}`, tr.p('parcours_fois', n)))
+        ? b.sujets.map(([s, n]) => h('div', { class: 'sujet-parcours' },
+          h('div', { class: 'sujet-tete' }, h('span', {}, tr.t(`theme_${s}`)), h('span', { class: 'sujet-fois' }, tr.p('parcours_fois', n))),
+          h('div', { class: 'sujet-piste' }, h('div', { class: 'sujet-plein', style: `width: ${Math.max(4, Math.round((100 * n) / max))}%` }))))
         : h('p', { class: 'parcours-vide' }, tr.t('parcours_sujets_vide'))))));
 }
 
@@ -620,7 +629,7 @@ function momentAccueil() {
       h('p', { class: 'source-du-jour-texte', lang: 'he', dir: 'rtl' }, SourceDuJour.extrait(p.texte)),
       h('p', { class: 'source-du-jour-ref' }, Reference.localise(p.source.ref, tr.langue)),
       h('div', { class: 'source-du-jour-actions' },
-        h('button', { class: 'secondaire', onclick: () => ouvrir('seance') }, tr.t('source_du_jour_commencer')),
+        h('button', { class: 'principal', onclick: () => ouvrir('seance') }, tr.t('source_du_jour_commencer')),
         h('button', { class: 'secondaire', onclick: () => { entreeBiblio = p.source.id; ouvrir('source'); } }, tr.t('source_du_jour_lire')))));
   }
   return cartes.length ? [h('div', { class: 'accueil-moment' }, ...cartes)] : [];

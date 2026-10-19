@@ -1266,3 +1266,22 @@ button.corps { min-height: 44px; }
 .question-seance .texte-clair { display: block; margin-inline-start: auto; }
 .simplement { display: flex; justify-content: center; flex-wrap: wrap; }
 .simplement .texte-clair { flex: 1 1 0; min-width: 0; }
+
+/* Design du 19/10 : boutons du bas côte à côte, « Mon parcours » en tuiles et en barres */
+.boutons-bas { display: flex; gap: 8px; }
+.boutons-bas .bouton-trophees { flex: 1 1 0; min-width: 0; }
+.tuiles-parcours { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 8px; }
+.tuile-parcours { background: var(--card); border: 1px solid var(--line); border-radius: 20px; padding: 14px 16px; }
+.tuile-pastille { display: block; width: 22px; height: 5px; border-radius: 3px; margin-bottom: 10px; }
+.tuile-valeur { font-size: 28px; font-weight: 700; color: var(--ink); line-height: 1.1; }
+.tuile-unite { font-size: 14px; font-weight: 400; color: var(--muted); }
+.tuile-libelle { margin-top: 4px; font-size: 13px; color: var(--muted); }
+.parcours-moyenne { margin: 10px 0 0; text-align: center; font-size: 13px; color: var(--muted); }
+.sujet-parcours { padding: 8px 0; }
+.sujet-tete { display: flex; justify-content: space-between; gap: 12px; color: var(--ink); }
+.sujet-fois { color: var(--muted); font-size: 13px; }
+.sujet-piste { margin-top: 6px; height: 8px; border-radius: 4px; background: var(--line); overflow: hidden; }
+.sujet-plein { height: 100%; border-radius: 4px; background: var(--brand); }
+.source-du-jour-actions button { flex: 1 1 0; }
+.source-du-jour-actions .principal { padding: 10px 16px; font-size: 15px; margin: 0; }
+.boutons-bas .bouton-trophees { font-size: 14px; padding: 10px 12px; }

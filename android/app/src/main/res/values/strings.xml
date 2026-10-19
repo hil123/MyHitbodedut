@@ -1117,7 +1117,6 @@
     <string name="parcours_sujets">Vos sujets les plus fréquents</string>
     <string name="parcours_sujets_vide">Choisissez un sujet au début d’une hitbodedout : les plus fréquents apparaîtront ici.</string>
     <string name="parcours_humeur">Humeur</string>
-    <string name="parcours_humeur_moyenne">En moyenne : %1$s avant, %2$s après</string>
     <plurals name="parcours_jours">
         <item quantity="one">%d jour</item>
         <item quantity="other">%d jours</item>
@@ -1153,4 +1152,15 @@
     <string name="ambiance_foret">Forêt</string>
     <string name="ambiance_feu">Feu</string>
     <string name="ambiance_nuit">Nuit</string>
+    <string name="parcours_moyenne_ligne">En moyenne, %1$s par jour de hitbodedout</string>
+    <string name="parcours_mois_vide">Pas encore de hitbodedout ce mois-ci.</string>
+    <string name="parcours_humeur_legende">Avant et après, en moyenne</string>
+    <plurals name="parcours_unite_jours">
+        <item quantity="one">jour</item>
+        <item quantity="other">jours</item>
+    </plurals>
+    <plurals name="parcours_mois_total">
+        <item quantity="one">%1$s ce mois-ci, en %2$d jour</item>
+        <item quantity="other">%1$s ce mois-ci, en %2$d jours</item>
+    </plurals>
 </resources>
