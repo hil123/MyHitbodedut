@@ -1,0 +1,27 @@
+# Télécharge le Kitsour Choulhan Aroukh Yalkut Yosef de Torat Emet (19/10) et le
+# pousse sur la branche claude/source-yalkut : l'environnement de développement
+# n'atteint pas toratemetfreeware.com. Lancé à la main seulement.
+name: Source Yalkut Yosef
+on: workflow_dispatch
+permissions:
+  contents: write
+jobs:
+  telecharger:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Télécharger le livre
+        run: |
+          mkdir source && cd source
+          curl -fsSL --retry 3 -o f_01355_all.html https://toratemetfreeware.com/online/f_01355_all.html
+          for n in $(seq 1 200); do
+            curl -fsSL --retry 2 -o "f_01355_part_$n.html" "https://toratemetfreeware.com/online/f_01355_part_$n.html" || { rm -f "f_01355_part_$n.html"; break; }
+          done
+          ls -la | tail -5; du -sh .
+      - name: Pousser sur claude/source-yalkut
+        run: |
+          cd source
+          git init -q -b claude/source-yalkut
+          git config user.name "github-actions"
+          git config user.email "github-actions@users.noreply.github.com"
+          git add -A && git commit -qm "source: Yalkut Yosef Kitsour (Torat Emet, CC BY-NC-SA 2.5)"
+          git push -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" claude/source-yalkut
