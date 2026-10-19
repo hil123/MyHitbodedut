@@ -148,4 +148,16 @@ class ChizukRulesTest {
         fr = "fr", en = "en", note = null, dureeLectureSec = 5,
         statutVerif = statut, relu = relu,
     )
+
+    /** « J'ai besoin de 'hizouk » (19/10) : tout le publiable, et un partage qui garde la source. */
+    @Test
+    fun `a la demande, tout le publiable, et le partage garde la source`() {
+        assertEquals(
+            ChizukRules.visible(chizuk, debug = false).map { it.id },
+            ChizukRules.forMoment(chizuk, Moment.DEMANDE, debug = false).map { it.id },
+        )
+        val partage = ChizukPartage.texte("עִקַּר", "", "Likoutei Moharan II, 25", "https://x")
+        assertEquals("עִקַּר\n\n— Likoutei Moharan II, 25\n\nhttps://x", partage)
+        assertTrue(ChizukPartage.texte("א", "trad", "s", "l").contains("\n\ntrad\n\n"))
+    }
 }

@@ -1424,6 +1424,40 @@ function ecranLivres() {
       ]) : []))));
 }
 
+/**
+ * « J'ai besoin de ’hizouk » (ChizukActivity, 19/10) : un texte à la demande,
+ * « Un autre », « Garder » (sur l'appareil) et « Partager » (le seul endroit
+ * où un texte de ’hizouk sort de l'appareil, d'un geste de l'utilisateur).
+ */
+let hizouk = null;
+function ecranHizouk() {
+  if (chizuk && !hizouk) hizouk = ChizukBag.tirer(store, chizuk, 'demande');
+  const item = hizouk;
+  const garde = item && store.chizukFavoris().includes(item.id);
+  const gardes = chizuk ? store.chizukFavoris().map((id) => chizuk.items.find((x) => x.id === id)).filter(Boolean) : [];
+  const partager = async () => {
+    const texte = ChizukRules.partage(ChizukRules.hebreu(chizuk, item), ChizukRules.traduction(item, tr.langue),
+      Reference.localise(item.ref, tr.langue), tr.t('partage_lien', LIEN_WEB));
+    try { if (navigator.share) { await navigator.share({ text: texte }); return; } } catch (e) { if (e?.name === 'AbortError') return; }
+    try { await navigator.clipboard.writeText(texte); signale(tr.t('partage_copie')); } catch { /* rien d'autre à faire */ }
+  };
+  return h('div', { class: 'ecran avec-bandeau' },
+    bandeau(tr.t('chizuk_demande_title'), { puce: h('p', { class: 'bandeau-sous-titre' }, tr.t('chizuk_demande_hint')), dessin: 'char_open_arms' }),
+    h('div', { class: 'defile' }, h('div', { class: 'contenu hizouk' },
+      item ? carteChizuk({ moment: 'demande', item }) : null,
+      item ? h('div', { class: 'hizouk-actions' },
+        h('button', { class: 'secondaire', onclick: () => { hizouk = ChizukBag.tirer(store, chizuk, 'demande'); rendre(); } }, tr.t('chizuk_autre')),
+        h('button', { class: 'secondaire', 'aria-pressed': garde ? 'true' : 'false', onclick: () => { store.basculerChizukFavori(item.id); rendre(); } },
+          tr.t(garde ? 'chizuk_garde' : 'chizuk_garder')),
+        h('button', { class: 'secondaire', onclick: partager }, tr.t('chizuk_partager'))) : null,
+      h('button', { class: 'principal', onclick: () => ouvrir('seance') }, tr.t('chizuk_commencer')),
+      gardes.length ? h('h2', { class: 'section' }, tr.t('chizuk_favoris')) : null,
+      gardes.length ? h('div', { class: 'carte' }, gardes.map((x) =>
+        h('button', { class: 'hizouk-garde', onclick: () => { hizouk = x; rendre(); document.querySelector('.defile')?.scrollTo(0, 0); } },
+          ChizukRules.traduction(x, tr.langue) || ChizukRules.hebreu(chizuk, x),
+          h('span', { class: 'hizouk-ref' }, Reference.localise(x.ref, tr.langue))))) : null)));
+}
+
 /** Les sources de la hitbodedout. */
 function ecranBibliotheque() {
   const pret = chargeBibliotheque();
@@ -1476,6 +1510,7 @@ function panneauTextes() {
       // Les livres entiers (13/10), puis les sources de la hitbodedout.
       ligne({ nom: tr.t('livres_title'), etat: tr.t('livres_hint'), onclick: () => ouvrir('livres') }),
       ligne({ nom: tr.t('library_title'), etat: tr.t('library_hint'), onclick: () => ouvrir('bibliotheque') }),
+      ligne({ nom: tr.t('chizuk_demande_title'), etat: tr.t('chizuk_demande_hint'), onclick: () => { hizouk = null; ouvrir('hizouk'); } }),
       ligne({ nom: tr.t('tips_title'), etat: tr.t('tips_hint'), aVenir: true })),
     h('h2', { class: 'section' }, tr.t('section_around')),
     h('div', { class: 'carte' },
@@ -2727,7 +2762,7 @@ function carteChizuk(tire, { compacte = false } = {}) {
   return h('section', { class: `chizuk${compacte ? ' compacte' : ''}` },
     h('div', { class: 'chizuk-tete' },
       h('div', { class: 'chizuk-art' }, h('img', { src: `img/${ART_DU_MOMENT[moment]}.webp`, alt: '' })),
-      h('h2', { class: 'chizuk-moment' }, tr.t(`moment_${moment}`))),
+      h('h2', { class: 'chizuk-moment' }, tr.t(moment === 'demande' ? 'chizuk_demande_title' : `moment_${moment}`))),
     // L'hébreu, de droite à gauche en toute langue.
     h('p', { class: 'chizuk-he ajuste', lang: 'he', dir: 'rtl' }, ChizukRules.hebreu(chizuk, item)),
     traduction ? h('hr', {}) : null,
@@ -3264,6 +3299,7 @@ function rendre() {
   else if (ecran === 'halakha') app.append(ecranHalakha());
   else if (ecran === 'recherche') app.append(ecranRecherche());
   else if (ecran === 'seance') app.append(ecranSeance());
+  else if (ecran === 'hizouk') app.append(ecranHizouk());
   else if (ecran === 'bravo') app.append(ecranBravo());
   else if (ecran === 'tehilim') app.append(ecranTehilim());
   else if (ecran === 'lecture') app.append(ecranLecture());

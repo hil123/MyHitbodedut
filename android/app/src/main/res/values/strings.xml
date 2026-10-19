@@ -1092,4 +1092,12 @@
     <string name="moment_mot_journee">Au milieu de la journée, un moment à l’écart avec Hachem.</string>
     <string name="moment_mot_soir">Le soir venu, racontez à Hachem votre journée.</string>
     <string name="moment_mot_nuit">La nuit, quand tout se tait, parlez à Hachem.</string>
+    <string name="chizuk_demande_title">J’ai besoin de ’hizouk</string>
+    <string name="chizuk_demande_hint">Un texte pour se relever, quand vous voulez.</string>
+    <string name="chizuk_autre">Un autre</string>
+    <string name="chizuk_garder">Garder</string>
+    <string name="chizuk_garde">Gardé ✓</string>
+    <string name="chizuk_partager">Partager</string>
+    <string name="chizuk_commencer">Commencer une hitbodedout</string>
+    <string name="chizuk_favoris">Textes gardés</string>
 </resources>

@@ -1074,4 +1074,12 @@
     <string name="moment_mot_journee">באמצע היום, רגע של התבודדות עם השם.</string>
     <string name="moment_mot_soir">לעת ערב, ספרו להשם על היום שעבר.</string>
     <string name="moment_mot_nuit">בלילה, כשהכול שקט, דברו עם השם.</string>
+    <string name="chizuk_demande_title">צריך חיזוק</string>
+    <string name="chizuk_demande_hint">טקסט שמחזק, מתי שתרצו.</string>
+    <string name="chizuk_autre">עוד אחד</string>
+    <string name="chizuk_garder">לשמור</string>
+    <string name="chizuk_garde">נשמר ✓</string>
+    <string name="chizuk_partager">לשתף</string>
+    <string name="chizuk_commencer">להתחיל התבודדות</string>
+    <string name="chizuk_favoris">טקסטים שמורים</string>
 </resources>

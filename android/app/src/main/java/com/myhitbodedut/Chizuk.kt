@@ -36,7 +36,13 @@ enum class Moment(val key: String) {
     CLOTURE("cloture"),
 
     /** Réglages lieu et moment. */
-    LIEU("lieu");
+    LIEU("lieu"),
+
+    /**
+     * « J'ai besoin de 'hizouk », hors séance (19/10) : aucun texte ne porte ce
+     * moment dans chizuk.json, il tire dans tout le publiable (ChizukRules).
+     */
+    DEMANDE("demande");
 
     /** Le nom affiché en tête de la carte. */
     val labelRes: Int
@@ -47,6 +53,7 @@ enum class Moment(val key: String) {
             RELANCE -> R.string.moment_relance
             CLOTURE -> R.string.moment_cloture
             LIEU -> R.string.moment_lieu
+            DEMANDE -> R.string.chizuk_demande_title
         }
 
     companion object {

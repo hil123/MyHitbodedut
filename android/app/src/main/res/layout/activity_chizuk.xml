@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    « J'ai besoin de 'hizouk » (proposition 11, 19/10) : un texte à la demande,
+    hors séance, avec « un autre », les favoris et le partage.
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_hero"
+        android:tag="bandeau"
+        android:orientation="vertical"
+        android:paddingHorizontal="@dimen/edge"
+        android:paddingTop="24dp"
+        android:paddingBottom="24dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/chizuk_demande_title"
+            android:textColor="@color/white"
+            android:textSize="@dimen/hero_title"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="@string/chizuk_demande_hint"
+            android:textColor="?attr/mhMint"
+            android:textSize="14sp" />
+    </LinearLayout>
+
+    <ScrollView
+        android:id="@+id/chizuk_defilement"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:clipToPadding="false"
+        android:paddingBottom="24dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="@dimen/edge"
+            android:paddingTop="16dp">
+
+            <include
+                android:id="@+id/chizuk_carte"
+                layout="@layout/view_chizuk" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:orientation="horizontal">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/chizuk_autre"
+                    style="@style/Widget.Material3.Button.OutlinedButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/chizuk_autre" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/chizuk_garder"
+                    style="@style/Widget.Material3.Button.OutlinedButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_weight="1"
+                    android:text="@string/chizuk_garder" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/chizuk_partager"
+                    style="@style/Widget.Material3.Button.OutlinedButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_weight="1"
+                    android:text="@string/chizuk_partager" />
+            </LinearLayout>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/chizuk_commencer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/chizuk_commencer" />
+
+            <TextView
+                android:id="@+id/chizuk_favoris_titre"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:letterSpacing="0.08"
+                android:paddingHorizontal="@dimen/edge_inner"
+                android:text="@string/chizuk_favoris"
+                android:textAllCaps="true"
+                android:textColor="?attr/mhMuted"
+                android:textSize="12sp" />
+
+            <LinearLayout
+                android:id="@+id/chizuk_favoris"
+                style="@style/Card"
+                android:layout_marginHorizontal="0dp"
+                android:layout_marginTop="8dp"
+                android:paddingVertical="4dp" />
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

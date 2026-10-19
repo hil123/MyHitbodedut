@@ -93,6 +93,11 @@
             android:label="@string/journal_title" />
 
         <activity
+            android:name=".ChizukActivity"
+            android:exported="false"
+            android:label="@string/chizuk_demande_title" />
+
+        <activity
             android:name=".TipsActivity"
             android:exported="false"
             android:label="@string/tips_title" />

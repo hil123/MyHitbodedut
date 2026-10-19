@@ -181,6 +181,9 @@ class MainActivity : AppCompatActivity() {
         findViewById<View>(R.id.music_button).setOnClickListener {
             startActivity(Intent(this, MusicActivity::class.java))
         }
+        findViewById<View>(R.id.chizuk_button).setOnClickListener {
+            startActivity(Intent(this, ChizukActivity::class.java))
+        }
         findViewById<View>(R.id.tips_button).setOnClickListener {
             startActivity(Intent(this, TipsActivity::class.java))
         }

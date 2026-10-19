@@ -73,6 +73,8 @@ object Character {
         Moment.CLOTURE -> R.drawable.char_praise
         // Le lieu et le moment : seul, assis face au paysage (planche du 11/10).
         Moment.LIEU -> R.drawable.scene_nature
+        // À la demande : les bras ouverts, comme on vient chercher.
+        Moment.DEMANDE -> R.drawable.char_open_arms
     }
 
     /** Au centre de l'anneau : tant que la hitbodedout du jour reste à faire, celui qui accueille (13/10). */

@@ -143,6 +143,12 @@ export function creeStore(stockage, { maintenant = () => new Date(), fuseau } = 
       const l = this.favoris().filter((x) => x !== cle);
       set('favoris', l.length === this.favoris().length ? [cle, ...l] : l);
     },
+    /** Les textes de ’hizouk gardés (19/10, Store.chizukFavoris), le plus récent en tête. */
+    chizukFavoris: () => (Array.isArray(get('chizuk_favoris', [])) ? get('chizuk_favoris', []) : []),
+    basculerChizukFavori(id) {
+      const l = this.chizukFavoris().filter((x) => x !== id);
+      set('chizuk_favoris', l.length === this.chizukFavoris().length ? [id, ...l] : l);
+    },
     /** Les marque-pages (15/10, MarquesPages.kt) : { cle, nusah, section, bloc, apercu }, le plus récent en tête. */
     marques: () => (Array.isArray(get('marques_pages', [])) ? get('marques_pages', []) : []),
     /** Pose ou retire ; vrai si la marque est maintenant posée. */

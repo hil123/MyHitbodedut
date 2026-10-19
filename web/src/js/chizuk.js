@@ -5,7 +5,7 @@
 
 import { RegleLangue } from './regles.js';
 
-export const MOMENTS = ['ouverture', 'blocage', 'porte', 'relance', 'cloture', 'lieu'];
+export const MOMENTS = ['ouverture', 'blocage', 'porte', 'relance', 'cloture', 'lieu', 'demande'];
 
 /** L'illustration d'un moment (Character.ofMoment) : l'image dit ce qu'on vit. */
 export const ART_DU_MOMENT = {
@@ -15,6 +15,7 @@ export const ART_DU_MOMENT = {
   relance: 'char_thinking', // plus le personnage qui marche (13/10)
   cloture: 'char_praise',
   lieu: 'scene_nature',
+  demande: 'char_open_arms', // « J'ai besoin de ’hizouk », hors séance (19/10)
 };
 
 export const ChizukRules = {
@@ -28,7 +29,11 @@ export const ChizukRules = {
    * montrerait les textes non relus.
    */
   pourMoment: (chizuk, moment) =>
-    chizuk.items.filter((it) => ChizukRules.publiable(it) && (it.moments || []).includes(moment)),
+    chizuk.items.filter((it) => ChizukRules.publiable(it) && (moment === 'demande' || (it.moments || []).includes(moment))),
+
+  /** Le texte partagé (ChizukPartage.texte) : l'hébreu, la traduction s'il y en a une, la source, le lien. */
+  partage: (hebreu, traduction, source, lien) =>
+    [hebreu.trim(), traduction.trim() || null, `— ${source}`, lien].filter(Boolean).join('\n\n'),
 
   /**
    * L'hébreu à afficher : sans nikkoud quand la licence de l'édition ne

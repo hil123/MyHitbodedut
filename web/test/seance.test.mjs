@@ -116,7 +116,7 @@ test('chaque moment tire dans son propre vivier, et n’a que des textes relus',
     const items = ChizukRules.pourMoment(chizuk, moment);
     assert.ok(items.length > 0, `${moment} : aucun texte`);
     for (const it of items) {
-      assert.ok(it.moments.includes(moment));
+      assert.ok(moment === 'demande' || it.moments.includes(moment));
       assert.equal(it.statut_verif, 'verifie_texte');
       assert.equal(it.relu, true);
     }
@@ -205,4 +205,10 @@ test('Ta’hanoun en fin de Tichri : toujours en Edot, au choix en Sfard, jamais
   assert.equal(s.sansTahanounFinTichri(), true);
   s.setSiddurNusah('ashkenaz');
   assert.equal(s.sansTahanounFinTichri(), false);
+});
+
+test('à la demande : tout le publiable, et le partage garde la source (19/10)', () => {
+  const publiables = chizuk.items.filter(ChizukRules.publiable).map((x) => x.id);
+  assert.deepEqual(ChizukRules.pourMoment(chizuk, 'demande').map((x) => x.id), publiables);
+  assert.equal(ChizukRules.partage('עִקַּר', '', 'Likoutei Moharan II, 25', 'https://x'), 'עִקַּר\n\n— Likoutei Moharan II, 25\n\nhttps://x');
 });

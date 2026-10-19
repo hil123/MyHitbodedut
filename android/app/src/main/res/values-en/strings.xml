@@ -1046,4 +1046,12 @@
     <string name="moment_mot_journee">In the middle of the day, a moment apart with Hashem.</string>
     <string name="moment_mot_soir">As evening comes, tell Hashem about your day.</string>
     <string name="moment_mot_nuit">At night, when all is quiet, speak to Hashem.</string>
+    <string name="chizuk_demande_title">I need hizuk</string>
+    <string name="chizuk_demande_hint">A text to lift you up, whenever you want.</string>
+    <string name="chizuk_autre">Another</string>
+    <string name="chizuk_garder">Keep</string>
+    <string name="chizuk_garde">Kept ✓</string>
+    <string name="chizuk_partager">Share</string>
+    <string name="chizuk_commencer">Start a hitbodedut</string>
+    <string name="chizuk_favoris">Kept texts</string>
 </resources>
