@@ -319,38 +319,9 @@ class PaliersActivity : AppCompatActivity() {
         return Triple(carte, compte, b)
     }
 
-    /** Le détail d'un trophée (16/10, point 1) : l'objet, ce qu'il demande, le jour gagné ou la progression. */
-    private fun detail(t: Trophees.Niveau, p: Trophees.Pratique, dates: Map<String, java.time.LocalDate>, rangGlobal: Int) {
-        val gagne = Trophees.gagne(p, t)
-        val m = if (gagne) Trophees.grade(rangGlobal) else null
-        val v = Trophees.valeur(p, t.famille).coerceAtMost(t.seuil)
-        val vue = LinearLayout(this).apply {
-            orientation = LinearLayout.VERTICAL
-            gravity = Gravity.CENTER_HORIZONTAL
-            setPadding(dp(24), dp(24), dp(24), dp(4))
-            val objet = View(context).apply {
-                background = TropheeDessin(context, t.famille.forme, m, t.famille.icone)
-                importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO
-            }
-            addView(objet, LinearLayout.LayoutParams(dp(120), dp(120)))
-            if (gagne) AnimationsTrophees.retourner(objet, 150L)
-            addView(VueJour.texte(context, TropheesVue.description(context, t.famille, t.seuil), 20f, R.color.ink, gras = true, haut = 12).apply { gravity = Gravity.CENTER })
-            addView(VueJour.texte(context, TropheesVue.nom(context, t.famille) + " · " + getString(R.string.trophee_niveau_court, t.rang, t.famille.seuils.size),
-                14f, R.color.muted, haut = 2).apply { gravity = Gravity.CENTER })
-            if (gagne) {
-                addView(VueJour.texte(context, dates[t.cle]?.let { getString(R.string.trophee_gagne_le, dateLongue(it)) } ?: getString(R.string.trophee_gagne),
-                    15f, R.color.brand, gras = true, haut = 10).apply { gravity = Gravity.CENTER })
-                addView(VueJour.texte(context, getString(R.string.trophee_detail_grade, TropheesVue.metal(context, m!!), rangGlobal), 13f, R.color.muted, haut = 4)
-                    .apply { gravity = Gravity.CENTER })
-            } else {
-                addView(barre(Trophees.fraction(p, t), dp(10), null).apply { (layoutParams as LinearLayout.LayoutParams).topMargin = dp(12) })
-                addView(VueJour.texte(context, getString(R.string.trophee_encore, v, t.seuil, t.seuil - v), 14f, R.color.brand, gras = true, haut = 4)
-                    .apply { gravity = Gravity.CENTER })
-            }
-        }
-        com.google.android.material.dialog.MaterialAlertDialogBuilder(this).setView(vue)
-            .setPositiveButton(R.string.celebration_continue, null).show()
-    }
+    /** Le détail d'un trophée (16/10, point 1) : la fiche partagée avec la fête d'un trophée gagné (FicheTrophee). */
+    private fun detail(t: Trophees.Niveau, p: Trophees.Pratique, dates: Map<String, java.time.LocalDate>, rangGlobal: Int) =
+        FicheTrophee.montrer(this, t, p, dates, rangGlobal)
 
     /** Une image du grade à partager (16/10, point 9) : dessinée ici, dans le cache ; rien d'autre ne sort. */
     private fun partager(g: Trophees.Metal, n: Int) {
