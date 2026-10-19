@@ -242,7 +242,8 @@ object SiddurJour {
     fun empreinte(texte: String): String =
         texte.replace(Regex("<[^>]+>"), " ")
             .replace(Regex("[\\u0591-\\u05C7]"), "")
-            .replace(Regex("\\s+"), " ")
+            // (?U) : les espaces Unicode (fine U+2009 du siddour Edot) comptent, comme \s de Python et de JS.
+            .replace(Regex("(?U)\\s+"), " ")
             .trim()
             .take(40)
 }
