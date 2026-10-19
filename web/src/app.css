@@ -1237,6 +1237,9 @@ button.corps { min-height: 44px; }
 .mini-commandes .mini-lecture svg { width: 32px; height: 32px; }
 .seance .contenu { padding-bottom: 104px; }
 .puces-recherche { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+/* Paragraphes d'un texte long (19/10) : un écart entre eux, pas entre les lignes. */
+.para { display: block; }
+.para + .para { margin-top: 0.7em; }
 
 /* « J'ai besoin de ’hizouk » (19/10) */
 .hizouk-actions { display: flex; gap: 8px; margin-top: 12px; }
