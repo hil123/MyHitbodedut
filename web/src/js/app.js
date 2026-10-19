@@ -2913,6 +2913,8 @@ function construireMini() {
 
 function majMini() {
   const montrer = store.isSessionRunning() && ecranCourant() === 'seance';
+  // La place du disque, réservée sous l'écran : il ne couvre jamais « Terminer ».
+  document.body.classList.toggle('avec-mini', montrer);
   if (!montrer) { if (mini) mini.hidden = true; return; }
   if (!mini) construireMini();
   mini.hidden = false;
