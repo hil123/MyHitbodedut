@@ -105,7 +105,13 @@ class TehilimLectureActivity : AppCompatActivity() {
         val bloc = SpannableStringBuilder()
         quels.forEach { v ->
             val verset = versets.getOrNull(v - 1) ?: return@forEach
-            if (bloc.isNotEmpty()) bloc.append("\n")
+            // Entre deux versets, une demi-ligne vide : chaque verset se détache (19/10).
+            if (bloc.isNotEmpty()) {
+                bloc.append("\n")
+                val vide = bloc.length
+                bloc.append("\n")
+                bloc.setSpan(RelativeSizeSpan(0.6f), vide, bloc.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+            }
             val debut = bloc.length
             bloc.append(Reference.lettres(v)).append(" ")
             bloc.setSpan(ForegroundColorSpan(discret), debut, bloc.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
@@ -116,7 +122,7 @@ class TehilimLectureActivity : AppCompatActivity() {
         layoutDirection = View.LAYOUT_DIRECTION_RTL
         textAlignment = View.TEXT_ALIGNMENT_VIEW_START
         textSize = 19f * rendu.echelle
-        setLineSpacing(dp(14).toFloat() * rendu.echelle, 1f)
+        setLineSpacing(dp(8).toFloat() * rendu.echelle, 1f)
         setTextColor(rendu.texte)
         setTextIsSelectable(false)
         PoliceHebraique.appliquer(this)
