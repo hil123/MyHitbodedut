@@ -30,6 +30,7 @@ class ChizukActivity : AppCompatActivity() {
 
         findViewById<MaterialButton>(R.id.chizuk_autre).setOnClickListener {
             courant = ChizukCard.show(carte, Moment.DEMANDE)
+            Effets.fondu(carte)
             rendreGarder()
             findViewById<View>(R.id.chizuk_defilement).scrollTo(0, 0)
         }
@@ -44,6 +45,8 @@ class ChizukActivity : AppCompatActivity() {
         }
         rendreGarder()
         rendreFavoris()
+        // Les effets (19/10) : la carte, les boutons, les textes gardés entrent en cascade.
+        if (savedInstanceState == null) (carte.parent as? android.view.ViewGroup)?.let { Effets.enfants(it) }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -84,9 +87,11 @@ class ChizukActivity : AppCompatActivity() {
                 setTextColor(Apparence.couleur(this@ChizukActivity, R.color.ink))
                 setPadding(dp(4), dp(12), dp(4), dp(12))
                 foreground = getDrawable(android.R.drawable.list_selector_background)
+                Effets.presse(this)
                 setOnClickListener {
                     courant = item
                     ChizukCard.bind(findViewById(R.id.chizuk_carte), chizuk, item, Moment.DEMANDE)
+                    Effets.fondu(findViewById(R.id.chizuk_carte))
                     rendreGarder()
                     findViewById<View>(R.id.chizuk_defilement).scrollTo(0, 0)
                 }

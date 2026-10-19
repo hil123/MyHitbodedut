@@ -122,6 +122,7 @@ class SessionActivity : AppCompatActivity() {
         findViewById<View>(R.id.session_question_suivante).setOnClickListener {
             question = QuestionsBlocage.suivante(question)
             renderQuestion()
+            Effets.fondu(findViewById(R.id.session_questions))
         }
 
         // « Commencer simplement » (proposition 15) : parler, écrire, prier ou

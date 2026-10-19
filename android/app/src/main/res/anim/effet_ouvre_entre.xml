@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Le passage d'un écran à l'autre (19/10, effets) : un léger glissement vertical et un fondu. -->
+<set xmlns:android="http://schemas.android.com/apk/res/android"
+    android:duration="260"
+    android:interpolator="@android:interpolator/decelerate_cubic"
+    android:shareInterpolator="true">
+    <alpha android:fromAlpha="0.0" android:toAlpha="1.0" />
+    <translate android:fromYDelta="6%" android:toYDelta="0" />
+</set>

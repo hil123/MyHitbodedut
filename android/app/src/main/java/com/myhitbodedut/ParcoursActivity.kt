@@ -119,6 +119,8 @@ class ParcoursActivity : AppCompatActivity() {
                     " · " + resources.getQuantityString(R.plurals.parcours_humeur_jours, humeur.third, humeur.third), R.color.muted).apply { gravity = Gravity.CENTER })
             })
         }
+        // Les effets (19/10) : les blocs entrent l'un après l'autre.
+        Effets.enfants(contenu)
     }
 
     private fun rangee(a: View, b: View) = LinearLayout(this).apply {
@@ -142,6 +144,8 @@ class ParcoursActivity : AppCompatActivity() {
             gravity = Gravity.BOTTOM
             addView(TextView(this@ParcoursActivity).apply {
                 text = valeur
+                // Un chiffre seul monte jusqu'à sa valeur ; une durée (« 1 h 10 ») s'affiche telle quelle.
+                valeur.toIntOrNull()?.let { Effets.compte(this, it) }
                 textSize = 28f
                 setTypeface(typeface, android.graphics.Typeface.BOLD)
                 setTextColor(couleur(R.color.ink))
@@ -187,10 +191,14 @@ class ParcoursActivity : AppCompatActivity() {
     private class Barre(c: Context, private val part: Float, plein: Int, piste: Int) : View(c) {
         private val pPlein = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = plein }
         private val pPiste = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = piste }
+        /** La barre se remplit à l'ouverture (19/10, effets). */
+        private var avance = 0f
+        init { Effets.remplir { avance = it; invalidate() } }
         override fun onDraw(canvas: Canvas) {
             val r = height / 2f
             canvas.drawRoundRect(RectF(0f, 0f, width.toFloat(), height.toFloat()), r, r, pPiste)
-            val w = (width * part.coerceIn(0.04f, 1f))
+            val w = (width * part.coerceIn(0.04f, 1f) * avance)
+            if (w <= 0f) return
             val x = if (layoutDirection == LAYOUT_DIRECTION_RTL) width - w else 0f
             canvas.drawRoundRect(RectF(x, 0f, x + w, height.toFloat()), r, r, pPlein)
         }

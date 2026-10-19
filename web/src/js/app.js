@@ -538,6 +538,37 @@ function panneauAujourdhui() {
       h('button', { class: 'bouton-trophees', onclick: () => ouvrir('parcours') }, tr.t('parcours_title')))));
 }
 
+/**
+ * Les effets d'entrée (19/10, « ajoute des effets professionnels ») : l'écran glisse
+ * et s'éclaircit, ses cartes suivent en cascade (app.css, « Effets ») ; dans « Mon
+ * parcours », les chiffres montent jusqu'à leur valeur. Rien de cela quand le
+ * téléphone demande moins de mouvement.
+ */
+const moinsDeMouvement = () => window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+function effetsEntree(ecran) {
+  if (moinsDeMouvement()) return;
+  const racine = app.firstElementChild;
+  if (!racine) return;
+  racine.classList.add('entree');
+  racine.querySelectorAll('.contenu > *').forEach((el, i) => el.style.setProperty('--rang', String(Math.min(i, 8))));
+  setTimeout(() => racine.classList.remove('entree'), 900);
+  if (ecran === 'parcours') racine.querySelectorAll('.tuile-valeur [data-compte]').forEach(compteMonte);
+}
+
+/** Un nombre qui monte de 0 à sa valeur en 0,7 s, en ralentissant. */
+function compteMonte(el) {
+  const fin = Number(el.dataset.compte);
+  if (!(fin > 0)) return;
+  const debut = performance.now();
+  const pas = (t) => {
+    const p = Math.min(1, (t - debut) / 700);
+    el.textContent = String(Math.round(fin * (1 - (1 - p) ** 3)));
+    if (p < 1) requestAnimationFrame(pas);
+  };
+  el.textContent = '0';
+  requestAnimationFrame(pas);
+}
+
 /** « Mon parcours » (ParcoursActivity) : les chiffres et les sujets ; l'humeur reste sur Android, qui a le journal. */
 function ecranParcours() {
   const b = Parcours.bilan(store.jours());
@@ -545,7 +576,8 @@ function ecranParcours() {
   const meilleure = store.meilleureSerie();
   const tuile = (valeur, unite, cle, teinte) => h('div', { class: 'tuile-parcours' },
     h('span', { class: 'tuile-pastille', style: `background: var(${teinte})` }),
-    h('div', { class: 'tuile-valeur' }, valeur, unite ? h('span', { class: 'tuile-unite' }, ` ${unite}`) : null),
+    h('div', { class: 'tuile-valeur' }, /^\d+$/.test(valeur) ? h('span', { 'data-compte': valeur }, valeur) : valeur,
+      unite ? h('span', { class: 'tuile-unite' }, ` ${unite}`) : null),
     h('div', { class: 'tuile-libelle' }, tr.t(cle)));
   const max = Math.max(1, ...b.sujets.map(([, n]) => n));
   return h('div', { class: 'ecran avec-bandeau' },
@@ -1472,7 +1504,10 @@ function ecranLivres() {
  * où un texte de ’hizouk sort de l'appareil, d'un geste de l'utilisateur).
  */
 let hizouk = null;
+let hizoukChange = false;
 function ecranHizouk() {
+  const change = hizoukChange;
+  hizoukChange = false;
   if (chizuk && !hizouk) hizouk = ChizukBag.tirer(store, chizuk, 'demande');
   const item = hizouk;
   const garde = item && store.chizukFavoris().includes(item.id);
@@ -1486,16 +1521,16 @@ function ecranHizouk() {
   return h('div', { class: 'ecran avec-bandeau' },
     bandeau(tr.t('chizuk_demande_title'), { puce: h('p', { class: 'bandeau-sous-titre' }, tr.t('chizuk_demande_hint')), dessin: 'char_open_arms' }),
     h('div', { class: 'defile' }, h('div', { class: 'contenu hizouk' },
-      item ? carteChizuk({ moment: 'demande', item }) : null,
+      item ? (() => { const c = carteChizuk({ moment: 'demande', item }); if (change && !moinsDeMouvement()) c.classList.add('fondu-neuf'); return c; })() : null,
       item ? h('div', { class: 'hizouk-actions' },
-        h('button', { class: 'secondaire', onclick: () => { hizouk = ChizukBag.tirer(store, chizuk, 'demande'); rendre(); } }, tr.t('chizuk_autre')),
+        h('button', { class: 'secondaire', onclick: () => { hizouk = ChizukBag.tirer(store, chizuk, 'demande'); hizoukChange = true; rendre(); } }, tr.t('chizuk_autre')),
         h('button', { class: 'secondaire', 'aria-pressed': garde ? 'true' : 'false', onclick: () => { store.basculerChizukFavori(item.id); rendre(); } },
           tr.t(garde ? 'chizuk_garde' : 'chizuk_garder')),
         h('button', { class: 'secondaire', onclick: partager }, tr.t('chizuk_partager'))) : null,
       h('button', { class: 'principal', onclick: () => ouvrir('seance') }, tr.t('chizuk_commencer')),
       gardes.length ? h('h2', { class: 'section' }, tr.t('chizuk_favoris')) : null,
       gardes.length ? h('div', { class: 'carte' }, gardes.map((x) =>
-        h('button', { class: 'hizouk-garde', onclick: () => { hizouk = x; rendre(); document.querySelector('.defile')?.scrollTo(0, 0); } },
+        h('button', { class: 'hizouk-garde', onclick: () => { hizouk = x; hizoukChange = true; rendre(); document.querySelector('.defile')?.scrollTo({ top: 0, behavior: moinsDeMouvement() ? 'auto' : 'smooth' }); } },
           h('span', { class: 'hizouk-garde-texte' }, ChizukRules.traduction(x, tr.langue) || ChizukRules.hebreu(chizuk, x)),
           h('span', { class: 'hizouk-ref' }, Reference.localise(x.ref, tr.langue))))) : null)));
 }
@@ -3164,6 +3199,7 @@ lecteur.addEventListener('timeupdate', () => {
 const QUESTIONS_BLOCAGE = ['question_merci', 'question_raconter', 'question_ressenti', 'question_besoins', 'question_force',
   'question_bilan', 'question_pardon', 'question_decision', 'question_demain', 'question_fin'];
 let questionSeance = -1;
+let questionChange = false;
 
 function ecranSeance() {
   const enCours = store.isSessionRunning();
@@ -3188,10 +3224,10 @@ function ecranSeance() {
     morceau ? h('p', { class: 'legende petite' }, tr.t('session_music_line', titreMorceau(morceau))) : null,
     carteChizuk(chizukSeance),
     enCours && aBlocage ? h('button', { class: 'texte-clair blocage', onclick: () => { tireChizuk('blocage'); if (questionSeance < 0) questionSeance = 0; rendre(); } }, tr.t('chizuk_stuck')) : null,
-    enCours && questionSeance >= 0 ? h('div', { class: 'question-seance' },
+    enCours && questionSeance >= 0 ? h('div', { class: `question-seance${questionChange && !moinsDeMouvement() ? ' fondu-neuf' : ''}` },
       h('p', { class: 'question-rang' }, tr.t('question_rang', questionSeance + 1, QUESTIONS_BLOCAGE.length)),
       h('p', { class: 'question-texte' }, tr.t(QUESTIONS_BLOCAGE[questionSeance])),
-      h('button', { class: 'texte-clair', onclick: () => { questionSeance = (questionSeance + 1) % QUESTIONS_BLOCAGE.length; rendre(); } }, tr.t('question_suivante'))) : null,
+      h('button', { class: 'texte-clair', onclick: () => { questionSeance = (questionSeance + 1) % QUESTIONS_BLOCAGE.length; questionChange = true; rendre(); questionChange = false; } }, tr.t('question_suivante'))) : null,
     h('button', { class: 'texte-clair', onclick: choisirSujet },
       sujet ? tr.t('session_theme_chosen', tr.t(`theme_${sujet}`)) : tr.t('session_theme_none')),
   ];
@@ -3418,6 +3454,9 @@ function rendre() {
   }
   app.dataset.ecran = `${ecran}/${onglet}`;
   if (memeEcran) app.querySelector('.defile').scrollTop = avant;
+  // Les effets (19/10) : un écran qu'on ouvre entre, ses cartes l'une après l'autre ;
+  // un écran redessiné sur place (chaque seconde pendant la séance) ne rejoue rien.
+  else effetsEntree(ecran);
   // L'accueil qui apparaît s'anime seul : anneaux, puis saut ou fête (04/10).
   const accueil = ecran === 'accueil' && onglet === 'aujourdhui';
   if (!accueil) { accueilAnime = false; facePlaque = 'hassid'; clearTimeout(minuteurPlaque); }

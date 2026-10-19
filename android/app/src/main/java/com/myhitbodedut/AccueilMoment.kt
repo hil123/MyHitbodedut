@@ -47,6 +47,7 @@ object AccueilMoment {
         layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply { topMargin = dp(c, 12) }
         setPadding(dp(c, 12), dp(c, 8), dp(c, 12), dp(c, 8))
         foreground = c.getDrawable(android.R.drawable.list_selector_background)
+        Effets.presse(this)
         setOnClickListener { ouvrir() }
         addView(ImageView(c).apply {
             setImageResource(image)
