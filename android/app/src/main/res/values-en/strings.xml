@@ -1084,4 +1084,20 @@
         <item quantity="one">over %d rated session</item>
         <item quantity="other">over %d rated sessions</item>
     </plurals>
+    <string name="question_merci">What would you like to thank Hashem for today?</string>
+    <string name="question_raconter">What happened today? Tell Him simply, in your own words.</string>
+    <string name="question_ressenti">What did you feel: joy, fear, anger, hurt?</string>
+    <string name="question_besoins">What do you need: livelihood, health, peace at home, a match?</string>
+    <string name="question_force">What inner strength would you ask Him for: faith, joy, patience?</string>
+    <string name="question_bilan">Where did you do well today? Where did you stumble?</string>
+    <string name="question_pardon">What would you like to ask forgiveness for, precisely?</string>
+    <string name="question_decision">What one small thing will you do differently tomorrow?</string>
+    <string name="question_demain">What would you like to tell Him about tomorrow, about this week?</string>
+    <string name="question_fin">To finish: thank you, even if not everything is solved yet.</string>
+    <string name="question_suivante">Next question</string>
+    <string name="question_rang">Question %1$d of %2$d</string>
+    <string name="simplement_parler">Speak</string>
+    <string name="simplement_ecrire">Write</string>
+    <string name="simplement_prier">Pray</string>
+    <string name="simplement_question">A question</string>
 </resources>

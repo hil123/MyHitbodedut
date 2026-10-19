@@ -1130,4 +1130,20 @@
         <item quantity="one">sur %d hitbodedout notée</item>
         <item quantity="other">sur %d hitbodedout notées</item>
     </plurals>
+    <string name="question_merci">Pour quoi voulez-vous remercier Hachem aujourd’hui ?</string>
+    <string name="question_raconter">Que s’est-il passé aujourd’hui ? Racontez-le-Lui simplement, avec vos mots.</string>
+    <string name="question_ressenti">Qu’avez-vous ressenti : de la joie, de la peur, de la colère, une blessure ?</string>
+    <string name="question_besoins">De quoi avez-vous besoin : parnassa, santé, chalom bayit, un chidoukh ?</string>
+    <string name="question_force">Quelle force intérieure voulez-vous Lui demander : émouna, joie, patience ?</string>
+    <string name="question_bilan">Où avez-vous été bien aujourd’hui ? Où avez-vous trébuché ?</string>
+    <string name="question_pardon">Pour quoi voulez-vous demander pardon, précisément ?</string>
+    <string name="question_decision">Quelle petite chose ferez-vous autrement demain ?</string>
+    <string name="question_demain">Que voulez-vous Lui dire de demain, de cette semaine ?</string>
+    <string name="question_fin">Pour finir : merci, même si tout n’est pas encore réglé.</string>
+    <string name="question_suivante">Question suivante</string>
+    <string name="question_rang">Question %1$d sur %2$d</string>
+    <string name="simplement_parler">Parler</string>
+    <string name="simplement_ecrire">Écrire</string>
+    <string name="simplement_prier">Prier</string>
+    <string name="simplement_question">Une question</string>
 </resources>

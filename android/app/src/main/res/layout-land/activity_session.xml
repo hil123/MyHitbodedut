@@ -119,6 +119,44 @@
                     android:textColor="?attr/mhMint"
                     android:visibility="gone" />
 
+                <!-- « Je ne sais pas quoi dire » (propositions 3 et 15, 19/10) : une question à la fois. -->
+                <LinearLayout
+                    android:id="@+id/session_questions"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/bg_hero_chip"
+                    android:orientation="vertical"
+                    android:paddingHorizontal="16dp"
+                    android:paddingVertical="12dp"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:id="@+id/session_question_rang"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="?attr/mhMint"
+                        android:textSize="12sp" />
+
+                    <TextView
+                        android:id="@+id/session_question"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:lineSpacingExtra="4dp"
+                        android:textColor="@color/white"
+                        android:textSize="19sp" />
+
+                    <Button
+                        android:id="@+id/session_question_suivante"
+                        style="@style/Widget.Material3.Button.TextButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end"
+                        android:text="@string/question_suivante"
+                        android:textColor="?attr/mhMint" />
+                </LinearLayout>
+
             </LinearLayout>
 
             <LinearLayout
@@ -234,6 +272,51 @@
                     android:layout_marginTop="0dp"
                     android:text="@string/session_open"
                     android:textColor="?attr/mhMint" />
+
+                <!-- « Commencer simplement » (proposition 15, 19/10) : quatre façons d'entrer, qui démarrent tout de suite. -->
+                <LinearLayout
+                    android:id="@+id/session_simplement"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/simplement_parler"
+                        style="@style/Widget.Material3.Button.TextButton"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/simplement_parler"
+                        android:textColor="?attr/mhMint" />
+
+                    <Button
+                        android:id="@+id/simplement_ecrire"
+                        style="@style/Widget.Material3.Button.TextButton"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/simplement_ecrire"
+                        android:textColor="?attr/mhMint" />
+
+                    <Button
+                        android:id="@+id/simplement_prier"
+                        style="@style/Widget.Material3.Button.TextButton"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/simplement_prier"
+                        android:textColor="?attr/mhMint" />
+
+                    <Button
+                        android:id="@+id/simplement_question"
+                        style="@style/Widget.Material3.Button.TextButton"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/simplement_question"
+                        android:textColor="?attr/mhMint" />
+                </LinearLayout>
 
             </LinearLayout>
         </LinearLayout>

@@ -1115,4 +1115,20 @@
         <item quantity="two">מתוך שתי התבודדויות שדורגו</item>
         <item quantity="other">מתוך %d התבודדויות שדורגו</item>
     </plurals>
+    <string name="question_merci">על מה תרצו להודות להשם היום?</string>
+    <string name="question_raconter">מה עבר עליכם היום? ספרו לו בפשטות, במילים שלכם.</string>
+    <string name="question_ressenti">מה הרגשתם: שמחה, פחד, כעס, פגיעה?</string>
+    <string name="question_besoins">מה אתם צריכים: פרנסה, בריאות, שלום בית, שידוך?</string>
+    <string name="question_force">איזה כוח פנימי תרצו לבקש ממנו: אמונה, שמחה, סבלנות?</string>
+    <string name="question_bilan">איפה הייתם טובים היום? איפה נכשלתם?</string>
+    <string name="question_pardon">על מה תרצו לבקש סליחה, בדיוק?</string>
+    <string name="question_decision">איזה דבר קטן תעשו אחרת מחר?</string>
+    <string name="question_demain">מה תרצו לומר לו על מחר, על השבוע?</string>
+    <string name="question_fin">לסיום: תודה, גם אם עוד לא הכול נפתר.</string>
+    <string name="question_suivante">השאלה הבאה</string>
+    <string name="question_rang">שאלה %1$d מתוך %2$d</string>
+    <string name="simplement_parler">לדבר</string>
+    <string name="simplement_ecrire">לכתוב</string>
+    <string name="simplement_prier">להתפלל</string>
+    <string name="simplement_question">שאלה</string>
 </resources>

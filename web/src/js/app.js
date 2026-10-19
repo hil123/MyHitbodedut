@@ -3107,8 +3107,17 @@ lecteur.addEventListener('timeupdate', () => {
   }
 });
 
+/**
+ * « Je ne sais pas quoi dire » (QuestionsBlocage.kt, propositions 3 et 15,
+ * 19/10) : une question à la fois, d'après « מה אומרים? » du guide du propriétaire.
+ */
+const QUESTIONS_BLOCAGE = ['question_merci', 'question_raconter', 'question_ressenti', 'question_besoins', 'question_force',
+  'question_bilan', 'question_pardon', 'question_decision', 'question_demain', 'question_fin'];
+let questionSeance = -1;
+
 function ecranSeance() {
   const enCours = store.isSessionRunning();
+  if (!enCours) questionSeance = -1;
   etaitEnCours = enCours;
   const fait = store.isDone();
   const sujet = store.sessionTheme();
@@ -3128,7 +3137,11 @@ function ecranSeance() {
     h('p', { class: 'legende' }, enCours ? c.legende : fait ? tr.t('session_idle_done', tr.duree(store.record()?.minutes ?? 0)) : tr.t('session_idle_caption')),
     morceau ? h('p', { class: 'legende petite' }, tr.t('session_music_line', titreMorceau(morceau))) : null,
     carteChizuk(chizukSeance),
-    enCours && aBlocage ? h('button', { class: 'texte-clair blocage', onclick: () => { tireChizuk('blocage'); rendre(); } }, tr.t('chizuk_stuck')) : null,
+    enCours && aBlocage ? h('button', { class: 'texte-clair blocage', onclick: () => { tireChizuk('blocage'); if (questionSeance < 0) questionSeance = 0; rendre(); } }, tr.t('chizuk_stuck')) : null,
+    enCours && questionSeance >= 0 ? h('div', { class: 'question-seance' },
+      h('p', { class: 'question-rang' }, tr.t('question_rang', questionSeance + 1, QUESTIONS_BLOCAGE.length)),
+      h('p', { class: 'question-texte' }, tr.t(QUESTIONS_BLOCAGE[questionSeance])),
+      h('button', { class: 'texte-clair', onclick: () => { questionSeance = (questionSeance + 1) % QUESTIONS_BLOCAGE.length; rendre(); } }, tr.t('question_suivante'))) : null,
     h('button', { class: 'texte-clair', onclick: choisirSujet },
       sujet ? tr.t('session_theme_chosen', tr.t(`theme_${sujet}`)) : tr.t('session_theme_none')),
   ];
@@ -3150,6 +3163,12 @@ function ecranSeance() {
         h('button', { class: 'duree', onclick: () => commencer(m) }, tr.duree(m)))),
       h('button', { class: 'texte-clair', onclick: () => saisirDuree(commencer) }, tr.t('duration_custom')),
       h('button', { class: 'texte-clair', onclick: () => commencer(0) }, tr.t('session_open')),
+      // « Commencer simplement » (proposition 15) : chacun démarre tout de suite.
+      h('div', { class: 'simplement' },
+        h('button', { class: 'texte-clair', onclick: () => commencer(store.targetMinutes()) }, tr.t('simplement_parler')),
+        h('button', { class: 'texte-clair', onclick: () => { commencer(store.targetMinutes()); ecrireNote(store.today(), rendre); } }, tr.t('simplement_ecrire')),
+        h('button', { class: 'texte-clair', onclick: () => { commencer(store.targetMinutes()); ouvrir('siddur'); } }, tr.t('simplement_prier')),
+        h('button', { class: 'texte-clair', onclick: () => { commencer(store.targetMinutes()); questionSeance = 0; rendre(); } }, tr.t('simplement_question'))),
       h('button', { class: 'principal', onclick: () => commencer(store.targetMinutes()) },
         tr.t('session_start', tr.duree(store.targetMinutes()))));
   }
