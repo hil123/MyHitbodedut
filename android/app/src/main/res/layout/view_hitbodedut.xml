@@ -83,6 +83,17 @@
         android:textColor="?attr/mhMuted"
         android:textSize="14sp" />
 
+    <!-- Selon le sujet choisi (proposition 2, 19/10). -->
+    <TextView
+        android:id="@+id/hitbodedut_sujet"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:lineSpacingExtra="2sp"
+        android:textColor="?attr/mhInk"
+        android:textSize="15sp"
+        android:visibility="gone" />
+
     <TextView
         android:id="@+id/hitbodedut_source"
         android:layout_width="match_parent"
