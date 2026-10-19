@@ -30,6 +30,9 @@ class SessionService : Service() {
 
     private val handler = Handler(Looper.getMainLooper())
     private val music by lazy { MusicPlayer(this) }
+
+    /** L'ambiance sous la musique (19/10) : calculée, jamais un fichier. */
+    private val ambiance = AmbiancePlayer()
     private val melange = MelangeMusique()
 
     /** Le mode de ce qui joue : null tant que rien n'a été lancé. */
@@ -101,6 +104,8 @@ class SessionService : Service() {
                     stopSelf()
                     return START_NOT_STICKY
                 }
+                // L'ambiance suit son réglage, que la musique soit là ou non (19/10).
+                ambiance.start(AmbiancePlayer.choisie(this), Store.musicVolume(this))
                 if (!Store.musicEnabled(this)) {
                     music.stop()
                     // Service déjà en marche : rien d'autre à faire. Sinon
@@ -123,6 +128,7 @@ class SessionService : Service() {
         // Ne pas déranger pendant la séance (14/10), si choisi.
         NePasDeranger.activer(this)
         ensureMusic()
+        ambiance.start(AmbiancePlayer.choisie(this), Store.musicVolume(this))
         StreakWidget.refresh(this)
         handler.removeCallbacks(tick)
         handler.post(tick)
@@ -130,6 +136,7 @@ class SessionService : Service() {
     }
 
     override fun onDestroy() {
+        ambiance.stop()
         lecteur = null
         handler.removeCallbacks(tick)
         relacherEveil()
@@ -299,6 +306,7 @@ class SessionService : Service() {
         relacherEveil()
         NePasDeranger.retablir(this)
         music.stop()
+        ambiance.stop()
         Store.setMusicNow(this, null)
         handler.removeCallbacks(tick)
         stopForeground(STOP_FOREGROUND_REMOVE)

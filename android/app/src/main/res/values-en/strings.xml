@@ -1100,4 +1100,11 @@
     <string name="simplement_ecrire">Write</string>
     <string name="simplement_prier">Pray</string>
     <string name="simplement_question">A question</string>
+    <string name="ambiance_title">Ambience</string>
+    <string name="ambiance_silence">Silence</string>
+    <string name="ambiance_pluie">Rain</string>
+    <string name="ambiance_mer">Sea</string>
+    <string name="ambiance_foret">Forest</string>
+    <string name="ambiance_feu">Fire</string>
+    <string name="ambiance_nuit">Night</string>
 </resources>

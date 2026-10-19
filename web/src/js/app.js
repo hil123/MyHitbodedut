@@ -6,6 +6,7 @@
 import { chargeTraduction, formate, langueInitiale, LANGUES } from './i18n.js';
 import { Anneaux, CycleTehilim, DureeSeance, JaugeSemaine, LibraryRules, Plaque, Reference, Salutation, SiddurMoment, SignetsSiddur, SourceDuJour, Parcours } from './regles.js';
 import { ART_DU_MOMENT, ChizukBag, ChizukRules } from './chizuk.js';
+import { AMBIANCES, arreter as arreteAmbiance, jouer as joueAmbiance } from './ambiance.js';
 import { DanseMesure } from './seance.js';
 import { creeStore, memoire } from './store.js';
 import { isoLocal } from './calendrier.js';
@@ -1604,6 +1605,7 @@ function barre(titre) {
     h('h1', {}, titre));
 }
 
+let apercuAmbiance = null;
 function ecranMusique() {
   const choisi = morceauChoisi();
   const interrupteur = h('input', {
@@ -1623,7 +1625,19 @@ function ecranMusique() {
             h('input', {
               type: 'range', min: 0, max: 100, value: store.musicVolume(), 'aria-label': tr.t('music_volume'),
               oninput: (e) => { store.setMusicVolume(Number(e.target.value)); lecteur.volume = store.musicVolume() / 100; },
-            }))) : null),
+            }))) : null,
+        // Les ambiances (19/10) : calculées, sous la musique ; cinq secondes d'aperçu hors séance.
+        h('button', {
+          class: 'ligne', onclick: () => choisirDans(tr.t('ambiance_title'), AMBIANCES.map((a) => tr.t(`ambiance_${a}`)),
+            AMBIANCES.indexOf(store.ambiance()), (i) => {
+              store.setAmbiance(AMBIANCES[i]);
+              if (store.isSessionRunning()) joueAmbiance(AMBIANCES[i], store.musicVolume());
+              else { joueAmbiance(AMBIANCES[i], store.musicVolume()); clearTimeout(apercuAmbiance); apercuAmbiance = setTimeout(arreteAmbiance, 5000); }
+              rendre();
+            }),
+        }, h('span', { class: 'corps' }, h('div', { class: 'nom' }, tr.t('ambiance_title')),
+          h('div', { class: 'etat' }, tr.t(`ambiance_${store.ambiance()}`))),
+        h('span', { class: 'chevron', 'aria-hidden': 'true' }))),
       h('h2', { class: 'section' }, tr.t('music_library')),
       h('div', { class: 'carte' }, morceaux.map((m) => h('div', { class: `ligne morceau${m === choisi ? ' choisi' : ''}` },
         h('button', {
@@ -2837,6 +2851,8 @@ function relacheEcran() {
 }
 
 function demarreMusique() {
+  // L'ambiance (19/10) suit son réglage, que la musique soit là ou non.
+  joueAmbiance(store.ambiance(), store.musicVolume());
   if (!store.musicEnabled()) return;
   const m = morceauChoisi();
   if (!m) return;
@@ -2850,6 +2866,7 @@ function demarreMusique() {
 
 /** Fondu court à la fin (MusicPlayer.stop) ; sur iPhone, où le volume ne se règle pas, l'arrêt est net. */
 function arreteMusique() {
+  arreteAmbiance();
   if (lecteur.paused) return;
   if (!volumeReglable) { lecteur.pause(); return; }
   const depart = lecteur.volume;

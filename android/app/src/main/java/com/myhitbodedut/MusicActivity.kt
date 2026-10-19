@@ -67,6 +67,24 @@ class MusicActivity : AppCompatActivity() {
             }
         }
 
+        // L'ambiance (19/10) : un choix, et cinq secondes pour l'entendre.
+        findViewById<View>(R.id.music_ambiance).setOnClickListener {
+            val choix = Ambiance.entries
+            val actuelle = choix.indexOf(AmbiancePlayer.choisie(this))
+            com.google.android.material.dialog.MaterialAlertDialogBuilder(this)
+                .setTitle(R.string.ambiance_title)
+                .setSingleChoiceItems(choix.map { getString(it.titre) }.toTypedArray(), actuelle) { d, i ->
+                    Store.setAmbiance(this, choix[i].cle)
+                    SessionService.musicChanged(this)
+                    renderAmbiance()
+                    ecouterAmbiance(choix[i])
+                    d.dismiss()
+                }
+                .setNegativeButton(R.string.action_back, null)
+                .show()
+        }
+        renderAmbiance()
+
         findViewById<SeekBar>(R.id.music_volume).apply {
             max = 100
             progress = Store.musicVolume(this@MusicActivity)
@@ -90,7 +108,25 @@ class MusicActivity : AppCompatActivity() {
 
     override fun onPause() {
         stopPreview()
+        apercuAmbiance.stop()
         super.onPause()
+    }
+
+    private val apercuAmbiance = AmbiancePlayer()
+    private val arretApercu = Runnable { apercuAmbiance.stop() }
+
+    private fun renderAmbiance() {
+        findViewById<TextView>(R.id.music_ambiance_valeur).setText(AmbiancePlayer.choisie(this).titre)
+    }
+
+    /** Cinq secondes d'aperçu, sauf pendant une séance : elle joue déjà l'ambiance. */
+    private fun ecouterAmbiance(a: Ambiance) {
+        val vue = findViewById<View>(R.id.music_ambiance)
+        vue.removeCallbacks(arretApercu)
+        apercuAmbiance.stop()
+        if (Store.isSessionRunning(this) || a == Ambiance.SILENCE) return
+        apercuAmbiance.start(a, Store.musicVolume(this))
+        vue.postDelayed(arretApercu, 5_000)
     }
 
     // --- Données ------------------------------------------------------------

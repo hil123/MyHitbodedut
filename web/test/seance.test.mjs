@@ -212,3 +212,15 @@ test('à la demande : tout le publiable, et le partage garde la source (19/10)',
   assert.deepEqual(ChizukRules.pourMoment(chizuk, 'demande').map((x) => x.id), publiables);
   assert.equal(ChizukRules.partage('עִקַּר', '', 'Likoutei Moharan II, 25', 'https://x'), 'עִקַּר\n\n— Likoutei Moharan II, 25\n\nhttps://x');
 });
+
+test('les ambiances calculées : audibles, douces, jamais saturées, le silence se tait (19/10)', async () => {
+  const { AMBIANCES, generer } = await import('../src/js/ambiance.js');
+  for (const a of AMBIANCES) {
+    const s = generer(a, 8000, 24);
+    let crete = 0; let r = 0;
+    for (const x of s) { crete = Math.max(crete, Math.abs(x)); r += x * x; }
+    if (a === 'silence') assert.equal(crete, 0);
+    else { assert.ok(Math.sqrt(r / s.length) > 0.02, a); assert.ok(crete <= 0.61, a); assert.equal(Math.abs(s[0]), 0, a); }
+  }
+  assert.deepEqual(generer('mer', 8000, 2), generer('mer', 8000, 2));
+});

@@ -145,6 +145,9 @@ export function creeStore(stockage, { maintenant = () => new Date(), fuseau } = 
       const l = this.favoris().filter((x) => x !== cle);
       set('favoris', l.length === this.favoris().length ? [cle, ...l] : l);
     },
+    /** L'ambiance des séances (19/10, Store.ambiance) : une clé d'AMBIANCES, le silence par défaut. */
+    ambiance: () => { const a = get('ambiance', 'silence'); return ['silence', 'pluie', 'mer', 'foret', 'feu', 'nuit'].includes(a) ? a : 'silence'; },
+    setAmbiance: (v) => set('ambiance', v),
     /** Les textes de ’hizouk gardés (19/10, Store.chizukFavoris), le plus récent en tête. */
     chizukFavoris: () => (Array.isArray(get('chizuk_favoris', [])) ? get('chizuk_favoris', []) : []),
     basculerChizukFavori(id) {
