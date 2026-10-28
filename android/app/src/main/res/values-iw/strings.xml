@@ -1171,6 +1171,15 @@
     <string name="boussole_sans_capteur">אין מצפן במכשיר: פנו לכיוון המצוין, מהצפון.</string>
     <string name="boussole_position_exacte">מיקום מדויק</string>
     <string name="boussole_activer">הפעלת המצפן</string>
+    <string name="boussole_aligne">אתם מכוונים לירושלים</string>
+    <string name="boussole_droite">פנו %1$d° ימינה</string>
+    <string name="boussole_gauche">פנו %1$d° שמאלה</string>
+    <string-array name="boussole_cardinaux">
+        <item>צ</item>
+        <item>מז</item>
+        <item>ד</item>
+        <item>מע</item>
+    </string-array>
     <string-array name="boussole_points">
         <item>צפון</item>
         <item>צפון־מזרח</item>

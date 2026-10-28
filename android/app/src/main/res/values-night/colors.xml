@@ -31,4 +31,6 @@
     <color name="ring_streak">#E8B45C</color>
     <!-- Le bouton qui efface tout (réinitialisation, 12/10). -->
     <color name="danger">#F2B8B5</color>
+    <!-- L'or de la boussole de la tefila : l'aiguille, la zone de Jérusalem, l'éclat quand on y fait face. -->
+    <color name="boussole_or">#E0B84A</color>
 </resources>

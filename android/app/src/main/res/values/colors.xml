@@ -62,4 +62,6 @@
     <color name="lecture_nuit_titre">#D6C28C</color>
     <!-- Le bouton qui efface tout (réinitialisation, 12/10). -->
     <color name="danger">#B3261E</color>
+    <!-- L'or de la boussole de la tefila : l'aiguille, la zone de Jérusalem, l'éclat quand on y fait face. -->
+    <color name="boussole_or">#B8891A</color>
 </resources>

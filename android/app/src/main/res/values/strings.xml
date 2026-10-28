@@ -1184,6 +1184,16 @@
     <string name="boussole_sans_capteur">Pas de boussole sur cet appareil : orientez-vous au cap indiqué, depuis le nord.</string>
     <string name="boussole_position_exacte">Position exacte</string>
     <string name="boussole_activer">Activer la boussole</string>
+    <string name="boussole_degres" translatable="false">%1$d°</string>
+    <string name="boussole_aligne">Vous êtes face à Jérusalem</string>
+    <string name="boussole_droite">Tournez de %1$d° vers la droite</string>
+    <string name="boussole_gauche">Tournez de %1$d° vers la gauche</string>
+    <string-array name="boussole_cardinaux">
+        <item>N</item>
+        <item>E</item>
+        <item>S</item>
+        <item>O</item>
+    </string-array>
     <string-array name="boussole_points">
         <item>nord</item>
         <item>nord-est</item>

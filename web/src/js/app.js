@@ -2334,7 +2334,11 @@ function arreteBoussole() {
   ecouteBoussole = null;
 }
 
-/** La boussole (BoussoleActivity) : le cadran tourne avec le téléphone, la flèche dorée montre Jérusalem. */
+/**
+ * La boussole (BoussoleActivity) : la rose tourne avec le téléphone, l'aiguille dorée montre
+ * Jérusalem ; en haut, le repère fixe du téléphone. Le guide dit de combien tourner, et la rose
+ * s'allume quand on est face au mont du Temple (±5°, relâché à 8° pour ne pas clignoter).
+ */
 function ecranBoussole() {
   rafraichirPosition();
   const lieu = store.lieu();
@@ -2347,28 +2351,57 @@ function ecranBoussole() {
   const loxo = loxodromie(lieu.latitude, lieu.longitude);
   const ns = 'http://www.w3.org/2000/svg';
   const el = (n, a) => { const e = document.createElementNS(ns, n); for (const [k, v] of Object.entries(a)) e.setAttribute(k, v); return e; };
+  const C = 120;
+  const R = 104;
+  const pt = (g, r) => { const a = (g * Math.PI) / 180; return [C + r * Math.sin(a), C - r * Math.cos(a)]; };
   const couronne = el('g', {});
-  couronne.append(el('circle', { cx: 100, cy: 100, r: 92, class: 'b-cercle' }));
-  for (let g = 0; g < 360; g += 15) {
-    const l = g % 90 === 0 ? 12 : g % 45 === 0 ? 8 : 4;
-    const a = (g * Math.PI) / 180;
-    couronne.append(el('line', { x1: 100 + 92 * Math.sin(a), y1: 100 - 92 * Math.cos(a), x2: 100 + (92 - l) * Math.sin(a), y2: 100 - (92 - l) * Math.cos(a), class: g % 90 === 0 ? 'b-grad fort' : 'b-grad' }));
+  couronne.append(el('circle', { cx: C, cy: C, r: R, class: 'b-cercle' }));
+  // La zone de tolérance, un arc doré de ±5° autour du cap de Jérusalem.
+  const [ax, ay] = pt(ortho - 5, R - 6);
+  const [bx, by] = pt(ortho + 5, R - 6);
+  couronne.append(el('path', { d: `M${ax} ${ay} A${R - 6} ${R - 6} 0 0 1 ${bx} ${by}`, class: 'b-zone' }));
+  for (let g = 0; g < 360; g += 5) {
+    const l = g % 30 === 0 ? 12 : g % 10 === 0 ? 7 : 4;
+    const [x1, y1] = pt(g, R);
+    const [x2, y2] = pt(g, R - l);
+    couronne.append(el('line', { x1, y1, x2, y2, class: g % 30 === 0 ? 'b-grad fort' : 'b-grad' }));
   }
-  for (const [l, g] of [['N', 0], ['E', 90], ['S', 180], ['O', 270]]) {
-    const a = (g * Math.PI) / 180;
-    const t = el('text', { x: 100 + 66 * Math.sin(a), y: 100 - 66 * Math.cos(a) + 5, class: g === 0 ? 'b-lettre nord' : 'b-lettre' });
-    t.textContent = l;
+  for (let g = 30; g < 360; g += 30) {
+    if (g % 90 === 0) continue;
+    const [x, y] = pt(g, R - 24);
+    const t = el('text', { x, y: y + 3.5, class: 'b-degre', transform: `rotate(${g} ${x} ${y})` });
+    t.textContent = String(g);
     couronne.append(t);
   }
-  const fleche = el('g', { transform: `rotate(${ortho} 100 100)` });
-  fleche.append(el('path', { d: 'M100 22 L88 108 L100 100 L112 108 Z', class: 'b-fleche' }));
-  couronne.append(fleche);
-  const svg = el('svg', { viewBox: '0 -8 200 216', class: 'cadran', 'aria-hidden': 'true' });
-  svg.append(couronne, el('path', { d: 'M100 -8 L94 2 L106 2 Z', class: 'b-repere' }), el('circle', { cx: 100, cy: 100, r: 3, class: 'b-centre' }));
+  [0, 90, 180, 270].forEach((g, i) => {
+    const [x, y] = pt(g, R - 30);
+    const t = el('text', { x, y: y + 6, class: g === 0 ? 'b-lettre nord' : 'b-lettre', transform: `rotate(${g} ${x} ${y})` });
+    t.textContent = tr.t(`boussole_cardinaux_${i}`);
+    couronne.append(t);
+  });
+  const aiguille = el('g', { transform: `rotate(${ortho} ${C} ${C})` });
+  aiguille.append(
+    el('path', { d: `M${C} ${C - R + 16} L${C - 9} ${C + 2} L${C} ${C - 6} L${C + 9} ${C + 2} Z`, class: 'b-fleche' }),
+    el('line', { x1: C, y1: C + 8, x2: C, y2: C + 34, class: 'b-queue' }));
+  couronne.append(aiguille);
+  const svg = el('svg', { viewBox: '0 0 240 240', class: 'cadran', 'aria-hidden': 'true' });
+  svg.append(el('circle', { cx: C, cy: C, r: R + 10, class: 'b-fond' }), couronne,
+    el('path', { d: `M${C} 4 L${C - 7} 16 L${C + 7} 16 Z`, class: 'b-repere' }),
+    el('circle', { cx: C, cy: C, r: 6, class: 'b-moyeu' }), el('circle', { cx: C, cy: C, r: 2.5, class: 'b-centre' }));
+  const guide = h('p', { class: 'boussole-guide', 'aria-live': 'polite' });
+  const boite = h('div', { class: 'boussole-rose' }, svg);
   let lisse = null;
+  let aligne = false;
   const tourner = (nord) => {
     lisse = lisse === null ? nord : (lisse + ((((nord - lisse) % 360) + 540) % 360 - 180) * 0.2 + 360) % 360;
-    couronne.setAttribute('transform', `rotate(${-lisse} 100 100)`);
+    couronne.setAttribute('transform', `rotate(${-lisse} ${C} ${C})`);
+    const ecart = ((ortho - lisse) % 360 + 540) % 360 - 180;
+    const face = Math.abs(ecart) <= (aligne ? 8 : 5);
+    if (face && !aligne) navigator.vibrate?.(40);
+    aligne = face;
+    boite.classList.toggle('aligne', face);
+    guide.textContent = face ? tr.t('boussole_aligne')
+      : tr.t(ecart > 0 ? 'boussole_droite' : 'boussole_gauche', Math.round(Math.abs(ecart)));
   };
   const ecouter = () => {
     arreteBoussole();
@@ -2392,8 +2425,9 @@ function ecranBoussole() {
   if (!permission) ecouter();
   return h('div', { class: 'ecran' }, barre(tr.t('boussole_titre')), h('div', { class: 'defile' }, h('div', { class: 'contenu boussole' },
     h('p', { class: 'boussole-lieu' }, tr.t('boussole_lieu', lieu.nom, Math.round(distanceKm(lieu.latitude, lieu.longitude, CIBLE_LAT, CIBLE_LON)))),
-    svg,
-    h('p', { class: 'boussole-cap' }, tr.t('boussole_cap', Math.round(ortho), tr.t(`boussole_points_${octant(ortho)}`))),
+    boite,
+    h('p', { class: 'boussole-cap' }, h('span', { class: 'chiffre' }, `${Math.round(ortho)}°`), h('span', { class: 'point' }, tr.t(`boussole_points_${octant(ortho)}`))),
+    guide,
     h('p', { class: 'indice' }, tr.t('boussole_loxodromie', Math.round(loxo), tr.t(`boussole_points_${octant(loxo)}`))),
     etat,
     permission ? h('button', { class: 'secondaire', onclick: () => DeviceOrientationEvent.requestPermission().then((r) => { if (r === 'granted') ecouter(); }).catch(() => {}) }, tr.t('boussole_activer')) : null,

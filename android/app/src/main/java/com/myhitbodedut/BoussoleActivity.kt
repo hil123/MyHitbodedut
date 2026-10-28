@@ -5,14 +5,17 @@ import android.content.Intent
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Path
+import android.graphics.RectF
 import android.graphics.Typeface
 import android.hardware.GeomagneticField
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
+import android.os.Build
 import android.os.Bundle
 import android.view.Gravity
+import android.view.HapticFeedbackConstants
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
@@ -20,6 +23,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.graphics.ColorUtils
 import com.google.android.material.button.MaterialButton
+import kotlin.math.abs
 import kotlin.math.cos
 import kotlin.math.min
 import kotlin.math.roundToInt
@@ -27,8 +31,10 @@ import kotlin.math.sin
 
 /**
  * La boussole de la tefila (28/10) : vers le mont du Temple depuis le lieu des zmanim
- * (DirectionTefila). Le téléphone à plat, le cadran tourne avec lui : le nord reste au
- * nord, la flèche dorée montre Jérusalem. Le cap magnétique du capteur est corrigé de la
+ * (DirectionTefila). Le téléphone à plat, la rose tourne avec lui : le nord reste au
+ * nord, l'aiguille dorée montre Jérusalem. Le guide dit de combien tourner ; face au mont
+ * du Temple (±5°, relâché à 8° pour ne pas clignoter), la rose s'allume et le téléphone
+ * donne un léger retour haptique. Même dessin que le web (ecranBoussole). Le cap magnétique du capteur est corrigé de la
  * déclinaison du lieu (GeomagneticField, modèle magnétique mondial embarqué dans Android,
  * sans réseau). Sans capteur, le cap seul, en degrés depuis le nord.
  *
@@ -40,6 +46,10 @@ class BoussoleActivity : AppCompatActivity(), SensorEventListener {
     private val choixLieu = ChoixLieu(this) { afficher() }
     private lateinit var cadran: Cadran
     private lateinit var cap: TextView
+    private lateinit var point: TextView
+    private lateinit var guide: TextView
+    private var cible = Float.NaN
+    private var aligne = false
     private lateinit var etat: TextView
     private lateinit var lieuTexte: TextView
     private lateinit var loxoTexte: TextView
@@ -55,8 +65,11 @@ class BoussoleActivity : AppCompatActivity(), SensorEventListener {
         fun dp(v: Int) = (v * d).roundToInt()
         title = getString(R.string.boussole_titre)
         cadran = Cadran(this)
-        cap = TextView(this).apply { textSize = 22f; gravity = Gravity.CENTER; setTypeface(typeface, Typeface.BOLD)
-            setTextColor(Apparence.couleur(context, R.color.ink)) }
+        cap = TextView(this).apply { textSize = 44f; gravity = Gravity.CENTER; setTypeface(typeface, Typeface.BOLD)
+            setTextColor(Apparence.couleur(context, R.color.ink)); fontFeatureSettings = "tnum" }
+        point = TextView(this).apply { textSize = 15f; gravity = Gravity.CENTER; setTextColor(Apparence.couleur(context, R.color.muted)) }
+        guide = TextView(this).apply { textSize = 16f; gravity = Gravity.CENTER; setTypeface(typeface, Typeface.BOLD)
+            setTextColor(Apparence.couleur(context, R.color.brand)); accessibilityLiveRegion = View.ACCESSIBILITY_LIVE_REGION_POLITE }
         etat = TextView(this).apply { textSize = 13f; gravity = Gravity.CENTER; setTextColor(Apparence.couleur(context, R.color.muted)) }
         loxoTexte = TextView(this).apply { textSize = 13f; gravity = Gravity.CENTER; setTextColor(Apparence.couleur(context, R.color.muted)) }
         lieuTexte = TextView(this).apply { textSize = 13f; gravity = Gravity.CENTER; setTextColor(Apparence.couleur(context, R.color.muted)) }
@@ -71,10 +84,12 @@ class BoussoleActivity : AppCompatActivity(), SensorEventListener {
                     setTypeface(typeface, Typeface.BOLD); setTextColor(Apparence.couleur(context, R.color.brand))
                 })
                 addView(lieuTexte, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply { topMargin = dp(4) })
-                val cote = min(resources.displayMetrics.widthPixels - dp(48), dp(320))
-                addView(cadran, LinearLayout.LayoutParams(cote, cote).apply { topMargin = dp(20) })
-                addView(cap, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply { topMargin = dp(16) })
-                addView(loxoTexte, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply { topMargin = dp(2) })
+                val cote = min(resources.displayMetrics.widthPixels - dp(32), dp(340))
+                addView(cadran, LinearLayout.LayoutParams(cote, cote).apply { topMargin = dp(12) })
+                addView(cap, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply { topMargin = dp(8) })
+                addView(point, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
+                addView(guide, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply { topMargin = dp(10) })
+                addView(loxoTexte, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply { topMargin = dp(10) })
                 addView(etat, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply { topMargin = dp(6) })
                 addView(MaterialButton(context, null, com.google.android.material.R.attr.materialButtonOutlinedStyle).apply {
                     text = getString(R.string.boussole_position_exacte)
@@ -107,6 +122,9 @@ class BoussoleActivity : AppCompatActivity(), SensorEventListener {
         if (lieu == null) {
             lieuTexte.text = getString(R.string.zmanim_choisir_lieu)
             cap.text = ""
+            point.text = ""
+            guide.text = ""
+            cible = Float.NaN
             cadran.cible = Float.NaN
             cadran.invalidate()
             return
@@ -116,9 +134,12 @@ class BoussoleActivity : AppCompatActivity(), SensorEventListener {
         val km = DirectionTefila.distanceKm(lieu.latitude, lieu.longitude)
         lieuTexte.text = getString(R.string.boussole_lieu, lieu.nom, km.roundToInt())
         val points = resources.getStringArray(R.array.boussole_points)
-        cap.text = getString(R.string.boussole_cap, ortho.roundToInt(), points[DirectionTefila.octant(ortho)])
+        cap.text = getString(R.string.boussole_degres, ortho.roundToInt())
+        point.text = points[DirectionTefila.octant(ortho)].replaceFirstChar { it.uppercase() }
         loxoTexte.text = getString(R.string.boussole_loxodromie, loxo.roundToInt(), points[DirectionTefila.octant(loxo)])
-        cadran.cible = ortho.toFloat()
+        cible = ortho.toFloat()
+        cadran.cible = cible
+        cadran.cardinaux = resources.getStringArray(R.array.boussole_cardinaux)
         declinaison = GeomagneticField(lieu.latitude.toFloat(), lieu.longitude.toFloat(), lieu.altitude.toFloat(),
             System.currentTimeMillis()).declination
         cadran.invalidate()
@@ -136,7 +157,29 @@ class BoussoleActivity : AppCompatActivity(), SensorEventListener {
             (lisse + e * 0.15f + 360f) % 360f
         }
         cadran.cap = lisse
+        guider()
         cadran.invalidate()
+    }
+
+    /** De combien tourner, et l'éclat quand on fait face (hystérésis 5° / 8°). */
+    private fun guider() {
+        if (cible.isNaN() || lisse.isNaN()) return
+        var ecart = (cible - lisse) % 360f
+        if (ecart > 180) ecart -= 360
+        if (ecart < -180) ecart += 360
+        val face = abs(ecart) <= if (aligne) 8f else 5f
+        if (face && !aligne) {
+            cadran.performHapticFeedback(if (Build.VERSION.SDK_INT >= 30) HapticFeedbackConstants.CONFIRM else HapticFeedbackConstants.VIRTUAL_KEY)
+        }
+        aligne = face
+        cadran.aligne = face
+        val texte = when {
+            face -> getString(R.string.boussole_aligne)
+            ecart > 0 -> getString(R.string.boussole_droite, abs(ecart).roundToInt())
+            else -> getString(R.string.boussole_gauche, abs(ecart).roundToInt())
+        }
+        if (guide.text != texte) guide.text = texte
+        guide.setTextColor(Apparence.couleur(this, if (face) R.color.boussole_or else R.color.brand))
     }
 
     override fun onAccuracyChanged(sensor: Sensor, accuracy: Int) {
@@ -144,67 +187,123 @@ class BoussoleActivity : AppCompatActivity(), SensorEventListener {
         else etat.text = getString(R.string.boussole_a_plat)
     }
 
-    /** Le cadran : couronne graduée qui tourne avec le téléphone, flèche dorée vers Jérusalem. */
+    /**
+     * La rose, dessinée sur une grille de 240 unités comme le SVG du web : graduations aux 5°,
+     * degrés aux 30°, points cardinaux, zone dorée de ±5° autour de Jérusalem, aiguille et moyeu.
+     */
     private class Cadran(context: Context) : View(context) {
         var cap = 0f
         var cible = Float.NaN
-        private val d = resources.displayMetrics.density
+        var aligne = false
+        var cardinaux: Array<String> = arrayOf("N", "E", "S", "O")
         private val encre = Apparence.couleur(context, R.color.ink)
+        private val pale = Apparence.couleur(context, R.color.muted)
         private val marque = Apparence.couleur(context, R.color.brand)
-        private val dore = 0xFFC9A227.toInt()
-        private val trait = Paint(Paint.ANTI_ALIAS_FLAG).apply { style = Paint.Style.STROKE; color = ColorUtils.setAlphaComponent(encre, 0x55) }
+        private val papier = Apparence.couleur(context, R.color.paper)
+        private val or = Apparence.couleur(context, R.color.boussole_or)
+        private val trait = Paint(Paint.ANTI_ALIAS_FLAG).apply { style = Paint.Style.STROKE; strokeCap = Paint.Cap.ROUND }
         private val plein = Paint(Paint.ANTI_ALIAS_FLAG)
-        private val lettres = Paint(Paint.ANTI_ALIAS_FLAG).apply { textAlign = Paint.Align.CENTER; typeface = Typeface.DEFAULT_BOLD }
+        private val lettres = Paint(Paint.ANTI_ALIAS_FLAG).apply { textAlign = Paint.Align.CENTER }
         private val chemin = Path()
+        private val arc = RectF()
 
         init {
             importantForAccessibility = IMPORTANT_FOR_ACCESSIBILITY_NO
         }
 
         override fun onDraw(canvas: Canvas) {
-            val cx = width / 2f
-            val cy = height / 2f
-            val r = min(cx, cy) - 8 * d
-            canvas.save()
-            canvas.rotate(-cap, cx, cy)
-            trait.strokeWidth = 2 * d
-            canvas.drawCircle(cx, cy, r, trait)
-            for (g in 0 until 360 step 15) {
-                val long = if (g % 90 == 0) 14 * d else if (g % 45 == 0) 9 * d else 5 * d
-                val a = Math.toRadians(g.toDouble())
-                trait.strokeWidth = if (g % 90 == 0) 2.5f * d else 1.2f * d
-                canvas.drawLine(cx + (r * sin(a)).toFloat(), cy - (r * cos(a)).toFloat(),
-                    cx + ((r - long) * sin(a)).toFloat(), cy - ((r - long) * cos(a)).toFloat(), trait)
+            val u = min(width, height) / 240f
+            val c = 120 * u
+            val r = 104 * u
+            fun x(g: Float, rr: Float) = c + rr * sin(Math.toRadians(g.toDouble())).toFloat()
+            fun y(g: Float, rr: Float) = c - rr * cos(Math.toRadians(g.toDouble())).toFloat()
+
+            // L'éclat quand on fait face : un anneau d'or et un halo qui s'estompe.
+            if (aligne) {
+                trait.style = Paint.Style.STROKE
+                for (i in 6 downTo 1) {
+                    trait.strokeWidth = (4 + i * 3) * u
+                    trait.color = ColorUtils.setAlphaComponent(or, 14)
+                    canvas.drawCircle(c, c, r + 12 * u, trait)
+                }
+                trait.strokeWidth = 2.5f * u
+                trait.color = or
+                canvas.drawCircle(c, c, r + 13 * u, trait)
             }
-            lettres.textSize = 16 * d
-            listOf("N" to 0, "E" to 90, "S" to 180, "O" to 270).forEach { (l, g) ->
-                lettres.color = if (g == 0) marque else encre
-                val a = Math.toRadians(g.toDouble())
-                val rr = r - 30 * d
-                canvas.drawText(l, cx + (rr * sin(a)).toFloat(), cy - (rr * cos(a)).toFloat() + 6 * d, lettres)
+            plein.color = ColorUtils.blendARGB(papier, if (aligne) or else encre, if (aligne) 0.14f else 0.04f)
+            canvas.drawCircle(c, c, r + 10 * u, plein)
+            trait.strokeWidth = 1 * u
+            trait.color = ColorUtils.setAlphaComponent(encre, 30)
+            canvas.drawCircle(c, c, r + 10 * u, trait)
+
+            canvas.save()
+            canvas.rotate(-cap, c, c)
+            trait.color = ColorUtils.setAlphaComponent(encre, 77)
+            canvas.drawCircle(c, c, r, trait)
+            if (!cible.isNaN()) {
+                trait.strokeWidth = 8 * u
+                trait.color = ColorUtils.setAlphaComponent(or, 90)
+                val rz = r - 6 * u
+                arc.set(c - rz, c - rz, c + rz, c + rz)
+                canvas.drawArc(arc, cible - 95f, 10f, false, trait)
+            }
+            for (g in 0 until 360 step 5) {
+                val fort = g % 30 == 0
+                val l = (if (fort) 12 else if (g % 10 == 0) 7 else 4) * u
+                trait.strokeWidth = (if (fort) 1.6f else 0.8f) * u
+                trait.color = if (fort) encre else ColorUtils.setAlphaComponent(encre, 102)
+                val gf = g.toFloat()
+                canvas.drawLine(x(gf, r), y(gf, r), x(gf, r - l), y(gf, r - l), trait)
+            }
+            lettres.typeface = Typeface.DEFAULT
+            lettres.textSize = 8.5f * u
+            lettres.color = pale
+            for (g in 30 until 360 step 30) {
+                if (g % 90 == 0) continue
+                val gf = g.toFloat()
+                canvas.save()
+                canvas.rotate(gf, x(gf, r - 24 * u), y(gf, r - 24 * u))
+                canvas.drawText(g.toString(), x(gf, r - 24 * u), y(gf, r - 24 * u) + 3 * u, lettres)
+                canvas.restore()
+            }
+            lettres.typeface = Typeface.DEFAULT_BOLD
+            lettres.textSize = 16 * u
+            for (i in 0 until 4) {
+                val gf = i * 90f
+                lettres.color = if (i == 0) marque else encre
+                canvas.save()
+                canvas.rotate(gf, x(gf, r - 30 * u), y(gf, r - 30 * u))
+                canvas.drawText(cardinaux.getOrElse(i) { "" }, x(gf, r - 30 * u), y(gf, r - 30 * u) + 6 * u, lettres)
+                canvas.restore()
             }
             if (!cible.isNaN()) {
-                canvas.rotate(cible, cx, cy)
+                canvas.rotate(cible, c, c)
+                trait.strokeWidth = 3 * u
+                trait.color = ColorUtils.setAlphaComponent(encre, 90)
+                canvas.drawLine(c, c + 8 * u, c, c + 34 * u, trait)
                 chemin.reset()
-                chemin.moveTo(cx, cy - r + 18 * d)
-                chemin.lineTo(cx - 14 * d, cy + 10 * d)
-                chemin.lineTo(cx, cy)
-                chemin.lineTo(cx + 14 * d, cy + 10 * d)
+                chemin.moveTo(c, c - r + 16 * u)
+                chemin.lineTo(c - 9 * u, c + 2 * u)
+                chemin.lineTo(c, c - 6 * u)
+                chemin.lineTo(c + 9 * u, c + 2 * u)
                 chemin.close()
-                plein.color = dore
+                plein.color = or
                 canvas.drawPath(chemin, plein)
             }
             canvas.restore()
+
             // Le repère fixe du haut : la direction où pointe le téléphone.
-            plein.color = marque
+            plein.color = if (aligne) or else marque
             chemin.reset()
-            chemin.moveTo(cx, 0f)
-            chemin.lineTo(cx - 7 * d, 10 * d)
-            chemin.lineTo(cx + 7 * d, 10 * d)
+            chemin.moveTo(c, 4 * u)
+            chemin.lineTo(c - 7 * u, 16 * u)
+            chemin.lineTo(c + 7 * u, 16 * u)
             chemin.close()
             canvas.drawPath(chemin, plein)
-            plein.color = ColorUtils.setAlphaComponent(encre, 0x99)
-            canvas.drawCircle(cx, cy, 4 * d, plein)
+            plein.color = or
+            canvas.drawCircle(c, c, 6 * u, plein)
+            plein.color = papier
+            canvas.drawCircle(c, c, 2.5f * u, plein)
         }
     }
 

@@ -1138,6 +1138,15 @@
     <string name="boussole_sans_capteur">No compass on this device: face the bearing shown, measured from north.</string>
     <string name="boussole_position_exacte">Exact position</string>
     <string name="boussole_activer">Enable the compass</string>
+    <string name="boussole_aligne">You are facing Jerusalem</string>
+    <string name="boussole_droite">Turn %1$d° to the right</string>
+    <string name="boussole_gauche">Turn %1$d° to the left</string>
+    <string-array name="boussole_cardinaux">
+        <item>N</item>
+        <item>E</item>
+        <item>S</item>
+        <item>W</item>
+    </string-array>
     <string-array name="boussole_points">
         <item>north</item>
         <item>northeast</item>

@@ -1398,15 +1398,29 @@ body.avec-mini .seance .contenu { padding-bottom: calc(104px + env(safe-area-ins
 .carte-direction { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; width: 100%; text-align: start; padding: 12px 16px; border: 0; cursor: pointer; font: inherit; color: var(--ink); }
 .carte-direction .nom { font-size: 15px; }
 .carte-direction .etat { font-size: 13px; color: var(--muted); }
-.contenu.boussole { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 8px; }
-.boussole .cadran { width: min(78vw, 320px); height: auto; max-width: 100%; margin-block: 12px; }
-.boussole .b-cercle { fill: none; stroke: color-mix(in srgb, var(--ink) 35%, transparent); stroke-width: 1.5; }
-.boussole .b-grad { stroke: color-mix(in srgb, var(--ink) 35%, transparent); stroke-width: 1; }
-.boussole .b-grad.fort { stroke-width: 2; }
-.boussole .b-lettre { font: 700 13px system-ui, sans-serif; text-anchor: middle; fill: var(--ink); }
+.contenu.boussole { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 8px; --or: #B8891A; }
+:root[data-mode="sombre"] .contenu.boussole { --or: #E0B84A; }
+.boussole-rose { width: min(84vw, 340px); max-width: 100%; margin-block: 8px 4px; border-radius: 50%; transition: box-shadow 500ms ease-out; }
+.boussole-rose.aligne { box-shadow: 0 0 0 3px var(--or), 0 0 36px color-mix(in srgb, var(--or) 45%, transparent); }
+.boussole .cadran { display: block; width: 100%; height: auto; }
+.boussole .b-fond { fill: color-mix(in srgb, var(--ink) 4%, var(--paper, transparent)); stroke: color-mix(in srgb, var(--ink) 12%, transparent); stroke-width: 1; transition: fill 500ms ease-out; }
+.boussole-rose.aligne .b-fond { fill: color-mix(in srgb, var(--or) 14%, var(--paper, transparent)); }
+.boussole .b-cercle { fill: none; stroke: color-mix(in srgb, var(--ink) 30%, transparent); stroke-width: 1; }
+.boussole .b-grad { stroke: color-mix(in srgb, var(--ink) 40%, transparent); stroke-width: 0.8; }
+.boussole .b-grad.fort { stroke: var(--ink); stroke-width: 1.6; }
+.boussole .b-zone { fill: none; stroke: var(--or); stroke-width: 8; stroke-linecap: round; opacity: 0.35; }
+.boussole .b-degre { font: 500 8.5px system-ui, sans-serif; text-anchor: middle; fill: var(--muted); font-variant-numeric: tabular-nums; }
+.boussole .b-lettre { font: 700 16px system-ui, sans-serif; text-anchor: middle; fill: var(--ink); }
 .boussole .b-lettre.nord { fill: var(--brand); }
-.boussole .b-fleche { fill: #C9A227; }
-.boussole .b-repere { fill: var(--brand); }
-.boussole .b-centre { fill: color-mix(in srgb, var(--ink) 60%, transparent); }
-.boussole-cap { font-size: 20px; font-weight: 700; margin: 0; }
+.boussole .b-fleche { fill: var(--or); stroke: color-mix(in srgb, var(--or) 60%, #000); stroke-width: 0.6; stroke-linejoin: round; }
+.boussole .b-queue { stroke: color-mix(in srgb, var(--ink) 35%, transparent); stroke-width: 3; stroke-linecap: round; }
+.boussole .b-repere { fill: var(--brand); transition: fill 500ms ease-out; }
+.boussole-rose.aligne .b-repere { fill: var(--or); }
+.boussole .b-moyeu { fill: var(--or); }
+.boussole .b-centre { fill: var(--paper, #fff); }
+.boussole-cap { display: flex; flex-direction: column; align-items: center; margin: 0; line-height: 1.1; }
+.boussole-cap .chiffre { font-size: 44px; font-weight: 700; font-variant-numeric: tabular-nums; letter-spacing: -0.5px; }
+.boussole-cap .point { font-size: 15px; color: var(--muted); text-transform: capitalize; }
+.boussole-guide { margin: 4px 0 0; min-height: 1.4em; font-size: 16px; font-weight: 600; color: var(--brand); }
+.boussole-rose.aligne ~ .boussole-guide { color: var(--or); }
 .boussole-lieu { color: var(--muted); margin: 0; }
