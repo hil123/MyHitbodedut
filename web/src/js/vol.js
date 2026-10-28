@@ -20,22 +20,42 @@ export const RETARD = 30 * MIN;
 export const DUREE_MAX = 22 * H;
 const COUVERT = 6 * H;
 
-/** [iata, nom, ville, pays, latitude, longitude, fuseau] (aeroports.json) → objet. */
-export function aeroports(donnees) {
-  return donnees.aeroports.map(([iata, nom, ville, pays, latitude, longitude, fuseau]) => ({ iata, nom, ville, pays, latitude, longitude, fuseau }));
+/**
+ * [iata, nom, ville, pays, latitude, longitude, fuseau] (aeroports.json) → objet ; les noms en hébreu
+ * et en français (aeroports_noms.json, Wikidata : [nom he, [villes he], nom fr, [villes fr]]) s'y
+ * ajoutent, pour l'affichage (noms) et la recherche (alias) (Aeroports.parse).
+ */
+export function aeroports(donnees, nomsDonnees = null) {
+  const autres = nomsDonnees?.noms ?? {};
+  return donnees.aeroports.map(([iata, nom, ville, pays, latitude, longitude, fuseau]) => {
+    const n = autres[iata];
+    const noms = {};
+    const alias = [];
+    if (n) ['he', 'fr'].forEach((langue, k) => {
+      if (n[2 * k]) { noms[langue] = n[2 * k]; alias.push(n[2 * k]); }
+      alias.push(...n[2 * k + 1]);
+    });
+    return { iata, nom, ville, pays, latitude, longitude, fuseau, noms, alias };
+  });
 }
 
-const plier = (s) => s.normalize('NFD').replace(/\p{M}/gu, '').toLowerCase();
+/** Sans accents, nikoud, casse ni ponctuation : tiret, maqaf, apostrophe, guillemets, géresh et points deviennent des espaces. */
+const plier = (s) => s.normalize('NFD').replace(/\p{M}/gu, '').toLowerCase()
+  .replace(/[-\u05BE'\u2019"\u05F3\u05F4.]/g, ' ').replace(/\s+/g, ' ').trim();
 
-/** Le code IATA exact d'abord, puis la ville, puis le nom (Aeroports.chercher). */
+/** Le code IATA exact d'abord, puis la ville, puis le nom et les autres noms (Aeroports.chercher). */
 export function chercher(liste, texte, max = 20) {
-  const q = plier(texte.trim());
+  const q = plier(texte);
   if (!q) return [];
+  const alias = (a) => (a.alias ?? []).map(plier);
   const exact = liste.filter((a) => plier(a.iata) === q);
-  const ville = liste.filter((a) => plier(a.ville).startsWith(q));
-  const nom = liste.filter((a) => plier(a.nom).includes(q) || plier(a.ville).includes(q));
+  const ville = liste.filter((a) => plier(a.ville).startsWith(q) || alias(a).some((x) => x.startsWith(q)));
+  const nom = liste.filter((a) => plier(a.nom).includes(q) || plier(a.ville).includes(q) || alias(a).some((x) => x.includes(q)));
   return [...new Set([...exact, ...ville, ...nom])].slice(0, max);
 }
+
+/** Le nom dans la langue de l'application s'il existe, sinon celui d'OurAirports (Aeroports.nomLocal). */
+export const nomLocal = (a, langue) => a.noms?.[langue === 'iw' ? 'he' : langue] ?? a.nom;
 
 /** Un fuseau que le navigateur ne connaît pas rend false plutôt que d'échouer. */
 export function fuseauConnu(fuseau) {
@@ -373,5 +393,64 @@ export async function positionEnDirect(relais, indicatif, estime, chercher = fet
     return lireReponse(await r.json(), maintenant);
   } catch {
     return { statut: 'erreur', raison: 'pas de connexion' };
+  }
+}
+
+// --- La route d'un numéro de vol (RouteVol.kt, 28/10) : au toucher seulement ------------------
+// Ce qui part de l'appareil : le numéro du vol, vers api.adsbdb.com (gratuit, sans compte ni clé).
+// La réponse donne la compagnie, l'indicatif OACI et les escales connues ; pas les heures, qu'aucune
+// source gratuite ne donne. Les routes d'adsbdb peuvent être anciennes : l'écran le dit.
+
+export const ADSBDB = 'https://api.adsbdb.com/v0';
+
+/** « ly 81 » → { code: 'LY', chiffres: '81', suffixe: '' } ; « ELY81 » → code OACI ELY ; null sinon. */
+export function normaliserNumero(texte) {
+  const m = /^([A-Z]{3}|[A-Z][A-Z0-9]|[0-9][A-Z])([0-9]{1,4})([A-Z]?)$/.exec(String(texte).toUpperCase().replace(/\s+/g, ''));
+  return m ? { code: m[1], chiffres: m[2].replace(/^0+(?=\d)/, ''), suffixe: m[3] } : null;
+}
+
+/**
+ * La réponse d'adsbdb (`response.flightroute`) → { statut: 'trouve', indicatif, compagnie, escales, de, vers }.
+ * Le tronçon est celui qui part de `depart` (code IATA) s'il est donné ; sinon le premier.
+ * `statut: 'autre_depart'` si le vol connu ne part pas de `depart`.
+ */
+export function lireRoute(o, depart = null) {
+  const r = o?.response?.flightroute;
+  if (!r || typeof r !== 'object') return { statut: 'introuvable' };
+  const escales = [r.origin, r.midpoint, r.destination].map((x) => x?.iata_code).filter((x) => typeof x === 'string' && /^[A-Z0-9]{3}$/.test(x));
+  if (escales.length < 2) return { statut: 'introuvable' };
+  const base = { indicatif: normaliserIndicatif(String(r.callsign_icao ?? '')), compagnie: r.airline?.name ?? '', escales };
+  const i = depart ? escales.indexOf(depart) : 0;
+  if (i < 0 || i >= escales.length - 1) return { statut: 'autre_depart', ...base };
+  return { statut: 'trouve', ...base, de: escales[i], vers: escales[i + 1] };
+}
+
+/**
+ * Le numéro (IATA « LY81 » ou OACI « ELY81 ») → la route (lireRoute), ou { statut: 'introuvable' | 'erreur' }.
+ * adsbdb refuse certains numéros IATA courts (« QF9 ») : on reprend alors avec l'indicatif OACI de
+ * chaque compagnie qui porte ce code (adsbdb /airline).
+ */
+export async function chercherRoute(numero, depart = null, chercher = fetch) {
+  const n = normaliserNumero(numero);
+  if (!n) return { statut: 'invalide' };
+  const demande = async (chemin) => {
+    const r = await chercher(`${ADSBDB}/${chemin}`);
+    if (r.status === 404 || r.status === 400) return null;
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    return r.json();
+  };
+  try {
+    const direct = await demande(`callsign/${encodeURIComponent(n.code + n.chiffres + n.suffixe)}`);
+    if (direct) return lireRoute(direct, depart);
+    if (n.code.length !== 2) return { statut: 'introuvable' };
+    const compagnies = (await demande(`airline/${encodeURIComponent(n.code)}`))?.response;
+    for (const c of Array.isArray(compagnies) ? compagnies : []) {
+      if (!/^[A-Z]{3}$/.test(c?.icao ?? '')) continue;
+      const o = await demande(`callsign/${c.icao}${n.chiffres}${n.suffixe}`);
+      if (o) return lireRoute(o, depart);
+    }
+    return { statut: 'introuvable' };
+  } catch (e) {
+    return { statut: 'erreur', raison: e.message };
   }
 }

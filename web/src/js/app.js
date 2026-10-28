@@ -2583,7 +2583,8 @@ function chargeAeroports() {
   if (aeroportsVol) return true;
   if (!aeroportsDemandes) {
     aeroportsDemandes = true;
-    fetch('data/aeroports.json').then((r) => r.json()).then((d) => { aeroportsVol = Vol.aeroports(d); rendre(); }).catch(() => {});
+    Promise.all(['data/aeroports.json', 'data/aeroports_noms.json'].map((u) => fetch(u).then((r) => r.json())))
+      .then(([d, n]) => { aeroportsVol = Vol.aeroports(d, n); rendre(); }).catch(() => {});
   }
   return false;
 }
@@ -2622,7 +2623,7 @@ function choisirAeroport(onChoisi) {
       const trouves = Vol.chercher(aeroportsVol, e.target.value);
       liste.replaceChildren(...(trouves.length || !e.target.value.trim() ? trouves.map((a) => h('button', {
         class: 'choix', onclick: () => { fermer(); onChoisi(a); },
-      }, `${a.iata} · ${a.ville} — ${a.nom} (${a.pays})`)) : [h('p', { class: 'message' }, tr.t('vol_aucun_resultat'))]));
+      }, `${a.iata} · ${a.ville} — ${Vol.nomLocal(a, tr.langue)} (${a.pays})`)) : [h('p', { class: 'message' }, tr.t('vol_aucun_resultat'))]));
     } });
     f.append(champ, liste, h('button', { class: 'secondaire', onclick: fermer }, tr.t('vol_fermer')));
   });
@@ -2642,6 +2643,35 @@ function deuxHeures(plan, t) {
 }
 
 const ecartVol = (ms) => tr.t(calculVol && calculVol.fiabilite !== 'route_prevue' ? 'vol_ecart_gps' : 'vol_ecart', `${ms < 0 ? '−' : '+'}${Math.abs(Math.round(ms / 60000))}`);
+
+/**
+ * La route d'un numéro de vol (VolActivity.chercherRoute) : adsbdb.com, au toucher seulement. Remplit
+ * l'arrivée (et le départ s'il est vide) et l'indicatif du suivi en direct ; les heures restent à saisir.
+ */
+let routeVol = { attente: false, texte: '' };
+async function chercherRouteVol(v) {
+  if (!Vol.normaliserNumero(v.numero || '')) { routeVol = { attente: false, texte: tr.t('vol_route_invalide') }; return rendre(); }
+  routeVol = { attente: true, texte: '' };
+  rendre();
+  const r = await Vol.chercherRoute(v.numero, v.depart);
+  const connu = (iata) => aeroportsVol?.some((a) => a.iata === iata);
+  let texte;
+  if (r.statut === 'trouve') {
+    const manquant = [r.de, r.vers].find((x) => !connu(x));
+    if (manquant) texte = tr.t('vol_route_inconnue', manquant);
+    else {
+      v.depart = r.de;
+      v.arrivee = r.vers;
+      texte = tr.t('vol_route_trouvee', v.numero.toUpperCase(), r.compagnie, r.de, r.vers);
+    }
+    if (r.indicatif) store.setVolIndicatif(r.indicatif);
+  } else if (r.statut === 'autre_depart') texte = tr.t('vol_route_autre_depart', v.numero.toUpperCase(), r.escales.join(' → '), v.depart);
+  else if (r.statut === 'introuvable') texte = tr.t('vol_route_introuvable');
+  else if (r.statut === 'invalide') texte = tr.t('vol_route_invalide');
+  else texte = tr.t('vol_route_erreur', r.raison);
+  routeVol = { attente: false, texte };
+  rendre();
+}
 
 /** Le GPS du téléphone, par le navigateur (VolActivity.releverGps) : 90 s au plus, sans réseau. */
 let gpsVol = false;
@@ -2808,9 +2838,12 @@ function ecranVol() {
   const heure = (cle, etiquette) => h('label', { class: 'ligne' },
     h('span', { class: 'corps' }, h('div', { class: 'etat' }, etiquette),
       h('input', { type: 'datetime-local', class: 'champ-recherche champ-vol', value: v[cle] || null, onchange: (e) => { v[cle] = e.target.value; } })));
+  const champNumero = h('input', { type: 'text', class: 'champ-recherche champ-vol', maxlength: 12, autocapitalize: 'characters', value: v.numero || null, onchange: (e) => { v.numero = e.target.value.trim(); } });
   const formulaire = h('div', { class: 'carte' },
-    h('label', { class: 'ligne' }, h('span', { class: 'corps' }, h('div', { class: 'etat' }, tr.t('vol_numero')),
-      h('input', { type: 'text', class: 'champ-recherche champ-vol', maxlength: 12, autocapitalize: 'characters', value: v.numero || null, onchange: (e) => { v.numero = e.target.value.trim(); } }))),
+    h('label', { class: 'ligne' }, h('span', { class: 'corps' }, h('div', { class: 'etat' }, tr.t('vol_numero')), champNumero)),
+    h('div', { class: 'boutons-vol' }, h('button', { class: 'secondaire', disabled: routeVol.attente, onclick: () => { v.numero = champNumero.value.trim(); chercherRouteVol(v); } },
+      tr.t(routeVol.attente ? 'vol_route_attente' : 'vol_route_bouton'))),
+    h('p', { class: 'indice', 'aria-live': 'polite' }, routeVol.texte || tr.t('vol_route_explication')),
     ligne(tr.t('vol_depart'), nomA(v.depart), () => pret && choisirAeroport((a) => { v.depart = a.iata; rendre(); })),
     ligne(tr.t('vol_arrivee'), nomA(v.arrivee), () => pret && choisirAeroport((a) => { v.arrivee = a.iata; rendre(); })),
     v.depart ? heure('decollage', tr.t('vol_decollage', villeA(v.depart))) : null,
@@ -2825,7 +2858,8 @@ function ecranVol() {
       ...(garde && !pret ? [h('div', { class: 'carte carte-texte' }, h('p', { class: 'message' }, tr.t('vol_calcul_en_cours')))] : []),
       ...(garde && calculVol ? resultatsVol(calculVol) : []),
       ...piedZmanim().slice(0, 1),
-      h('p', { class: 'indice sources' }, tr.t('vol_source_aeroports')))));
+      h('p', { class: 'indice sources' }, tr.t('vol_source_aeroports')),
+      h('p', { class: 'indice sources' }, tr.t('vol_source_adsbdb')))));
 }
 
 /**

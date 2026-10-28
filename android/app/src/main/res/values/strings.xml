@@ -183,7 +183,7 @@
     <string name="onboarding_practice">Parler, simplement</string>
     <string name="onboarding_practice_body">La hitbodedout, c’est se retirer seul un moment chaque jour et parler à Hachem dans sa propre langue, comme on parle à quelqu’un. Pas de formule à réciter, pas de niveau à atteindre.</string>
     <string name="onboarding_private">Rien ne sort d’ici</string>
-    <string name="onboarding_private_body">L’application ne se connecte à Internet que si vous activez vous-même le suivi d’un vol en direct ; elle demande alors à OpenSky Network les avions d’une zone approchée, sans envoyer l’indicatif du vol. Ce que vous écrivez reste sur ce téléphone, et n’en sort que si vous l’exportez vous-même.</string>
+    <string name="onboarding_private_body">L’application ne se connecte à Internet que si vous le demandez vous-même : le suivi d’un vol en direct demande à OpenSky Network les avions d’une zone approchée, sans envoyer l’indicatif du vol ; la recherche d’un numéro de vol envoie ce numéro seul à adsbdb.com. Ce que vous écrivez reste sur ce téléphone, et n’en sort que si vous l’exportez vous-même.</string>
     <string name="blocker_session_open_subtitle">Hitbodedout sans durée, depuis %1$s. Le téléphone peut attendre.</string>
     <string name="session_done_title">Vous avez parlé avec Hachem aujourd’hui</string>
     <string name="session_done_text">%1$s de hitbodedout. Touchez pour laisser une note.</string>
@@ -1181,6 +1181,16 @@
     <string name="vol_carte_sous">Saisissez un vol : les horaires sont calculés sur la route prévue, sur l’appareil.</string>
     <string name="vol_carte_vol">%1$s · %2$s → %3$s</string>
     <string name="vol_numero">Numéro de vol (facultatif)</string>
+    <string name="vol_route_bouton">Trouver l’arrivée par le numéro</string>
+    <string name="vol_route_attente">Recherche du vol…</string>
+    <string name="vol_route_explication">Au toucher, seul le numéro du vol est envoyé à adsbdb.com (gratuit, sans compte). Il rend les escales connues et l’indicatif radio, pas les heures : elles restent à saisir, celles du billet.</string>
+    <string name="vol_route_trouvee">%1$s : %2$s. Départ %3$s, arrivée %4$s. Route connue d’adsbdb.com, parfois ancienne : vérifiez-la sur le billet.</string>
+    <string name="vol_route_autre_depart">D’après adsbdb.com, %1$s fait %2$s et ne part pas de %3$s. Vérifiez le numéro ou l’aéroport de départ ; la route connue peut être ancienne.</string>
+    <string name="vol_route_inconnue">L’aéroport %1$s, donné par adsbdb.com, n’est pas dans la liste de l’application : choisissez-le à la main.</string>
+    <string name="vol_route_introuvable">adsbdb.com ne connaît pas ce numéro de vol : choisissez les aéroports à la main.</string>
+    <string name="vol_route_invalide">Numéro attendu : le code de la compagnie puis le numéro, par exemple LY81.</string>
+    <string name="vol_route_erreur">Recherche impossible (%1$s). Les aéroports se choisissent aussi à la main.</string>
+    <string name="vol_source_adsbdb">Routes des vols : adsbdb.com (données de David J. Taylor et Jim Mason)</string>
     <string name="vol_depart">Départ</string>
     <string name="vol_arrivee">Arrivée</string>
     <string name="vol_choisir_aeroport">Choisir un aéroport</string>
@@ -1264,7 +1274,7 @@
     <string name="vol_rappel_omer_titre">Sefirat haOmer</string>
     <string name="vol_rappel_omer_texte">Les étoiles sortent sous l’avion : ce soir, on compte le jour %1$s du Omer.</string>
     <string name="vol_direct_explication_opensky">Désactivé par défaut. Activé, il demande à OpenSky Network, gratuitement et sans compte, les avions vus dans un carré de 10° autour de la position estimée ; l’indicatif reste sur le téléphone, qui y cherche l’avion. Au-dessus des océans, l’avion n’est souvent pas vu.</string>
-    <string name="vol_source_aeroports">Aéroports : OurAirports (domaine public) ; fuseaux : timezone-boundary-builder (ODbL, © contributeurs OpenStreetMap)</string>
+    <string name="vol_source_aeroports">Aéroports : OurAirports (domaine public) ; fuseaux : timezone-boundary-builder (ODbL, © contributeurs OpenStreetMap) ; noms en hébreu et en français : Wikidata (CC0)</string>
 
     <!-- La boussole de Jérusalem (28/10, design C). -->
     <string name="boussole_title">Direction de Jérusalem</string>

@@ -45,6 +45,10 @@ object Vol {
         val longitude: Double,
         /** Fuseau IANA de l'aéroport : celui des heures du billet. */
         val fuseau: String,
+        /** Le nom de l'aéroport par langue (« he », « fr » ; Wikidata, aeroports_noms.json), pour l'affichage. */
+        val noms: Map<String, String> = emptyMap(),
+        /** Les autres noms cherchés : ceux de `noms` et des lieux desservis, en hébreu et en français. */
+        val alias: List<String> = emptyList(),
     )
 
     /** Le vol tel qu'on le saisit : numéro (affiché seulement), aéroports et heures prévues. */

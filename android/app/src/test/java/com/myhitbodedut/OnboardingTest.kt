@@ -63,10 +63,11 @@ class OnboardingTest {
         listOf("values", "values-en", "values-iw").forEach {
             assertTrue("$it : la phrase de l'édition légère manque", File("src/light/res/$it/strings.xml").readText().contains("onboarding_private_body"))
         }
-        // Le seul code qui ouvre une connexion est le suivi de vol, et seulement en HTTPS.
+        assertTrue("l'accueil doit dire que le numéro de vol part vers adsbdb", completeFr.contains("adsbdb.com"))
+        // Le seul code qui ouvre une connexion est le suivi de vol et la route d'un numéro de vol, en HTTPS.
         val connexions = File("src/main/java/com/myhitbodedut").listFiles().orEmpty()
-            .filter { it.readText().contains("openConnection(") }.map { it.name }
-        assertEquals(listOf("SuiviVol.kt"), connexions)
+            .filter { it.readText().contains("openConnection(") }.map { it.name }.sorted()
+        assertEquals(listOf("RouteVol.kt", "SuiviVol.kt"), connexions)
     }
 
     /** Sans son entree au manifeste, l'ecran ne s'ouvrirait pas. */
