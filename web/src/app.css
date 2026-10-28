@@ -1426,3 +1426,4 @@ body.avec-mini .seance .contenu { padding-bottom: calc(104px + env(safe-area-ins
 .boussole-guide { margin: 4px 0 0; min-height: 1.4em; font-size: 16px; font-weight: 600; color: var(--brand); }
 .boussole-rose.aligne ~ .boussole-guide { color: var(--or); }
 .boussole-lieu { color: var(--muted); margin: 0; }
+.lu-zone .defile { touch-action: manipulation; } /* deux touchers ramènent le bouton (28/10), sans zoomer */

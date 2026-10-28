@@ -615,7 +615,7 @@
     <string name="police_serif">Hébraïque à empattements</string>
     <string name="police_sans">Sans empattements</string>
     <string name="police_arrondie">Arrondie</string>
-    <string name="lecture_masque_info">Bouton masqué. Touchez le texte pour le faire revenir.</string>
+    <string name="lecture_masque_info">Bouton masqué. Touchez deux fois le texte pour le faire revenir.</string>
     <string name="lecture_annuler_masque">Annuler</string>
     <string name="lecture_taille">Taille du texte : %1$d %%</string>
     <string name="lecture_pourcent">%1$d %%</string>

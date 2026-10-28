@@ -571,7 +571,7 @@
     <string name="police_serif">Hebrew serif</string>
     <string name="police_sans">Sans serif</string>
     <string name="police_arrondie">Rounded</string>
-    <string name="lecture_masque_info">Button hidden. Tap the text to bring it back.</string>
+    <string name="lecture_masque_info">Button hidden. Double-tap the text to bring it back.</string>
     <string name="lecture_annuler_masque">Undo</string>
     <string name="lecture_taille">Text size: %1$d%%</string>
     <string name="lecture_pourcent">%1$d%%</string>

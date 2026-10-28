@@ -25,6 +25,7 @@ import androidx.appcompat.app.AppCompatActivity
 class TehilimLectureActivity : AppCompatActivity() {
 
     private lateinit var portion: Portion
+    private var reglages: ReglagesLecture? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,7 +39,7 @@ class TehilimLectureActivity : AppCompatActivity() {
         findViewById<Button>(R.id.lecture_previous).setOnClickListener { afficher(Portion(portion.debut - 1, portion.debut - 1)) }
         findViewById<Button>(R.id.lecture_next).setOnClickListener { afficher(Portion(portion.debut + 1, portion.debut + 1)) }
         // Le bouton de lecture : taille des lettres et lecture de nuit (pas de nusah ici).
-        ReglagesLecture.installer(this, findViewById<ScrollView>(R.id.lecture_scroll), auDessusDe = findViewById(R.id.lecture_nav)) {
+        reglages = ReglagesLecture.installer(this, findViewById<ScrollView>(R.id.lecture_scroll), auDessusDe = findViewById(R.id.lecture_nav)) {
             afficher(portion, garderPlace = true)
         }
         afficher(portion)
@@ -152,7 +153,7 @@ class TehilimLectureActivity : AppCompatActivity() {
         places[n] = this to rangs
         var x = 0f
         var y = 0f
-        setOnTouchListener { _, e -> x = e.x; y = e.y; false }
+        setOnTouchListener { _, e -> x = e.x; y = e.y; reglages?.toucher(e); false }
         setOnLongClickListener {
             val o = getOffsetForPosition(x, y)
             val (_, _, v) = rangs.firstOrNull { o in it.first..it.second } ?: return@setOnLongClickListener false

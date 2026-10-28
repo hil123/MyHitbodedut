@@ -585,7 +585,7 @@
     <string name="police_serif">עברי עם תגים</string>
     <string name="police_sans">ללא תגים</string>
     <string name="police_arrondie">מעוגל</string>
-    <string name="lecture_masque_info">הכפתור הוסתר. נגיעה בטקסט תחזיר אותו.</string>
+    <string name="lecture_masque_info">הכפתור הוסתר. נגיעה כפולה בטקסט תחזיר אותו.</string>
     <string name="lecture_annuler_masque">ביטול</string>
     <string name="lecture_taille">גודל הטקסט: %1$d%%</string>
     <string name="lecture_pourcent">%1$d%%</string>

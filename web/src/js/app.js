@@ -912,6 +912,22 @@ function masquerLecture() {
   });
 }
 
+/**
+ * Deux touchers sur le texte (28/10, « faire réapparaître le bandeau en appuyant 2 fois ») :
+ * masqué, le bouton revient ; l'appui long reste aux marque-pages. Un seul toucher, bouton
+ * visible, appelle [simple] (la pastille effacée par le défilement revient).
+ */
+function doubleToucherPourRamener(zone, simple = null) {
+  let dernier = null;
+  zone.addEventListener('click', (e) => {
+    if (e.defaultPrevented || e.target.closest('button, a, input, select')) return;
+    const double = dernier && e.timeStamp - dernier.t < 350 && Math.hypot(e.clientX - dernier.x, e.clientY - dernier.y) < 40;
+    dernier = double ? null : { t: e.timeStamp, x: e.clientX, y: e.clientY };
+    if (store.lectureMasquee()) { if (double) ramenerLecture(); return; }
+    simple?.();
+  });
+}
+
 function ramenerLecture() {
   store.setLectureMasquee(false);
   reglagesOuverts = true;
@@ -965,38 +981,6 @@ function reglagesLecture({ avecNusah, sansNuit = false }) {
       bouton({ class: 'icone-bouton', 'aria-label': tl('lecture_replier'), 'aria-expanded': 'true', onclick: () => { reglagesOuverts = false; choixNusahOuvert = false; rendreEtViser('.lecture-pastille'); } }, icone('replier'))));
 }
 
-/**
- * L'appui long sur le texte, quand le bouton est masqué : 550 ms sans
- * bouger de plus de 10 px, ou le menu contextuel. Rien n'est empêché tant
- * qu'il n'a pas abouti : le texte défile comme d'habitude.
- */
-function appuiLongPourRamener(zone) {
-  let minuteur = null;
-  let depart = null;
-  let abouti = 0;
-  const annule = () => { clearTimeout(minuteur); minuteur = null; depart = null; };
-  zone.addEventListener('pointerdown', (e) => {
-    if (!store.lectureMasquee() || (e.pointerType === 'mouse' && e.button !== 0)) return;
-    depart = { x: e.clientX, y: e.clientY };
-    minuteur = setTimeout(() => { minuteur = null; abouti = Date.now(); ramenerLecture(); }, 550);
-  });
-  zone.addEventListener('pointermove', (e) => {
-    if (depart && Math.hypot(e.clientX - depart.x, e.clientY - depart.y) > 10) annule();
-  });
-  for (const fin of ['pointerup', 'pointercancel', 'pointerleave', 'scroll']) zone.addEventListener(fin, annule, { passive: true });
-  zone.addEventListener('contextmenu', (e) => {
-    if (Date.now() - abouti < 800) { e.preventDefault(); return; }
-    if (!store.lectureMasquee()) return;
-    e.preventDefault();
-    annule();
-    abouti = Date.now();
-    ramenerLecture();
-  });
-  // Le doigt qui se lève après l'appui long ne touche rien d'autre.
-  zone.addEventListener('click', (e) => {
-    if (Date.now() - abouti < 800) { e.preventDefault(); e.stopPropagation(); }
-  }, true);
-}
 
 /**
  * Un écran de lecture de texte saint : le texte à la taille choisie, de
@@ -1034,13 +1018,7 @@ function ecranLu(titre, contenu, { avecNusah = false, pied = null, bande = null,
     }
     avant = y;
   }, { passive: true });
-  appuiLongPourRamener(defile);
-  // Un seul toucher sur le texte (28/10) : masqué, le bouton revient ; effacé par le défilement, la pastille aussi.
-  defile.addEventListener('click', (e) => {
-    if (e.defaultPrevented || e.target.closest('button, a, input, select')) return;
-    if (store.lectureMasquee()) { ramenerLecture(); return; }
-    ctrl?.querySelector('.lecture-pastille')?.classList.remove('cachee');
-  });
+  doubleToucherPourRamener(defile, () => ctrl?.querySelector('.lecture-pastille')?.classList.remove('cachee'));
   return h('div', { class: `ecran lu${store.lectureSombre() ? ' nuit' : ''}`, style: `--echelle: ${store.lectureEchelle()}` },
     entete ?? barre(titre),
     bande,
@@ -2210,7 +2188,7 @@ let rechercheHalakhaTexte = '';
  */
 function zoneReglable(contenu) {
   const defile = h('div', { class: 'defile' }, contenu);
-  appuiLongPourRamener(defile);
+  doubleToucherPourRamener(defile);
   return h('div', { class: 'lu-zone sans-pied reglable' }, defile, reglagesLecture({ avecNusah: false, sansNuit: true }));
 }
 
