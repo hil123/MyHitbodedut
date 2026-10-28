@@ -634,6 +634,7 @@ class SiddurLectureActivity : AppCompatActivity() {
 
         /** Ouvre le texte d'un marque-page, à sa place. */
         fun ouvrirMarque(context: Context, m: MarquesPages.Marque) {
+            if (m.cle == TehilimLectureActivity.CLE) return TehilimLectureActivity.ouvrirMarque(context, m)
             val i = Intent(context, SiddurLectureActivity::class.java).putExtra(ID, m.cle.substringAfter(':'))
                 .putExtra(MARQUE, "${m.section}:${m.bloc}")
             if (m.cle.startsWith("l:")) i.putExtra(LIVRE, true)

@@ -185,6 +185,8 @@ const MARQUES = { marques_pages: [
   { cle: 'l:likoutei_etsot', nusah: '', section: 1, bloc: 0, apercu: 'עיקר ההתבודדות הוא בלילה' },
   { cle: 's:chaharit', nusah: 'edot', section: 5, bloc: 0, apercu: 'ברוך שאמר והיה העולם' },
   { cle: 's:birkat_hamazon', nusah: 'edot', section: 0, bloc: 0, apercu: 'שיר המעלות בשוב ה׳ את שיבת ציון' },
+  { cle: 't:tehilim', nusah: '', section: 121, bloc: 1, apercu: 'קכ״א, א׳ · שיר למעלות אשא עיני אל' },
+  { cle: 't:tehilim', nusah: '', section: 23, bloc: 4, apercu: 'כ״ג, ד׳ · גם כי אלך בגיא צלמות' },
 ] };
 const feuilleSignets = (filtre) => async (p) => {
   await p.waitForSelector('.ligne .nom-marque');
@@ -196,6 +198,15 @@ await capture('signets-he', { langue: 'he', onglet: 'textes', extra: MARQUES });
 await capture('signets-he-feuille', { langue: 'he', onglet: 'textes', extra: MARQUES, actions: feuilleSignets('') });
 await capture('signets-he-livres', { langue: 'he', ecran: 'livres', extra: MARQUES, actions: bas(0) });
 await capture('signets-he-siddour', { langue: 'he', ecran: 'siddur', extra: MARQUES, actions: bas(0) });
+await capture('signets-he-tehilim', { langue: 'he', ecran: 'tehilim', extra: MARQUES });
+await capture('signets-he-psaume', { langue: 'he', ecran: 'tehilim', extra: MARQUES, actions: async (p) => {
+  await p.waitForSelector('.ligne .nom-marque');
+  await p.click('.ligne:has(.nom-marque)');
+  await p.waitForSelector('.signet-choix');
+  await p.click('.signet-choix >> nth=0');
+  await p.waitForSelector('.verset.marque-page');
+  await p.waitForTimeout(300);
+} });
 await capture('signets-he-chaharit', { langue: 'he', onglet: 'textes', extra: MARQUES, actions: feuilleSignets('שַׁחֲרִית') });
 await capture('siddour-he', { langue: 'he', ecran: 'siddur', actions: bas(0) });
 await capture('siddour-he-occasions', { langue: 'he', ecran: 'siddur', actions: bas(100000) });

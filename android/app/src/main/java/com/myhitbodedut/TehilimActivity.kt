@@ -37,7 +37,14 @@ class TehilimActivity : AppCompatActivity() {
         super.onResume()
         // Le jour a pu changer depuis l'ouverture de l'écran.
         renderDuJour()
+        // Les marque-pages des Tehilim (28/10), en tête : la même feuille que la Bibliothèque.
+        val carte = findViewById<View>(R.id.tehilim_month_button).parent as View
+        val contenu = carte.parent as android.view.ViewGroup
+        signets?.let { contenu.removeView(it) }
+        signets = RepriseFavoris.ligneSignets(this, "t")?.also { contenu.addView(it, contenu.indexOfChild(carte)) }
     }
+
+    private var signets: View? = null
 
     private fun renderDuJour() {
         val aujourdhui = LocalDate.now()

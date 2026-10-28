@@ -17,6 +17,7 @@ object RepriseFavoris {
 
     /** Le titre hébreu d'une clé « s:id » ou « l:id », ou null. */
     fun titre(c: Context, cle: String): String? {
+        if (cle == TehilimLectureActivity.CLE) return c.getString(R.string.tehilim_title)
         val id = cle.substringAfter(':')
         val recueil = if (cle.startsWith("l:")) Data.livres(c) else Data.siddur(c)
         return recueil.texte(id)?.titre?.he
@@ -45,6 +46,7 @@ object RepriseFavoris {
 
     /** L'ordre du recueil : le siddour d'abord, puis les livres, chacun dans son ordre. */
     private fun ordre(c: Context, cle: String): Int {
+        if (cle.startsWith("t:")) return 5_000
         val livre = cle.startsWith("l:")
         val i = (if (livre) Data.livres(c) else Data.siddur(c)).textes.indexOfFirst { it.id == cle.substringAfter(':') }
         return (if (livre) 10_000 else 0) + i
@@ -59,8 +61,11 @@ object RepriseFavoris {
         val filtres = buildList {
             add("*" to c.getString(R.string.recherche_tout))
             if (marques.any { it.cle.startsWith("s:") }) add("s" to c.getString(R.string.siddur_title))
+            if (marques.any { it.cle.startsWith("t:") }) add("t" to c.getString(R.string.tehilim_title))
             if (marques.any { it.cle.startsWith("l:") }) add("l" to c.getString(R.string.livres_title))
-            if (textes.size > 1) textes.forEach { add(it to (titre(c, it) ?: it)) }
+            // Un texte par puce, pour le siddour et les livres ; les Tehilim n'en ont qu'un, déjà nommé.
+            val parTexte = textes.filterNot { it.startsWith("t:") }
+            if (parTexte.size > 1) parTexte.forEach { add(it to (titre(c, it) ?: it)) }
         }
         val liste = LinearLayout(c).apply { orientation = LinearLayout.VERTICAL }
         var dialogue: androidx.appcompat.app.AlertDialog? = null

@@ -748,6 +748,8 @@ function ecranTehilim() {
   return h('div', { class: 'ecran' }, barre(tr.t('tehilim_title')),
     h('div', { class: 'defile' }, h('div', { class: 'contenu' },
       versets ? h('p', { class: 'indice' }, tr.t('tehilim_count', 150, versets.toLocaleString(tr.langue))) : null,
+      // Les marque-pages des Tehilim (28/10), en tête : la même feuille que la Bibliothèque.
+      ...[ligneSignets('t')].filter(Boolean).map((l) => h('div', { class: 'carte' }, l)),
       h('div', { class: 'carte' },
         ligne({ nom: tr.t('tehilim_month'), etat: tr.t('tehilim_month_state', nombreTehilim(jour), libellePortion(portion)), onclick: () => lire(portion) }),
         ligne({ nom: tr.t('tehilim_week'), etat: tr.t('tehilim_week_state', nomJour.charAt(0).toLocaleUpperCase(tr.langue) + nomJour.slice(1), libellePortion(semaine)), onclick: () => lire(semaine) })),
@@ -755,6 +757,26 @@ function ecranTehilim() {
       h('div', { class: 'grille-psaumes' }, Array.from({ length: 150 }, (_, i) => i + 1).map((n) =>
         h('button', { class: 'case-psaume', 'aria-label': libellePortion(CycleTehilim.portion(n, n)), onclick: () => lire(CycleTehilim.portion(n, n)) },
           nombreTehilim(n)))))));
+}
+
+/** La clé des marque-pages des Tehilim (28/10) : le psaume en section, le verset en bloc. */
+const CLE_TEHILIM = 't:tehilim';
+
+/** Un verset ; un appui long le marque ou le démarque, comme un paragraphe du siddour. */
+function verset(n, v, texte) {
+  const marque = () => store.marques().some((m) => m.cle === CLE_TEHILIM && m.section === n && m.bloc === v);
+  const p = h('p', { class: `verset${marque() ? ' marque-page' : ''}`, 'data-place': `${n}:${v}` },
+    h('span', { class: 'num', 'aria-hidden': 'true' }, `${Reference.lettres(v)} `), texte);
+  let minuteur = null;
+  const poser = () => {
+    const pose = store.basculerMarque({ cle: CLE_TEHILIM, nusah: '', section: n, bloc: v, apercu: `${Reference.lettres(n)}, ${Reference.lettres(v)} · ${apercuMarque(texte, 5)}` });
+    p.classList.toggle('marque-page', pose);
+    signale(tr.t(pose ? 'marque_posee' : 'marque_retiree'));
+  };
+  p.addEventListener('contextmenu', (e) => { e.preventDefault(); clearTimeout(minuteur); poser(); });
+  p.addEventListener('touchstart', () => { minuteur = setTimeout(() => { minuteur = null; poser(); }, 550); }, { passive: true });
+  for (const ev of ['touchend', 'touchmove', 'touchcancel']) p.addEventListener(ev, () => clearTimeout(minuteur), { passive: true });
+  return p;
 }
 
 function ecranLecture() {
@@ -770,15 +792,16 @@ function ecranLecture() {
     const quels = CycleTehilim.versets(p, n, tous.length);
     total += quels.length;
     blocs.push(h('h2', { class: 'psaume-titre', lang: 'he', dir: 'rtl' }, tr.t('tikkun_psalm_he', Reference.lettres(n))));
-    blocs.push(h('div', { class: 'psaume', lang: 'he', dir: 'rtl' }, quels.map((v) =>
-      h('p', { class: 'verset' }, h('span', { class: 'num', 'aria-hidden': 'true' }, `${Reference.lettres(v)} `), tous[v - 1]))));
+    blocs.push(h('div', { class: 'psaume', lang: 'he', dir: 'rtl' }, quels.map((v) => verset(n, v, tous[v - 1]))));
   }
   const aller = (n) => { lecture = CycleTehilim.portion(n, n); rendre(); app.querySelector('.defile').scrollTop = 0; };
-  return ecranLu(libellePortion(p), h('div', { class: 'contenu lecture' },
+  const ecran = ecranLu(libellePortion(p), h('div', { class: 'contenu lecture' },
       h('p', { class: 'indice' }, tr.p('tehilim_verses', total, total)),
       ...blocs), { avecNusah: false, pied: seul ? h('div', { class: 'lecture-nav' },
       h('button', { class: 'secondaire', style: p.debut > 1 ? null : 'visibility:hidden', onclick: () => aller(p.debut - 1) }, tr.t('tehilim_previous')),
       h('button', { class: 'principal', style: p.debut < 150 ? null : 'visibility:hidden', onclick: () => aller(p.debut + 1) }, tr.t('tehilim_next'))) : null });
+  if (marqueAOuvrir?.cle === CLE_TEHILIM) { const m = marqueAOuvrir; marqueAOuvrir = null; requestAnimationFrame(() => allerAMarque(ecran, m)); }
+  return ecran;
 }
 
 // --- Siddour (SiddurActivity.kt, SiddurLectureActivity.kt) ------------------------
@@ -1378,7 +1401,7 @@ function iconeMarque(etude, taille = 22) {
 }
 
 /** Les premiers mots d'un paragraphe, sans balises ni voyelles (MarquesPages.apercu). */
-const apercuMarque = (t) => t.replace(/<[^>]+>/g, ' ').replace(/[־׀]/g, ' ').replace(/[\u0591-\u05C7]/g, '').trim().split(/\s+/).slice(0, 6).join(' ');
+const apercuMarque = (t, mots = 6) => t.replace(/<[^>]+>/g, ' ').replace(/[־׀]/g, ' ').replace(/[\u0591-\u05C7]/g, '').trim().split(/\s+/).slice(0, mots).join(' ');
 /** Le marque-page à rejoindre à l'ouverture du texte (depuis la Bibliothèque). */
 let marqueAOuvrir = null;
 /** Va au paragraphe marqué ; replié aujourd'hui, à sa section (le premier paragraphe qui suit). */
@@ -1392,6 +1415,7 @@ function allerAMarque(ecran, m) {
 
 /** Le titre hébreu d'une clé « s:id » ou « l:id », ou null tant que son recueil n'est pas chargé. */
 function titreCle(cle) {
+  if (cle === CLE_TEHILIM) return tr.t('tehilim_title');
   const livre = cle.startsWith('l:');
   if (livre ? !chargeLivres() : !chargeSiddur()) return null;
   return (livre ? livres : siddur).textes.find((t) => t.id === cle.slice(2))?.titre.he ?? null;
@@ -1402,7 +1426,14 @@ const ouvrirCle = (cle) => { priere = cle.startsWith('l:') ? `livre:${cle.slice(
 function ligneSignets(recueil = null) {
   const marques = store.marques().filter((m) => (!recueil || m.cle.startsWith(`${recueil}:`)) && titreCle(m.cle));
   return marques.length ? ligne({ nom: h('span', { class: 'nom-marque' }, iconeMarque(recueil === 'l', 18), tr.t('marques_titre')), etat: String(marques.length),
-    onclick: () => listeSignets(marques, titreCle, (m) => { marqueAOuvrir = m; ouvrirCle(m.cle); }) }) : null;
+    onclick: () => listeSignets(marques, titreCle, ouvrirSignet) }) : null;
+}
+
+/** Ouvre le texte d'un marque-page, à sa place : un paragraphe du siddour ou d'un livre, ou un verset des Tehilim. */
+function ouvrirSignet(m) {
+  marqueAOuvrir = m;
+  if (m.cle === CLE_TEHILIM) { lire(CycleTehilim.portion(m.section, m.section)); return; }
+  ouvrirCle(m.cle);
 }
 
 /** « Reprendre la lecture » et les favoris, en tête de la Bibliothèque (RepriseFavoris.kt). */
@@ -1426,12 +1457,15 @@ function repriseFavoris() {
  * ou par texte (שחרית, מנחה…), dans l'ordre du recueil.
  */
 function listeSignets(marques, titre, ouvrirMarque) {
-  const ordre = (cle) => { const l = cle.startsWith('l:') ? livres : siddur; return (cle.startsWith('l:') ? 1e4 : 0) + (l?.textes.findIndex((t) => t.id === cle.slice(2)) ?? 0); };
+  const ordre = (cle) => { if (cle.startsWith('t:')) return 5000; const l = cle.startsWith('l:') ? livres : siddur; return (cle.startsWith('l:') ? 1e4 : 0) + (l?.textes.findIndex((t) => t.id === cle.slice(2)) ?? 0); };
   const textes = [...new Set(marques.map((m) => m.cle))].sort((a, b) => ordre(a) - ordre(b));
   const filtres = [['*', tr.t('recherche_tout')]];
   if (marques.some((m) => m.cle.startsWith('s:'))) filtres.push(['s', tr.t('siddur_title')]);
+  if (marques.some((m) => m.cle.startsWith('t:'))) filtres.push(['t', tr.t('tehilim_title')]);
   if (marques.some((m) => m.cle.startsWith('l:'))) filtres.push(['l', tr.t('livres_title')]);
-  if (textes.length > 1) filtres.push(...textes.map((c) => [c, titre(c)]));
+  // Un texte par puce, pour le siddour et les livres ; les Tehilim n'en ont qu'un, déjà nommé.
+  const parTexte = textes.filter((c) => !c.startsWith('t:'));
+  if (parTexte.length > 1) filtres.push(...parTexte.map((c) => [c, titre(c)]));
   let filtre = '*';
   feuille(tr.t('marques_titre'), (f, fermer) => {
     const puces = h('div', { class: 'puces-recherche puces-signets', role: 'radiogroup', 'aria-label': tr.t('marques_titre') });
