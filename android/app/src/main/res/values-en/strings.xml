@@ -1120,4 +1120,11 @@
         <item quantity="one">%1$s this month, over %2$d day</item>
         <item quantity="other">%1$s this month, over %2$d days</item>
     </plurals>
+    <string name="widget_paracha">Parasha %s</string>
+    <string name="widget_jusqua">until %s</string>
+    <string name="widget_reste">%s left</string>
+    <string name="widget_zmanim_petit_label">Zmanim · small</string>
+    <string name="widget_zmanim_petit_description">The prayer of the moment and when it closes.</string>
+    <string name="widget_zmanim_grand_label">Zmanim · full day</string>
+    <string name="widget_zmanim_grand_description">The date, the prayer of the moment and all of today’s zmanim.</string>
 </resources>

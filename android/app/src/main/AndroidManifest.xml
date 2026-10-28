@@ -274,6 +274,30 @@
                 android:resource="@xml/widget_zmanim_info" />
         </receiver>
 
+        <receiver
+            android:name=".ZmanimPetitWidget"
+            android:exported="false"
+            android:label="@string/widget_zmanim_petit_label">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_zmanim_petit_info" />
+        </receiver>
+
+        <receiver
+            android:name=".ZmanimGrandWidget"
+            android:exported="false"
+            android:label="@string/widget_zmanim_grand_label">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_zmanim_grand_info" />
+        </receiver>
+
         <!-- La série sur l'écran d'accueil. -->
         <receiver
             android:name=".StreakWidget"

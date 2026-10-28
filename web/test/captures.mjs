@@ -203,6 +203,12 @@ const finDeSeance = async (page) => {
 };
 await capture('seance-fr', { langue: 'fr', ecran: 'seance' });
 await capture('seance-en-cours-he', { langue: 'he', ecran: 'seance', actions: (p) => p.click('.duree') });
+// « המילים לא באות לי » et la carte question (28/10).
+await capture('seance-question-he', {
+  langue: 'he', ecran: 'seance', calme: true,
+  actions: async (p) => { await p.click('.duree'); await p.click('.blocage'); await p.click('.question-suivante');
+    await p.evaluate(() => document.querySelector('.question-seance')?.scrollIntoView({ block: 'center' })); },
+});
 await capture('seance-en-cours-en-sombre', { langue: 'en', mode: 'sombre', ecran: 'seance', actions: (p) => p.click('.duree') });
 await capture('bravo-fr', {
   langue: 'fr', ecran: 'seance', adresse: 'm', calme: true,

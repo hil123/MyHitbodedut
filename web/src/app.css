@@ -1333,7 +1333,7 @@ body.avec-mini .seance .contenu { padding-bottom: calc(104px + env(safe-area-ins
   border-radius: 999px; background: none; color: var(--mint); font: inherit; font-size: 14px; font-weight: 600; cursor: pointer;
 }
 .question-suivante::after { content: '›'; font-size: 18px; line-height: 1; }
-:root[dir="rtl"] .question-suivante::after { content: '‹'; }
+.question-suivante:dir(rtl)::after { content: '‹'; }
 .question-seance::after { content: ''; display: block; clear: both; }
 .texte-clair.blocage {
   width: auto; margin: 12px auto 0; padding: 10px 22px; min-height: 44px;

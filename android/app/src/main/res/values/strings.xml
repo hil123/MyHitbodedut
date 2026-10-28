@@ -1166,4 +1166,11 @@
         <item quantity="one">%1$s ce mois-ci, en %2$d jour</item>
         <item quantity="other">%1$s ce mois-ci, en %2$d jours</item>
     </plurals>
+    <string name="widget_paracha">Paracha %s</string>
+    <string name="widget_jusqua">jusqu’à %s</string>
+    <string name="widget_reste">encore %s</string>
+    <string name="widget_zmanim_petit_label">Zmanim · petit</string>
+    <string name="widget_zmanim_petit_description">La prière du moment et l’heure où elle se ferme.</string>
+    <string name="widget_zmanim_grand_label">Zmanim · journée</string>
+    <string name="widget_zmanim_grand_description">La date, la prière du moment et tous les zmanim du jour.</string>
 </resources>

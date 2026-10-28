@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Généré avec les deux autres vignettes des zmanim (28/10) ; voir ZmanimVignette.kt. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/wv_corps" android:layout_width="match_parent" android:layout_height="match_parent"
+    android:background="@drawable/bg_widget_nuit" android:orientation="vertical" android:padding="16dp">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_vertical" android:orientation="horizontal" android:layoutDirection="locale">
+        <TextView android:id="@+id/wv_date" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:textColor="#FF9FE3CC" android:textSize="14sp" android:letterSpacing="0.04" android:fontFamily="serif" android:maxLines="1" android:ellipsize="end" android:textDirection="locale" />
+        <TextView android:id="@+id/wv_pastille" android:layout_width="wrap_content" android:layout_height="wrap_content" android:background="@drawable/bg_widget_pastille" android:paddingHorizontal="10dp" android:paddingVertical="2dp" android:textColor="#FF9FE3CC" android:textSize="11sp" android:maxLines="1" android:visibility="gone" />
+    </LinearLayout>
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="bottom" android:orientation="horizontal" android:layoutDirection="locale">
+        <LinearLayout android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:orientation="vertical">
+            <TextView android:id="@+id/wv_priere" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="6dp" android:fontFamily="serif" android:textColor="#F2FFFFFF" android:textSize="17sp" android:maxLines="1" android:textDirection="locale" />
+    <TextView android:id="@+id/wv_limite" android:layout_width="match_parent" android:layout_height="wrap_content" android:fontFamily="sans-serif-light" android:fontFeatureSettings="tnum" android:textColor="#F2FFFFFF" android:textSize="34sp" android:maxLines="1" android:textDirection="locale" />
+        </LinearLayout>
+        <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="end" android:orientation="vertical">
+            <TextView android:id="@+id/wv_reste" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textColor="#A6FFFFFF" android:textSize="12sp" />
+            <TextView android:id="@+id/wv_serie" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="2dp" android:textColor="#A6FFFFFF" android:textSize="12sp" />
+        </LinearLayout>
+    </LinearLayout>
+    <ProgressBar android:id="@+id/wv_jauge" style="@android:style/Widget.ProgressBar.Horizontal" android:layout_width="match_parent" android:layout_height="3dp" android:layout_marginTop="10dp" android:max="1000" android:progressDrawable="@drawable/widget_jauge" />
+    <ImageView android:importantForAccessibility="no" android:layout_width="match_parent" android:layout_height="1dp" android:layout_marginVertical="10dp" android:background="#1FFFFFFF" />
+    <LinearLayout android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" android:orientation="vertical">
+        <LinearLayout android:id="@+id/wv_r0" android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" android:gravity="center_vertical" android:orientation="horizontal" android:paddingHorizontal="8dp" android:layoutDirection="locale">
+            <TextView android:id="@+id/wv_l0" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:textColor="#A6FFFFFF" android:textSize="13sp" android:maxLines="1" android:ellipsize="end" android:textDirection="locale" />
+            <TextView android:id="@+id/wv_t0" android:layout_width="wrap_content" android:layout_height="wrap_content" android:fontFeatureSettings="tnum" android:textColor="#F2FFFFFF" android:textSize="14sp" />
+        </LinearLayout><LinearLayout android:id="@+id/wv_r1" android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" android:gravity="center_vertical" android:orientation="horizontal" android:paddingHorizontal="8dp" android:layoutDirection="locale">
+            <TextView android:id="@+id/wv_l1" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:textColor="#A6FFFFFF" android:textSize="13sp" android:maxLines="1" android:ellipsize="end" android:textDirection="locale" />
+            <TextView android:id="@+id/wv_t1" android:layout_width="wrap_content" android:layout_height="wrap_content" android:fontFeatureSettings="tnum" android:textColor="#F2FFFFFF" android:textSize="14sp" />
+        </LinearLayout><LinearLayout android:id="@+id/wv_r2" android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" android:gravity="center_vertical" android:orientation="horizontal" android:paddingHorizontal="8dp" android:layoutDirection="locale">
+            <TextView android:id="@+id/wv_l2" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:textColor="#A6FFFFFF" android:textSize="13sp" android:maxLines="1" android:ellipsize="end" android:textDirection="locale" />
+            <TextView android:id="@+id/wv_t2" android:layout_width="wrap_content" android:layout_height="wrap_content" android:fontFeatureSettings="tnum" android:textColor="#F2FFFFFF" android:textSize="14sp" />
+        </LinearLayout><LinearLayout android:id="@+id/wv_r3" android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" android:gravity="center_vertical" android:orientation="horizontal" android:paddingHorizontal="8dp" android:layoutDirection="locale">
+            <TextView android:id="@+id/wv_l3" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:textColor="#A6FFFFFF" android:textSize="13sp" android:maxLines="1" android:ellipsize="end" android:textDirection="locale" />
+            <TextView android:id="@+id/wv_t3" android:layout_width="wrap_content" android:layout_height="wrap_content" android:fontFeatureSettings="tnum" android:textColor="#F2FFFFFF" android:textSize="14sp" />
+        </LinearLayout><LinearLayout android:id="@+id/wv_r4" android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" android:gravity="center_vertical" android:orientation="horizontal" android:paddingHorizontal="8dp" android:layoutDirection="locale">
+            <TextView android:id="@+id/wv_l4" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:textColor="#A6FFFFFF" android:textSize="13sp" android:maxLines="1" android:ellipsize="end" android:textDirection="locale" />
+            <TextView android:id="@+id/wv_t4" android:layout_width="wrap_content" android:layout_height="wrap_content" android:fontFeatureSettings="tnum" android:textColor="#F2FFFFFF" android:textSize="14sp" />
+        </LinearLayout><LinearLayout android:id="@+id/wv_r5" android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" android:gravity="center_vertical" android:orientation="horizontal" android:paddingHorizontal="8dp" android:layoutDirection="locale">
+            <TextView android:id="@+id/wv_l5" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:textColor="#A6FFFFFF" android:textSize="13sp" android:maxLines="1" android:ellipsize="end" android:textDirection="locale" />
+            <TextView android:id="@+id/wv_t5" android:layout_width="wrap_content" android:layout_height="wrap_content" android:fontFeatureSettings="tnum" android:textColor="#F2FFFFFF" android:textSize="14sp" />
+        </LinearLayout><LinearLayout android:id="@+id/wv_r6" android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" android:gravity="center_vertical" android:orientation="horizontal" android:paddingHorizontal="8dp" android:layoutDirection="locale">
+            <TextView android:id="@+id/wv_l6" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:textColor="#A6FFFFFF" android:textSize="13sp" android:maxLines="1" android:ellipsize="end" android:textDirection="locale" />
+            <TextView android:id="@+id/wv_t6" android:layout_width="wrap_content" android:layout_height="wrap_content" android:fontFeatureSettings="tnum" android:textColor="#F2FFFFFF" android:textSize="14sp" />
+        </LinearLayout><LinearLayout android:id="@+id/wv_r7" android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" android:gravity="center_vertical" android:orientation="horizontal" android:paddingHorizontal="8dp" android:layoutDirection="locale">
+            <TextView android:id="@+id/wv_l7" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:textColor="#A6FFFFFF" android:textSize="13sp" android:maxLines="1" android:ellipsize="end" android:textDirection="locale" />
+            <TextView android:id="@+id/wv_t7" android:layout_width="wrap_content" android:layout_height="wrap_content" android:fontFeatureSettings="tnum" android:textColor="#F2FFFFFF" android:textSize="14sp" />
+        </LinearLayout><LinearLayout android:id="@+id/wv_r8" android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" android:gravity="center_vertical" android:orientation="horizontal" android:paddingHorizontal="8dp" android:layoutDirection="locale">
+            <TextView android:id="@+id/wv_l8" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:textColor="#A6FFFFFF" android:textSize="13sp" android:maxLines="1" android:ellipsize="end" android:textDirection="locale" />
+            <TextView android:id="@+id/wv_t8" android:layout_width="wrap_content" android:layout_height="wrap_content" android:fontFeatureSettings="tnum" android:textColor="#F2FFFFFF" android:textSize="14sp" />
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

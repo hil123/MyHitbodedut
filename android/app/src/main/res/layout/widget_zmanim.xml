@@ -1,44 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- La vignette des zmanim (14/10) : date hébraïque, prière du moment, chki'a, série. -->
+<!-- Généré avec les deux autres vignettes des zmanim (28/10) ; voir ZmanimVignette.kt. -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/wz_corps"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/bg_widget"
-    android:gravity="center_vertical"
-    android:orientation="vertical"
-    android:padding="12dp">
-
-    <TextView
-        android:id="@+id/wz_date"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="@color/brand"
-        android:textDirection="rtl"
-        android:textSize="16sp"
-        android:textStyle="bold" />
-
-    <TextView
-        android:id="@+id/wz_priere"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:textColor="@color/ink"
-        android:textSize="15sp" />
-
-    <TextView
-        android:id="@+id/wz_chkia"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="0dp"
-        android:textColor="@color/muted"
-        android:textSize="13sp" />
-
-    <TextView
-        android:id="@+id/wz_serie"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="0dp"
-        android:textColor="@color/muted"
-        android:textSize="13sp" />
+    android:id="@+id/wv_corps" android:layout_width="match_parent" android:layout_height="match_parent"
+    android:background="@drawable/bg_widget_nuit" android:orientation="vertical" android:padding="16dp">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_vertical" android:orientation="horizontal" android:layoutDirection="locale">
+        <TextView android:id="@+id/wv_date" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:textColor="#FF9FE3CC" android:textSize="13sp" android:letterSpacing="0.04" android:fontFamily="serif" android:maxLines="1" android:ellipsize="end" android:textDirection="locale" />
+        <TextView android:id="@+id/wv_pastille" android:layout_width="wrap_content" android:layout_height="wrap_content" android:background="@drawable/bg_widget_pastille" android:paddingHorizontal="10dp" android:paddingVertical="2dp" android:textColor="#FF9FE3CC" android:textSize="11sp" android:maxLines="1" android:visibility="gone" />
+    </LinearLayout>
+    <LinearLayout android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" android:gravity="center_vertical" android:orientation="horizontal" android:layoutDirection="locale">
+        <LinearLayout android:layout_width="0dp" android:layout_weight="1.2" android:layout_height="wrap_content" android:orientation="vertical">
+            <TextView android:id="@+id/wv_priere" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="6dp" android:fontFamily="serif" android:textColor="#F2FFFFFF" android:textSize="15sp" android:maxLines="1" android:textDirection="locale" />
+    <TextView android:id="@+id/wv_limite" android:layout_width="match_parent" android:layout_height="wrap_content" android:fontFamily="sans-serif-light" android:fontFeatureSettings="tnum" android:textColor="#F2FFFFFF" android:textSize="30sp" android:maxLines="1" android:textDirection="locale" />
+        </LinearLayout>
+        <ImageView android:importantForAccessibility="no" android:layout_width="1dp" android:layout_height="44dp" android:layout_marginHorizontal="12dp" android:background="#26FFFFFF" />
+        <LinearLayout android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:orientation="vertical">
+            <TextView android:id="@+id/wv_reste" android:layout_width="match_parent" android:layout_height="wrap_content" android:textColor="#A6FFFFFF" android:textSize="11sp" android:textDirection="locale" android:maxLines="1" android:ellipsize="end" />
+            <TextView android:id="@+id/wv_serie" android:layout_width="match_parent" android:layout_height="wrap_content" android:textColor="#A6FFFFFF" android:textSize="11sp" android:textDirection="locale" android:maxLines="1" android:ellipsize="end" android:layout_marginTop="4dp"/>
+        </LinearLayout>
+    </LinearLayout>
+    <ProgressBar android:id="@+id/wv_jauge" style="@android:style/Widget.ProgressBar.Horizontal" android:layout_width="match_parent" android:layout_height="3dp" android:layout_marginTop="10dp" android:max="1000" android:progressDrawable="@drawable/widget_jauge" />
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="10dp" android:orientation="horizontal" android:layoutDirection="locale">
+        <LinearLayout android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:orientation="vertical">
+            <TextView android:id="@+id/wv_pl0" android:layout_width="match_parent" android:layout_height="wrap_content" android:textColor="#66FFFFFF" android:textSize="10sp" android:textDirection="locale" android:maxLines="1" android:ellipsize="end" />
+            <TextView android:id="@+id/wv_pt0" android:layout_width="match_parent" android:layout_height="wrap_content" android:textColor="#F2FFFFFF" android:textSize="15sp" android:textDirection="locale" android:maxLines="1" android:ellipsize="end" android:fontFeatureSettings="tnum"/>
+        </LinearLayout><LinearLayout android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:orientation="vertical">
+            <TextView android:id="@+id/wv_pl1" android:layout_width="match_parent" android:layout_height="wrap_content" android:textColor="#66FFFFFF" android:textSize="10sp" android:textDirection="locale" android:maxLines="1" android:ellipsize="end" />
+            <TextView android:id="@+id/wv_pt1" android:layout_width="match_parent" android:layout_height="wrap_content" android:textColor="#F2FFFFFF" android:textSize="15sp" android:textDirection="locale" android:maxLines="1" android:ellipsize="end" android:fontFeatureSettings="tnum"/>
+        </LinearLayout><LinearLayout android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:orientation="vertical">
+            <TextView android:id="@+id/wv_pl2" android:layout_width="match_parent" android:layout_height="wrap_content" android:textColor="#66FFFFFF" android:textSize="10sp" android:textDirection="locale" android:maxLines="1" android:ellipsize="end" />
+            <TextView android:id="@+id/wv_pt2" android:layout_width="match_parent" android:layout_height="wrap_content" android:textColor="#F2FFFFFF" android:textSize="15sp" android:textDirection="locale" android:maxLines="1" android:ellipsize="end" android:fontFeatureSettings="tnum"/>
+        </LinearLayout>
+    </LinearLayout>
 </LinearLayout>

@@ -1153,4 +1153,11 @@
         <item quantity="two">%1$s החודש, ביומיים</item>
         <item quantity="other">%1$s החודש, ב־%2$d ימים</item>
     </plurals>
+    <string name="widget_paracha">פרשת %s</string>
+    <string name="widget_jusqua">עד %s</string>
+    <string name="widget_reste">נותרו %s</string>
+    <string name="widget_zmanim_petit_label">זמנים · קטן</string>
+    <string name="widget_zmanim_petit_description">התפילה של השעה ועד מתי.</string>
+    <string name="widget_zmanim_grand_label">זמנים · כל היום</string>
+    <string name="widget_zmanim_grand_description">התאריך, התפילה של השעה וכל זמני היום.</string>
 </resources>

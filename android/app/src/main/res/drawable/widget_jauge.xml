@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- La jauge du temps de la prière : piste claire, remplissage menthe. -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@android:id/background">
+        <shape><solid android:color="#22FFFFFF" /><corners android:radius="2dp" /></shape>
+    </item>
+    <item android:id="@android:id/progress">
+        <clip><shape><solid android:color="#FF9FE3CC" /><corners android:radius="2dp" /></shape></clip>
+    </item>
+</layer-list>

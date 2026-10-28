@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Généré avec les deux autres vignettes des zmanim (28/10) ; voir ZmanimVignette.kt. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/wv_corps" android:layout_width="match_parent" android:layout_height="match_parent"
+    android:background="@drawable/bg_widget_nuit" android:orientation="vertical" android:padding="14dp">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_vertical" android:orientation="horizontal" android:layoutDirection="locale">
+        <TextView android:id="@+id/wv_date" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:textColor="#FF9FE3CC" android:textSize="12sp" android:letterSpacing="0.04" android:fontFamily="serif" android:maxLines="1" android:ellipsize="end" android:textDirection="locale" />
+        <TextView android:id="@+id/wv_pastille" android:layout_width="wrap_content" android:layout_height="wrap_content" android:background="@drawable/bg_widget_pastille" android:paddingHorizontal="10dp" android:paddingVertical="2dp" android:textColor="#FF9FE3CC" android:textSize="11sp" android:maxLines="1" android:visibility="gone" />
+    </LinearLayout>
+    <ImageView android:importantForAccessibility="no" android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" />
+    <TextView android:id="@+id/wv_priere" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="6dp" android:fontFamily="serif" android:textColor="#F2FFFFFF" android:textSize="15sp" android:maxLines="1" android:textDirection="locale" />
+    <TextView android:id="@+id/wv_limite" android:layout_width="match_parent" android:layout_height="wrap_content" android:fontFamily="sans-serif-light" android:fontFeatureSettings="tnum" android:textColor="#F2FFFFFF" android:textSize="30sp" android:maxLines="1" android:textDirection="locale" />
+    <ProgressBar android:id="@+id/wv_jauge" style="@android:style/Widget.ProgressBar.Horizontal" android:layout_width="match_parent" android:layout_height="3dp" android:layout_marginTop="10dp" android:max="1000" android:progressDrawable="@drawable/widget_jauge" />
+    <TextView android:id="@+id/wv_reste" android:layout_width="match_parent" android:layout_height="wrap_content" android:textColor="#A6FFFFFF" android:textSize="11sp" android:textDirection="locale" android:maxLines="1" android:ellipsize="end" android:layout_marginTop="6dp"/>
+</LinearLayout>
