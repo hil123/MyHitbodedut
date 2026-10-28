@@ -1157,6 +1157,8 @@ function ecranSiddur() {
   }, h('span', {}, nomNusah), icone('replier'));
   return h('div', { class: 'ecran avec-bandeau' }, bandeau(tr.t('siddur_title'), { puce, dessin: 'char_praying' }),
     h('div', { class: 'defile' }, h('div', { class: 'contenu liste-siddour' },
+      // Les marque-pages du siddour (28/10), en tête : la même feuille, sans les livres.
+      ...(pret ? [ligneSignets('s')].filter(Boolean).map((l) => h('div', { class: 'carte' }, l)) : []),
       suggere ? carteMaintenant(suggere) : null,
       hallelHanouka ? carteMaintenant(hallelHanouka, 'scene_hanukkah') : null,
       ilanot ? carteMaintenant(ilanot, 'scene_nature') : null,

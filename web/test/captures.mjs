@@ -195,6 +195,7 @@ const feuilleSignets = (filtre) => async (p) => {
 await capture('signets-he', { langue: 'he', onglet: 'textes', extra: MARQUES });
 await capture('signets-he-feuille', { langue: 'he', onglet: 'textes', extra: MARQUES, actions: feuilleSignets('') });
 await capture('signets-he-livres', { langue: 'he', ecran: 'livres', extra: MARQUES, actions: bas(0) });
+await capture('signets-he-siddour', { langue: 'he', ecran: 'siddur', extra: MARQUES, actions: bas(0) });
 await capture('signets-he-chaharit', { langue: 'he', onglet: 'textes', extra: MARQUES, actions: feuilleSignets('שַׁחֲרִית') });
 await capture('siddour-he', { langue: 'he', ecran: 'siddur', actions: bas(0) });
 await capture('siddour-he-occasions', { langue: 'he', ecran: 'siddur', actions: bas(100000) });

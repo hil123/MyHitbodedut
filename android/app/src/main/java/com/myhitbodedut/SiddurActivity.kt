@@ -45,6 +45,8 @@ class SiddurActivity : AppCompatActivity() {
         }
         val liste = findViewById<LinearLayout>(R.id.siddur_list)
         liste.removeAllViews()
+        // Les marque-pages du siddour (28/10), en tête : la même feuille, sans les livres.
+        RepriseFavoris.ligneSignets(this, "s")?.let { liste.addView(it) }
 
         // Avec un lieu, la suggestion suit ses zmanim ; sans lieu, les heures fixes.
         val lieu = Store.lieuZmanim(this)
