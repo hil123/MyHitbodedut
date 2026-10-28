@@ -384,6 +384,30 @@ Montréal et retour (été et hiver austral, ligne de date dans les deux sens),
 Sydney – Queenstown, Tel Aviv – Buenos Aires (direct hypothétique, aucun
 vol régulier connu).
 
+**La route d'un numéro de vol** (28/10 ; édition complète et web ; `RouteVol.kt`,
+`chercherRoute` dans `vol.js`). Au toucher de « Trouver l'arrivée par le numéro »,
+le numéro seul (« LY81 » ou « ELY81 ») part vers api.adsbdb.com, gratuit, sans
+compte ni clé. La réponse donne la compagnie, l'indicatif OACI (repris pour le
+suivi en direct) et les escales connues ; le tronçon retenu est celui qui part
+de l'aéroport de départ choisi, sinon le premier. adsbdb refuse certains
+numéros IATA courts (« QF9 ») : on reprend avec l'indicatif OACI de chaque
+compagnie qui porte ce code. **Pas les heures** : aucune source gratuite et sans
+clé n'a été trouvée (28/10 : Aviationstack, Aviation Edge, Cirium, OAG
+demandent tous une clé) ; elles restent à saisir, celles du billet. Les routes
+d'adsbdb peuvent être anciennes (28/10 : QF9 y passe par Singapour), et l'écran
+le dit. Données de route de David J. Taylor et Jim Mason, qui n'en permettent ni
+la copie ni l'intégration à une autre base sans accord : l'application les lit
+à la demande et n'en garde rien que les deux aéroports du vol saisi ; une
+publication commerciale serait à revoir avec eux, comme OpenSky.
+
+**Les noms en hébreu et en français** (`res/raw/aeroports_noms.json`,
+`tools/aeroports_noms.py`, 28/10) : Wikidata (CC0), libellé de l'élément au code
+IATA et des lieux desservis, lus à la construction ; l'élément n'est gardé que
+si ses coordonnées sont à moins de 30 km de celles d'OurAirports (24 écartés).
+3 144 aéroports nommés, 2 462 en hébreu. La recherche ignore les points-voyelles
+et la ponctuation (« תל-אביב » = « תל אביב ») ; les lieux desservis servent à la
+recherche seulement (Wikidata fait desservir Jérusalem par TLV).
+
 **Les aéroports** (`res/raw/aeroports.json`, `tools/aeroports_construction.py`) :
 OurAirports (domaine public, « sans garantie d'exactitude »), aéroports
 moyens et grands à vols réguliers ayant un code IATA. Le fuseau de chacun
@@ -442,6 +466,8 @@ tourne »), widget 2 × 2 `BoussoleWidget`. Vers Har haBayit, 31,7781° N,
   `tools/villes_construction.py`, puis relancer l'outil.
 - **Changer le calcul en vol** : `VolTest` échoue tant que
   `web/test/vecteurs_vol.json` n'est pas régénéré (`tools/vecteurs_vol/README.md`).
+- **Mettre à jour les noms des aéroports** : `python3 -I tools/aeroports_noms.py`,
+  après tout changement d'`aeroports.json`.
 - **Mettre à jour les aéroports** : relancer `tools/aeroports_construction.py`
   sur un `airports.csv` récent ; tout nouvel écart de fuseau l'arrête jusqu'à
   ce qu'il soit relu et ajouté à l'une de ses listes.

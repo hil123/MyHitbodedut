@@ -130,6 +130,16 @@ class VolActivity : AppCompatActivity() {
                     override fun afterTextChanged(s: Editable?) { numero = s?.toString()?.trim().orEmpty() }
                 })
             })
+            if (BuildConfig.SUIVI_VOL) {
+                addView(MaterialButton(this@VolActivity, null, com.google.android.material.R.attr.materialButtonOutlinedStyle).apply {
+                    text = getString(if (routeEnCours) R.string.vol_route_attente else R.string.vol_route_bouton)
+                    isEnabled = !routeEnCours
+                    setOnClickListener { chercherRoute() }
+                })
+                addView(VueJour.texte(this@VolActivity, routeTexte ?: getString(R.string.vol_route_explication), 12f, R.color.muted, haut = 2).apply {
+                    accessibilityLiveRegion = View.ACCESSIBILITY_LIVE_REGION_POLITE
+                })
+            }
             addView(champ(getString(R.string.vol_depart), depart?.let(::nomAeroport) ?: getString(R.string.vol_choisir_aeroport)) {
                 choisirAeroport { depart = it; afficherFormulaire() }
             })
@@ -170,6 +180,9 @@ class VolActivity : AppCompatActivity() {
         contenu.addView(VueJour.texte(this, getString(R.string.vol_source_aeroports), 12f, R.color.muted, haut = 6).apply {
             setPadding(dp(16), 0, dp(16), 0)
         })
+        if (BuildConfig.SUIVI_VOL) contenu.addView(VueJour.texte(this, getString(R.string.vol_source_adsbdb), 12f, R.color.muted, haut = 4).apply {
+            setPadding(dp(16), 0, dp(16), 0)
+        })
         afficherResultats()
     }
 
@@ -186,7 +199,7 @@ class VolActivity : AppCompatActivity() {
 
     private fun formatSaisie() = DateTimeFormatter.ofPattern("EEE d MMM yyyy · HH:mm", locale)
 
-    /** Une recherche dans les 3 226 aéroports : code, ville ou nom. */
+    /** Une recherche dans les 3 226 aéroports : code, ville ou nom, en lettres latines ou en hébreu. */
     private fun choisirAeroport(choisi: (Vol.Aeroport) -> Unit) {
         val champ = EditText(this).apply {
             hint = getString(R.string.vol_chercher)
@@ -203,7 +216,7 @@ class VolActivity : AppCompatActivity() {
             override fun afterTextChanged(s: Editable?) {
                 trouves = Aeroports.chercher(aeroports, s?.toString().orEmpty())
                 adaptateur.clear()
-                adaptateur.addAll(trouves.map { "${it.iata} · ${it.ville} — ${it.nom} (${it.pays})" })
+                adaptateur.addAll(trouves.map { "${it.iata} · ${it.ville} — ${Aeroports.nomLocal(it, ChizukCard.language(this@VolActivity))} (${it.pays})" })
                 vide.visibility = if (trouves.isEmpty() && !s.isNullOrBlank()) View.VISIBLE else View.GONE
             }
         })
@@ -505,6 +518,50 @@ class VolActivity : AppCompatActivity() {
     }
 
     private var directEnCours = false
+
+    private var routeEnCours = false
+    private var routeTexte: String? = null
+
+    /**
+     * La route du numéro saisi (RouteVol, adsbdb.com), hors du fil de l'interface : remplit l'arrivée
+     * (et le départ s'il est vide) et l'indicatif du suivi en direct ; les heures restent à saisir.
+     */
+    private fun chercherRoute() {
+        if (RouteVol.normaliser(numero) == null) {
+            routeTexte = getString(R.string.vol_route_invalide)
+            return afficherFormulaire()
+        }
+        routeEnCours = true
+        routeTexte = null
+        afficherFormulaire()
+        val n = numero
+        val d = depart?.iata
+        Thread {
+            val r = RouteVol.chercher(n, d)
+            runOnUiThread {
+                if (isFinishing || isDestroyed) return@runOnUiThread
+                routeEnCours = false
+                routeTexte = when (r) {
+                    is RouteVol.Resultat.Trouve -> {
+                        r.indicatif?.let { Store.setVolIndicatif(this, it) }
+                        val de = Aeroports.parIata(aeroports, r.de)
+                        val vers = Aeroports.parIata(aeroports, r.vers)
+                        if (de == null || vers == null) getString(R.string.vol_route_inconnue, if (de == null) r.de else r.vers)
+                        else {
+                            depart = de
+                            arrivee = vers
+                            getString(R.string.vol_route_trouvee, n.uppercase(), r.compagnie, r.de, r.vers)
+                        }
+                    }
+                    is RouteVol.Resultat.AutreDepart -> getString(R.string.vol_route_autre_depart, n.uppercase(), r.escales.joinToString(" → "), d)
+                    RouteVol.Resultat.Introuvable -> getString(R.string.vol_route_introuvable)
+                    RouteVol.Resultat.Invalide -> getString(R.string.vol_route_invalide)
+                    is RouteVol.Resultat.Erreur -> getString(R.string.vol_route_erreur, r.raison)
+                }
+                afficherFormulaire()
+            }
+        }.start()
+    }
 
     /** La position en direct, hors du fil de l'interface : seulement pendant le vol prévu. */
     private fun demanderDirect(indicatif: String) {

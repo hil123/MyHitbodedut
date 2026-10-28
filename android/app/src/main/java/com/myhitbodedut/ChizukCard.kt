@@ -192,9 +192,10 @@ object Data {
     @Volatile
     private var aeroports: List<Vol.Aeroport>? = null
 
-    /** Les aéroports des zmanim en vol (OurAirports), lus une fois, à la première ouverture de l'écran. */
+    /** Les aéroports des zmanim en vol (OurAirports, noms Wikidata), lus une fois, à la première ouverture de l'écran. */
     fun aeroports(context: Context): List<Vol.Aeroport> =
-        aeroports ?: Aeroports.parse(Json.readRaw(context.applicationContext, R.raw.aeroports)).also { aeroports = it }
+        aeroports ?: Aeroports.parse(Json.readRaw(context.applicationContext, R.raw.aeroports),
+            Json.readRaw(context.applicationContext, R.raw.aeroports_noms)).also { aeroports = it }
 
     @Volatile
     private var livres: Siddur? = null

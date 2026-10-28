@@ -23,7 +23,7 @@ import kotlin.math.abs
  */
 class VolTest {
 
-    private val aeroports = Aeroports.parse(File("src/main/res/raw/aeroports.json").readText())
+    private val aeroports = Aeroports.parse(File("src/main/res/raw/aeroports.json").readText(), File("src/main/res/raw/aeroports_noms.json").readText())
     private fun a(iata: String) = Aeroports.parIata(aeroports, iata) ?: error("$iata absent")
 
     private fun plan(de: String, vers: String, decollage: String, atterrissage: String): Vol.Plan {
@@ -59,6 +59,14 @@ class VolTest {
         assertTrue(Aeroports.chercher(aeroports, "zurich").any { it.iata == "ZRH" })
         assertTrue(Aeroports.chercher(aeroports, "Ben Gurion").any { it.iata == "TLV" })
         assertTrue(Aeroports.chercher(aeroports, "  ").isEmpty())
+        // Wikidata : hébreu (avec ou sans tiret) et français.
+        assertTrue(Aeroports.chercher(aeroports, "תל אביב").any { it.iata == "TLV" })
+        assertTrue(Aeroports.chercher(aeroports, "תל-אביב").any { it.iata == "TLV" })
+        assertTrue(Aeroports.chercher(aeroports, "בן גוריון").any { it.iata == "TLV" })
+        assertTrue(Aeroports.chercher(aeroports, "מלבורן").any { it.iata == "MEL" })
+        assertTrue(Aeroports.chercher(aeroports, "Londres").any { it.iata == "LHR" })
+        assertEquals("נמל התעופה בן-גוריון", Aeroports.nomLocal(a("TLV"), "he"))
+        assertEquals(a("TLV").nom, Aeroports.nomLocal(a("TLV"), "en"))
     }
 
     @Test

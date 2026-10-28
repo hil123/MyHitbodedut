@@ -168,7 +168,7 @@
     <string name="onboarding_practice">פשוט לדבר</string>
     <string name="onboarding_practice_body">התבודדות היא להתייחד לבד זמן־מה בכל יום ולדבר אל השם בשפה שלכם, כמו שמדברים אל מישהו. בלי נוסח לדקלם, בלי דרגה להגיע אליה.</string>
     <string name="onboarding_private">כלום לא יוצא מכאן</string>
-    <string name="onboarding_private_body">האפליקציה מתחברת לאינטרנט רק אם תפעילו בעצמכם מעקב טיסה בזמן אמת; היא מבקשת אז מ־OpenSky Network את המטוסים באזור משוער, בלי לשלוח את אות הקריאה של הטיסה. מה שתכתבו נשאר בטלפון הזה, ורק אתם יכולים להוציא אותו, דרך הייצוא.</string>
+    <string name="onboarding_private_body">האפליקציה מתחברת לאינטרנט רק כשתבקשו זאת בעצמכם: מעקב טיסה בזמן אמת מבקש מ־OpenSky Network את המטוסים באזור משוער, בלי לשלוח את אות הקריאה של הטיסה; חיפוש לפי מספר טיסה שולח ל־adsbdb.com את המספר בלבד. מה שתכתבו נשאר בטלפון הזה, ורק אתם יכולים להוציא אותו, דרך הייצוא.</string>
     <string name="blocker_session_open_subtitle">התבודדות פתוחה, כבר %1$s. הטלפון יכול לחכות.</string>
     <string name="session_done_title">דיברתם היום עם השם</string>
     <string name="session_done_text">%1$s של התבודדות. הקישו כדי להוסיף הערה.</string>
@@ -1168,6 +1168,16 @@
     <string name="vol_carte_sous">הזינו טיסה: הזמנים מחושבים לאורך המסלול המתוכנן, במכשיר.</string>
     <string name="vol_carte_vol">%1$s · %2$s → %3$s</string>
     <string name="vol_numero">מספר טיסה (רשות)</string>
+    <string name="vol_route_bouton">מציאת היעד לפי מספר הטיסה</string>
+    <string name="vol_route_attente">מחפש את הטיסה…</string>
+    <string name="vol_route_explication">בלחיצה נשלח ל־adsbdb.com (חינם, בלי חשבון) רק מספר הטיסה. הוא מחזיר את התחנות הידועות ואת אות הקריאה, לא את השעות: יש להזין אותן מהכרטיס.</string>
+    <string name="vol_route_trouvee">%1$s: %2$s. המראה %3$s, נחיתה %4$s. המסלול ידוע ל־adsbdb.com ולפעמים אינו מעודכן: יש לבדוק מול הכרטיס.</string>
+    <string name="vol_route_autre_depart">לפי adsbdb.com, %1$s טסה %2$s ואינה ממריאה מ־%3$s. יש לבדוק את המספר או את שדה ההמראה; המסלול הידוע עשוי להיות ישן.</string>
+    <string name="vol_route_inconnue">שדה התעופה %1$s, שנמסר על ידי adsbdb.com, אינו ברשימת היישום: יש לבחור אותו ידנית.</string>
+    <string name="vol_route_introuvable">מספר הטיסה אינו מוכר ל־adsbdb.com: יש לבחור את שדות התעופה ידנית.</string>
+    <string name="vol_route_invalide">יש להזין את קוד החברה ואחריו המספר, לדוגמה LY81.</string>
+    <string name="vol_route_erreur">החיפוש נכשל (%1$s). אפשר לבחור את שדות התעופה ידנית.</string>
+    <string name="vol_source_adsbdb">מסלולי טיסה: adsbdb.com (נתונים של David J. Taylor ו־Jim Mason)</string>
     <string name="vol_depart">יציאה</string>
     <string name="vol_arrivee">הגעה</string>
     <string name="vol_choisir_aeroport">בחירת שדה תעופה</string>
@@ -1251,7 +1261,7 @@
     <string name="vol_rappel_omer_titre">ספירת העומר</string>
     <string name="vol_rappel_omer_texte">צאת הכוכבים מתחת למטוס: הלילה סופרים יום %1$s לעומר.</string>
     <string name="vol_direct_explication_opensky">כבוי כברירת מחדל. כשהוא פעיל, הוא מבקש מ־OpenSky Network, בחינם וללא חשבון, את המטוסים שנראים בריבוע של 10° סביב המיקום המשוער; אות הקריאה נשאר בטלפון, שמחפש בו את הטיסה. מעל אוקיינוסים המטוס לעיתים קרובות אינו נראה.</string>
-    <string name="vol_source_aeroports">שדות תעופה: OurAirports (נחלת הכלל); אזורי זמן: timezone-boundary-builder ‏(ODbL, © תורמי OpenStreetMap)</string>
+    <string name="vol_source_aeroports">שדות תעופה: OurAirports (נחלת הכלל); אזורי זמן: timezone-boundary-builder ‏(ODbL, © תורמי OpenStreetMap); שמות בעברית ובצרפתית: Wikidata (CC0)</string>
 
     <!-- La boussole de Jérusalem (28/10, design C). -->
     <string name="boussole_title">כיוון ירושלים</string>

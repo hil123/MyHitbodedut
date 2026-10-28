@@ -7,7 +7,8 @@ import { readFileSync } from 'node:fs';
 import * as Vol from '../src/js/vol.js';
 import { jour } from '../src/js/zmanim.js';
 
-const liste = Vol.aeroports(JSON.parse(readFileSync(new URL('../../android/app/src/main/res/raw/aeroports.json', import.meta.url), 'utf8')));
+const brut = (nom) => JSON.parse(readFileSync(new URL(`../../android/app/src/main/res/raw/${nom}`, import.meta.url), 'utf8'));
+const liste = Vol.aeroports(brut('aeroports.json'), brut('aeroports_noms.json'));
 const a = (iata) => liste.find((x) => x.iata === iata) ?? assert.fail(`${iata} absent`);
 const plan = (de, vers, decollage, atterrissage) => ({
   numero: 'TEST', depart: a(de), arrivee: a(vers), decollage: Vol.instant(decollage, a(de)), atterrissage: Vol.instant(atterrissage, a(vers)),
@@ -31,6 +32,19 @@ test('les aéroports sont complets ; la recherche trouve code, ville sans accent
   assert.ok(Vol.chercher(liste, 'zurich').some((x) => x.iata === 'ZRH'));
   assert.ok(Vol.chercher(liste, 'Ben Gurion').some((x) => x.iata === 'TLV'));
   assert.deepEqual(Vol.chercher(liste, '  '), []);
+});
+
+test('la recherche d\'aéroport trouve les noms hébreux et français (Wikidata), sans nikoud ni ponctuation', () => {
+  const premier = (q) => Vol.chercher(liste, q).map((x) => x.iata);
+  assert.ok(premier('תל אביב').includes('TLV'));
+  assert.ok(premier('תל-אביב').includes('TLV'));
+  assert.ok(premier('בן גוריון').includes('TLV'));
+  assert.ok(premier('מלבורן').includes('MEL'));
+  assert.ok(premier('בנגקוק').includes('BKK'));
+  assert.ok(premier('ניו יורק').includes('JFK'));
+  assert.ok(premier('Londres').includes('LHR'));
+  assert.equal(Vol.nomLocal(a('TLV'), 'he'), 'נמל התעופה בן-גוריון');
+  assert.equal(Vol.nomLocal(a('TLV'), 'en'), a('TLV').nom);
 });
 
 test('les heures du billet se lisent à l’heure de chaque aéroport, trous d’heure d’été compris', () => {
@@ -202,4 +216,33 @@ test('suivi en direct : indicatifs, réponse du relais, adresse, fiabilité', as
   // La position reçue recale la route comme un relevé, avec sa propre fiabilité.
   const c = Vol.calculer({ ...versOuest, releve: trouve.point, sourceReleve: 'direct' });
   assert.equal(c.fiabilite, 'releve_direct');
+});
+
+test('la route d\'un numéro de vol (adsbdb) : tronçon depuis le départ, repli OACI, erreurs', async () => {
+  assert.deepEqual(Vol.normaliserNumero('ly 81'), { code: 'LY', chiffres: '81', suffixe: '' });
+  assert.deepEqual(Vol.normaliserNumero('ELY081'), { code: 'ELY', chiffres: '81', suffixe: '' });
+  assert.equal(Vol.normaliserNumero('U22148')?.code, 'U2');
+  assert.equal(Vol.normaliserNumero('bonjour'), null);
+  const point = (iata) => ({ iata_code: iata });
+  const route = (icao, ...escales) => ({ response: { flightroute: { callsign_icao: icao, airline: { name: 'Cie' },
+    origin: point(escales[0]), ...(escales.length === 3 ? { midpoint: point(escales[1]) } : {}), destination: point(escales.at(-1)) } } });
+  const demandes = [];
+  const faux = (table) => async (url) => {
+    demandes.push(url);
+    const corps = table[url.replace(Vol.ADSBDB + '/', '')];
+    return corps ? { ok: true, status: 200, json: async () => corps } : { ok: false, status: url.includes('/callsign/QF9') ? 400 : 404 };
+  };
+  const table = { 'callsign/LY81': route('ELY81', 'TLV', 'BKK'), 'airline/QF': { response: [{ icao: 'QFA' }] }, 'callsign/QFA9': route('QFA9', 'MEL', 'PER', 'LHR') };
+  assert.deepEqual(await Vol.chercherRoute('LY81', 'TLV', faux(table)),
+    { statut: 'trouve', indicatif: 'ELY81', compagnie: 'Cie', escales: ['TLV', 'BKK'], de: 'TLV', vers: 'BKK' });
+  assert.equal((await Vol.chercherRoute('LY81', 'MEL', faux(table))).statut, 'autre_depart');
+  const qf = await Vol.chercherRoute('QF9', 'PER', faux(table));
+  assert.deepEqual([qf.statut, qf.de, qf.vers, qf.indicatif], ['trouve', 'PER', 'LHR', 'QFA9']);
+  assert.equal((await Vol.chercherRoute('QF9', null, faux(table))).vers, 'PER');
+  assert.equal((await Vol.chercherRoute('XX999', null, faux(table))).statut, 'introuvable');
+  assert.equal((await Vol.chercherRoute('nimporte', null, faux(table))).statut, 'invalide');
+  const panne = await Vol.chercherRoute('LY81', null, async () => ({ ok: false, status: 503 }));
+  assert.deepEqual(panne, { statut: 'erreur', raison: 'HTTP 503' });
+  // Seul le numéro part : ni position, ni aéroport de départ dans l'adresse.
+  assert.ok(demandes.every((u) => u.startsWith(Vol.ADSBDB + '/') && !u.includes('?')));
 });

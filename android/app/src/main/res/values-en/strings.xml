@@ -167,7 +167,7 @@
     <string name="onboarding_practice">Simply speaking</string>
     <string name="onboarding_practice_body">Hitbodedut means withdrawing alone for a while each day and speaking to Hashem in your own language, as you would to someone. No formula to recite, no level to reach.</string>
     <string name="onboarding_private">Nothing leaves this phone</string>
-    <string name="onboarding_private_body">The app only connects to the Internet if you turn on live flight tracking yourself; it then asks OpenSky Network for the aircraft in an approximate area, without sending the flight’s callsign. What you write stays on this phone, and only you can take it out, through the export.</string>
+    <string name="onboarding_private_body">The app only connects to the Internet when you ask it to: live flight tracking asks OpenSky Network for the aircraft in an approximate area, without sending the flight’s callsign; looking up a flight number sends only that number to adsbdb.com. What you write stays on this phone, and only you can take it out, through the export.</string>
     <string name="blocker_session_open_subtitle">Open hitbodedut, %1$s so far. The phone can wait.</string>
     <string name="session_done_title">You spoke with Hashem today</string>
     <string name="session_done_text">%1$s of hitbodedut. Tap to leave a note.</string>
@@ -1135,6 +1135,16 @@
     <string name="vol_carte_sous">Enter a flight: times are computed along the planned route, on the device.</string>
     <string name="vol_carte_vol">%1$s · %2$s → %3$s</string>
     <string name="vol_numero">Flight number (optional)</string>
+    <string name="vol_route_bouton">Find the arrival from the number</string>
+    <string name="vol_route_attente">Looking up the flight…</string>
+    <string name="vol_route_explication">When tapped, only the flight number is sent to adsbdb.com (free, no account). It returns the known stops and the radio callsign, not the times: enter those from your ticket.</string>
+    <string name="vol_route_trouvee">%1$s: %2$s. Departure %3$s, arrival %4$s. Route known to adsbdb.com, sometimes outdated: check it against your ticket.</string>
+    <string name="vol_route_autre_depart">According to adsbdb.com, %1$s flies %2$s and does not depart from %3$s. Check the number or the departure airport; the known route may be outdated.</string>
+    <string name="vol_route_inconnue">Airport %1$s, given by adsbdb.com, is not in the app’s list: choose it by hand.</string>
+    <string name="vol_route_introuvable">adsbdb.com does not know this flight number: choose the airports by hand.</string>
+    <string name="vol_route_invalide">Expected: the airline code then the number, for example LY81.</string>
+    <string name="vol_route_erreur">Lookup failed (%1$s). You can still choose the airports by hand.</string>
+    <string name="vol_source_adsbdb">Flight routes: adsbdb.com (data by David J. Taylor and Jim Mason)</string>
     <string name="vol_depart">Departure</string>
     <string name="vol_arrivee">Arrival</string>
     <string name="vol_choisir_aeroport">Choose an airport</string>
@@ -1218,7 +1228,7 @@
     <string name="vol_rappel_omer_titre">Sefirat HaOmer</string>
     <string name="vol_rappel_omer_texte">The stars come out below the aircraft: tonight is day %1$s of the Omer.</string>
     <string name="vol_direct_explication_opensky">Off by default. When on, it asks OpenSky Network, free and without an account, for the aircraft seen in a 10° square around the estimated position; the callsign stays on the phone, which looks for the flight there. Over the oceans, the aircraft is often not seen.</string>
-    <string name="vol_source_aeroports">Airports: OurAirports (public domain); time zones: timezone-boundary-builder (ODbL, © OpenStreetMap contributors)</string>
+    <string name="vol_source_aeroports">Airports: OurAirports (public domain); time zones: timezone-boundary-builder (ODbL, © OpenStreetMap contributors); Hebrew and French names: Wikidata (CC0)</string>
 
     <!-- La boussole de Jérusalem (28/10, design C). -->
     <string name="boussole_title">Direction of Jerusalem</string>
