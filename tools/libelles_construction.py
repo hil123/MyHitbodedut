@@ -15,6 +15,9 @@ RACINE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
 MAIN = os.path.join(RACINE, "android", "app", "src", "main")
 s = open(os.path.join(MAIN, "res", "values", "strings.xml"), encoding="utf-8").read()
 cles = sorted(set(re.findall(r'name="((?:ajout|fete|zman)_[a-z0-9_]+)"', s)))
+# Les clés sans chaîne propre, qui empruntent le libellé d'une autre (condition du siddour).
+ALIAS = {"ajout_embolismique_avant_nissan": "ajout_embolismique"}
+lignes = sorted([(k, k) for k in cles] + list(ALIAS.items()))
 sortie = '''package com.myhitbodedut
 
 /**
@@ -28,7 +31,7 @@ sortie = '''package com.myhitbodedut
  */
 object Libelles {
     fun res(cle: String): Int? = when (cle) {
-''' + "".join(f'        "{k}" -> R.string.{k}\n' for k in cles) + '''        else -> null
+''' + "".join(f'        "{k}" -> R.string.{v}\n' for k, v in lignes) + '''        else -> null
     }
 }
 '''
