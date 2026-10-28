@@ -1029,11 +1029,13 @@ function ecranLu(titre, contenu, { avecNusah = false, pied = null, bande = null,
 function riche(html) {
   const racine = document.createDocumentFragment();
   const pile = [racine];
-  for (const morceau of html.split(/(<\/?b>|<\/?small>|<br>)/)) {
+  for (const morceau of html.split(/(<\/?b>|<\/?small>|<br><br>|<br>)/)) {
     if (!morceau) continue;
     const ouvre = morceau.match(/^<(b|small)>$/);
     if (ouvre) { const el = document.createElement(ouvre[1]); pile.at(-1).append(el); pile.push(el); }
     else if (/^<\/(b|small)>$/.test(morceau)) { if (pile.length > 1) pile.pop(); }
+    // Une ligne vide dans un paragraphe (aération, 28/10) : un saut plus court qu'entre deux paragraphes.
+    else if (morceau === '<br><br>') pile.at(-1).append(h('span', { class: 'saut', 'aria-hidden': 'true' }));
     else if (morceau === '<br>') pile.at(-1).append(document.createElement('br'));
     else pile.at(-1).append(document.createTextNode(morceau));
   }

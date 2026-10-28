@@ -729,6 +729,7 @@ input[type="range"] { width: 100%; accent-color: var(--brand); }
 .ecran.lu.nuit { background: var(--lecture-nuit-fond, #000); color: var(--lecture-nuit-texte, #F2F0EA); }
 .ecran.lu.nuit .barre h1 { color: var(--lecture-nuit-texte, #F2F0EA); }
 .siddour .priere > b.premier-mot { font-size: 1.25em; }
+.saut { display: block; height: 10px; }
 .ecran.lu.nuit .lecture .verset, .ecran.lu.nuit .siddour .priere { color: var(--lecture-nuit-texte, #F2F0EA); }
 .ecran.lu.nuit .lecture .psaume-titre { color: var(--lecture-nuit-titre, #D6C28C); }
 .ecran.lu.nuit .siddour .consigne, .ecran.lu.nuit .indice, .ecran.lu.nuit .lecture .verset .num, .ecran.lu.nuit .lecture .arret { color: var(--lecture-nuit-discret, #A3A8A5); }

@@ -112,6 +112,12 @@ class SiddurLectureActivity : AppCompatActivity() {
         s.getSpans(0, minOf(1, s.length), android.text.style.StyleSpan::class.java)
             .firstOrNull { s.getSpanStart(it) == 0 && it.style == android.graphics.Typeface.BOLD }
             ?.let { s.setSpan(android.text.style.RelativeSizeSpan(1.25f), 0, s.getSpanEnd(it), android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE) }
+        // Une ligne vide dans un paragraphe (aération) : réduite, plus courte que l'écart entre deux paragraphes.
+        var i = s.indexOf("\n\n")
+        while (i >= 0) {
+            s.setSpan(android.text.style.RelativeSizeSpan(0.3f), i + 1, i + 2, android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+            i = s.indexOf("\n\n", i + 2)
+        }
         return s
     }
 
