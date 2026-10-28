@@ -585,7 +585,7 @@
     <string name="police_serif">עברי עם תגים</string>
     <string name="police_sans">ללא תגים</string>
     <string name="police_arrondie">מעוגל</string>
-    <string name="lecture_masque_info">הכפתור הוסתר. לחיצה ארוכה על הטקסט תחזיר אותו.</string>
+    <string name="lecture_masque_info">הכפתור הוסתר. נגיעה כפולה בטקסט תחזיר אותו.</string>
     <string name="lecture_annuler_masque">ביטול</string>
     <string name="lecture_taille">גודל הטקסט: %1$d%%</string>
     <string name="lecture_pourcent">%1$d%%</string>
@@ -713,6 +713,8 @@
     <string name="ajout_yom_tov_chabbat">יום טוב שחל בשבת</string>
     <string name="ajout_roch_hachana_chabbat">ראש השנה שחל בשבת</string>
     <string name="ajout_motsae_chabbat_yt">מוצאי שבת ויום טוב</string>
+    <string name="ajout_cheva_berakhot">שבע ברכות</string>
+    <string name="ajout_embolismique">שנה מעוברת (וּלְכַפָּרַת פֶּשַׁע)</string>
     <string name="ajout_beit_avel">בית האבל</string>
     <string name="siddur_seul">ביחיד</string>
     <string name="ajout_minyan">במניין</string>
@@ -1262,7 +1264,7 @@
     <string name="boussole_grand_cercle">הכיוון האמיתי (מעגל גדול): %1$d° %2$s</string>
     <string name="boussole_cap_constant">הכיוון על המפה (כיוון קבוע): %1$d° %2$s</string>
     <string name="boussole_distance">מרחק: %1$s ק״מ</string>
-    <string name="boussole_legende">התווית „ירושלים” עוקבת אחרי הכיוון האמיתי; הסימון הכחול המקווקו מראה את הכיוון על המפה, לידיעה בלבד.</string>
+    <string name="boussole_legende">התווית „ירושלים” (בשושנה, המחוג הזהוב) עוקבת אחרי הכיוון האמיתי; הסימון הכחול המקווקו מראה את הכיוון על המפה, לידיעה בלבד.</string>
     <string name="boussole_a_plat">החזיקו את הטלפון שטוח, הרחק מחפצי מתכת ומגנטים.</string>
     <string name="boussole_calibrer">המצפן אינו מדויק: ציירו באוויר את הספרה 8 עם הטלפון.</string>
     <string name="boussole_sans_capteur">בטלפון זה אין מצפן: הכיוון מוצג ביחס לצפון, למעלה.</string>
@@ -1277,6 +1279,8 @@
     <string name="boussole_affichage">תצוגת המצפן</string>
     <string name="boussole_affichage_hassid">החסיד מסתובב (ברירת מחדל)</string>
     <string name="boussole_affichage_rose">שושנת רוחות</string>
+    <!-- Relance la localisation précise (ChoixLieu.positionExacte). -->
+    <string name="boussole_position_exacte">מיקום מדויק</string>
     <string-array name="boussole_cardinaux">
         <item>צ</item>
         <item>מז</item>

@@ -3013,6 +3013,96 @@
     "empreinte": "הרחמן הוא ינחילנו יום שכלו טוב:",
     "g": 9,
     "racine": "yom_tov"
+   },
+   {
+    "sorte": "bloc",
+    "s": 0,
+    "si": "cheva_berakhot",
+    "b": 58,
+    "empreinte": "בסעודת שבע ברכות, אחר ברכת המזון:",
+    "g": 10,
+    "racine": "cheva_berakhot"
+   },
+   {
+    "sorte": "bloc",
+    "s": 0,
+    "si": "cheva_berakhot",
+    "b": 59,
+    "empreinte": "ברוך אתה יהוה, אלהינו מלך העולם, שהכל בר",
+    "g": 10,
+    "racine": "cheva_berakhot"
+   },
+   {
+    "sorte": "bloc",
+    "s": 0,
+    "si": "cheva_berakhot",
+    "b": 60,
+    "empreinte": "ברוך אתה יהוה, אלהינו מלך העולם, יוצר הא",
+    "g": 10,
+    "racine": "cheva_berakhot"
+   },
+   {
+    "sorte": "bloc",
+    "s": 0,
+    "si": "cheva_berakhot",
+    "b": 61,
+    "empreinte": "ברוך אתה יהוה, אלהינו מלך העולם, אשר יצר",
+    "g": 10,
+    "racine": "cheva_berakhot"
+   },
+   {
+    "sorte": "bloc",
+    "s": 0,
+    "si": "cheva_berakhot",
+    "b": 62,
+    "empreinte": "שוש תשיש ותגל עקרה בקבוץ בניה לתוכה במהר",
+    "g": 10,
+    "racine": "cheva_berakhot"
+   },
+   {
+    "sorte": "bloc",
+    "s": 0,
+    "si": "cheva_berakhot",
+    "b": 63,
+    "empreinte": "שמח תשמח רעים אהובים כשמחך יצירך בגן עדן",
+    "g": 10,
+    "racine": "cheva_berakhot"
+   },
+   {
+    "sorte": "bloc",
+    "s": 0,
+    "si": "cheva_berakhot",
+    "b": 64,
+    "empreinte": "ברוך אתה יהוה, אלהינו מלך העולם, אשר ברא",
+    "g": 10,
+    "racine": "cheva_berakhot"
+   },
+   {
+    "sorte": "bloc",
+    "s": 0,
+    "si": "cheva_berakhot",
+    "b": 65,
+    "empreinte": "המברך ברכת המזון נוטל הכוס שבירך עליו ומ",
+    "g": 10,
+    "racine": "cheva_berakhot"
+   },
+   {
+    "sorte": "bloc",
+    "s": 0,
+    "si": "cheva_berakhot",
+    "b": 66,
+    "empreinte": "סברי מרנן ועונים: לחיים.",
+    "g": 10,
+    "racine": "cheva_berakhot"
+   },
+   {
+    "sorte": "bloc",
+    "s": 0,
+    "si": "cheva_berakhot",
+    "b": 67,
+    "empreinte": "ברוך אתה יהוה, אלהינו מלך העולם, בורא פר",
+    "g": 10,
+    "racine": "cheva_berakhot"
    }
   ],
   "meen_chaloch": [
@@ -3118,6 +3208,15 @@
     "empreinte": "כתר יתנו לך, יהוה אלהינו, מלאכים המוני מ",
     "g": 0,
     "racine": "minyan"
+   },
+   {
+    "sorte": "indice",
+    "s": 0,
+    "si": "embolismique",
+    "b": 10,
+    "empreinte": "אלהינו ואלהי אבותינו, חדש עלינו את החדש ",
+    "texte": "וּלְכַפָּרַת פֶּשַׁע",
+    "retire": " <small><small>בשנה מעוברת אומרים:</small> וּלְכַפָּרַת פֶּשַׁע.</small>"
    },
    {
     "sorte": "bloc",
@@ -7392,91 +7491,91 @@
    {
     "sorte": "bloc",
     "s": 0,
-    "si": "oubli",
+    "si": "cheva_berakhot",
     "b": 74,
-    "empreinte": "דיני שכחה:",
+    "empreinte": "בסעודת שבע ברכות, אחר ברכת המזון:",
     "g": 5,
-    "racine": "oubli"
+    "racine": "cheva_berakhot"
    },
    {
     "sorte": "bloc",
     "s": 0,
-    "si": "oubli",
+    "si": "cheva_berakhot",
     "b": 75,
-    "empreinte": "בשבת אומר:",
+    "empreinte": "ברוך אתה יהוה אלהינו מלך העולם, שהכל ברא",
     "g": 5,
-    "racine": "oubli"
+    "racine": "cheva_berakhot"
    },
    {
     "sorte": "bloc",
     "s": 0,
-    "si": "oubli",
+    "si": "cheva_berakhot",
     "b": 76,
-    "empreinte": "ברוך אתה יהוה אלהינו מלך העולם אשר נתן ש",
+    "empreinte": "ברוך אתה יהוה אלהינו מלך העולם, יוצר האד",
     "g": 5,
-    "racine": "oubli"
+    "racine": "cheva_berakhot"
    },
    {
     "sorte": "bloc",
     "s": 0,
-    "si": "oubli",
+    "si": "cheva_berakhot",
     "b": 77,
-    "empreinte": "בראש חודש:",
+    "empreinte": "ברוך אתה יהוה אלהינו מלך העולם, אשר יצר ",
     "g": 5,
-    "racine": "oubli"
+    "racine": "cheva_berakhot"
    },
    {
     "sorte": "bloc",
     "s": 0,
-    "si": "oubli",
+    "si": "cheva_berakhot",
     "b": 78,
-    "empreinte": "ברוך אתה יהוה אלהינו מלך העולם אשר נתן ר",
+    "empreinte": "שוש תשיש ותגל העקרה, בקבוץ בניה לתוכה במ",
     "g": 5,
-    "racine": "oubli"
+    "racine": "cheva_berakhot"
    },
    {
     "sorte": "bloc",
     "s": 0,
-    "si": "oubli",
+    "si": "cheva_berakhot",
     "b": 79,
-    "empreinte": "בראש חודש שחל בשבת:",
+    "empreinte": "שמח תשמח רעים אהובים כשמחך יצירך בגן עדן",
     "g": 5,
-    "racine": "oubli"
+    "racine": "cheva_berakhot"
    },
    {
     "sorte": "bloc",
     "s": 0,
-    "si": "oubli",
+    "si": "cheva_berakhot",
     "b": 80,
-    "empreinte": "ברוך אתה יהוה אלהינו מלך העולם אשר נתן ש",
+    "empreinte": "ברוך אתה יהוה אלהינו מלך העולם, אשר ברא ",
     "g": 5,
-    "racine": "oubli"
+    "racine": "cheva_berakhot"
    },
    {
     "sorte": "bloc",
     "s": 0,
-    "si": "oubli",
+    "si": "cheva_berakhot",
     "b": 81,
-    "empreinte": "ביו״ט אומר:",
+    "empreinte": "המברך ברכת המזון נוטל הכוס שבירך עליו ומ",
     "g": 5,
-    "racine": "oubli"
+    "racine": "cheva_berakhot"
    },
    {
     "sorte": "bloc",
     "s": 0,
-    "si": "oubli",
+    "si": "cheva_berakhot",
     "b": 82,
-    "empreinte": "ברוך אתה יהוה אלהינו מלך העולם אשר נתן י",
+    "empreinte": "ברוך אתה יהוה אלהינו מלך העולם, בורא פרי",
     "g": 5,
-    "racine": "oubli"
+    "racine": "cheva_berakhot"
    },
    {
     "sorte": "bloc",
     "s": 0,
     "si": "oubli",
     "b": 83,
-    "empreinte": "ביו״ט שחל בשבת:",
-    "g": 5,
+    "empreinte": "דיני שכחה:",
+    "g": 6,
     "racine": "oubli"
    },
    {
@@ -7484,8 +7583,8 @@
     "s": 0,
     "si": "oubli",
     "b": 84,
-    "empreinte": "ברוך אתה יהוה אלהינו מלך העולם אשר נתן ש",
-    "g": 5,
+    "empreinte": "בשבת אומר:",
+    "g": 6,
     "racine": "oubli"
    },
    {
@@ -7493,8 +7592,8 @@
     "s": 0,
     "si": "oubli",
     "b": 85,
-    "empreinte": "בראש השנה:",
-    "g": 5,
+    "empreinte": "ברוך אתה יהוה אלהינו מלך העולם אשר נתן ש",
+    "g": 6,
     "racine": "oubli"
    },
    {
@@ -7502,8 +7601,8 @@
     "s": 0,
     "si": "oubli",
     "b": 86,
-    "empreinte": "ברוך אתה יהוה אלהינו מלך העולם אשר נתן י",
-    "g": 5,
+    "empreinte": "בראש חודש:",
+    "g": 6,
     "racine": "oubli"
    },
    {
@@ -7511,8 +7610,8 @@
     "s": 0,
     "si": "oubli",
     "b": 87,
-    "empreinte": "בראש השנה שחל בשבת:",
-    "g": 5,
+    "empreinte": "ברוך אתה יהוה אלהינו מלך העולם אשר נתן ר",
+    "g": 6,
     "racine": "oubli"
    },
    {
@@ -7520,8 +7619,89 @@
     "s": 0,
     "si": "oubli",
     "b": 88,
+    "empreinte": "בראש חודש שחל בשבת:",
+    "g": 6,
+    "racine": "oubli"
+   },
+   {
+    "sorte": "bloc",
+    "s": 0,
+    "si": "oubli",
+    "b": 89,
     "empreinte": "ברוך אתה יהוה אלהינו מלך העולם אשר נתן ש",
-    "g": 5,
+    "g": 6,
+    "racine": "oubli"
+   },
+   {
+    "sorte": "bloc",
+    "s": 0,
+    "si": "oubli",
+    "b": 90,
+    "empreinte": "ביו״ט אומר:",
+    "g": 6,
+    "racine": "oubli"
+   },
+   {
+    "sorte": "bloc",
+    "s": 0,
+    "si": "oubli",
+    "b": 91,
+    "empreinte": "ברוך אתה יהוה אלהינו מלך העולם אשר נתן י",
+    "g": 6,
+    "racine": "oubli"
+   },
+   {
+    "sorte": "bloc",
+    "s": 0,
+    "si": "oubli",
+    "b": 92,
+    "empreinte": "ביו״ט שחל בשבת:",
+    "g": 6,
+    "racine": "oubli"
+   },
+   {
+    "sorte": "bloc",
+    "s": 0,
+    "si": "oubli",
+    "b": 93,
+    "empreinte": "ברוך אתה יהוה אלהינו מלך העולם אשר נתן ש",
+    "g": 6,
+    "racine": "oubli"
+   },
+   {
+    "sorte": "bloc",
+    "s": 0,
+    "si": "oubli",
+    "b": 94,
+    "empreinte": "בראש השנה:",
+    "g": 6,
+    "racine": "oubli"
+   },
+   {
+    "sorte": "bloc",
+    "s": 0,
+    "si": "oubli",
+    "b": 95,
+    "empreinte": "ברוך אתה יהוה אלהינו מלך העולם אשר נתן י",
+    "g": 6,
+    "racine": "oubli"
+   },
+   {
+    "sorte": "bloc",
+    "s": 0,
+    "si": "oubli",
+    "b": 96,
+    "empreinte": "בראש השנה שחל בשבת:",
+    "g": 6,
+    "racine": "oubli"
+   },
+   {
+    "sorte": "bloc",
+    "s": 0,
+    "si": "oubli",
+    "b": 97,
+    "empreinte": "ברוך אתה יהוה אלהינו מלך העולם אשר נתן ש",
+    "g": 6,
     "racine": "oubli"
    }
   ],
@@ -7644,6 +7824,15 @@
     "empreinte": "חזן: לדור ודור נגיד גדלך. ולנצח נצחים קד",
     "g": 0,
     "racine": "minyan"
+   },
+   {
+    "sorte": "indice",
+    "s": 0,
+    "si": "embolismique_avant_nissan",
+    "b": 13,
+    "empreinte": "אלהינו ואלהי אבותינו, חדש עלינו את החדש ",
+    "texte": "וּלְכַפָּרַת פֶּשַׁע",
+    "retire": ", <small>בשנת העיבור עד חדש ניסן:</small> <b>וּלְכַפָּרַת פֶּשַׁע</b>"
    },
    {
     "sorte": "bloc",
@@ -12401,91 +12590,91 @@
    {
     "sorte": "bloc",
     "s": 0,
-    "si": "oubli",
+    "si": "cheva_berakhot",
     "b": 76,
-    "empreinte": "דיני שכחה:",
+    "empreinte": "בסעודת שבע ברכות, אחר ברכת המזון:",
     "g": 10,
-    "racine": "oubli"
+    "racine": "cheva_berakhot"
    },
    {
     "sorte": "bloc",
     "s": 0,
-    "si": "oubli",
+    "si": "cheva_berakhot",
     "b": 77,
-    "empreinte": "בשבת אומר:",
+    "empreinte": "ברוך אתה יהוה אלהינו מלך העולם, שהכל ברא",
     "g": 10,
-    "racine": "oubli"
+    "racine": "cheva_berakhot"
    },
    {
     "sorte": "bloc",
     "s": 0,
-    "si": "oubli",
+    "si": "cheva_berakhot",
     "b": 78,
-    "empreinte": "ברוך אתה יהוה אלהינו מלך העולם אשר נתן ש",
+    "empreinte": "ברוך אתה יהוה אלהינו מלך העולם, יוצר האד",
     "g": 10,
-    "racine": "oubli"
+    "racine": "cheva_berakhot"
    },
    {
     "sorte": "bloc",
     "s": 0,
-    "si": "oubli",
+    "si": "cheva_berakhot",
     "b": 79,
-    "empreinte": "בראש חודש:",
+    "empreinte": "ברוך אתה יהוה אלהינו מלך העולם, אשר יצר ",
     "g": 10,
-    "racine": "oubli"
+    "racine": "cheva_berakhot"
    },
    {
     "sorte": "bloc",
     "s": 0,
-    "si": "oubli",
+    "si": "cheva_berakhot",
     "b": 80,
-    "empreinte": "ברוך אתה יהוה אלהינו מלך העולם אשר נתן ר",
+    "empreinte": "שוש תשיש ותגל עקרה, בקבוץ בניה לתוכה בשמ",
     "g": 10,
-    "racine": "oubli"
+    "racine": "cheva_berakhot"
    },
    {
     "sorte": "bloc",
     "s": 0,
-    "si": "oubli",
+    "si": "cheva_berakhot",
     "b": 81,
-    "empreinte": "ביו״ט אומר:",
+    "empreinte": "שמח תשמח רעים האהובים, כשמחך יצירך בגן ע",
     "g": 10,
-    "racine": "oubli"
+    "racine": "cheva_berakhot"
    },
    {
     "sorte": "bloc",
     "s": 0,
-    "si": "oubli",
+    "si": "cheva_berakhot",
     "b": 82,
-    "empreinte": "ברוך אתה יהוה אלהינו מלך העולם אשר נתן י",
+    "empreinte": "ברוך אתה יהוה אלהינו מלך העולם, אשר ברא ",
     "g": 10,
-    "racine": "oubli"
+    "racine": "cheva_berakhot"
    },
    {
     "sorte": "bloc",
     "s": 0,
-    "si": "oubli",
+    "si": "cheva_berakhot",
     "b": 83,
-    "empreinte": "ביו״ט שחל בשבת:",
+    "empreinte": "המברך ברכת המזון נוטל הכוס שבירך עליו ומ",
     "g": 10,
-    "racine": "oubli"
+    "racine": "cheva_berakhot"
    },
    {
     "sorte": "bloc",
     "s": 0,
-    "si": "oubli",
+    "si": "cheva_berakhot",
     "b": 84,
-    "empreinte": "ברוך אתה יהוה אלהינו מלך העולם אשר נתן ש",
+    "empreinte": "ברוך אתה יהוה אלהינו מלך העולם, בורא פרי",
     "g": 10,
-    "racine": "oubli"
+    "racine": "cheva_berakhot"
    },
    {
     "sorte": "bloc",
     "s": 0,
     "si": "oubli",
     "b": 85,
-    "empreinte": "בראש השנה:",
-    "g": 10,
+    "empreinte": "דיני שכחה:",
+    "g": 11,
     "racine": "oubli"
    },
    {
@@ -12493,8 +12682,8 @@
     "s": 0,
     "si": "oubli",
     "b": 86,
-    "empreinte": "ברוך אתה יהוה אלהינו מלך העולם אשר נתן י",
-    "g": 10,
+    "empreinte": "בשבת אומר:",
+    "g": 11,
     "racine": "oubli"
    },
    {
@@ -12502,8 +12691,8 @@
     "s": 0,
     "si": "oubli",
     "b": 87,
-    "empreinte": "בראש השנה שחל בשבת:",
-    "g": 10,
+    "empreinte": "ברוך אתה יהוה אלהינו מלך העולם אשר נתן ש",
+    "g": 11,
     "racine": "oubli"
    },
    {
@@ -12511,8 +12700,89 @@
     "s": 0,
     "si": "oubli",
     "b": 88,
+    "empreinte": "בראש חודש:",
+    "g": 11,
+    "racine": "oubli"
+   },
+   {
+    "sorte": "bloc",
+    "s": 0,
+    "si": "oubli",
+    "b": 89,
+    "empreinte": "ברוך אתה יהוה אלהינו מלך העולם אשר נתן ר",
+    "g": 11,
+    "racine": "oubli"
+   },
+   {
+    "sorte": "bloc",
+    "s": 0,
+    "si": "oubli",
+    "b": 90,
+    "empreinte": "ביו״ט אומר:",
+    "g": 11,
+    "racine": "oubli"
+   },
+   {
+    "sorte": "bloc",
+    "s": 0,
+    "si": "oubli",
+    "b": 91,
+    "empreinte": "ברוך אתה יהוה אלהינו מלך העולם אשר נתן י",
+    "g": 11,
+    "racine": "oubli"
+   },
+   {
+    "sorte": "bloc",
+    "s": 0,
+    "si": "oubli",
+    "b": 92,
+    "empreinte": "ביו״ט שחל בשבת:",
+    "g": 11,
+    "racine": "oubli"
+   },
+   {
+    "sorte": "bloc",
+    "s": 0,
+    "si": "oubli",
+    "b": 93,
     "empreinte": "ברוך אתה יהוה אלהינו מלך העולם אשר נתן ש",
-    "g": 10,
+    "g": 11,
+    "racine": "oubli"
+   },
+   {
+    "sorte": "bloc",
+    "s": 0,
+    "si": "oubli",
+    "b": 94,
+    "empreinte": "בראש השנה:",
+    "g": 11,
+    "racine": "oubli"
+   },
+   {
+    "sorte": "bloc",
+    "s": 0,
+    "si": "oubli",
+    "b": 95,
+    "empreinte": "ברוך אתה יהוה אלהינו מלך העולם אשר נתן י",
+    "g": 11,
+    "racine": "oubli"
+   },
+   {
+    "sorte": "bloc",
+    "s": 0,
+    "si": "oubli",
+    "b": 96,
+    "empreinte": "בראש השנה שחל בשבת:",
+    "g": 11,
+    "racine": "oubli"
+   },
+   {
+    "sorte": "bloc",
+    "s": 0,
+    "si": "oubli",
+    "b": 97,
+    "empreinte": "ברוך אתה יהוה אלהינו מלך העולם אשר נתן ש",
+    "g": 11,
     "racine": "oubli"
    }
   ],
@@ -12557,11 +12827,29 @@
   "moussaf_rosh_hodech": [
    {
     "sorte": "bloc",
+    "s": 1,
+    "si": "morid_hatal",
+    "b": 1,
+    "empreinte": "בקיץ - מוריד הטל:",
+    "g": 0,
+    "racine": "morid_hatal"
+   },
+   {
+    "sorte": "bloc",
+    "s": 1,
+    "si": "machiv_harouah",
+    "b": 2,
+    "empreinte": "בחורף - משיב הרוח ומוריד הגשם:",
+    "g": 1,
+    "racine": "machiv_harouah"
+   },
+   {
+    "sorte": "bloc",
     "s": 2,
     "si": "minyan",
     "b": 0,
     "empreinte": "בחזרת הש״ץ אומרים כאן קדושה:",
-    "g": 0,
+    "g": 2,
     "racine": "minyan"
    },
    {
@@ -12570,7 +12858,7 @@
     "si": "minyan",
     "b": 1,
     "empreinte": "נקדש את שמך בעולם. כשם שמקדישים אותו בשמ",
-    "g": 0,
+    "g": 2,
     "racine": "minyan"
    },
    {
@@ -12579,7 +12867,7 @@
     "si": "minyan",
     "b": 2,
     "empreinte": "קדוש קדוש קדוש יהוה צבאות מלא כל הארץ כב",
-    "g": 0,
+    "g": 2,
     "racine": "minyan"
    },
    {
@@ -12588,7 +12876,7 @@
     "si": "minyan",
     "b": 3,
     "empreinte": "לעמתם ברוך יאמרו:",
-    "g": 0,
+    "g": 2,
     "racine": "minyan"
    },
    {
@@ -12597,7 +12885,7 @@
     "si": "minyan",
     "b": 4,
     "empreinte": "ברוך כבוד יהוה ממקומו:",
-    "g": 0,
+    "g": 2,
     "racine": "minyan"
    },
    {
@@ -12606,7 +12894,7 @@
     "si": "minyan",
     "b": 5,
     "empreinte": "ובדברי קדשך כתוב לאמר:",
-    "g": 0,
+    "g": 2,
     "racine": "minyan"
    },
    {
@@ -12615,7 +12903,7 @@
     "si": "minyan",
     "b": 6,
     "empreinte": "ימלך יהוה לעולם אלהיך ציון לדר ודר הללוי",
-    "g": 0,
+    "g": 2,
     "racine": "minyan"
    },
    {
@@ -12624,7 +12912,7 @@
     "si": "minyan",
     "b": 7,
     "empreinte": "לש״ץ - לדור ודור נגיד גדלך ולנצח נצחים ק",
-    "g": 0,
+    "g": 2,
     "racine": "minyan"
    },
    {
@@ -12637,12 +12925,21 @@
     "retire": "<small>בעשי״ת הַמֶּלֶךְ</small> "
    },
    {
+    "sorte": "indice",
+    "s": 3,
+    "si": "embolismique_avant_nissan",
+    "b": 4,
+    "empreinte": "אלהינו ואלהי אבותינו. חדש עלינו את החדש ",
+    "texte": "וּלְכַפָּרַת פֶּשַׁע",
+    "retire": " <small>בשנת העיבור עד חודש ניסן וּלְכַפָּרַת פָּשַׁע</small>."
+   },
+   {
     "sorte": "bloc",
     "s": 5,
     "si": "minyan",
     "b": 3,
     "empreinte": "מודים דרבנן:",
-    "g": 1,
+    "g": 3,
     "racine": "minyan"
    },
    {
@@ -12651,7 +12948,7 @@
     "si": "minyan",
     "b": 4,
     "empreinte": "מודים אנחנו לך. שאתה הוא יהוה אלהינו ואל",
-    "g": 1,
+    "g": 3,
     "racine": "minyan"
    },
    {
@@ -12660,7 +12957,7 @@
     "si": "hanouka",
     "b": 5,
     "empreinte": "בחנוכה אומרים זה:",
-    "g": 2,
+    "g": 4,
     "racine": "hanouka"
    },
    {
@@ -12669,7 +12966,7 @@
     "si": "hanouka",
     "b": 6,
     "empreinte": "על הנסים ועל הפרקן ועל הגבורות ועל התשוע",
-    "g": 2,
+    "g": 4,
     "racine": "hanouka"
    },
    {
@@ -12678,7 +12975,7 @@
     "si": "hanouka",
     "b": 7,
     "empreinte": "לחנוכה:",
-    "g": 2,
+    "g": 4,
     "racine": "hanouka"
    },
    {
@@ -12687,7 +12984,7 @@
     "si": "hanouka",
     "b": 8,
     "empreinte": "בימי מתתיהו בן יוחנן כהן גדול חשמונאי וב",
-    "g": 2,
+    "g": 4,
     "racine": "hanouka"
    },
    {
@@ -12696,7 +12993,7 @@
     "si": "hanouka",
     "b": 9,
     "empreinte": "ואתה ברחמיך הרבים עמדת להם בעת צרתם. רבת",
-    "g": 2,
+    "g": 4,
     "racine": "hanouka"
    },
    {
@@ -12705,7 +13002,7 @@
     "si": "hanouka",
     "b": 10,
     "empreinte": "ואחר כן באו בניך לדביר ביתך. ופנו את היכ",
-    "g": 2,
+    "g": 4,
     "racine": "hanouka"
    },
    {
@@ -12714,7 +13011,7 @@
     "si": "hanouka",
     "b": 11,
     "empreinte": "ועל כלם יתברך ויתרומם שמך מלכנו תמיד לעו",
-    "g": 2,
+    "g": 4,
     "racine": "hanouka"
    },
    {
@@ -12723,7 +13020,7 @@
     "si": "hanouka",
     "b": 12,
     "empreinte": "וכל החיים יודוך סלה. ויהללו את שמך באמת ",
-    "g": 2,
+    "g": 4,
     "racine": "hanouka"
    },
    {
@@ -12732,7 +13029,7 @@
     "si": "hanouka",
     "b": 13,
     "empreinte": "ברוך אתה יהוה. הטוב שמך ולך נאה להודות:",
-    "g": 2,
+    "g": 4,
     "racine": "hanouka"
    },
    {
@@ -12741,7 +13038,7 @@
     "si": "minyan",
     "b": 0,
     "empreinte": "ברכת כהנים:",
-    "g": 3,
+    "g": 5,
     "racine": "minyan"
    },
    {
@@ -12750,7 +13047,7 @@
     "si": "minyan",
     "b": 1,
     "empreinte": "אלהינו ואלהי אבותינו. ברכנו בברכה המשלשת",
-    "g": 3,
+    "g": 5,
     "racine": "minyan"
    },
    {
@@ -12759,7 +13056,7 @@
     "si": "minyan",
     "b": 2,
     "empreinte": "יברכך יהוה וישמרך:",
-    "g": 3,
+    "g": 5,
     "racine": "minyan"
    },
    {
@@ -12768,7 +13065,7 @@
     "si": "minyan",
     "b": 3,
     "empreinte": "יאר יהוה פניו אליך ויחנך:",
-    "g": 3,
+    "g": 5,
     "racine": "minyan"
    },
    {
@@ -12777,7 +13074,7 @@
     "si": "minyan",
     "b": 4,
     "empreinte": "ישא יהוה פניו אליך וישם לך שלום:",
-    "g": 3,
+    "g": 5,
     "racine": "minyan"
    },
    {
@@ -12786,7 +13083,7 @@
     "si": "minyan",
     "b": 5,
     "empreinte": "והש״ץ ממשיך \"שים שלום\":",
-    "g": 3,
+    "g": 5,
     "racine": "minyan"
    },
    {
@@ -12795,7 +13092,7 @@
     "si": "minyan",
     "b": 6,
     "empreinte": "אם עלו כהנים לדוכן קוראים להם - כהנים:",
-    "g": 3,
+    "g": 5,
     "racine": "minyan"
    },
    {
@@ -12804,7 +13101,7 @@
     "si": "minyan",
     "b": 7,
     "empreinte": "והכהנים מברכים:",
-    "g": 3,
+    "g": 5,
     "racine": "minyan"
    },
    {
@@ -12813,7 +13110,7 @@
     "si": "minyan",
     "b": 8,
     "empreinte": "ברוך אתה יהוה אלהינו מלך העולם אשר קדשנו",
-    "g": 3,
+    "g": 5,
     "racine": "minyan"
    },
    {
@@ -12822,7 +13119,7 @@
     "si": "minyan",
     "b": 9,
     "empreinte": "יברכך יהוה וישמרך:",
-    "g": 3,
+    "g": 5,
     "racine": "minyan"
    },
    {
@@ -12831,7 +13128,7 @@
     "si": "minyan",
     "b": 10,
     "empreinte": "והצבור עונים:",
-    "g": 3,
+    "g": 5,
     "racine": "minyan"
    },
    {
@@ -12840,7 +13137,7 @@
     "si": "minyan",
     "b": 11,
     "empreinte": "אמן:",
-    "g": 3,
+    "g": 5,
     "racine": "minyan"
    },
    {
@@ -12849,7 +13146,7 @@
     "si": "minyan",
     "b": 12,
     "empreinte": "יאר יהוה פניו אליך ויחנך:",
-    "g": 3,
+    "g": 5,
     "racine": "minyan"
    },
    {
@@ -12858,7 +13155,7 @@
     "si": "minyan",
     "b": 13,
     "empreinte": "והצבור עונים:",
-    "g": 3,
+    "g": 5,
     "racine": "minyan"
    },
    {
@@ -12867,7 +13164,7 @@
     "si": "minyan",
     "b": 14,
     "empreinte": "אמן:",
-    "g": 3,
+    "g": 5,
     "racine": "minyan"
    },
    {
@@ -12876,7 +13173,7 @@
     "si": "minyan",
     "b": 15,
     "empreinte": "ישא יהוה פניו אליך וישם לך שלום:",
-    "g": 3,
+    "g": 5,
     "racine": "minyan"
    },
    {
@@ -12885,7 +13182,7 @@
     "si": "minyan",
     "b": 16,
     "empreinte": "והצבור עונים:",
-    "g": 3,
+    "g": 5,
     "racine": "minyan"
    },
    {
@@ -12894,7 +13191,7 @@
     "si": "minyan",
     "b": 17,
     "empreinte": "אמן:",
-    "g": 3,
+    "g": 5,
     "racine": "minyan"
    },
    {
@@ -12903,7 +13200,7 @@
     "si": "minyan",
     "b": 18,
     "empreinte": "הקהל - אדיר במרום שוכן בגבורה אתה שלום ו",
-    "g": 3,
+    "g": 5,
     "racine": "minyan"
    }
   ]

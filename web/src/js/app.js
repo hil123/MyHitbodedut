@@ -12,6 +12,8 @@ import { creeStore, memoire } from './store.js';
 import { isoLocal } from './calendrier.js';
 import { JERUSALEM_GEONAMES, RAPPELS_TEFILA, dansIsrael, USAGES_LEVANA, aJerusalem, calendrier, jour as jourJuif, jourDeLaPriere, levana, rappelsTefila, usageLevana } from './calendrier-juif.js';
 import { conditionsPour, index as indexAjouts, libelleJour, vrai as ajoutVrai } from './siddur-jour.js';
+import { aerer } from './aeration.js';
+import { distanceKm } from './direction.js';
 import * as Paliers from './paliers.js';
 import * as Trophees from './trophees.js';
 import { FORMES, ICONES } from './trophees-formes.js';
@@ -675,8 +677,8 @@ function pastille(libelle, valeur, onclick) {
     h('span', { class: 'libelle' }, libelle), h('span', { class: 'valeur' }, valeur));
 }
 
-function ligne({ nom, etat, onclick, aVenir = false, fin = null }) {
-  return h('button', { class: `ligne${aVenir ? ' a-venir' : ''}`, onclick, 'aria-disabled': aVenir ? 'true' : null },
+function ligne({ nom, etat, onclick, aVenir = false, fin = null, class: classe = '' }) {
+  return h('button', { class: `ligne${aVenir ? ' a-venir' : ''}${classe ? ` ${classe}` : ''}`, onclick, 'aria-disabled': aVenir ? 'true' : null },
     h('span', { class: 'corps' }, h('div', { class: 'nom' }, nom), etat ? h('div', { class: 'etat' }, etat) : null),
     fin, h('span', { class: 'chevron', 'aria-hidden': 'true' }));
 }
@@ -749,6 +751,8 @@ function ecranTehilim() {
   return h('div', { class: 'ecran' }, barre(tr.t('tehilim_title')),
     h('div', { class: 'defile' }, h('div', { class: 'contenu' },
       versets ? h('p', { class: 'indice' }, tr.t('tehilim_count', 150, versets.toLocaleString(tr.langue))) : null,
+      // Les marque-pages des Tehilim (28/10), en tête : la même feuille que la Bibliothèque.
+      ...[ligneSignets('t')].filter(Boolean).map((l) => h('div', { class: 'carte' }, l)),
       h('div', { class: 'carte' },
         ligne({ nom: tr.t('tehilim_month'), etat: tr.t('tehilim_month_state', nombreTehilim(jour), libellePortion(portion)), onclick: () => lire(portion) }),
         ligne({ nom: tr.t('tehilim_week'), etat: tr.t('tehilim_week_state', nomJour.charAt(0).toLocaleUpperCase(tr.langue) + nomJour.slice(1), libellePortion(semaine)), onclick: () => lire(semaine) })),
@@ -756,6 +760,26 @@ function ecranTehilim() {
       h('div', { class: 'grille-psaumes' }, Array.from({ length: 150 }, (_, i) => i + 1).map((n) =>
         h('button', { class: 'case-psaume', 'aria-label': libellePortion(CycleTehilim.portion(n, n)), onclick: () => lire(CycleTehilim.portion(n, n)) },
           nombreTehilim(n)))))));
+}
+
+/** La clé des marque-pages des Tehilim (28/10) : le psaume en section, le verset en bloc. */
+const CLE_TEHILIM = 't:tehilim';
+
+/** Un verset ; un appui long le marque ou le démarque, comme un paragraphe du siddour. */
+function verset(n, v, texte) {
+  const marque = () => store.marques().some((m) => m.cle === CLE_TEHILIM && m.section === n && m.bloc === v);
+  const p = h('p', { class: `verset${marque() ? ' marque-page' : ''}`, 'data-place': `${n}:${v}` },
+    h('span', { class: 'num', 'aria-hidden': 'true' }, `${Reference.lettres(v)} `), texte);
+  let minuteur = null;
+  const poser = () => {
+    const pose = store.basculerMarque({ cle: CLE_TEHILIM, nusah: '', section: n, bloc: v, apercu: `${Reference.lettres(n)}, ${Reference.lettres(v)} · ${apercuMarque(texte, 5)}` });
+    p.classList.toggle('marque-page', pose);
+    signale(tr.t(pose ? 'marque_posee' : 'marque_retiree'));
+  };
+  p.addEventListener('contextmenu', (e) => { e.preventDefault(); clearTimeout(minuteur); poser(); });
+  p.addEventListener('touchstart', () => { minuteur = setTimeout(() => { minuteur = null; poser(); }, 550); }, { passive: true });
+  for (const ev of ['touchend', 'touchmove', 'touchcancel']) p.addEventListener(ev, () => clearTimeout(minuteur), { passive: true });
+  return p;
 }
 
 function ecranLecture() {
@@ -771,15 +795,16 @@ function ecranLecture() {
     const quels = CycleTehilim.versets(p, n, tous.length);
     total += quels.length;
     blocs.push(h('h2', { class: 'psaume-titre', lang: 'he', dir: 'rtl' }, tr.t('tikkun_psalm_he', Reference.lettres(n))));
-    blocs.push(h('div', { class: 'psaume', lang: 'he', dir: 'rtl' }, quels.map((v) =>
-      h('p', { class: 'verset' }, h('span', { class: 'num', 'aria-hidden': 'true' }, `${Reference.lettres(v)} `), tous[v - 1]))));
+    blocs.push(h('div', { class: 'psaume', lang: 'he', dir: 'rtl' }, quels.map((v) => verset(n, v, tous[v - 1]))));
   }
   const aller = (n) => { lecture = CycleTehilim.portion(n, n); rendre(); app.querySelector('.defile').scrollTop = 0; };
-  return ecranLu(libellePortion(p), h('div', { class: 'contenu lecture' },
+  const ecran = ecranLu(libellePortion(p), h('div', { class: 'contenu lecture' },
       h('p', { class: 'indice' }, tr.p('tehilim_verses', total, total)),
       ...blocs), { avecNusah: false, pied: seul ? h('div', { class: 'lecture-nav' },
       h('button', { class: 'secondaire', style: p.debut > 1 ? null : 'visibility:hidden', onclick: () => aller(p.debut - 1) }, tr.t('tehilim_previous')),
       h('button', { class: 'principal', style: p.debut < 150 ? null : 'visibility:hidden', onclick: () => aller(p.debut + 1) }, tr.t('tehilim_next'))) : null });
+  if (marqueAOuvrir?.cle === CLE_TEHILIM) { const m = marqueAOuvrir; marqueAOuvrir = null; requestAnimationFrame(() => allerAMarque(ecran, m)); }
+  return ecran;
 }
 
 // --- Siddour (SiddurActivity.kt, SiddurLectureActivity.kt) ------------------------
@@ -790,9 +815,12 @@ const NUSAH = [['edot', 'siddur_nusah_edot'], ['sefard', 'siddur_nusah_sefard'],
 /** Le siddour du nusah choisi, chargé au premier besoin (un fichier par nusah). */
 /** Les livres entiers de la bibliothèque (data/livres.json, au format du siddour), chargés au premier besoin. */
 let livres = null;
+let livresDemandes = false;
 function chargeLivres() {
   if (livres) return true;
-  fetch('data/livres.json').then((r) => r.json()).then((d) => { livres = d; rendre(); }).catch(() => {});
+  if (livresDemandes) return false;
+  livresDemandes = true;
+  fetch('data/livres.json').then((r) => r.json()).then((d) => { livres = d; rendre(); }).catch(() => { livresDemandes = false; });
   return false;
 }
 
@@ -819,7 +847,7 @@ const CHAINES_LECTURE = {
   lecture_plus: 'Lettres plus grandes',
   lecture_moins: 'Lettres plus petites',
   lecture_masquer: 'Masquer le bouton',
-  lecture_masque_info: 'Bouton masqué. Appui long sur le texte pour le faire revenir.',
+  lecture_masque_info: 'Bouton masqué. Touchez le texte pour le faire revenir.',
   lecture_annuler_masque: 'Annuler',
   lecture_replier: 'Replier',
   lecture_taille: 'Taille du texte : %1$d %%',
@@ -887,6 +915,22 @@ function masquerLecture() {
   });
 }
 
+/**
+ * Deux touchers sur le texte (28/10, « faire réapparaître le bandeau en appuyant 2 fois ») :
+ * masqué, le bouton revient ; l'appui long reste aux marque-pages. Un seul toucher, bouton
+ * visible, appelle [simple] (la pastille effacée par le défilement revient).
+ */
+function doubleToucherPourRamener(zone, simple = null) {
+  let dernier = null;
+  zone.addEventListener('click', (e) => {
+    if (e.defaultPrevented || e.target.closest('button, a, input, select')) return;
+    const double = dernier && e.timeStamp - dernier.t < 350 && Math.hypot(e.clientX - dernier.x, e.clientY - dernier.y) < 40;
+    dernier = double ? null : { t: e.timeStamp, x: e.clientX, y: e.clientY };
+    if (store.lectureMasquee()) { if (double) ramenerLecture(); return; }
+    simple?.();
+  });
+}
+
 function ramenerLecture() {
   store.setLectureMasquee(false);
   reglagesOuverts = true;
@@ -940,38 +984,6 @@ function reglagesLecture({ avecNusah, sansNuit = false }) {
       bouton({ class: 'icone-bouton', 'aria-label': tl('lecture_replier'), 'aria-expanded': 'true', onclick: () => { reglagesOuverts = false; choixNusahOuvert = false; rendreEtViser('.lecture-pastille'); } }, icone('replier'))));
 }
 
-/**
- * L'appui long sur le texte, quand le bouton est masqué : 550 ms sans
- * bouger de plus de 10 px, ou le menu contextuel. Rien n'est empêché tant
- * qu'il n'a pas abouti : le texte défile comme d'habitude.
- */
-function appuiLongPourRamener(zone) {
-  let minuteur = null;
-  let depart = null;
-  let abouti = 0;
-  const annule = () => { clearTimeout(minuteur); minuteur = null; depart = null; };
-  zone.addEventListener('pointerdown', (e) => {
-    if (!store.lectureMasquee() || (e.pointerType === 'mouse' && e.button !== 0)) return;
-    depart = { x: e.clientX, y: e.clientY };
-    minuteur = setTimeout(() => { minuteur = null; abouti = Date.now(); ramenerLecture(); }, 550);
-  });
-  zone.addEventListener('pointermove', (e) => {
-    if (depart && Math.hypot(e.clientX - depart.x, e.clientY - depart.y) > 10) annule();
-  });
-  for (const fin of ['pointerup', 'pointercancel', 'pointerleave', 'scroll']) zone.addEventListener(fin, annule, { passive: true });
-  zone.addEventListener('contextmenu', (e) => {
-    if (Date.now() - abouti < 800) { e.preventDefault(); return; }
-    if (!store.lectureMasquee()) return;
-    e.preventDefault();
-    annule();
-    abouti = Date.now();
-    ramenerLecture();
-  });
-  // Le doigt qui se lève après l'appui long ne touche rien d'autre.
-  zone.addEventListener('click', (e) => {
-    if (Date.now() - abouti < 800) { e.preventDefault(); e.stopPropagation(); }
-  }, true);
-}
 
 /**
  * Un écran de lecture de texte saint : le texte à la taille choisie, de
@@ -980,6 +992,23 @@ function appuiLongPourRamener(zone) {
 function ecranLu(titre, contenu, { avecNusah = false, pied = null, bande = null, entete = null } = {}) {
   const defile = h('div', { class: 'defile' }, contenu);
   const ctrl = reglagesLecture({ avecNusah });
+  // Le niveau de lecture (IndicateurDefilement.kt, 28/10) : un trait fin au bord droit, montré pendant le défilement.
+  const curseur = h('div', { class: 'niveau-curseur' });
+  const niveau = h('div', { class: 'niveau', 'aria-hidden': 'true' }, curseur);
+  let estompe = null;
+  const reveiller = () => {
+    const total = defile.scrollHeight;
+    const vu = defile.clientHeight;
+    if (total <= vu + 1) return;
+    const part = Math.min(1, Math.max(0, defile.scrollTop / (total - vu)));
+    const longueur = Math.max(8, (vu / total) * 100);
+    curseur.style.height = `${longueur}%`;
+    curseur.style.top = `${part * (100 - longueur)}%`;
+    niveau.classList.add('visible');
+    clearTimeout(estompe);
+    estompe = setTimeout(() => niveau.classList.remove('visible'), 1500);
+  };
+  defile.addEventListener('scroll', reveiller, { passive: true });
   let avant = 0;
   defile.addEventListener('scroll', () => {
     const p = ctrl?.querySelector('.lecture-pastille');
@@ -992,11 +1021,11 @@ function ecranLu(titre, contenu, { avecNusah = false, pied = null, bande = null,
     }
     avant = y;
   }, { passive: true });
-  appuiLongPourRamener(defile);
+  doubleToucherPourRamener(defile, () => ctrl?.querySelector('.lecture-pastille')?.classList.remove('cachee'));
   return h('div', { class: `ecran lu${store.lectureSombre() ? ' nuit' : ''}`, style: `--echelle: ${store.lectureEchelle()}` },
     entete ?? barre(titre),
     bande,
-    h('div', { class: `lu-zone${pied ? '' : ' sans-pied'}` }, defile, ctrl),
+    h('div', { class: `lu-zone${pied ? '' : ' sans-pied'}` }, defile, niveau, ctrl),
     pied);
 }
 
@@ -1007,11 +1036,13 @@ function ecranLu(titre, contenu, { avecNusah = false, pied = null, bande = null,
 function riche(html) {
   const racine = document.createDocumentFragment();
   const pile = [racine];
-  for (const morceau of html.split(/(<\/?b>|<\/?small>|<br>)/)) {
+  for (const morceau of html.split(/(<\/?b>|<\/?small>|<br><br>|<br>)/)) {
     if (!morceau) continue;
     const ouvre = morceau.match(/^<(b|small)>$/);
     if (ouvre) { const el = document.createElement(ouvre[1]); pile.at(-1).append(el); pile.push(el); }
     else if (/^<\/(b|small)>$/.test(morceau)) { if (pile.length > 1) pile.pop(); }
+    // Une ligne vide dans un paragraphe (aération, 28/10) : un saut plus court qu'entre deux paragraphes.
+    else if (morceau === '<br><br>') pile.at(-1).append(h('span', { class: 'saut', 'aria-hidden': 'true' }));
     else if (morceau === '<br>') pile.at(-1).append(document.createElement('br'));
     else pile.at(-1).append(document.createTextNode(morceau));
   }
@@ -1130,6 +1161,8 @@ function ecranSiddur() {
   }, h('span', {}, nomNusah), icone('replier'));
   return h('div', { class: 'ecran avec-bandeau' }, bandeau(tr.t('siddur_title'), { puce, dessin: 'char_praying' }),
     h('div', { class: 'defile' }, h('div', { class: 'contenu liste-siddour' },
+      // Les marque-pages du siddour (28/10), en tête : la même feuille, sans les livres.
+      ...(pret ? [ligneSignets('s')].filter(Boolean).map((l) => h('div', { class: 'carte' }, l)) : []),
       suggere ? carteMaintenant(suggere) : null,
       hallelHanouka ? carteMaintenant(hallelHanouka, 'scene_hanukkah') : null,
       ilanot ? carteMaintenant(ilanot, 'scene_nature') : null,
@@ -1179,7 +1212,8 @@ function ecranPriere() {
   const paragraphe = (s, i, texte) => {
     const b = s.blocs[i];
     const si = x.sections.indexOf(s);
-    const p = h('p', { class: `${b.c !== undefined ? 'consigne' : 'priere'}${marquee(si, i) ? ' marque-page' : ''}${livre ? ' marque-etude' : ''}`, lang: 'he', dir: 'rtl', 'data-place': `${si}:${i}` }, riche(texte ?? b.c ?? b.t));
+    const p = h('p', { class: `${b.c !== undefined ? 'consigne' : 'priere'}${marquee(si, i) ? ' marque-page' : ''}${livre ? ' marque-etude' : ''}`, lang: 'he', dir: 'rtl', 'data-place': `${si}:${i}` }, riche(b.c !== undefined ? (texte ?? b.c) : aerer(texte ?? b.t)));
+    if (p.firstChild?.nodeName === 'B') p.firstChild.classList.add('premier-mot');
     let minuteur = null;
     const poser = () => {
       const pose = store.basculerMarque({ cle: cleMarque, nusah: nusahMarque, section: si, bloc: i, apercu: apercuMarque(b.c ?? b.t) });
@@ -1348,7 +1382,7 @@ function iconeMarque(etude, taille = 22) {
 }
 
 /** Les premiers mots d'un paragraphe, sans balises ni voyelles (MarquesPages.apercu). */
-const apercuMarque = (t) => t.replace(/<[^>]+>/g, ' ').replace(/[־׀]/g, ' ').replace(/[\u0591-\u05C7]/g, '').trim().split(/\s+/).slice(0, 6).join(' ');
+const apercuMarque = (t, mots = 6) => t.replace(/<[^>]+>/g, ' ').replace(/[־׀]/g, ' ').replace(/[\u0591-\u05C7]/g, '').trim().split(/\s+/).slice(0, mots).join(' ');
 /** Le marque-page à rejoindre à l'ouverture du texte (depuis la Bibliothèque). */
 let marqueAOuvrir = null;
 /** Va au paragraphe marqué ; replié aujourd'hui, à sa section (le premier paragraphe qui suit). */
@@ -1360,14 +1394,32 @@ function allerAMarque(ecran, m) {
   if (visible && defile) defile.scrollTop += visible.getBoundingClientRect().top - defile.getBoundingClientRect().top - 8;
 }
 
+/** Le titre hébreu d'une clé « s:id » ou « l:id », ou null tant que son recueil n'est pas chargé. */
+function titreCle(cle) {
+  if (cle === CLE_TEHILIM) return tr.t('tehilim_title');
+  const livre = cle.startsWith('l:');
+  if (livre ? !chargeLivres() : !chargeSiddur()) return null;
+  return (livre ? livres : siddur).textes.find((t) => t.id === cle.slice(2))?.titre.he ?? null;
+}
+const ouvrirCle = (cle) => { priere = cle.startsWith('l:') ? `livre:${cle.slice(2)}` : cle.slice(2); ouvrir('priere'); };
+
+/** La ligne « סימניות · n » (28/10) : tous les marque-pages, ou ceux d'un recueil (« s », « l »). */
+function ligneSignets(recueil = null) {
+  const marques = store.marques().filter((m) => (!recueil || m.cle.startsWith(`${recueil}:`)) && titreCle(m.cle));
+  return marques.length ? ligne({ nom: h('span', { class: 'nom-marque' }, iconeMarque(recueil === 'l', 18), tr.t('marques_titre')), etat: String(marques.length),
+    onclick: () => listeSignets(marques, titreCle, ouvrirSignet) }) : null;
+}
+
+/** Ouvre le texte d'un marque-page, à sa place : un paragraphe du siddour ou d'un livre, ou un verset des Tehilim. */
+function ouvrirSignet(m) {
+  marqueAOuvrir = m;
+  if (m.cle === CLE_TEHILIM) { lire(CycleTehilim.portion(m.section, m.section)); return; }
+  ouvrirCle(m.cle);
+}
+
 /** « Reprendre la lecture » et les favoris, en tête de la Bibliothèque (RepriseFavoris.kt). */
 function repriseFavoris() {
-  const titre = (cle) => {
-    const livre = cle.startsWith('l:');
-    if (livre ? !livres : !chargeSiddur()) return null;
-    return (livre ? livres : siddur).textes.find((t) => t.id === cle.slice(2))?.titre.he ?? null;
-  };
-  const ouvrirCle = (cle) => { priere = cle.startsWith('l:') ? `livre:${cle.slice(2)}` : cle.slice(2); ouvrir('priere'); };
+  const titre = titreCle;
   const lignes = [];
   const derniere = store.derniereLecture();
   if (derniere && titre(derniere)) lignes.push(ligne({ nom: tr.t('reprise_titre'), etat: titre(derniere), onclick: () => ouvrirCle(derniere) }));
@@ -1375,12 +1427,41 @@ function repriseFavoris() {
     const t = titre(cle);
     if (t) lignes.push(ligne({ nom: `★ ${t}`, onclick: () => ouvrirCle(cle) }));
   }
-  // Les marque-pages (15/10) : le texte et les premiers mots du paragraphe marqué.
-  for (const m of store.marques().slice(0, 12)) {
-    const t = titre(m.cle);
-    if (t) lignes.push(ligne({ nom: h('span', { class: 'nom-marque' }, iconeMarque(m.cle.startsWith('l:'), 18), t), etat: `${m.apercu}…`, onclick: () => { marqueAOuvrir = m; ouvrirCle(m.cle); } }));
-  }
+  // Les marque-pages (15/10) : une seule ligne (28/10), qui ouvre la liste filtrée par recueil et par texte.
+  const signets = ligneSignets();
+  if (signets) lignes.push(signets);
   return lignes.length ? h('div', { class: 'carte' }, ...lignes) : null;
+}
+
+/**
+ * Tous les marque-pages (28/10) : d'abord tous, puis filtrés par recueil (סידור, ספרים)
+ * ou par texte (שחרית, מנחה…), dans l'ordre du recueil.
+ */
+function listeSignets(marques, titre, ouvrirMarque) {
+  const ordre = (cle) => { if (cle.startsWith('t:')) return 5000; const l = cle.startsWith('l:') ? livres : siddur; return (cle.startsWith('l:') ? 1e4 : 0) + (l?.textes.findIndex((t) => t.id === cle.slice(2)) ?? 0); };
+  const textes = [...new Set(marques.map((m) => m.cle))].sort((a, b) => ordre(a) - ordre(b));
+  const filtres = [['*', tr.t('recherche_tout')]];
+  if (marques.some((m) => m.cle.startsWith('s:'))) filtres.push(['s', tr.t('siddur_title')]);
+  if (marques.some((m) => m.cle.startsWith('t:'))) filtres.push(['t', tr.t('tehilim_title')]);
+  if (marques.some((m) => m.cle.startsWith('l:'))) filtres.push(['l', tr.t('livres_title')]);
+  // Un texte par puce, pour le siddour et les livres ; les Tehilim n'en ont qu'un, déjà nommé.
+  const parTexte = textes.filter((c) => !c.startsWith('t:'));
+  if (parTexte.length > 1) filtres.push(...parTexte.map((c) => [c, titre(c)]));
+  let filtre = '*';
+  feuille(tr.t('marques_titre'), (f, fermer) => {
+    const puces = h('div', { class: 'puces-recherche puces-signets', role: 'radiogroup', 'aria-label': tr.t('marques_titre') });
+    const liste = h('div', { class: 'liste-signets' });
+    const remplir = () => {
+      puces.replaceChildren(...filtres.map(([cle, nom]) => h('button', { type: 'button', class: 'puce-choix', role: 'radio', lang: cle.includes(':') ? 'he' : null,
+        'aria-checked': String(cle === filtre), onclick: () => { filtre = cle; remplir(); } }, nom)));
+      const garde = marques.filter((m) => filtre === '*' || (filtre.includes(':') ? m.cle === filtre : m.cle.startsWith(`${filtre}:`)))
+        .sort((a, b) => ordre(a.cle) - ordre(b.cle) || a.section - b.section || a.bloc - b.bloc);
+      liste.replaceChildren(...garde.map((m) => h('button', { class: 'choix signet-choix', onclick: () => { fermer(); ouvrirMarque(m); } },
+        h('span', { class: 'nom-marque' }, iconeMarque(m.cle.startsWith('l:'), 16), titre(m.cle)), h('span', { class: 'apercu', lang: 'he', dir: 'rtl' }, `${m.apercu}…`))));
+    };
+    remplir();
+    f.append(puces, liste);
+  });
 }
 
 // Les annotations des ajouts (tools/siddur_annotations.py), chargées une fois.
@@ -1438,7 +1519,7 @@ function ajout(nom, applique, blocs, cond = '') {
 }
 
 /** Les ajouts qui ne sont jamais « du jour » : « toucher pour lire », pas « pas aujourd'hui ». */
-const JAMAIS_DU_JOUR = new Set(['minyan', 'beit_avel', 'oubli']);
+const JAMAIS_DU_JOUR = new Set(['minyan', 'beit_avel', 'oubli', 'cheva_berakhot']);
 
 /**
  * La bande de signets en tête de la lecture (demande du 10/10, comme
@@ -1535,6 +1616,8 @@ function ecranLivres() {
   return h('div', { class: 'ecran avec-bandeau' },
     bandeau(tr.t('livres_title'), { puce: h('p', { class: 'bandeau-sous-titre' }, tr.t('livres_hint')), dessin: 'char_torah' }),
     h('div', { class: 'defile' }, h('div', { class: 'contenu liste-siddour' },
+      // Les marque-pages des livres (28/10), en tête : la même feuille, sans le siddour.
+      ...(livresPrets ? [ligneSignets('l')].filter(Boolean).map((l) => h('div', { class: 'carte' }, l)) : []),
       ...(livresPrets ? livres.groupes.flatMap((g) => [
         enteteGroupe(g.titre.he, titreTexte(g.titre)),
         h('div', { class: 'carte carte-sections' }, livres.textes.filter((x) => x.groupe === g.cle).map((x) =>
@@ -1758,36 +1841,60 @@ let moisHebreuCalendrier = null;
 const parametre = (p) => (p !== '' && !Number.isNaN(Number(p)) ? Number(p).toLocaleString(tr.langue) : p);
 
 /** Choisir le lieu : la position du téléphone, ou une ville de la liste (GeoNames). */
+/**
+ * La position du téléphone (16/10 ; précise depuis le 28/10, « en fonction de la position exacte ») :
+ * haute précision, un point de moins d'une minute ; sans réponse, la dernière connue, même
+ * ancienne. La ville la plus proche nomme le lieu. Silencieux : aucun message, aucune demande.
+ */
+function localiserPosition({ etat = null, apres = rendre, silencieux = false } = {}) {
+  const dire = (cle) => { if (etat && !silencieux) etat.textContent = tr.t(cle); };
+  if (!navigator.geolocation) { dire('zmanim_position_refusee'); return; }
+  dire('zmanim_position_attente');
+  const poser = (p, ancienne) => {
+    const proche = villePlusProche(villes ?? [], p.coords.latitude, p.coords.longitude);
+    store.setLieu({
+      nom: proche ? tr.t('zmanim_position_pres', titreTexte(proche.nom)) : tr.t('zmanim_position'),
+      latitude: p.coords.latitude, longitude: p.coords.longitude,
+      // Le fuseau du téléphone ; Israël ou diaspora d'après le territoire (TerritoireIsrael, 16/10).
+      altitude: proche?.altitude ?? 0, fuseau: Intl.DateTimeFormat().resolvedOptions().timeZone,
+    });
+    store.setInIsrael(dansIsrael(p.coords.latitude, p.coords.longitude));
+    if (ancienne && !silencieux) signale(tr.t('zmanim_position_ancienne'));
+    apres();
+  };
+  const refus = () => dire('zmanim_position_refusee');
+  navigator.geolocation.getCurrentPosition((p) => poser(p, false), (e) => {
+    if (e.code === 1) { refus(); return; } // refusée : inutile d'insister
+    if (!silencieux) navigator.geolocation.getCurrentPosition((p) => poser(p, true), refus, { maximumAge: Infinity, timeout: 10_000 });
+  }, { enableHighAccuracy: true, maximumAge: 60_000, timeout: 20_000 });
+}
+
+/**
+ * À l'ouverture des zmanim ou de la boussole : si le lieu est la position du téléphone (pas une
+ * ville) et que la localisation est déjà permise, la reprendre sans rien dire, au plus toutes
+ * les cinq minutes ; la page se redessine si le point a bougé de plus de 100 m.
+ */
+let dernierRafraichissement = 0;
+function rafraichirPosition() {
+  const lieu = store.lieu();
+  if (!lieu || lieu.ville != null || !navigator.permissions || Date.now() - dernierRafraichissement < 300_000) return;
+  dernierRafraichissement = Date.now();
+  navigator.permissions.query({ name: 'geolocation' }).then((r) => {
+    if (r.state !== 'granted') return;
+    localiserPosition({ silencieux: true, apres: () => {
+      const n = store.lieu();
+      if (distanceKm(lieu.latitude, lieu.longitude, n.latitude, n.longitude) > 0.1) rendre();
+    } });
+  }).catch(() => {});
+}
+
 function choisirLieu() {
   chargeVilles();
   feuille(tr.t('zmanim_choisir_lieu'), (f, fermer) => {
     const etat = h('p', { class: 'message', 'aria-live': 'polite' });
     f.append(h('button', {
       class: 'choix',
-      onclick: () => {
-        if (!navigator.geolocation) { etat.textContent = tr.t('zmanim_position_refusee'); return; }
-        etat.textContent = tr.t('zmanim_position_attente');
-        // La position (16/10) : basse précision d'abord (plus rapide, et assez pour des zmanim) ;
-        // sans réponse, la dernière connue, même ancienne. La ville la plus proche nomme le lieu.
-        const poser = (p, ancienne) => {
-          const proche = villePlusProche(villes ?? [], p.coords.latitude, p.coords.longitude);
-          store.setLieu({
-            nom: proche ? tr.t('zmanim_position_pres', titreTexte(proche.nom)) : tr.t('zmanim_position'),
-            latitude: p.coords.latitude, longitude: p.coords.longitude,
-            // Le fuseau du téléphone ; Israël ou diaspora d'après le territoire (TerritoireIsrael, 16/10).
-            altitude: proche?.altitude ?? 0, fuseau: Intl.DateTimeFormat().resolvedOptions().timeZone,
-          });
-          store.setInIsrael(dansIsrael(p.coords.latitude, p.coords.longitude));
-          if (ancienne) signale(tr.t('zmanim_position_ancienne'));
-          fermer();
-          rendre();
-        };
-        const refus = () => { etat.textContent = tr.t('zmanim_position_refusee'); };
-        navigator.geolocation.getCurrentPosition((p) => poser(p, false), (e) => {
-          if (e.code === 1) { refus(); return; } // refusée : inutile d'insister
-          navigator.geolocation.getCurrentPosition((p) => poser(p, true), refus, { maximumAge: Infinity, timeout: 10_000 });
-        }, { enableHighAccuracy: false, maximumAge: 3_600_000, timeout: 20_000 });
-      },
+      onclick: () => localiserPosition({ etat, apres: () => { fermer(); rendre(); } }),
     }, tr.t('zmanim_position')), etat);
     const courant = store.lieu()?.ville;
     for (const v of villes ?? []) {
@@ -2084,7 +2191,7 @@ let rechercheHalakhaTexte = '';
  */
 function zoneReglable(contenu) {
   const defile = h('div', { class: 'defile' }, contenu);
-  appuiLongPourRamener(defile);
+  doubleToucherPourRamener(defile);
   return h('div', { class: 'lu-zone sans-pied reglable' }, defile, reglagesLecture({ avecNusah: false, sansNuit: true }));
 }
 
@@ -2249,6 +2356,7 @@ const piedZmanim = () => [h('p', { class: 'indice sources' }, tr.t('zmanim_a_val
 
 function ecranZmanim() {
   chargeVilles();
+  rafraichirPosition();
   const iso = isoLocal(new Date());
   const lieu = store.lieu();
   const puce = h('button', {
@@ -2278,6 +2386,8 @@ function ecranZmanim() {
 let capBoussole = null;
 let boussoleEcoute = false;
 let boussoleRecu = false;
+/** L'iPhone a dit oui : à la prochaine ouverture, on écoute sans redemander le toucher. */
+let boussolePermise = false;
 const SOURCE_BOUSSOLE = 'https://www.chabad.org/library/article_cdo/aid/3502321/jewish/Why-Do-We-Face-East-When-Praying-Or-Do-We.htm';
 const COULEURS_BOUSSOLE = { ciel: '#DFF5E8', sol: '#CBEBD8', horizon: '#9CC9B0', encre: '#173C32', marque: '#16775A', or: '#B8780F', bleu: '#2E7DB3' };
 
@@ -2311,29 +2421,7 @@ function dessinBoussole(gc, rh, cap) {
       <text x="108" y="146" text-anchor="middle" font-size="26" fill="${c.encre}">${Boussole.degres(gc)}°</text></svg>`;
   }
   const e = Boussole.ecart(gc, cap), ok = Boussole.face(e);
-  if (store.boussoleRose()) {
-    let grad = '';
-    for (let d = 0; d < 360; d += 10) grad += `<line x1="0" y1="-112" x2="0" y2="${-112 + (d % 90 === 0 ? 14 : d % 30 === 0 ? 9 : 5)}" stroke="${c.encre}" stroke-width="${d % 90 === 0 ? 2.5 : 1.2}" transform="rotate(${d})"/>`;
-    const lettres = tr.tab('boussole_cardinaux').map((n, i) => {
-      const a = (i * Math.PI) / 2;
-      return `<text x="${86 * Math.sin(a)}" y="${-86 * Math.cos(a) + 6}" transform="rotate(${cap} ${86 * Math.sin(a)} ${-86 * Math.cos(a)})" text-anchor="middle" font-size="17" font-weight="700" fill="${i === 0 ? c.or : c.encre}">${echapper(n)}</text>`;
-    }).join('');
-    const a = (Boussole.ecart(gc, cap) * Math.PI) / 180;
-    let x = Math.max(-120, Math.min(120, 128 * Math.sin(a)));
-    const y = Math.max(-118, Math.min(140, -128 * Math.cos(a)));
-    if (y < -100 && Math.abs(x) < 46) x = x < 0 ? -46 : 46;
-    const teinte = ok ? c.marque : c.or;
-    return `<svg viewBox="-160 -160 320 320" role="img" aria-label="${texte}"><rect x="-160" y="-160" width="320" height="320" fill="${c.ciel}"/>
-      <circle r="112" fill="none" stroke="${c.horizon}" stroke-width="2"/>
-      <g transform="rotate(${-cap})">${grad}${lettres}</g>
-      <line x1="0" y1="0" x2="0" y2="-100" stroke="${c.bleu}" stroke-width="3" stroke-dasharray="7 7" transform="rotate(${rh - cap})"/>
-      <g transform="rotate(${gc - cap})"><line x1="0" y1="18" x2="0" y2="-100" stroke="${teinte}" stroke-width="5" stroke-linecap="round"/><circle cy="-100" r="7" fill="${teinte}"/></g>
-      <circle r="6" fill="${c.encre}"/>
-      <rect x="${x - 34}" y="${y - 11}" width="68" height="22" rx="11" fill="${ok ? c.marque : '#fff'}"/>
-      <text x="${x}" y="${y + 5}" text-anchor="middle" font-family="serif" font-size="15" font-weight="700" fill="${ok ? '#fff' : c.marque}">ירושלים</text>
-      <path d="M0,-118 L-7,-130 L7,-130 Z" fill="${c.encre}"/>
-      <text y="-140" text-anchor="middle" font-size="14" fill="${c.encre}">${texte}</text></svg>`;
-  }
+  if (store.boussoleRose()) return roseGraduee(gc, rh, cap, ok, texte);
   const xg = Boussole.xHorizon(e), xr = Boussole.xHorizon(Boussole.ecart(rh, cap));
   return `<svg viewBox="-160 -160 320 320" role="img" aria-label="${texte}"><rect x="-160" y="-160" width="320" height="320" fill="${c.ciel}"/>
     <path d="M-160,40 Q0,10 160,40 L160,160 L-160,160 Z" fill="${c.sol}"/>
@@ -2344,6 +2432,46 @@ function dessinBoussole(gc, rh, cap) {
     <circle cx="${xg}" cy="-90" r="8" fill="${ok ? c.marque : c.or}"/>
     <image href="img/char_standing_back.webp" x="-28" y="${ok ? -68 : -62}" width="56" height="176"/>
     <text y="-132" text-anchor="middle" font-size="14" fill="${c.encre}">${texte}</text></svg>`;
+}
+
+/**
+ * La rose graduée (reprise de main, 28/10), miroir de BoussoleDessin.roseVivante : le cadran
+ * tourne avec le téléphone, le repère du haut est le cap ; graduations aux 5°, degrés aux 30°,
+ * zone d'or de ±TOLERANCE, aiguille d'or vers [gc], pointillé bleu vers [rh]. Grille de 240.
+ */
+function roseGraduee(gc, rh, cap, ok, texte) {
+  const c = COULEURS_BOUSSOLE, C = 120, R = 104, t = Boussole.TOLERANCE;
+  const f = (n) => +n.toFixed(2);
+  const pt = (g, r) => { const a = (g * Math.PI) / 180; return [f(C + r * Math.sin(a)), f(C - r * Math.cos(a))]; };
+  let cadran = `<circle cx="${C}" cy="${C}" r="${R}" fill="none" stroke="${c.encre}" stroke-opacity="0.3"/>`;
+  const [ax, ay] = pt(gc - t, R - 6), [bx, by] = pt(gc + t, R - 6);
+  cadran += `<path d="M${ax} ${ay} A${R - 6} ${R - 6} 0 0 1 ${bx} ${by}" fill="none" stroke="${c.or}" stroke-opacity="0.35" stroke-width="8" stroke-linecap="round"/>`;
+  for (let g = 0; g < 360; g += 5) {
+    const fort = g % 30 === 0, l = fort ? 12 : g % 10 === 0 ? 7 : 4;
+    const [x1, y1] = pt(g, R), [x2, y2] = pt(g, R - l);
+    cadran += `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${c.encre}" stroke-opacity="${fort ? 1 : 0.4}" stroke-width="${fort ? 1.6 : 0.8}" stroke-linecap="round"/>`;
+  }
+  for (let g = 30; g < 360; g += 30) {
+    if (g % 90 === 0) continue;
+    const [x, y] = pt(g, R - 24);
+    cadran += `<text x="${x}" y="${f(y + 3)}" transform="rotate(${g} ${x} ${y})" text-anchor="middle" font-size="8.5" fill="${c.encre}" fill-opacity="0.67">${g}</text>`;
+  }
+  tr.tab('boussole_cardinaux').slice(0, 4).forEach((n, i) => {
+    const [x, y] = pt(i * 90, R - 30);
+    cadran += `<text x="${x}" y="${f(y + 6)}" transform="rotate(${i * 90} ${x} ${y})" text-anchor="middle" font-size="16" font-weight="700" fill="${i === 0 ? c.marque : c.encre}">${echapper(n)}</text>`;
+  });
+  cadran += `<line x1="${C}" y1="${C}" x2="${C}" y2="${C - R + 20}" stroke="${c.bleu}" stroke-width="2.5" stroke-dasharray="6 6" transform="rotate(${f(rh)} ${C} ${C})"/>`;
+  cadran += `<g transform="rotate(${f(gc)} ${C} ${C})"><line x1="${C}" y1="${C + 8}" x2="${C}" y2="${C + 34}" stroke="${c.encre}" stroke-opacity="0.35" stroke-width="3" stroke-linecap="round"/>
+    <path d="M${C} ${C - R + 16} L${C - 9} ${C + 2} L${C} ${C - 6} L${C + 9} ${C + 2} Z" fill="${c.or}"/></g>`;
+  const eclat = ok ? `<circle cx="${C}" cy="${C}" r="${R + 12}" fill="none" stroke="${c.or}" stroke-opacity="0.25" stroke-width="18"/>
+    <circle cx="${C}" cy="${C}" r="${R + 13}" fill="none" stroke="${c.or}" stroke-width="2.5"/>` : '';
+  return `<svg viewBox="-160 -160 320 320" role="img" aria-label="${texte}"><rect x="-160" y="-160" width="320" height="320" fill="${c.ciel}"/>
+    <text y="-142" text-anchor="middle" font-size="14" fill="${c.encre}">${texte}</text>
+    <g transform="translate(0 12) scale(1.15) translate(-120 -120)">${eclat}
+      <circle cx="${C}" cy="${C}" r="${R + 10}" fill="${ok ? '#F4E8CF' : '#F5F6F5'}" stroke="${c.encre}" stroke-opacity="0.12"/>
+      <g transform="rotate(${f(-cap)} ${C} ${C})">${cadran}</g>
+      <path d="M${C} 4 L${C - 7} 16 L${C + 7} 16 Z" fill="${ok ? c.or : c.marque}"/>
+      <circle cx="${C}" cy="${C}" r="6" fill="${c.or}"/><circle cx="${C}" cy="${C}" r="2.5" fill="#fff"/></g></svg>`;
 }
 
 /** Une mesure d'orientation : le cap vrai, lissé, et la scène seule redessinée. */
@@ -2363,6 +2491,14 @@ function surOrientation(e) {
   if (!boussoleRecu) { boussoleRecu = true; rendre(); }
 }
 
+/** En quittant l'écran (rendre) : plus d'écoute du capteur. */
+function arreteBoussole() {
+  if (!boussoleEcoute) return;
+  boussoleEcoute = false;
+  window.removeEventListener('deviceorientationabsolute', surOrientation);
+  window.removeEventListener('deviceorientation', surOrientation);
+}
+
 function ecouterBoussole() {
   if (boussoleEcoute) return;
   boussoleEcoute = true;
@@ -2376,8 +2512,9 @@ const autorisationBoussole = () => typeof DeviceOrientationEvent !== 'undefined'
 
 function ecranBoussole() {
   chargeVilles();
+  rafraichirPosition();
   const lieu = store.lieu();
-  if (!autorisationBoussole()) ecouterBoussole();
+  if (!autorisationBoussole() || boussolePermise) ecouterBoussole();
   const puce = h('button', {
     type: 'button', class: 'puce-bandeau', 'aria-haspopup': 'dialog', onclick: choisirLieu,
     'aria-label': `${tr.t('reglage_lieu')} : ${lieu ? lieu.nom : tr.t('reglage_lieu_aucun')}`,
@@ -2394,12 +2531,15 @@ function ecranBoussole() {
     contenu.push(scene);
     if (autorisationBoussole() && !boussoleEcoute) {
       contenu.push(h('button', { class: 'principal boussole-activer', onclick: async () => {
-        try { if (await DeviceOrientationEvent.requestPermission() === 'granted') { ecouterBoussole(); rendre(); } } catch { /* refusé : la rose fixe reste */ }
+        try { if (await DeviceOrientationEvent.requestPermission() === 'granted') { boussolePermise = true; ecouterBoussole(); rendre(); } } catch { /* refusé : la rose fixe reste */ }
       } }, tr.t('boussole_activer')));
     }
     // Avant le toucher, rien n'est encore dit du capteur ; ensuite, sans mesure, la rose fixe reste.
     const attente = autorisationBoussole() && !boussoleEcoute;
     contenu.push(h('p', { class: 'indice' }, tr.t(attente || boussoleRecu ? 'boussole_a_plat' : 'boussole_sans_capteur')));
+    // « Position exacte » (28/10) : la localisation précise, le message de l'attente dessous.
+    const etat = h('p', { class: 'indice', 'aria-live': 'polite' });
+    contenu.push(h('button', { class: 'secondaire boussole-position', onclick: () => localiserPosition({ etat }) }, tr.t('boussole_position_exacte')), etat);
     const points = tr.tab('boussole_points');
     const km = new Intl.NumberFormat(tr.langue).format(Math.round(Boussole.distanceKm(lieu.latitude, lieu.longitude)));
     contenu.push(h('div', { class: 'carte carte-texte' },
@@ -3893,6 +4033,7 @@ function rendre() {
   // n'était vue qu'au toucher suivant (audit du 16/10).
   if (ecran !== 'seance' && !store.isSessionRunning()) arreteTic();
   if (ecran !== 'bravo') arreteDanse();
+  if (ecran !== 'boussole') arreteBoussole();
   queueMicrotask(majMini);
   const memeEcran = app.dataset.ecran === `${ecran}/${onglet}`;
   app.replaceChildren();

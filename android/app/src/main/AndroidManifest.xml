@@ -14,7 +14,8 @@
     <!-- Les zmanim (10/10) : la position approximative, seulement si on choisit
          « Ma position » plutôt qu'une ville, et demandée à ce moment-là. -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <!-- Le GPS des zmanim en vol (28/10) : demandé seulement au toucher de « position réelle », il marche en mode avion. -->
+    <!-- La position exacte (28/10) : zmanim et boussole (« Position exacte »), et le GPS des zmanim
+         en vol, demandé seulement au toucher de « position réelle » ; il marche en mode avion. -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <!--

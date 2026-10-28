@@ -19,7 +19,8 @@ import java.util.TimeZone
 /**
  * Le choix du lieu des zmanim (demande du 10/10) : la position du téléphone,
  * ou une ville de la liste (GeoNames). La position demande l'autorisation de
- * localisation approximative, et seulement au moment où on la choisit ; elle
+ * localisation précise (28/10 ; l'approximative suffit si on ne donne qu'elle), et
+ * seulement au moment où on la choisit ; elle
  * ne sert qu'au calcul et reste sur l'appareil. L'application ne déclare
  * toujours aucune permission Internet.
  *
@@ -28,9 +29,14 @@ import java.util.TimeZone
  */
 class ChoixLieu(private val activite: AppCompatActivity, private val apres: () -> Unit) {
 
-    private val autorisation = activite.registerForActivityResult(ActivityResultContracts.RequestPermission()) { accordee ->
-        if (accordee) localiser() else echec()
+    // La localisation précise (28/10, « en fonction de la position exacte ») ; l'approximative
+    // suffit encore si on ne donne qu'elle.
+    private val autorisation = activite.registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { r ->
+        if (r.values.any { it }) localiser() else echec()
     }
+
+    /** Silencieux : rafraîchit la position sans message (ouverture de l'écran), seulement si déjà permise. */
+    private var silencieux = false
 
     fun montrer() {
         val langue = ChizukCard.language(activite)
@@ -49,10 +55,27 @@ class ChoixLieu(private val activite: AppCompatActivity, private val apres: () -
             .show()
     }
 
+    private fun permise(p: String) = ContextCompat.checkSelfPermission(activite, p) == PackageManager.PERMISSION_GRANTED
+
     private fun demanderPosition() {
-        val accordee = ContextCompat.checkSelfPermission(activite, Manifest.permission.ACCESS_COARSE_LOCATION) ==
-            PackageManager.PERMISSION_GRANTED
-        if (accordee) localiser() else autorisation.launch(Manifest.permission.ACCESS_COARSE_LOCATION)
+        silencieux = false
+        if (permise(Manifest.permission.ACCESS_FINE_LOCATION)) localiser()
+        else autorisation.launch(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION))
+    }
+
+    /** « Position exacte » (boussole) : la localisation précise, demandée au besoin. */
+    fun positionExacte() = demanderPosition()
+
+    /**
+     * À l'ouverture de l'écran : si le lieu est la position du téléphone (pas une ville) et que
+     * la localisation est déjà permise, la reprendre sans rien dire — les zmanim et la direction
+     * suivent l'endroit où l'on est (28/10). Rien n'est demandé.
+     */
+    fun rafraichir() {
+        if (Store.lieuZmanim(activite) == null || Store.lieuVille(activite) != -1L) return
+        if (!permise(Manifest.permission.ACCESS_FINE_LOCATION) && !permise(Manifest.permission.ACCESS_COARSE_LOCATION)) return
+        silencieux = true
+        localiser()
     }
 
     /**
@@ -66,33 +89,44 @@ class ChoixLieu(private val activite: AppCompatActivity, private val apres: () -
     @SuppressLint("MissingPermission") // vérifiée par demanderPosition
     private fun localiser() {
         val lm = activite.getSystemService(LocationManager::class.java) ?: return echec()
-        val tous = listOf(LocationManager.NETWORK_PROVIDER, LocationManager.GPS_PROVIDER, LocationManager.PASSIVE_PROVIDER)
+        val tous = listOf(LocationManager.GPS_PROVIDER, LocationManager.NETWORK_PROVIDER, LocationManager.PASSIVE_PROVIDER)
         // Avant Android 12, les fournisseurs GPS et passif exigent la
         // localisation précise : avec la seule approximative, les interroger
         // lève SecurityException. On s'en tient alors au réseau.
-        val permis = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) tous else listOf(LocationManager.NETWORK_PROVIDER)
+        val precise = permise(Manifest.permission.ACCESS_FINE_LOCATION)
+        val permis = if (precise || Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) tous else listOf(LocationManager.NETWORK_PROVIDER)
         val connue = tous.mapNotNull { runCatching { lm.getLastKnownLocation(it) }.getOrNull() }.maxByOrNull { it.time }
-        if (connue != null && System.currentTimeMillis() - connue.time < UNE_HEURE) return enregistrer(connue)
+        // Position exacte (28/10) : une position connue ne sert telle quelle que fraîche (2 min) et
+        // précise (100 m) ; sinon on demande un point neuf, le GPS d'abord.
+        if (connue != null && System.currentTimeMillis() - connue.time < DEUX_MINUTES &&
+            (!connue.hasAccuracy() || connue.accuracy <= PRECIS_M)) return enregistrer(connue)
         val actifs = permis.filter { runCatching { lm.isProviderEnabled(it) }.getOrDefault(false) }
         if (actifs.isEmpty()) return connue?.let { ancienne(it) } ?: echec()
-        Toast.makeText(activite, activite.getString(R.string.zmanim_position_attente), Toast.LENGTH_SHORT).show()
+        if (!silencieux) Toast.makeText(activite, activite.getString(R.string.zmanim_position_attente), Toast.LENGTH_SHORT).show()
         var fini = false
         var reponses = 0
+        var meilleure: Location? = null
         val ecouteurs = mutableListOf<LocationListener>()
         val delai = android.os.Handler(Looper.getMainLooper())
-        fun conclure(position: Location?) {
+        // Le premier point précis l'emporte ; sinon, au bout du délai ou quand tous ont répondu,
+        // le plus précis reçu, puis la dernière position connue.
+        fun conclure(position: Location?, finDuDelai: Boolean = false) {
             if (fini) return
-            if (position == null && ++reponses < actifs.size) return
+            if (position != null && (meilleure == null || (position.hasAccuracy() && position.accuracy < (meilleure?.accuracy ?: Float.MAX_VALUE)))) {
+                meilleure = position
+            }
+            val precis = position != null && (!position.hasAccuracy() || position.accuracy <= PRECIS_M)
+            if (!precis && !finDuDelai && ++reponses < actifs.size) return
             fini = true
             delai.removeCallbacksAndMessages(null)
             ecouteurs.forEach { runCatching { lm.removeUpdates(it) } }
             when {
-                position != null -> enregistrer(position)
+                meilleure != null -> enregistrer(meilleure!!)
                 connue != null -> ancienne(connue)
                 else -> echec()
             }
         }
-        delai.postDelayed({ reponses = actifs.size - 1; conclure(null) }, DELAI_MS)
+        delai.postDelayed({ conclure(null, finDuDelai = true) }, DELAI_MS)
         actifs.forEach { f ->
             try {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
@@ -122,7 +156,7 @@ class ChoixLieu(private val activite: AppCompatActivity, private val apres: () -
 
     /** Pas de position fraîche : la dernière connue, et on le dit. */
     private fun ancienne(position: Location) {
-        Toast.makeText(activite, activite.getString(R.string.zmanim_position_ancienne), Toast.LENGTH_LONG).show()
+        if (!silencieux) Toast.makeText(activite, activite.getString(R.string.zmanim_position_ancienne), Toast.LENGTH_LONG).show()
         enregistrer(position)
     }
 
@@ -135,19 +169,24 @@ class ChoixLieu(private val activite: AppCompatActivity, private val apres: () -
         val langue = ChizukCard.language(activite)
         val nom = proche?.let { activite.getString(R.string.zmanim_position_pres, it.nom.forLanguage(langue)) }
             ?: activite.getString(R.string.zmanim_position)
-        val lieu = Zmanim.Lieu(nom, position.latitude, position.longitude, proche?.altitude ?: 0.0, TimeZone.getDefault().id)
+        // L'altitude au-dessus du niveau de la mer quand le téléphone la donne (Android 14+) ; sinon
+        // celle de la ville la plus proche. L'altitude GPS brute (ellipsoïde) n'est pas celle des cartes.
+        val altitude = if (Build.VERSION.SDK_INT >= 34 && position.hasMslAltitude()) position.mslAltitudeMeters.coerceAtLeast(0.0)
+        else proche?.altitude ?: 0.0
+        val lieu = Zmanim.Lieu(nom, position.latitude, position.longitude, altitude, TimeZone.getDefault().id)
         Store.setLieuZmanim(activite, lieu, null)
         Store.setInIsrael(activite, TerritoireIsrael.contient(position.latitude, position.longitude))
         apres()
     }
 
     private fun echec() {
-        if (activite.isFinishing || activite.isDestroyed) return
+        if (activite.isFinishing || activite.isDestroyed || silencieux) return
         Toast.makeText(activite, activite.getString(R.string.zmanim_position_refusee), Toast.LENGTH_LONG).show()
     }
 
     private companion object {
-        const val UNE_HEURE = 3_600_000L
+        const val DEUX_MINUTES = 120_000L
+        const val PRECIS_M = 100f
         const val DELAI_MS = 25_000L
     }
 }

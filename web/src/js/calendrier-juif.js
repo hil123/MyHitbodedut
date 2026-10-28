@@ -133,6 +133,14 @@ export function jour(iso, enIsrael, mukafChoma = false) {
   si(yomTov, 'yom_tov');
   si(['pessah', 'soukkot', 'chavouot', 'chemini_atseret'].some((k) => c.has(k)), 'moed');
   si(c.has('chabbat') && regles.isRoshChodesh(), 'chabbat_roch_hodech');
+  // « וּלְכַפָּרַת פָּשַׁע » au Moussaf de Roch 'Hodech d'une année embolismique (28/10) : toute l'année
+  // (consigne du siddour Edot) ou jusqu'à Roch 'Hodech Adar II inclus (« עד חודש ניסן », Sfard et
+  // Ashkenaz) ; les deux usages, Michna beroura 423:6. Le 30 inaugure le mois suivant.
+  if (regles.isRoshChodesh() && regles.isJewishLeapYear()) {
+    const inaugure = quantieme === 30 ? (mois === JewishDate.ADAR ? JewishDate.ADAR_II : mois === JewishDate.ADAR_II ? JewishDate.NISSAN : mois + 1) : mois;
+    c.add('embolismique');
+    si(inaugure >= JewishDate.TISHREI, 'embolismique_avant_nissan');
+  }
   si(c.has('chabbat') && yomTov, 'yom_tov_chabbat');
   si(c.has('chabbat') && regles.isRoshHashana(), 'roch_hachana_chabbat');
   const hier = new Date(`${iso}T12:00:00Z`);

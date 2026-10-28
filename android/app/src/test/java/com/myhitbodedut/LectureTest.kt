@@ -40,10 +40,12 @@ class LectureTest {
     }
 
     @Test
-    fun `le bouton se masque tout a fait et revient par un appui long`() {
+    fun `le bouton se masque tout a fait et revient par deux touchers`() {
         val code = source("ReglagesLecture")
         assertTrue(code.contains("Store.setLectureMasquee(contexte, true)"))
-        assertTrue(code.contains("override fun onLongPress"))
+        assertTrue(code.contains("override fun onDoubleTap"))
+        // L'appui long reste aux marque-pages (28/10).
+        assertFalse(code.contains("override fun onLongPress"))
         assertTrue(code.contains("Store.lectureMasquee(contexte)"))
         assertTrue(source("Store").contains("fun lectureMasquee"))
     }

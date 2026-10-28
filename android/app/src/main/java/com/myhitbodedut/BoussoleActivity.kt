@@ -14,6 +14,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.text.HtmlCompat
+import com.google.android.material.button.MaterialButton
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import java.text.NumberFormat
 import java.util.Locale
@@ -23,7 +24,8 @@ import java.util.Locale
  * lieu des zmanim. Le cap vient du capteur d'orientation (nord magnétique),
  * corrigé de la déclinaison du lieu (GeomagneticField) pour le nord vrai, comme
  * les deux directions. Sans capteur, la rose orientée au nord. Rien ne passe par
- * le réseau ; aucune autorisation n'est demandée.
+ * le réseau. « Position exacte » demande la localisation précise (ChoixLieu) ; à
+ * l'ouverture, la position du téléphone se reprend sans bruit si elle est déjà permise.
  */
 class BoussoleActivity : AppCompatActivity(), SensorEventListener {
 
@@ -49,6 +51,7 @@ class BoussoleActivity : AppCompatActivity(), SensorEventListener {
     override fun onResume() {
         super.onResume()
         afficher()
+        choixLieu.rafraichir()
         val sm = capteurs ?: return
         val rotation = sm.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR)
         if (rotation != null) {
@@ -92,6 +95,12 @@ class BoussoleActivity : AppCompatActivity(), SensorEventListener {
         val avecCapteur = aBoussole()
         contenu.addView(VueJour.texte(this, getString(if (avecCapteur) R.string.boussole_a_plat else R.string.boussole_sans_capteur),
             13f, R.color.muted, haut = 8).apply { setPadding(dp(16), 0, dp(16), 0) })
+        contenu.addView(MaterialButton(this, null, com.google.android.material.R.attr.materialButtonOutlinedStyle).apply {
+            text = getString(R.string.boussole_position_exacte)
+            setOnClickListener { choixLieu.positionExacte() }
+            layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+                .apply { setMargins(dp(16), dp(8), dp(16), 0) }
+        })
         aLieu = lieu != null
         if (lieu == null) {
             boussole.directions(null, null)

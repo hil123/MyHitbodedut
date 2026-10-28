@@ -173,4 +173,16 @@ class CalendrierJuifTest {
             CalendrierJuif.FETES.values.forEach { assertTrue("$d : fete_$it", xml.contains("name=\"fete_$it\"")) }
         }
     }
+
+    /** « וּלְכַפָּרַת פֶּשַׁע » (28/10) : mêmes dates que web/test/calendrier.test.mjs. */
+    @Test
+    fun rochHodechEmbolismique() {
+        for (d in listOf("2026-11-10", "2026-11-11")) {
+            assertTrue(d, C.EMBOLISMIQUE in jour(d).conditions && C.EMBOLISMIQUE_AVANT_NISSAN in jour(d).conditions)
+        }
+        assertTrue(C.EMBOLISMIQUE in jour("2027-04-08").conditions)
+        assertFalse(C.EMBOLISMIQUE_AVANT_NISSAN in jour("2027-04-08").conditions)
+        assertFalse(C.EMBOLISMIQUE in jour("2026-01-19").conditions)
+        assertFalse(C.EMBOLISMIQUE in jour("2026-11-12").conditions)
+    }
 }

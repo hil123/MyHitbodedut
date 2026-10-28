@@ -37,6 +37,7 @@ const DONNEES = {
 const MAINTENANT = new Date('2026-09-29T09:00:00').getTime();
 
 async function capture(nom, { langue, mode = 'clair', fond = 'vert', accent = 'vert', prenom = '', ecran = '', onglet = null, adresse = null, actions = null, calme = false, extra = {} }) {
+  if (process.env.SEUL && !nom.startsWith(process.env.SEUL)) return;
   const contexte = await navigateur.newContext({
     viewport: { width: LARGEUR, height: HAUTEUR }, deviceScaleFactor: 2, colorScheme: mode === 'sombre' ? 'dark' : 'light',
     serviceWorkers: 'block',
@@ -177,8 +178,61 @@ await capture('halakha-he', { langue: 'he', ecran: 'halakha', extra: JERUSALEM, 
 await capture('halakha-he-ben-ish-hai', { langue: 'he', ecran: 'halakha', extra: { ...JERUSALEM, halakha_source: 'ben_ish_hai' }, actions: bas(0) });
 await capture('hilloulot-he', { langue: 'he', ecran: 'hilloulot', extra: JERUSALEM, actions: bas(0) });
 await capture('livres-he', { langue: 'he', ecran: 'livres', actions: bas(0) });
+// Le 28/10 : les marque-pages en une ligne, puis la feuille filtrée par recueil et par texte.
+const MARQUES = { marques_pages: [
+  { cle: 's:chaharit', nusah: 'edot', section: 2, bloc: 3, apercu: 'אביי הוה מסדר סדר המערכה' },
+  { cle: 's:minha', nusah: 'edot', section: 0, bloc: 1, apercu: 'אשרי יושבי ביתך עוד יהללוך' },
+  { cle: 'l:likoutei_etsot', nusah: '', section: 1, bloc: 0, apercu: 'עיקר ההתבודדות הוא בלילה' },
+  { cle: 's:chaharit', nusah: 'edot', section: 5, bloc: 0, apercu: 'ברוך שאמר והיה העולם' },
+  { cle: 's:birkat_hamazon', nusah: 'edot', section: 0, bloc: 0, apercu: 'שיר המעלות בשוב ה׳ את שיבת ציון' },
+  { cle: 't:tehilim', nusah: '', section: 121, bloc: 1, apercu: 'קכ״א, א׳ · שיר למעלות אשא עיני אל' },
+  { cle: 't:tehilim', nusah: '', section: 23, bloc: 4, apercu: 'כ״ג, ד׳ · גם כי אלך בגיא צלמות' },
+] };
+const feuilleSignets = (filtre) => async (p) => {
+  await p.waitForSelector('.ligne .nom-marque');
+  await p.click('.ligne:has(.nom-marque)');
+  await p.waitForSelector('.puces-signets');
+  if (filtre) await p.evaluate((f) => [...document.querySelectorAll('.puces-signets .puce-choix')].find((b) => b.textContent.includes(f)).click(), filtre);
+};
+await capture('signets-he', { langue: 'he', onglet: 'textes', extra: MARQUES });
+await capture('signets-he-feuille', { langue: 'he', onglet: 'textes', extra: MARQUES, actions: feuilleSignets('') });
+await capture('signets-he-livres', { langue: 'he', ecran: 'livres', extra: MARQUES, actions: bas(0) });
+await capture('signets-he-siddour', { langue: 'he', ecran: 'siddur', extra: MARQUES, actions: bas(0) });
+await capture('signets-he-tehilim', { langue: 'he', ecran: 'tehilim', extra: MARQUES });
+await capture('signets-he-psaume', { langue: 'he', ecran: 'tehilim', extra: MARQUES, actions: async (p) => {
+  await p.waitForSelector('.ligne .nom-marque');
+  await p.click('.ligne:has(.nom-marque)');
+  await p.waitForSelector('.signet-choix');
+  await p.click('.signet-choix >> nth=0');
+  await p.waitForSelector('.verset.marque-page');
+  await p.waitForTimeout(300);
+} });
+await capture('signets-he-chaharit', { langue: 'he', onglet: 'textes', extra: MARQUES, actions: feuilleSignets('שַׁחֲרִית') });
 await capture('siddour-he', { langue: 'he', ecran: 'siddur', actions: bas(0) });
 await capture('siddour-he-occasions', { langue: 'he', ecran: 'siddur', actions: bas(100000) });
+// Le 28/10 : paragraphes aérés (premier mot agrandi), Chéva bérakhot repliées en fin de Birkat
+// haMazon, boussole de la tefila.
+const ouvrirTexte = (titre, y) => async (p) => {
+  // Les titres sont vocalisés : comparés sans voyelles.
+  await p.evaluate((t) => [...document.querySelectorAll('.ligne-he')]
+    .find((b) => b.querySelector('.nom-he').textContent.replace(/[\u0591-\u05C7]/g, '') .includes(t)).click(), titre);
+  await p.waitForSelector('.siddour .priere');
+  await p.evaluate((y) => { const d = document.querySelector('.defile'); d.scrollTop = y < 0 ? d.scrollHeight : y; }, y);
+};
+await capture('priere-aeree-he', { langue: 'he', ecran: 'siddur', actions: ouvrirTexte('תפלת שחרית', 1400) });
+await capture('birkat-cheva-he', { langue: 'he', ecran: 'siddur', actions: ouvrirTexte('ברכת המזון', -1) });
+// Le capteur simulé : quarante lectures au même cap, pour que le lissage s'y pose.
+const cap = (nord) => async (p) => {
+  await p.waitForSelector('.boussole-scene svg');
+  await p.evaluate((n) => { for (let i = 0; i < 40; i++) window.dispatchEvent(Object.assign(new Event('deviceorientationabsolute'), { alpha: (360 - n) % 360, absolute: true })); }, nord);
+  await p.waitForTimeout(700);
+};
+const PARIS = { lieu_zmanim: { nom: 'Paris', latitude: 48.8566, longitude: 2.3522, altitude: 35, fuseau: 'Europe/Paris', ville: 2988507 }, in_israel: false };
+await capture('boussole-fr', { langue: 'fr', ecran: 'boussole', extra: PARIS, actions: cap(80) });
+await capture('boussole-fr-aligne', { langue: 'fr', ecran: 'boussole', mode: 'sombre', extra: PARIS, actions: cap(112) });
+await capture('boussole-he', { langue: 'he', ecran: 'boussole', extra: JERUSALEM, actions: cap(150) });
+await capture('boussole-fr-rose', { langue: 'fr', ecran: 'boussole', extra: { ...PARIS, boussole_rose: true }, actions: cap(80) });
+await capture('boussole-fr-rose-aligne', { langue: 'fr', ecran: 'boussole', extra: { ...PARIS, boussole_rose: true }, actions: cap(112) });
 await capture('bibliotheque-he', { langue: 'he', ecran: 'bibliotheque', actions: bas(0) });
 await capture('reglages-fr-personnalisation', { langue: 'fr', ecran: 'reglages', actions: bas(400) });
 await capture('reglages-he', { langue: 'he', ecran: 'reglages', mode: 'sombre', actions: bas(400) });

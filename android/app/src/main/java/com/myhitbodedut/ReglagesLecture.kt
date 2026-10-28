@@ -281,7 +281,7 @@ class ReglagesLecture private constructor(
             .show()
     }
 
-    /** L'appui long sur le texte : le bouton revient, déplié. */
+    /** Le double toucher sur le texte : le bouton revient, déplié. */
     fun retrouver() {
         if (!Store.lectureMasquee(contexte)) return
         Store.setLectureMasquee(contexte, false)
@@ -296,6 +296,9 @@ class ReglagesLecture private constructor(
             .setDuration(180L).withEndAction { pastille.isClickable = visible }.start()
     }
 
+    /** Le niveau de lecture sur le bord du texte (IndicateurDefilement, 28/10). */
+    private var indicateur: IndicateurDefilement? = null
+
     /** Le chemin parcouru dans un sens : un défilement lent cache aussi la pastille. */
     private var parcouru = 0
 
@@ -304,19 +307,37 @@ class ReglagesLecture private constructor(
         if (parcouru > dp(24)) { montrer(false); parcouru = 0 } else if (parcouru < -dp(24)) { montrer(true); parcouru = 0 }
     }
 
-    private val appuiLong = GestureDetector(contexte, object : GestureDetector.SimpleOnGestureListener() {
-        override fun onLongPress(e: MotionEvent) = retrouver()
+    /**
+     * Deux touchers sur le texte (28/10, « faire réapparaître le bandeau en appuyant 2 fois ») :
+     * masqué, le bouton revient déplié. Un seul toucher fait revenir la pastille effacée par le
+     * défilement. L'appui long est laissé aux marque-pages.
+     */
+    private val toucher = GestureDetector(contexte, object : GestureDetector.SimpleOnGestureListener() {
+        override fun onDoubleTap(e: MotionEvent): Boolean {
+            retrouver()
+            return false
+        }
+        override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
+            if (!Store.lectureMasquee(contexte)) montrer(true)
+            return false
+        }
     })
+
+    /** Pour un texte qui prend lui-même les touchers (les versets des Tehilim) : il les montre ici. */
+    fun toucher(e: MotionEvent) {
+        toucher.onTouchEvent(e)
+    }
 
     private fun suivreListe(liste: RecyclerView) {
         liste.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 defile(dy)
+                if (dy != 0) indicateur?.reveiller()
             }
         })
         liste.addOnItemTouchListener(object : RecyclerView.SimpleOnItemTouchListener() {
             override fun onInterceptTouchEvent(rv: RecyclerView, e: MotionEvent): Boolean {
-                appuiLong.onTouchEvent(e)
+                toucher.onTouchEvent(e)
                 return false
             }
         })
@@ -326,11 +347,12 @@ class ReglagesLecture private constructor(
     private fun suivreDefilement(defilement: View) {
         defilement.setOnScrollChangeListener { _, _, y, _, ancien ->
             defile(y - ancien)
+            if (y != ancien) indicateur?.reveiller()
         }
         // Le texte ne prend pas les touchers : ils arrivent à la vue qui défile,
         // qui les laisse passer (false) après les avoir montrés au détecteur.
         defilement.setOnTouchListener { _, e ->
-            appuiLong.onTouchEvent(e)
+            toucher.onTouchEvent(e)
             false
         }
     }
@@ -372,13 +394,14 @@ class ReglagesLecture private constructor(
                 }
             }
             val reglages = ReglagesLecture(activite, avecNusah, auDessusDe, garderPlace)
+            reglages.indicateur = IndicateurDefilement.poser(activite.findViewById(android.R.id.content), defilement)
             if (defilement is RecyclerView) reglages.suivreListe(defilement) else reglages.suivreDefilement(defilement)
             // De quoi lire la fin du texte au-dessus de la barre ouverte.
             val d = activite.resources.displayMetrics.density
             defilement.setPadding(defilement.paddingLeft, defilement.paddingTop, defilement.paddingRight,
                 defilement.paddingBottom + (72 * d).toInt())
             (defilement as? ViewGroup)?.clipToPadding = false
-            // Sans appui long (TalkBack, contacteur) : une action d'accessibilité fait revenir le bouton.
+            // Sans double toucher (TalkBack, contacteur) : une action d'accessibilité fait revenir le bouton.
             ViewCompat.addAccessibilityAction(defilement, activite.getString(R.string.lecture_reglages)) { _, _ ->
                 reglages.retrouver()
                 true

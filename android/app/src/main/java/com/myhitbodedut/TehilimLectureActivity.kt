@@ -25,6 +25,7 @@ import androidx.appcompat.app.AppCompatActivity
 class TehilimLectureActivity : AppCompatActivity() {
 
     private lateinit var portion: Portion
+    private var reglages: ReglagesLecture? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,10 +39,28 @@ class TehilimLectureActivity : AppCompatActivity() {
         findViewById<Button>(R.id.lecture_previous).setOnClickListener { afficher(Portion(portion.debut - 1, portion.debut - 1)) }
         findViewById<Button>(R.id.lecture_next).setOnClickListener { afficher(Portion(portion.debut + 1, portion.debut + 1)) }
         // Le bouton de lecture : taille des lettres et lecture de nuit (pas de nusah ici).
-        ReglagesLecture.installer(this, findViewById<ScrollView>(R.id.lecture_scroll), auDessusDe = findViewById(R.id.lecture_nav)) {
+        reglages = ReglagesLecture.installer(this, findViewById<ScrollView>(R.id.lecture_scroll), auDessusDe = findViewById(R.id.lecture_nav)) {
             afficher(portion, garderPlace = true)
         }
         afficher(portion)
+        // Ouvert depuis un marque-page (28/10) : le verset marqué en haut de l'écran.
+        intent.getIntExtra(MARQUE_VERSET, 0).takeIf { it > 0 }?.let { v -> allerAuVerset(portion.debut, v) }
+    }
+
+    /** Les versets affichés, psaume par psaume : la vue, et pour chaque verset sa place dans le texte. */
+    private val places = mutableMapOf<Int, Pair<TextView, List<Triple<Int, Int, Int>>>>()
+
+    private fun allerAuVerset(n: Int, v: Int) {
+        val defile = findViewById<ScrollView>(R.id.lecture_scroll)
+        defile.post {
+            val (vue, versets) = places[n] ?: return@post
+            val debut = versets.firstOrNull { it.third == v }?.first ?: return@post
+            val ligne = vue.layout?.getLineForOffset(debut) ?: return@post
+            var y = vue.top + vue.layout.getLineTop(ligne)
+            var parent = vue.parent as? View
+            while (parent != null && parent !== defile) { y += parent.top; parent = parent.parent as? View }
+            defile.scrollTo(0, (y - dp(8)).coerceAtLeast(0))
+        }
     }
 
     private fun afficher(p: Portion, garderPlace: Boolean = false) {
@@ -55,10 +74,12 @@ class TehilimLectureActivity : AppCompatActivity() {
 
         val contenu = findViewById<LinearLayout>(R.id.lecture_content)
         contenu.removeAllViews()
+        places.clear()
+        val marques = MarquesPages.duTexte(Store.marques(this), CLE, "").map { it.section to it.bloc }.toSet()
         p.psaumes.forEachIndexed { i, n ->
             val tous = livre.versets(n)
             contenu.addView(titre(getString(R.string.tikkun_psalm_he, Reference.lettres(n)), i == 0))
-            contenu.addView(texte(tous, p.versets(n, tous.size)))
+            contenu.addView(texte(n, tous, p.versets(n, tous.size), marques))
         }
 
         // Un psaume seul se lit de proche en proche ; une portion d'un trait.
@@ -92,8 +113,12 @@ class TehilimLectureActivity : AppCompatActivity() {
         PoliceHebraique.appliquer(this)
     }
 
-    /** Les versets d'un psaume en un seul bloc, chacun précédé de son numéro en lettres. */
-    private fun texte(versets: List<String>, quels: IntRange): View = TextView(this).apply {
+    /**
+     * Les versets d'un psaume en un seul bloc, chacun précédé de son numéro en lettres.
+     * Marque-pages (28/10), comme au siddour : un appui long sur un verset le marque ou le démarque ;
+     * un verset marqué porte un trait de la couleur des titres et son numéro dans cette couleur.
+     */
+    private fun texte(n: Int, versets: List<String>, quels: IntRange, marques: Set<Pair<Int, Int>>): View = TextView(this).apply {
         layoutParams = LinearLayout.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT,
         ).apply {
@@ -103,6 +128,7 @@ class TehilimLectureActivity : AppCompatActivity() {
         }
         val discret = rendu.discret
         val bloc = SpannableStringBuilder()
+        val rangs = mutableListOf<Triple<Int, Int, Int>>()
         quels.forEach { v ->
             val verset = versets.getOrNull(v - 1) ?: return@forEach
             // Entre deux versets, une demi-ligne vide : chaque verset se détache (19/10).
@@ -117,8 +143,26 @@ class TehilimLectureActivity : AppCompatActivity() {
             bloc.setSpan(ForegroundColorSpan(discret), debut, bloc.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
             bloc.setSpan(RelativeSizeSpan(0.7f), debut, bloc.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
             bloc.append(verset)
+            rangs.add(Triple(debut, bloc.length, v))
+            if (n to v in marques) {
+                bloc.setSpan(ForegroundColorSpan(rendu.titre), debut, debut + Reference.lettres(v).length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                bloc.setSpan(android.text.style.QuoteSpan(rendu.titre), debut, bloc.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+            }
         }
         text = bloc
+        places[n] = this to rangs
+        var x = 0f
+        var y = 0f
+        setOnTouchListener { _, e -> x = e.x; y = e.y; reglages?.toucher(e); false }
+        setOnLongClickListener {
+            val o = getOffsetForPosition(x, y)
+            val (_, _, v) = rangs.firstOrNull { o in it.first..it.second } ?: return@setOnLongClickListener false
+            val pose = Store.basculerMarque(this@TehilimLectureActivity, MarquesPages.Marque(CLE, "", n, v,
+                "${Reference.lettres(n)}, ${Reference.lettres(v)} · ${MarquesPages.apercu(versets[v - 1], 5)}"))
+            android.widget.Toast.makeText(this@TehilimLectureActivity, if (pose) R.string.marque_posee else R.string.marque_retiree, android.widget.Toast.LENGTH_SHORT).show()
+            afficher(portion, garderPlace = true)
+            true
+        }
         layoutDirection = View.LAYOUT_DIRECTION_RTL
         textAlignment = View.TEXT_ALIGNMENT_VIEW_START
         textSize = 19f * rendu.echelle
@@ -135,6 +179,18 @@ class TehilimLectureActivity : AppCompatActivity() {
         private const val FIN = "fin"
         private const val DEBUT_VERSET = "debut_verset"
         private const val FIN_VERSET = "fin_verset"
+        private const val MARQUE_VERSET = "marque_verset"
+
+        /** La clé des marque-pages des Tehilim : le psaume en section, le verset en bloc. */
+        const val CLE = "t:tehilim"
+
+        /** Ouvre le psaume d'un marque-page, à son verset. */
+        fun ouvrirMarque(context: Context, m: MarquesPages.Marque) {
+            context.startActivity(
+                Intent(context, TehilimLectureActivity::class.java)
+                    .putExtra(DEBUT, m.section).putExtra(FIN, m.section).putExtra(MARQUE_VERSET, m.bloc)
+            )
+        }
 
         fun ouvrir(context: Context, p: Portion) {
             context.startActivity(

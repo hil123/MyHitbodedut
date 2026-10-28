@@ -269,6 +269,7 @@ object SiddurJour {
             c == "kippour" -> "fete_yom_kippour"
             // « אומרים כאן הלל » : le Hallel, complet ou non selon le jour.
             c == "hallel" -> "ajout_hallel_annonce"
+            c.startsWith("embolismique") -> "ajout_embolismique"
             c in setOf("pessah", "soukkot", "chavouot", "roch_hachana", "chemini_atseret", "hanouka", "pourim") -> "fete_$c"
             else -> "ajout_$c"
         }

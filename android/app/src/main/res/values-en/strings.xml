@@ -571,7 +571,7 @@
     <string name="police_serif">Hebrew serif</string>
     <string name="police_sans">Sans serif</string>
     <string name="police_arrondie">Rounded</string>
-    <string name="lecture_masque_info">Button hidden. Long-press the text to bring it back.</string>
+    <string name="lecture_masque_info">Button hidden. Double-tap the text to bring it back.</string>
     <string name="lecture_annuler_masque">Undo</string>
     <string name="lecture_taille">Text size: %1$d%%</string>
     <string name="lecture_pourcent">%1$d%%</string>
@@ -699,6 +699,8 @@
     <string name="ajout_yom_tov_chabbat">Yom Tov on Shabbat</string>
     <string name="ajout_roch_hachana_chabbat">Rosh Hashanah on Shabbat</string>
     <string name="ajout_motsae_chabbat_yt">Motzaei Shabbat and Yom Tov</string>
+    <string name="ajout_cheva_berakhot">Sheva Berakhot (wedding meal)</string>
+    <string name="ajout_embolismique">Leap year (וּלְכַפָּרַת פֶּשַׁע)</string>
     <string name="ajout_beit_avel">House of mourning</string>
     <string name="siddur_seul">Praying alone</string>
     <string name="ajout_minyan">With a minyan</string>
@@ -1229,7 +1231,7 @@
     <string name="boussole_grand_cercle">Real direction (great circle): %1$d° %2$s</string>
     <string name="boussole_cap_constant">Direction on the map (constant heading): %1$d° %2$s</string>
     <string name="boussole_distance">Distance: %1$s km</string>
-    <string name="boussole_legende">The ירושלים label follows the real direction; the dashed blue mark shows the direction on the map, for information.</string>
+    <string name="boussole_legende">The ירושלים label (on the rose, the gold needle) follows the real direction; the dashed blue mark shows the direction on the map, for information.</string>
     <string name="boussole_a_plat">Hold the phone flat, away from metal objects and magnets.</string>
     <string name="boussole_calibrer">Compass not accurate: draw a figure 8 in the air with the phone.</string>
     <string name="boussole_sans_capteur">This phone has no compass: the direction is given relative to north, at the top.</string>
@@ -1244,6 +1246,8 @@
     <string name="boussole_affichage">Compass display</string>
     <string name="boussole_affichage_hassid">The chassid turns (default)</string>
     <string name="boussole_affichage_rose">Compass rose</string>
+    <!-- Relance la localisation précise (ChoixLieu.positionExacte). -->
+    <string name="boussole_position_exacte">Exact position</string>
     <string-array name="boussole_cardinaux">
         <item>N</item>
         <item>E</item>

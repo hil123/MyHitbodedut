@@ -125,9 +125,12 @@ object BoussoleDessin {
     }
 
     /**
-     * La rose des vents vivante : le cadran tourne avec le téléphone, le repère
-     * du haut est le cap ; l'aiguille d'or va vers la direction principale, le
-     * trait bleu pointillé vers l'autre. [cardinaux] : N, E, S, O dans la langue.
+     * La rose des vents vivante, la rose graduée reprise de main (28/10) : le cadran tourne avec
+     * le téléphone, le repère du haut est le cap. Graduations aux 5°, degrés aux 30°, points
+     * cardinaux, zone d'or de ±TOLERANCE autour de la direction principale, aiguille d'or ; le
+     * trait bleu pointillé va vers l'autre direction. Face à Jérusalem, un anneau d'or.
+     * Dessinée sur une grille de 240 unités (centre 120, rayon 104), comme le SVG du web.
+     * [cardinaux] : N, E, S, O dans la langue.
      */
     fun roseVivante(c: Canvas, largeur: Int, hauteur: Int, principale: Double, autre: Double, cap: Double,
                     consigne: String, cardinaux: Array<String>) {
@@ -135,60 +138,89 @@ object BoussoleDessin {
         cadrer(c, largeur, hauteur)
         val face = DirectionJerusalem.face(DirectionJerusalem.ecart(principale, cap))
         c.drawRect(-160f, -160f, 160f, 160f, pinceau(CIEL))
-        val trait = pinceau(HORIZON, Paint.Style.STROKE).apply { strokeWidth = 2f }
-        c.drawCircle(0f, 0f, 112f, trait)
+        c.drawText(consigne, 0f, -142f, texte(ENCRE, 14f))
+        c.translate(0f, 12f)
+        c.scale(1.15f, 1.15f)
+        c.translate(-120f, -120f)
+        val ce = 120f
+        val r = 104f
+        fun x(g: Float, rr: Float) = ce + rr * kotlin.math.sin(Math.toRadians(g.toDouble())).toFloat()
+        fun y(g: Float, rr: Float) = ce - rr * kotlin.math.cos(Math.toRadians(g.toDouble())).toFloat()
+        val trait = pinceau(ENCRE, Paint.Style.STROKE).apply { strokeCap = Paint.Cap.ROUND }
+
+        if (face) {
+            for (i in 6 downTo 1) {
+                trait.strokeWidth = 4f + i * 3
+                trait.color = androidx.core.graphics.ColorUtils.setAlphaComponent(OR, 14)
+                c.drawCircle(ce, ce, r + 12, trait)
+            }
+            trait.strokeWidth = 2.5f
+            trait.color = OR
+            c.drawCircle(ce, ce, r + 13, trait)
+        }
+        c.drawCircle(ce, ce, r + 10, pinceau(androidx.core.graphics.ColorUtils.blendARGB(BLANC, if (face) OR else ENCRE, if (face) 0.14f else 0.04f)))
+        trait.strokeWidth = 1f
+        trait.color = androidx.core.graphics.ColorUtils.setAlphaComponent(ENCRE, 30)
+        c.drawCircle(ce, ce, r + 10, trait)
 
         // Le cadran, tourné du cap : le nord du cadran reste au nord.
         c.save()
-        c.rotate(-cap.toFloat())
-        val grad = pinceau(ENCRE, Paint.Style.STROKE)
-        for (d in 0 until 360 step 10) {
+        c.rotate(-cap.toFloat(), ce, ce)
+        trait.color = androidx.core.graphics.ColorUtils.setAlphaComponent(ENCRE, 77)
+        c.drawCircle(ce, ce, r, trait)
+        val p = principale.toFloat()
+        trait.strokeWidth = 8f
+        trait.color = androidx.core.graphics.ColorUtils.setAlphaComponent(OR, 90)
+        c.drawArc(RectF(ce - r + 6, ce - r + 6, ce + r - 6, ce + r - 6), p - 90 - DirectionJerusalem.TOLERANCE,
+            2 * DirectionJerusalem.TOLERANCE, false, trait)
+        for (g in 0 until 360 step 5) {
+            val fort = g % 30 == 0
+            val l = if (fort) 12f else if (g % 10 == 0) 7f else 4f
+            trait.strokeWidth = if (fort) 1.6f else 0.8f
+            trait.color = if (fort) ENCRE else androidx.core.graphics.ColorUtils.setAlphaComponent(ENCRE, 102)
+            val gf = g.toFloat()
+            c.drawLine(x(gf, r), y(gf, r), x(gf, r - l), y(gf, r - l), trait)
+        }
+        val degre = texte(ENCRE, 8.5f).apply { alpha = 170 }
+        for (g in 30 until 360 step 30) {
+            if (g % 90 == 0) continue
+            val gf = g.toFloat()
             c.save()
-            c.rotate(d.toFloat())
-            grad.strokeWidth = if (d % 90 == 0) 2.5f else 1.2f
-            c.drawLine(0f, -112f, 0f, -112f + if (d % 90 == 0) 14f else if (d % 30 == 0) 9f else 5f, grad)
+            c.rotate(gf, x(gf, r - 24), y(gf, r - 24))
+            c.drawText(g.toString(), x(gf, r - 24), y(gf, r - 24) + 3, degre)
             c.restore()
         }
-        val lettre = texte(ENCRE, 17f, gras = true)
+        val lettre = texte(ENCRE, 16f, gras = true)
         cardinaux.take(4).forEachIndexed { i, n ->
-            val a = Math.toRadians(i * 90.0)
+            val gf = i * 90f
+            lettre.color = if (i == 0) MARQUE else ENCRE
             c.save()
-            c.translate((86 * Math.sin(a)).toFloat(), (-86 * Math.cos(a)).toFloat())
-            c.rotate(cap.toFloat())
-            lettre.color = if (i == 0) OR else ENCRE
-            c.drawText(n, 0f, 6f, lettre)
+            c.rotate(gf, x(gf, r - 30), y(gf, r - 30))
+            c.drawText(n, x(gf, r - 30), y(gf, r - 30) + 6, lettre)
             c.restore()
         }
-        c.restore()
-
-        // L'autre direction, puis la principale.
+        // L'autre direction, en pointillé bleu.
         c.save()
-        c.rotate((autre - cap).toFloat())
-        c.drawLine(0f, 0f, 0f, -100f, pinceau(BLEU, Paint.Style.STROKE).apply {
-            strokeWidth = 3f
-            pathEffect = DashPathEffect(floatArrayOf(7f, 7f), 0f)
+        c.rotate(autre.toFloat(), ce, ce)
+        c.drawLine(ce, ce, ce, ce - r + 20, pinceau(BLEU, Paint.Style.STROKE).apply {
+            strokeWidth = 2.5f
+            pathEffect = DashPathEffect(floatArrayOf(6f, 6f), 0f)
         })
         c.restore()
-        val couleur = if (face) MARQUE else OR
-        c.save()
-        c.rotate((principale - cap).toFloat())
-        c.drawLine(0f, 18f, 0f, -100f, pinceau(couleur, Paint.Style.STROKE).apply { strokeWidth = 5f; strokeCap = Paint.Cap.ROUND })
-        c.drawCircle(0f, -100f, 7f, pinceau(couleur))
+        // L'aiguille d'or vers la direction principale.
+        c.rotate(p, ce, ce)
+        trait.strokeWidth = 3f
+        trait.color = androidx.core.graphics.ColorUtils.setAlphaComponent(ENCRE, 90)
+        c.drawLine(ce, ce + 8, ce, ce + 34, trait)
+        c.drawPath(Path().apply {
+            moveTo(ce, ce - r + 16); lineTo(ce - 9, ce + 2); lineTo(ce, ce - 6); lineTo(ce + 9, ce + 2); close()
+        }, pinceau(OR))
         c.restore()
-        c.drawCircle(0f, 0f, 6f, pinceau(ENCRE))
 
-        // L'étiquette au bout de l'aiguille, droite.
-        val a = Math.toRadians(principale - cap)
-        var x = (128 * Math.sin(a)).toFloat().coerceIn(-120f, 120f)
-        val y = (-128 * Math.cos(a)).toFloat().coerceIn(-118f, 140f)
-        // Près du haut, à côté du repère du cap plutôt que dessus.
-        if (y < -100f && kotlin.math.abs(x) < 46f) x = if (x < 0) -46f else 46f
-        c.drawRoundRect(RectF(x - 34f, y - 11f, x + 34f, y + 11f), 11f, 11f, pinceau(if (face) MARQUE else BLANC))
-        c.drawText(JERUSALEM, x, y + 5f, texte(if (face) BLANC else MARQUE, 15f, gras = true, serif = true))
-
-        // Le repère du haut : où pointe le téléphone.
-        c.drawPath(Path().apply { moveTo(0f, -118f); lineTo(-7f, -130f); lineTo(7f, -130f); close() }, pinceau(ENCRE))
-        c.drawText(consigne, 0f, -140f, texte(ENCRE, 14f))
+        // Le repère fixe du haut : où pointe le téléphone ; le moyeu.
+        c.drawPath(Path().apply { moveTo(ce, 4f); lineTo(ce - 7, 16f); lineTo(ce + 7, 16f); close() }, pinceau(if (face) OR else MARQUE))
+        c.drawCircle(ce, ce, 6f, pinceau(OR))
+        c.drawCircle(ce, ce, 2.5f, pinceau(BLANC))
         c.restore()
     }
 }

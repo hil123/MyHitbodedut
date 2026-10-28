@@ -105,12 +105,19 @@ object CalendrierJuif {
         const val BEIT_AVEL = "beit_avel"
         const val OUBLI = "oubli"
 
+        /** Les Chéva bérakhot de la table, à la fin de Birkat haMazon (28/10) : jamais du jour, repliées. */
+        const val CHEVA_BERAKHOT = "cheva_berakhot"
+
+        /** Roch 'Hodech d'une année embolismique ; avant Nissan (« וּלְכַפָּרַת פָּשַׁע », 28/10). */
+        const val EMBOLISMIQUE = "embolismique"
+        const val EMBOLISMIQUE_AVANT_NISSAN = "embolismique_avant_nissan"
+
         /** Ce qui ne se dit qu'avec un minyan (Kaddich, Barekhou, Kedoucha…) : jamais du jour, replié. */
         const val MINYAN = "minyan"
         val DERIVEES = listOf(AVINOU_MALKENOU, KRIAT_HATORAH) + JOURS_SEMAINE +
             listOf(TSOM_GUEDALIA_TEVET, LENDEMAIN_KIPPOUR, ESTHER_POURIM, CHIVA_ASSAR_TAMOUZ, BASCULE_PLUIE, EREV_KIPPOUR_VENDREDI,
                 LAMNATSEAH, LEDAVID, TECHOUVA_HOCHAANA, YOM_TOV, MOED, CHABBAT_ROCH_HODECH, YOM_TOV_CHABBAT, ROCH_HACHANA_CHABBAT,
-                MOTSAE_CHABBAT_YT, BEIT_AVEL, OUBLI, MINYAN)
+                MOTSAE_CHABBAT_YT, BEIT_AVEL, OUBLI, MINYAN, CHEVA_BERAKHOT, EMBOLISMIQUE, EMBOLISMIQUE_AVANT_NISSAN)
     }
 
     /**
@@ -283,6 +290,18 @@ object CalendrierJuif {
             if (yomTov) add(C.YOM_TOV)
             if (listOf(C.PESSAH, C.SOUKKOT, C.CHAVOUOT, C.CHEMINI_ATSERET).any { it in this }) add(C.MOED)
             if (C.CHABBAT in this && regles.isRoshChodesh) add(C.CHABBAT_ROCH_HODECH)
+            // « וּלְכַפָּרַת פָּשַׁע » au Moussaf de Roch 'Hodech d'une année embolismique (28/10) : toute l'année
+            // (consigne du siddour Edot) ou jusqu'à Roch 'Hodech Adar II inclus (« עד חודש ניסן », Sfard et
+            // Ashkenaz) ; les deux usages, Michna beroura 423:6. Le 30 inaugure le mois suivant.
+            if (regles.isRoshChodesh && regles.isJewishLeapYear) {
+                val inaugure = if (quantieme == 30) when (mois) {
+                    JewishDate.ADAR -> JewishDate.ADAR_II
+                    JewishDate.ADAR_II -> JewishDate.NISSAN
+                    else -> mois + 1
+                } else mois
+                add(C.EMBOLISMIQUE)
+                if (inaugure >= JewishDate.TISHREI) add(C.EMBOLISMIQUE_AVANT_NISSAN)
+            }
             if (C.CHABBAT in this && yomTov) add(C.YOM_TOV_CHABBAT)
             if (C.CHABBAT in this && regles.isRoshHashana) add(C.ROCH_HACHANA_CHABBAT)
             val hierYomTov = calendrier(date.minusDays(1), enIsrael, modernes = false).isYomTovAssurBemelacha

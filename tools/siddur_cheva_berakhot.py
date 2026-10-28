@@ -58,6 +58,21 @@ def reordonne(blocs):
     return [{"c": C_HOUPPA}] + six + [{"c": C_KOS}] + vin + apres
 
 
+# Dans Birkat haMazon (28/10, « mets en replié 7 brachot après birkat ») : les six bérakhot puis
+# le vin, copiés mot pour mot de « cheva_berakhot » une fois réordonné, sous une consigne qui
+# ouvre la section ; siddur_annotations.py la replie (condition « cheva_berakhot », jamais du jour).
+C_TABLE = "בסעודת שבע ברכות, אחר ברכת המזון:"
+
+
+def table(blocs):
+    """Les blocs de la table : les six bérakhot, la consigne du kos, (סברי) et הגפן."""
+    i = next(k for k, b in enumerate(blocs) if b.get("c") == C_KOS)
+    j = i + 1
+    while j < len(blocs) and "t" in blocs[j] and (est_gefen(blocs[j]) or est_savri(blocs[j])):
+        j += 1
+    return [{"c": C_TABLE}] + [b for b in blocs[1:i] if "t" in b] + blocs[i:j]
+
+
 def main():
     for n in NUSAH:
         nom = os.path.join(RAW, f"siddur_{n}.json")
@@ -67,6 +82,16 @@ def main():
             if isinstance(s, dict) and any(est_gefen(b) for b in s["blocs"]):
                 s["blocs"] = reordonne(s["blocs"])
                 print(n, [sans_balises(b.get("t", b.get("c", "")))[:28] for b in s["blocs"]])
+                bh = next(x for x in d["textes"] if x["id"] == "birkat_hamazon")
+                blocs = bh["sections"][-1]["blocs"]
+                ajout = table(s["blocs"])
+                # Reposé à chaque passage (idempotent) : avant « דיני שכחה » (Ashkenaz, Sfard), qui
+                # court jusqu'à la fin de la section ; sinon à la fin (Edot).
+                if C_TABLE in [b.get("c") for b in blocs]:
+                    k = [b.get("c") for b in blocs].index(C_TABLE)
+                    del blocs[k:k + len(ajout)]
+                k = next((i for i, b in enumerate(blocs) if sans_balises(b.get("c", "")).startswith("דיני שכחה")), len(blocs))
+                blocs[k:k] = ajout
         json.dump(d, open(nom, "w", encoding="utf-8"), ensure_ascii=False, separators=(",", ":"))
 
 

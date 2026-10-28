@@ -615,7 +615,7 @@
     <string name="police_serif">Hébraïque à empattements</string>
     <string name="police_sans">Sans empattements</string>
     <string name="police_arrondie">Arrondie</string>
-    <string name="lecture_masque_info">Bouton masqué. Appui long sur le texte pour le faire revenir.</string>
+    <string name="lecture_masque_info">Bouton masqué. Touchez deux fois le texte pour le faire revenir.</string>
     <string name="lecture_annuler_masque">Annuler</string>
     <string name="lecture_taille">Taille du texte : %1$d %%</string>
     <string name="lecture_pourcent">%1$d %%</string>
@@ -745,6 +745,8 @@
     <string name="ajout_yom_tov_chabbat">Yom tov un Chabbat</string>
     <string name="ajout_roch_hachana_chabbat">Roch Hachana un Chabbat</string>
     <string name="ajout_motsae_chabbat_yt">Motsaé Chabbat et Yom tov</string>
+    <string name="ajout_cheva_berakhot">Chéva bérakhot (repas de noces)</string>
+    <string name="ajout_embolismique">Année embolismique (וּלְכַפָּרַת פֶּשַׁע)</string>
     <string name="ajout_beit_avel">Maison endeuillée</string>
     <string name="siddur_seul">Si l’on prie seul</string>
     <string name="ajout_minyan">Avec minyan</string>
@@ -1275,7 +1277,7 @@
     <string name="boussole_grand_cercle">Direction réelle (grand cercle) : %1$d° %2$s</string>
     <string name="boussole_cap_constant">Direction sur la carte (cap constant) : %1$d° %2$s</string>
     <string name="boussole_distance">Distance : %1$s km</string>
-    <string name="boussole_legende">L’étiquette ירושלים suit la direction réelle ; le pointillé bleu montre la direction sur la carte, pour information.</string>
+    <string name="boussole_legende">L’étiquette ירושלים (sur la rose, l’aiguille d’or) suit la direction réelle ; le pointillé bleu montre la direction sur la carte, pour information.</string>
     <string name="boussole_a_plat">Tenez le téléphone à plat, loin des objets métalliques et des aimants.</string>
     <string name="boussole_calibrer">Boussole peu précise : dessinez un 8 dans l’air avec le téléphone.</string>
     <string name="boussole_sans_capteur">Ce téléphone n’a pas de boussole : la direction est donnée par rapport au nord, en haut.</string>
@@ -1291,6 +1293,8 @@
     <string name="boussole_affichage">Affichage de la boussole</string>
     <string name="boussole_affichage_hassid">Le hassid se tourne (par défaut)</string>
     <string name="boussole_affichage_rose">Rose des vents</string>
+    <!-- Relance la localisation précise (ChoixLieu.positionExacte). -->
+    <string name="boussole_position_exacte">Position exacte</string>
     <string-array name="boussole_cardinaux">
         <item>N</item>
         <item>E</item>

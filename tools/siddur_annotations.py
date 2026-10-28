@@ -84,6 +84,29 @@ INDICES = [
 ]
 
 
+# « וּלְכַפָּרַת פָּשַׁע » au Moussaf de Roch 'Hodech (vérification du 28/10) : année embolismique
+# seulement. Edot, « בשנה מעוברת » : toute l'année ; Sfard, Ashkenaz, « עד חודש ניסן » : jusqu'à
+# Roch 'Hodech Adar II inclus. Les deux usages : Michna beroura 423:6. Rend (condition, passage
+# brut à retirer hors du jour : la consigne et le mot, avec l'espace qui les précède).
+def kapparat_pecha(brut, nusah):
+    m = re.search(r"(בשנת העיבור|בשנה מעוברת)", brut)
+    if not m:
+        return None
+    debut = brut.rfind("<small>", 0, m.start())
+    while brut.startswith("<small>", debut - 7):
+        debut -= 7
+    fin = brut.index("שַׁע", m.end()) + len("שַׁע")
+    suite = re.match(r"(\.?(</b>|</small>))*", brut[fin:])
+    fin += suite.end()
+    if brut[fin:fin + 1] == "." and brut[:debut].rstrip().endswith("."):
+        fin += 1
+    while debut > 0 and brut[debut - 1] == " ":
+        debut -= 1
+    if brut[fin:fin + 1] == ")" and brut[debut - 1:debut] == ",":
+        debut -= 1
+    return ("embolismique" if nusah == "edot" else "embolismique_avant_nissan"), brut[debut:fin]
+
+
 def annoter(texte_id, sections, nusah):
     sortie = []
 
@@ -281,6 +304,15 @@ def annoter(texte_id, sections, nusah):
                         j += 1
                 bi = j
                 continue
+            # Les Chéva bérakhot de la table (28/10, tools/siddur_cheva_berakhot.py) : à la fin de
+            # Birkat haMazon, jamais un jour du calendrier, toujours repliées (dépliables).
+            if cons[bi] and x.startswith("בסעודת שבע ברכות"):
+                j = bi
+                while j < n and not (cons[j] and txt[j].startswith("דיני שכחה")):
+                    prend(j, "cheva_berakhot")
+                    j += 1
+                bi = j
+                continue
             # La maison endeuillée : jamais un jour du calendrier, toujours replié (dépliable).
             if cons[bi] and x.startswith("בבית האבל"):
                 j = bi
@@ -459,9 +491,10 @@ def annoter(texte_id, sections, nusah):
                 continue
             # Été, hiver : la consigne et sa variante dans le même bloc (Arvit
             # ashkénaze, « בימות החמה: ברכה » ; relevé le 14/10).
-            elif not cons[bi] and any(x.startswith(e + " ") for e in ETE + HIVER) \
-                    and not (any(e in x for e in ETE) and any(h in x for h in HIVER)):
-                if any(x.startswith(e) for e in ETE):
+            # Aussi « בקיץ - מוריד הטל: » (Moussaf ashkénaze ; vérification de Roch 'Hodech, 28/10).
+            elif not cons[bi] and any(x.startswith(e + " ") or x.startswith(e.rstrip(":") + " - ") for e in ETE + HIVER) \
+                    and not (any(e.rstrip(":") in x for e in ETE) and any(h.rstrip(":") in x for h in HIVER)):
+                if any(x.startswith(e.rstrip(":")) for e in ETE):
                     c = "morid_hatal" if "מוריד הטל" in x else "berakha"
                 else:
                     c = "machiv_harouah" if "משיב הרוח" in x else "tal_oumatar"
@@ -522,6 +555,10 @@ def annoter(texte_id, sections, nusah):
                     k = brut.index("<small>בחורף")
                     note("indice", si, bi, "morid_hatal", {"texte": "מוריד הטל", "retire": brut[:k]})
                     note("indice", si, bi, "machiv_harouah", {"texte": "משיב הרוח ומוריד הגשם", "retire": brut[k:]})
+                if texte_id == "moussaf_rosh_hodech" and "t" in sec["blocs"][bi]:
+                    kapara = kapparat_pecha(sec["blocs"][bi]["t"], nusah)
+                    if kapara:
+                        note("indice", si, bi, kapara[0], {"texte": "וּלְכַפָּרַת פֶּשַׁע", "retire": kapara[1]})
             bi += 1
         if office or texte_id in ("arvit", "moussaf_rosh_hodech"):
             minyan(txt, cons, pris, prend)

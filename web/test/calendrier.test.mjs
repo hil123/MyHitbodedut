@@ -368,3 +368,18 @@ test('rappels de tefila : nord et sud, Israël et diaspora', () => {
   assert.ok(!t(false, true).has('guechem_debut'));
   assert.ok(!rappelsTefila('2026-10-16', false, 3, undefined, true).some((r) => r.type === 'pluie_debut'));
 });
+
+test('Roch \'Hodech d\'une année embolismique : וּלְכַפָּרַת פֶּשַׁע (28/10)', async () => {
+  const { jour } = await import('../src/js/calendrier-juif.js');
+  const c = (iso) => jour(iso, false, false).conditions;
+  // 5787 est embolismique (11ᵉ année du cycle). Kislev (30 'Hechvan, 1 Kislev) : les deux.
+  for (const d of ['2026-11-10', '2026-11-11']) {
+    assert.ok(c(d).has('embolismique') && c(d).has('embolismique_avant_nissan'), d);
+  }
+  // Roch 'Hodech Nissan 5787 (Adar II a 29 jours : 1 Nissan seul, 2027-04-08) : toute l'année seulement.
+  assert.ok(c('2027-04-08').has('embolismique') && !c('2027-04-08').has('embolismique_avant_nissan'));
+  // 5786 n'est pas embolismique : Roch 'Hodech Chevat 5786 (2026-01-19).
+  assert.ok(!c('2026-01-19').has('embolismique'));
+  // Hors Roch 'Hodech : rien.
+  assert.ok(!c('2026-11-12').has('embolismique'));
+});
