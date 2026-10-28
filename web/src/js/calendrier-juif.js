@@ -167,11 +167,13 @@ export function jour(iso, enIsrael, mukafChoma = false) {
 
 /**
  * Le jour civil dont relève une prière dite à [heures] (0-23) le [iso] :
- * Arvit et le Chema du coucher, l'après-midi, relèvent du lendemain (voir
+ * Arvit et le Chema du coucher, l'après-midi, relèvent du lendemain ; les
+ * autres textes sauf Min'ha, après la sortie des étoiles du lieu (28/10 ; voir
  * CalendrierJuif.jourDeLaPriere, qui documente la règle).
  */
-export function jourDeLaPriere(texte, iso, heures) {
-  if ((texte === 'arvit' || texte === 'chema_coucher') && heures >= 12) {
+export function jourDeLaPriere(texte, iso, heures, apresSortie = false) {
+  const soir = texte === 'arvit' || texte === 'chema_coucher' ? heures >= 12 : texte !== 'minha' && apresSortie;
+  if (soir) {
     const [a, m, j] = iso.split('-').map(Number);
     return new Date(Date.UTC(a, m - 1, j + 1, 12)).toISOString().slice(0, 10);
   }

@@ -147,6 +147,10 @@ test('Arvit et le Chema du coucher relèvent du jour hébreu suivant dès l’ap
   assert.equal(jourDeLaPriere('chema_coucher', '2026-12-31', 23), '2027-01-01');
   assert.equal(jourDeLaPriere('arvit', '2026-10-10', 0), '2026-10-10');
   assert.equal(jourDeLaPriere('minha', '2026-10-10', 17), '2026-10-10');
+  // Après la sortie des étoiles (28/10) : Birkat haMazon relève de demain ; Min'ha non.
+  assert.equal(jourDeLaPriere('birkat_hamazon', '2026-10-10', 19, true), '2026-10-11');
+  assert.ok(!jour(jourDeLaPriere('birkat_hamazon', '2026-10-10', 19, true), false).conditions.has('chabbat'));
+  assert.equal(jourDeLaPriere('minha', '2026-10-10', 19, true), '2026-10-10');
   // Samedi soir : le dimanche, d'où la section de motsaé Chabbat.
   assert.ok(jour(jourDeLaPriere('arvit', '2026-10-10', 20), false).conditions.has('motsae_chabbat'));
 });

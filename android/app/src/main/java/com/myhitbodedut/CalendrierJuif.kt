@@ -319,14 +319,18 @@ object CalendrierJuif {
      * [date]. Arvit et le Chema du coucher se disent le soir, qui ouvre déjà
      * le jour hébreu suivant : l'après-midi, c'est le lendemain ; après
      * minuit, c'est encore le jour civil, que la nuit a ouvert la veille.
-     * Midi sert de borne parce qu'aucun Arvit ne se dit le matin ; la
-     * chki'a, elle, demanderait une ville. Toutes les autres prières (et
-     * les bénédictions du repas) relèvent du jour civil : les ajouts y
-     * restent ouvrables à la main, ce n'est qu'une mise en évidence.
+     * Midi sert de borne parce qu'aucun Arvit ne se dit le matin.
+     * Les autres textes (bénédictions du repas, Havdala…) passent au jour
+     * suivant à la sortie des étoiles du lieu, quand on le connaît
+     * ([apresSortie]) : samedi soir, Birkat haMazon n'a plus רצה en évidence
+     * (demande du 28/10) ; il reste ouvrable à la main pour qui a commencé
+     * son repas pendant Chabbat. Min'ha garde le jour civil. Sans lieu, le
+     * jour civil.
      */
-    fun jourDeLaPriere(texte: String, date: LocalDate, heure: LocalTime): LocalDate = when (texte) {
+    fun jourDeLaPriere(texte: String, date: LocalDate, heure: LocalTime, apresSortie: Boolean = false): LocalDate = when (texte) {
         "arvit", "chema_coucher" -> if (heure >= LocalTime.NOON) date.plusDays(1) else date
-        else -> date
+        "minha" -> date
+        else -> if (apresSortie) date.plusDays(1) else date
     }
 
     private fun calendrier(date: LocalDate, enIsrael: Boolean, modernes: Boolean) =

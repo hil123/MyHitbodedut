@@ -486,6 +486,10 @@ def annoter(texte_id, sections, nusah):
             elif not cons[bi] and commence(x, "רצה והחליצנו"):
                 en_tete(bi, "chabbat", "בשבת")
                 prend(bi, "chabbat")
+            # « אתה חוננתנו » en bloc à part (Sefard, Ashkenaz), sans consigne : motsaé Chabbat
+            # et Yom Tov (28/10 ; les Edot ont la consigne « במוצאי שבת ויום טוב אומרים »).
+            elif not cons[bi] and re.match(r"\(?אתה חוננתנו", x) and bi not in pris:
+                prend(bi, "motsae_chabbat_yt")
             # Le Hallel annoncé après l'Amida.
             elif cons[bi] and "אומרים כאן הלל" in x:
                 prend(bi, "hallel")

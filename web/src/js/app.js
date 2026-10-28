@@ -1162,7 +1162,10 @@ function ecranPriere() {
   const annotations = !livre && chargeAnnotations() ? annotationsSiddur[store.siddurNusah()]?.[x.id] : null;
   const idx = indexAjouts(annotations ?? []);
   const maintenant = new Date();
-  const jourDuTexte = jourJuif(jourDeLaPriere(x.id, isoLocal(maintenant), maintenant.getHours()), store.inIsrael(), mukafChoma());
+  // Après la sortie des étoiles du lieu, les autres textes relèvent aussi de demain (28/10).
+  const lieuSortie = store.lieu();
+  const tset = lieuSortie ? zmanimDuJour(lieuSortie, isoLocal(maintenant)).find((z) => z.cle === 'tset')?.instant : null;
+  const jourDuTexte = jourJuif(jourDeLaPriere(x.id, isoLocal(maintenant), maintenant.getHours(), !!tset && maintenant >= tset), store.inIsrael(), mukafChoma());
   const nusah = store.siddurNusah();
   const c = conditionsPour(nusah, store.inIsrael(), jourDuTexte.conditions, store.sansTahanounFinTichri(), hemisphereSud());
   const nom = (a, condition) => tr.t(libelleJour(a.libelle, condition, nusah, c));

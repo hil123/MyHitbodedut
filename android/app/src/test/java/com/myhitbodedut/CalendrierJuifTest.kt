@@ -157,6 +157,10 @@ class CalendrierJuifTest {
         assertEquals(date, CalendrierJuif.jourDeLaPriere("arvit", date, LocalTime.of(0, 40)))
         assertEquals(date, CalendrierJuif.jourDeLaPriere("chaharit", date, LocalTime.of(19, 30)))
         assertEquals(date, CalendrierJuif.jourDeLaPriere("minha", date, LocalTime.of(17, 0)))
+        // Après la sortie des étoiles (28/10) : Birkat haMazon relève de demain, plus de רצה en évidence ; Min'ha non.
+        assertEquals(date.plusDays(1), CalendrierJuif.jourDeLaPriere("birkat_hamazon", date, LocalTime.of(19, 30), apresSortie = true))
+        assertEquals(date, CalendrierJuif.jourDeLaPriere("birkat_hamazon", date, LocalTime.of(17, 0), apresSortie = false))
+        assertEquals(date, CalendrierJuif.jourDeLaPriere("minha", date, LocalTime.of(19, 30), apresSortie = true))
         // Samedi soir : Arvit relève du dimanche, d'où la section de motsaé Chabbat.
         assertTrue(C.MOTSAE_CHABBAT in CalendrierJuif.jour(date.plusDays(1), false).conditions)
     }

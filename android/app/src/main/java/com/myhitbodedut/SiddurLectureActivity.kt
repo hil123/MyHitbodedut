@@ -205,7 +205,11 @@ class SiddurLectureActivity : AppCompatActivity() {
 
         // Le jour hébreu de cette prière : Arvit, l'après-midi, est déjà celui de demain.
         val israel = Store.inIsrael(this)
-        val jour = CalendrierJuif.jour(CalendrierJuif.jourDeLaPriere(id, LocalDate.now(), LocalTime.now()), israel,
+        // Après la sortie des étoiles du lieu, les autres textes relèvent aussi de demain (28/10).
+        val apresSortie = Store.lieuZmanim(this)?.let { lieu ->
+            Zmanim.jour(lieu, LocalDate.now()).firstOrNull { it.cle == "tset" }?.instant?.let { !java.time.Instant.now().isBefore(it) }
+        } ?: false
+        val jour = CalendrierJuif.jour(CalendrierJuif.jourDeLaPriere(id, LocalDate.now(), LocalTime.now(), apresSortie), israel,
             Store.mukafChoma(this))
         val annotations = if (livre) emptyList() else Data.ajouts(this)[id].orEmpty()
         val note = if (annotations.isEmpty()) emptyList() else listOf(Note(getString(R.string.siddur_jour_ajouts,
