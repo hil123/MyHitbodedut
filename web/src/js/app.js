@@ -789,9 +789,12 @@ const NUSAH = [['edot', 'siddur_nusah_edot'], ['sefard', 'siddur_nusah_sefard'],
 /** Le siddour du nusah choisi, chargé au premier besoin (un fichier par nusah). */
 /** Les livres entiers de la bibliothèque (data/livres.json, au format du siddour), chargés au premier besoin. */
 let livres = null;
+let livresDemandes = false;
 function chargeLivres() {
   if (livres) return true;
-  fetch('data/livres.json').then((r) => r.json()).then((d) => { livres = d; rendre(); }).catch(() => {});
+  if (livresDemandes) return false;
+  livresDemandes = true;
+  fetch('data/livres.json').then((r) => r.json()).then((d) => { livres = d; rendre(); }).catch(() => { livresDemandes = false; });
   return false;
 }
 
@@ -1389,7 +1392,7 @@ function allerAMarque(ecran, m) {
 function repriseFavoris() {
   const titre = (cle) => {
     const livre = cle.startsWith('l:');
-    if (livre ? !livres : !chargeSiddur()) return null;
+    if (livre ? !chargeLivres() : !chargeSiddur()) return null;
     return (livre ? livres : siddur).textes.find((t) => t.id === cle.slice(2))?.titre.he ?? null;
   };
   const ouvrirCle = (cle) => { priere = cle.startsWith('l:') ? `livre:${cle.slice(2)}` : cle.slice(2); ouvrir('priere'); };
@@ -1400,13 +1403,39 @@ function repriseFavoris() {
     const t = titre(cle);
     if (t) lignes.push(ligne({ nom: `★ ${t}`, onclick: () => ouvrirCle(cle) }));
   }
-  // Les marque-pages (15/10) : le texte et les premiers mots du paragraphe marqué.
-  // Plus discrets que les favoris (28/10) : une ligne chacun, petite, en gris, cinq au plus.
-  for (const m of store.marques().slice(0, 5)) {
-    const t = titre(m.cle);
-    if (t) lignes.push(ligne({ class: 'marque-discrete', nom: h('span', { class: 'nom-marque' }, iconeMarque(m.cle.startsWith('l:'), 14), t), etat: `${m.apercu}…`, onclick: () => { marqueAOuvrir = m; ouvrirCle(m.cle); } }));
-  }
+  // Les marque-pages (15/10) : une seule ligne (28/10), qui ouvre la liste filtrée par recueil et par texte.
+  const marques = store.marques().filter((m) => titre(m.cle));
+  if (marques.length) lignes.push(ligne({ nom: h('span', { class: 'nom-marque' }, iconeMarque(false, 18), tr.t('marques_titre')), etat: String(marques.length),
+    onclick: () => listeSignets(marques, titre, (m) => { marqueAOuvrir = m; ouvrirCle(m.cle); }) }));
   return lignes.length ? h('div', { class: 'carte' }, ...lignes) : null;
+}
+
+/**
+ * Tous les marque-pages (28/10) : d'abord tous, puis filtrés par recueil (סידור, ספרים)
+ * ou par texte (שחרית, מנחה…), dans l'ordre du recueil.
+ */
+function listeSignets(marques, titre, ouvrirMarque) {
+  const ordre = (cle) => { const l = cle.startsWith('l:') ? livres : siddur; return (cle.startsWith('l:') ? 1e4 : 0) + (l?.textes.findIndex((t) => t.id === cle.slice(2)) ?? 0); };
+  const textes = [...new Set(marques.map((m) => m.cle))].sort((a, b) => ordre(a) - ordre(b));
+  const filtres = [['*', tr.t('recherche_tout')]];
+  if (marques.some((m) => m.cle.startsWith('s:'))) filtres.push(['s', tr.t('siddur_title')]);
+  if (marques.some((m) => m.cle.startsWith('l:'))) filtres.push(['l', tr.t('livres_title')]);
+  if (textes.length > 1) filtres.push(...textes.map((c) => [c, titre(c)]));
+  let filtre = '*';
+  feuille(tr.t('marques_titre'), (f, fermer) => {
+    const puces = h('div', { class: 'puces-recherche puces-signets', role: 'radiogroup', 'aria-label': tr.t('marques_titre') });
+    const liste = h('div', { class: 'liste-signets' });
+    const remplir = () => {
+      puces.replaceChildren(...filtres.map(([cle, nom]) => h('button', { type: 'button', class: 'puce-choix', role: 'radio', lang: cle.includes(':') ? 'he' : null,
+        'aria-checked': String(cle === filtre), onclick: () => { filtre = cle; remplir(); } }, nom)));
+      const garde = marques.filter((m) => filtre === '*' || (filtre.includes(':') ? m.cle === filtre : m.cle.startsWith(`${filtre}:`)))
+        .sort((a, b) => ordre(a.cle) - ordre(b.cle) || a.section - b.section || a.bloc - b.bloc);
+      liste.replaceChildren(...garde.map((m) => h('button', { class: 'choix signet-choix', onclick: () => { fermer(); ouvrirMarque(m); } },
+        h('span', { class: 'nom-marque' }, iconeMarque(m.cle.startsWith('l:'), 16), titre(m.cle)), h('span', { class: 'apercu', lang: 'he', dir: 'rtl' }, `${m.apercu}…`))));
+    };
+    remplir();
+    f.append(puces, liste);
+  });
 }
 
 // Les annotations des ajouts (tools/siddur_annotations.py), chargées une fois.

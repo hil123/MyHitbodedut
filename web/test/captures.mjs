@@ -178,6 +178,23 @@ await capture('halakha-he', { langue: 'he', ecran: 'halakha', extra: JERUSALEM, 
 await capture('halakha-he-ben-ish-hai', { langue: 'he', ecran: 'halakha', extra: { ...JERUSALEM, halakha_source: 'ben_ish_hai' }, actions: bas(0) });
 await capture('hilloulot-he', { langue: 'he', ecran: 'hilloulot', extra: JERUSALEM, actions: bas(0) });
 await capture('livres-he', { langue: 'he', ecran: 'livres', actions: bas(0) });
+// Le 28/10 : les marque-pages en une ligne, puis la feuille filtrée par recueil et par texte.
+const MARQUES = { marques_pages: [
+  { cle: 's:chaharit', nusah: 'edot', section: 2, bloc: 3, apercu: 'אביי הוה מסדר סדר המערכה' },
+  { cle: 's:minha', nusah: 'edot', section: 0, bloc: 1, apercu: 'אשרי יושבי ביתך עוד יהללוך' },
+  { cle: 'l:likoutei_etsot', nusah: '', section: 1, bloc: 0, apercu: 'עיקר ההתבודדות הוא בלילה' },
+  { cle: 's:chaharit', nusah: 'edot', section: 5, bloc: 0, apercu: 'ברוך שאמר והיה העולם' },
+  { cle: 's:birkat_hamazon', nusah: 'edot', section: 0, bloc: 0, apercu: 'שיר המעלות בשוב ה׳ את שיבת ציון' },
+] };
+const feuilleSignets = (filtre) => async (p) => {
+  await p.waitForSelector('.ligne .nom-marque');
+  await p.click('.ligne:has(.nom-marque)');
+  await p.waitForSelector('.puces-signets');
+  if (filtre) await p.evaluate((f) => [...document.querySelectorAll('.puces-signets .puce-choix')].find((b) => b.textContent.includes(f)).click(), filtre);
+};
+await capture('signets-he', { langue: 'he', onglet: 'textes', extra: MARQUES });
+await capture('signets-he-feuille', { langue: 'he', onglet: 'textes', extra: MARQUES, actions: feuilleSignets('') });
+await capture('signets-he-chaharit', { langue: 'he', onglet: 'textes', extra: MARQUES, actions: feuilleSignets('שַׁחֲרִית') });
 await capture('siddour-he', { langue: 'he', ecran: 'siddur', actions: bas(0) });
 await capture('siddour-he-occasions', { langue: 'he', ecran: 'siddur', actions: bas(100000) });
 // Le 28/10 : paragraphes aérés (premier mot agrandi), Chéva bérakhot repliées en fin de Birkat
