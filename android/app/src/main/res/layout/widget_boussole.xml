@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Le widget boussole 2 × 2 (28/10) : une image dessinée par BoussoleWidget ; l'aperçu montre le hassid seul. -->
+<ImageView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/wb_image"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_widget_boussole"
+    android:contentDescription="@string/boussole_widget_label"
+    android:padding="8dp"
+    android:scaleType="fitCenter"
+    android:src="@drawable/char_standing_back" />

@@ -117,6 +117,7 @@ object Store {
     private const val KEY_VOL_RAPPELS_ACTIFS = "vol_rappels_actifs"
     private const val KEY_VOL_RAPPEL_VU = "vol_rappel_vu"
     private const val KEY_SUIVI_DIRECT = "vol_suivi_direct"
+    private const val KEY_BOUSSOLE_CARTE = "boussole_carte"
     private const val KEY_ALLUMAGE = "allumage_minutes"
     private const val KEY_PAUSED_DATES = "paused_dates"
     private const val KEY_REMINDER_ON = "reminder_on"
@@ -478,6 +479,13 @@ object Store {
     }
 
     /** Le suivi de vol en direct (SuiviVol) : désactivé tant que l'utilisateur ne l'active pas. */
+    /** La boussole suit la direction sur la carte plutôt que le plus court chemin (28/10) ; les deux restent affichées. */
+    fun boussoleCarte(context: Context): Boolean = prefs(context).getBoolean(KEY_BOUSSOLE_CARTE, false)
+
+    fun setBoussoleCarte(context: Context, carte: Boolean) {
+        prefs(context).edit().putBoolean(KEY_BOUSSOLE_CARTE, carte).apply()
+    }
+
     fun suiviDirect(context: Context): Boolean = prefs(context).getBoolean(KEY_SUIVI_DIRECT, false)
 
     fun setSuiviDirect(context: Context, actif: Boolean) {

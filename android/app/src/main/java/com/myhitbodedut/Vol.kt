@@ -280,7 +280,7 @@ object Vol {
     /** Les zmanim du point pour la veille, le jour et le lendemain (jour du fuseau nautique). */
     private fun occurrences(p: Point, signaler: (Reserve) -> Unit = {}): Map<String, List<Instant>> {
         val lieu = lieuSous(p)
-        val jour = LocalDate.ofInstant(p.instant, ZoneId.of(lieu.fuseau))
+        val jour = p.instant.atZone(ZoneId.of(lieu.fuseau)).toLocalDate()
         val parCle = mutableMapOf<String, MutableList<Instant>>()
         for (d in listOf(jour.minusDays(1), jour, jour.plusDays(1))) {
             for (z in Zmanim.jour(lieu, d)) {
@@ -336,8 +336,8 @@ object Vol {
             val avantLigne = 180 - abs(a.longitude)
             val part = avantLigne / (avantLigne + 180 - abs(b.longitude))
             val t = a.instant.plusMillis((Duration.between(a.instant, b.instant).toMillis() * part).toLong())
-            lignes += LigneDate(t, LocalDate.ofInstant(t, ZoneId.of(fuseauNautique(a.longitude))),
-                LocalDate.ofInstant(t, ZoneId.of(fuseauNautique(b.longitude))))
+            lignes += LigneDate(t, t.atZone(ZoneId.of(fuseauNautique(a.longitude))).toLocalDate(),
+                t.atZone(ZoneId.of(fuseauNautique(b.longitude))).toLocalDate())
         }
         return lignes
     }

@@ -44,7 +44,7 @@ object VolCalendrier {
 
     fun jalons(calcul: Vol.Calcul, enIsrael: Boolean, minutes: Int): List<Jalon> = calcul.enVol.flatMap { e ->
         if (e.cle != "chkia" && e.cle != "tset") return@flatMap emptyList()
-        val jour = LocalDate.ofInstant(e.instant, ZoneId.of(Vol.fuseauNautique(e.longitude)))
+        val jour = e.instant.atZone(ZoneId.of(Vol.fuseauNautique(e.longitude))).toLocalDate()
         val aujourdhui = CalendrierJuif.jour(jour, enIsrael)
         val demain = CalendrierJuif.jour(jour.plusDays(1), enIsrael)
         fun jalon(type: Type, j: CalendrierJuif.Jour, allumage: Instant? = null, omer: Int = 0) =

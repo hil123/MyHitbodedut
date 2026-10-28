@@ -1263,4 +1263,39 @@
     <string name="vol_rappel_omer_texte">Les étoiles sortent sous l’avion : ce soir, on compte le jour %1$s du Omer.</string>
     <string name="vol_direct_explication_opensky">Désactivé par défaut. Activé, il demande à OpenSky Network, gratuitement et sans compte, les avions vus dans un carré de 10° autour de la position estimée ; l’indicatif reste sur le téléphone, qui y cherche l’avion. Au-dessus des océans, l’avion n’est souvent pas vu.</string>
     <string name="vol_source_aeroports">Aéroports : OurAirports (domaine public) ; fuseaux : timezone-boundary-builder (ODbL, © contributeurs OpenStreetMap)</string>
+
+    <!-- La boussole de Jérusalem (28/10, design C). -->
+    <string name="boussole_title">Direction de Jérusalem</string>
+    <string name="boussole_carte_sous">Choisissez un lieu : le hassid se tourne vers Jérusalem.</string>
+    <string name="boussole_face">Face à Jérusalem</string>
+    <string name="boussole_droite">Tournez à droite de %1$d°</string>
+    <string name="boussole_gauche">Tournez à gauche de %1$d°</string>
+    <string name="boussole_par_rapport_nord">%1$d° depuis le nord</string>
+    <string name="boussole_nord">N</string>
+    <string name="boussole_grand_cercle">Plus court chemin (grand cercle) : %1$d° %2$s</string>
+    <string name="boussole_cap_constant">Direction sur la carte (cap constant) : %1$d° %2$s</string>
+    <string name="boussole_distance">Distance : %1$s km</string>
+    <string name="boussole_legende">L’étiquette ירושלים suit la direction principale ; le petit rond bleu pointillé, l’autre.</string>
+    <string name="boussole_a_plat">Tenez le téléphone à plat, loin des objets métalliques et des aimants.</string>
+    <string name="boussole_calibrer">Boussole peu précise : dessinez un 8 dans l’air avec le téléphone.</string>
+    <string name="boussole_sans_capteur">Ce téléphone n’a pas de boussole : la direction est donnée par rapport au nord, en haut.</string>
+    <string name="boussole_principale">Direction principale</string>
+    <string name="boussole_principale_gc">Plus court chemin (grand cercle)</string>
+    <string name="boussole_principale_carte">Direction sur la carte (cap constant)</string>
+    <string name="boussole_note_titre">Deux façons de calculer</string>
+    <string name="boussole_note">La direction de Jérusalem se calcule de deux façons. Par le plus court chemin sur le globe (grand cercle) : selon Chabad.org, le Choul’han Aroukh haRav et beaucoup d’autres tiennent cette méthode pour préférable ; de New York, environ 54°. Selon la ligne droite sur une carte de Mercator (cap constant) : de New York, environ 95°. Les deux restent affichées ; le réglage choisit seulement celle que suit le hassid. Calculé sur l’appareil, vers Har haBayit (31,7781° N, 35,2354° E), en corrigeant la déclinaison magnétique du lieu.</string>
+    <string name="boussole_widget_label">Direction de Jérusalem</string>
+    <string name="boussole_widget_description">Le hassid et la direction de Jérusalem depuis le lieu des zmanim, par rapport au nord. Le toucher ouvre la boussole.</string>
+    <string name="boussole_widget_lecture">Jérusalem depuis %1$s : %2$d° depuis le nord</string>
+    <string name="boussole_source"><![CDATA[Source : <a href="https://www.chabad.org/library/article_cdo/aid/3502321/jewish/Why-Do-We-Face-East-When-Praying-Or-Do-We.htm">Chabad.org, « Why Do We Face East When Praying? Or Do We? »</a>]]></string>
+    <string-array name="boussole_points">
+        <item>N</item>
+        <item>NE</item>
+        <item>E</item>
+        <item>SE</item>
+        <item>S</item>
+        <item>SO</item>
+        <item>O</item>
+        <item>NO</item>
+    </string-array>
 </resources>

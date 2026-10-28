@@ -59,7 +59,7 @@ object VolAlerte {
         val dep = Vol.zone(plan.depart.fuseau)?.let { t.atZone(it) } ?: return t.toString()
         val arr = Vol.zone(plan.arrivee.fuseau)?.let { t.atZone(it) } ?: return t.toString()
         val autreJour = if (arr.toLocalDate() != dep.toLocalDate()) "${arr.format(jour)} " else ""
-        return "${dep.format(jour)} ⁦${dep.format(heure)} ${plan.depart.iata}⁩ · $autreJour⁦${arr.format(heure)} ${plan.arrivee.iata}⁩"
+        return "${dep.format(jour)} \u2066${dep.format(heure)} ${plan.depart.iata}\u2069 · $autreJour\u2066${arr.format(heure)} ${plan.arrivee.iata}\u2069"
     }
 
     fun nomPriere(c: Context, priere: String?) = c.getString(when (priere) {

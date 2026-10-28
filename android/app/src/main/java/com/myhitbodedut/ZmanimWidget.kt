@@ -30,7 +30,10 @@ class ZmanimWidget : AppWidgetProvider() {
             return "arvit" to null
         }
 
-        /** Les trois tailles (28/10) : ZmanimVignette. */
-        fun refresh(context: Context) = ZmanimVignette.rafraichir(context)
+        /** Les trois tailles (28/10) : ZmanimVignette ; et la boussole, qui suit le même lieu. */
+        fun refresh(context: Context) {
+            ZmanimVignette.rafraichir(context)
+            BoussoleWidget.refresh(context)
+        }
     }
 }

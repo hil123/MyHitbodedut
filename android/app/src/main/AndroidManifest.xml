@@ -193,6 +193,11 @@
             android:label="@string/vol_title" />
 
         <activity
+            android:name=".BoussoleActivity"
+            android:exported="false"
+            android:label="@string/boussole_title" />
+
+        <activity
             android:name=".CalendrierActivity"
             android:exported="false"
             android:label="@string/calendrier_title" />
@@ -308,6 +313,19 @@
             <meta-data
                 android:name="android.appwidget.provider"
                 android:resource="@xml/widget_zmanim_grand_info" />
+        </receiver>
+
+        <!-- La direction de Jérusalem sur l'écran d'accueil (28/10). -->
+        <receiver
+            android:name=".BoussoleWidget"
+            android:exported="false"
+            android:label="@string/boussole_widget_label">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_boussole_info" />
         </receiver>
 
         <!-- La série sur l'écran d'accueil. -->
