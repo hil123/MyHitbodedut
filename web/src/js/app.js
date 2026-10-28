@@ -2711,7 +2711,7 @@ function suiviDirect() {
       store.setVolIndicatif(indicatif);
       demanderDirect(indicatif);
     } }, tr.t(directVol ? 'vol_direct_attente' : 'vol_direct_bouton')),
-    h('p', { class: 'indice' }, tr.t('vol_source_opensky'))];
+    h('p', { class: 'indice' }, tr.t('vol_source_opensky')), h('p', { class: 'indice' }, tr.t('vol_direct_avertissement'))];
 }
 
 function releverGps() {

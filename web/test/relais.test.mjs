@@ -2,8 +2,10 @@
 // la clé reste dans le relais, seul l'avion de l'indicatif demandé revient.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { traiter, carres, memeIndicatif, JETON, ETATS } from '../../tools/relais_vol/worker.js';
+import { traiter as traiterAvecCache, carres, caler, memeIndicatif, JETON, ETATS, DUREE_CACHE } from '../../tools/relais_vol/worker.js';
 
+// Chaque test a son propre cache, vide : les réponses d'un test ne servent pas au suivant.
+const traiter = (requete, env, chercher) => traiterAvecCache(requete, env, chercher, new Map());
 const ENV = { OPENSKY_CLIENT_ID: 'id', OPENSKY_CLIENT_SECRET: 'secret', ORIGINE_WEB: 'https://exemple.org' };
 const ETAT = (indicatif, lat, lon, t, sol = false) => ['abc123', indicatif, 'Israel', t, t, lon, lat, 11000, sol, 250, 270, 0, null, 11200, '1234', false, 0];
 
@@ -25,9 +27,9 @@ test('le relais rend la position de l’indicatif demandé, et lui seul', async 
   assert.equal(r.headers.get('access-control-allow-origin'), 'https://exemple.org');
   const d = await r.json();
   assert.deepEqual([d.trouve, d.latitude, d.longitude, d.altitude_geo, d.instant], [true, 50.5, -21.2, 11200, '2026-11-10T18:30:00.000Z']);
-  // La clé part vers le serveur de jetons d'OpenSky, jamais ailleurs ; le carré est de ±5°.
+  // La clé part vers le serveur de jetons d'OpenSky, jamais ailleurs ; le carré est de ±5°, calé sur la grille de 0,5°.
   assert.ok(journal.every((x) => x.url === JETON || x.url.startsWith(ETATS)));
-  assert.match(journal.find((x) => x.url.startsWith(ETATS)).url, /lamin=45\.1&lomin=-25\.3&lamax=55\.1&lomax=-15\.3/);
+  assert.match(journal.find((x) => x.url.startsWith(ETATS)).url, /lamin=45&lomin=-25\.5&lamax=55&lomax=-15\.5/);
   assert.equal(journal.find((x) => x.url.startsWith(ETATS)).options.headers.authorization, 'Bearer jeton');
 });
 
@@ -59,4 +61,21 @@ test('sans client API, le relais passe par l’accès anonyme et gratuit, sans j
     fauxOpenSky([ETAT('ELY1', 50.2, -20.1, t)], journal));
   assert.equal((await r.json()).trouve, true);
   assert.ok(journal.every((x) => x.url.startsWith(ETATS) && !x.options.headers));
+});
+
+test('deux appareils de la même zone partagent une seule demande à OpenSky, gardée 15 s au plus', async () => {
+  const journal = [];
+  const t = 1_800_000_000;
+  const cache = new Map();
+  const chercher = fauxOpenSky([ETAT('ELY1', 50.2, -20.1, t), ETAT('AFR12', 51, -21, t)], journal);
+  const demande = (q, instant) => traiterAvecCache(new Request(`https://relais.test/position?${q}`), ENV, chercher, cache, instant);
+  const t0 = 1_000_000;
+  assert.equal((await (await demande('indicatif=ELY1&lat=50.1&lon=-20.2', t0)).json()).trouve, true);
+  assert.equal((await (await demande('indicatif=AFR12&lat=49.9&lon=-20.1', t0 + 5000)).json()).trouve, true);
+  assert.equal(journal.filter((x) => x.url.startsWith(ETATS)).length, 1);
+  // Passé le délai, la réponse est effacée et redemandée : pas d'archive.
+  await demande('indicatif=ELY1&lat=50.1&lon=-20.2', t0 + DUREE_CACHE + 1);
+  assert.equal(journal.filter((x) => x.url.startsWith(ETATS)).length, 2);
+  assert.equal(cache.size, 1);
+  assert.deepEqual([caler(50.26), caler(-20.24), caler(179.9)], [50.5, -20, 180]);
 });
