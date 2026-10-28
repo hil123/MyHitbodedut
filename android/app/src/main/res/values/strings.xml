@@ -33,7 +33,7 @@
     <string name="section_data_hint">Tout est stocké sur ce téléphone uniquement. Exportez de temps en temps.</string>
 
     <!-- Diagnostic -->
-    <string name="gate_armed_title">« Je suis avec Hachem » veille</string>
+    <string name="gate_armed_title">« Je suis avec Hachem » veille</string>
     <plurals name="gate_armed_detail">
         <item quantity="one">%1$d application est bloquée jusqu’à %2$s ou jusqu’à votre hitbodedout.</item>
         <item quantity="other">%1$d applications sont bloquées jusqu’à %2$s ou jusqu’à votre hitbodedout.</item>
@@ -41,13 +41,13 @@
     <string name="gate_permissions_title">Autorisations manquantes</string>
     <string name="gate_permissions_detail">Accordez l’affichage par-dessus les autres applications et l’accès aux données d’utilisation, plus bas.</string>
     <string name="gate_disabled_title">Mode désactivé</string>
-    <string name="gate_disabled_detail">Activez l’interrupteur « Je suis avec Hachem » pour que le mode agisse.</string>
+    <string name="gate_disabled_detail">Activez l’interrupteur « Je suis avec Hachem » pour que le mode agisse.</string>
     <string name="gate_no_apps_title">Aucune application choisie</string>
     <string name="gate_no_apps_detail">Le mode n’a rien à retenir. Choisissez au moins une application.</string>
     <string name="gate_done_title">Journée validée</string>
     <string name="gate_done_detail">Plus rien ne sera retenu aujourd’hui. Le mode reprendra demain.</string>
     <string name="gate_exempt_title">Jour sans obligation</string>
-    <string name="gate_exempt_detail">Chabbat, Yom Tov ou pause : le mode se tait et la série reste intacte.</string>
+    <string name="gate_exempt_detail">Chabbat, Yom Tov ou pause : le mode se tait et la série reste intacte.</string>
     <string name="gate_snoozed_title">Report en cours</string>
     <string name="gate_snoozed_detail">Vous avez demandé un délai. Le mode reprend à la fin du report.</string>
     <string name="gate_window_title">Hors de la fenêtre</string>
@@ -59,7 +59,7 @@
     <string name="action_back_to_session">Revenir à la hitbodedout en cours</string>
     <string name="action_write_note">Écrire une note</string>
     <string name="action_journal">Voir le journal</string>
-    <string name="action_preview_gate">Voir l’écran « Je suis avec Hachem » maintenant</string>
+    <string name="action_preview_gate">Voir l’écran « Je suis avec Hachem » maintenant</string>
     <string name="action_pick_apps">Choisir les applications</string>
     <string name="action_grant">Accorder</string>
     <string name="action_export">Exporter</string>
@@ -84,7 +84,7 @@
     <string name="ring_streak_reached">Palier de %2$d jours atteint !</string>
     <string name="rings_description">Anneaux. Aujourd’hui : %1$s sur %2$s. Semaine : %3$d jours sur %4$d. Série : %5$d jours sur %6$d.</string>
     <string name="settings_shabbat">Chabbat et Yom Tov</string>
-    <string name="settings_shabbat_hint">Ces jours-là : le mode se tait, pas de rappel, et la série reste intacte.</string>
+    <string name="settings_shabbat_hint">Ces jours-là : le mode se tait, pas de rappel, et la série reste intacte.</string>
     <string name="settings_exempt_today">Pause aujourd’hui</string>
     <string name="settings_exempt_today_hint">Pour un Yom Tov, un voyage, une maladie : la journée ne compte pas contre vous.</string>
     <string name="settings_screen_missing">Cet écran de réglages n’existe pas sur ce téléphone.</string>
@@ -99,7 +99,7 @@
     <string name="permission_notifications">Notifications</string>
     <string name="permission_notifications_why">Sans elles, le rappel se programme et n’apparaît jamais, et la hitbodedout n’affiche rien quand le téléphone est posé.</string>
     <string name="permission_battery_why">Sans elle, Android peut retarder le rappel de plusieurs heures pour économiser la batterie.</string>
-    <string name="permission_overlay_why">Pour afficher l’écran « Je suis avec Hachem » par-dessus l’application que vous ouvrez le matin.</string>
+    <string name="permission_overlay_why">Pour afficher l’écran « Je suis avec Hachem » par-dessus l’application que vous ouvrez le matin.</string>
     <string name="permission_usage_why">Pour savoir quelle application vient de s’ouvrir. Rien n’est enregistré ni envoyé.</string>
     <string name="permission_granted">Accordée</string>
     <string name="permission_missing">Manquante</string>
@@ -183,7 +183,7 @@
     <string name="onboarding_practice">Parler, simplement</string>
     <string name="onboarding_practice_body">La hitbodedout, c’est se retirer seul un moment chaque jour et parler à Hachem dans sa propre langue, comme on parle à quelqu’un. Pas de formule à réciter, pas de niveau à atteindre.</string>
     <string name="onboarding_private">Rien ne sort d’ici</string>
-    <string name="onboarding_private_body">L’application ne se connecte à Internet que si vous le demandez vous-même : le suivi d’un vol en direct demande à OpenSky Network les avions d’une zone approchée, sans envoyer l’indicatif du vol ; la recherche d’un numéro de vol envoie ce numéro seul à adsbdb.com. Ce que vous écrivez reste sur ce téléphone, et n’en sort que si vous l’exportez vous-même.</string>
+    <string name="onboarding_private_body">L’application ne se connecte à Internet que si vous le demandez vous-même : le suivi d’un vol en direct demande à OpenSky Network les avions d’une zone approchée, sans envoyer l’indicatif du vol ; la recherche d’un numéro de vol envoie ce numéro seul à adsbdb.com. Ce que vous écrivez reste sur ce téléphone, et n’en sort que si vous l’exportez vous-même.</string>
     <string name="blocker_session_open_subtitle">Hitbodedout sans durée, depuis %1$s. Le téléphone peut attendre.</string>
     <string name="session_done_title">Vous avez parlé avec Hachem aujourd’hui</string>
     <string name="session_done_text">%1$s de hitbodedout. Touchez pour laisser une note.</string>
@@ -199,7 +199,7 @@
     <string name="reminder_title">C’est l’heure de la hitbodedout</string>
     <string name="reminder_text">Une hitbodedout de %1$s vous attend.</string>
     <string name="channel_gate">Je suis avec Hachem</string>
-    <string name="channel_gate_description">Notification permanente qu’Android exige tant que le mode « Je suis avec Hachem » est actif.</string>
+    <string name="channel_gate_description">Notification permanente qu’Android exige tant que le mode « Je suis avec Hachem » est actif.</string>
     <string name="channel_session">Hitbodedout en cours</string>
     <string name="channel_session_description">Décompte affiché pendant une hitbodedout.</string>
     <string name="channel_reminder">Rappels</string>
@@ -461,7 +461,7 @@
     <string name="theme_croissance">Travail sur soi</string>
     <string name="theme_autre">Autre chose</string>
     <string name="hero_greeting_morning">Bonjour, %1$s</string>
-    <string name="hero_greeting_afternoon">Bonjour, %1$s</string>
+    <string name="hero_greeting_afternoon">Bon après-midi, %1$s</string>
     <string name="hero_greeting_evening">Bonsoir, %1$s</string>
     <string name="nav_today">Aujourd’hui</string>
     <string name="nav_texts">Bibliothèque</string>
@@ -514,7 +514,7 @@
     <string name="onboarding_rappel_heure_desc">Heure du rappel : %1$s</string>
     <!-- Pour la version web (16/10) : pas de rappels, et un navigateur plutôt qu’un téléphone sans Internet. -->
     <string name="onboarding_days_body_web">La série compte les jours de pratique d’affilée, et la semaine se lit d’un coup d’œil. Après chaque hitbodedout, une note peut rejoindre votre journal.</string>
-    <string name="onboarding_private_body_web">Ce que vous écrivez reste dans ce navigateur, sur cet appareil : rien n’est envoyé nulle part, sauf l’indicatif d’un vol et une position approchée si vous activez le suivi en direct.</string>
+    <string name="onboarding_private_body_web">Ce que vous écrivez reste dans ce navigateur, sur cet appareil : rien n’est envoyé nulle part, sauf l’indicatif d’un vol et une position approchée si vous activez le suivi en direct.</string>
     <string name="adresse_tsadik">Tsadik</string>
     <string name="adresse_tsadeket">Tsadeket</string>
     <string name="adresse_none">Pas choisi</string>
@@ -738,7 +738,7 @@
     <string name="ajout_omer">Compte de l’omer</string>
     <string name="ajout_lamnatseah">Lamnatséa’h</string>
     <string name="ajout_ledavid">D’Eloul à Hochaana Rabba</string>
-    <string name="ajout_techouva_hochaana">Dix jours de pénitence et Hochaana Rabba</string>
+    <string name="ajout_techouva_hochaana">Dix jours de techouva et Hochaana Rabba</string>
     <string name="ajout_yom_tov">Yom tov</string>
     <string name="ajout_moed">Fêtes</string>
     <string name="ajout_chabbat_roch_hodech">Roch ’Hodech un Chabbat</string>
@@ -836,11 +836,11 @@
     <string name="hilloulot_aucune">Aucune hilloula ce jour</string>
     <string name="hilloulot_resultats">Résultats : %1$d</string>
     <string name="hilloula_source_wiki">Wikipédia (CC BY-SA)</string>
-    <string name="hilloula_source_hyomi">החכם היומי</string>
+    <string name="hilloula_source_hyomi">HaHakham HaYomi</string>
     <string name="hilloula_source_mytzadik">MyTzadik</string>
-    <string name="hilloula_source_hameir">המאיר לארץ</string>
+    <string name="hilloula_source_hameir">HaMéir LaArets</string>
     <string name="hilloula_source_hidabroot">Lire sur Hidabroot</string>
-    <string name="hilloula_source_toratemet">תורת אמת (CC BY-NC-SA)</string>
+    <string name="hilloula_source_toratemet">Torat Emet (CC BY-NC-SA)</string>
     <string name="hilloula_lire_plus">Lire la suite</string>
     <string name="hilloula_reduire">Réduire</string>
     <string name="hilloulot_tout">Toutes les hilloulot ›</string>
@@ -886,7 +886,7 @@
     <string name="partage_action">Partager ma hitbodedout</string>
     <string name="partage_texte">Aujourd’hui, j’ai fait %1$s de hitbodedout, un moment seul à seul avec Hachem.</string>
     <string name="partage_serie">Série : %1$d jours d’affilée.</string>
-    <string name="partage_lien">Essaie toi aussi, gratuitement : %1$s</string>
+    <string name="partage_lien">Essayez, vous aussi, gratuitement : %1$s</string>
     <string name="partage_choix">Partager</string>
     <plurals name="partage_minutes">
         <item quantity="one">%1$d minute</item>
@@ -954,8 +954,8 @@
     <string name="trophee_sommet">Niveau le plus haut atteint</string>
     <string name="trophee_vedette">Votre plus beau trophée</string>
     <string name="trophee_vedette_aucune">Votre premier trophée vous attend</string>
-    <string name="chabbat_alerte_titre">Chabbat dans 3 h, prépare-toi au kiff !</string>
-    <string name="chabbat_alerte_texte">Double neshama, double simha et double repas ! Tente une double hitbodedout.</string>
+    <string name="chabbat_alerte_titre">Chabbat dans 3 h : préparez-vous à en profiter !</string>
+    <string name="chabbat_alerte_texte">Double neshama, double simha et double repas ! Tentez une double hitbodedout.</string>
     <!-- L’onglet Bibliothèque : les livres entiers (13/10) -->
     <string name="livres_title">Livres</string>
     <string name="livres_hint">Likoutei Moharan, Hichtapkhout HaNefech, Kokhvei Or, méguilot, Perek Chira, Nichmat…</string>
@@ -1064,9 +1064,9 @@
     <!-- Ajouter du temps à un jour passé (16/10). -->
     <string name="jour_ajouter_temps">Ajouter du temps fait hors du téléphone</string>
     <string name="jour_rien">Rien d’inscrit ce jour.</string>
-    <string name="jour_fait">%1$s inscrites ce jour.</string>
+    <string name="jour_fait">Inscrit ce jour : %1$s.</string>
     <string name="jour_montrer_duree">Montrer la durée</string>
-    <string name="jour_ajoute">%1$s ajoutées.</string>
+    <string name="jour_ajoute">Ajouté : %1$s.</string>
     <!-- Les rappels de tefila (16/10) : un changement dans la prière, annoncé quelques jours avant. -->
     <string name="rappel_pluie_debut_titre">Bénédiction d’hiver dans la Amida</string>
     <string name="rappel_pluie_debut_edot">%1$s, à la Amida d’Arvit, on commence à dire la bénédiction d’hiver « בָּרֵךְ עָלֵינוּ ».</string>
@@ -1110,7 +1110,7 @@
     <string name="source_du_jour_lire">Lire la suite</string>
     <string name="journal_travail">À travailler</string>
     <string name="journal_travail_hint">Une chose à travailler demain</string>
-    <string name="journal_sujets">Sujet : %1$s</string>
+    <string name="journal_sujets">Sujet : %1$s</string>
     <string name="parcours_title">Mon parcours</string>
     <string name="parcours_hint">Ce que vos hitbodedout disent de votre chemin.</string>
     <string name="parcours_serie">Série actuelle</string>
@@ -1120,7 +1120,7 @@
     <string name="parcours_moyenne">En moyenne, par jour</string>
     <string name="parcours_mois">Ce mois-ci</string>
     <string name="parcours_sujets">Vos sujets les plus fréquents</string>
-    <string name="parcours_sujets_vide">Choisissez un sujet au début d’une hitbodedout : les plus fréquents apparaîtront ici.</string>
+    <string name="parcours_sujets_vide">Choisissez un sujet au début d’une hitbodedout : les plus fréquents apparaîtront ici.</string>
     <string name="parcours_humeur">Humeur</string>
     <plurals name="parcours_jours">
         <item quantity="one">%d jour</item>
@@ -1134,16 +1134,16 @@
         <item quantity="one">sur %d hitbodedout notée</item>
         <item quantity="other">sur %d hitbodedout notées</item>
     </plurals>
-    <string name="question_merci">Pour quoi voulez-vous remercier Hachem aujourd’hui ?</string>
-    <string name="question_raconter">Que s’est-il passé aujourd’hui ? Racontez-le-Lui simplement, avec vos mots.</string>
-    <string name="question_ressenti">Qu’avez-vous ressenti : de la joie, de la peur, de la colère, une blessure ?</string>
-    <string name="question_besoins">De quoi avez-vous besoin : parnassa, santé, chalom bayit, un chidoukh ?</string>
-    <string name="question_force">Quelle force intérieure voulez-vous Lui demander : émouna, joie, patience ?</string>
-    <string name="question_bilan">Où avez-vous été bien aujourd’hui ? Où avez-vous trébuché ?</string>
-    <string name="question_pardon">Pour quoi voulez-vous demander pardon, précisément ?</string>
-    <string name="question_decision">Quelle petite chose ferez-vous autrement demain ?</string>
-    <string name="question_demain">Que voulez-vous Lui dire de demain, de cette semaine ?</string>
-    <string name="question_fin">Pour finir : merci, même si tout n’est pas encore réglé.</string>
+    <string name="question_merci">Pour quoi voulez-vous remercier Hachem aujourd’hui ?</string>
+    <string name="question_raconter">Que s’est-il passé aujourd’hui ? Racontez-le-Lui simplement, avec vos mots.</string>
+    <string name="question_ressenti">Qu’avez-vous ressenti : de la joie, de la peur, de la colère, une blessure ?</string>
+    <string name="question_besoins">De quoi avez-vous besoin : parnassa, santé, chalom bayit, un chidoukh ?</string>
+    <string name="question_force">Quelle force intérieure voulez-vous Lui demander : émouna, joie, patience ?</string>
+    <string name="question_bilan">Où avez-vous été bien aujourd’hui ? Où avez-vous trébuché ?</string>
+    <string name="question_pardon">Pour quoi voulez-vous demander pardon, précisément ?</string>
+    <string name="question_decision">Quelle petite chose ferez-vous autrement demain ?</string>
+    <string name="question_demain">Que voulez-vous Lui dire de demain, de cette semaine ?</string>
+    <string name="question_fin">Pour finir : merci, même si tout n’est pas encore réglé.</string>
     <string name="question_suivante">Question suivante</string>
     <string name="question_rang">Question %1$d sur %2$d</string>
     <string name="simplement_parler">Parler</string>
@@ -1178,19 +1178,19 @@
 
     <!-- Zmanim en vol (28/10) : Vol.kt, VolActivity. -->
     <string name="vol_title">Zmanim en vol</string>
-    <string name="vol_carte_sous">Saisissez un vol : les horaires sont calculés sur la route prévue, sur l’appareil.</string>
+    <string name="vol_carte_sous">Saisissez un vol : les horaires sont calculés sur la route prévue, sur l’appareil.</string>
     <string name="vol_carte_vol">%1$s · %2$s → %3$s</string>
     <string name="vol_numero">Numéro de vol (facultatif)</string>
     <string name="vol_route_bouton">Trouver l’arrivée par le numéro</string>
     <string name="vol_route_attente">Recherche du vol…</string>
-    <string name="vol_route_explication">Au toucher, seul le numéro du vol est envoyé à adsbdb.com (gratuit, sans compte). Il rend les escales connues et l’indicatif radio, pas les heures : elles restent à saisir, celles du billet.</string>
-    <string name="vol_route_trouvee">%1$s : %2$s. Départ %3$s, arrivée %4$s. Route connue d’adsbdb.com, parfois ancienne : vérifiez-la sur le billet.</string>
-    <string name="vol_route_autre_depart">D’après adsbdb.com, %1$s fait %2$s et ne part pas de %3$s. Vérifiez le numéro ou l’aéroport de départ ; la route connue peut être ancienne.</string>
-    <string name="vol_route_inconnue">L’aéroport %1$s, donné par adsbdb.com, n’est pas dans la liste de l’application : choisissez-le à la main.</string>
-    <string name="vol_route_introuvable">adsbdb.com ne connaît pas ce numéro de vol : choisissez les aéroports à la main.</string>
-    <string name="vol_route_invalide">Numéro attendu : le code de la compagnie puis le numéro, par exemple LY81.</string>
+    <string name="vol_route_explication">Au toucher, seul le numéro du vol est envoyé à adsbdb.com (gratuit, sans compte). Il rend les escales connues et l’indicatif radio, pas les heures : elles restent à saisir, celles du billet.</string>
+    <string name="vol_route_trouvee">%1$s : %2$s. Départ %3$s, arrivée %4$s. Route connue d’adsbdb.com, parfois ancienne : vérifiez-la sur le billet.</string>
+    <string name="vol_route_autre_depart">D’après adsbdb.com, %1$s fait %2$s et ne part pas de %3$s. Vérifiez le numéro ou l’aéroport de départ ; la route connue peut être ancienne.</string>
+    <string name="vol_route_inconnue">L’aéroport %1$s, donné par adsbdb.com, n’est pas dans la liste de l’application : choisissez-le à la main.</string>
+    <string name="vol_route_introuvable">adsbdb.com ne connaît pas ce numéro de vol : choisissez les aéroports à la main.</string>
+    <string name="vol_route_invalide">Numéro attendu : le code de la compagnie puis le numéro, par exemple LY81.</string>
     <string name="vol_route_erreur">Recherche impossible (%1$s). Les aéroports se choisissent aussi à la main.</string>
-    <string name="vol_source_adsbdb">Routes des vols : adsbdb.com (données de David J. Taylor et Jim Mason)</string>
+    <string name="vol_source_adsbdb">Routes des vols : adsbdb.com (données de David J. Taylor et Jim Mason)</string>
     <string name="vol_depart">Départ</string>
     <string name="vol_arrivee">Arrivée</string>
     <string name="vol_choisir_aeroport">Choisir un aéroport</string>
@@ -1204,8 +1204,8 @@
     <string name="vol_calcul_en_cours">Calcul en cours…</string>
     <string name="vol_incomplet">Choisissez les deux aéroports et les deux heures.</string>
     <string name="vol_invalide_meme_aeroport">Le départ et l’arrivée sont le même aéroport.</string>
-    <string name="vol_invalide_arrivee_avant_depart">L’atterrissage doit suivre le décollage : vérifiez les dates, à l’heure de chaque aéroport.</string>
-    <string name="vol_invalide_trop_long">Plus de 22 heures de vol : vérifiez la date d’arrivée.</string>
+    <string name="vol_invalide_arrivee_avant_depart">L’atterrissage doit suivre le décollage : vérifiez les dates, à l’heure de chaque aéroport.</string>
+    <string name="vol_invalide_trop_long">Plus de 22 heures de vol : vérifiez la date d’arrivée.</string>
     <string name="vol_invalide_fuseau_inconnu">L’appareil ne connaît pas le fuseau horaire de cet aéroport.</string>
     <string name="vol_priere_titre">Prière du moment</string>
     <string name="vol_jusqua">jusqu’à %1$s</string>
@@ -1222,20 +1222,20 @@
     <string name="vol_ecart">%1$s min si le départ a 30 min de retard</string>
     <string name="vol_fiabilite_titre">Fiabilité</string>
     <string name="vol_fiabilite">Estimation sur la route prévue (grand cercle, vitesse constante entre les heures saisies), pas la position réelle de l’avion. Zmanim du point sous l’avion, au niveau de la mer, calculés sur l’appareil, sans réseau.</string>
-    <string name="vol_reserve_haute_latitude">La route passe au-delà de 60° de latitude : les méthodes en degrés et en minutes y donnent des heures très différentes, et certains zmanim manquent.</string>
+    <string name="vol_reserve_haute_latitude">La route passe au-delà de 60° de latitude : les méthodes en degrés et en minutes y donnent des heures très différentes, et certains zmanim manquent.</string>
     <string name="vol_reserve_absent">Certains zmanim n’ont pas lieu sur une partie de la route (soleil de minuit ou nuit polaire).</string>
     <string name="vol_reserve_erreur">Le calcul a échoué en un point de la route.</string>
-    <string name="vol_reserve_a_rebours">L’avion va plus vite que le soleil vers l’ouest : un zman se produit plus d’une fois.</string>
-    <string name="vol_ligne_date">Ligne de changement de date (méridien de 180°) franchie vers %1$s : la date locale passe du %2$s au %3$s.</string>
+    <string name="vol_reserve_a_rebours">L’avion va plus vite que le soleil vers l’ouest : un zman se produit plus d’une fois.</string>
+    <string name="vol_ligne_date">Ligne de changement de date (méridien de 180°) franchie vers %1$s : la date locale passe du %2$s au %3$s.</string>
     <string name="vol_fermer">Fermer</string>
     <string name="vol_jalons_titre">Chabbat, fêtes et Omer pendant le vol</string>
     <string name="vol_chabbat">Chabbat</string>
-    <string name="vol_jalon_entree">Entrée de %1$s : chki’a %2$s</string>
-    <string name="vol_jalon_allumage">Allumage, %1$s min avant la chki’a : %2$s</string>
-    <string name="vol_jalon_sortie">Sortie de %1$s : tsét (8,5°) %2$s</string>
-    <string name="vol_jalon_enchainement">%1$s commence à tsét (8,5°) : %2$s</string>
-    <string name="vol_jalon_omer">Compte du Omer, jour %1$s, dès tsét (8,5°) : %2$s</string>
-    <string name="vol_jalons_note">Jour civil du point sous l’avion ; %1$s, d’après le réglage de l’application.</string>
+    <string name="vol_jalon_entree">Entrée de %1$s : chki’a %2$s</string>
+    <string name="vol_jalon_allumage">Allumage, %1$s min avant la chki’a : %2$s</string>
+    <string name="vol_jalon_sortie">Sortie de %1$s : tsét (8,5°) %2$s</string>
+    <string name="vol_jalon_enchainement">%1$s commence à tsét (8,5°) : %2$s</string>
+    <string name="vol_jalon_omer">Compte du Omer, jour %1$s, dès tsét (8,5°) : %2$s</string>
+    <string name="vol_jalons_note">Jour civil du point sous l’avion ; %1$s, d’après le réglage de l’application.</string>
     <string name="vol_jalons_israel">calendrier d’Israël</string>
     <string name="vol_jalons_diaspora">calendrier de diaspora</string>
     <string name="vol_gps">Position réelle (GPS)</string>
@@ -1247,57 +1247,57 @@
     <string name="vol_fiabilite_gps">Route recalée sur le relevé GPS de %1$s (%2$s), puis grand cercle jusqu’à l’arrivée, à vitesse constante. Zmanim du point sous l’avion, au niveau de la mer, calculés sur l’appareil, sans réseau.</string>
     <string name="vol_ecart_gps">%1$s min si l’arrivée a 30 min de retard</string>
     <string name="vol_direct_titre">Suivi en direct (Internet)</string>
-    <string name="vol_direct_explication">Désactivé par défaut. Activé, il envoie au relais de l’application l’indicatif du vol et la position estimée de l’avion, rien d’autre ; le relais demande la position réelle à OpenSky Network. Au-dessus des océans, l’avion n’est souvent pas vu.</string>
+    <string name="vol_direct_explication">Désactivé par défaut. Activé, il envoie au relais de l’application l’indicatif du vol et la position estimée de l’avion, rien d’autre ; le relais demande la position réelle à OpenSky Network. Au-dessus des océans, l’avion n’est souvent pas vu.</string>
     <string name="vol_direct_activer">Activer le suivi en direct</string>
     <string name="vol_indicatif">Indicatif radio (OACI), par exemple ELY1</string>
-    <string name="vol_indicatif_invalide">Indicatif attendu : trois lettres puis le numéro, par exemple ELY1.</string>
+    <string name="vol_indicatif_invalide">Indicatif attendu : trois lettres puis le numéro, par exemple ELY1.</string>
     <string name="vol_direct_bouton">Position en direct</string>
     <string name="vol_direct_attente">Demande de la position…</string>
     <string name="vol_direct_introuvable">L’avion n’est pas vu en ce moment (hors couverture ou indicatif inexact). Le calcul reste sur la route prévue.</string>
     <string name="vol_direct_erreur">Suivi indisponible (%1$s). Le calcul reste sur la route prévue.</string>
     <string name="vol_direct_inactif">Le relais du suivi n’est pas encore en service dans cette version.</string>
     <string name="vol_fiabilite_direct">Route recalée sur la position reçue d’OpenSky Network à %1$s (%2$s), puis grand cercle jusqu’à l’arrivée, à vitesse constante. Zmanim du point sous l’avion, au niveau de la mer, calculés sur l’appareil.</string>
-    <string name="vol_source_opensky">Données aéronautiques : OpenSky Network (opensky-network.org)</string>
-    <string name="vol_direct_avertissement">Ne sert ni à la navigation ni à la sécurité : la couverture d’OpenSky varie selon la région et l’altitude, et certains avions n’y sont pas vus.</string>
+    <string name="vol_source_opensky">Données aéronautiques : OpenSky Network (opensky-network.org)</string>
+    <string name="vol_direct_avertissement">Ne sert ni à la navigation ni à la sécurité : la couverture d’OpenSky varie selon la région et l’altitude, et certains avions n’y sont pas vus.</string>
     <string name="vol_rappels_titre">Rappels pendant le vol</string>
     <string name="vol_rappels_activer">Me rappeler pendant le vol</string>
     <string name="vol_rappels_aucun">Plus aucun rappel pendant ce vol.</string>
-    <string name="vol_rappels_sans_permission">Les notifications de l’application sont désactivées : les rappels ne s’afficheront pas.</string>
-    <string name="vol_rappels_note">Aux heures du billet : un décollage en retard ne décale pas les rappels. Android peut les retarder de quelques minutes.</string>
+    <string name="vol_rappels_sans_permission">Les notifications de l’application sont désactivées : les rappels ne s’afficheront pas.</string>
+    <string name="vol_rappels_note">Aux heures du billet : un décollage en retard ne décale pas les rappels. Android peut les retarder de quelques minutes.</string>
     <string name="vol_rappel_derekh_titre">Tefilat haDerekh</string>
-    <string name="vol_rappel_derekh_texte">Cinq minutes après le décollage prévu : le moment de dire Tefilat haDerekh.</string>
-    <string name="vol_rappel_derekh_priere">Prière du moment : %1$s, jusqu’à %2$s.</string>
+    <string name="vol_rappel_derekh_texte">Cinq minutes après le décollage prévu : le moment de dire Tefilat haDerekh.</string>
+    <string name="vol_rappel_derekh_priere">Prière du moment : %1$s, jusqu’à %2$s.</string>
     <string name="vol_rappel_priere_titre">%1$s dans l’avion</string>
     <string name="vol_rappel_priere_texte">Le temps de %1$s commence sous l’avion. Jusqu’à %2$s.</string>
     <string name="vol_rappel_priere_sans_limite">Le temps de %1$s commence sous l’avion.</string>
     <string name="vol_rappel_fin_titre">Plus que 30 min pour %1$s</string>
-    <string name="vol_rappel_fin_texte">Limite : %1$s.</string>
+    <string name="vol_rappel_fin_texte">Limite : %1$s.</string>
     <string name="vol_rappel_omer_titre">Sefirat haOmer</string>
-    <string name="vol_rappel_omer_texte">Les étoiles sortent sous l’avion : ce soir, on compte le jour %1$s du Omer.</string>
-    <string name="vol_direct_explication_opensky">Désactivé par défaut. Activé, il demande à OpenSky Network, gratuitement et sans compte, les avions vus dans un carré de 10° autour de la position estimée ; l’indicatif reste sur le téléphone, qui y cherche l’avion. Au-dessus des océans, l’avion n’est souvent pas vu.</string>
-    <string name="vol_source_aeroports">Aéroports : OurAirports (domaine public) ; fuseaux : timezone-boundary-builder (ODbL, © contributeurs OpenStreetMap) ; noms en hébreu et en français : Wikidata (CC0)</string>
+    <string name="vol_rappel_omer_texte">Les étoiles sortent sous l’avion : ce soir, on compte le jour %1$s du Omer.</string>
+    <string name="vol_direct_explication_opensky">Désactivé par défaut. Activé, il demande à OpenSky Network, gratuitement et sans compte, les avions vus dans un carré de 10° autour de la position estimée ; l’indicatif reste sur le téléphone, qui y cherche l’avion. Au-dessus des océans, l’avion n’est souvent pas vu.</string>
+    <string name="vol_source_aeroports">Aéroports : OurAirports (domaine public) ; fuseaux : timezone-boundary-builder (ODbL, © contributeurs OpenStreetMap) ; noms en hébreu et en français : Wikidata (CC0)</string>
 
     <!-- La boussole de Jérusalem (28/10, design C). -->
     <string name="boussole_title">Direction de Jérusalem</string>
-    <string name="boussole_carte_sous">Choisissez un lieu : le hassid se tourne vers Jérusalem.</string>
+    <string name="boussole_carte_sous">Choisissez un lieu : le hassid se tourne vers Jérusalem.</string>
     <string name="boussole_face">Face à Jérusalem</string>
     <string name="boussole_droite">Tournez à droite de %1$d°</string>
     <string name="boussole_gauche">Tournez à gauche de %1$d°</string>
     <string name="boussole_par_rapport_nord">%1$d° depuis le nord</string>
     <string name="boussole_nord">N</string>
-    <string name="boussole_grand_cercle">Direction réelle (grand cercle) : %1$d° %2$s</string>
-    <string name="boussole_cap_constant">Direction sur la carte (cap constant) : %1$d° %2$s</string>
-    <string name="boussole_distance">Distance : %1$s km</string>
-    <string name="boussole_legende">L’étiquette ירושלים (sur la rose, l’aiguille d’or) suit la direction réelle ; le pointillé bleu montre la direction sur la carte, pour information.</string>
+    <string name="boussole_grand_cercle">Direction réelle (grand cercle) : %1$d° %2$s</string>
+    <string name="boussole_cap_constant">Direction sur la carte (cap constant) : %1$d° %2$s</string>
+    <string name="boussole_distance">Distance : %1$s km</string>
+    <string name="boussole_legende">L’étiquette ירושלים (sur la rose, l’aiguille d’or) suit la direction réelle ; le pointillé bleu montre la direction sur la carte, pour information.</string>
     <string name="boussole_a_plat">Tenez le téléphone à plat, loin des objets métalliques et des aimants.</string>
-    <string name="boussole_calibrer">Boussole peu précise : dessinez un 8 dans l’air avec le téléphone.</string>
-    <string name="boussole_sans_capteur">Ce téléphone n’a pas de boussole : la direction est donnée par rapport au nord, en haut.</string>
+    <string name="boussole_calibrer">Boussole peu précise : dessinez un 8 dans l’air avec le téléphone.</string>
+    <string name="boussole_sans_capteur">Ce téléphone n’a pas de boussole : la direction est donnée par rapport au nord, en haut.</string>
     <string name="boussole_note_titre">Deux façons de calculer</string>
-    <string name="boussole_note">La direction de Jérusalem se calcule de deux façons. Par le grand cercle, la direction réelle sur le globe : selon Chabad.org, le Choul’han Aroukh haRav et beaucoup d’autres tiennent cette méthode pour préférable ; de New York, environ 54°. Selon la ligne droite sur une carte de Mercator (cap constant) : de New York, environ 95°. Le hassid suit la direction réelle ; la direction sur la carte reste affichée pour information. Calculé sur l’appareil, vers Har haBayit (31,7781° N, 35,2354° E), en corrigeant la déclinaison magnétique du lieu.</string>
+    <string name="boussole_note">La direction de Jérusalem se calcule de deux façons. Par le grand cercle, la direction réelle sur le globe : selon Chabad.org, le Choul’han Aroukh haRav et beaucoup d’autres tiennent cette méthode pour préférable ; de New York, environ 54°. Selon la ligne droite sur une carte de Mercator (cap constant) : de New York, environ 95°. Le hassid suit la direction réelle ; la direction sur la carte reste affichée pour information. Calculé sur l’appareil, vers Har haBayit (31,7781° N, 35,2354° E), en corrigeant la déclinaison magnétique du lieu.</string>
     <string name="boussole_widget_label">Direction de Jérusalem</string>
     <string name="boussole_widget_description">Le hassid et la direction de Jérusalem depuis le lieu des zmanim, par rapport au nord. Le toucher ouvre la boussole.</string>
-    <string name="boussole_widget_lecture">Jérusalem depuis %1$s : %2$d° depuis le nord</string>
-    <string name="boussole_source">Source : %1$s</string>
+    <string name="boussole_widget_lecture">Jérusalem depuis %1$s : %2$d° depuis le nord</string>
+    <string name="boussole_source">Source : %1$s</string>
     <string name="boussole_source_titre" translatable="false">Chabad.org, “Why Do We Face East When Praying? Or Do We?”</string>
     <!-- Le web seulement : l’iPhone demande l’autorisation après un toucher. -->
     <string name="boussole_activer">Activer la boussole</string>

@@ -27,7 +27,7 @@
     <string name="section_data">My data</string>
     <string name="section_data_hint">Everything is stored on this phone only. Export from time to time.</string>
 
-    <string name="gate_armed_title">“I am with Hashem” is watching</string>
+    <string name="gate_armed_title">“I am with Hashem” is on</string>
     <plurals name="gate_armed_detail">
         <item quantity="one">%1$d app is blocked until %2$s or until your hitbodedut.</item>
         <item quantity="other">%1$d apps are blocked until %2$s or until your hitbodedut.</item>
@@ -120,10 +120,10 @@
     <string name="session_start">Start, %1$s</string>
     <string name="session_target">%1$s hitbodedut</string>
     <string name="session_finish_now">Finish now</string>
-    <string name="session_cancel">Abandon</string>
+    <string name="session_cancel">Discard</string>
     <string name="session_finish_title">Finish the hitbodedut?</string>
     <string name="session_finish_message">The time already elapsed will be recorded and the day confirmed.</string>
-    <string name="session_cancel_title">Abandon the hitbodedut?</string>
+    <string name="session_cancel_title">Discard this hitbodedut?</string>
     <string name="session_cancel_message">Nothing will be recorded and the day stays open.</string>
     <string name="session_running_title">Hitbodedut in progress</string>
     <string name="session_remaining">%1$s left</string>
@@ -154,7 +154,7 @@
     <string name="hitbodedut_harata">Regret for the past</string>
     <string name="hitbodedut_harata_invite">Say what you regret, and say it plainly. Regret before Him is not a trial.</string>
     <string name="hitbodedut_bakasha">Asking</string>
-    <string name="hitbodedut_bakasha_invite">Ask for what you lack, and first of all to be brought close to Him. Even what you believe yourself too far from.</string>
+    <string name="hitbodedut_bakasha_invite">Ask for what you lack, and first of all to be brought close to Him. Even for what feels out of your reach.</string>
     <string name="hitbodedut_torah">Turn learning into prayer</string>
     <string name="hitbodedut_torah_invite">Take a teaching you heard today, and ask to reach it yourself.</string>
     <string name="hitbodedut_hodaa">Thanksgiving</string>
@@ -756,7 +756,7 @@
     </plurals>
     <string name="hilloula_lien">Sages of the day on hyomi.org.il</string>
     <string name="halakha_yomit_titre">Halakha Yomit</string>
-    <string name="halakha_yomit_lien">Today’s halakha on halakhayomit.co.il</string>
+    <string name="halakha_yomit_lien">Today’s halakha on halachayomit.co.il</string>
     <!-- Les paliers d'objectifs (11/10) -->
     <string name="paliers_title">My milestones</string>
     <string name="paliers_sous_titre">Each milestone leads to the next</string>
@@ -861,7 +861,7 @@
     <string name="trophee_plume">The pen</string>
     <plurals name="trophee_premier_pas_desc">
         <item quantity="one">A first hitbodedut</item>
-        <item quantity="other">%1$d first hitbodedut</item>
+        <item quantity="other">First %1$d hitbodedut sessions</item>
     </plurals>
     <plurals name="trophee_seance_longue_desc">
         <item quantity="one">%1$d minute in one day</item>
@@ -1054,11 +1054,11 @@
     <string name="chizuk_demande_title">I need hizuk</string>
     <string name="chizuk_demande_hint">A text to lift you up, whenever you want.</string>
     <string name="chizuk_autre">Another</string>
-    <string name="chizuk_garder">Keep</string>
-    <string name="chizuk_garde">Kept ✓</string>
+    <string name="chizuk_garder">Save</string>
+    <string name="chizuk_garde">Saved ✓</string>
     <string name="chizuk_partager">Share</string>
     <string name="chizuk_commencer">Start a hitbodedut</string>
-    <string name="chizuk_favoris">Kept texts</string>
+    <string name="chizuk_favoris">Saved texts</string>
     <string name="source_du_jour">Source of the day</string>
     <string name="source_du_jour_commencer">Start</string>
     <string name="source_du_jour_lire">Read more</string>
