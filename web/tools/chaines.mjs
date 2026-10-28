@@ -6,7 +6,8 @@
 // copie à la main qui finirait par diverger.
 //
 // Le format est volontairement réduit à ce que ces fichiers contiennent :
-// <string> et <plurals>, sans CDATA ni balise interne (vérifié le 28/09).
+// <string>, <plurals> et <string-array> (28/10), sans CDATA ni balise interne
+// (vérifié le 28/09).
 // Une balise inattendue fait échouer la construction plutôt que d'être
 // avalée en silence.
 
@@ -55,20 +56,17 @@ function attribut(balise, nom) {
   return m ? m[1] : null;
 }
 
-/** { chaines: {nom: texte}, pluriels: {nom: {one, two, other}} } */
+/** { chaines: {nom: texte}, pluriels: {nom: {one, two, other}}, tableaux: {nom: [textes]} } */
 export function litChaines(xml) {
   const sansCommentaires = xml.replace(/<!--[\s\S]*?-->/g, '');
   const chaines = {};
   const pluriels = {};
+  const tableaux = {};
   for (const m of sansCommentaires.matchAll(/<string\b([^>]*)>([\s\S]*?)<\/string>/g)) {
     chaines[attribut(m[1], 'name')] = valeurAndroid(m[2]);
   }
   for (const m of sansCommentaires.matchAll(/<string\b([^>]*)\/>/g)) {
     chaines[attribut(m[1], 'name')] = '';
-  }
-  // Les tableaux (<string-array>, ex. boussole_points) : « nom_0 », « nom_1 »…
-  for (const m of sansCommentaires.matchAll(/<string-array\b([^>]*)>([\s\S]*?)<\/string-array>/g)) {
-    [...m[2].matchAll(/<item>([\s\S]*?)<\/item>/g)].forEach((item, i) => { chaines[`${attribut(m[1], 'name')}_${i}`] = valeurAndroid(item[1]); });
   }
   for (const m of sansCommentaires.matchAll(/<plurals\b([^>]*)>([\s\S]*?)<\/plurals>/g)) {
     const formes = {};
@@ -77,5 +75,8 @@ export function litChaines(xml) {
     }
     pluriels[attribut(m[1], 'name')] = formes;
   }
-  return { chaines, pluriels };
+  for (const m of sansCommentaires.matchAll(/<string-array\b([^>]*)>([\s\S]*?)<\/string-array>/g)) {
+    tableaux[attribut(m[1], 'name')] = [...m[2].matchAll(/<item\b[^>]*>([\s\S]*?)<\/item>/g)].map((item) => valeurAndroid(item[1]));
+  }
+  return { chaines, pluriels, tableaux };
 }

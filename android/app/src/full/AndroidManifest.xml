@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
     Ce que l'édition complète ajoute : la barrière du matin, et les deux accès
-    spéciaux qu'elle exige. Ils sont volontairement absents de l'édition légère.
+    spéciaux qu'elle exige ; l'accès Internet du suivi de vol en direct (28/10),
+    utilisé seulement si l'on active l'option (SuiviVol). Ils sont volontairement
+    absents de l'édition légère.
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
@@ -10,6 +12,8 @@
     <uses-permission
         android:name="android.permission.PACKAGE_USAGE_STATS"
         tools:ignore="ProtectedPermissions" />
+    <!-- Le suivi de vol en direct, désactivé par défaut : HTTPS vers le relais seulement. -->
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <!--
         Visibilité des applications lançables, pour que l'utilisateur puisse les
@@ -23,7 +27,7 @@
         </intent>
     </queries>
 
-    <application>
+    <application android:usesCleartextTraffic="false">
 
         <activity
             android:name=".AppPickerActivity"

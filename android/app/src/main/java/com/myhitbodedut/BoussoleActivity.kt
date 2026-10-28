@@ -1,313 +1,207 @@
 package com.myhitbodedut
 
 import android.content.Context
-import android.content.Intent
-import android.graphics.Canvas
-import android.graphics.Paint
-import android.graphics.Path
-import android.graphics.RectF
-import android.graphics.Typeface
 import android.hardware.GeomagneticField
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
-import android.os.Build
 import android.os.Bundle
-import android.view.Gravity
-import android.view.HapticFeedbackConstants
-import android.view.View
+import android.text.method.LinkMovementMethod
+import android.view.Surface
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.graphics.ColorUtils
+import androidx.core.text.HtmlCompat
 import com.google.android.material.button.MaterialButton
-import kotlin.math.abs
-import kotlin.math.cos
-import kotlin.math.min
-import kotlin.math.roundToInt
-import kotlin.math.sin
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import java.text.NumberFormat
+import java.util.Locale
 
 /**
- * La boussole de la tefila (28/10) : vers le mont du Temple depuis le lieu des zmanim
- * (DirectionTefila). Le téléphone à plat, la rose tourne avec lui : le nord reste au
- * nord, l'aiguille dorée montre Jérusalem. Le guide dit de combien tourner ; face au mont
- * du Temple (±5°, relâché à 8° pour ne pas clignoter), la rose s'allume et le téléphone
- * donne un léger retour haptique. Même dessin que le web (ecranBoussole). Le cap magnétique du capteur est corrigé de la
- * déclinaison du lieu (GeomagneticField, modèle magnétique mondial embarqué dans Android,
- * sans réseau). Sans capteur, le cap seul, en degrés depuis le nord.
- *
- * « Position exacte » relance la localisation précise (ChoixLieu) : la direction et les
- * zmanim suivent le point où l'on est, pas la ville la plus proche.
+ * La boussole de Jérusalem (28/10, design C « le hassid se tourne ») depuis le
+ * lieu des zmanim. Le cap vient du capteur d'orientation (nord magnétique),
+ * corrigé de la déclinaison du lieu (GeomagneticField) pour le nord vrai, comme
+ * les deux directions. Sans capteur, la rose orientée au nord. Rien ne passe par
+ * le réseau. « Position exacte » demande la localisation précise (ChoixLieu) ; à
+ * l'ouverture, la position du téléphone se reprend sans bruit si elle est déjà permise.
  */
 class BoussoleActivity : AppCompatActivity(), SensorEventListener {
 
     private val choixLieu = ChoixLieu(this) { afficher() }
-    private lateinit var cadran: Cadran
-    private lateinit var cap: TextView
-    private lateinit var point: TextView
-    private lateinit var guide: TextView
-    private var cible = Float.NaN
-    private var aligne = false
-    private lateinit var etat: TextView
-    private lateinit var lieuTexte: TextView
-    private lateinit var loxoTexte: TextView
+    private lateinit var boussole: BoussoleView
+    private lateinit var precision: TextView
     private var capteurs: SensorManager? = null
     private var declinaison = 0f
-    private var lisse = Float.NaN
-    private val matrice = FloatArray(9)
-    private val orientation = FloatArray(3)
+    private var lisse: Double? = null
+    private val gravite = FloatArray(3)
+    private val champ = FloatArray(3)
+    private var aGravite = false
+    private var aChamp = false
+    private var aLieu = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val d = resources.displayMetrics.density
-        fun dp(v: Int) = (v * d).roundToInt()
-        title = getString(R.string.boussole_titre)
-        cadran = Cadran(this)
-        cap = TextView(this).apply { textSize = 44f; gravity = Gravity.CENTER; setTypeface(typeface, Typeface.BOLD)
-            setTextColor(Apparence.couleur(context, R.color.ink)); fontFeatureSettings = "tnum" }
-        point = TextView(this).apply { textSize = 15f; gravity = Gravity.CENTER; setTextColor(Apparence.couleur(context, R.color.muted)) }
-        guide = TextView(this).apply { textSize = 16f; gravity = Gravity.CENTER; setTypeface(typeface, Typeface.BOLD)
-            setTextColor(Apparence.couleur(context, R.color.brand)); accessibilityLiveRegion = View.ACCESSIBILITY_LIVE_REGION_POLITE }
-        etat = TextView(this).apply { textSize = 13f; gravity = Gravity.CENTER; setTextColor(Apparence.couleur(context, R.color.muted)) }
-        loxoTexte = TextView(this).apply { textSize = 13f; gravity = Gravity.CENTER; setTextColor(Apparence.couleur(context, R.color.muted)) }
-        lieuTexte = TextView(this).apply { textSize = 13f; gravity = Gravity.CENTER; setTextColor(Apparence.couleur(context, R.color.muted)) }
-        setContentView(android.widget.ScrollView(this).apply {
-            setBackgroundColor(Apparence.couleur(context, R.color.paper))
-            addView(LinearLayout(context).apply {
-                orientation = LinearLayout.VERTICAL
-                gravity = Gravity.CENTER_HORIZONTAL
-                setPadding(dp(16), dp(24), dp(16), dp(24))
-                addView(TextView(context).apply {
-                    text = getString(R.string.boussole_titre); textSize = 24f; gravity = Gravity.CENTER
-                    setTypeface(typeface, Typeface.BOLD); setTextColor(Apparence.couleur(context, R.color.brand))
-                })
-                addView(lieuTexte, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply { topMargin = dp(4) })
-                val cote = min(resources.displayMetrics.widthPixels - dp(32), dp(340))
-                addView(cadran, LinearLayout.LayoutParams(cote, cote).apply { topMargin = dp(12) })
-                addView(cap, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply { topMargin = dp(8) })
-                addView(point, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
-                addView(guide, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply { topMargin = dp(10) })
-                addView(loxoTexte, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply { topMargin = dp(10) })
-                addView(etat, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply { topMargin = dp(6) })
-                addView(MaterialButton(context, null, com.google.android.material.R.attr.materialButtonOutlinedStyle).apply {
-                    text = getString(R.string.boussole_position_exacte)
-                    setOnClickListener { choixLieu.positionExacte() }
-                }, LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply { topMargin = dp(16) })
-            })
-        })
-        capteurs = getSystemService(SensorManager::class.java)
-        afficher()
+        setContentView(R.layout.activity_boussole)
+        findViewById<TextView>(R.id.boussole_lieu).setOnClickListener { choixLieu.montrer() }
+        capteurs = getSystemService(Context.SENSOR_SERVICE) as? SensorManager
     }
 
     override fun onResume() {
         super.onResume()
-        val c = capteurs?.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR)
-        if (c == null) {
-            etat.text = getString(R.string.boussole_sans_capteur)
+        afficher()
+        choixLieu.rafraichir()
+        val sm = capteurs ?: return
+        val rotation = sm.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR)
+        if (rotation != null) {
+            sm.registerListener(this, rotation, SensorManager.SENSOR_DELAY_UI)
         } else {
-            capteurs?.registerListener(this, c, SensorManager.SENSOR_DELAY_UI)
-            etat.text = getString(R.string.boussole_a_plat)
+            sm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)?.let { sm.registerListener(this, it, SensorManager.SENSOR_DELAY_UI) }
+            sm.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD)?.let { sm.registerListener(this, it, SensorManager.SENSOR_DELAY_UI) }
         }
     }
 
     override fun onPause() {
         super.onPause()
         capteurs?.unregisterListener(this)
+        BoussoleWidget.refresh(this)
+    }
+
+    /** Le téléphone a-t-il de quoi trouver le nord ? */
+    private fun aBoussole(): Boolean {
+        val sm = capteurs ?: return false
+        return sm.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR) != null ||
+            (sm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER) != null && sm.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD) != null)
     }
 
     private fun afficher() {
         val lieu = Store.lieuZmanim(this)
+        findViewById<TextView>(R.id.boussole_lieu).text = lieu?.nom?.ifEmpty { null } ?: getString(R.string.zmanim_choisir_lieu)
+        val contenu = findViewById<LinearLayout>(R.id.boussole_contenu)
+        contenu.removeAllViews()
+        boussole = BoussoleView(this).apply {
+            layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+                .apply { setMargins(dp(16), dp(16), dp(16), 0) }
+            setBackgroundResource(R.drawable.bg_stage)
+            clipToOutline = true
+            if (lieu == null) setOnClickListener { choixLieu.montrer() }
+            roseDesVents = Store.boussoleRose(this@BoussoleActivity)
+        }
+        contenu.addView(boussole)
+        precision = VueJour.texte(this, getString(R.string.boussole_calibrer), 13f, R.color.warning, haut = 8)
+            .apply { visibility = android.view.View.GONE; setPadding(dp(16), 0, dp(16), 0) }
+        contenu.addView(precision)
+        val avecCapteur = aBoussole()
+        contenu.addView(VueJour.texte(this, getString(if (avecCapteur) R.string.boussole_a_plat else R.string.boussole_sans_capteur),
+            13f, R.color.muted, haut = 8).apply { setPadding(dp(16), 0, dp(16), 0) })
+        contenu.addView(MaterialButton(this, null, com.google.android.material.R.attr.materialButtonOutlinedStyle).apply {
+            text = getString(R.string.boussole_position_exacte)
+            setOnClickListener { choixLieu.positionExacte() }
+            layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+                .apply { setMargins(dp(16), dp(8), dp(16), 0) }
+        })
+        aLieu = lieu != null
         if (lieu == null) {
-            lieuTexte.text = getString(R.string.zmanim_choisir_lieu)
-            cap.text = ""
-            point.text = ""
-            guide.text = ""
-            cible = Float.NaN
-            cadran.cible = Float.NaN
-            cadran.invalidate()
+            boussole.directions(null, null)
+            contenu.addView(VueJour.pied(this))
             return
         }
-        val ortho = DirectionTefila.orthodromie(lieu.latitude, lieu.longitude)
-        val loxo = DirectionTefila.loxodromie(lieu.latitude, lieu.longitude)
-        val km = DirectionTefila.distanceKm(lieu.latitude, lieu.longitude)
-        lieuTexte.text = getString(R.string.boussole_lieu, lieu.nom, km.roundToInt())
-        val points = resources.getStringArray(R.array.boussole_points)
-        cap.text = getString(R.string.boussole_degres, ortho.roundToInt())
-        point.text = points[DirectionTefila.octant(ortho)].replaceFirstChar { it.uppercase() }
-        loxoTexte.text = getString(R.string.boussole_loxodromie, loxo.roundToInt(), points[DirectionTefila.octant(loxo)])
-        cible = ortho.toFloat()
-        cadran.cible = cible
-        cadran.cardinaux = resources.getStringArray(R.array.boussole_cardinaux)
+
         declinaison = GeomagneticField(lieu.latitude.toFloat(), lieu.longitude.toFloat(), lieu.altitude.toFloat(),
             System.currentTimeMillis()).declination
-        cadran.invalidate()
+        val (principale, autre) = DirectionJerusalem.directions(lieu.latitude, lieu.longitude)
+        boussole.directions(principale, autre)
+        boussole.cap(lisse)
+
+        val gc = DirectionJerusalem.grandCercle(lieu.latitude, lieu.longitude)
+        val rh = DirectionJerusalem.carte(lieu.latitude, lieu.longitude)
+        val points = resources.getStringArray(R.array.boussole_points)
+        val km = NumberFormat.getIntegerInstance(Locale.forLanguageTag(ChizukCard.language(this)))
+            .format(Math.round(DirectionJerusalem.distanceKm(lieu.latitude, lieu.longitude)))
+        contenu.addView(VueJour.carte(this).apply {
+            addView(VueJour.texte(this@BoussoleActivity, getString(R.string.boussole_grand_cercle, DirectionJerusalem.degres(gc),
+                points[DirectionJerusalem.point(gc)]), 15f, R.color.brand, gras = true))
+            addView(VueJour.texte(this@BoussoleActivity, getString(R.string.boussole_cap_constant, DirectionJerusalem.degres(rh),
+                points[DirectionJerusalem.point(rh)]), 15f, R.color.ink, haut = 6))
+            addView(VueJour.texte(this@BoussoleActivity, getString(R.string.boussole_distance, km), 13f, R.color.muted, haut = 6))
+            addView(VueJour.texte(this@BoussoleActivity, getString(R.string.boussole_legende), 13f, R.color.muted, haut = 6))
+        })
+
+        contenu.addView(VueJour.carte(this).apply {
+            addView(VueJour.texte(this@BoussoleActivity, getString(R.string.boussole_affichage), 15f, R.color.ink))
+            addView(VueJour.texte(this@BoussoleActivity, getString(if (Store.boussoleRose(this@BoussoleActivity))
+                R.string.boussole_affichage_rose else R.string.boussole_affichage_hassid), 13f, R.color.muted, haut = 2))
+            foreground = getDrawable(android.R.drawable.list_selector_background)
+            setOnClickListener { choisirAffichage() }
+        })
+
+        contenu.addView(VueJour.carte(this).apply {
+            addView(VueJour.texte(this@BoussoleActivity, getString(R.string.boussole_note_titre), 15f, R.color.ink))
+            addView(VueJour.texte(this@BoussoleActivity, getString(R.string.boussole_note), 13f, R.color.muted, haut = 4))
+            addView(VueJour.texte(this@BoussoleActivity, HtmlCompat.fromHtml(getString(R.string.boussole_source,
+                "<a href=\"$SOURCE\">${android.text.TextUtils.htmlEncode(getString(R.string.boussole_source_titre))}</a>"), HtmlCompat.FROM_HTML_MODE_LEGACY),
+                13f, R.color.brand, haut = 6).apply { movementMethod = LinkMovementMethod.getInstance() })
+        })
+        contenu.addView(VueJour.pied(this))
+    }
+
+    /** Le hassid (design C, par défaut) ou la rose des vents. */
+    private fun choisirAffichage() {
+        MaterialAlertDialogBuilder(this)
+            .setTitle(R.string.boussole_affichage)
+            .setSingleChoiceItems(arrayOf(getString(R.string.boussole_affichage_hassid), getString(R.string.boussole_affichage_rose)),
+                if (Store.boussoleRose(this)) 1 else 0) { d, i ->
+                Store.setBoussoleRose(this, i == 1)
+                d.dismiss()
+                afficher()
+            }
+            .show()
     }
 
     override fun onSensorChanged(event: SensorEvent) {
-        SensorManager.getRotationMatrixFromVector(matrice, event.values)
-        SensorManager.getOrientation(matrice, orientation)
-        val nord = ((Math.toDegrees(orientation[0].toDouble()).toFloat() + declinaison) + 360f) % 360f
-        // Lissage sur le cercle : sans à-coup entre 359° et 0°.
-        lisse = if (lisse.isNaN()) nord else {
-            var e = nord - lisse
-            if (e > 180) e -= 360
-            if (e < -180) e += 360
-            (lisse + e * 0.15f + 360f) % 360f
+        val matrice = FloatArray(9)
+        when (event.sensor.type) {
+            Sensor.TYPE_ROTATION_VECTOR -> SensorManager.getRotationMatrixFromVector(matrice, event.values)
+            Sensor.TYPE_ACCELEROMETER, Sensor.TYPE_MAGNETIC_FIELD -> {
+                if (event.sensor.type == Sensor.TYPE_ACCELEROMETER) { event.values.copyInto(gravite, 0, 0, 3); aGravite = true }
+                else { event.values.copyInto(champ, 0, 0, 3); aChamp = true }
+                if (!aGravite || !aChamp || !SensorManager.getRotationMatrix(matrice, null, gravite, champ)) return
+            }
+            else -> return
         }
-        cadran.cap = lisse
-        guider()
-        cadran.invalidate()
-    }
-
-    /** De combien tourner, et l'éclat quand on fait face (hystérésis 5° / 8°). */
-    private fun guider() {
-        if (cible.isNaN() || lisse.isNaN()) return
-        var ecart = (cible - lisse) % 360f
-        if (ecart > 180) ecart -= 360
-        if (ecart < -180) ecart += 360
-        val face = abs(ecart) <= if (aligne) 8f else 5f
-        if (face && !aligne) {
-            cadran.performHapticFeedback(if (Build.VERSION.SDK_INT >= 30) HapticFeedbackConstants.CONFIRM else HapticFeedbackConstants.VIRTUAL_KEY)
+        // Le haut de l'écran, quelle que soit la rotation de l'affichage.
+        val rotation = if (android.os.Build.VERSION.SDK_INT >= 30) display?.rotation
+            else @Suppress("DEPRECATION") windowManager.defaultDisplay.rotation
+        val (x, y) = when (rotation ?: Surface.ROTATION_0) {
+            Surface.ROTATION_90 -> SensorManager.AXIS_Y to SensorManager.AXIS_MINUS_X
+            Surface.ROTATION_180 -> SensorManager.AXIS_MINUS_X to SensorManager.AXIS_MINUS_Y
+            Surface.ROTATION_270 -> SensorManager.AXIS_MINUS_Y to SensorManager.AXIS_X
+            else -> SensorManager.AXIS_X to SensorManager.AXIS_Y
         }
-        aligne = face
-        cadran.aligne = face
-        val texte = when {
-            face -> getString(R.string.boussole_aligne)
-            ecart > 0 -> getString(R.string.boussole_droite, abs(ecart).roundToInt())
-            else -> getString(R.string.boussole_gauche, abs(ecart).roundToInt())
-        }
-        if (guide.text != texte) guide.text = texte
-        guide.setTextColor(Apparence.couleur(this, if (face) R.color.boussole_or else R.color.brand))
+        val remappee = FloatArray(9)
+        SensorManager.remapCoordinateSystem(matrice, x, y, remappee)
+        val orientation = FloatArray(3)
+        SensorManager.getOrientation(remappee, orientation)
+        val vrai = DirectionJerusalem.norm(Math.toDegrees(orientation[0].toDouble()) + declinaison)
+        lisse = lisser(lisse, vrai)
+        if (::boussole.isInitialized && aLieu) boussole.cap(lisse)
     }
 
     override fun onAccuracyChanged(sensor: Sensor, accuracy: Int) {
-        if (accuracy <= SensorManager.SENSOR_STATUS_ACCURACY_LOW) etat.text = getString(R.string.boussole_calibrer)
-        else etat.text = getString(R.string.boussole_a_plat)
+        if (sensor.type != Sensor.TYPE_ROTATION_VECTOR && sensor.type != Sensor.TYPE_MAGNETIC_FIELD) return
+        if (!::precision.isInitialized) return
+        precision.visibility = if (accuracy <= SensorManager.SENSOR_STATUS_ACCURACY_LOW) android.view.View.VISIBLE else android.view.View.GONE
     }
 
-    /**
-     * La rose, dessinée sur une grille de 240 unités comme le SVG du web : graduations aux 5°,
-     * degrés aux 30°, points cardinaux, zone dorée de ±5° autour de Jérusalem, aiguille et moyeu.
-     */
-    private class Cadran(context: Context) : View(context) {
-        var cap = 0f
-        var cible = Float.NaN
-        var aligne = false
-        var cardinaux: Array<String> = arrayOf("N", "E", "S", "O")
-        private val encre = Apparence.couleur(context, R.color.ink)
-        private val pale = Apparence.couleur(context, R.color.muted)
-        private val marque = Apparence.couleur(context, R.color.brand)
-        private val papier = Apparence.couleur(context, R.color.paper)
-        private val or = Apparence.couleur(context, R.color.boussole_or)
-        private val trait = Paint(Paint.ANTI_ALIAS_FLAG).apply { style = Paint.Style.STROKE; strokeCap = Paint.Cap.ROUND }
-        private val plein = Paint(Paint.ANTI_ALIAS_FLAG)
-        private val lettres = Paint(Paint.ANTI_ALIAS_FLAG).apply { textAlign = Paint.Align.CENTER }
-        private val chemin = Path()
-        private val arc = RectF()
-
-        init {
-            importantForAccessibility = IMPORTANT_FOR_ACCESSIBILITY_NO
-        }
-
-        override fun onDraw(canvas: Canvas) {
-            val u = min(width, height) / 240f
-            val c = 120 * u
-            val r = 104 * u
-            fun x(g: Float, rr: Float) = c + rr * sin(Math.toRadians(g.toDouble())).toFloat()
-            fun y(g: Float, rr: Float) = c - rr * cos(Math.toRadians(g.toDouble())).toFloat()
-
-            // L'éclat quand on fait face : un anneau d'or et un halo qui s'estompe.
-            if (aligne) {
-                trait.style = Paint.Style.STROKE
-                for (i in 6 downTo 1) {
-                    trait.strokeWidth = (4 + i * 3) * u
-                    trait.color = ColorUtils.setAlphaComponent(or, 14)
-                    canvas.drawCircle(c, c, r + 12 * u, trait)
-                }
-                trait.strokeWidth = 2.5f * u
-                trait.color = or
-                canvas.drawCircle(c, c, r + 13 * u, trait)
-            }
-            plein.color = ColorUtils.blendARGB(papier, if (aligne) or else encre, if (aligne) 0.14f else 0.04f)
-            canvas.drawCircle(c, c, r + 10 * u, plein)
-            trait.strokeWidth = 1 * u
-            trait.color = ColorUtils.setAlphaComponent(encre, 30)
-            canvas.drawCircle(c, c, r + 10 * u, trait)
-
-            canvas.save()
-            canvas.rotate(-cap, c, c)
-            trait.color = ColorUtils.setAlphaComponent(encre, 77)
-            canvas.drawCircle(c, c, r, trait)
-            if (!cible.isNaN()) {
-                trait.strokeWidth = 8 * u
-                trait.color = ColorUtils.setAlphaComponent(or, 90)
-                val rz = r - 6 * u
-                arc.set(c - rz, c - rz, c + rz, c + rz)
-                canvas.drawArc(arc, cible - 95f, 10f, false, trait)
-            }
-            for (g in 0 until 360 step 5) {
-                val fort = g % 30 == 0
-                val l = (if (fort) 12 else if (g % 10 == 0) 7 else 4) * u
-                trait.strokeWidth = (if (fort) 1.6f else 0.8f) * u
-                trait.color = if (fort) encre else ColorUtils.setAlphaComponent(encre, 102)
-                val gf = g.toFloat()
-                canvas.drawLine(x(gf, r), y(gf, r), x(gf, r - l), y(gf, r - l), trait)
-            }
-            lettres.typeface = Typeface.DEFAULT
-            lettres.textSize = 8.5f * u
-            lettres.color = pale
-            for (g in 30 until 360 step 30) {
-                if (g % 90 == 0) continue
-                val gf = g.toFloat()
-                canvas.save()
-                canvas.rotate(gf, x(gf, r - 24 * u), y(gf, r - 24 * u))
-                canvas.drawText(g.toString(), x(gf, r - 24 * u), y(gf, r - 24 * u) + 3 * u, lettres)
-                canvas.restore()
-            }
-            lettres.typeface = Typeface.DEFAULT_BOLD
-            lettres.textSize = 16 * u
-            for (i in 0 until 4) {
-                val gf = i * 90f
-                lettres.color = if (i == 0) marque else encre
-                canvas.save()
-                canvas.rotate(gf, x(gf, r - 30 * u), y(gf, r - 30 * u))
-                canvas.drawText(cardinaux.getOrElse(i) { "" }, x(gf, r - 30 * u), y(gf, r - 30 * u) + 6 * u, lettres)
-                canvas.restore()
-            }
-            if (!cible.isNaN()) {
-                canvas.rotate(cible, c, c)
-                trait.strokeWidth = 3 * u
-                trait.color = ColorUtils.setAlphaComponent(encre, 90)
-                canvas.drawLine(c, c + 8 * u, c, c + 34 * u, trait)
-                chemin.reset()
-                chemin.moveTo(c, c - r + 16 * u)
-                chemin.lineTo(c - 9 * u, c + 2 * u)
-                chemin.lineTo(c, c - 6 * u)
-                chemin.lineTo(c + 9 * u, c + 2 * u)
-                chemin.close()
-                plein.color = or
-                canvas.drawPath(chemin, plein)
-            }
-            canvas.restore()
-
-            // Le repère fixe du haut : la direction où pointe le téléphone.
-            plein.color = if (aligne) or else marque
-            chemin.reset()
-            chemin.moveTo(c, 4 * u)
-            chemin.lineTo(c - 7 * u, 16 * u)
-            chemin.lineTo(c + 7 * u, 16 * u)
-            chemin.close()
-            canvas.drawPath(chemin, plein)
-            plein.color = or
-            canvas.drawCircle(c, c, 6 * u, plein)
-            plein.color = papier
-            canvas.drawCircle(c, c, 2.5f * u, plein)
-        }
-    }
+    private fun dp(v: Int) = (v * resources.displayMetrics.density).toInt()
 
     companion object {
-        fun ouvrir(c: Context) = c.startActivity(Intent(c, BoussoleActivity::class.java))
+        /** L'article qui expose les deux calculs (vérifié le 28/10). */
+        const val SOURCE = "https://www.chabad.org/library/article_cdo/aid/3502321/jewish/Why-Do-We-Face-East-When-Praying-Or-Do-We.htm"
+
+        /** Un filtre doux sur le cercle : un cinquième du chemin à chaque mesure, par le plus court côté. */
+        fun lisser(avant: Double?, mesure: Double): Double =
+            avant?.let { DirectionJerusalem.norm(it + DirectionJerusalem.ecart(mesure, it) * 0.2) } ?: mesure
     }
 }

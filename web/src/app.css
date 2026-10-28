@@ -1389,41 +1389,25 @@ body.avec-mini .seance .contenu { padding-bottom: calc(104px + env(safe-area-ins
   .principal:active, .secondaire:active, .bouton-trophees:active, .duree:active, .pastille:active, .maintenant:active, .livre:active { transform: none; }
 }
 
-/* Les marque-pages en tête de la Bibliothèque (28/10) : plus discrets que les favoris. */
-.puces-signets { display: flex; flex-wrap: wrap; gap: 8px; margin: 4px 0 12px; }
-.puces-signets .puce-choix[lang="he"] { font-family: var(--police-texte); }
-.feuille .signet-choix { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; }
-.signet-choix .nom-marque { font-size: 13px; color: var(--muted); }
-.signet-choix .apercu { font-family: var(--police-texte); font-size: 17px; color: var(--ink); width: 100%; text-align: start; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+/* Les zmanim en vol (28/10, VolActivity) : la prière du moment en grand, le compte à rebours en gras. */
+.carte-vol p { margin: 4px 0 0; }
+.carte-vol .indice { margin: 0; }
+.carte-vol .vol-priere { margin-top: 6px; color: var(--brand); font-size: 24px; font-weight: 700; }
+.carte-vol .vol-compte { font-size: 18px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.carte-vol p + p:not(.vol-priere):not(.vol-compte):not(.indice) { margin-top: 10px; }
+.champ-vol { margin-top: 4px; min-height: 44px; }
+.boutons-vol { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin: 12px 0 8px; }
+.boutons-vol button { width: 100%; min-width: 0; }
+.vol-heure { margin-top: 2px; font-weight: 700; font-variant-numeric: tabular-nums; text-align: start; }
+.liste-aeroports { max-height: 50vh; overflow-y: auto; margin-top: 8px; }
+.carte-vol .vol-jalon { margin-top: 12px; font-weight: 700; }
 
-/* La direction de la tefila (28/10) : la ligne des zmanim et la boussole. */
-.carte-direction { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; width: 100%; text-align: start; padding: 12px 16px; border: 0; cursor: pointer; font: inherit; color: var(--ink); }
-.carte-direction .nom { font-size: 15px; }
-.carte-direction .etat { font-size: 13px; color: var(--muted); }
-.contenu.boussole { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 8px; --or: #B8891A; }
-:root[data-mode="sombre"] .contenu.boussole { --or: #E0B84A; }
-.boussole-rose { width: min(84vw, 340px); max-width: 100%; margin-block: 8px 4px; border-radius: 50%; transition: box-shadow 500ms ease-out; }
-.boussole-rose.aligne { box-shadow: 0 0 0 3px var(--or), 0 0 36px color-mix(in srgb, var(--or) 45%, transparent); }
-.boussole .cadran { display: block; width: 100%; height: auto; }
-.boussole .b-fond { fill: color-mix(in srgb, var(--ink) 4%, var(--paper, transparent)); stroke: color-mix(in srgb, var(--ink) 12%, transparent); stroke-width: 1; transition: fill 500ms ease-out; }
-.boussole-rose.aligne .b-fond { fill: color-mix(in srgb, var(--or) 14%, var(--paper, transparent)); }
-.boussole .b-cercle { fill: none; stroke: color-mix(in srgb, var(--ink) 30%, transparent); stroke-width: 1; }
-.boussole .b-grad { stroke: color-mix(in srgb, var(--ink) 40%, transparent); stroke-width: 0.8; }
-.boussole .b-grad.fort { stroke: var(--ink); stroke-width: 1.6; }
-.boussole .b-zone { fill: none; stroke: var(--or); stroke-width: 8; stroke-linecap: round; opacity: 0.35; }
-.boussole .b-degre { font: 500 8.5px system-ui, sans-serif; text-anchor: middle; fill: var(--muted); font-variant-numeric: tabular-nums; }
-.boussole .b-lettre { font: 700 16px system-ui, sans-serif; text-anchor: middle; fill: var(--ink); }
-.boussole .b-lettre.nord { fill: var(--brand); }
-.boussole .b-fleche { fill: var(--or); stroke: color-mix(in srgb, var(--or) 60%, #000); stroke-width: 0.6; stroke-linejoin: round; }
-.boussole .b-queue { stroke: color-mix(in srgb, var(--ink) 35%, transparent); stroke-width: 3; stroke-linecap: round; }
-.boussole .b-repere { fill: var(--brand); transition: fill 500ms ease-out; }
-.boussole-rose.aligne .b-repere { fill: var(--or); }
-.boussole .b-moyeu { fill: var(--or); }
-.boussole .b-centre { fill: var(--paper, #fff); }
-.boussole-cap { display: flex; flex-direction: column; align-items: center; margin: 0; line-height: 1.1; }
-.boussole-cap .chiffre { font-size: 44px; font-weight: 700; font-variant-numeric: tabular-nums; letter-spacing: -0.5px; }
-.boussole-cap .point { font-size: 15px; color: var(--muted); text-transform: capitalize; }
-.boussole-guide { margin: 4px 0 0; min-height: 1.4em; font-size: 16px; font-weight: 600; color: var(--brand); }
-.boussole-rose.aligne ~ .boussole-guide { color: var(--or); }
-.boussole-lieu { color: var(--muted); margin: 0; }
-.lu-zone .defile { touch-action: manipulation; } /* deux touchers ramènent le bouton (28/10), sans zoomer */
+/* La boussole de Jérusalem (28/10) : la scène carrée, sur son panneau menthe. */
+.boussole-scene { margin: 16px 16px 0; border-radius: 20px; overflow: hidden; aspect-ratio: 1; max-width: 480px; }
+.boussole-scene svg { display: block; width: 100%; height: 100%; font-family: var(--f-ui, system-ui, sans-serif); }
+.boussole-activer { margin: 12px 16px 0; width: calc(100% - 32px); }
+.boussole-scene + .indice, .boussole-activer + .indice { margin: 8px 16px 0; }
+.boussole-position { margin: 8px 16px 0; width: calc(100% - 32px); }
+.boussole-position + .indice { margin: 4px 16px 0; }
+.boussole-position + .indice:empty { display: none; }
+.boussole-principale { color: var(--brand); font-weight: 700; }

@@ -233,6 +233,201 @@ L'accord de deux moteurs ne prouve pas l'exactitude : ils partagent
 l'algorithme solaire de la NOAA. C'est pourquoi l'astronomie est vérifiée
 contre PyEphem, et les règles de prière restent à valider par un Rav.
 
+## En vol (phase 1, hors ligne)
+
+`Vol.kt` (Android) et `vol.js` (web), ligne pour ligne, ajoutés le 28/10.
+Rien ne quitte le téléphone, sauf si l'on active le suivi en direct (plus
+bas). La localisation précise n'est demandée qu'au toucher de « position
+réelle (GPS) ».
+
+**Le calcul.** On saisit les deux aéroports et les heures du billet, à
+l'heure locale de chaque aéroport. L'avion est placé sur l'arc de grand
+cercle entre les deux, à vitesse constante entre décollage et atterrissage ;
+avant le décollage il est à l'aéroport de départ, après l'atterrissage à
+celui d'arrivée. Un zman a lieu en vol à l'instant t où le zman du point
+sous l'avion vaut t : t = zman(position(t)). Le zman du point est celui du
+moteur, sans changement (`Zmanim.jour`, même profil, au niveau de la mer) ;
+on échantillonne toutes les 5 minutes en vol, toutes les heures au sol, et
+chaque racine est affinée (fausse position) à la demi-seconde. Tout est en
+UTC. Le fuseau « nautique » du point (UTC + longitude / 15, arrondi) sert
+seulement à dire quel jour civil demander au moteur ; on demande toujours la
+veille, le jour et le lendemain. La prière du moment est
+`ZmanimWidget.prochaine`, sans règle nouvelle, nourrie des zmanim de la
+route (`VolPriere`).
+
+**Ce que l'écran dit, sans conseil** : la fiabilité (« route prévue », jamais
+une position réelle) ; de combien chaque horaire bouge si le départ a
+30 minutes de retard ; la haute latitude (au-delà de 60°) ; un zman absent
+sur une partie de la route ; un zman qui repasse (l'avion plus rapide que le
+soleil vers l'ouest) ; le passage du méridien de 180°, avec la date locale de
+part et d'autre. La vraie ligne de changement de date s'écarte de ce
+méridien (Kiribati, Samoa…) : seul le méridien est calculé.
+
+**Ce qui est vérifié, estimé, supposé.**
+
+- Vérifié par les tests (`VolTest`, `vol.test.mjs`) : chaque zman trouvé en
+  vol est le zman du moteur au point où est l'avion à cet instant, à 2 s
+  près ; au sol, avant le décollage, le calcul rend exactement les zmanim de
+  l'aéroport ; Android et web s'accordent à 2 s sur vingt-six vols, jalons
+  de Chabbat, des fêtes et du Omer compris (`tools/vecteurs_vol`). Ce sont des vérifications de calcul, pas de
+  halakha.
+- Estimé : la position. Une route réelle s'écarte du grand cercle de
+  plusieurs centaines de kilomètres (vents, couloirs de l'Atlantique Nord),
+  le roulage et les retards déplacent tout. Vers l'ouest, quand l'avion suit
+  le soleil, un horaire peut bouger de beaucoup plus que le retard lui-même
+  (exemple calculé, Tel Aviv–New York : chki'a avancée de 86 min pour 30 min
+  de retard). L'écart affiché le montre ; il ne le corrige pas.
+- Supposé, et **à valider par un Rav** (aucune règle n'est tranchée ici) :
+  1. le zman du sol sous l'avion, au niveau de la mer, plutôt que l'horizon
+     vu de l'altitude. Les sources secondaires lues pendant l'audit (28/10)
+     présentent le sol sous l'avion comme l'avis majoritaire ; les sources
+     premières n'ont pas été vérifiées. À 11 000 m, l'horizon s'abaisse
+     d'environ 3,4° (géométrie seule, sans réfraction) : le soleil s'y lève
+     plus tôt et s'y couche plus tard, de l'ordre d'un quart d'heure ou plus
+     aux latitudes moyennes. Ce lever vu de l'avion n'est pas calculé ;
+  2. les heures saisonnières (fin du Chema, de la Téfila, Min'ha…) prennent
+     la journée du point sous l'avion à cet instant, pas la journée vécue à
+     bord, qui peut être bien plus longue ou plus courte. Laquelle compte
+     n'est pas tranché ;
+  3. la date (jour de fête, jeûne, Chabbat) quand on franchit la ligne de
+     changement de date : l'écran donne seulement le fait ;
+  4. au-delà de 60° de latitude, les méthodes en degrés et en minutes
+     divergent fortement ; certaines n'ont pas lieu.
+
+**Le GPS** (au choix, en plus de la route prévue). Au toucher de « position
+réelle », l'application demande la localisation précise et un relevé du GPS
+seul, 90 s au plus ; le GPS marche en mode avion, sans réseau. Un relevé pris
+entre le décollage et l'atterrissage prévus recale la route : grand cercle du
+départ au relevé, puis du relevé à l'arrivée, chaque tronçon à vitesse
+constante. L'écart affiché devient alors celui d'une arrivée retardée de
+30 min. Le relevé reste sur l'appareil ; un autre vol l'efface.
+
+**Le suivi en direct par Internet** (édition complète et web, désactivé par
+défaut ; `SuiviVol.kt`, `positionEnDirect` dans `vol.js`, `tools/relais_vol`).
+L'utilisateur l'active et donne l'indicatif radio OACI du vol (« ELY1 »).
+Sur Android, l'accès anonyme et gratuit d'OpenSky Network (sans compte ni clé,
+400 crédits par jour et par adresse IP, positions à 10 s près ; documentation
+de l'API REST, lue le 28/10) : le téléphone demande les avions d'un carré de
+±5° autour de la position estimée (2 crédits) et y cherche l'indicatif
+lui-même, qui ne part pas. Essai réel le 28/10 : un avion en vol retrouvé
+depuis une position estimée décalée de 1,3°. Le web ne peut pas appeler
+OpenSky (le navigateur le refuse : OpenSky n'autorise que son propre site) ;
+il passe par le relais (Cloudflare Workers), qui reçoit l'indicatif et la
+position estimée arrondie au dixième de degré, et interroge OpenSky en
+anonyme, ou avec un client API s'il en a un. Une position de plus de 10 minutes est écartée. La position reçue
+devient un relevé, comme celui du GPS, et la fiabilité le dit. OpenSky ne voit
+les avions que près de ses antennes au sol : au-dessus des océans, souvent
+rien. Usage **non commercial** d'OpenSky : une publication sur le Play Store ou
+l'App Store est à revoir avec ses conditions, ou avec un autre fournisseur
+(`SuiviVol.FournisseurPosition` est interchangeable). Sans adresse de relais à
+la construction (`RELAIS_VOL=`), l'option est inactive sur le web et sa CSP
+n'autorise que le site.
+
+**Les rappels pendant le vol** (Android, `VolRappels.kt`, `VolAlerte.kt` ;
+actifs par défaut, un interrupteur sur l'écran du vol). Des notifications,
+même en mode avion, aux heures calculées sur la route :
+
+- **Tefilat haDerekh**, cinq minutes après le décollage prévu. Le délai de cinq
+  minutes est la demande de l'utilisateur, pas une règle. Ce que disent les
+  sources consultées (recoupées, non lues dans les responsa) : si l'aéroport
+  est hors de la ville, on la dit en route vers l'aéroport et elle couvre le
+  vol ; sinon on la dit dans l'avion, au mieux après le décollage, plusieurs
+  Rabbanim la disant déjà sur la piste ; oubliée, on peut la dire pendant le
+  vol jusqu'à la descente, avis rapporté dans les sources consultées sans
+  être unanime (shulchanaruchharav.com, « When traveling on an airplane, when
+  is Tefilas Haderech to be recited? » ; OU Torah, « Airplane Travel »).
+  L'application ne tranche pas entre ces cas.
+- **Le début de chaque prière dans l'avion**, aux bornes de l'application
+  (HorairePriere, ZmanimWidget) : Min'ha à min'ha guedola, Arvit à la sortie
+  des étoiles. Cha'harit n'avait pas de début dans l'application : le rappel
+  est au lever du soleil (netz), temps de la prière au départ (Choul'han
+  Aroukh O.H. 89, 1). Au décollage, la notification de Tefilat haDerekh dit
+  la prière ouverte, s'il y en a une.
+- **30 minutes avant la limite** de Cha'harit (fin du temps de la tefila,
+  GRA) et de Min'ha (chki'a), si elle tombe dans l'avion ; pas pour Arvit.
+- **Le compte du Omer**, à la sortie des étoiles sous l'avion (les jalons de
+  `VolCalendrier`).
+
+Les rappels suivent les heures du billet : un décollage en retard ne les
+décale pas, et Android peut les retarder de quelques minutes (alarme
+inexacte, comme les autres rappels de l'application). Le web n'a pas ces
+notifications.
+
+**Chabbat, fêtes et Omer** (`VolCalendrier.kt`, `jalons` dans `vol.js`) : la
+règle de `JourAffiche.horaires` (isAssurBemelacha de KosherJava), appliquée aux
+chki'a et aux tsét de la route. Chki'a la veille d'un jour chômé : entrée, et
+l'allumage du réglage (18 min par défaut) avant cette chki'a ; tsét d'un jour
+chômé suivi d'un jour ouvré : sortie ; suivi d'un autre jour chômé : le jour
+suivant commence ; tsét pendant le Omer : le jour compté ce soir. Le jour civil
+est celui du point sous l'avion (fuseau nautique), le calendrier d'Israël ou
+de diaspora celui du réglage de l'application. Ce sont deux choix de calcul,
+**à valider par un Rav**, comme la question de la date après la ligne de
+changement de date ; l'écran ne donne aucun conseil (allumer à bord, compter
+avant ou après une escale…).
+
+**Vérifications des fuseaux et de l'heure d'été** (28/10, `VolTest`,
+`vol.test.mjs`) : Melbourne, Sydney +11 en décembre et +10 en juillet ;
+Brisbane +10, Perth +8, Adélaïde +10,5 / +9,5, Darwin +9,5 ; Jakarta +7,
+Bali +8, Jayapura +9 ; Los Angeles −8 / −7, New York et Montréal −5 / −4,
+Phoenix −7 et Honolulu −10 toute l'année ; Buenos Aires −3 toute l'année ;
+Queenstown +13 / +12 ; Tel Aviv +2 / +3. Règles recoupées : heure d'été en
+Nouvelle-Galles du Sud, Victoria, Tasmanie, Australie-Méridionale et ACT, pas
+au Queensland, en Australie-Occidentale ni dans le Territoire du Nord ; trois
+fuseaux indonésiens par province ; pas d'heure d'été en Argentine (un projet
+UTC−4 voté par les députés en 2025 n'a pas été trouvé adopté par le Sénat) ;
+ni à Hawaï ni en Arizona hors Nation navajo. Les 729 aéroports d'Australie,
+d'Indonésie, des États-Unis et d'Argentine ont été comparés à ces règles,
+région par région, en janvier et en juillet : aucun écart. L'ouest de
+l'Alaska (Nome, Pribilof, Unalaska) est à l'heure de l'Alaska malgré sa
+longitude, comme le dit la tzdb. Trajets vérifiés : Melbourne – Los Angeles –
+Montréal et retour (été et hiver austral, ligne de date dans les deux sens),
+Sydney – Queenstown, Tel Aviv – Buenos Aires (direct hypothétique, aucun
+vol régulier connu).
+
+**Les aéroports** (`res/raw/aeroports.json`, `tools/aeroports_construction.py`) :
+OurAirports (domaine public, « sans garantie d'exactitude »), aéroports
+moyens et grands à vols réguliers ayant un code IATA. Le fuseau de chacun
+vient des contours de timezone-boundary-builder 2026e (ODbL : attribution
+affichée), par point dans polygone, à la construction seulement ; il est
+contre-vérifié par la localité GeoNames la plus proche. Chaque écart a été
+relu (liste dans l'outil) ; Gold Coast prend l'heure du Queensland, celle
+de son aérogare. Les aéroports dont le fuseau est disputé par les sources
+elles-mêmes (Xinjiang, Abkhazie, Govi-Altaï) ne sont pas proposés.
+
+## La direction de Jérusalem (boussole, 28/10)
+
+`DirectionJerusalem.kt`, écran `BoussoleActivity` (design C, « le hassid se
+tourne »), widget 2 × 2 `BoussoleWidget`. Vers Har haBayit, 31,7781° N,
+35,2354° E, depuis le lieu des zmanim.
+
+- **Le hassid suit la direction réelle** (décision du 28/10) : le plus court
+  chemin sur le globe (grand cercle, cap initial). La direction sur la carte
+  (loxodromie, cap constant) reste affichée pour information, en pointillé
+  bleu. Selon Chabad.org (« Why Do We Face East When Praying? Or Do We? »), le
+  Choul'han Aroukh haRav et beaucoup d'autres tiennent le grand cercle pour
+  préférable ; la page donne, de New York, 54° et environ 95°.
+- **Deux affichages au choix** (réglage « Affichage de la boussole ») : le
+  hassid qui se tourne (design C, par défaut) ou une rose des vents qui tourne
+  avec le téléphone : la rose graduée venue de `main` à la fusion du 28/10
+  (graduations aux 5°, degrés aux 30°, zone d'or de ±4°, aiguille d'or vers
+  Jérusalem, anneau d'or face à elle), avec le pointillé bleu de la carte.
+- **Position exacte.** Le bouton relance la localisation précise
+  (`ChoixLieu.positionExacte`, web `localiserPosition`) ; à l'ouverture, la
+  position du téléphone se reprend sans bruit si elle est déjà permise.
+  La boussole parallèle de `main` (`DirectionTefila`, même calcul) est
+  remplacée par celle-ci ; `web/src/js/direction.js` reste pour `distanceKm`.
+- **Nord vrai.** Le capteur d'orientation donne le nord magnétique ; la
+  déclinaison du lieu (`GeomagneticField`, modèle intégré à Android) est
+  ajoutée (Android) ; sur le web, le modèle WMM2025 de la NOAA
+  (`web/src/js/magnetisme.js`). Sans capteur, la rose orientée au nord.
+- **Widget.** Il ne lit pas le capteur : la direction par rapport au nord, en
+  haut ; redessiné quand le lieu change.
+- **Tests.** `DirectionJerusalemTest` : six villes contre geographiclib
+  (WGS84) à 0,5° près pour le grand cercle (calcul sur sphère), la loxodromie
+  contre un calcul séparé, le méridien de 180°, l'écart, le filtre du cap.
+  Non vérifié : le comportement du capteur sur un vrai téléphone (rendu
+  Robolectric seulement).
+
 ## Maintenance
 
 - **Changer de version de KosherJava** : relancer les tests Android, puis
@@ -245,3 +440,10 @@ contre PyEphem, et les règles de prière restent à valider par un Rav.
   l'indiquent.
 - **Ajouter une ville** : son identifiant GeoNames dans
   `tools/villes_construction.py`, puis relancer l'outil.
+- **Changer le calcul en vol** : `VolTest` échoue tant que
+  `web/test/vecteurs_vol.json` n'est pas régénéré (`tools/vecteurs_vol/README.md`).
+- **Mettre à jour les aéroports** : relancer `tools/aeroports_construction.py`
+  sur un `airports.csv` récent ; tout nouvel écart de fuseau l'arrête jusqu'à
+  ce qu'il soit relu et ajouté à l'une de ses listes.
+- **Mettre le relais en ligne ou changer de fournisseur** : `tools/relais_vol/README.md` ;
+  `web/test/relais.test.mjs` le teste contre un faux OpenSky.

@@ -11,4 +11,6 @@
     <item name="lecture_interligne" type="id" />
     <!-- La banderole déjà surveillée par BandeauDefilant. -->
     <item name="bandeau_defilant" type="id" />
+    <!-- La zone des résultats des zmanim en vol, récrite par la minuterie (VolActivity). -->
+    <item name="vol_resultats" type="id" />
 </resources>

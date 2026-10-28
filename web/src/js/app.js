@@ -13,7 +13,7 @@ import { isoLocal } from './calendrier.js';
 import { JERUSALEM_GEONAMES, RAPPELS_TEFILA, dansIsrael, USAGES_LEVANA, aJerusalem, calendrier, jour as jourJuif, jourDeLaPriere, levana, rappelsTefila, usageLevana } from './calendrier-juif.js';
 import { conditionsPour, index as indexAjouts, libelleJour, vrai as ajoutVrai } from './siddur-jour.js';
 import { aerer } from './aeration.js';
-import { CIBLE_LAT, CIBLE_LON, distanceKm, loxodromie, octant, orthodromie } from './direction.js';
+import { distanceKm } from './direction.js';
 import * as Paliers from './paliers.js';
 import * as Trophees from './trophees.js';
 import { FORMES, ICONES } from './trophees-formes.js';
@@ -21,6 +21,9 @@ import { pour as halakhotPour, recherche as rechercheHalakha, source as sourceHa
 import { pour as yalkutPour, recherche as rechercheYalkut, source as sourceYalkut, texteCarte, titreCarte } from './yalkut.js';
 import { ajouts as ajoutsDuJour, dateHilloula, debutMoisHebreu, hilloulotPour, lienArticle, rechercheHilloula, horaires, illustration as illustrationDuJour, lienHalakha, lienHyomi, momentDuSiddour, moisHebreuVoisin, semaines, semainesHebreu } from './jour-affiche.js';
 import { ALLUMAGES, heure as heureZman, jour as zmanimDuJour } from './zmanim.js';
+import * as Vol from './vol.js';
+import * as Boussole from './boussole.js';
+import { RELAIS_VOL } from './relais.js';
 
 // --- Stockage ---------------------------------------------------------------
 function stockageDuNavigateur() {
@@ -2368,126 +2371,461 @@ function ecranZmanim() {
         h('button', { class: 'secondaire', onclick: () => { jourHalakha = iso; rechercheHalakhaTexte = ''; ouvrir('halakha'); } }, tr.t('zmanim_bouton_halakha')),
         h('button', { class: 'secondaire', onclick: () => { jourHilloulot = iso; rechercheHilloulot = ''; ouvrir('hilloulot'); } }, tr.t('zmanim_bouton_hilloulot')),
         h('button', { class: 'secondaire', onclick: () => { jourCalendrier = iso; moisCalendrier = null; ouvrir('calendrier'); } }, tr.t('zmanim_calendrier'))),
-      lieu ? carteDirection(lieu) : null,
+      carteVol(),
+      carteBoussole(),
       listeZmanim(iso),
       ...sousHoraires(iso),
       ...piedZmanim())));
 }
 
-/** La direction de la tefila (DirectionTefila, 28/10) : une ligne, le cap ; touchée, la boussole. */
-function carteDirection(lieu) {
-  const c = orthodromie(lieu.latitude, lieu.longitude);
-  return h('button', { type: 'button', class: 'carte carte-direction', onclick: () => ouvrir('boussole') },
-    h('span', { class: 'nom' }, `🧭  ${tr.t('boussole_titre')}`),
-    h('span', { class: 'etat' }, tr.t('boussole_cap', Math.round(c), tr.t(`boussole_points_${octant(c)}`))));
+// --- La boussole de Jérusalem (BoussoleActivity, 28/10) : boussole.js ------------------------
+// Le hassid se tourne (design C, par défaut) ou la rose des vents. Le hassid suit
+// le plus court chemin, la direction réelle ; la direction sur la carte reste en
+// pointillé bleu. Le cap vient de l'orientation de l'appareil (iPhone : après un
+// toucher, qui demande l'autorisation), corrigé de la déclinaison (WMM2025).
+let capBoussole = null;
+let boussoleEcoute = false;
+let boussoleRecu = false;
+/** L'iPhone a dit oui : à la prochaine ouverture, on écoute sans redemander le toucher. */
+let boussolePermise = false;
+const SOURCE_BOUSSOLE = 'https://www.chabad.org/library/article_cdo/aid/3502321/jewish/Why-Do-We-Face-East-When-Praying-Or-Do-We.htm';
+const COULEURS_BOUSSOLE = { ciel: '#DFF5E8', sol: '#CBEBD8', horizon: '#9CC9B0', encre: '#173C32', marque: '#16775A', or: '#B8780F', bleu: '#2E7DB3' };
+
+function carteBoussole() {
+  const lieu = store.lieu();
+  return h('div', { class: 'carte' }, h('button', { class: 'ligne', onclick: () => ouvrir('boussole') },
+    h('span', { class: 'corps' }, h('div', { class: 'nom' }, tr.t('boussole_title')),
+      h('div', { class: 'etat' }, lieu ? tr.t('boussole_par_rapport_nord', Boussole.degres(Boussole.grandCercle(lieu.latitude, lieu.longitude))) : tr.t('boussole_carte_sous'))),
+    h('span', { class: 'chevron', 'aria-hidden': 'true' })));
 }
 
-let ecouteBoussole = null;
-function arreteBoussole() {
-  if (!ecouteBoussole) return;
-  window.removeEventListener('deviceorientationabsolute', ecouteBoussole);
-  window.removeEventListener('deviceorientation', ecouteBoussole);
-  ecouteBoussole = null;
+function consigneBoussole(gc, cap) {
+  if (cap == null) return tr.t('boussole_par_rapport_nord', Boussole.degres(gc));
+  const e = Boussole.ecart(gc, cap);
+  if (Boussole.face(e)) return tr.t('boussole_face');
+  return e > 0 ? tr.t('boussole_droite', Math.round(e)) : tr.t('boussole_gauche', Math.round(-e));
+}
+
+const echapper = (t) => t.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
+
+/** Le dessin, en SVG : la scène C, la rose vivante, ou la rose fixe (nord en haut) sans cap. */
+function dessinBoussole(gc, rh, cap) {
+  const c = COULEURS_BOUSSOLE;
+  const texte = echapper(consigneBoussole(gc, cap));
+  if (cap == null) {
+    return `<svg viewBox="-160 -160 320 320" role="img" aria-label="${texte}"><rect x="-160" y="-160" width="320" height="320" fill="${c.ciel}"/>
+      <circle r="126" fill="none" stroke="${c.horizon}" stroke-width="3"/>
+      <image href="img/char_standing_back.webp" x="-34" y="-94" width="68" height="212"/>
+      <g transform="rotate(${gc})"><path d="M0,-151 L14,-106 L0,-114 L-14,-106 Z" fill="${c.or}"/></g>
+      <text y="-132" text-anchor="middle" font-size="22" font-weight="700" fill="${c.encre}">${echapper(tr.t('boussole_nord'))}</text>
+      <text x="108" y="146" text-anchor="middle" font-size="26" fill="${c.encre}">${Boussole.degres(gc)}°</text></svg>`;
+  }
+  const e = Boussole.ecart(gc, cap), ok = Boussole.face(e);
+  if (store.boussoleRose()) return roseGraduee(gc, rh, cap, ok, texte);
+  const xg = Boussole.xHorizon(e), xr = Boussole.xHorizon(Boussole.ecart(rh, cap));
+  // L'étiquette reste entière dans le cadre, même quand le point est au bord.
+  const xe = Math.max(-124, Math.min(124, xg));
+  return `<svg viewBox="-160 -160 320 320" role="img" aria-label="${texte}"><rect x="-160" y="-160" width="320" height="320" fill="${c.ciel}"/>
+    <path d="M-160,40 Q0,10 160,40 L160,160 L-160,160 Z" fill="${c.sol}"/>
+    <line x1="-150" y1="-90" x2="150" y2="-90" stroke="${c.horizon}" stroke-width="2"/>
+    <circle cx="${xr}" cy="-90" r="7" fill="none" stroke="${c.bleu}" stroke-width="2.5" stroke-dasharray="3 3"/>
+    <rect x="${xe - 34}" y="-124" width="68" height="22" rx="11" fill="${ok ? c.marque : '#fff'}"/>
+    <text x="${xe}" y="-108" text-anchor="middle" font-family="serif" font-size="15" font-weight="700" fill="${ok ? '#fff' : c.marque}">ירושלים</text>
+    <circle cx="${xg}" cy="-90" r="8" fill="${ok ? c.marque : c.or}"/>
+    <image href="img/char_standing_back.webp" x="-28" y="${ok ? -68 : -62}" width="56" height="176"/>
+    <text y="-132" text-anchor="middle" font-size="14" fill="${c.encre}">${texte}</text></svg>`;
 }
 
 /**
- * La boussole (BoussoleActivity) : la rose tourne avec le téléphone, l'aiguille dorée montre
- * Jérusalem ; en haut, le repère fixe du téléphone. Le guide dit de combien tourner, et la rose
- * s'allume quand on est face au mont du Temple (±5°, relâché à 8° pour ne pas clignoter).
+ * La rose graduée (reprise de main, 28/10), miroir de BoussoleDessin.roseVivante : le cadran
+ * tourne avec le téléphone, le repère du haut est le cap ; graduations aux 5°, degrés aux 30°,
+ * zone d'or de ±TOLERANCE, aiguille d'or vers [gc], pointillé bleu vers [rh]. Grille de 240.
  */
-function ecranBoussole() {
-  rafraichirPosition();
-  const lieu = store.lieu();
-  const etat = h('p', { class: 'indice boussole-etat', 'aria-live': 'polite' });
-  if (!lieu) {
-    return h('div', { class: 'ecran' }, barre(tr.t('boussole_titre')), h('div', { class: 'defile' }, h('div', { class: 'contenu boussole' },
-      h('p', {}, tr.t('zmanim_choisir_lieu')), h('button', { class: 'principal', onclick: choisirLieu }, tr.t('zmanim_choisir_lieu')))));
-  }
-  const ortho = orthodromie(lieu.latitude, lieu.longitude);
-  const loxo = loxodromie(lieu.latitude, lieu.longitude);
-  const ns = 'http://www.w3.org/2000/svg';
-  const el = (n, a) => { const e = document.createElementNS(ns, n); for (const [k, v] of Object.entries(a)) e.setAttribute(k, v); return e; };
-  const C = 120;
-  const R = 104;
-  const pt = (g, r) => { const a = (g * Math.PI) / 180; return [C + r * Math.sin(a), C - r * Math.cos(a)]; };
-  const couronne = el('g', {});
-  couronne.append(el('circle', { cx: C, cy: C, r: R, class: 'b-cercle' }));
-  // La zone de tolérance, un arc doré de ±5° autour du cap de Jérusalem.
-  const [ax, ay] = pt(ortho - 5, R - 6);
-  const [bx, by] = pt(ortho + 5, R - 6);
-  couronne.append(el('path', { d: `M${ax} ${ay} A${R - 6} ${R - 6} 0 0 1 ${bx} ${by}`, class: 'b-zone' }));
+function roseGraduee(gc, rh, cap, ok, texte) {
+  const c = COULEURS_BOUSSOLE, C = 120, R = 104, t = Boussole.TOLERANCE;
+  const f = (n) => +n.toFixed(2);
+  const pt = (g, r) => { const a = (g * Math.PI) / 180; return [f(C + r * Math.sin(a)), f(C - r * Math.cos(a))]; };
+  let cadran = `<circle cx="${C}" cy="${C}" r="${R}" fill="none" stroke="${c.encre}" stroke-opacity="0.3"/>`;
+  const [ax, ay] = pt(gc - t, R - 6), [bx, by] = pt(gc + t, R - 6);
+  cadran += `<path d="M${ax} ${ay} A${R - 6} ${R - 6} 0 0 1 ${bx} ${by}" fill="none" stroke="${c.or}" stroke-opacity="0.35" stroke-width="8" stroke-linecap="round"/>`;
   for (let g = 0; g < 360; g += 5) {
-    const l = g % 30 === 0 ? 12 : g % 10 === 0 ? 7 : 4;
-    const [x1, y1] = pt(g, R);
-    const [x2, y2] = pt(g, R - l);
-    couronne.append(el('line', { x1, y1, x2, y2, class: g % 30 === 0 ? 'b-grad fort' : 'b-grad' }));
+    const fort = g % 30 === 0, l = fort ? 12 : g % 10 === 0 ? 7 : 4;
+    const [x1, y1] = pt(g, R), [x2, y2] = pt(g, R - l);
+    cadran += `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${c.encre}" stroke-opacity="${fort ? 1 : 0.4}" stroke-width="${fort ? 1.6 : 0.8}" stroke-linecap="round"/>`;
   }
   for (let g = 30; g < 360; g += 30) {
     if (g % 90 === 0) continue;
     const [x, y] = pt(g, R - 24);
-    const t = el('text', { x, y: y + 3.5, class: 'b-degre', transform: `rotate(${g} ${x} ${y})` });
-    t.textContent = String(g);
-    couronne.append(t);
+    cadran += `<text x="${x}" y="${f(y + 3)}" transform="rotate(${g} ${x} ${y})" text-anchor="middle" font-size="8.5" fill="${c.encre}" fill-opacity="0.67">${g}</text>`;
   }
-  [0, 90, 180, 270].forEach((g, i) => {
-    const [x, y] = pt(g, R - 30);
-    const t = el('text', { x, y: y + 6, class: g === 0 ? 'b-lettre nord' : 'b-lettre', transform: `rotate(${g} ${x} ${y})` });
-    t.textContent = tr.t(`boussole_cardinaux_${i}`);
-    couronne.append(t);
+  tr.tab('boussole_cardinaux').slice(0, 4).forEach((n, i) => {
+    const [x, y] = pt(i * 90, R - 30);
+    cadran += `<text x="${x}" y="${f(y + 6)}" transform="rotate(${i * 90} ${x} ${y})" text-anchor="middle" font-size="16" font-weight="700" fill="${i === 0 ? c.marque : c.encre}">${echapper(n)}</text>`;
   });
-  const aiguille = el('g', { transform: `rotate(${ortho} ${C} ${C})` });
-  aiguille.append(
-    el('path', { d: `M${C} ${C - R + 16} L${C - 9} ${C + 2} L${C} ${C - 6} L${C + 9} ${C + 2} Z`, class: 'b-fleche' }),
-    el('line', { x1: C, y1: C + 8, x2: C, y2: C + 34, class: 'b-queue' }));
-  couronne.append(aiguille);
-  const svg = el('svg', { viewBox: '0 0 240 240', class: 'cadran', 'aria-hidden': 'true' });
-  svg.append(el('circle', { cx: C, cy: C, r: R + 10, class: 'b-fond' }), couronne,
-    el('path', { d: `M${C} 4 L${C - 7} 16 L${C + 7} 16 Z`, class: 'b-repere' }),
-    el('circle', { cx: C, cy: C, r: 6, class: 'b-moyeu' }), el('circle', { cx: C, cy: C, r: 2.5, class: 'b-centre' }));
-  const guide = h('p', { class: 'boussole-guide', 'aria-live': 'polite' });
-  const boite = h('div', { class: 'boussole-rose' }, svg);
-  let lisse = null;
-  let aligne = false;
-  const tourner = (nord) => {
-    lisse = lisse === null ? nord : (lisse + ((((nord - lisse) % 360) + 540) % 360 - 180) * 0.2 + 360) % 360;
-    couronne.setAttribute('transform', `rotate(${-lisse} ${C} ${C})`);
-    const ecart = ((ortho - lisse) % 360 + 540) % 360 - 180;
-    const face = Math.abs(ecart) <= (aligne ? 8 : 5);
-    if (face && !aligne) navigator.vibrate?.(40);
-    aligne = face;
-    boite.classList.toggle('aligne', face);
-    guide.textContent = face ? tr.t('boussole_aligne')
-      : tr.t(ecart > 0 ? 'boussole_droite' : 'boussole_gauche', Math.round(Math.abs(ecart)));
+  cadran += `<line x1="${C}" y1="${C}" x2="${C}" y2="${C - R + 20}" stroke="${c.bleu}" stroke-width="2.5" stroke-dasharray="6 6" transform="rotate(${f(rh)} ${C} ${C})"/>`;
+  cadran += `<g transform="rotate(${f(gc)} ${C} ${C})"><line x1="${C}" y1="${C + 8}" x2="${C}" y2="${C + 34}" stroke="${c.encre}" stroke-opacity="0.35" stroke-width="3" stroke-linecap="round"/>
+    <path d="M${C} ${C - R + 16} L${C - 9} ${C + 2} L${C} ${C - 6} L${C + 9} ${C + 2} Z" fill="${c.or}"/></g>`;
+  const eclat = ok ? `<circle cx="${C}" cy="${C}" r="${R + 12}" fill="none" stroke="${c.or}" stroke-opacity="0.25" stroke-width="18"/>
+    <circle cx="${C}" cy="${C}" r="${R + 13}" fill="none" stroke="${c.or}" stroke-width="2.5"/>` : '';
+  return `<svg viewBox="-160 -160 320 320" role="img" aria-label="${texte}"><rect x="-160" y="-160" width="320" height="320" fill="${c.ciel}"/>
+    <text y="-142" text-anchor="middle" font-size="14" fill="${c.encre}">${texte}</text>
+    <g transform="translate(0 12) scale(1.15) translate(-120 -120)">${eclat}
+      <circle cx="${C}" cy="${C}" r="${R + 10}" fill="${ok ? '#F4E8CF' : '#F5F6F5'}" stroke="${c.encre}" stroke-opacity="0.12"/>
+      <g transform="rotate(${f(-cap)} ${C} ${C})">${cadran}</g>
+      <path d="M${C} 4 L${C - 7} 16 L${C + 7} 16 Z" fill="${ok ? c.or : c.marque}"/>
+      <circle cx="${C}" cy="${C}" r="6" fill="${c.or}"/><circle cx="${C}" cy="${C}" r="2.5" fill="#fff"/></g></svg>`;
+}
+
+/** Une mesure d'orientation : le cap vrai, lissé, et la scène seule redessinée. */
+function surOrientation(e) {
+  if (ecranCourant() !== 'boussole') return;
+  const lieu = store.lieu();
+  const magnetique = Boussole.capMagnetique(e, screen.orientation?.angle ?? window.orientation ?? 0);
+  if (!lieu || magnetique == null) return;
+  const avant = capBoussole;
+  capBoussole = Boussole.lisser(capBoussole, Boussole.capVrai(magnetique, lieu));
+  const scene = app.querySelector('.boussole-scene');
+  if (!scene) return;
+  const gc = Boussole.grandCercle(lieu.latitude, lieu.longitude);
+  scene.innerHTML = dessinBoussole(gc, Boussole.carte(lieu.latitude, lieu.longitude), capBoussole);
+  // Face à Jérusalem : une petite vibration, là où le navigateur le permet (pas sur iPhone).
+  if (avant != null && !Boussole.face(Boussole.ecart(gc, avant)) && Boussole.face(Boussole.ecart(gc, capBoussole))) navigator.vibrate?.(30);
+  if (!boussoleRecu) { boussoleRecu = true; rendre(); }
+}
+
+/** En quittant l'écran (rendre) : plus d'écoute du capteur. */
+function arreteBoussole() {
+  if (!boussoleEcoute) return;
+  boussoleEcoute = false;
+  window.removeEventListener('deviceorientationabsolute', surOrientation);
+  window.removeEventListener('deviceorientation', surOrientation);
+}
+
+function ecouterBoussole() {
+  if (boussoleEcoute) return;
+  boussoleEcoute = true;
+  // Chrome et Android : l'orientation absolue ; iPhone : webkitCompassHeading sur deviceorientation.
+  if ('ondeviceorientationabsolute' in window) window.addEventListener('deviceorientationabsolute', surOrientation);
+  else window.addEventListener('deviceorientation', surOrientation);
+}
+
+/** L'iPhone demande l'autorisation, et seulement après un toucher. */
+const autorisationBoussole = () => typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function';
+
+function ecranBoussole() {
+  chargeVilles();
+  rafraichirPosition();
+  const lieu = store.lieu();
+  if (!autorisationBoussole() || boussolePermise) ecouterBoussole();
+  const puce = h('button', {
+    type: 'button', class: 'puce-bandeau', 'aria-haspopup': 'dialog', onclick: choisirLieu,
+    'aria-label': `${tr.t('reglage_lieu')} : ${lieu ? lieu.nom : tr.t('reglage_lieu_aucun')}`,
+  }, h('span', {}, lieu ? lieu.nom : tr.t('zmanim_choisir_lieu')), icone('replier'));
+  const contenu = [];
+  if (!lieu) {
+    contenu.push(h('div', { class: 'carte' }, h('button', { class: 'ligne', onclick: choisirLieu },
+      h('span', { class: 'corps' }, h('div', { class: 'nom' }, tr.t('zmanim_choisir_lieu')), h('div', { class: 'etat' }, tr.t('boussole_carte_sous'))))));
+  } else {
+    const gc = Boussole.grandCercle(lieu.latitude, lieu.longitude);
+    const rh = Boussole.carte(lieu.latitude, lieu.longitude);
+    const scene = h('div', { class: 'boussole-scene' });
+    scene.innerHTML = dessinBoussole(gc, rh, capBoussole);
+    contenu.push(scene);
+    if (autorisationBoussole() && !boussoleEcoute) {
+      contenu.push(h('button', { class: 'principal boussole-activer', onclick: async () => {
+        try { if (await DeviceOrientationEvent.requestPermission() === 'granted') { boussolePermise = true; ecouterBoussole(); rendre(); } } catch { /* refusé : la rose fixe reste */ }
+      } }, tr.t('boussole_activer')));
+    }
+    // Avant le toucher, rien n'est encore dit du capteur ; ensuite, sans mesure, la rose fixe reste.
+    const attente = autorisationBoussole() && !boussoleEcoute;
+    contenu.push(h('p', { class: 'indice' }, tr.t(attente || boussoleRecu ? 'boussole_a_plat' : 'boussole_sans_capteur')));
+    // « Position exacte » (28/10) : la localisation précise, le message de l'attente dessous.
+    const etat = h('p', { class: 'indice', 'aria-live': 'polite' });
+    contenu.push(h('button', { class: 'secondaire boussole-position', onclick: () => localiserPosition({ etat }) }, tr.t('boussole_position_exacte')), etat);
+    const points = tr.tab('boussole_points');
+    const km = new Intl.NumberFormat(tr.langue).format(Math.round(Boussole.distanceKm(lieu.latitude, lieu.longitude)));
+    contenu.push(h('div', { class: 'carte carte-texte' },
+      h('p', { class: 'boussole-principale' }, tr.t('boussole_grand_cercle', Boussole.degres(gc), points[Boussole.point(gc)])),
+      h('p', {}, tr.t('boussole_cap_constant', Boussole.degres(rh), points[Boussole.point(rh)])),
+      h('p', { class: 'indice' }, tr.t('boussole_distance', km)),
+      h('p', { class: 'indice' }, tr.t('boussole_legende'))));
+    contenu.push(h('div', { class: 'carte' }, h('button', { class: 'ligne', 'aria-haspopup': 'dialog', onclick: choisirAffichageBoussole },
+      h('span', { class: 'corps' }, h('div', { class: 'nom' }, tr.t('boussole_affichage')),
+        h('div', { class: 'etat' }, tr.t(store.boussoleRose() ? 'boussole_affichage_rose' : 'boussole_affichage_hassid'))),
+      h('span', { class: 'chevron', 'aria-hidden': 'true' }))));
+    const source = tr.t('boussole_source', '\u0000').split('\u0000');
+    contenu.push(h('div', { class: 'carte carte-texte' },
+      h('p', { class: 'nom' }, tr.t('boussole_note_titre')),
+      h('p', { class: 'indice' }, tr.t('boussole_note')),
+      h('p', {}, source[0], h('a', { href: SOURCE_BOUSSOLE, target: '_blank', rel: 'noopener' }, tr.t('boussole_source_titre')), source[1] ?? '')));
+  }
+  return h('div', { class: 'ecran avec-bandeau' }, bandeau(tr.t('boussole_title'), { puce, dessin: 'char_standing_back' }),
+    h('div', { class: 'defile' }, h('div', { class: 'contenu' }, ...contenu, ...piedZmanim())));
+}
+
+function choisirAffichageBoussole() {
+  feuille(tr.t('boussole_affichage'), (f, fermer) => {
+    f.append(h('div', { role: 'radiogroup', 'aria-label': tr.t('boussole_affichage') }, [false, true].map((rose) => {
+      const courant = store.boussoleRose() === rose;
+      return h('button', {
+        type: 'button', class: 'choix choix-radio', role: 'radio', 'aria-checked': String(courant),
+        onclick: () => { fermer(); if (!courant) { store.setBoussoleRose(rose); rendre(); } },
+      }, h('span', { class: 'radio', 'aria-hidden': 'true' }), tr.t(rose ? 'boussole_affichage_rose' : 'boussole_affichage_hassid'));
+    })));
+  });
+  document.querySelector('.feuille [aria-checked="true"]')?.focus();
+}
+
+// --- Les zmanim en vol (VolActivity, 28/10) : vol.js, hors ligne --------------------------
+let aeroportsVol = null;
+let aeroportsDemandes = false;
+function chargeAeroports() {
+  if (aeroportsVol) return true;
+  if (!aeroportsDemandes) {
+    aeroportsDemandes = true;
+    fetch('data/aeroports.json').then((r) => r.json()).then((d) => { aeroportsVol = Vol.aeroports(d); rendre(); }).catch(() => {});
+  }
+  return false;
+}
+/** Le formulaire en cours : { numero, depart, arrivee, decollage, atterrissage } ; repris du vol gardé. */
+let saisieVol = null;
+/** Le dernier calcul et la saisie qui l'a produit (deux passes de vol.js : on ne recalcule pas à chaque rendu). */
+let calculVol = null;
+let cleCalculVol = null;
+let minuterieVol = null;
+
+const libelleVol = (v) => tr.t('vol_carte_vol', v.numero || '✈', v.depart, v.arrivee);
+
+/** L'accès depuis l'onglet Zmanim : le dernier vol saisi, ou l'invitation à en saisir un. */
+function carteVol() {
+  const v = store.vol();
+  return h('div', { class: 'carte' }, h('button', { class: 'ligne', onclick: () => ouvrir('vol') },
+    h('span', { class: 'corps' }, h('div', { class: 'nom' }, tr.t('vol_title')),
+      h('div', { class: 'etat' }, v ? libelleVol(v) : tr.t('vol_carte_sous'))),
+    h('span', { class: 'chevron', 'aria-hidden': 'true' })));
+}
+
+function planDe(v) {
+  const depart = aeroportsVol.find((a) => a.iata === v.depart);
+  const arrivee = aeroportsVol.find((a) => a.iata === v.arrivee);
+  if (!depart || !arrivee || !v.decollage || !v.atterrissage) return null;
+  const decollage = Vol.instant(v.decollage, depart);
+  const atterrissage = Vol.instant(v.atterrissage, arrivee);
+  const releve = v.releve ? { latitude: v.releve.latitude, longitude: v.releve.longitude, instant: new Date(v.releve.instant) } : null;
+  return decollage && atterrissage ? { numero: v.numero ?? '', depart, arrivee, decollage, atterrissage, releve, sourceReleve: v.releve?.source ?? 'gps' } : null;
+}
+
+function choisirAeroport(onChoisi) {
+  feuille(tr.t('vol_choisir_aeroport'), (f, fermer) => {
+    const liste = h('div', { class: 'liste-aeroports' });
+    const champ = h('input', { type: 'search', class: 'champ-recherche', placeholder: tr.t('vol_chercher'), oninput: (e) => {
+      const trouves = Vol.chercher(aeroportsVol, e.target.value);
+      liste.replaceChildren(...(trouves.length || !e.target.value.trim() ? trouves.map((a) => h('button', {
+        class: 'choix', onclick: () => { fermer(); onChoisi(a); },
+      }, `${a.iata} · ${a.ville} — ${a.nom} (${a.pays})`)) : [h('p', { class: 'message' }, tr.t('vol_aucun_resultat'))]));
+    } });
+    f.append(champ, liste, h('button', { class: 'secondaire', onclick: fermer }, tr.t('vol_fermer')));
+  });
+}
+
+/**
+ * « mar. 10 · 18:42 TLV · 11:42 JFK » : l'heure du départ et celle de l'arrivée, le jour s'il change
+ * (VolActivity.deuxHeures). Seuls « heure code » sont isolés de gauche à droite : le jour reste dans
+ * le sens de la langue.
+ */
+function deuxHeures(plan, t) {
+  const jour = (fuseau) => new Intl.DateTimeFormat(tr.langue, { timeZone: fuseau, weekday: 'short', day: 'numeric' }).format(t);
+  const heure = (a) => `\u2066${new Intl.DateTimeFormat(tr.langue, { timeZone: a.fuseau, hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }).format(t)} ${a.iata}\u2069`;
+  const civil = (fuseau) => new Intl.DateTimeFormat('en-CA', { timeZone: fuseau }).format(t);
+  const autreJour = civil(plan.arrivee.fuseau) !== civil(plan.depart.fuseau);
+  return `${jour(plan.depart.fuseau)} ${heure(plan.depart)} · ${autreJour ? `${jour(plan.arrivee.fuseau)} ` : ''}${heure(plan.arrivee)}`;
+}
+
+const ecartVol = (ms) => tr.t(calculVol && calculVol.fiabilite !== 'route_prevue' ? 'vol_ecart_gps' : 'vol_ecart', `${ms < 0 ? '−' : '+'}${Math.abs(Math.round(ms / 60000))}`);
+
+/** Le GPS du téléphone, par le navigateur (VolActivity.releverGps) : 90 s au plus, sans réseau. */
+let gpsVol = false;
+/** La position en direct par le relais (VolActivity.demanderDirect) : seulement pendant le vol prévu. */
+let directVol = false;
+async function demanderDirect(indicatif) {
+  const garde = store.vol();
+  const plan = garde && planDe(garde);
+  if (!plan) return;
+  const maintenant = new Date();
+  if (+maintenant < +plan.decollage || +maintenant > +plan.atterrissage) return signale(tr.t('vol_gps_hors_vol'));
+  directVol = true;
+  rendre();
+  const r = await Vol.positionEnDirect(RELAIS_VOL, indicatif, Vol.position(plan, maintenant));
+  directVol = false;
+  if (r.statut === 'trouve') {
+    const releve = { latitude: r.point.latitude, longitude: r.point.longitude, instant: r.point.instant.toISOString(), source: 'direct' };
+    if (!Vol.releveUtilisable({ ...plan, releve: r.point })) { rendre(); return signale(tr.t('vol_gps_hors_vol')); }
+    store.setVol({ ...garde, releve });
+  } else signale(r.statut === 'introuvable' ? tr.t('vol_direct_introuvable') : tr.t('vol_direct_erreur', r.raison));
+  rendre();
+}
+
+/** Le suivi en direct : un interrupteur désactivé par défaut, qui dit ce qui part ; l'indicatif ; le bouton. */
+function suiviDirect() {
+  const actif = store.suiviDirect();
+  const bloc = [h('p', { class: 'vol-jalon' }, tr.t('vol_direct_titre')), h('p', { class: 'indice' }, tr.t('vol_direct_explication')),
+    h('label', { class: 'ligne' }, h('span', { class: 'corps' }, h('div', { class: 'nom' }, tr.t('vol_direct_activer'))),
+      h('input', { type: 'checkbox', role: 'switch', class: 'interrupteur', checked: actif, onchange: (e) => { store.setSuiviDirect(e.target.checked); rendre(); } }))];
+  if (!actif) return bloc;
+  if (!RELAIS_VOL) return [...bloc, h('p', { class: 'indice' }, tr.t('vol_direct_inactif'))];
+  const champ = h('input', { type: 'text', class: 'champ-recherche champ-vol', maxlength: 9, autocapitalize: 'characters', placeholder: tr.t('vol_indicatif'), value: store.volIndicatif() || null });
+  return [...bloc, champ,
+    h('button', { class: 'secondaire', disabled: directVol, onclick: () => {
+      const indicatif = Vol.normaliserIndicatif(champ.value);
+      if (!indicatif) return signale(tr.t('vol_indicatif_invalide'));
+      store.setVolIndicatif(indicatif);
+      demanderDirect(indicatif);
+    } }, tr.t(directVol ? 'vol_direct_attente' : 'vol_direct_bouton')),
+    h('p', { class: 'indice' }, tr.t('vol_source_opensky'))];
+}
+
+function releverGps() {
+  const garde = store.vol();
+  if (!garde || !navigator.geolocation) return signale(tr.t('vol_gps_echec'));
+  gpsVol = true;
+  rendre();
+  navigator.geolocation.getCurrentPosition((p) => {
+    gpsVol = false;
+    const releve = { latitude: p.coords.latitude, longitude: p.coords.longitude, instant: new Date(p.timestamp).toISOString(), source: 'gps' };
+    const plan = planDe({ ...garde, releve });
+    if (!plan || !Vol.releveUtilisable(plan)) { rendre(); return signale(tr.t('vol_gps_hors_vol')); }
+    store.setVol({ ...garde, releve });
+    rendre();
+  }, (e) => {
+    gpsVol = false;
+    rendre();
+    signale(tr.t(e.code === 1 ? 'vol_gps_refuse' : 'vol_gps_echec'));
+  }, { enableHighAccuracy: true, timeout: 90000, maximumAge: 0 });
+}
+
+function positionVol(e) {
+  const n = (x) => Math.abs(x).toLocaleString(tr.langue, { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+  return tr.t('vol_position', tr.t(e.latitude >= 0 ? 'vol_lat_nord' : 'vol_lat_sud', n(e.latitude)),
+    tr.t(e.longitude >= 0 ? 'vol_lon_est' : 'vol_lon_ouest', n(e.longitude)));
+}
+
+function resultatsVol(c) {
+  const maintenant = new Date();
+  const p = Vol.priere(c, maintenant);
+  const NOMS = { chaharit: 'widget_zmanim_chaharit', minha: 'widget_zmanim_minha', arvit: 'widget_zmanim_arvit' };
+  const enVol = Vol.enVol(c);
+  let priere;
+  if (!p) priere = [h('p', { class: 'message' }, tr.t('vol_hors_fenetre'))];
+  else {
+    const [nom, limite] = p;
+    const minutes = limite ? Math.max(0, Math.floor((limite - maintenant) / 60000)) : 0;
+    const ecart = limite ? enVol.find((e) => +e.instant === +limite)?.ecartSiRetard : null;
+    priere = [h('p', { class: 'vol-priere' }, tr.t(NOMS[nom])),
+      limite ? h('p', {}, tr.t('vol_jusqua', deuxHeures(c.plan, limite))) : h('p', {}, tr.t('vol_sans_limite')),
+      limite ? h('p', { class: 'vol-compte' }, tr.t('vol_dans', JaugeSemaine.dureeCourte(minutes))) : null,
+      ecart !== null && ecart !== undefined ? h('p', { class: 'indice' }, ecartVol(ecart)) : null];
+  }
+  const RESERVES = ['haute_latitude', 'absent', 'erreur', 'a_rebours'];
+  const date = (iso) => new Intl.DateTimeFormat(tr.langue, { timeZone: 'UTC', weekday: 'short', day: 'numeric', month: 'short' }).format(new Date(`${iso}T12:00:00Z`));
+  return [
+    h('div', { class: 'carte carte-texte carte-vol' }, h('p', { class: 'indice' }, tr.t('vol_priere_titre')), ...priere),
+    h('div', { class: 'carte carte-texte carte-vol' }, h('p', { class: 'indice' }, tr.t('vol_fiabilite_titre')),
+      h('p', {}, c.fiabilite === 'route_prevue' ? tr.t('vol_fiabilite')
+        : tr.t(c.fiabilite === 'releve_direct' ? 'vol_fiabilite_direct' : 'vol_fiabilite_gps', deuxHeures(c.plan, c.plan.releve.instant), positionVol(c.plan.releve))),
+      h('div', { class: 'boutons-vol' },
+        h('button', { class: 'secondaire', disabled: gpsVol, onclick: releverGps }, tr.t(gpsVol ? 'vol_gps_attente' : 'vol_gps')),
+        c.plan.releve ? h('button', { class: 'secondaire', onclick: () => { const g = store.vol(); delete g.releve; store.setVol(g); rendre(); } }, tr.t('vol_gps_oublier')) : null),
+      ...suiviDirect(),
+      ...RESERVES.filter((r) => c.reserves.has(r)).map((r) => h('p', {}, tr.t(`vol_reserve_${r}`))),
+      ...c.lignesDate.map((l) => h('p', {}, tr.t('vol_ligne_date', deuxHeures(c.plan, l.instant), date(l.avant), date(l.apres))))),
+    h('div', { class: 'carte carte-zmanim' }, h('p', { class: 'indice' }, tr.t('vol_en_vol_titre')),
+      enVol.length ? enVol.map((e) => h('div', { class: 'zman' },
+        h('div', { class: 'zman-tete' }, h('span', { class: 'zman-nom' }, tr.t(`zman_${e.cle}`))),
+        h('div', { class: 'zman-heure vol-heure' }, deuxHeures(c.plan, e.instant)),
+        h('div', { class: 'zman-methode' }, [positionVol(e), e.ecartSiRetard !== null ? ecartVol(e.ecartSiRetard) : null].filter(Boolean).join(' · '))))
+        : h('p', { class: 'message' }, tr.t('vol_aucun_zman'))),
+    carteJalons(c),
+  ];
+}
+
+/** Chabbat, fêtes et Omer sur la route (VolActivity.carteJalons) : des heures, sans conseil. */
+function carteJalons(c) {
+  const minutes = store.allumage();
+  const jalons = Vol.jalons(c, store.inIsrael(), minutes);
+  if (!jalons.length) return null;
+  const libelle = (f) => { try { return tr.t(`fete_${f}`); } catch { return null; } };
+  return h('div', { class: 'carte carte-texte carte-vol' }, h('p', { class: 'indice' }, tr.t('vol_jalons_titre')),
+    ...jalons.flatMap((j) => {
+      const nom = [j.chabbat ? tr.t('vol_chabbat') : null, ...j.fetes.map(libelle)].filter(Boolean).join(' · ');
+      const heure = deuxHeures(c.plan, j.instant);
+      const texte = j.type === 'omer' ? tr.t('vol_jalon_omer', String(j.omer), heure) : tr.t(`vol_jalon_${j.type}`, nom, heure);
+      return [h('p', { class: 'vol-jalon' }, texte),
+        j.allumage ? h('p', {}, tr.t('vol_jalon_allumage', String(minutes), deuxHeures(c.plan, j.allumage))) : null,
+        h('p', { class: 'indice' }, positionVol(j))];
+    }),
+    h('p', { class: 'indice' }, tr.t('vol_jalons_note', tr.t(store.inIsrael() ? 'vol_jalons_israel' : 'vol_jalons_diaspora'))));
+}
+
+function ecranVol() {
+  // La prière du moment et son compte à rebours suivent l'heure : un rendu toutes les 30 s,
+  // sauf pendant une saisie (le champ garderait le clavier).
+  if (!minuterieVol) {
+    minuterieVol = setInterval(() => {
+      if (ecranCourant() !== 'vol') { clearInterval(minuterieVol); minuterieVol = null; return; }
+      if (!document.querySelector('.voile') && !app.contains(document.activeElement?.closest('input'))) rendre();
+    }, 30000);
+  }
+  const pret = chargeAeroports();
+  saisieVol ??= { ...(store.vol() ?? { numero: '', depart: null, arrivee: null, decollage: '', atterrissage: '' }) };
+  delete saisieVol.releve;
+  const v = saisieVol;
+  const garde = store.vol();
+  if (pret && garde && cleCalculVol !== JSON.stringify(garde)) {
+    const plan = planDe(garde);
+    calculVol = plan && !Vol.verifier(plan) ? Vol.calculer(plan) : null;
+    cleCalculVol = JSON.stringify(garde);
+  }
+  const nomA = (iata) => {
+    const a = pret && iata ? aeroportsVol.find((x) => x.iata === iata) : null;
+    return a ? `${a.iata} · ${a.ville || a.nom}` : tr.t('vol_choisir_aeroport');
   };
-  const ecouter = () => {
-    arreteBoussole();
-    let absolu = false;
-    ecouteBoussole = (e) => {
-      if (e.type === 'deviceorientationabsolute') absolu = true;
-      else if (absolu) return;
-      // iOS : le cap boussole ; ailleurs, alpha d'une orientation absolue (sens inverse des aiguilles).
-      const nord = typeof e.webkitCompassHeading === 'number' ? e.webkitCompassHeading
-        : (e.absolute || e.type === 'deviceorientationabsolute') && e.alpha != null ? (360 - e.alpha) % 360 : null;
-      if (nord == null) return;
-      etat.textContent = tr.t('boussole_a_plat');
-      tourner(nord);
-    };
-    window.addEventListener('deviceorientationabsolute', ecouteBoussole);
-    window.addEventListener('deviceorientation', ecouteBoussole);
+  const villeA = (iata) => (pret ? aeroportsVol.find((x) => x.iata === iata) : null)?.ville || iata;
+  const message = (cle) => feuille(tr.t('vol_title'), (f, fermer) => f.append(h('p', {}, tr.t(cle)), h('button', { class: 'principal', onclick: fermer }, tr.t('vol_fermer'))));
+  const calculer = () => {
+    if (!v.depart || !v.arrivee || !v.decollage || !v.atterrissage) return message('vol_incomplet');
+    const plan = planDe(v);
+    if (!plan) return message('vol_invalide_fuseau_inconnu');
+    const faute = Vol.verifier(plan);
+    if (faute) return message(`vol_invalide_${faute}`);
+    // Le même vol, calculé à nouveau, garde son relevé GPS ; un autre vol l'efface (Store.setVol).
+    const memeVol = garde && ['depart', 'arrivee', 'decollage', 'atterrissage'].every((k) => garde[k] === v[k]);
+    const { releve, ...saisie } = v;
+    store.setVol(memeVol && garde.releve ? { ...saisie, releve: garde.releve } : saisie);
+    rendre();
   };
-  // iOS demande la permission d'un geste ; ailleurs, on écoute tout de suite.
-  const permission = typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function';
-  etat.textContent = tr.t('boussole_sans_capteur');
-  if (!permission) ecouter();
-  return h('div', { class: 'ecran' }, barre(tr.t('boussole_titre')), h('div', { class: 'defile' }, h('div', { class: 'contenu boussole' },
-    h('p', { class: 'boussole-lieu' }, tr.t('boussole_lieu', lieu.nom, Math.round(distanceKm(lieu.latitude, lieu.longitude, CIBLE_LAT, CIBLE_LON)))),
-    boite,
-    h('p', { class: 'boussole-cap' }, h('span', { class: 'chiffre' }, `${Math.round(ortho)}°`), h('span', { class: 'point' }, tr.t(`boussole_points_${octant(ortho)}`))),
-    guide,
-    h('p', { class: 'indice' }, tr.t('boussole_loxodromie', Math.round(loxo), tr.t(`boussole_points_${octant(loxo)}`))),
-    etat,
-    permission ? h('button', { class: 'secondaire', onclick: () => DeviceOrientationEvent.requestPermission().then((r) => { if (r === 'granted') ecouter(); }).catch(() => {}) }, tr.t('boussole_activer')) : null,
-    h('button', { class: 'secondaire', onclick: () => localiserPosition({ etat }) }, tr.t('boussole_position_exacte')))));
+  const ligne = (etiquette, valeur, onclick) => h('button', { class: 'ligne', onclick },
+    h('span', { class: 'corps' }, h('div', { class: 'etat' }, etiquette), h('div', { class: 'nom' }, valeur)), h('span', { class: 'chevron', 'aria-hidden': 'true' }));
+  const heure = (cle, etiquette) => h('label', { class: 'ligne' },
+    h('span', { class: 'corps' }, h('div', { class: 'etat' }, etiquette),
+      h('input', { type: 'datetime-local', class: 'champ-recherche champ-vol', value: v[cle] || null, onchange: (e) => { v[cle] = e.target.value; } })));
+  const formulaire = h('div', { class: 'carte' },
+    h('label', { class: 'ligne' }, h('span', { class: 'corps' }, h('div', { class: 'etat' }, tr.t('vol_numero')),
+      h('input', { type: 'text', class: 'champ-recherche champ-vol', maxlength: 12, autocapitalize: 'characters', value: v.numero || null, onchange: (e) => { v.numero = e.target.value.trim(); } }))),
+    ligne(tr.t('vol_depart'), nomA(v.depart), () => pret && choisirAeroport((a) => { v.depart = a.iata; rendre(); })),
+    ligne(tr.t('vol_arrivee'), nomA(v.arrivee), () => pret && choisirAeroport((a) => { v.arrivee = a.iata; rendre(); })),
+    v.depart ? heure('decollage', tr.t('vol_decollage', villeA(v.depart))) : null,
+    v.arrivee ? heure('atterrissage', tr.t('vol_atterrissage', villeA(v.arrivee))) : null,
+    h('div', { class: 'boutons-vol' },
+      h('button', { class: 'principal', onclick: calculer }, tr.t('vol_calculer')),
+      h('button', { class: 'secondaire', onclick: () => { store.setVol(null); saisieVol = null; calculVol = null; cleCalculVol = null; rendre(); } }, tr.t('vol_effacer'))));
+  const puce = h('span', { class: 'puce-bandeau' }, garde ? libelleVol(garde) : tr.t('vol_carte_sous'));
+  return h('div', { class: 'ecran avec-bandeau' }, bandeau(tr.t('vol_title'), { puce, dessin: 'scene_airport' }),
+    h('div', { class: 'defile' }, h('div', { class: 'contenu' },
+      formulaire,
+      ...(garde && !pret ? [h('div', { class: 'carte carte-texte' }, h('p', { class: 'message' }, tr.t('vol_calcul_en_cours')))] : []),
+      ...(garde && calculVol ? resultatsVol(calculVol) : []),
+      ...piedZmanim().slice(0, 1),
+      h('p', { class: 'indice sources' }, tr.t('vol_source_aeroports')))));
 }
 
 /**
@@ -3644,7 +3982,7 @@ function arreteDanse() {
 // et le geste de retour ramènent à l'accueil, sur l'onglet quitté.
 function ecranCourant() {
   const e = location.hash.slice(1);
-  return ['musique', 'reglages', 'seance', 'bravo', 'tehilim', 'lecture', 'siddur', 'priere', 'tikkun', 'bibliotheque', 'livres', 'source', 'zmanim', 'boussole', 'calendrier', 'paliers', 'hilloulot', 'halakha', 'recherche', 'hizouk', 'parcours'].includes(e) ? e : 'accueil';
+  return ['musique', 'reglages', 'seance', 'bravo', 'tehilim', 'lecture', 'siddur', 'priere', 'tikkun', 'bibliotheque', 'livres', 'source', 'zmanim', 'vol', 'boussole', 'calendrier', 'paliers', 'hilloulot', 'halakha', 'recherche', 'hizouk', 'parcours'].includes(e) ? e : 'accueil';
 }
 function ouvrir(ecran) {
   // L'entrée sur l'écran de séance tire le mot d'ouverture (SessionActivity.onCreate).
@@ -3704,6 +4042,7 @@ function rendre() {
   if (ecran === 'musique') app.append(ecranMusique());
   else if (ecran === 'reglages') app.append(ecranReglages());
   else if (ecran === 'zmanim') app.append(ecranZmanim());
+  else if (ecran === 'vol') app.append(ecranVol());
   else if (ecran === 'boussole') app.append(ecranBoussole());
   else if (ecran === 'calendrier') app.append(ecranCalendrier());
   else if (ecran === 'paliers') app.append(ecranPaliers());

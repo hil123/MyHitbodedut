@@ -30,6 +30,19 @@ mkdirSync(DIST, { recursive: true });
 // --- Le code du site ------------------------------------------------------
 cpSync(SRC, DIST, { recursive: true });
 
+// --- Le relais du suivi de vol en direct (28/10) -----------------------------
+// Sans RELAIS_VOL, le suivi reste inactif et la CSP n'autorise que le site.
+// Avec, son origine seule s'ajoute à connect-src, en HTTPS.
+const relais = process.env.RELAIS_VOL ?? '';
+if (relais) {
+  if (!relais.startsWith('https://')) throw new Error(`RELAIS_VOL doit être en https:// : ${relais}`);
+  const origine = new URL(relais).origin;
+  writeFileSync(join(DIST, 'js', 'relais.js'), `export const RELAIS_VOL = ${JSON.stringify(relais)};\n`);
+  const page = readFileSync(join(DIST, 'index.html'), 'utf8');
+  if (!page.includes("connect-src 'self';")) throw new Error('CSP : connect-src introuvable');
+  writeFileSync(join(DIST, 'index.html'), page.replace("connect-src 'self';", `connect-src 'self' ${origine};`));
+}
+
 // --- Les chaînes ------------------------------------------------------------
 // Comme Android : la langue par défaut (le français) sous chaque langue,
 // que la traduction recouvre. Seules les chaînes non traduisibles (nom de
@@ -41,6 +54,7 @@ for (const [langue, dossier] of [['fr', 'values'], ['en', 'values-en'], ['he', '
   const table = {
     chaines: { ...defaut.chaines, ...propre.chaines },
     pluriels: { ...defaut.pluriels, ...propre.pluriels },
+    tableaux: { ...defaut.tableaux, ...propre.tableaux },
   };
   writeFileSync(join(DIST, 'data', `strings.${langue}.json`), JSON.stringify(table));
 }
@@ -77,7 +91,7 @@ for (const nom of [...onglets.flatMap((n) => [`${n}_off`, `${n}_on`]), 'ic_chevr
 }
 
 // --- Les textes vérifiés, tels quels ---------------------------------------
-for (const nom of ['chizuk.json', 'bibliotheque.json', 'tikkun_haklali.json', 'tehilim.json', 'siddur_edot.json', 'siddur_sefard.json', 'siddur_ashkenaz.json', 'villes.json', 'siddur_annotations.json', 'hilloulot.json', 'hilloulot_bios.json', 'ben_ish_hai.json', 'livres.json', 'yalkut_yosef.json']) {
+for (const nom of ['chizuk.json', 'bibliotheque.json', 'tikkun_haklali.json', 'tehilim.json', 'siddur_edot.json', 'siddur_sefard.json', 'siddur_ashkenaz.json', 'villes.json', 'aeroports.json', 'siddur_annotations.json', 'hilloulot.json', 'hilloulot_bios.json', 'ben_ish_hai.json', 'livres.json', 'yalkut_yosef.json']) {
   cpSync(join(RES, 'raw', nom), join(DIST, 'data', nom));
 }
 

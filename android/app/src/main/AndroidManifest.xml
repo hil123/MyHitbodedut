@@ -14,6 +14,8 @@
     <!-- Les zmanim (10/10) : la position approximative, seulement si on choisit
          « Ma position » plutôt qu'une ville, et demandée à ce moment-là. -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <!-- La position exacte (28/10) : zmanim et boussole (« Position exacte »), et le GPS des zmanim
+         en vol, demandé seulement au toucher de « position réelle » ; il marche en mode avion. -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <!--
@@ -187,10 +189,14 @@
             android:label="@string/zmanim_title" />
 
         <activity
+            android:name=".VolActivity"
+            android:exported="false"
+            android:label="@string/vol_title" />
+
+        <activity
             android:name=".BoussoleActivity"
             android:exported="false"
-            android:label="@string/boussole_titre"
-            android:screenOrientation="portrait" />
+            android:label="@string/boussole_title" />
 
         <activity
             android:name=".CalendrierActivity"
@@ -257,6 +263,11 @@
             android:name=".LevanaAlerteReceiver"
             android:exported="false" />
 
+        <!-- Les rappels en vol : Tefilat haDerekh, prières, Omer (28/10). -->
+        <receiver
+            android:name=".VolAlerteReceiver"
+            android:exported="false" />
+
         <!-- Partager un jour en image (14/10) : seulement le dossier partage/ du cache. -->
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -303,6 +314,19 @@
             <meta-data
                 android:name="android.appwidget.provider"
                 android:resource="@xml/widget_zmanim_grand_info" />
+        </receiver>
+
+        <!-- La direction de Jérusalem sur l'écran d'accueil (28/10). -->
+        <receiver
+            android:name=".BoussoleWidget"
+            android:exported="false"
+            android:label="@string/boussole_widget_label">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_boussole_info" />
         </receiver>
 
         <!-- La série sur l'écran d'accueil. -->

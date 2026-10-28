@@ -167,7 +167,7 @@
     <string name="onboarding_practice">Simply speaking</string>
     <string name="onboarding_practice_body">Hitbodedut means withdrawing alone for a while each day and speaking to Hashem in your own language, as you would to someone. No formula to recite, no level to reach.</string>
     <string name="onboarding_private">Nothing leaves this phone</string>
-    <string name="onboarding_private_body">The app asks for no Internet access at all. What you write stays on this phone, and only you can take it out, through the export.</string>
+    <string name="onboarding_private_body">The app only connects to the Internet if you turn on live flight tracking yourself; it then asks OpenSky Network for the aircraft in an approximate area, without sending the flight’s callsign. What you write stays on this phone, and only you can take it out, through the export.</string>
     <string name="blocker_session_open_subtitle">Open hitbodedut, %1$s so far. The phone can wait.</string>
     <string name="session_done_title">You spoke with Hashem today</string>
     <string name="session_done_text">%1$s of hitbodedut. Tap to leave a note.</string>
@@ -438,7 +438,7 @@
     <string name="onboarding_rappel_heure_desc">Reminder time: %1$s</string>
     <!-- Pour la version web (16/10) : pas de rappels, et un navigateur plutôt qu’un téléphone sans Internet. -->
     <string name="onboarding_days_body_web">The streak counts your days in a row, and the week shows at a glance. After each hitbodedut, a note can go into your journal.</string>
-    <string name="onboarding_private_body_web">What you write stays in this browser, on this device: nothing is sent anywhere.</string>
+    <string name="onboarding_private_body_web">What you write stays in this browser, on this device: nothing is sent anywhere, except a flight’s callsign and an approximate position if you turn on live tracking.</string>
     <string name="adresse_tsadik">Tsadik</string>
     <string name="adresse_tsadeket">Tsadeket</string>
     <string name="adresse_none">Not chosen</string>
@@ -1129,18 +1129,125 @@
     <string name="widget_zmanim_petit_description">The prayer of the moment and when it closes.</string>
     <string name="widget_zmanim_grand_label">Zmanim · full day</string>
     <string name="widget_zmanim_grand_description">The date, the prayer of the moment and all of today’s zmanim.</string>
-    <string name="boussole_titre">Direction of prayer</string>
-    <string name="boussole_lieu">%1$s · %2$d km from the Temple Mount</string>
-    <string name="boussole_cap">%1$d° · %2$s</string>
-    <string name="boussole_loxodromie">On a map (constant bearing): %1$d° · %2$s</string>
-    <string name="boussole_a_plat">Hold the phone flat; the gold arrow points to Jerusalem.</string>
-    <string name="boussole_calibrer">Compass inaccurate: move the phone in a figure 8.</string>
-    <string name="boussole_sans_capteur">No compass on this device: face the bearing shown, measured from north.</string>
+
+    <!-- Zmanim en vol (28/10) : Vol.kt, VolActivity. -->
+    <string name="vol_title">Zmanim in flight</string>
+    <string name="vol_carte_sous">Enter a flight: times are computed along the planned route, on the device.</string>
+    <string name="vol_carte_vol">%1$s · %2$s → %3$s</string>
+    <string name="vol_numero">Flight number (optional)</string>
+    <string name="vol_depart">Departure</string>
+    <string name="vol_arrivee">Arrival</string>
+    <string name="vol_choisir_aeroport">Choose an airport</string>
+    <string name="vol_chercher">City, airport or code (TLV)</string>
+    <string name="vol_aucun_resultat">No airport found.</string>
+    <string name="vol_decollage">Scheduled departure, %1$s time</string>
+    <string name="vol_atterrissage">Scheduled arrival, %1$s time</string>
+    <string name="vol_choisir_heure">Choose date and time</string>
+    <string name="vol_calculer">Calculate</string>
+    <string name="vol_effacer">Clear the flight</string>
+    <string name="vol_calcul_en_cours">Calculating…</string>
+    <string name="vol_incomplet">Choose both airports and both times.</string>
+    <string name="vol_invalide_meme_aeroport">Departure and arrival are the same airport.</string>
+    <string name="vol_invalide_arrivee_avant_depart">Arrival must come after departure: check the dates, in each airport’s local time.</string>
+    <string name="vol_invalide_trop_long">More than 22 hours of flight: check the arrival date.</string>
+    <string name="vol_invalide_fuseau_inconnu">This device does not know this airport’s time zone.</string>
+    <string name="vol_priere_titre">Current prayer</string>
+    <string name="vol_jusqua">until %1$s</string>
+    <string name="vol_sans_limite">until dawn, no limit shown</string>
+    <string name="vol_dans">in %1$s</string>
+    <string name="vol_hors_fenetre">The calculation covers the flight and the 6 hours either side.</string>
+    <string name="vol_en_vol_titre">During the flight</string>
+    <string name="vol_aucun_zman">No zman during this flight.</string>
+    <string name="vol_position">over %1$s, %2$s</string>
+    <string name="vol_lat_nord">%1$s° N</string>
+    <string name="vol_lat_sud">%1$s° S</string>
+    <string name="vol_lon_est">%1$s° E</string>
+    <string name="vol_lon_ouest">%1$s° W</string>
+    <string name="vol_ecart">%1$s min if departure is 30 min late</string>
+    <string name="vol_fiabilite_titre">Reliability</string>
+    <string name="vol_fiabilite">Estimate along the planned route (great circle, constant speed between the times entered), not the aircraft’s real position. Zmanim of the point below the aircraft, at sea level, computed on the device, without network.</string>
+    <string name="vol_reserve_haute_latitude">The route goes beyond 60° latitude: the degree-based and minute-based methods give very different times there, and some zmanim are missing.</string>
+    <string name="vol_reserve_absent">Some zmanim do not occur on part of the route (midnight sun or polar night).</string>
+    <string name="vol_reserve_erreur">The calculation failed at a point on the route.</string>
+    <string name="vol_reserve_a_rebours">The aircraft flies west faster than the sun: a zman occurs more than once.</string>
+    <string name="vol_ligne_date">Date line (180th meridian) crossed around %1$s: the local date changes from %2$s to %3$s.</string>
+    <string name="vol_fermer">Close</string>
+    <string name="vol_jalons_titre">Shabbat, festivals and Omer during the flight</string>
+    <string name="vol_chabbat">Shabbat</string>
+    <string name="vol_jalon_entree">%1$s begins: sunset %2$s</string>
+    <string name="vol_jalon_allumage">Candle lighting, %1$s min before sunset: %2$s</string>
+    <string name="vol_jalon_sortie">%1$s ends: nightfall (8.5°) %2$s</string>
+    <string name="vol_jalon_enchainement">%1$s begins at nightfall (8.5°): %2$s</string>
+    <string name="vol_jalon_omer">Omer count, day %1$s, from nightfall (8.5°): %2$s</string>
+    <string name="vol_jalons_note">Civil day of the point below the aircraft; %1$s, from the app setting.</string>
+    <string name="vol_jalons_israel">Israel calendar</string>
+    <string name="vol_jalons_diaspora">diaspora calendar</string>
+    <string name="vol_gps">Real position (GPS)</string>
+    <string name="vol_gps_oublier">Back to the planned route</string>
+    <string name="vol_gps_attente">Searching for a GPS signal… Reception is better near a window.</string>
+    <string name="vol_gps_echec">No GPS position. The calculation stays on the planned route.</string>
+    <string name="vol_gps_refuse">Without precise location, the calculation stays on the planned route.</string>
+    <string name="vol_gps_hors_vol">The GPS fix is only used during the flight, between scheduled departure and arrival.</string>
+    <string name="vol_fiabilite_gps">Route adjusted to the GPS fix of %1$s (%2$s), then great circle to arrival, at constant speed. Zmanim of the point below the aircraft, at sea level, computed on the device, without network.</string>
+    <string name="vol_ecart_gps">%1$s min if arrival is 30 min late</string>
+    <string name="vol_direct_titre">Live tracking (Internet)</string>
+    <string name="vol_direct_explication">Off by default. When on, it sends the app’s relay the flight’s callsign and the aircraft’s estimated position, nothing else; the relay asks OpenSky Network for the real position. Over the oceans, the aircraft is often not seen.</string>
+    <string name="vol_direct_activer">Turn on live tracking</string>
+    <string name="vol_indicatif">Radio callsign (ICAO), for example ELY1</string>
+    <string name="vol_indicatif_invalide">Expected callsign: three letters then the number, for example ELY1.</string>
+    <string name="vol_direct_bouton">Live position</string>
+    <string name="vol_direct_attente">Requesting the position…</string>
+    <string name="vol_direct_introuvable">The aircraft is not seen right now (out of coverage or wrong callsign). The calculation stays on the planned route.</string>
+    <string name="vol_direct_erreur">Tracking unavailable (%1$s). The calculation stays on the planned route.</string>
+    <string name="vol_direct_inactif">The tracking relay is not in service yet in this version.</string>
+    <string name="vol_fiabilite_direct">Route adjusted to the position received from OpenSky Network at %1$s (%2$s), then great circle to arrival, at constant speed. Zmanim of the point below the aircraft, at sea level, computed on the device.</string>
+    <string name="vol_source_opensky">Live position: The OpenSky Network, opensky-network.org</string>
+    <string name="vol_rappels_titre">Reminders during the flight</string>
+    <string name="vol_rappels_activer">Remind me during the flight</string>
+    <string name="vol_rappels_aucun">No more reminders during this flight.</string>
+    <string name="vol_rappels_sans_permission">The app’s notifications are off: the reminders will not show.</string>
+    <string name="vol_rappels_note">At the ticket times: a late takeoff does not move the reminders. Android may delay them by a few minutes.</string>
+    <string name="vol_rappel_derekh_titre">Tefilat HaDerech</string>
+    <string name="vol_rappel_derekh_texte">Five minutes after the scheduled takeoff: time to say Tefilat HaDerech.</string>
+    <string name="vol_rappel_derekh_priere">Prayer now: %1$s, until %2$s.</string>
+    <string name="vol_rappel_priere_titre">%1$s on the plane</string>
+    <string name="vol_rappel_priere_texte">The time of %1$s begins below the aircraft. Until %2$s.</string>
+    <string name="vol_rappel_priere_sans_limite">The time of %1$s begins below the aircraft.</string>
+    <string name="vol_rappel_fin_titre">30 min left for %1$s</string>
+    <string name="vol_rappel_fin_texte">Deadline: %1$s.</string>
+    <string name="vol_rappel_omer_titre">Sefirat HaOmer</string>
+    <string name="vol_rappel_omer_texte">The stars come out below the aircraft: tonight is day %1$s of the Omer.</string>
+    <string name="vol_direct_explication_opensky">Off by default. When on, it asks OpenSky Network, free and without an account, for the aircraft seen in a 10° square around the estimated position; the callsign stays on the phone, which looks for the flight there. Over the oceans, the aircraft is often not seen.</string>
+    <string name="vol_source_aeroports">Airports: OurAirports (public domain); time zones: timezone-boundary-builder (ODbL, © OpenStreetMap contributors)</string>
+
+    <!-- La boussole de Jérusalem (28/10, design C). -->
+    <string name="boussole_title">Direction of Jerusalem</string>
+    <string name="boussole_carte_sous">Choose a place: the chassid turns toward Jerusalem.</string>
+    <string name="boussole_face">Facing Jerusalem</string>
+    <string name="boussole_droite">Turn right %1$d°</string>
+    <string name="boussole_gauche">Turn left %1$d°</string>
+    <string name="boussole_par_rapport_nord">%1$d° from north</string>
+    <string name="boussole_nord">N</string>
+    <string name="boussole_grand_cercle">Real direction (great circle): %1$d° %2$s</string>
+    <string name="boussole_cap_constant">Direction on the map (constant heading): %1$d° %2$s</string>
+    <string name="boussole_distance">Distance: %1$s km</string>
+    <string name="boussole_legende">The ירושלים label (on the rose, the gold needle) follows the real direction; the dashed blue mark shows the direction on the map, for information.</string>
+    <string name="boussole_a_plat">Hold the phone flat, away from metal objects and magnets.</string>
+    <string name="boussole_calibrer">Compass not accurate: draw a figure 8 in the air with the phone.</string>
+    <string name="boussole_sans_capteur">This phone has no compass: the direction is given relative to north, at the top.</string>
+    <string name="boussole_note_titre">Two ways to calculate</string>
+    <string name="boussole_note">The direction of Jerusalem can be calculated in two ways. By the great circle, the real direction on the globe: according to Chabad.org, the Shulchan Aruch HaRav and many others consider this method preferable; from New York, about 54°. By the straight line on a Mercator map (constant heading): from New York, about 95°. The chassid follows the real direction; the direction on the map stays on screen for information. Calculated on the device, toward Har haBayit (31.7781° N, 35.2354° E), corrected for the local magnetic declination.</string>
+    <string name="boussole_widget_label">Direction of Jerusalem</string>
+    <string name="boussole_widget_description">The chassid and the direction of Jerusalem from your zmanim location, relative to north. Tap to open the compass.</string>
+    <string name="boussole_widget_lecture">Jerusalem from %1$s: %2$d° from north</string>
+    <string name="boussole_source">Source: %1$s</string>
+    <!-- Le web seulement : l’iPhone demande l’autorisation après un toucher. -->
+    <string name="boussole_activer">Turn on the compass</string>
+    <string name="boussole_affichage">Compass display</string>
+    <string name="boussole_affichage_hassid">The chassid turns (default)</string>
+    <string name="boussole_affichage_rose">Compass rose</string>
+    <!-- Relance la localisation précise (ChoixLieu.positionExacte). -->
     <string name="boussole_position_exacte">Exact position</string>
-    <string name="boussole_activer">Enable the compass</string>
-    <string name="boussole_aligne">You are facing Jerusalem</string>
-    <string name="boussole_droite">Turn %1$d° to the right</string>
-    <string name="boussole_gauche">Turn %1$d° to the left</string>
     <string-array name="boussole_cardinaux">
         <item>N</item>
         <item>E</item>
@@ -1148,13 +1255,13 @@
         <item>W</item>
     </string-array>
     <string-array name="boussole_points">
-        <item>north</item>
-        <item>northeast</item>
-        <item>east</item>
-        <item>southeast</item>
-        <item>south</item>
-        <item>southwest</item>
-        <item>west</item>
-        <item>northwest</item>
+        <item>N</item>
+        <item>NE</item>
+        <item>E</item>
+        <item>SE</item>
+        <item>S</item>
+        <item>SW</item>
+        <item>W</item>
+        <item>NW</item>
     </string-array>
 </resources>

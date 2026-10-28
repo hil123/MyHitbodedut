@@ -26,6 +26,7 @@ class BootReceiver : BroadcastReceiver() {
         Reminder.reschedule(context)
         ChabbatAlerte.programmer(context)
         LevanaAlerte.programmer(context)
+        VolAlerte.programmer(context)
         StreakWidget.refresh(context)
         ZmanimWidget.refresh(context)
     }

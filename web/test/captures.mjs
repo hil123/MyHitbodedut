@@ -223,7 +223,14 @@ await capture('priere-aeree-he', { langue: 'he', ecran: 'siddur', actions: ouvri
 await capture('birkat-cheva-he', { langue: 'he', ecran: 'siddur', actions: ouvrirTexte('ברכת המזון', -1) });
 // Le capteur simulé : quarante lectures au même cap, pour que le lissage s'y pose.
 const cap = (nord) => async (p) => {
-  await p.waitForSelector('.boussole .cadran');
+  await p.waitForSelector('.boussole-scene svg');
+  // Là où le navigateur demande l'autorisation (iPhone, Chromium récent), le toucher d'abord.
+  // Le harnais répond oui à la place de l'utilisateur.
+  if (await p.$('.boussole-activer')) {
+    await p.evaluate(() => { DeviceOrientationEvent.requestPermission = async () => 'granted'; });
+    await p.click('.boussole-activer');
+    await p.waitForSelector('.boussole-activer', { state: 'detached' });
+  }
   await p.evaluate((n) => { for (let i = 0; i < 40; i++) window.dispatchEvent(Object.assign(new Event('deviceorientationabsolute'), { alpha: (360 - n) % 360, absolute: true })); }, nord);
   await p.waitForTimeout(700);
 };
@@ -231,6 +238,8 @@ const PARIS = { lieu_zmanim: { nom: 'Paris', latitude: 48.8566, longitude: 2.352
 await capture('boussole-fr', { langue: 'fr', ecran: 'boussole', extra: PARIS, actions: cap(80) });
 await capture('boussole-fr-aligne', { langue: 'fr', ecran: 'boussole', mode: 'sombre', extra: PARIS, actions: cap(112) });
 await capture('boussole-he', { langue: 'he', ecran: 'boussole', extra: JERUSALEM, actions: cap(150) });
+await capture('boussole-fr-rose', { langue: 'fr', ecran: 'boussole', extra: { ...PARIS, boussole_rose: true }, actions: cap(80) });
+await capture('boussole-fr-rose-aligne', { langue: 'fr', ecran: 'boussole', extra: { ...PARIS, boussole_rose: true }, actions: cap(112) });
 await capture('bibliotheque-he', { langue: 'he', ecran: 'bibliotheque', actions: bas(0) });
 await capture('reglages-fr-personnalisation', { langue: 'fr', ecran: 'reglages', actions: bas(400) });
 await capture('reglages-he', { langue: 'he', ecran: 'reglages', mode: 'sombre', actions: bas(400) });

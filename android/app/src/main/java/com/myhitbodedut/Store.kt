@@ -103,6 +103,21 @@ object Store {
     private const val KEY_LIEU_ALT = "lieu_altitude"
     private const val KEY_LIEU_FUSEAU = "lieu_fuseau"
     private const val KEY_LIEU_VILLE = "lieu_ville"
+    private const val KEY_VOL_NUMERO = "vol_numero"
+    private const val KEY_VOL_DEPART = "vol_depart"
+    private const val KEY_VOL_ARRIVEE = "vol_arrivee"
+    private const val KEY_VOL_DECOLLAGE = "vol_decollage"
+    private const val KEY_VOL_ATTERRISSAGE = "vol_atterrissage"
+    private const val KEY_VOL_RELEVE_LAT = "vol_releve_latitude"
+    private const val KEY_VOL_RELEVE_LON = "vol_releve_longitude"
+    private const val KEY_VOL_RELEVE_T = "vol_releve_instant"
+    private const val KEY_VOL_RELEVE_SOURCE = "vol_releve_source"
+    private const val KEY_VOL_INDICATIF = "vol_indicatif"
+    private const val KEY_VOL_RAPPELS = "vol_rappels"
+    private const val KEY_VOL_RAPPELS_ACTIFS = "vol_rappels_actifs"
+    private const val KEY_VOL_RAPPEL_VU = "vol_rappel_vu"
+    private const val KEY_SUIVI_DIRECT = "vol_suivi_direct"
+    private const val KEY_BOUSSOLE_ROSE = "boussole_rose"
     private const val KEY_ALLUMAGE = "allumage_minutes"
     private const val KEY_PAUSED_DATES = "paused_dates"
     private const val KEY_REMINDER_ON = "reminder_on"
@@ -379,6 +394,109 @@ object Store {
             .putLong(KEY_LIEU_VILLE, ville?.id ?: -1L)
             .apply()
         setInIsrael(context, ville?.enIsrael ?: Holidays.defaultInIsrael(lieu.fuseau))
+    }
+
+    /**
+     * Le vol des zmanim en vol (28/10) : numéro, codes IATA, instants prévus en
+     * millisecondes UTC, et le dernier relevé GPS pris en vol. Il reste sur
+     * l'appareil, comme tout le reste ; null tant qu'aucun vol complet n'a été
+     * calculé.
+     */
+    fun vol(context: Context, aeroports: List<Vol.Aeroport>): Vol.Plan? {
+        val p = prefs(context)
+        val depart = p.getString(KEY_VOL_DEPART, null)?.let { Aeroports.parIata(aeroports, it) } ?: return null
+        val arrivee = p.getString(KEY_VOL_ARRIVEE, null)?.let { Aeroports.parIata(aeroports, it) } ?: return null
+        val decollage = p.getLong(KEY_VOL_DECOLLAGE, -1L).takeIf { it >= 0 } ?: return null
+        val atterrissage = p.getLong(KEY_VOL_ATTERRISSAGE, -1L).takeIf { it >= 0 } ?: return null
+        val releve = run {
+            val lat = p.getString(KEY_VOL_RELEVE_LAT, null)?.toDoubleOrNull() ?: return@run null
+            val lon = p.getString(KEY_VOL_RELEVE_LON, null)?.toDoubleOrNull() ?: return@run null
+            val t = p.getLong(KEY_VOL_RELEVE_T, -1L).takeIf { it >= 0 } ?: return@run null
+            Vol.Point(java.time.Instant.ofEpochMilli(t), lat, lon)
+        }
+        return Vol.Plan(p.getString(KEY_VOL_NUMERO, "").orEmpty(), depart, arrivee,
+            java.time.Instant.ofEpochMilli(decollage), java.time.Instant.ofEpochMilli(atterrissage), releve,
+            if (p.getString(KEY_VOL_RELEVE_SOURCE, null) == Vol.SourceReleve.DIRECT.name) Vol.SourceReleve.DIRECT else Vol.SourceReleve.GPS)
+    }
+
+    /** Le numéro et les codes du dernier vol, pour l'accès depuis l'onglet Zmanim, sans lire les aéroports. */
+    fun volResume(context: Context): Triple<String, String, String>? {
+        val p = prefs(context)
+        val depart = p.getString(KEY_VOL_DEPART, null) ?: return null
+        val arrivee = p.getString(KEY_VOL_ARRIVEE, null) ?: return null
+        return Triple(p.getString(KEY_VOL_NUMERO, "").orEmpty(), depart, arrivee)
+    }
+
+    fun setVol(context: Context, plan: Vol.Plan?) {
+        val e = prefs(context).edit()
+        val releve = listOf(KEY_VOL_RELEVE_LAT, KEY_VOL_RELEVE_LON, KEY_VOL_RELEVE_T, KEY_VOL_RELEVE_SOURCE)
+        if (plan == null) {
+            (listOf(KEY_VOL_NUMERO, KEY_VOL_DEPART, KEY_VOL_ARRIVEE, KEY_VOL_DECOLLAGE, KEY_VOL_ATTERRISSAGE, KEY_VOL_RAPPELS) + releve).forEach { e.remove(it) }
+        } else {
+            e.putString(KEY_VOL_NUMERO, plan.numero)
+                .putString(KEY_VOL_DEPART, plan.depart.iata)
+                .putString(KEY_VOL_ARRIVEE, plan.arrivee.iata)
+                .putLong(KEY_VOL_DECOLLAGE, plan.decollage.toEpochMilli())
+                .putLong(KEY_VOL_ATTERRISSAGE, plan.atterrissage.toEpochMilli())
+            // Le relevé GPS appartient à ce vol : un vol saisi à nouveau l'efface.
+            val r = plan.releve
+            if (r == null) releve.forEach { e.remove(it) }
+            else e.putString(KEY_VOL_RELEVE_LAT, r.latitude.toString()).putString(KEY_VOL_RELEVE_LON, r.longitude.toString())
+                .putLong(KEY_VOL_RELEVE_T, r.instant.toEpochMilli()).putString(KEY_VOL_RELEVE_SOURCE, plan.sourceReleve.name)
+        }
+        e.apply()
+    }
+
+    /** Les rappels en vol (VolRappels, VolAlerte) : actifs par défaut, un interrupteur sur l'écran du vol. */
+    fun volRappelsActifs(context: Context): Boolean = prefs(context).getBoolean(KEY_VOL_RAPPELS_ACTIFS, true)
+
+    fun setVolRappelsActifs(context: Context, actifs: Boolean) {
+        prefs(context).edit().putBoolean(KEY_VOL_RAPPELS_ACTIFS, actifs).apply()
+    }
+
+    /** Les rappels du vol enregistré, une ligne par rappel : « TYPE|instant|prière|limite|omer » (millisecondes). */
+    fun volRappels(context: Context): List<VolRappels.Rappel> =
+        prefs(context).getString(KEY_VOL_RAPPELS, "").orEmpty().lines().mapNotNull { ligne ->
+            val c = ligne.split("|")
+            if (c.size != 5) return@mapNotNull null
+            val type = runCatching { VolRappels.Type.valueOf(c[0]) }.getOrNull() ?: return@mapNotNull null
+            val t = c[1].toLongOrNull() ?: return@mapNotNull null
+            VolRappels.Rappel(type, java.time.Instant.ofEpochMilli(t), c[2].ifEmpty { null },
+                c[3].toLongOrNull()?.let(java.time.Instant::ofEpochMilli), c[4].toIntOrNull() ?: 0)
+        }
+
+    fun setVolRappels(context: Context, rappels: List<VolRappels.Rappel>) {
+        prefs(context).edit().putString(KEY_VOL_RAPPELS, rappels.joinToString("\n") { r ->
+            "${r.type.name}|${r.instant.toEpochMilli()}|${r.priere.orEmpty()}|${r.limite?.toEpochMilli() ?: ""}|${r.omer}"
+        }).apply()
+    }
+
+    /** L'instant du dernier rappel montré : un rappel n'est pas montré deux fois. */
+    fun volRappelVu(context: Context): Long = prefs(context).getLong(KEY_VOL_RAPPEL_VU, 0L)
+
+    fun setVolRappelVu(context: Context, instant: Long) {
+        prefs(context).edit().putLong(KEY_VOL_RAPPEL_VU, instant).apply()
+    }
+
+    /** Le suivi de vol en direct (SuiviVol) : désactivé tant que l'utilisateur ne l'active pas. */
+    /** L'affichage de la boussole (28/10) : le hassid (design C, par défaut) ou la rose des vents. */
+    fun boussoleRose(context: Context): Boolean = prefs(context).getBoolean(KEY_BOUSSOLE_ROSE, false)
+
+    fun setBoussoleRose(context: Context, rose: Boolean) {
+        prefs(context).edit().putBoolean(KEY_BOUSSOLE_ROSE, rose).apply()
+    }
+
+    fun suiviDirect(context: Context): Boolean = prefs(context).getBoolean(KEY_SUIVI_DIRECT, false)
+
+    fun setSuiviDirect(context: Context, actif: Boolean) {
+        prefs(context).edit().putBoolean(KEY_SUIVI_DIRECT, actif).apply()
+    }
+
+    /** L'indicatif radio du vol (« ELY1 »), pour le suivi en direct. */
+    fun volIndicatif(context: Context): String = prefs(context).getString(KEY_VOL_INDICATIF, "").orEmpty()
+
+    fun setVolIndicatif(context: Context, indicatif: String) {
+        prefs(context).edit().putString(KEY_VOL_INDICATIF, indicatif).apply()
     }
 
     /** Les minutes d'allumage avant la chki'a ; 18 par défaut (Zmanim.ALLUMAGES). */

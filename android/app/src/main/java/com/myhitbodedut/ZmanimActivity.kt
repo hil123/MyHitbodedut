@@ -12,8 +12,10 @@ import java.time.LocalDate
 
 /**
  * L'onglet Zmanim (demande du 10/10) : la date hébraïque du jour, ce qu'elle
- * change aux prières, les boutons halakha, hilloulot et calendrier, puis tous
- * les horaires de la journée, chacun avec sa méthode (ZMANIM.md) ; ensuite
+ * change aux prières, les boutons halakha, hilloulot et calendrier, l'accès
+ * aux zmanim en vol (28/10, VolActivity) et à la boussole de Jérusalem
+ * (BoussoleActivity), puis tous les horaires de la
+ * journée, chacun avec sa méthode (ZMANIM.md) ; ensuite
  * Birkat haLevana, la hilloula et la halakha du jour (14/10). Le lieu se choisit sur le
  * bandeau ; l'allumage des bougies, en bas de page.
  */
@@ -56,16 +58,8 @@ class ZmanimActivity : AppCompatActivity() {
             })
             addView(bouton(R.string.zmanim_calendrier, 8) { startActivity(Intent(this@ZmanimActivity, CalendrierActivity::class.java)) })
         })
-        // La direction de la tefila (28/10) : une ligne, le cap ; touchée, la boussole.
-        if (lieu != null) contenu.addView(VueJour.carte(this).apply {
-            val c = DirectionTefila.orthodromie(lieu.latitude, lieu.longitude)
-            val points = resources.getStringArray(R.array.boussole_points)
-            addView(VueJour.texte(this@ZmanimActivity, "🧭  " + getString(R.string.boussole_titre), 15f, R.color.ink))
-            addView(VueJour.texte(this@ZmanimActivity, getString(R.string.boussole_cap, Math.round(c).toInt(),
-                points[DirectionTefila.octant(c)]), 13f, R.color.muted, haut = 2))
-            foreground = getDrawable(android.R.drawable.list_selector_background)
-            setOnClickListener { BoussoleActivity.ouvrir(this@ZmanimActivity) }
-        })
+        contenu.addView(carteVol())
+        contenu.addView(carteBoussole())
         contenu.addView(VueJour.horaires(this, aujourdhui, israel) { choixLieu.montrer() })
         VueJour.sousHoraires(this, aujourdhui, israel).forEach { contenu.addView(it) }
         contenu.addView(VueJour.carte(this).apply {
@@ -90,6 +84,28 @@ class ZmanimActivity : AppCompatActivity() {
             })
         }
         contenu.addView(VueJour.pied(this))
+    }
+
+    /** L'accès aux zmanim en vol (28/10) : le dernier vol saisi, ou l'invitation à en saisir un. */
+    private fun carteVol() = VueJour.carte(this).apply {
+        addView(VueJour.texte(this@ZmanimActivity, getString(R.string.vol_title), 15f, R.color.ink))
+        val vol = Store.volResume(this@ZmanimActivity)
+        addView(VueJour.texte(this@ZmanimActivity, vol?.let { (numero, de, vers) -> getString(R.string.vol_carte_vol, numero.ifEmpty { "✈" }, de, vers) }
+            ?: getString(R.string.vol_carte_sous), 13f, if (vol != null) R.color.brand else R.color.muted, haut = 2))
+        foreground = getDrawable(android.R.drawable.list_selector_background)
+        setOnClickListener { startActivity(Intent(this@ZmanimActivity, VolActivity::class.java)) }
+    }
+
+    /** La boussole de Jérusalem (28/10) : la direction depuis le lieu choisi. */
+    private fun carteBoussole() = VueJour.carte(this).apply {
+        addView(VueJour.texte(this@ZmanimActivity, getString(R.string.boussole_title), 15f, R.color.ink))
+        val lieu = Store.lieuZmanim(this@ZmanimActivity)
+        addView(VueJour.texte(this@ZmanimActivity, lieu?.let {
+            val p = DirectionJerusalem.directions(it.latitude, it.longitude).first
+            getString(R.string.boussole_par_rapport_nord, DirectionJerusalem.degres(p))
+        } ?: getString(R.string.boussole_carte_sous), 13f, if (lieu != null) R.color.brand else R.color.muted, haut = 2))
+        foreground = getDrawable(android.R.drawable.list_selector_background)
+        setOnClickListener { startActivity(Intent(this@ZmanimActivity, BoussoleActivity::class.java)) }
     }
 
     private fun choisirAllumage() {

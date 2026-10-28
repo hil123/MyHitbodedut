@@ -206,6 +206,25 @@ export function creeStore(stockage, { maintenant = () => new Date(), fuseau } = 
       // téléphone, comme la valeur par défaut (israelParDefaut).
       set('in_israel', ville ? ville.pays === 'IL' : israelParDefaut(lieu.fuseau));
     },
+    /**
+     * Le vol des zmanim en vol (28/10, Store.vol) : { numero, depart, arrivee
+     * (codes IATA), decollage, atterrissage (« AAAA-MM-JJTHH:MM » à l'heure de
+     * chaque aéroport), releve ({ latitude, longitude, instant }, facultatif :
+     * le dernier relevé GPS en vol) } ; null tant qu'aucun vol complet n'est calculé.
+     */
+    vol: () => {
+      const v = get('vol_zmanim', null);
+      return v && v.depart && v.arrivee && v.decollage && v.atterrissage ? v : null;
+    },
+    setVol: (v) => set('vol_zmanim', v),
+    /** Le suivi de vol en direct (SuiviVol) : désactivé tant que l'utilisateur ne l'active pas. */
+    /** La boussole en rose des vents plutôt que le hassid (design C, par défaut ; 28/10). */
+    boussoleRose: () => get('boussole_rose', false) === true,
+    setBoussoleRose: (v) => set('boussole_rose', !!v),
+    suiviDirect: () => get('vol_suivi_direct', false) === true,
+    setSuiviDirect: (v) => set('vol_suivi_direct', !!v),
+    volIndicatif: () => get('vol_indicatif', ''),
+    setVolIndicatif: (v) => set('vol_indicatif', v),
     /** Les minutes d'allumage avant la chki'a ; 18 par défaut. */
     allumage: () => ([18, 20, 22, 30, 40].includes(get('allumage_minutes', 18)) ? get('allumage_minutes', 18) : 18),
     setAllumage: (m) => set('allumage_minutes', m),
