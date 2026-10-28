@@ -126,11 +126,52 @@ test('parité avec Android : chaque zman en vol, à deux secondes près (vecteur
   const vecteurs = JSON.parse(readFileSync(new URL('vecteurs_vol.json', import.meta.url), 'utf8'));
   assert.ok(vecteurs.vols.length >= 6);
   for (const v of vecteurs.vols) {
-    const c = Vol.calculer(plan(v.depart, v.arrivee, v.decollage, v.atterrissage));
+    const p = plan(v.depart, v.arrivee, v.decollage, v.atterrissage);
+    if (v.releve) p.releve = { latitude: v.releve.latitude, longitude: v.releve.longitude, instant: new Date(v.releve.instant) };
+    const c = Vol.calculer(p);
+    assert.equal(c.fiabilite, v.fiabilite);
     const web = Vol.enVol(c);
     assert.deepEqual(web.map((e) => e.cle), v.enVol.map((e) => e.cle), `${v.depart}-${v.arrivee}`);
     web.forEach((e, i) => assert.ok(Math.abs(e.instant - Date.parse(v.enVol[i].instant)) <= 2000, `${v.depart}-${v.arrivee} ${e.cle}`));
     assert.deepEqual([...c.reserves].sort(), v.reserves);
     assert.deepEqual(c.lignesDate.map((l) => [l.avant, l.apres]), v.lignesDate);
+    const jalons = Vol.jalons(c, false, 18);
+    assert.deepEqual(jalons.map((j) => [j.type, j.date, j.omer]), v.jalons.map((j) => [j.type, j.date, j.omer]), `${v.depart}-${v.arrivee} ${v.decollage}`);
+    jalons.forEach((j, i) => assert.ok(Math.abs(j.instant - Date.parse(v.jalons[i].instant)) <= 2000));
   }
+});
+
+test('Melbourne – Los Angeles – Montréal, Sydney – Queenstown, Tel Aviv – Buenos Aires : heures d’été et d’hiver', () => {
+  // Décalage UTC, en heures, de l'heure du billet : décembre puis juillet (règles officielles, ZMANIM.md).
+  const decalage = (iata, local) => (Date.parse(`${local}:00Z`) - Vol.instant(local, a(iata))) / H;
+  for (const [iata, dec, juil] of [['MEL', 11, 10], ['SYD', 11, 10], ['LAX', -8, -7], ['YUL', -5, -4], ['ZQN', 13, 12], ['EZE', -3, -3], ['TLV', 2, 3], ['BNE', 10, 10], ['PER', 8, 8], ['DPS', 8, 8], ['CGK', 7, 7], ['DJJ', 9, 9], ['PHX', -7, -7], ['HNL', -10, -10]]) {
+    assert.equal(decalage(iata, '2026-12-15T12:00'), dec, `${iata} décembre`);
+    assert.equal(decalage(iata, '2026-07-15T12:00'), juil, `${iata} juillet`);
+  }
+  // Le Pacifique, dans les deux sens : la date locale recule vers l'est, avance vers l'ouest.
+  const aller = Vol.calculer(plan('MEL', 'LAX', '2026-12-15T10:30', '2026-12-15T06:45'));
+  assert.equal(aller.lignesDate.length, 1);
+  assert.ok(aller.lignesDate[0].apres < aller.lignesDate[0].avant);
+  const retour = Vol.calculer(plan('LAX', 'MEL', '2026-12-22T22:30', '2026-12-24T08:45'));
+  assert.ok(retour.lignesDate[0].apres > retour.lignesDate[0].avant);
+  // Queenstown (168° E) : pas de ligne de date ; Tel Aviv – Buenos Aires : l'équateur, pas la ligne.
+  assert.equal(Vol.calculer(plan('SYD', 'ZQN', '2026-12-18T09:00', '2026-12-18T14:15')).lignesDate.length, 0);
+  assert.equal(Vol.calculer(plan('TLV', 'EZE', '2026-11-10T23:00', '2026-11-11T09:20')).lignesDate.length, 0);
+});
+
+
+test('un relevé GPS en vol recale la route ; hors du vol, il est ignoré', () => {
+  const releve = { latitude: 56, longitude: -30, instant: new Date('2026-11-10T18:30:00Z') };
+  const avec = { ...versOuest, releve };
+  const p = Vol.position(avec, releve.instant);
+  assert.ok(Math.abs(p.latitude - 56) < 1e-6 && Math.abs(p.longitude + 30) < 1e-6);
+  const c = Vol.calculer(avec);
+  assert.equal(c.fiabilite, 'releve_gps');
+  const sans = Vol.calculer(versOuest);
+  assert.equal(sans.fiabilite, 'route_prevue');
+  const chkia = (x) => Vol.enVol(x).find((e) => e.cle === 'chkia').instant;
+  assert.notEqual(+chkia(c), +chkia(sans));
+  const dehors = Vol.calculer({ ...versOuest, releve: { ...releve, instant: new Date(+versOuest.atterrissage + H) } });
+  assert.equal(dehors.fiabilite, 'route_prevue');
+  assert.deepEqual(Vol.enVol(dehors).map((e) => +e.instant), Vol.enVol(sans).map((e) => +e.instant));
 });

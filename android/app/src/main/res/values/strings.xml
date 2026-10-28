@@ -1216,5 +1216,23 @@
     <string name="vol_reserve_a_rebours">L’avion va plus vite que le soleil vers l’ouest : un zman se produit plus d’une fois.</string>
     <string name="vol_ligne_date">Ligne de changement de date (méridien de 180°) franchie vers %1$s : la date locale passe du %2$s au %3$s.</string>
     <string name="vol_fermer">Fermer</string>
+    <string name="vol_jalons_titre">Chabbat, fêtes et Omer pendant le vol</string>
+    <string name="vol_chabbat">Chabbat</string>
+    <string name="vol_jalon_entree">Entrée de %1$s : chki’a %2$s</string>
+    <string name="vol_jalon_allumage">Allumage, %1$s min avant la chki’a : %2$s</string>
+    <string name="vol_jalon_sortie">Sortie de %1$s : tsét (8,5°) %2$s</string>
+    <string name="vol_jalon_enchainement">%1$s commence à tsét (8,5°) : %2$s</string>
+    <string name="vol_jalon_omer">Compte du Omer, jour %1$s, dès tsét (8,5°) : %2$s</string>
+    <string name="vol_jalons_note">Jour civil du point sous l’avion ; %1$s, d’après le réglage de l’application.</string>
+    <string name="vol_jalons_israel">calendrier d’Israël</string>
+    <string name="vol_jalons_diaspora">calendrier de diaspora</string>
+    <string name="vol_gps">Position réelle (GPS)</string>
+    <string name="vol_gps_oublier">Revenir à la route prévue</string>
+    <string name="vol_gps_attente">Recherche du signal GPS… Près d’un hublot, la réception est meilleure.</string>
+    <string name="vol_gps_echec">Pas de position GPS. Le calcul reste sur la route prévue.</string>
+    <string name="vol_gps_refuse">Sans la localisation précise, le calcul reste sur la route prévue.</string>
+    <string name="vol_gps_hors_vol">Le relevé GPS ne sert que pendant le vol, entre le décollage et l’atterrissage prévus.</string>
+    <string name="vol_fiabilite_gps">Route recalée sur le relevé GPS de %1$s (%2$s), puis grand cercle jusqu’à l’arrivée, à vitesse constante. Zmanim du point sous l’avion, au niveau de la mer, calculés sur l’appareil, sans réseau.</string>
+    <string name="vol_ecart_gps">%1$s min si l’arrivée a 30 min de retard</string>
     <string name="vol_source_aeroports">Aéroports : OurAirports (domaine public) ; fuseaux : timezone-boundary-builder (ODbL, © contributeurs OpenStreetMap)</string>
 </resources>

@@ -236,7 +236,8 @@ contre PyEphem, et les règles de prière restent à valider par un Rav.
 ## En vol (phase 1, hors ligne)
 
 `Vol.kt` (Android) et `vol.js` (web), ligne pour ligne, ajoutés le 28/10.
-Rien ne quitte le téléphone, aucune permission n'est demandée.
+Rien ne quitte le téléphone. La localisation précise n'est demandée qu'au
+toucher de « position réelle (GPS) ».
 
 **Le calcul.** On saisit les deux aéroports et les heures du billet, à
 l'heure locale de chaque aéroport. L'avion est placé sur l'arc de grand
@@ -266,8 +267,8 @@ méridien (Kiribati, Samoa…) : seul le méridien est calculé.
 - Vérifié par les tests (`VolTest`, `vol.test.mjs`) : chaque zman trouvé en
   vol est le zman du moteur au point où est l'avion à cet instant, à 2 s
   près ; au sol, avant le décollage, le calcul rend exactement les zmanim de
-  l'aéroport ; Android et web s'accordent à 2 s sur neuf vols
-  (`tools/vecteurs_vol`). Ce sont des vérifications de calcul, pas de
+  l'aéroport ; Android et web s'accordent à 2 s sur vingt-six vols, jalons
+  de Chabbat, des fêtes et du Omer compris (`tools/vecteurs_vol`). Ce sont des vérifications de calcul, pas de
   halakha.
 - Estimé : la position. Une route réelle s'écarte du grand cercle de
   plusieurs centaines de kilomètres (vents, couloirs de l'Atlantique Nord),
@@ -291,6 +292,45 @@ méridien (Kiribati, Samoa…) : seul le méridien est calculé.
      changement de date : l'écran donne seulement le fait ;
   4. au-delà de 60° de latitude, les méthodes en degrés et en minutes
      divergent fortement ; certaines n'ont pas lieu.
+
+**Le GPS** (au choix, en plus de la route prévue). Au toucher de « position
+réelle », l'application demande la localisation précise et un relevé du GPS
+seul, 90 s au plus ; le GPS marche en mode avion, sans réseau. Un relevé pris
+entre le décollage et l'atterrissage prévus recale la route : grand cercle du
+départ au relevé, puis du relevé à l'arrivée, chaque tronçon à vitesse
+constante. L'écart affiché devient alors celui d'une arrivée retardée de
+30 min. Le relevé reste sur l'appareil ; un autre vol l'efface.
+
+**Chabbat, fêtes et Omer** (`VolCalendrier.kt`, `jalons` dans `vol.js`) : la
+règle de `JourAffiche.horaires` (isAssurBemelacha de KosherJava), appliquée aux
+chki'a et aux tsét de la route. Chki'a la veille d'un jour chômé : entrée, et
+l'allumage du réglage (18 min par défaut) avant cette chki'a ; tsét d'un jour
+chômé suivi d'un jour ouvré : sortie ; suivi d'un autre jour chômé : le jour
+suivant commence ; tsét pendant le Omer : le jour compté ce soir. Le jour civil
+est celui du point sous l'avion (fuseau nautique), le calendrier d'Israël ou
+de diaspora celui du réglage de l'application. Ce sont deux choix de calcul,
+**à valider par un Rav**, comme la question de la date après la ligne de
+changement de date ; l'écran ne donne aucun conseil (allumer à bord, compter
+avant ou après une escale…).
+
+**Vérifications des fuseaux et de l'heure d'été** (28/10, `VolTest`,
+`vol.test.mjs`) : Melbourne, Sydney +11 en décembre et +10 en juillet ;
+Brisbane +10, Perth +8, Adélaïde +10,5 / +9,5, Darwin +9,5 ; Jakarta +7,
+Bali +8, Jayapura +9 ; Los Angeles −8 / −7, New York et Montréal −5 / −4,
+Phoenix −7 et Honolulu −10 toute l'année ; Buenos Aires −3 toute l'année ;
+Queenstown +13 / +12 ; Tel Aviv +2 / +3. Règles recoupées : heure d'été en
+Nouvelle-Galles du Sud, Victoria, Tasmanie, Australie-Méridionale et ACT, pas
+au Queensland, en Australie-Occidentale ni dans le Territoire du Nord ; trois
+fuseaux indonésiens par province ; pas d'heure d'été en Argentine (un projet
+UTC−4 voté par les députés en 2025 n'a pas été trouvé adopté par le Sénat) ;
+ni à Hawaï ni en Arizona hors Nation navajo. Les 729 aéroports d'Australie,
+d'Indonésie, des États-Unis et d'Argentine ont été comparés à ces règles,
+région par région, en janvier et en juillet : aucun écart. L'ouest de
+l'Alaska (Nome, Pribilof, Unalaska) est à l'heure de l'Alaska malgré sa
+longitude, comme le dit la tzdb. Trajets vérifiés : Melbourne – Los Angeles –
+Montréal et retour (été et hiver austral, ligne de date dans les deux sens),
+Sydney – Queenstown, Tel Aviv – Buenos Aires (direct hypothétique, aucun
+vol régulier connu).
 
 **Les aéroports** (`res/raw/aeroports.json`, `tools/aeroports_construction.py`) :
 OurAirports (domaine public, « sans garantie d'exactitude »), aéroports

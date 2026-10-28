@@ -1395,3 +1395,4 @@ body.avec-mini .seance .contenu { padding-bottom: calc(104px + env(safe-area-ins
 .boutons-vol button { width: 100%; min-width: 0; }
 .vol-heure { margin-top: 2px; font-weight: 700; font-variant-numeric: tabular-nums; text-align: start; }
 .liste-aeroports { max-height: 50vh; overflow-y: auto; margin-top: 8px; }
+.carte-vol .vol-jalon { margin-top: 12px; font-weight: 700; }

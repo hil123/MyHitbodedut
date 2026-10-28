@@ -2302,7 +2302,8 @@ function planDe(v) {
   if (!depart || !arrivee || !v.decollage || !v.atterrissage) return null;
   const decollage = Vol.instant(v.decollage, depart);
   const atterrissage = Vol.instant(v.atterrissage, arrivee);
-  return decollage && atterrissage ? { numero: v.numero ?? '', depart, arrivee, decollage, atterrissage } : null;
+  const releve = v.releve ? { latitude: v.releve.latitude, longitude: v.releve.longitude, instant: new Date(v.releve.instant) } : null;
+  return decollage && atterrissage ? { numero: v.numero ?? '', depart, arrivee, decollage, atterrissage, releve } : null;
 }
 
 function choisirAeroport(onChoisi) {
@@ -2331,7 +2332,28 @@ function deuxHeures(plan, t) {
   return `${jour(plan.depart.fuseau)} ${heure(plan.depart)} · ${autreJour ? `${jour(plan.arrivee.fuseau)} ` : ''}${heure(plan.arrivee)}`;
 }
 
-const ecartVol = (ms) => tr.t('vol_ecart', `${ms < 0 ? '−' : '+'}${Math.abs(Math.round(ms / 60000))}`);
+const ecartVol = (ms) => tr.t(calculVol?.fiabilite === 'releve_gps' ? 'vol_ecart_gps' : 'vol_ecart', `${ms < 0 ? '−' : '+'}${Math.abs(Math.round(ms / 60000))}`);
+
+/** Le GPS du téléphone, par le navigateur (VolActivity.releverGps) : 90 s au plus, sans réseau. */
+let gpsVol = false;
+function releverGps() {
+  const garde = store.vol();
+  if (!garde || !navigator.geolocation) return signale(tr.t('vol_gps_echec'));
+  gpsVol = true;
+  rendre();
+  navigator.geolocation.getCurrentPosition((p) => {
+    gpsVol = false;
+    const releve = { latitude: p.coords.latitude, longitude: p.coords.longitude, instant: new Date(p.timestamp).toISOString() };
+    const plan = planDe({ ...garde, releve });
+    if (!plan || !Vol.releveUtilisable(plan)) { rendre(); return signale(tr.t('vol_gps_hors_vol')); }
+    store.setVol({ ...garde, releve });
+    rendre();
+  }, (e) => {
+    gpsVol = false;
+    rendre();
+    signale(tr.t(e.code === 1 ? 'vol_gps_refuse' : 'vol_gps_echec'));
+  }, { enableHighAccuracy: true, timeout: 90000, maximumAge: 0 });
+}
 
 function positionVol(e) {
   const n = (x) => Math.abs(x).toLocaleString(tr.langue, { minimumFractionDigits: 1, maximumFractionDigits: 1 });
@@ -2359,7 +2381,12 @@ function resultatsVol(c) {
   const date = (iso) => new Intl.DateTimeFormat(tr.langue, { timeZone: 'UTC', weekday: 'short', day: 'numeric', month: 'short' }).format(new Date(`${iso}T12:00:00Z`));
   return [
     h('div', { class: 'carte carte-texte carte-vol' }, h('p', { class: 'indice' }, tr.t('vol_priere_titre')), ...priere),
-    h('div', { class: 'carte carte-texte carte-vol' }, h('p', { class: 'indice' }, tr.t('vol_fiabilite_titre')), h('p', {}, tr.t('vol_fiabilite')),
+    h('div', { class: 'carte carte-texte carte-vol' }, h('p', { class: 'indice' }, tr.t('vol_fiabilite_titre')),
+      h('p', {}, c.fiabilite === 'releve_gps'
+        ? tr.t('vol_fiabilite_gps', deuxHeures(c.plan, c.plan.releve.instant), positionVol(c.plan.releve)) : tr.t('vol_fiabilite')),
+      h('div', { class: 'boutons-vol' },
+        h('button', { class: 'secondaire', disabled: gpsVol, onclick: releverGps }, tr.t(gpsVol ? 'vol_gps_attente' : 'vol_gps')),
+        c.plan.releve ? h('button', { class: 'secondaire', onclick: () => { const g = store.vol(); delete g.releve; store.setVol(g); rendre(); } }, tr.t('vol_gps_oublier')) : null),
       ...RESERVES.filter((r) => c.reserves.has(r)).map((r) => h('p', {}, tr.t(`vol_reserve_${r}`))),
       ...c.lignesDate.map((l) => h('p', {}, tr.t('vol_ligne_date', deuxHeures(c.plan, l.instant), date(l.avant), date(l.apres))))),
     h('div', { class: 'carte carte-zmanim' }, h('p', { class: 'indice' }, tr.t('vol_en_vol_titre')),
@@ -2368,7 +2395,26 @@ function resultatsVol(c) {
         h('div', { class: 'zman-heure vol-heure' }, deuxHeures(c.plan, e.instant)),
         h('div', { class: 'zman-methode' }, [positionVol(e), e.ecartSiRetard !== null ? ecartVol(e.ecartSiRetard) : null].filter(Boolean).join(' · '))))
         : h('p', { class: 'message' }, tr.t('vol_aucun_zman'))),
+    carteJalons(c),
   ];
+}
+
+/** Chabbat, fêtes et Omer sur la route (VolActivity.carteJalons) : des heures, sans conseil. */
+function carteJalons(c) {
+  const minutes = store.allumage();
+  const jalons = Vol.jalons(c, store.inIsrael(), minutes);
+  if (!jalons.length) return null;
+  const libelle = (f) => { try { return tr.t(`fete_${f}`); } catch { return null; } };
+  return h('div', { class: 'carte carte-texte carte-vol' }, h('p', { class: 'indice' }, tr.t('vol_jalons_titre')),
+    ...jalons.flatMap((j) => {
+      const nom = [j.chabbat ? tr.t('vol_chabbat') : null, ...j.fetes.map(libelle)].filter(Boolean).join(' · ');
+      const heure = deuxHeures(c.plan, j.instant);
+      const texte = j.type === 'omer' ? tr.t('vol_jalon_omer', String(j.omer), heure) : tr.t(`vol_jalon_${j.type}`, nom, heure);
+      return [h('p', { class: 'vol-jalon' }, texte),
+        j.allumage ? h('p', {}, tr.t('vol_jalon_allumage', String(minutes), deuxHeures(c.plan, j.allumage))) : null,
+        h('p', { class: 'indice' }, positionVol(j))];
+    }),
+    h('p', { class: 'indice' }, tr.t('vol_jalons_note', tr.t(store.inIsrael() ? 'vol_jalons_israel' : 'vol_jalons_diaspora'))));
 }
 
 function ecranVol() {
@@ -2382,6 +2428,7 @@ function ecranVol() {
   }
   const pret = chargeAeroports();
   saisieVol ??= { ...(store.vol() ?? { numero: '', depart: null, arrivee: null, decollage: '', atterrissage: '' }) };
+  delete saisieVol.releve;
   const v = saisieVol;
   const garde = store.vol();
   if (pret && garde && cleCalculVol !== JSON.stringify(garde)) {
@@ -2401,7 +2448,10 @@ function ecranVol() {
     if (!plan) return message('vol_invalide_fuseau_inconnu');
     const faute = Vol.verifier(plan);
     if (faute) return message(`vol_invalide_${faute}`);
-    store.setVol({ ...v });
+    // Le même vol, calculé à nouveau, garde son relevé GPS ; un autre vol l'efface (Store.setVol).
+    const memeVol = garde && ['depart', 'arrivee', 'decollage', 'atterrissage'].every((k) => garde[k] === v[k]);
+    const { releve, ...saisie } = v;
+    store.setVol(memeVol && garde.releve ? { ...saisie, releve: garde.releve } : saisie);
     rendre();
   };
   const ligne = (etiquette, valeur, onclick) => h('button', { class: 'ligne', onclick },

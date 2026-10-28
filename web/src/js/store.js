@@ -209,7 +209,8 @@ export function creeStore(stockage, { maintenant = () => new Date(), fuseau } = 
     /**
      * Le vol des zmanim en vol (28/10, Store.vol) : { numero, depart, arrivee
      * (codes IATA), decollage, atterrissage (« AAAA-MM-JJTHH:MM » à l'heure de
-     * chaque aéroport) } ; null tant qu'aucun vol complet n'est calculé.
+     * chaque aéroport), releve ({ latitude, longitude, instant }, facultatif :
+     * le dernier relevé GPS en vol) } ; null tant qu'aucun vol complet n'est calculé.
      */
     vol: () => {
       const v = get('vol_zmanim', null);

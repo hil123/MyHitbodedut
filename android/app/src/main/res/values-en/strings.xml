@@ -1170,5 +1170,23 @@
     <string name="vol_reserve_a_rebours">The aircraft flies west faster than the sun: a zman occurs more than once.</string>
     <string name="vol_ligne_date">Date line (180th meridian) crossed around %1$s: the local date changes from %2$s to %3$s.</string>
     <string name="vol_fermer">Close</string>
+    <string name="vol_jalons_titre">Shabbat, festivals and Omer during the flight</string>
+    <string name="vol_chabbat">Shabbat</string>
+    <string name="vol_jalon_entree">%1$s begins: sunset %2$s</string>
+    <string name="vol_jalon_allumage">Candle lighting, %1$s min before sunset: %2$s</string>
+    <string name="vol_jalon_sortie">%1$s ends: nightfall (8.5°) %2$s</string>
+    <string name="vol_jalon_enchainement">%1$s begins at nightfall (8.5°): %2$s</string>
+    <string name="vol_jalon_omer">Omer count, day %1$s, from nightfall (8.5°): %2$s</string>
+    <string name="vol_jalons_note">Civil day of the point below the aircraft; %1$s, from the app setting.</string>
+    <string name="vol_jalons_israel">Israel calendar</string>
+    <string name="vol_jalons_diaspora">diaspora calendar</string>
+    <string name="vol_gps">Real position (GPS)</string>
+    <string name="vol_gps_oublier">Back to the planned route</string>
+    <string name="vol_gps_attente">Searching for a GPS signal… Reception is better near a window.</string>
+    <string name="vol_gps_echec">No GPS position. The calculation stays on the planned route.</string>
+    <string name="vol_gps_refuse">Without precise location, the calculation stays on the planned route.</string>
+    <string name="vol_gps_hors_vol">The GPS fix is only used during the flight, between scheduled departure and arrival.</string>
+    <string name="vol_fiabilite_gps">Route adjusted to the GPS fix of %1$s (%2$s), then great circle to arrival, at constant speed. Zmanim of the point below the aircraft, at sea level, computed on the device, without network.</string>
+    <string name="vol_ecart_gps">%1$s min if arrival is 30 min late</string>
     <string name="vol_source_aeroports">Airports: OurAirports (public domain); time zones: timezone-boundary-builder (ODbL, © OpenStreetMap contributors)</string>
 </resources>

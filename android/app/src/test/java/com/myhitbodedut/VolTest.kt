@@ -239,7 +239,9 @@ class VolTest {
         assertTrue(vols.length() >= 6)
         for (i in 0 until vols.length()) {
             val v = vols.getJSONObject(i)
-            val c = Vol.calculer(plan(v.getString("depart"), v.getString("arrivee"), v.getString("decollage"), v.getString("atterrissage")))
+            val releve = v.optJSONObject("releve")?.let { Vol.Point(Instant.parse(it.getString("instant")), it.getDouble("latitude"), it.getDouble("longitude")) }
+            val c = Vol.calculer(plan(v.getString("depart"), v.getString("arrivee"), v.getString("decollage"), v.getString("atterrissage")).copy(releve = releve))
+            assertEquals(v.getString("fiabilite"), c.fiabilite.name.lowercase())
             val attendus = v.getJSONArray("enVol")
             val nom = "${v.getString("depart")}-${v.getString("arrivee")}"
             assertEquals(nom, attendus.length(), c.enVol.size)
@@ -251,6 +253,93 @@ class VolTest {
             val reserves = v.getJSONArray("reserves").let { r -> (0 until r.length()).map { r.getString(it) } }
             assertEquals(nom, reserves, c.reserves.map { it.name.lowercase() }.sorted())
             assertEquals(nom, v.getJSONArray("lignesDate").length(), c.lignesDate.size)
+            val jalons = VolCalendrier.jalons(c, false, 18)
+            val attendusJ = v.getJSONArray("jalons")
+            assertEquals(nom, attendusJ.length(), jalons.size)
+            jalons.forEachIndexed { j, x ->
+                val y = attendusJ.getJSONObject(j)
+                assertEquals(nom, y.getString("type"), x.type.name.lowercase())
+                assertEquals(nom, y.getString("date"), x.date.toString())
+                assertEquals(nom, y.getInt("omer"), x.omer)
+            }
         }
+    }
+
+    /** Les heures du billet en été et en hiver (règles officielles : ZMANIM.md, « En vol »). */
+    @Test
+    fun `heures d ete et d hiver d Australie, d Indonesie, des Etats-Unis, d Argentine`() {
+        fun decalage(iata: String, local: String) =
+            Duration.between(Vol.instant(LocalDateTime.parse(local), a(iata)), LocalDateTime.parse(local).toInstant(java.time.ZoneOffset.UTC)).toMinutes() / 60.0
+        listOf("MEL" to (11.0 to 10.0), "SYD" to (11.0 to 10.0), "BNE" to (10.0 to 10.0), "ADL" to (10.5 to 9.5), "DRW" to (9.5 to 9.5),
+            "PER" to (8.0 to 8.0), "CGK" to (7.0 to 7.0), "DPS" to (8.0 to 8.0), "DJJ" to (9.0 to 9.0), "LAX" to (-8.0 to -7.0),
+            "JFK" to (-5.0 to -4.0), "PHX" to (-7.0 to -7.0), "HNL" to (-10.0 to -10.0), "YUL" to (-5.0 to -4.0),
+            "EZE" to (-3.0 to -3.0), "ZQN" to (13.0 to 12.0), "TLV" to (2.0 to 3.0)).forEach { (iata, attendu) ->
+            assertEquals("$iata décembre", attendu.first, decalage(iata, "2026-12-15T12:00"), 0.0)
+            assertEquals("$iata juillet", attendu.second, decalage(iata, "2026-07-15T12:00"), 0.0)
+        }
+    }
+
+    /** Melbourne → Los Angeles → Montréal et retour ; Sydney → Queenstown ; Tel Aviv → Buenos Aires. */
+    @Test
+    fun `les trajets du Pacifique et de l Atlantique Sud`() {
+        val aller = Vol.calculer(plan("MEL", "LAX", "2026-12-15T10:30", "2026-12-15T06:45"))
+        assertEquals(Duration.ofMinutes(15 * 60 + 15), Duration.between(aller.plan.decollage, aller.plan.atterrissage))
+        aller.lignesDate.single().let { assertEquals(it.avant.minusDays(1), it.apres) }
+        val retour = Vol.calculer(plan("LAX", "MEL", "2026-12-22T22:30", "2026-12-24T08:45"))
+        retour.lignesDate.single().let { assertEquals(it.avant.plusDays(1), it.apres) }
+        // L'escale : le vol suivant part de Los Angeles, dont il rend les zmanim au sol.
+        val suite = Vol.calculer(plan("LAX", "YUL", "2026-12-15T09:30", "2026-12-15T17:55"))
+        val lax = a("LAX").let { Zmanim.Lieu(it.ville, it.latitude, it.longitude, 0.0, it.fuseau) }
+        val netz = Zmanim.jour(lax, LocalDate.parse("2026-12-15")).first { it.cle == "netz" }.instant!!
+        assertTrue(suite.evenements.any { it.cle == "netz" && abs(Duration.between(netz, it.instant).toMillis()) <= 1000 })
+        assertTrue(Vol.calculer(plan("SYD", "ZQN", "2026-12-18T09:00", "2026-12-18T14:15")).lignesDate.isEmpty())
+        val sud = Vol.calculer(plan("TLV", "EZE", "2026-11-10T23:00", "2026-11-11T09:20"))
+        assertTrue(sud.lignesDate.isEmpty())
+        assertTrue(sud.enVol.any { it.latitude > 0 } && sud.enVol.any { it.latitude < 0 })
+        listOf(aller, retour, suite, sud).forEach { assertTrue(it.reserves.isEmpty()) }
+    }
+
+    @Test
+    fun `Chabbat, fetes et Omer en vol suivent le calendrier`() {
+        fun premier(depuis: String, ok: (LocalDate) -> Boolean) = generateSequence(LocalDate.parse(depuis)) { it.plusDays(1) }.first(ok)
+        val vendredi = premier("2026-11-01") { it.dayOfWeek == java.time.DayOfWeek.FRIDAY }
+        val entree = VolCalendrier.jalons(Vol.calculer(plan("TLV", "JFK", "${vendredi}T12:30", "${vendredi}T17:45")), false, 18).single()
+        assertEquals(VolCalendrier.Type.ENTREE, entree.type)
+        assertTrue(entree.chabbat)
+        assertEquals(vendredi.plusDays(1), entree.date)
+        assertEquals(Duration.ofMinutes(18), Duration.between(entree.allumage, entree.instant))
+        val sortie = VolCalendrier.jalons(Vol.calculer(plan("TLV", "JFK", "${vendredi.plusDays(1)}T12:30", "${vendredi.plusDays(1)}T17:45")), false, 18).single()
+        assertEquals(VolCalendrier.Type.SORTIE, sortie.type)
+        // Le Omer : le jour compté ce soir est celui du lendemain hébreu.
+        val omer = premier("2027-01-01") { CalendrierJuif.jour(it.plusDays(1), false).omer == 4 }
+        val j = VolCalendrier.jalons(Vol.calculer(plan("TLV", "JFK", "${omer}T17:00", "${omer}T22:15")), false, 18)
+        assertEquals(listOf(VolCalendrier.Type.OMER to 4), j.map { it.type to it.omer })
+        // Un vol sans chki'a ni tsét n'a aucun jalon.
+        assertTrue(VolCalendrier.jalons(Vol.calculer(plan("TLV", "ETM", "${vendredi}T09:50", "${vendredi}T10:40")), false, 18).isEmpty())
+    }
+
+    @Test
+    fun `un releve GPS en vol recale la route, hors du vol il est ignore`() {
+        val releve = Vol.Point(Instant.parse("2026-11-10T18:30:00Z"), 56.0, -30.0)
+        val avec = versOuest.copy(releve = releve)
+        val p = Vol.position(avec, releve.instant)
+        assertEquals(56.0, p.latitude, 1e-6)
+        assertEquals(-30.0, p.longitude, 1e-6)
+        val c = Vol.calculer(avec)
+        assertEquals(Vol.Fiabilite.RELEVE_GPS, c.fiabilite)
+        val sans = Vol.calculer(versOuest)
+        assertEquals(Vol.Fiabilite.ROUTE_PREVUE, sans.fiabilite)
+        assertTrue(c.enVol.first { it.cle == "chkia" }.instant != sans.enVol.first { it.cle == "chkia" }.instant)
+        // Le point fixe tient aussi sur la route recalée.
+        c.enVol.forEach { e ->
+            val lieu = Vol.lieuSous(Vol.Point(e.instant, e.latitude, e.longitude))
+            val jour = LocalDate.ofInstant(e.instant, ZoneId.of(lieu.fuseau))
+            val ecart = (-1L..1L).flatMap { Zmanim.jour(lieu, jour.plusDays(it)) }.filter { it.cle == e.cle && it.instant != null }
+                .minOf { abs(Duration.between(it.instant, e.instant).toMillis()) }
+            assertTrue("${e.cle} : $ecart ms", ecart <= 2000)
+        }
+        val dehors = Vol.calculer(versOuest.copy(releve = releve.copy(instant = versOuest.atterrissage + Duration.ofHours(1))))
+        assertEquals(Vol.Fiabilite.ROUTE_PREVUE, dehors.fiabilite)
+        assertEquals(sans.enVol.map { it.instant }, dehors.enVol.map { it.instant })
     }
 }

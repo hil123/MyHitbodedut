@@ -6,6 +6,7 @@
 // limites : ZMANIM.md, « En vol ». Tout est en UTC (des Date).
 
 import { jour, CLES } from './zmanim.js';
+import { jour as jourJuif } from './calendrier-juif.js';
 
 const H = 3600 * 1000;
 const MIN = 60 * 1000;
@@ -83,11 +84,27 @@ const rad = (d) => (d * Math.PI) / 180;
 const deg = (r) => (r * 180) / Math.PI;
 const vecteur = (lat, lon) => [Math.cos(rad(lat)) * Math.cos(rad(lon)), Math.cos(rad(lat)) * Math.sin(rad(lon)), Math.sin(rad(lat))];
 
-/** La position prévue à t : grand cercle, vitesse constante ; à l'aéroport hors du vol. */
+/** Le relevé GPS compte s'il tombe entre le décollage et l'atterrissage prévus (Vol.releveUtilisable). */
+export const releveUtilisable = (plan) => !!plan.releve && +plan.releve.instant > +plan.decollage && +plan.releve.instant < +plan.atterrissage;
+
+/**
+ * La position prévue à t : grand cercle, vitesse constante ; à l'aéroport hors du vol. Avec
+ * un relevé GPS en vol : du départ au relevé, puis du relevé à l'arrivée (Vol.position).
+ */
 export function position(plan, t) {
-  const f = Math.min(1, Math.max(0, (+t - +plan.decollage) / (+plan.atterrissage - +plan.decollage)));
-  const a = vecteur(plan.depart.latitude, plan.depart.longitude);
-  const b = vecteur(plan.arrivee.latitude, plan.arrivee.longitude);
+  const r = plan.releve;
+  if (releveUtilisable(plan)) {
+    return +t > +r.instant
+      ? arc(r.latitude, r.longitude, plan.arrivee.latitude, plan.arrivee.longitude, r.instant, plan.atterrissage, t)
+      : arc(plan.depart.latitude, plan.depart.longitude, r.latitude, r.longitude, plan.decollage, r.instant, t);
+  }
+  return arc(plan.depart.latitude, plan.depart.longitude, plan.arrivee.latitude, plan.arrivee.longitude, plan.decollage, plan.atterrissage, t);
+}
+
+function arc(lat1, lon1, lat2, lon2, debut, fin, t) {
+  const f = Math.min(1, Math.max(0, (+t - +debut) / (+fin - +debut)));
+  const a = vecteur(lat1, lon1);
+  const b = vecteur(lat2, lon2);
   const omega = Math.acos(Math.min(1, Math.max(-1, a[0] * b[0] + a[1] * b[1] + a[2] * b[2])));
   const p = omega < 1e-9 ? a : a.map((_, i) => (Math.sin((1 - f) * omega) * a[i] + Math.sin(f * omega) * b[i]) / Math.sin(omega));
   return { instant: new Date(+t), latitude: deg(Math.asin(Math.min(1, Math.max(-1, p[2])))), longitude: deg(Math.atan2(p[1], p[0])) };
@@ -218,7 +235,7 @@ function calculerSeul(plan) {
   trouves.sort((x, y) => x.instant - y.instant);
   const evenements = [];
   for (const e of trouves) if (!evenements.some((x) => x.cle === e.cle && Math.abs(x.instant - e.instant) < MIN)) evenements.push(e);
-  return { plan, evenements, reserves, lignesDate: lignesDate(plan, echantillons), fiabilite: 'route_prevue' };
+  return { plan, evenements, reserves, lignesDate: lignesDate(plan, echantillons), fiabilite: releveUtilisable(plan) ? 'releve_gps' : 'route_prevue' };
 }
 
 /** Le passage du méridien de 180° en vol, et la date locale (fuseau nautique) de part et d'autre. */
@@ -242,7 +259,9 @@ export const enVol = (calcul) => calcul.evenements.filter((e) => +e.instant >= +
 /** Le calcul complet, avec l'écart de chaque horaire en vol si le départ glisse de 30 minutes. */
 export function calculer(plan) {
   const base = calculerSeul(plan);
-  const retard = calculerSeul({ ...plan, decollage: new Date(+plan.decollage + RETARD), atterrissage: new Date(+plan.atterrissage + RETARD) });
+  // Avec un relevé GPS, le départ est passé : l'incertitude est l'arrivée, 30 min plus tard.
+  const retard = calculerSeul(releveUtilisable(plan) ? { ...plan, atterrissage: new Date(+plan.atterrissage + RETARD) }
+    : { ...plan, decollage: new Date(+plan.decollage + RETARD), atterrissage: new Date(+plan.atterrissage + RETARD) });
   base.evenements = base.evenements.map((e) => {
     if (+e.instant < +plan.decollage || +e.instant > +plan.atterrissage) return e;
     const memes = retard.evenements.filter((x) => x.cle === e.cle).map((x) => +x.instant);
@@ -281,4 +300,30 @@ export function horaires(calcul, maintenant) {
 export function priere(calcul, maintenant) {
   if (+maintenant < +calcul.plan.decollage - COUVERT || +maintenant > +calcul.plan.atterrissage + COUVERT) return null;
   return prochaine(horaires(calcul, maintenant), maintenant);
+}
+
+/**
+ * Chabbat, les fêtes et le compte du Omer en vol (VolCalendrier.kt, ligne pour
+ * ligne) : la règle de JourAffiche.horaires appliquée aux chki'a et tsét de la
+ * route. Le jour civil est celui du point sous l'avion (fuseau nautique).
+ */
+export function jalons(calcul, enIsrael, minutes) {
+  const sortie = [];
+  for (const e of enVol(calcul)) {
+    if (e.cle !== 'chkia' && e.cle !== 'tset') continue;
+    const iso = isoDans(e.instant, fuseauNautique(e.longitude));
+    const aujourdhui = jourJuif(iso, enIsrael);
+    const demain = jourJuif(decale(iso, 1), enIsrael);
+    const jalon = (type, j, allumage = null, omer = 0) => ({
+      type, instant: e.instant, date: j.date, chabbat: new Date(`${j.date}T12:00:00Z`).getUTCDay() === 6, fetes: j.fetes, omer, allumage,
+      latitude: e.latitude, longitude: e.longitude,
+    });
+    if (e.cle === 'chkia' && demain.chome && !aujourdhui.chome) sortie.push(jalon('entree', demain, new Date(+e.instant - minutes * MIN)));
+    if (e.cle === 'tset') {
+      if (aujourdhui.chome && !demain.chome) sortie.push(jalon('sortie', aujourdhui));
+      if (aujourdhui.chome && demain.chome) sortie.push(jalon('enchainement', demain));
+      if (demain.omer > 0) sortie.push(jalon('omer', demain, null, demain.omer));
+    }
+  }
+  return sortie;
 }

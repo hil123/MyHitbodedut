@@ -108,6 +108,9 @@ object Store {
     private const val KEY_VOL_ARRIVEE = "vol_arrivee"
     private const val KEY_VOL_DECOLLAGE = "vol_decollage"
     private const val KEY_VOL_ATTERRISSAGE = "vol_atterrissage"
+    private const val KEY_VOL_RELEVE_LAT = "vol_releve_latitude"
+    private const val KEY_VOL_RELEVE_LON = "vol_releve_longitude"
+    private const val KEY_VOL_RELEVE_T = "vol_releve_instant"
     private const val KEY_ALLUMAGE = "allumage_minutes"
     private const val KEY_PAUSED_DATES = "paused_dates"
     private const val KEY_REMINDER_ON = "reminder_on"
@@ -388,8 +391,9 @@ object Store {
 
     /**
      * Le vol des zmanim en vol (28/10) : numéro, codes IATA, instants prévus en
-     * millisecondes UTC. Il reste sur l'appareil, comme tout le reste ; null
-     * tant qu'aucun vol complet n'a été calculé.
+     * millisecondes UTC, et le dernier relevé GPS pris en vol. Il reste sur
+     * l'appareil, comme tout le reste ; null tant qu'aucun vol complet n'a été
+     * calculé.
      */
     fun vol(context: Context, aeroports: List<Vol.Aeroport>): Vol.Plan? {
         val p = prefs(context)
@@ -397,8 +401,14 @@ object Store {
         val arrivee = p.getString(KEY_VOL_ARRIVEE, null)?.let { Aeroports.parIata(aeroports, it) } ?: return null
         val decollage = p.getLong(KEY_VOL_DECOLLAGE, -1L).takeIf { it >= 0 } ?: return null
         val atterrissage = p.getLong(KEY_VOL_ATTERRISSAGE, -1L).takeIf { it >= 0 } ?: return null
+        val releve = run {
+            val lat = p.getString(KEY_VOL_RELEVE_LAT, null)?.toDoubleOrNull() ?: return@run null
+            val lon = p.getString(KEY_VOL_RELEVE_LON, null)?.toDoubleOrNull() ?: return@run null
+            val t = p.getLong(KEY_VOL_RELEVE_T, -1L).takeIf { it >= 0 } ?: return@run null
+            Vol.Point(java.time.Instant.ofEpochMilli(t), lat, lon)
+        }
         return Vol.Plan(p.getString(KEY_VOL_NUMERO, "").orEmpty(), depart, arrivee,
-            java.time.Instant.ofEpochMilli(decollage), java.time.Instant.ofEpochMilli(atterrissage))
+            java.time.Instant.ofEpochMilli(decollage), java.time.Instant.ofEpochMilli(atterrissage), releve)
     }
 
     /** Le numéro et les codes du dernier vol, pour l'accès depuis l'onglet Zmanim, sans lire les aéroports. */
@@ -411,14 +421,20 @@ object Store {
 
     fun setVol(context: Context, plan: Vol.Plan?) {
         val e = prefs(context).edit()
+        val releve = listOf(KEY_VOL_RELEVE_LAT, KEY_VOL_RELEVE_LON, KEY_VOL_RELEVE_T)
         if (plan == null) {
-            listOf(KEY_VOL_NUMERO, KEY_VOL_DEPART, KEY_VOL_ARRIVEE, KEY_VOL_DECOLLAGE, KEY_VOL_ATTERRISSAGE).forEach { e.remove(it) }
+            (listOf(KEY_VOL_NUMERO, KEY_VOL_DEPART, KEY_VOL_ARRIVEE, KEY_VOL_DECOLLAGE, KEY_VOL_ATTERRISSAGE) + releve).forEach { e.remove(it) }
         } else {
             e.putString(KEY_VOL_NUMERO, plan.numero)
                 .putString(KEY_VOL_DEPART, plan.depart.iata)
                 .putString(KEY_VOL_ARRIVEE, plan.arrivee.iata)
                 .putLong(KEY_VOL_DECOLLAGE, plan.decollage.toEpochMilli())
                 .putLong(KEY_VOL_ATTERRISSAGE, plan.atterrissage.toEpochMilli())
+            // Le relevé GPS appartient à ce vol : un vol saisi à nouveau l'efface.
+            val r = plan.releve
+            if (r == null) releve.forEach { e.remove(it) }
+            else e.putString(KEY_VOL_RELEVE_LAT, r.latitude.toString()).putString(KEY_VOL_RELEVE_LON, r.longitude.toString())
+                .putLong(KEY_VOL_RELEVE_T, r.instant.toEpochMilli())
         }
         e.apply()
     }

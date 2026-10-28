@@ -1203,5 +1203,23 @@
     <string name="vol_reserve_a_rebours">המטוס טס מערבה מהר יותר מהשמש: זמן מסוים חל יותר מפעם אחת.</string>
     <string name="vol_ligne_date">קו התאריך (קו האורך 180°) נחצה בסביבות %1$s: התאריך המקומי עובר מ־%2$s ל־%3$s.</string>
     <string name="vol_fermer">סגירה</string>
+    <string name="vol_jalons_titre">שבת, חגים וספירת העומר במהלך הטיסה</string>
+    <string name="vol_chabbat">שבת</string>
+    <string name="vol_jalon_entree">כניסת %1$s: שקיעה %2$s</string>
+    <string name="vol_jalon_allumage">הדלקת נרות, %1$s דק׳ לפני השקיעה: %2$s</string>
+    <string name="vol_jalon_sortie">צאת %1$s: צאת הכוכבים (8.5°) %2$s</string>
+    <string name="vol_jalon_enchainement">%1$s מתחיל בצאת הכוכבים (8.5°): %2$s</string>
+    <string name="vol_jalon_omer">ספירת העומר, יום %1$s, מצאת הכוכבים (8.5°): %2$s</string>
+    <string name="vol_jalons_note">היום האזרחי של הנקודה שמתחת למטוס; %1$s, לפי הגדרת היישום.</string>
+    <string name="vol_jalons_israel">לוח ארץ ישראל</string>
+    <string name="vol_jalons_diaspora">לוח חוץ לארץ</string>
+    <string name="vol_gps">מיקום אמיתי (GPS)</string>
+    <string name="vol_gps_oublier">חזרה למסלול המתוכנן</string>
+    <string name="vol_gps_attente">מחפש אות GPS… ליד חלון הקליטה טובה יותר.</string>
+    <string name="vol_gps_echec">אין מיקום GPS. החישוב נשאר לפי המסלול המתוכנן.</string>
+    <string name="vol_gps_refuse">ללא מיקום מדויק, החישוב נשאר לפי המסלול המתוכנן.</string>
+    <string name="vol_gps_hors_vol">מיקום ה־GPS משמש רק במהלך הטיסה, בין ההמראה לנחיתה המתוכננות.</string>
+    <string name="vol_fiabilite_gps">המסלול תוקן לפי מיקום ה־GPS של %1$s (%2$s), ומשם מעגל גדול עד הנחיתה, במהירות קבועה. זמני הנקודה שמתחת למטוס, בגובה פני הים, מחושבים במכשיר, ללא רשת.</string>
+    <string name="vol_ecart_gps">⁦%1$s⁩ דק׳ אם הנחיתה מתעכבת ב־30 דק׳</string>
     <string name="vol_source_aeroports">שדות תעופה: OurAirports (נחלת הכלל); אזורי זמן: timezone-boundary-builder ‏(ODbL, © תורמי OpenStreetMap)</string>
 </resources>

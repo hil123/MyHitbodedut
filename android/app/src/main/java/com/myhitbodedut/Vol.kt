@@ -54,7 +54,12 @@ object Vol {
         val arrivee: Aeroport,
         val decollage: Instant,
         val atterrissage: Instant,
+        /** Un relevé GPS pris en vol : la route passe par lui (deux grands cercles). */
+        val releve: Point? = null,
     )
+
+    /** Le relevé compte s'il tombe entre le décollage et l'atterrissage prévus. */
+    fun releveUtilisable(plan: Plan): Boolean = plan.releve?.let { it.instant.isAfter(plan.decollage) && it.instant.isBefore(plan.atterrissage) } == true
 
     enum class Invalide { MEME_AEROPORT, ARRIVEE_AVANT_DEPART, TROP_LONG, FUSEAU_INCONNU }
 
@@ -77,12 +82,25 @@ object Vol {
 
     data class Point(val instant: Instant, val latitude: Double, val longitude: Double)
 
-    /** La position prévue à [t] : grand cercle, vitesse constante ; à l'aéroport hors du vol. */
+    /**
+     * La position prévue à [t] : grand cercle, vitesse constante ; à l'aéroport hors du vol.
+     * Avec un relevé GPS en vol : du départ au relevé, puis du relevé à l'arrivée, chaque
+     * tronçon à vitesse constante.
+     */
     fun position(plan: Plan, t: Instant): Point {
-        val total = Duration.between(plan.decollage, plan.atterrissage).toMillis().toDouble()
-        val f = (Duration.between(plan.decollage, t).toMillis() / total).coerceIn(0.0, 1.0)
-        val a = vecteur(plan.depart.latitude, plan.depart.longitude)
-        val b = vecteur(plan.arrivee.latitude, plan.arrivee.longitude)
+        val r = plan.releve
+        if (r != null && releveUtilisable(plan)) {
+            return if (t.isAfter(r.instant)) arc(r.latitude, r.longitude, plan.arrivee.latitude, plan.arrivee.longitude, r.instant, plan.atterrissage, t)
+            else arc(plan.depart.latitude, plan.depart.longitude, r.latitude, r.longitude, plan.decollage, r.instant, t)
+        }
+        return arc(plan.depart.latitude, plan.depart.longitude, plan.arrivee.latitude, plan.arrivee.longitude, plan.decollage, plan.atterrissage, t)
+    }
+
+    private fun arc(lat1: Double, lon1: Double, lat2: Double, lon2: Double, debut: Instant, fin: Instant, t: Instant): Point {
+        val total = Duration.between(debut, fin).toMillis().toDouble()
+        val f = (Duration.between(debut, t).toMillis() / total).coerceIn(0.0, 1.0)
+        val a = vecteur(lat1, lon1)
+        val b = vecteur(lat2, lon2)
         val omega = acos((a[0] * b[0] + a[1] * b[1] + a[2] * b[2]).coerceIn(-1.0, 1.0))
         val p = if (omega < 1e-9) a else DoubleArray(3) { i ->
             (sin((1 - f) * omega) * a[i] + sin(f * omega) * b[i]) / sin(omega)
@@ -133,7 +151,10 @@ object Vol {
         val instant: Instant,
         val latitude: Double,
         val longitude: Double,
-        /** De combien cet horaire bouge si le vol part 30 min plus tard (même durée) ; null : sans correspondant. */
+        /**
+         * De combien cet horaire bouge si le vol part 30 min plus tard (même durée) ; avec un relevé
+         * GPS, si l'arrivée a 30 min de retard. null : sans correspondant.
+         */
         val ecartSiRetard: Duration? = null,
     )
 
@@ -155,8 +176,8 @@ object Vol {
     /** Le passage du méridien de 180° : la date locale (fuseau nautique) passe de [avant] à [apres]. */
     data class LigneDate(val instant: Instant, val avant: LocalDate, val apres: LocalDate)
 
-    /** La fiabilité de la phase 1 : une estimation sur la route prévue, jamais une position réelle. */
-    enum class Fiabilite { ROUTE_PREVUE }
+    /** La fiabilité : la route prévue seule, ou recalée sur un relevé GPS pris en vol. */
+    enum class Fiabilite { ROUTE_PREVUE, RELEVE_GPS }
 
     data class Calcul(
         val plan: Plan,
@@ -164,7 +185,7 @@ object Vol {
         val evenements: List<Evenement>,
         val reserves: Set<Reserve>,
         val lignesDate: List<LigneDate>,
-        val fiabilite: Fiabilite = Fiabilite.ROUTE_PREVUE,
+        val fiabilite: Fiabilite = if (releveUtilisable(plan)) Fiabilite.RELEVE_GPS else Fiabilite.ROUTE_PREVUE,
     ) {
         /** Les zmanim entre le décollage et l'atterrissage. */
         val enVol: List<Evenement>
@@ -182,7 +203,9 @@ object Vol {
     /** Le calcul complet, avec l'écart de chaque horaire en vol si le départ glisse de 30 minutes. */
     fun calculer(plan: Plan): Calcul {
         val base = calculerSeul(plan)
-        val retard = calculerSeul(plan.copy(decollage = plan.decollage + RETARD, atterrissage = plan.atterrissage + RETARD))
+        // Avec un relevé GPS, le départ est passé : l'incertitude est l'arrivée, 30 min plus tard.
+        val retard = calculerSeul(if (releveUtilisable(plan)) plan.copy(atterrissage = plan.atterrissage + RETARD)
+            else plan.copy(decollage = plan.decollage + RETARD, atterrissage = plan.atterrissage + RETARD))
         val evenements = base.evenements.map { e ->
             if (e.instant.isBefore(plan.decollage) || e.instant.isAfter(plan.atterrissage)) return@map e
             val proche = retard.evenements.filter { it.cle == e.cle }

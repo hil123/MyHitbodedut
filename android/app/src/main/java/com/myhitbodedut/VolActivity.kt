@@ -1,6 +1,16 @@
 package com.myhitbodedut
 
+import android.Manifest
+import android.annotation.SuppressLint
 import android.app.DatePickerDialog
+import android.content.pm.PackageManager
+import android.location.Location
+import android.location.LocationListener
+import android.location.LocationManager
+import android.os.Build
+import android.os.CancellationSignal
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import android.app.TimePickerDialog
 import android.os.Bundle
 import android.os.Handler
@@ -33,7 +43,8 @@ import kotlin.math.abs
  * du billet, à l'heure de chaque aéroport) ; l'écran montre la prière du
  * moment avec son compte à rebours, la fiabilité de l'estimation, puis les
  * zmanim de la route. Le calcul est Vol.kt, hors ligne ; rien ne sort du
- * téléphone, aucune permission n'est demandée.
+ * téléphone. La seule permission, la localisation précise, n'est demandée
+ * qu'au toucher de « position réelle » : le GPS marche en mode avion.
  */
 class VolActivity : AppCompatActivity() {
 
@@ -44,6 +55,10 @@ class VolActivity : AppCompatActivity() {
     private var decollage: LocalDateTime? = null
     private var atterrissage: LocalDateTime? = null
     private var calcul: Vol.Calcul? = null
+    private var gpsEnCours = false
+    private val autorisationGps = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { r ->
+        if (r[Manifest.permission.ACCESS_FINE_LOCATION] == true) releverGps() else message(getString(R.string.vol_gps_refuse))
+    }
     private var enCours = false
     private val minuterie = Handler(Looper.getMainLooper())
     private val rafraichir = object : Runnable {
@@ -230,7 +245,9 @@ class VolActivity : AppCompatActivity() {
         val i1 = Vol.instant(t1, d)
         val i2 = Vol.instant(t2, a)
         if (i1 == null || i2 == null) return message(getString(R.string.vol_invalide_fuseau_inconnu))
-        val plan = Vol.Plan(numero, d, a, i1, i2)
+        // Le même vol, calculé à nouveau, garde son relevé GPS ; un autre vol l'efface.
+        val garde = Store.vol(this, aeroports)?.takeIf { it.depart == d && it.arrivee == a && it.decollage == i1 && it.atterrissage == i2 }
+        val plan = Vol.Plan(numero, d, a, i1, i2, garde?.releve)
         Vol.verifier(plan)?.let { return message(getString(invalide(it))) }
         Store.setVol(this, plan)
         lancer(plan)
@@ -291,6 +308,34 @@ class VolActivity : AppCompatActivity() {
         zone.addView(cartePriere(c, maintenant))
         zone.addView(carteFiabilite(c))
         zone.addView(carteZmanim(c))
+        carteJalons(c)?.let(zone::addView)
+    }
+
+    /** Chabbat, fêtes et Omer sur la route (VolCalendrier) : des heures, sans conseil. */
+    private fun carteJalons(c: Vol.Calcul): View? {
+        val israel = Store.inIsrael(this)
+        val minutes = Store.allumage(this)
+        val jalons = VolCalendrier.jalons(c, israel, minutes)
+        if (jalons.isEmpty()) return null
+        return VueJour.carte(this).apply {
+            addView(VueJour.texte(this@VolActivity, getString(R.string.vol_jalons_titre), 13f, R.color.muted))
+            jalons.forEach { j ->
+                val nom = (listOfNotNull(if (j.chabbat) getString(R.string.vol_chabbat) else null) +
+                    j.fetes.mapNotNull { Libelles.res("fete_$it")?.let(::getString) }).joinToString(" · ")
+                val heure = deuxHeures(c.plan, j.instant)
+                val texte = when (j.type) {
+                    VolCalendrier.Type.ENTREE -> getString(R.string.vol_jalon_entree, nom, heure)
+                    VolCalendrier.Type.SORTIE -> getString(R.string.vol_jalon_sortie, nom, heure)
+                    VolCalendrier.Type.ENCHAINEMENT -> getString(R.string.vol_jalon_enchainement, nom, heure)
+                    VolCalendrier.Type.OMER -> getString(R.string.vol_jalon_omer, j.omer.toString(), heure)
+                }
+                addView(VueJour.texte(this@VolActivity, texte, 15f, R.color.ink, gras = true, haut = 10))
+                j.allumage?.let { addView(VueJour.texte(this@VolActivity, getString(R.string.vol_jalon_allumage, minutes.toString(), deuxHeures(c.plan, it)), 13f, R.color.ink, haut = 2)) }
+                addView(VueJour.texte(this@VolActivity, position(Vol.Evenement("", j.instant, j.latitude, j.longitude)), 12f, R.color.muted, haut = 1))
+            }
+            addView(VueJour.texte(this@VolActivity, getString(R.string.vol_jalons_note,
+                getString(if (israel) R.string.vol_jalons_israel else R.string.vol_jalons_diaspora)), 12f, R.color.muted, haut = 10))
+        }
     }
 
     /**
@@ -332,11 +377,95 @@ class VolActivity : AppCompatActivity() {
         }
     }
 
-    private fun ecart(d: Duration) = getString(R.string.vol_ecart, (if (d.isNegative) "−" else "+") + abs(d.toMinutes()))
+    private fun ecart(d: Duration) = getString(if (calcul?.fiabilite == Vol.Fiabilite.RELEVE_GPS) R.string.vol_ecart_gps else R.string.vol_ecart,
+        (if (d.isNegative) "−" else "+") + abs(d.toMinutes()))
+
+    private fun demanderGps() {
+        val accordee = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+        if (accordee) releverGps()
+        else autorisationGps.launch(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION))
+    }
+
+    /**
+     * Un relevé du GPS seul (pas le réseau : en vol, il n'y en a pas), 90 s au plus. Il recale la
+     * route s'il tombe pendant le vol prévu ; sinon on le dit et la route prévue reste.
+     */
+    @SuppressLint("MissingPermission") // vérifiée par demanderGps
+    private fun releverGps() {
+        val lm = getSystemService(LocationManager::class.java) ?: return message(getString(R.string.vol_gps_echec))
+        if (!runCatching { lm.isProviderEnabled(LocationManager.GPS_PROVIDER) }.getOrDefault(false)) return message(getString(R.string.vol_gps_echec))
+        gpsEnCours = true
+        afficherResultats()
+        val delai = Handler(Looper.getMainLooper())
+        var fini = false
+        val annulation = CancellationSignal()
+        var ecouteur: LocationListener? = null
+        fun conclure(l: Location?) {
+            if (fini || isFinishing || isDestroyed) return
+            fini = true
+            delai.removeCallbacksAndMessages(null)
+            annulation.cancel()
+            ecouteur?.let { runCatching { lm.removeUpdates(it) } }
+            gpsEnCours = false
+            if (l == null) {
+                afficherResultats()
+                return message(getString(R.string.vol_gps_echec))
+            }
+            appliquerReleve(Vol.Point(Instant.ofEpochMilli(l.time), l.latitude, l.longitude))
+        }
+        delai.postDelayed({ conclure(null) }, GPS_MS)
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                lm.getCurrentLocation(LocationManager.GPS_PROVIDER, annulation, mainExecutor) { conclure(it) }
+            } else {
+                // Avant Android 11, les quatre méthodes de LocationListener sont abstraites (ChoixLieu).
+                val e = object : LocationListener {
+                    override fun onLocationChanged(location: Location) = conclure(location)
+                    override fun onProviderEnabled(provider: String) = Unit
+                    override fun onProviderDisabled(provider: String) = conclure(null)
+
+                    @Deprecated("Android 10 et avant seulement")
+                    override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) = Unit
+                }
+                ecouteur = e
+                @Suppress("DEPRECATION")
+                lm.requestSingleUpdate(LocationManager.GPS_PROVIDER, e, Looper.getMainLooper())
+            }
+        } catch (e: SecurityException) {
+            conclure(null)
+        } catch (e: IllegalArgumentException) {
+            conclure(null)
+        }
+    }
+
+    /** Garde le relevé avec le vol et recalcule ; null : retour à la route prévue. */
+    private fun appliquerReleve(releve: Vol.Point?) {
+        val plan = Store.vol(this, aeroports) ?: return
+        val nouveau = plan.copy(releve = releve)
+        if (releve != null && !Vol.releveUtilisable(nouveau)) {
+            afficherResultats()
+            return message(getString(R.string.vol_gps_hors_vol))
+        }
+        Store.setVol(this, nouveau)
+        lancer(nouveau)
+    }
 
     private fun carteFiabilite(c: Vol.Calcul) = VueJour.carte(this).apply {
         addView(VueJour.texte(this@VolActivity, getString(R.string.vol_fiabilite_titre), 13f, R.color.muted))
-        addView(VueJour.texte(this@VolActivity, getString(R.string.vol_fiabilite), 14f, R.color.ink, haut = 4))
+        val r = c.plan.releve
+        addView(VueJour.texte(this@VolActivity, if (c.fiabilite == Vol.Fiabilite.RELEVE_GPS && r != null)
+            getString(R.string.vol_fiabilite_gps, deuxHeures(c.plan, r.instant), position(Vol.Evenement("", r.instant, r.latitude, r.longitude)))
+        else getString(R.string.vol_fiabilite), 14f, R.color.ink, haut = 4))
+        addView(MaterialButton(this@VolActivity, null, com.google.android.material.R.attr.materialButtonOutlinedStyle).apply {
+            text = getString(if (gpsEnCours) R.string.vol_gps_attente else R.string.vol_gps)
+            isEnabled = !gpsEnCours
+            layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply { topMargin = dp(8) }
+            setOnClickListener { demanderGps() }
+        })
+        if (r != null) addView(MaterialButton(this@VolActivity, null, com.google.android.material.R.attr.borderlessButtonStyle).apply {
+            text = getString(R.string.vol_gps_oublier)
+            setOnClickListener { appliquerReleve(null) }
+        })
         Vol.Reserve.entries.filter { it in c.reserves }.forEach { r ->
             val texte = when (r) {
                 Vol.Reserve.HAUTE_LATITUDE -> R.string.vol_reserve_haute_latitude
@@ -381,6 +510,7 @@ class VolActivity : AppCompatActivity() {
 
     private companion object {
         const val RAFRAICHISSEMENT_MS = 30_000L
+        const val GPS_MS = 90_000L
         const val ETAT_NUMERO = "vol_numero"
         const val ETAT_DEPART = "vol_depart"
         const val ETAT_ARRIVEE = "vol_arrivee"
