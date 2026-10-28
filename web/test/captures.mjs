@@ -224,6 +224,13 @@ await capture('birkat-cheva-he', { langue: 'he', ecran: 'siddur', actions: ouvri
 // Le capteur simulé : quarante lectures au même cap, pour que le lissage s'y pose.
 const cap = (nord) => async (p) => {
   await p.waitForSelector('.boussole-scene svg');
+  // Là où le navigateur demande l'autorisation (iPhone, Chromium récent), le toucher d'abord.
+  // Le harnais répond oui à la place de l'utilisateur.
+  if (await p.$('.boussole-activer')) {
+    await p.evaluate(() => { DeviceOrientationEvent.requestPermission = async () => 'granted'; });
+    await p.click('.boussole-activer');
+    await p.waitForSelector('.boussole-activer', { state: 'detached' });
+  }
   await p.evaluate((n) => { for (let i = 0; i < 40; i++) window.dispatchEvent(Object.assign(new Event('deviceorientationabsolute'), { alpha: (360 - n) % 360, absolute: true })); }, nord);
   await p.waitForTimeout(700);
 };

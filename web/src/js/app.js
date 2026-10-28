@@ -2423,12 +2423,14 @@ function dessinBoussole(gc, rh, cap) {
   const e = Boussole.ecart(gc, cap), ok = Boussole.face(e);
   if (store.boussoleRose()) return roseGraduee(gc, rh, cap, ok, texte);
   const xg = Boussole.xHorizon(e), xr = Boussole.xHorizon(Boussole.ecart(rh, cap));
+  // L'étiquette reste entière dans le cadre, même quand le point est au bord.
+  const xe = Math.max(-124, Math.min(124, xg));
   return `<svg viewBox="-160 -160 320 320" role="img" aria-label="${texte}"><rect x="-160" y="-160" width="320" height="320" fill="${c.ciel}"/>
     <path d="M-160,40 Q0,10 160,40 L160,160 L-160,160 Z" fill="${c.sol}"/>
     <line x1="-150" y1="-90" x2="150" y2="-90" stroke="${c.horizon}" stroke-width="2"/>
     <circle cx="${xr}" cy="-90" r="7" fill="none" stroke="${c.bleu}" stroke-width="2.5" stroke-dasharray="3 3"/>
-    <rect x="${xg - 34}" y="-124" width="68" height="22" rx="11" fill="${ok ? c.marque : '#fff'}"/>
-    <text x="${xg}" y="-108" text-anchor="middle" font-family="serif" font-size="15" font-weight="700" fill="${ok ? '#fff' : c.marque}">ירושלים</text>
+    <rect x="${xe - 34}" y="-124" width="68" height="22" rx="11" fill="${ok ? c.marque : '#fff'}"/>
+    <text x="${xe}" y="-108" text-anchor="middle" font-family="serif" font-size="15" font-weight="700" fill="${ok ? '#fff' : c.marque}">ירושלים</text>
     <circle cx="${xg}" cy="-90" r="8" fill="${ok ? c.marque : c.or}"/>
     <image href="img/char_standing_back.webp" x="-28" y="${ok ? -68 : -62}" width="56" height="176"/>
     <text y="-132" text-anchor="middle" font-size="14" fill="${c.encre}">${texte}</text></svg>`;

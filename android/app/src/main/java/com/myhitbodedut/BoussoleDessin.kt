@@ -91,8 +91,10 @@ object BoussoleDessin {
 
         // Jérusalem : l'étiquette et son point.
         val xg = xHorizon(e)
-        c.drawRoundRect(RectF(xg - 34f, -124f, xg + 34f, -102f), 11f, 11f, pinceau(if (face) MARQUE else BLANC))
-        c.drawText(JERUSALEM, xg, -108f, texte(if (face) BLANC else MARQUE, 15f, gras = true, serif = true))
+        // L'étiquette reste entière dans le cadre, même quand le point est au bord.
+        val xe = xg.coerceIn(-124f, 124f)
+        c.drawRoundRect(RectF(xe - 34f, -124f, xe + 34f, -102f), 11f, 11f, pinceau(if (face) MARQUE else BLANC))
+        c.drawText(JERUSALEM, xe, -108f, texte(if (face) BLANC else MARQUE, 15f, gras = true, serif = true))
         c.drawCircle(xg, -90f, 8f, pinceau(if (face) MARQUE else OR))
 
         // Face à Jérusalem, il se hausse un peu.
