@@ -2326,14 +2326,6 @@ function carteDirection(lieu) {
     h('span', { class: 'etat' }, tr.t('boussole_cap', Math.round(c), tr.t(`boussole_points_${octant(c)}`))));
 }
 
-// Ce que le web ne partage pas avec Android : son nord est magnétique (pas de modèle embarqué).
-const CHAINES_BOUSSOLE = {
-  fr: { nord: 'Sur le web, le nord du téléphone est le nord magnétique : quelques degrés d’écart sont possibles selon la région. L’application Android corrige la déclinaison.', activer: 'Activer la boussole' },
-  en: { nord: 'On the web, the phone’s north is magnetic north: a few degrees of error are possible depending on the region. The Android app corrects for declination.', activer: 'Enable the compass' },
-  he: { nord: 'באתר, הצפון של הטלפון הוא הצפון המגנטי: ייתכנו כמה מעלות סטייה לפי האזור. אפליקציית אנדרואיד מתקנת את הסטייה.', activer: 'הפעלת המצפן' },
-};
-const tb = (k) => (CHAINES_BOUSSOLE[tr.langue] ?? CHAINES_BOUSSOLE.fr)[k];
-
 let ecouteBoussole = null;
 function arreteBoussole() {
   if (!ecouteBoussole) return;
@@ -2404,10 +2396,8 @@ function ecranBoussole() {
     h('p', { class: 'boussole-cap' }, tr.t('boussole_cap', Math.round(ortho), tr.t(`boussole_points_${octant(ortho)}`))),
     h('p', { class: 'indice' }, tr.t('boussole_loxodromie', Math.round(loxo), tr.t(`boussole_points_${octant(loxo)}`))),
     etat,
-    permission ? h('button', { class: 'secondaire', onclick: () => DeviceOrientationEvent.requestPermission().then((r) => { if (r === 'granted') ecouter(); }).catch(() => {}) }, tb('activer')) : null,
-    h('button', { class: 'secondaire', onclick: () => localiserPosition({ etat }) }, tr.t('boussole_position_exacte')),
-    h('p', { class: 'indice sources' }, tr.t('boussole_source')),
-    h('p', { class: 'indice sources' }, tb('nord')))));
+    permission ? h('button', { class: 'secondaire', onclick: () => DeviceOrientationEvent.requestPermission().then((r) => { if (r === 'granted') ecouter(); }).catch(() => {}) }, tr.t('boussole_activer')) : null,
+    h('button', { class: 'secondaire', onclick: () => localiserPosition({ etat }) }, tr.t('boussole_position_exacte')))));
 }
 
 /**

@@ -60,10 +60,6 @@ class BoussoleActivity : AppCompatActivity(), SensorEventListener {
         etat = TextView(this).apply { textSize = 13f; gravity = Gravity.CENTER; setTextColor(Apparence.couleur(context, R.color.muted)) }
         loxoTexte = TextView(this).apply { textSize = 13f; gravity = Gravity.CENTER; setTextColor(Apparence.couleur(context, R.color.muted)) }
         lieuTexte = TextView(this).apply { textSize = 13f; gravity = Gravity.CENTER; setTextColor(Apparence.couleur(context, R.color.muted)) }
-        val source = TextView(this).apply {
-            textSize = 12f; gravity = Gravity.CENTER; setTextColor(Apparence.couleur(context, R.color.muted))
-            text = getString(R.string.boussole_source)
-        }
         setContentView(android.widget.ScrollView(this).apply {
             setBackgroundColor(Apparence.couleur(context, R.color.paper))
             addView(LinearLayout(context).apply {
@@ -84,7 +80,6 @@ class BoussoleActivity : AppCompatActivity(), SensorEventListener {
                     text = getString(R.string.boussole_position_exacte)
                     setOnClickListener { choixLieu.positionExacte() }
                 }, LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply { topMargin = dp(16) })
-                addView(source, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply { topMargin = dp(20) })
             })
         })
         capteurs = getSystemService(SensorManager::class.java)
