@@ -1388,14 +1388,24 @@ function allerAMarque(ecran, m) {
   if (visible && defile) defile.scrollTop += visible.getBoundingClientRect().top - defile.getBoundingClientRect().top - 8;
 }
 
+/** Le titre hébreu d'une clé « s:id » ou « l:id », ou null tant que son recueil n'est pas chargé. */
+function titreCle(cle) {
+  const livre = cle.startsWith('l:');
+  if (livre ? !chargeLivres() : !chargeSiddur()) return null;
+  return (livre ? livres : siddur).textes.find((t) => t.id === cle.slice(2))?.titre.he ?? null;
+}
+const ouvrirCle = (cle) => { priere = cle.startsWith('l:') ? `livre:${cle.slice(2)}` : cle.slice(2); ouvrir('priere'); };
+
+/** La ligne « סימניות · n » (28/10) : tous les marque-pages, ou ceux d'un recueil (« s », « l »). */
+function ligneSignets(recueil = null) {
+  const marques = store.marques().filter((m) => (!recueil || m.cle.startsWith(`${recueil}:`)) && titreCle(m.cle));
+  return marques.length ? ligne({ nom: h('span', { class: 'nom-marque' }, iconeMarque(recueil === 'l', 18), tr.t('marques_titre')), etat: String(marques.length),
+    onclick: () => listeSignets(marques, titreCle, (m) => { marqueAOuvrir = m; ouvrirCle(m.cle); }) }) : null;
+}
+
 /** « Reprendre la lecture » et les favoris, en tête de la Bibliothèque (RepriseFavoris.kt). */
 function repriseFavoris() {
-  const titre = (cle) => {
-    const livre = cle.startsWith('l:');
-    if (livre ? !chargeLivres() : !chargeSiddur()) return null;
-    return (livre ? livres : siddur).textes.find((t) => t.id === cle.slice(2))?.titre.he ?? null;
-  };
-  const ouvrirCle = (cle) => { priere = cle.startsWith('l:') ? `livre:${cle.slice(2)}` : cle.slice(2); ouvrir('priere'); };
+  const titre = titreCle;
   const lignes = [];
   const derniere = store.derniereLecture();
   if (derniere && titre(derniere)) lignes.push(ligne({ nom: tr.t('reprise_titre'), etat: titre(derniere), onclick: () => ouvrirCle(derniere) }));
@@ -1404,9 +1414,8 @@ function repriseFavoris() {
     if (t) lignes.push(ligne({ nom: `★ ${t}`, onclick: () => ouvrirCle(cle) }));
   }
   // Les marque-pages (15/10) : une seule ligne (28/10), qui ouvre la liste filtrée par recueil et par texte.
-  const marques = store.marques().filter((m) => titre(m.cle));
-  if (marques.length) lignes.push(ligne({ nom: h('span', { class: 'nom-marque' }, iconeMarque(false, 18), tr.t('marques_titre')), etat: String(marques.length),
-    onclick: () => listeSignets(marques, titre, (m) => { marqueAOuvrir = m; ouvrirCle(m.cle); }) }));
+  const signets = ligneSignets();
+  if (signets) lignes.push(signets);
   return lignes.length ? h('div', { class: 'carte' }, ...lignes) : null;
 }
 
@@ -1590,6 +1599,8 @@ function ecranLivres() {
   return h('div', { class: 'ecran avec-bandeau' },
     bandeau(tr.t('livres_title'), { puce: h('p', { class: 'bandeau-sous-titre' }, tr.t('livres_hint')), dessin: 'char_torah' }),
     h('div', { class: 'defile' }, h('div', { class: 'contenu liste-siddour' },
+      // Les marque-pages des livres (28/10), en tête : la même feuille, sans le siddour.
+      ...(livresPrets ? [ligneSignets('l')].filter(Boolean).map((l) => h('div', { class: 'carte' }, l)) : []),
       ...(livresPrets ? livres.groupes.flatMap((g) => [
         enteteGroupe(g.titre.he, titreTexte(g.titre)),
         h('div', { class: 'carte carte-sections' }, livres.textes.filter((x) => x.groupe === g.cle).map((x) =>

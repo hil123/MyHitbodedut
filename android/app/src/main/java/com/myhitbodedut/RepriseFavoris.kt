@@ -32,9 +32,15 @@ object RepriseFavoris {
         val favoris = Store.favoris(c).mapNotNull { cle -> titre(c, cle)?.let { cle to it } }
         favoris.forEachIndexed { i, (cle, t) -> add(ligne(c, if (i == 0) c.getString(R.string.favoris_titre) else null, t, cle)) }
         // Les marque-pages (15/10) : une seule ligne (28/10), qui ouvre la liste filtrée.
-        val marques = Store.marques(c).filter { titre(c, it.cle) != null }
-        if (marques.isNotEmpty()) add(ligne(c, null, "${c.getString(R.string.marques_titre)} · ${marques.size}", "",
-            icone = SiddurLectureActivity.icone(false)) { listeSignets(c, marques) })
+        ligneSignets(c)?.let { add(it) }
+    }
+
+    /** La ligne « סימניות · n » (28/10) : tous les marque-pages, ou ceux d'un recueil (« s », « l »). */
+    fun ligneSignets(c: Context, recueil: String? = null): View? {
+        val marques = Store.marques(c).filter { (recueil == null || it.cle.startsWith("$recueil:")) && titre(c, it.cle) != null }
+        if (marques.isEmpty()) return null
+        return ligne(c, null, "${c.getString(R.string.marques_titre)} · ${marques.size}", "",
+            icone = SiddurLectureActivity.icone(recueil == "l")) { listeSignets(c, marques) }
     }
 
     /** L'ordre du recueil : le siddour d'abord, puis les livres, chacun dans son ordre. */

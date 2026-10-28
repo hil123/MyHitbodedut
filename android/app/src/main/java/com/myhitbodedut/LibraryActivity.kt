@@ -54,6 +54,18 @@ class LibraryActivity : AppCompatActivity() {
         }
     }
 
+    /** Les marque-pages des livres (28/10), en tête de la liste ; rebâtis au retour d'une lecture. */
+    private var signets: View? = null
+
+    override fun onResume() {
+        super.onResume()
+        if (!livresSeuls) return
+        val liste = findViewById<RecyclerView>(R.id.library_list)
+        val parent = liste.parent as ViewGroup
+        signets?.let { parent.removeView(it) }
+        signets = RepriseFavoris.ligneSignets(this, "l")?.also { parent.addView(it, parent.indexOfChild(liste)) }
+    }
+
     private inner class Adapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
         override fun getItemCount(): Int = rows.size
