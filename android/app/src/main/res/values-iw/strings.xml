@@ -168,7 +168,7 @@
     <string name="onboarding_practice">פשוט לדבר</string>
     <string name="onboarding_practice_body">התבודדות היא להתייחד לבד זמן־מה בכל יום ולדבר אל השם בשפה שלכם, כמו שמדברים אל מישהו. בלי נוסח לדקלם, בלי דרגה להגיע אליה.</string>
     <string name="onboarding_private">כלום לא יוצא מכאן</string>
-    <string name="onboarding_private_body">האפליקציה אינה מבקשת שום גישה לאינטרנט. מה שתכתבו נשאר בטלפון הזה, ורק אתם יכולים להוציא אותו, דרך הייצוא.</string>
+    <string name="onboarding_private_body">האפליקציה מתחברת לאינטרנט רק אם תפעילו בעצמכם מעקב טיסה בזמן אמת; היא שולחת אז רק את אות הקריאה של הטיסה ומיקום משוער. מה שתכתבו נשאר בטלפון הזה, ורק אתם יכולים להוציא אותו, דרך הייצוא.</string>
     <string name="blocker_session_open_subtitle">התבודדות פתוחה, כבר %1$s. הטלפון יכול לחכות.</string>
     <string name="session_done_title">דיברתם היום עם השם</string>
     <string name="session_done_text">%1$s של התבודדות. הקישו כדי להוסיף הערה.</string>
@@ -448,7 +448,7 @@
     <string name="onboarding_rappel_heure_desc">שעת התזכורת: %1$s</string>
     <!-- Pour la version web (16/10) : pas de rappels, et un navigateur plutôt qu’un téléphone sans Internet. -->
     <string name="onboarding_days_body_web">הרצף סופר את הימים ברציפות, והשבוע כולו נראה במבט אחד. אחרי כל התבודדות אפשר להשאיר הערה ביומן.</string>
-    <string name="onboarding_private_body_web">מה שתכתבו נשאר בדפדפן הזה, במכשיר הזה: שום דבר לא נשלח לשום מקום.</string>
+    <string name="onboarding_private_body_web">מה שתכתבו נשאר בדפדפן הזה, במכשיר הזה: שום דבר לא נשלח לשום מקום, מלבד אות הקריאה של טיסה ומיקום משוער אם תפעילו מעקב בזמן אמת.</string>
     <string name="adresse_tsadik">צדיק</string>
     <string name="adresse_tsadeket">צדקת</string>
     <string name="adresse_none">לא נבחר</string>
@@ -1221,5 +1221,17 @@
     <string name="vol_gps_hors_vol">מיקום ה־GPS משמש רק במהלך הטיסה, בין ההמראה לנחיתה המתוכננות.</string>
     <string name="vol_fiabilite_gps">המסלול תוקן לפי מיקום ה־GPS של %1$s (%2$s), ומשם מעגל גדול עד הנחיתה, במהירות קבועה. זמני הנקודה שמתחת למטוס, בגובה פני הים, מחושבים במכשיר, ללא רשת.</string>
     <string name="vol_ecart_gps">⁦%1$s⁩ דק׳ אם הנחיתה מתעכבת ב־30 דק׳</string>
+    <string name="vol_direct_titre">מעקב בזמן אמת (אינטרנט)</string>
+    <string name="vol_direct_explication">כבוי כברירת מחדל. כשהוא פעיל, הוא שולח לשרת הממסר של היישום את אות הקריאה של הטיסה ואת המיקום המשוער של המטוס, ותו לא; הממסר מבקש את המיקום האמיתי מ־OpenSky Network. מעל אוקיינוסים המטוס לעיתים קרובות אינו נראה.</string>
+    <string name="vol_direct_activer">הפעלת מעקב בזמן אמת</string>
+    <string name="vol_indicatif">אות קריאה (ICAO), לדוגמה ELY1</string>
+    <string name="vol_indicatif_invalide">אות קריאה צפוי: שלוש אותיות ואחריהן המספר, לדוגמה ELY1.</string>
+    <string name="vol_direct_bouton">מיקום בזמן אמת</string>
+    <string name="vol_direct_attente">מבקש את המיקום…</string>
+    <string name="vol_direct_introuvable">המטוס אינו נראה כרגע (מחוץ לכיסוי או אות קריאה שגוי). החישוב נשאר לפי המסלול המתוכנן.</string>
+    <string name="vol_direct_erreur">המעקב אינו זמין (%1$s). החישוב נשאר לפי המסלול המתוכנן.</string>
+    <string name="vol_direct_inactif">שרת הממסר של המעקב עדיין אינו פעיל בגרסה זו.</string>
+    <string name="vol_fiabilite_direct">המסלול תוקן לפי המיקום שהתקבל מ־OpenSky Network ב־%1$s (%2$s), ומשם מעגל גדול עד הנחיתה, במהירות קבועה. זמני הנקודה שמתחת למטוס, בגובה פני הים, מחושבים במכשיר.</string>
+    <string name="vol_source_opensky">מיקום בזמן אמת: The OpenSky Network, ‏opensky-network.org</string>
     <string name="vol_source_aeroports">שדות תעופה: OurAirports (נחלת הכלל); אזורי זמן: timezone-boundary-builder ‏(ODbL, © תורמי OpenStreetMap)</string>
 </resources>

@@ -30,6 +30,19 @@ mkdirSync(DIST, { recursive: true });
 // --- Le code du site ------------------------------------------------------
 cpSync(SRC, DIST, { recursive: true });
 
+// --- Le relais du suivi de vol en direct (28/10) -----------------------------
+// Sans RELAIS_VOL, le suivi reste inactif et la CSP n'autorise que le site.
+// Avec, son origine seule s'ajoute à connect-src, en HTTPS.
+const relais = process.env.RELAIS_VOL ?? '';
+if (relais) {
+  if (!relais.startsWith('https://')) throw new Error(`RELAIS_VOL doit être en https:// : ${relais}`);
+  const origine = new URL(relais).origin;
+  writeFileSync(join(DIST, 'js', 'relais.js'), `export const RELAIS_VOL = ${JSON.stringify(relais)};\n`);
+  const page = readFileSync(join(DIST, 'index.html'), 'utf8');
+  if (!page.includes("connect-src 'self';")) throw new Error('CSP : connect-src introuvable');
+  writeFileSync(join(DIST, 'index.html'), page.replace("connect-src 'self';", `connect-src 'self' ${origine};`));
+}
+
 // --- Les chaînes ------------------------------------------------------------
 // Comme Android : la langue par défaut (le français) sous chaque langue,
 // que la traduction recouvre. Seules les chaînes non traduisibles (nom de

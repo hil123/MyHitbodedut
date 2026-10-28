@@ -20,6 +20,7 @@ import { pour as yalkutPour, recherche as rechercheYalkut, source as sourceYalku
 import { ajouts as ajoutsDuJour, dateHilloula, debutMoisHebreu, hilloulotPour, lienArticle, rechercheHilloula, horaires, illustration as illustrationDuJour, lienHalakha, lienHyomi, momentDuSiddour, moisHebreuVoisin, semaines, semainesHebreu } from './jour-affiche.js';
 import { ALLUMAGES, heure as heureZman, jour as zmanimDuJour } from './zmanim.js';
 import * as Vol from './vol.js';
+import { RELAIS_VOL } from './relais.js';
 
 // --- Stockage ---------------------------------------------------------------
 function stockageDuNavigateur() {
@@ -2303,7 +2304,7 @@ function planDe(v) {
   const decollage = Vol.instant(v.decollage, depart);
   const atterrissage = Vol.instant(v.atterrissage, arrivee);
   const releve = v.releve ? { latitude: v.releve.latitude, longitude: v.releve.longitude, instant: new Date(v.releve.instant) } : null;
-  return decollage && atterrissage ? { numero: v.numero ?? '', depart, arrivee, decollage, atterrissage, releve } : null;
+  return decollage && atterrissage ? { numero: v.numero ?? '', depart, arrivee, decollage, atterrissage, releve, sourceReleve: v.releve?.source ?? 'gps' } : null;
 }
 
 function choisirAeroport(onChoisi) {
@@ -2332,10 +2333,49 @@ function deuxHeures(plan, t) {
   return `${jour(plan.depart.fuseau)} ${heure(plan.depart)} · ${autreJour ? `${jour(plan.arrivee.fuseau)} ` : ''}${heure(plan.arrivee)}`;
 }
 
-const ecartVol = (ms) => tr.t(calculVol?.fiabilite === 'releve_gps' ? 'vol_ecart_gps' : 'vol_ecart', `${ms < 0 ? '−' : '+'}${Math.abs(Math.round(ms / 60000))}`);
+const ecartVol = (ms) => tr.t(calculVol && calculVol.fiabilite !== 'route_prevue' ? 'vol_ecart_gps' : 'vol_ecart', `${ms < 0 ? '−' : '+'}${Math.abs(Math.round(ms / 60000))}`);
 
 /** Le GPS du téléphone, par le navigateur (VolActivity.releverGps) : 90 s au plus, sans réseau. */
 let gpsVol = false;
+/** La position en direct par le relais (VolActivity.demanderDirect) : seulement pendant le vol prévu. */
+let directVol = false;
+async function demanderDirect(indicatif) {
+  const garde = store.vol();
+  const plan = garde && planDe(garde);
+  if (!plan) return;
+  const maintenant = new Date();
+  if (+maintenant < +plan.decollage || +maintenant > +plan.atterrissage) return signale(tr.t('vol_gps_hors_vol'));
+  directVol = true;
+  rendre();
+  const r = await Vol.positionEnDirect(RELAIS_VOL, indicatif, Vol.position(plan, maintenant));
+  directVol = false;
+  if (r.statut === 'trouve') {
+    const releve = { latitude: r.point.latitude, longitude: r.point.longitude, instant: r.point.instant.toISOString(), source: 'direct' };
+    if (!Vol.releveUtilisable({ ...plan, releve: r.point })) { rendre(); return signale(tr.t('vol_gps_hors_vol')); }
+    store.setVol({ ...garde, releve });
+  } else signale(r.statut === 'introuvable' ? tr.t('vol_direct_introuvable') : tr.t('vol_direct_erreur', r.raison));
+  rendre();
+}
+
+/** Le suivi en direct : un interrupteur désactivé par défaut, qui dit ce qui part ; l'indicatif ; le bouton. */
+function suiviDirect() {
+  const actif = store.suiviDirect();
+  const bloc = [h('p', { class: 'vol-jalon' }, tr.t('vol_direct_titre')), h('p', { class: 'indice' }, tr.t('vol_direct_explication')),
+    h('label', { class: 'ligne' }, h('span', { class: 'corps' }, h('div', { class: 'nom' }, tr.t('vol_direct_activer'))),
+      h('input', { type: 'checkbox', role: 'switch', class: 'interrupteur', checked: actif, onchange: (e) => { store.setSuiviDirect(e.target.checked); rendre(); } }))];
+  if (!actif) return bloc;
+  if (!RELAIS_VOL) return [...bloc, h('p', { class: 'indice' }, tr.t('vol_direct_inactif'))];
+  const champ = h('input', { type: 'text', class: 'champ-recherche champ-vol', maxlength: 9, autocapitalize: 'characters', placeholder: tr.t('vol_indicatif'), value: store.volIndicatif() || null });
+  return [...bloc, champ,
+    h('button', { class: 'secondaire', disabled: directVol, onclick: () => {
+      const indicatif = Vol.normaliserIndicatif(champ.value);
+      if (!indicatif) return signale(tr.t('vol_indicatif_invalide'));
+      store.setVolIndicatif(indicatif);
+      demanderDirect(indicatif);
+    } }, tr.t(directVol ? 'vol_direct_attente' : 'vol_direct_bouton')),
+    h('p', { class: 'indice' }, tr.t('vol_source_opensky'))];
+}
+
 function releverGps() {
   const garde = store.vol();
   if (!garde || !navigator.geolocation) return signale(tr.t('vol_gps_echec'));
@@ -2343,7 +2383,7 @@ function releverGps() {
   rendre();
   navigator.geolocation.getCurrentPosition((p) => {
     gpsVol = false;
-    const releve = { latitude: p.coords.latitude, longitude: p.coords.longitude, instant: new Date(p.timestamp).toISOString() };
+    const releve = { latitude: p.coords.latitude, longitude: p.coords.longitude, instant: new Date(p.timestamp).toISOString(), source: 'gps' };
     const plan = planDe({ ...garde, releve });
     if (!plan || !Vol.releveUtilisable(plan)) { rendre(); return signale(tr.t('vol_gps_hors_vol')); }
     store.setVol({ ...garde, releve });
@@ -2382,11 +2422,12 @@ function resultatsVol(c) {
   return [
     h('div', { class: 'carte carte-texte carte-vol' }, h('p', { class: 'indice' }, tr.t('vol_priere_titre')), ...priere),
     h('div', { class: 'carte carte-texte carte-vol' }, h('p', { class: 'indice' }, tr.t('vol_fiabilite_titre')),
-      h('p', {}, c.fiabilite === 'releve_gps'
-        ? tr.t('vol_fiabilite_gps', deuxHeures(c.plan, c.plan.releve.instant), positionVol(c.plan.releve)) : tr.t('vol_fiabilite')),
+      h('p', {}, c.fiabilite === 'route_prevue' ? tr.t('vol_fiabilite')
+        : tr.t(c.fiabilite === 'releve_direct' ? 'vol_fiabilite_direct' : 'vol_fiabilite_gps', deuxHeures(c.plan, c.plan.releve.instant), positionVol(c.plan.releve))),
       h('div', { class: 'boutons-vol' },
         h('button', { class: 'secondaire', disabled: gpsVol, onclick: releverGps }, tr.t(gpsVol ? 'vol_gps_attente' : 'vol_gps')),
         c.plan.releve ? h('button', { class: 'secondaire', onclick: () => { const g = store.vol(); delete g.releve; store.setVol(g); rendre(); } }, tr.t('vol_gps_oublier')) : null),
+      ...suiviDirect(),
       ...RESERVES.filter((r) => c.reserves.has(r)).map((r) => h('p', {}, tr.t(`vol_reserve_${r}`))),
       ...c.lignesDate.map((l) => h('p', {}, tr.t('vol_ligne_date', deuxHeures(c.plan, l.instant), date(l.avant), date(l.apres))))),
     h('div', { class: 'carte carte-zmanim' }, h('p', { class: 'indice' }, tr.t('vol_en_vol_titre')),

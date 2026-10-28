@@ -167,7 +167,7 @@
     <string name="onboarding_practice">Simply speaking</string>
     <string name="onboarding_practice_body">Hitbodedut means withdrawing alone for a while each day and speaking to Hashem in your own language, as you would to someone. No formula to recite, no level to reach.</string>
     <string name="onboarding_private">Nothing leaves this phone</string>
-    <string name="onboarding_private_body">The app asks for no Internet access at all. What you write stays on this phone, and only you can take it out, through the export.</string>
+    <string name="onboarding_private_body">The app only connects to the Internet if you turn on live flight tracking yourself; it then sends only the flight’s callsign and an approximate position. What you write stays on this phone, and only you can take it out, through the export.</string>
     <string name="blocker_session_open_subtitle">Open hitbodedut, %1$s so far. The phone can wait.</string>
     <string name="session_done_title">You spoke with Hashem today</string>
     <string name="session_done_text">%1$s of hitbodedut. Tap to leave a note.</string>
@@ -438,7 +438,7 @@
     <string name="onboarding_rappel_heure_desc">Reminder time: %1$s</string>
     <!-- Pour la version web (16/10) : pas de rappels, et un navigateur plutôt qu’un téléphone sans Internet. -->
     <string name="onboarding_days_body_web">The streak counts your days in a row, and the week shows at a glance. After each hitbodedut, a note can go into your journal.</string>
-    <string name="onboarding_private_body_web">What you write stays in this browser, on this device: nothing is sent anywhere.</string>
+    <string name="onboarding_private_body_web">What you write stays in this browser, on this device: nothing is sent anywhere, except a flight’s callsign and an approximate position if you turn on live tracking.</string>
     <string name="adresse_tsadik">Tsadik</string>
     <string name="adresse_tsadeket">Tsadeket</string>
     <string name="adresse_none">Not chosen</string>
@@ -1188,5 +1188,17 @@
     <string name="vol_gps_hors_vol">The GPS fix is only used during the flight, between scheduled departure and arrival.</string>
     <string name="vol_fiabilite_gps">Route adjusted to the GPS fix of %1$s (%2$s), then great circle to arrival, at constant speed. Zmanim of the point below the aircraft, at sea level, computed on the device, without network.</string>
     <string name="vol_ecart_gps">%1$s min if arrival is 30 min late</string>
+    <string name="vol_direct_titre">Live tracking (Internet)</string>
+    <string name="vol_direct_explication">Off by default. When on, it sends the app’s relay the flight’s callsign and the aircraft’s estimated position, nothing else; the relay asks OpenSky Network for the real position. Over the oceans, the aircraft is often not seen.</string>
+    <string name="vol_direct_activer">Turn on live tracking</string>
+    <string name="vol_indicatif">Radio callsign (ICAO), for example ELY1</string>
+    <string name="vol_indicatif_invalide">Expected callsign: three letters then the number, for example ELY1.</string>
+    <string name="vol_direct_bouton">Live position</string>
+    <string name="vol_direct_attente">Requesting the position…</string>
+    <string name="vol_direct_introuvable">The aircraft is not seen right now (out of coverage or wrong callsign). The calculation stays on the planned route.</string>
+    <string name="vol_direct_erreur">Tracking unavailable (%1$s). The calculation stays on the planned route.</string>
+    <string name="vol_direct_inactif">The tracking relay is not in service yet in this version.</string>
+    <string name="vol_fiabilite_direct">Route adjusted to the position received from OpenSky Network at %1$s (%2$s), then great circle to arrival, at constant speed. Zmanim of the point below the aircraft, at sea level, computed on the device.</string>
+    <string name="vol_source_opensky">Live position: The OpenSky Network, opensky-network.org</string>
     <string name="vol_source_aeroports">Airports: OurAirports (public domain); time zones: timezone-boundary-builder (ODbL, © OpenStreetMap contributors)</string>
 </resources>

@@ -175,3 +175,31 @@ test('un relevé GPS en vol recale la route ; hors du vol, il est ignoré', () =
   assert.equal(dehors.fiabilite, 'route_prevue');
   assert.deepEqual(Vol.enVol(dehors).map((e) => +e.instant), Vol.enVol(sans).map((e) => +e.instant));
 });
+
+test('suivi en direct : indicatifs, réponse du relais, adresse, fiabilité', async () => {
+  assert.equal(Vol.normaliserIndicatif('ely 001'), 'ELY001');
+  assert.equal(Vol.normaliserIndicatif('LY001'), null);
+  assert.ok(Vol.memeIndicatif('ELY001', 'ELY1'));
+  const maintenant = new Date('2026-11-10T18:35:00Z');
+  const ok = Vol.lireReponse({ trouve: true, latitude: 50.5, longitude: -21.2, altitude_geo: 11200, instant: '2026-11-10T18:30:00Z' }, maintenant);
+  assert.equal(ok.statut, 'trouve');
+  assert.equal(ok.altitude, 11200);
+  assert.equal(Vol.lireReponse({ trouve: true, latitude: 50, longitude: -21, instant: '2026-11-10T18:00:00Z' }, maintenant).statut, 'introuvable');
+  assert.equal(Vol.lireReponse({ trouve: false }, maintenant).statut, 'introuvable');
+  assert.equal(Vol.lireReponse({ erreur: 'x' }, maintenant).statut, 'erreur');
+  assert.equal(Vol.lireReponse({ trouve: true, latitude: 99, longitude: 0, instant: '2026-11-10T18:30:00Z' }, maintenant).statut, 'erreur');
+  assert.equal(Vol.adresseRelais('https://r.test/', 'ELY1', { latitude: 50.123, longitude: -20.36 }), 'https://r.test/position?indicatif=ELY1&lat=50.1&lon=-20.4');
+  // Sans relais configuré, aucune requête.
+  let appels = 0;
+  const compte = async () => { appels++; return new Response('{}'); };
+  assert.equal((await Vol.positionEnDirect('', 'ELY1', { latitude: 0, longitude: 0 }, compte)).raison, 'relais non configuré');
+  assert.equal((await Vol.positionEnDirect('http://r.test', 'ELY1', { latitude: 0, longitude: 0 }, compte)).statut, 'erreur');
+  assert.equal(appels, 0);
+  const trouve = await Vol.positionEnDirect('https://r.test', 'ELY1', { latitude: 50, longitude: -20 },
+    async () => new Response(JSON.stringify({ trouve: true, latitude: 56, longitude: -30, instant: '2026-11-10T18:30:00Z' })), maintenant);
+  assert.equal(trouve.statut, 'trouve');
+  assert.equal((await Vol.positionEnDirect('https://r.test', 'ELY1', { latitude: 0, longitude: 0 }, async () => { throw new Error('hors ligne'); })).raison, 'pas de connexion');
+  // La position reçue recale la route comme un relevé, avec sa propre fiabilité.
+  const c = Vol.calculer({ ...versOuest, releve: trouve.point, sourceReleve: 'direct' });
+  assert.equal(c.fiabilite, 'releve_direct');
+});

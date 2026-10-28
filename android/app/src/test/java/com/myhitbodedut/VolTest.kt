@@ -342,4 +342,29 @@ class VolTest {
         assertEquals(Vol.Fiabilite.ROUTE_PREVUE, dehors.fiabilite)
         assertEquals(sans.enVol.map { it.instant }, dehors.enVol.map { it.instant })
     }
+
+    @Test
+    fun `suivi en direct - indicatifs, reponse du relais, adresse, fiabilite`() {
+        assertEquals("ELY001", SuiviVol.normaliser("ely 001"))
+        assertNull(SuiviVol.normaliser("LY001"))
+        assertTrue(SuiviVol.memeIndicatif("ELY001", "ELY1"))
+        assertFalse(SuiviVol.memeIndicatif("ELY1", "ELY11"))
+        val maintenant = Instant.parse("2026-11-10T18:35:00Z")
+        val ok = SuiviVol.lire("""{"trouve":true,"latitude":50.5,"longitude":-21.2,"altitude_geo":11200,"instant":"2026-11-10T18:30:00Z"}""", maintenant)
+        assertEquals(SuiviVol.Resultat.Trouve(Vol.Point(Instant.parse("2026-11-10T18:30:00Z"), 50.5, -21.2), 11200.0), ok)
+        assertEquals(SuiviVol.Resultat.Introuvable, SuiviVol.lire("""{"trouve":true,"latitude":50,"longitude":-21,"instant":"2026-11-10T18:00:00Z"}""", maintenant))
+        assertEquals(SuiviVol.Resultat.Introuvable, SuiviVol.lire("""{"trouve":false}""", maintenant))
+        assertTrue(SuiviVol.lire("""{"erreur":"x"}""", maintenant) is SuiviVol.Resultat.Erreur)
+        assertTrue(SuiviVol.lire("pas du json", maintenant) is SuiviVol.Resultat.Erreur)
+        assertEquals("https://r.test/position?indicatif=ELY1&lat=50.1&lon=-20.4",
+            SuiviVol.adresse("https://r.test/", "ELY1", Vol.Point(maintenant, 50.123, -20.36)))
+        // Sans relais en HTTPS, aucune connexion.
+        assertEquals(SuiviVol.Resultat.Erreur("relais non configuré"), SuiviVol.Relais("").position("ELY1", Vol.Point(maintenant, 0.0, 0.0)))
+        assertEquals(SuiviVol.Resultat.Erreur("relais non configuré"), SuiviVol.Relais("http://r.test").position("ELY1", Vol.Point(maintenant, 0.0, 0.0)))
+        // Le fournisseur est interchangeable ; sa position recale la route comme un relevé.
+        val faux = SuiviVol.FournisseurPosition { _, _ -> SuiviVol.Resultat.Trouve(Vol.Point(Instant.parse("2026-11-10T18:30:00Z"), 56.0, -30.0), null) }
+        val r = faux.position("ELY1", Vol.position(versOuest, maintenant)) as SuiviVol.Resultat.Trouve
+        val c = Vol.calculer(versOuest.copy(releve = r.point, sourceReleve = Vol.SourceReleve.DIRECT))
+        assertEquals(Vol.Fiabilite.RELEVE_DIRECT, c.fiabilite)
+    }
 }

@@ -111,6 +111,9 @@ object Store {
     private const val KEY_VOL_RELEVE_LAT = "vol_releve_latitude"
     private const val KEY_VOL_RELEVE_LON = "vol_releve_longitude"
     private const val KEY_VOL_RELEVE_T = "vol_releve_instant"
+    private const val KEY_VOL_RELEVE_SOURCE = "vol_releve_source"
+    private const val KEY_VOL_INDICATIF = "vol_indicatif"
+    private const val KEY_SUIVI_DIRECT = "vol_suivi_direct"
     private const val KEY_ALLUMAGE = "allumage_minutes"
     private const val KEY_PAUSED_DATES = "paused_dates"
     private const val KEY_REMINDER_ON = "reminder_on"
@@ -408,7 +411,8 @@ object Store {
             Vol.Point(java.time.Instant.ofEpochMilli(t), lat, lon)
         }
         return Vol.Plan(p.getString(KEY_VOL_NUMERO, "").orEmpty(), depart, arrivee,
-            java.time.Instant.ofEpochMilli(decollage), java.time.Instant.ofEpochMilli(atterrissage), releve)
+            java.time.Instant.ofEpochMilli(decollage), java.time.Instant.ofEpochMilli(atterrissage), releve,
+            if (p.getString(KEY_VOL_RELEVE_SOURCE, null) == Vol.SourceReleve.DIRECT.name) Vol.SourceReleve.DIRECT else Vol.SourceReleve.GPS)
     }
 
     /** Le numéro et les codes du dernier vol, pour l'accès depuis l'onglet Zmanim, sans lire les aéroports. */
@@ -421,7 +425,7 @@ object Store {
 
     fun setVol(context: Context, plan: Vol.Plan?) {
         val e = prefs(context).edit()
-        val releve = listOf(KEY_VOL_RELEVE_LAT, KEY_VOL_RELEVE_LON, KEY_VOL_RELEVE_T)
+        val releve = listOf(KEY_VOL_RELEVE_LAT, KEY_VOL_RELEVE_LON, KEY_VOL_RELEVE_T, KEY_VOL_RELEVE_SOURCE)
         if (plan == null) {
             (listOf(KEY_VOL_NUMERO, KEY_VOL_DEPART, KEY_VOL_ARRIVEE, KEY_VOL_DECOLLAGE, KEY_VOL_ATTERRISSAGE) + releve).forEach { e.remove(it) }
         } else {
@@ -434,9 +438,23 @@ object Store {
             val r = plan.releve
             if (r == null) releve.forEach { e.remove(it) }
             else e.putString(KEY_VOL_RELEVE_LAT, r.latitude.toString()).putString(KEY_VOL_RELEVE_LON, r.longitude.toString())
-                .putLong(KEY_VOL_RELEVE_T, r.instant.toEpochMilli())
+                .putLong(KEY_VOL_RELEVE_T, r.instant.toEpochMilli()).putString(KEY_VOL_RELEVE_SOURCE, plan.sourceReleve.name)
         }
         e.apply()
+    }
+
+    /** Le suivi de vol en direct (SuiviVol) : désactivé tant que l'utilisateur ne l'active pas. */
+    fun suiviDirect(context: Context): Boolean = prefs(context).getBoolean(KEY_SUIVI_DIRECT, false)
+
+    fun setSuiviDirect(context: Context, actif: Boolean) {
+        prefs(context).edit().putBoolean(KEY_SUIVI_DIRECT, actif).apply()
+    }
+
+    /** L'indicatif radio du vol (« ELY1 »), pour le suivi en direct. */
+    fun volIndicatif(context: Context): String = prefs(context).getString(KEY_VOL_INDICATIF, "").orEmpty()
+
+    fun setVolIndicatif(context: Context, indicatif: String) {
+        prefs(context).edit().putString(KEY_VOL_INDICATIF, indicatif).apply()
     }
 
     /** Les minutes d'allumage avant la chki'a ; 18 par défaut (Zmanim.ALLUMAGES). */

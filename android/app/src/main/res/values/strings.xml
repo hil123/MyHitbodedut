@@ -183,7 +183,7 @@
     <string name="onboarding_practice">Parler, simplement</string>
     <string name="onboarding_practice_body">La hitbodedout, c’est se retirer seul un moment chaque jour et parler à Hachem dans sa propre langue, comme on parle à quelqu’un. Pas de formule à réciter, pas de niveau à atteindre.</string>
     <string name="onboarding_private">Rien ne sort d’ici</string>
-    <string name="onboarding_private_body">L’application ne demande aucun accès à Internet. Ce que vous écrivez reste sur ce téléphone, et n’en sort que si vous l’exportez vous-même.</string>
+    <string name="onboarding_private_body">L’application ne se connecte à Internet que si vous activez vous-même le suivi d’un vol en direct ; elle n’envoie alors que l’indicatif du vol et une position approchée. Ce que vous écrivez reste sur ce téléphone, et n’en sort que si vous l’exportez vous-même.</string>
     <string name="blocker_session_open_subtitle">Hitbodedout sans durée, depuis %1$s. Le téléphone peut attendre.</string>
     <string name="session_done_title">Vous avez parlé avec Hachem aujourd’hui</string>
     <string name="session_done_text">%1$s de hitbodedout. Touchez pour laisser une note.</string>
@@ -514,7 +514,7 @@
     <string name="onboarding_rappel_heure_desc">Heure du rappel : %1$s</string>
     <!-- Pour la version web (16/10) : pas de rappels, et un navigateur plutôt qu’un téléphone sans Internet. -->
     <string name="onboarding_days_body_web">La série compte les jours de pratique d’affilée, et la semaine se lit d’un coup d’œil. Après chaque hitbodedout, une note peut rejoindre votre journal.</string>
-    <string name="onboarding_private_body_web">Ce que vous écrivez reste dans ce navigateur, sur cet appareil : rien n’est envoyé nulle part.</string>
+    <string name="onboarding_private_body_web">Ce que vous écrivez reste dans ce navigateur, sur cet appareil : rien n’est envoyé nulle part, sauf l’indicatif d’un vol et une position approchée si vous activez le suivi en direct.</string>
     <string name="adresse_tsadik">Tsadik</string>
     <string name="adresse_tsadeket">Tsadeket</string>
     <string name="adresse_none">Pas choisi</string>
@@ -1234,5 +1234,17 @@
     <string name="vol_gps_hors_vol">Le relevé GPS ne sert que pendant le vol, entre le décollage et l’atterrissage prévus.</string>
     <string name="vol_fiabilite_gps">Route recalée sur le relevé GPS de %1$s (%2$s), puis grand cercle jusqu’à l’arrivée, à vitesse constante. Zmanim du point sous l’avion, au niveau de la mer, calculés sur l’appareil, sans réseau.</string>
     <string name="vol_ecart_gps">%1$s min si l’arrivée a 30 min de retard</string>
+    <string name="vol_direct_titre">Suivi en direct (Internet)</string>
+    <string name="vol_direct_explication">Désactivé par défaut. Activé, il envoie au relais de l’application l’indicatif du vol et la position estimée de l’avion, rien d’autre ; le relais demande la position réelle à OpenSky Network. Au-dessus des océans, l’avion n’est souvent pas vu.</string>
+    <string name="vol_direct_activer">Activer le suivi en direct</string>
+    <string name="vol_indicatif">Indicatif radio (OACI), par exemple ELY1</string>
+    <string name="vol_indicatif_invalide">Indicatif attendu : trois lettres puis le numéro, par exemple ELY1.</string>
+    <string name="vol_direct_bouton">Position en direct</string>
+    <string name="vol_direct_attente">Demande de la position…</string>
+    <string name="vol_direct_introuvable">L’avion n’est pas vu en ce moment (hors couverture ou indicatif inexact). Le calcul reste sur la route prévue.</string>
+    <string name="vol_direct_erreur">Suivi indisponible (%1$s). Le calcul reste sur la route prévue.</string>
+    <string name="vol_direct_inactif">Le relais du suivi n’est pas encore en service dans cette version.</string>
+    <string name="vol_fiabilite_direct">Route recalée sur la position reçue d’OpenSky Network à %1$s (%2$s), puis grand cercle jusqu’à l’arrivée, à vitesse constante. Zmanim du point sous l’avion, au niveau de la mer, calculés sur l’appareil.</string>
+    <string name="vol_source_opensky">Position en direct : The OpenSky Network, opensky-network.org</string>
     <string name="vol_source_aeroports">Aéroports : OurAirports (domaine public) ; fuseaux : timezone-boundary-builder (ODbL, © contributeurs OpenStreetMap)</string>
 </resources>

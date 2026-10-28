@@ -1,0 +1,13 @@
+# Le relais du suivi de vol en direct (README.md). Les secrets ne sont pas ici :
+#   npx wrangler secret put OPENSKY_CLIENT_ID
+#   npx wrangler secret put OPENSKY_CLIENT_SECRET
+name = "myhitbodedut-vol"
+main = "worker.js"
+compatibility_date = "2026-10-01"
+
+[vars]
+# L'origine de la version web, la seule autorisée à appeler le relais depuis un navigateur.
+ORIGINE_WEB = ""
+
+[observability]
+enabled = false

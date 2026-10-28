@@ -54,9 +54,13 @@ object Vol {
         val arrivee: Aeroport,
         val decollage: Instant,
         val atterrissage: Instant,
-        /** Un relevé GPS pris en vol : la route passe par lui (deux grands cercles). */
+        /** Un relevé pris en vol (GPS ou suivi en direct) : la route passe par lui (deux grands cercles). */
         val releve: Point? = null,
+        val sourceReleve: SourceReleve = SourceReleve.GPS,
     )
+
+    /** Le GPS du téléphone, ou la position reçue du suivi en direct (SuiviVol). */
+    enum class SourceReleve { GPS, DIRECT }
 
     /** Le relevé compte s'il tombe entre le décollage et l'atterrissage prévus. */
     fun releveUtilisable(plan: Plan): Boolean = plan.releve?.let { it.instant.isAfter(plan.decollage) && it.instant.isBefore(plan.atterrissage) } == true
@@ -176,8 +180,8 @@ object Vol {
     /** Le passage du méridien de 180° : la date locale (fuseau nautique) passe de [avant] à [apres]. */
     data class LigneDate(val instant: Instant, val avant: LocalDate, val apres: LocalDate)
 
-    /** La fiabilité : la route prévue seule, ou recalée sur un relevé GPS pris en vol. */
-    enum class Fiabilite { ROUTE_PREVUE, RELEVE_GPS }
+    /** La fiabilité : la route prévue seule, ou recalée sur un relevé pris en vol (GPS ou suivi en direct). */
+    enum class Fiabilite { ROUTE_PREVUE, RELEVE_GPS, RELEVE_DIRECT }
 
     data class Calcul(
         val plan: Plan,
@@ -185,7 +189,11 @@ object Vol {
         val evenements: List<Evenement>,
         val reserves: Set<Reserve>,
         val lignesDate: List<LigneDate>,
-        val fiabilite: Fiabilite = if (releveUtilisable(plan)) Fiabilite.RELEVE_GPS else Fiabilite.ROUTE_PREVUE,
+        val fiabilite: Fiabilite = when {
+            !releveUtilisable(plan) -> Fiabilite.ROUTE_PREVUE
+            plan.sourceReleve == SourceReleve.DIRECT -> Fiabilite.RELEVE_DIRECT
+            else -> Fiabilite.RELEVE_GPS
+        },
     ) {
         /** Les zmanim entre le décollage et l'atterrissage. */
         val enVol: List<Evenement>

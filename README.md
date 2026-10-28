@@ -150,9 +150,14 @@ profil est à valider par un Rav.
 
 ### Aucune donnée ne sort de l'appareil
 
-Tout est dans les `SharedPreferences` locales. Pas de compte, pas de serveur,
-pas d'analytique, pas de réseau. L'application ne déclare aucune permission
-Internet.
+Tout est dans les `SharedPreferences` locales. Pas de compte, pas d'analytique.
+L'édition **Light** ne déclare aucune permission Internet. L'édition complète
+déclare INTERNET pour une seule fonction, désactivée par défaut : le suivi d'un
+vol en direct (28/10, `SuiviVol.kt`). Activé par l'utilisateur, il envoie à un
+relais (`tools/relais_vol`) l'indicatif du vol et une position approchée, rien
+d'autre, en HTTPS seulement ; sans relais configuré à la construction, il ne
+fait aucune requête. `OnboardingTest` tient la phrase de l'accueil de chaque
+édition à son manifeste.
 
 ### Construire
 

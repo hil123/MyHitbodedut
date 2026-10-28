@@ -35,21 +35,38 @@ class OnboardingTest {
     }
 
     /**
-     * Le troisieme ecran affirme que l'application n'a aucun acces a
-     * Internet. C'est la seule phrase de l'accueil qui puisse devenir
-     * fausse sans que personne s'en apercoive : il suffirait qu'une
-     * permission soit ajoutee un jour pour une fonction qui semble
-     * anodine. Le test la tient au manifeste.
+     * Le troisieme ecran affirme ce qui sort du telephone. C'est la seule phrase
+     * de l'accueil qui puisse devenir fausse sans que personne s'en apercoive :
+     * il suffirait qu'une permission soit ajoutee un jour pour une fonction qui
+     * semble anodine. Le test la tient aux manifestes, edition par edition
+     * (28/10) : l'edition legere ne declare aucun acces reseau et garde sa
+     * phrase ; l'edition complete ne declare qu'INTERNET, pour le suivi de vol
+     * en direct, desactive par defaut, et sa phrase le dit.
      */
     @Test
     fun `l application ne demande aucun acces reseau`() {
-        val manifeste = File("src/main/AndroidManifest.xml").readText()
+        val principal = File("src/main/AndroidManifest.xml").readText()
+        val legere = File("src/light/AndroidManifest.xml").readText()
+        val complete = File("src/full/AndroidManifest.xml").readText()
         listOf("android.permission.INTERNET", "android.permission.ACCESS_NETWORK_STATE").forEach {
-            assertFalse(
-                "l'accueil promet qu'aucune donnée ne sort ; « $it » le dément",
-                manifeste.contains(it),
-            )
+            assertFalse("l'accueil promet qu'aucune donnée ne sort ; « $it » le dément", principal.contains(it))
+            assertFalse("l'édition légère promet qu'aucune donnée ne sort ; « $it » le dément", legere.contains(it))
         }
+        assertFalse(complete.contains("android.permission.ACCESS_NETWORK_STATE"))
+        assertTrue("HTTPS seulement", complete.contains("""android:usesCleartextTraffic="false""""))
+        // La phrase de chaque édition dit ce que déclare son manifeste.
+        val legereFr = File("src/light/res/values/strings.xml").readText()
+        assertTrue(legereFr.contains("aucun accès à Internet"))
+        val completeFr = File("src/main/res/values/strings.xml").readText()
+            .substringAfter("""<string name="onboarding_private_body">""").substringBefore("</string>")
+        assertTrue("l'accueil doit dire quand l'application se connecte", completeFr.contains("suivi d’un vol en direct"))
+        listOf("values", "values-en", "values-iw").forEach {
+            assertTrue("$it : la phrase de l'édition légère manque", File("src/light/res/$it/strings.xml").readText().contains("onboarding_private_body"))
+        }
+        // Le seul code qui ouvre une connexion est le suivi de vol, et seulement en HTTPS.
+        val connexions = File("src/main/java/com/myhitbodedut").listFiles().orEmpty()
+            .filter { it.readText().contains("openConnection(") }.map { it.name }
+        assertEquals(listOf("SuiviVol.kt"), connexions)
     }
 
     /** Sans son entree au manifeste, l'ecran ne s'ouvrirait pas. */

@@ -235,7 +235,7 @@ function calculerSeul(plan) {
   trouves.sort((x, y) => x.instant - y.instant);
   const evenements = [];
   for (const e of trouves) if (!evenements.some((x) => x.cle === e.cle && Math.abs(x.instant - e.instant) < MIN)) evenements.push(e);
-  return { plan, evenements, reserves, lignesDate: lignesDate(plan, echantillons), fiabilite: releveUtilisable(plan) ? 'releve_gps' : 'route_prevue' };
+  return { plan, evenements, reserves, lignesDate: lignesDate(plan, echantillons), fiabilite: !releveUtilisable(plan) ? 'route_prevue' : plan.sourceReleve === 'direct' ? 'releve_direct' : 'releve_gps' };
 }
 
 /** Le passage du méridien de 180° en vol, et la date locale (fuseau nautique) de part et d'autre. */
@@ -326,4 +326,52 @@ export function jalons(calcul, enIsrael, minutes) {
     }
   }
   return sortie;
+}
+
+// --- Le suivi en direct (SuiviVol.kt, 28/10) : option désactivée par défaut ---------------
+// Ce qui part de l'appareil : l'indicatif du vol et la position estimée, arrondie au dixième de
+// degré, vers le relais (tools/relais_vol) qui garde la clé d'OpenSky. Rien d'autre.
+
+export const FRAICHEUR_MAX = 10 * MIN;
+
+/** « ely 001 » → « ELY001 » ; null si ce n'est pas un indicatif OACI plausible. */
+export function normaliserIndicatif(texte) {
+  const x = texte.toUpperCase().replaceAll(' ', '');
+  return /^[A-Z]{3}[0-9]{1,4}[A-Z]{0,2}$/.test(x) ? x : null;
+}
+
+/** ELY001 et ELY1 sont le même vol. */
+export function memeIndicatif(a, b) {
+  const parties = (x) => /^([A-Z]{3})0*([0-9]+)([A-Z]*)$/.exec(x.toUpperCase().trim())?.slice(1).join('/');
+  const pa = parties(a);
+  return pa !== undefined && pa === parties(b);
+}
+
+/** La réponse du relais (SuiviVol.lire) : { statut: 'trouve' | 'introuvable' | 'erreur', point, altitude, raison }. */
+export function lireReponse(o, maintenant) {
+  if (!o || typeof o !== 'object') return { statut: 'erreur', raison: 'réponse illisible' };
+  if (o.erreur) return { statut: 'erreur', raison: String(o.erreur) };
+  if (!o.trouve) return { statut: 'introuvable' };
+  const instant = new Date(o.instant);
+  const { latitude, longitude } = o;
+  if (Number.isNaN(+instant) || typeof latitude !== 'number' || typeof longitude !== 'number') return { statut: 'erreur', raison: 'réponse illisible' };
+  if (Math.abs(latitude) > 90 || Math.abs(longitude) > 180) return { statut: 'erreur', raison: 'position invalide' };
+  if (+maintenant - +instant > FRAICHEUR_MAX) return { statut: 'introuvable' };
+  const altitude = [o.altitude_geo, o.altitude_baro].find((v) => typeof v === 'number') ?? null;
+  return { statut: 'trouve', point: { instant, latitude, longitude }, altitude };
+}
+
+export const adresseRelais = (relais, indicatif, estime) =>
+  `${relais.replace(/\/+$/, '')}/position?indicatif=${encodeURIComponent(indicatif)}&lat=${estime.latitude.toFixed(1)}&lon=${estime.longitude.toFixed(1)}`;
+
+/** Le relais OpenSky, en HTTPS seulement ; [chercher] est fetch, remplaçable dans les tests. */
+export async function positionEnDirect(relais, indicatif, estime, chercher = fetch, maintenant = new Date()) {
+  if (!relais || !relais.startsWith('https://')) return { statut: 'erreur', raison: 'relais non configuré' };
+  try {
+    const r = await chercher(adresseRelais(relais, indicatif, estime), { credentials: 'omit', redirect: 'error' });
+    if (r.status >= 500) return { statut: 'erreur', raison: `relais ${r.status}` };
+    return lireReponse(await r.json(), maintenant);
+  } catch {
+    return { statut: 'erreur', raison: 'pas de connexion' };
+  }
 }

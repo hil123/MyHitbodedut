@@ -236,8 +236,9 @@ contre PyEphem, et les règles de prière restent à valider par un Rav.
 ## En vol (phase 1, hors ligne)
 
 `Vol.kt` (Android) et `vol.js` (web), ligne pour ligne, ajoutés le 28/10.
-Rien ne quitte le téléphone. La localisation précise n'est demandée qu'au
-toucher de « position réelle (GPS) ».
+Rien ne quitte le téléphone, sauf si l'on active le suivi en direct (plus
+bas). La localisation précise n'est demandée qu'au toucher de « position
+réelle (GPS) ».
 
 **Le calcul.** On saisit les deux aéroports et les heures du billet, à
 l'heure locale de chaque aéroport. L'avion est placé sur l'arc de grand
@@ -301,6 +302,21 @@ départ au relevé, puis du relevé à l'arrivée, chaque tronçon à vitesse
 constante. L'écart affiché devient alors celui d'une arrivée retardée de
 30 min. Le relevé reste sur l'appareil ; un autre vol l'efface.
 
+**Le suivi en direct par Internet** (édition complète et web, désactivé par
+défaut ; `SuiviVol.kt`, `positionEnDirect` dans `vol.js`, `tools/relais_vol`).
+L'utilisateur l'active et donne l'indicatif radio OACI du vol (« ELY1 »).
+L'application envoie au relais cet indicatif et la position estimée, arrondie
+au dixième de degré ; le relais (Cloudflare Workers) garde la clé d'OpenSky
+Network, cherche dans un carré de ±5° et rend la position de l'avion de même
+indicatif. Une position de plus de 10 minutes est écartée. La position reçue
+devient un relevé, comme celui du GPS, et la fiabilité le dit. OpenSky ne voit
+les avions que près de ses antennes au sol : au-dessus des océans, souvent
+rien. Usage **non commercial** d'OpenSky : une publication sur le Play Store ou
+l'App Store est à revoir avec ses conditions, ou avec un autre fournisseur
+(`SuiviVol.FournisseurPosition` est interchangeable). Sans adresse de relais à
+la construction (`-PrelaisVol=`, `RELAIS_VOL=`), l'option est inactive et la
+CSP du web n'autorise que le site.
+
 **Chabbat, fêtes et Omer** (`VolCalendrier.kt`, `jalons` dans `vol.js`) : la
 règle de `JourAffiche.horaires` (isAssurBemelacha de KosherJava), appliquée aux
 chki'a et aux tsét de la route. Chki'a la veille d'un jour chômé : entrée, et
@@ -359,3 +375,5 @@ elles-mêmes (Xinjiang, Abkhazie, Govi-Altaï) ne sont pas proposés.
 - **Mettre à jour les aéroports** : relancer `tools/aeroports_construction.py`
   sur un `airports.csv` récent ; tout nouvel écart de fuseau l'arrête jusqu'à
   ce qu'il soit relu et ajouté à l'une de ses listes.
+- **Mettre le relais en ligne ou changer de fournisseur** : `tools/relais_vol/README.md` ;
+  `web/test/relais.test.mjs` le teste contre un faux OpenSky.

@@ -247,7 +247,7 @@ class VolActivity : AppCompatActivity() {
         if (i1 == null || i2 == null) return message(getString(R.string.vol_invalide_fuseau_inconnu))
         // Le même vol, calculé à nouveau, garde son relevé GPS ; un autre vol l'efface.
         val garde = Store.vol(this, aeroports)?.takeIf { it.depart == d && it.arrivee == a && it.decollage == i1 && it.atterrissage == i2 }
-        val plan = Vol.Plan(numero, d, a, i1, i2, garde?.releve)
+        val plan = Vol.Plan(numero, d, a, i1, i2, garde?.releve, garde?.sourceReleve ?: Vol.SourceReleve.GPS)
         Vol.verifier(plan)?.let { return message(getString(invalide(it))) }
         Store.setVol(this, plan)
         lancer(plan)
@@ -377,7 +377,7 @@ class VolActivity : AppCompatActivity() {
         }
     }
 
-    private fun ecart(d: Duration) = getString(if (calcul?.fiabilite == Vol.Fiabilite.RELEVE_GPS) R.string.vol_ecart_gps else R.string.vol_ecart,
+    private fun ecart(d: Duration) = getString(if (calcul?.fiabilite != null && calcul?.fiabilite != Vol.Fiabilite.ROUTE_PREVUE) R.string.vol_ecart_gps else R.string.vol_ecart,
         (if (d.isNegative) "−" else "+") + abs(d.toMinutes()))
 
     private fun demanderGps() {
@@ -438,10 +438,74 @@ class VolActivity : AppCompatActivity() {
         }
     }
 
-    /** Garde le relevé avec le vol et recalcule ; null : retour à la route prévue. */
-    private fun appliquerReleve(releve: Vol.Point?) {
+    /**
+     * Le suivi en direct (SuiviVol), édition complète seulement : un interrupteur désactivé par
+     * défaut, qui dit ce qui part ; l'indicatif ; le bouton. Sans relais configuré à la
+     * construction, l'option est visible mais inactive, et rien ne part.
+     */
+    private fun ajouterSuiviDirect(carte: LinearLayout) {
+        val actif = Store.suiviDirect(this)
+        carte.addView(VueJour.texte(this, getString(R.string.vol_direct_titre), 15f, R.color.ink, haut = 14))
+        carte.addView(VueJour.texte(this, getString(R.string.vol_direct_explication), 12f, R.color.muted, haut = 2))
+        carte.addView(com.google.android.material.materialswitch.MaterialSwitch(this).apply {
+            text = getString(R.string.vol_direct_activer)
+            isChecked = actif
+            setOnCheckedChangeListener { _, v -> Store.setSuiviDirect(this@VolActivity, v); afficherResultats() }
+        })
+        if (!actif) return
+        if (!BuildConfig.RELAIS_VOL.startsWith("https://")) {
+            carte.addView(VueJour.texte(this, getString(R.string.vol_direct_inactif), 13f, R.color.muted, haut = 4))
+            return
+        }
+        val champ = EditText(this).apply {
+            hint = getString(R.string.vol_indicatif)
+            setText(Store.volIndicatif(this@VolActivity))
+            inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS
+            isSingleLine = true
+            filters = arrayOf(android.text.InputFilter.LengthFilter(9))
+        }
+        carte.addView(champ)
+        carte.addView(MaterialButton(this, null, com.google.android.material.R.attr.materialButtonOutlinedStyle).apply {
+            text = getString(if (directEnCours) R.string.vol_direct_attente else R.string.vol_direct_bouton)
+            isEnabled = !directEnCours
+            setOnClickListener {
+                val indicatif = SuiviVol.normaliser(champ.text.toString()) ?: return@setOnClickListener message(getString(R.string.vol_indicatif_invalide))
+                Store.setVolIndicatif(this@VolActivity, indicatif)
+                demanderDirect(indicatif)
+            }
+        })
+        carte.addView(VueJour.texte(this, getString(R.string.vol_source_opensky), 11f, R.color.muted, haut = 2))
+    }
+
+    private var directEnCours = false
+
+    /** La position en direct, hors du fil de l'interface : seulement pendant le vol prévu. */
+    private fun demanderDirect(indicatif: String) {
         val plan = Store.vol(this, aeroports) ?: return
-        val nouveau = plan.copy(releve = releve)
+        val maintenant = Instant.now()
+        if (maintenant.isBefore(plan.decollage) || maintenant.isAfter(plan.atterrissage)) return message(getString(R.string.vol_gps_hors_vol))
+        val estime = Vol.position(plan, maintenant)
+        directEnCours = true
+        afficherResultats()
+        val fournisseur: SuiviVol.FournisseurPosition = SuiviVol.Relais(BuildConfig.RELAIS_VOL)
+        Thread {
+            val r = fournisseur.position(indicatif, estime)
+            runOnUiThread {
+                if (isFinishing || isDestroyed) return@runOnUiThread
+                directEnCours = false
+                when (r) {
+                    is SuiviVol.Resultat.Trouve -> appliquerReleve(r.point, Vol.SourceReleve.DIRECT)
+                    SuiviVol.Resultat.Introuvable -> { afficherResultats(); message(getString(R.string.vol_direct_introuvable)) }
+                    is SuiviVol.Resultat.Erreur -> { afficherResultats(); message(getString(R.string.vol_direct_erreur, r.raison)) }
+                }
+            }
+        }.start()
+    }
+
+    /** Garde le relevé avec le vol et recalcule ; null : retour à la route prévue. */
+    private fun appliquerReleve(releve: Vol.Point?, source: Vol.SourceReleve = Vol.SourceReleve.GPS) {
+        val plan = Store.vol(this, aeroports) ?: return
+        val nouveau = plan.copy(releve = releve, sourceReleve = source)
         if (releve != null && !Vol.releveUtilisable(nouveau)) {
             afficherResultats()
             return message(getString(R.string.vol_gps_hors_vol))
@@ -453,9 +517,11 @@ class VolActivity : AppCompatActivity() {
     private fun carteFiabilite(c: Vol.Calcul) = VueJour.carte(this).apply {
         addView(VueJour.texte(this@VolActivity, getString(R.string.vol_fiabilite_titre), 13f, R.color.muted))
         val r = c.plan.releve
-        addView(VueJour.texte(this@VolActivity, if (c.fiabilite == Vol.Fiabilite.RELEVE_GPS && r != null)
-            getString(R.string.vol_fiabilite_gps, deuxHeures(c.plan, r.instant), position(Vol.Evenement("", r.instant, r.latitude, r.longitude)))
-        else getString(R.string.vol_fiabilite), 14f, R.color.ink, haut = 4))
+        addView(VueJour.texte(this@VolActivity, when {
+            r == null || c.fiabilite == Vol.Fiabilite.ROUTE_PREVUE -> getString(R.string.vol_fiabilite)
+            else -> getString(if (c.fiabilite == Vol.Fiabilite.RELEVE_DIRECT) R.string.vol_fiabilite_direct else R.string.vol_fiabilite_gps,
+                deuxHeures(c.plan, r.instant), position(Vol.Evenement("", r.instant, r.latitude, r.longitude)))
+        }, 14f, R.color.ink, haut = 4))
         addView(MaterialButton(this@VolActivity, null, com.google.android.material.R.attr.materialButtonOutlinedStyle).apply {
             text = getString(if (gpsEnCours) R.string.vol_gps_attente else R.string.vol_gps)
             isEnabled = !gpsEnCours
@@ -466,6 +532,7 @@ class VolActivity : AppCompatActivity() {
             text = getString(R.string.vol_gps_oublier)
             setOnClickListener { appliquerReleve(null) }
         })
+        if (BuildConfig.SUIVI_VOL) ajouterSuiviDirect(this)
         Vol.Reserve.entries.filter { it in c.reserves }.forEach { r ->
             val texte = when (r) {
                 Vol.Reserve.HAUTE_LATITUDE -> R.string.vol_reserve_haute_latitude

@@ -217,6 +217,11 @@ export function creeStore(stockage, { maintenant = () => new Date(), fuseau } = 
       return v && v.depart && v.arrivee && v.decollage && v.atterrissage ? v : null;
     },
     setVol: (v) => set('vol_zmanim', v),
+    /** Le suivi de vol en direct (SuiviVol) : désactivé tant que l'utilisateur ne l'active pas. */
+    suiviDirect: () => get('vol_suivi_direct', false) === true,
+    setSuiviDirect: (v) => set('vol_suivi_direct', !!v),
+    volIndicatif: () => get('vol_indicatif', ''),
+    setVolIndicatif: (v) => set('vol_indicatif', v),
     /** Les minutes d'allumage avant la chki'a ; 18 par défaut. */
     allumage: () => ([18, 20, 22, 30, 40].includes(get('allumage_minutes', 18)) ? get('allumage_minutes', 18) : 18),
     setAllumage: (m) => set('allumage_minutes', m),
