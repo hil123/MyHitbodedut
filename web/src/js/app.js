@@ -2511,7 +2511,7 @@ function ecranVol() {
       h('button', { class: 'principal', onclick: calculer }, tr.t('vol_calculer')),
       h('button', { class: 'secondaire', onclick: () => { store.setVol(null); saisieVol = null; calculVol = null; cleCalculVol = null; rendre(); } }, tr.t('vol_effacer'))));
   const puce = h('span', { class: 'puce-bandeau' }, garde ? libelleVol(garde) : tr.t('vol_carte_sous'));
-  return h('div', { class: 'ecran avec-bandeau' }, bandeau(tr.t('vol_title'), { puce, dessin: 'char_torah' }),
+  return h('div', { class: 'ecran avec-bandeau' }, bandeau(tr.t('vol_title'), { puce, dessin: 'scene_airport' }),
     h('div', { class: 'defile' }, h('div', { class: 'contenu' },
       formulaire,
       ...(garde && !pret ? [h('div', { class: 'carte carte-texte' }, h('p', { class: 'message' }, tr.t('vol_calcul_en_cours')))] : []),

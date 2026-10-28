@@ -14,7 +14,9 @@
 //   400 { erreur }        paramètres invalides
 //   502 { erreur }        OpenSky injoignable ou refus (crédits épuisés : 429)
 //
-// Secrets (wrangler secret put) : OPENSKY_CLIENT_ID, OPENSKY_CLIENT_SECRET.
+// Secrets (wrangler secret put), facultatifs : OPENSKY_CLIENT_ID, OPENSKY_CLIENT_SECRET.
+// Sans eux, l'accès anonyme et gratuit d'OpenSky (400 crédits par jour pour
+// l'adresse IP du Worker, partagés par tous les utilisateurs du web).
 // Variable : ORIGINE_WEB, l'origine de la version web autorisée (CORS).
 
 export const JETON = 'https://auth.opensky-network.org/auth/realms/opensky-network/protocol/openid-connect/token';
@@ -69,9 +71,9 @@ export async function traiter(requete, env, chercher = fetch) {
     return json({ erreur: 'paramètres invalides' }, 400, origine);
   }
   try {
-    const t = await jetonOpenSky(env, chercher);
+    const t = env.OPENSKY_CLIENT_ID && env.OPENSKY_CLIENT_SECRET ? await jetonOpenSky(env, chercher) : null;
     for (const [lamin, lomin, lamax, lomax] of carres(lat, lon)) {
-      const r = await chercher(`${ETATS}?lamin=${lamin}&lomin=${lomin}&lamax=${lamax}&lomax=${lomax}`, { headers: { authorization: `Bearer ${t}` } });
+      const r = await chercher(`${ETATS}?lamin=${lamin}&lomin=${lomin}&lamax=${lamax}&lomax=${lomax}`, t ? { headers: { authorization: `Bearer ${t}` } } : {});
       if (r.status === 401) jeton = null;
       if (!r.ok) return json({ erreur: `opensky ${r.status}` }, 502, origine);
       const d = await r.json();

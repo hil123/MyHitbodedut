@@ -167,7 +167,7 @@
     <string name="onboarding_practice">Simply speaking</string>
     <string name="onboarding_practice_body">Hitbodedut means withdrawing alone for a while each day and speaking to Hashem in your own language, as you would to someone. No formula to recite, no level to reach.</string>
     <string name="onboarding_private">Nothing leaves this phone</string>
-    <string name="onboarding_private_body">The app only connects to the Internet if you turn on live flight tracking yourself; it then sends only the flight’s callsign and an approximate position. What you write stays on this phone, and only you can take it out, through the export.</string>
+    <string name="onboarding_private_body">The app only connects to the Internet if you turn on live flight tracking yourself; it then asks OpenSky Network for the aircraft in an approximate area, without sending the flight’s callsign. What you write stays on this phone, and only you can take it out, through the export.</string>
     <string name="blocker_session_open_subtitle">Open hitbodedut, %1$s so far. The phone can wait.</string>
     <string name="session_done_title">You spoke with Hashem today</string>
     <string name="session_done_text">%1$s of hitbodedut. Tap to leave a note.</string>
@@ -1200,5 +1200,21 @@
     <string name="vol_direct_inactif">The tracking relay is not in service yet in this version.</string>
     <string name="vol_fiabilite_direct">Route adjusted to the position received from OpenSky Network at %1$s (%2$s), then great circle to arrival, at constant speed. Zmanim of the point below the aircraft, at sea level, computed on the device.</string>
     <string name="vol_source_opensky">Live position: The OpenSky Network, opensky-network.org</string>
+    <string name="vol_rappels_titre">Reminders during the flight</string>
+    <string name="vol_rappels_activer">Remind me during the flight</string>
+    <string name="vol_rappels_aucun">No more reminders during this flight.</string>
+    <string name="vol_rappels_sans_permission">The app’s notifications are off: the reminders will not show.</string>
+    <string name="vol_rappels_note">At the ticket times: a late takeoff does not move the reminders. Android may delay them by a few minutes.</string>
+    <string name="vol_rappel_derekh_titre">Tefilat HaDerech</string>
+    <string name="vol_rappel_derekh_texte">Five minutes after the scheduled takeoff: time to say Tefilat HaDerech.</string>
+    <string name="vol_rappel_derekh_priere">Prayer now: %1$s, until %2$s.</string>
+    <string name="vol_rappel_priere_titre">%1$s on the plane</string>
+    <string name="vol_rappel_priere_texte">The time of %1$s begins below the aircraft. Until %2$s.</string>
+    <string name="vol_rappel_priere_sans_limite">The time of %1$s begins below the aircraft.</string>
+    <string name="vol_rappel_fin_titre">30 min left for %1$s</string>
+    <string name="vol_rappel_fin_texte">Deadline: %1$s.</string>
+    <string name="vol_rappel_omer_titre">Sefirat HaOmer</string>
+    <string name="vol_rappel_omer_texte">The stars come out below the aircraft: tonight is day %1$s of the Omer.</string>
+    <string name="vol_direct_explication_opensky">Off by default. When on, it asks OpenSky Network, free and without an account, for the aircraft seen in a 10° square around the estimated position; the callsign stays on the phone, which looks for the flight there. Over the oceans, the aircraft is often not seen.</string>
     <string name="vol_source_aeroports">Airports: OurAirports (public domain); time zones: timezone-boundary-builder (ODbL, © OpenStreetMap contributors)</string>
 </resources>

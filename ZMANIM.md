@@ -305,17 +305,53 @@ constante. L'écart affiché devient alors celui d'une arrivée retardée de
 **Le suivi en direct par Internet** (édition complète et web, désactivé par
 défaut ; `SuiviVol.kt`, `positionEnDirect` dans `vol.js`, `tools/relais_vol`).
 L'utilisateur l'active et donne l'indicatif radio OACI du vol (« ELY1 »).
-L'application envoie au relais cet indicatif et la position estimée, arrondie
-au dixième de degré ; le relais (Cloudflare Workers) garde la clé d'OpenSky
-Network, cherche dans un carré de ±5° et rend la position de l'avion de même
-indicatif. Une position de plus de 10 minutes est écartée. La position reçue
+Sur Android, l'accès anonyme et gratuit d'OpenSky Network (sans compte ni clé,
+400 crédits par jour et par adresse IP, positions à 10 s près ; documentation
+de l'API REST, lue le 28/10) : le téléphone demande les avions d'un carré de
+±5° autour de la position estimée (2 crédits) et y cherche l'indicatif
+lui-même, qui ne part pas. Essai réel le 28/10 : un avion en vol retrouvé
+depuis une position estimée décalée de 1,3°. Le web ne peut pas appeler
+OpenSky (le navigateur le refuse : OpenSky n'autorise que son propre site) ;
+il passe par le relais (Cloudflare Workers), qui reçoit l'indicatif et la
+position estimée arrondie au dixième de degré, et interroge OpenSky en
+anonyme, ou avec un client API s'il en a un. Une position de plus de 10 minutes est écartée. La position reçue
 devient un relevé, comme celui du GPS, et la fiabilité le dit. OpenSky ne voit
 les avions que près de ses antennes au sol : au-dessus des océans, souvent
 rien. Usage **non commercial** d'OpenSky : une publication sur le Play Store ou
 l'App Store est à revoir avec ses conditions, ou avec un autre fournisseur
 (`SuiviVol.FournisseurPosition` est interchangeable). Sans adresse de relais à
-la construction (`-PrelaisVol=`, `RELAIS_VOL=`), l'option est inactive et la
-CSP du web n'autorise que le site.
+la construction (`RELAIS_VOL=`), l'option est inactive sur le web et sa CSP
+n'autorise que le site.
+
+**Les rappels pendant le vol** (Android, `VolRappels.kt`, `VolAlerte.kt` ;
+actifs par défaut, un interrupteur sur l'écran du vol). Des notifications,
+même en mode avion, aux heures calculées sur la route :
+
+- **Tefilat haDerekh**, cinq minutes après le décollage prévu. Le délai de cinq
+  minutes est la demande de l'utilisateur, pas une règle. Ce que disent les
+  sources consultées (recoupées, non lues dans les responsa) : si l'aéroport
+  est hors de la ville, on la dit en route vers l'aéroport et elle couvre le
+  vol ; sinon on la dit dans l'avion, au mieux après le décollage, plusieurs
+  Rabbanim la disant déjà sur la piste ; oubliée, on peut la dire pendant le
+  vol jusqu'à la descente, avis rapporté dans les sources consultées sans
+  être unanime (shulchanaruchharav.com, « When traveling on an airplane, when
+  is Tefilas Haderech to be recited? » ; OU Torah, « Airplane Travel »).
+  L'application ne tranche pas entre ces cas.
+- **Le début de chaque prière dans l'avion**, aux bornes de l'application
+  (HorairePriere, ZmanimWidget) : Min'ha à min'ha guedola, Arvit à la sortie
+  des étoiles. Cha'harit n'avait pas de début dans l'application : le rappel
+  est au lever du soleil (netz), temps de la prière au départ (Choul'han
+  Aroukh O.H. 89, 1). Au décollage, la notification de Tefilat haDerekh dit
+  la prière ouverte, s'il y en a une.
+- **30 minutes avant la limite** de Cha'harit (fin du temps de la tefila,
+  GRA) et de Min'ha (chki'a), si elle tombe dans l'avion ; pas pour Arvit.
+- **Le compte du Omer**, à la sortie des étoiles sous l'avion (les jalons de
+  `VolCalendrier`).
+
+Les rappels suivent les heures du billet : un décollage en retard ne les
+décale pas, et Android peut les retarder de quelques minutes (alarme
+inexacte, comme les autres rappels de l'application). Le web n'a pas ces
+notifications.
 
 **Chabbat, fêtes et Omer** (`VolCalendrier.kt`, `jalons` dans `vol.js`) : la
 règle de `JourAffiche.horaires` (isAssurBemelacha de KosherJava), appliquée aux

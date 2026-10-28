@@ -257,6 +257,11 @@
             android:name=".LevanaAlerteReceiver"
             android:exported="false" />
 
+        <!-- Les rappels en vol : Tefilat haDerekh, prières, Omer (28/10). -->
+        <receiver
+            android:name=".VolAlerteReceiver"
+            android:exported="false" />
+
         <!-- Partager un jour en image (14/10) : seulement le dossier partage/ du cache. -->
         <provider
             android:name="androidx.core.content.FileProvider"

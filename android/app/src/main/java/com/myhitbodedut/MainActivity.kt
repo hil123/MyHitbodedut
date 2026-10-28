@@ -911,6 +911,7 @@ class MainActivity : AppCompatActivity() {
         Reminder.reschedule(this)
         ChabbatAlerte.programmer(this)
         LevanaAlerte.programmer(this)
+        VolAlerte.programmer(this)
     }
 
     // --- Sélecteurs ---------------------------------------------------------

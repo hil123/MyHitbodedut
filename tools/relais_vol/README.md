@@ -2,7 +2,14 @@
 
 `worker.js` est un Cloudflare Worker. L'application ne contient aucune clé :
 elle demande au relais la position d'un vol, et le relais interroge OpenSky
-Network avec la sienne.
+Network.
+
+**Android n'en a pas besoin** (28/10) : l'édition complète interroge OpenSky
+directement, en accès anonyme et gratuit (sans compte ni clé, 400 crédits par
+jour et par adresse IP, positions à 10 s près), et cherche l'indicatif sur le
+téléphone : seule la zone part. **Le web en a besoin** : OpenSky n'autorise
+pas les appels d'un autre site depuis un navigateur (vérifié le 28/10 : en-tête
+`access-control-allow-origin: https://opensky-network.org` seulement).
 
 ## Ce qui passe par le relais
 
@@ -18,21 +25,24 @@ Network avec la sienne.
 
 ## Mettre en ligne (à faire par le propriétaire du compte)
 
-1. Créer un compte OpenSky Network, puis un client API (identifiant et secret)
-   dans la page du compte. Usage **non commercial** seulement : une
-   publication sur le Play Store ou l'App Store est à revoir avec les
-   conditions d'OpenSky, ou avec un autre fournisseur.
+1. Facultatif : un compte OpenSky Network et un client API (identifiant et
+   secret), pour 4 000 crédits par jour au lieu de 400. Sans eux, le relais
+   utilise l'accès anonyme, dont les 400 crédits de l'adresse du Worker sont
+   partagés par tous les visiteurs du web (2 crédits par demande). Usage
+   **non commercial** seulement : une publication sur le Play Store ou
+   l'App Store est à revoir avec les conditions d'OpenSky.
 2. Créer un compte Cloudflare (offre gratuite : 100 000 requêtes par jour).
-3. Ici : `npx wrangler login`, puis
+3. Ici : `npx wrangler login`, puis, si l'on a un client API,
    `npx wrangler secret put OPENSKY_CLIENT_ID` et
-   `npx wrangler secret put OPENSKY_CLIENT_SECRET`, puis `npx wrangler deploy`.
+   `npx wrangler secret put OPENSKY_CLIENT_SECRET` ; enfin `npx wrangler deploy`.
 4. Mettre l'adresse obtenue (`https://myhitbodedut-vol.<compte>.workers.dev`)
    dans la construction :
-   - Android : `./gradlew -PrelaisVol=https://… assembleFullRelease` ;
+   - Android, seulement pour passer par le relais plutôt qu'en direct :
+     `./gradlew -PrelaisVol=https://… assembleFullRelease` ;
    - web : `RELAIS_VOL=https://… node build.mjs`, et `ORIGINE_WEB` dans
      `wrangler.toml` à l'origine du site.
 
-Sans adresse, l'option reste visible mais inactive, et l'application ne fait
+Sans adresse, l'option reste visible mais inactive sur le web, qui ne fait
 aucune requête.
 
 ## Limites

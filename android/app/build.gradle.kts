@@ -143,7 +143,7 @@ android {
             dimension = "edition"
             buildConfigField("boolean", "HAS_GATE", "true")
             // Le suivi de vol en direct (28/10) : l'édition complète seule déclare INTERNET
-            // (src/full/AndroidManifest.xml). Sans -PrelaisVol=https://…, l'option reste inactive.
+            // (src/full/AndroidManifest.xml). Sans -PrelaisVol=https://…, OpenSky en accès anonyme et gratuit (SuiviVol).
             buildConfigField("boolean", "SUIVI_VOL", "true")
             val relais = (project.findProperty("relaisVol") as String?).orEmpty()
             require(relais.isEmpty() || relais.startsWith("https://")) { "relaisVol doit être en https://" }

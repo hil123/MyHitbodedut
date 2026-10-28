@@ -168,7 +168,7 @@
     <string name="onboarding_practice">פשוט לדבר</string>
     <string name="onboarding_practice_body">התבודדות היא להתייחד לבד זמן־מה בכל יום ולדבר אל השם בשפה שלכם, כמו שמדברים אל מישהו. בלי נוסח לדקלם, בלי דרגה להגיע אליה.</string>
     <string name="onboarding_private">כלום לא יוצא מכאן</string>
-    <string name="onboarding_private_body">האפליקציה מתחברת לאינטרנט רק אם תפעילו בעצמכם מעקב טיסה בזמן אמת; היא שולחת אז רק את אות הקריאה של הטיסה ומיקום משוער. מה שתכתבו נשאר בטלפון הזה, ורק אתם יכולים להוציא אותו, דרך הייצוא.</string>
+    <string name="onboarding_private_body">האפליקציה מתחברת לאינטרנט רק אם תפעילו בעצמכם מעקב טיסה בזמן אמת; היא מבקשת אז מ־OpenSky Network את המטוסים באזור משוער, בלי לשלוח את אות הקריאה של הטיסה. מה שתכתבו נשאר בטלפון הזה, ורק אתם יכולים להוציא אותו, דרך הייצוא.</string>
     <string name="blocker_session_open_subtitle">התבודדות פתוחה, כבר %1$s. הטלפון יכול לחכות.</string>
     <string name="session_done_title">דיברתם היום עם השם</string>
     <string name="session_done_text">%1$s של התבודדות. הקישו כדי להוסיף הערה.</string>
@@ -1233,5 +1233,21 @@
     <string name="vol_direct_inactif">שרת הממסר של המעקב עדיין אינו פעיל בגרסה זו.</string>
     <string name="vol_fiabilite_direct">המסלול תוקן לפי המיקום שהתקבל מ־OpenSky Network ב־%1$s (%2$s), ומשם מעגל גדול עד הנחיתה, במהירות קבועה. זמני הנקודה שמתחת למטוס, בגובה פני הים, מחושבים במכשיר.</string>
     <string name="vol_source_opensky">מיקום בזמן אמת: The OpenSky Network, ‏opensky-network.org</string>
+    <string name="vol_rappels_titre">תזכורות בטיסה</string>
+    <string name="vol_rappels_activer">להזכיר לי במהלך הטיסה</string>
+    <string name="vol_rappels_aucun">אין עוד תזכורות בטיסה הזאת.</string>
+    <string name="vol_rappels_sans_permission">ההתראות של היישום כבויות: התזכורות לא יוצגו.</string>
+    <string name="vol_rappels_note">לפי שעות הכרטיס: המראה מאוחרת אינה מזיזה את התזכורות. אנדרואיד עשוי לאחר אותן בכמה דקות.</string>
+    <string name="vol_rappel_derekh_titre">תפילת הדרך</string>
+    <string name="vol_rappel_derekh_texte">חמש דקות אחרי ההמראה המתוכננת: הזמן לומר תפילת הדרך.</string>
+    <string name="vol_rappel_derekh_priere">התפילה של עכשיו: %1$s, עד %2$s.</string>
+    <string name="vol_rappel_priere_titre">%1$s במטוס</string>
+    <string name="vol_rappel_priere_texte">זמן %1$s מתחיל מתחת למטוס. עד %2$s.</string>
+    <string name="vol_rappel_priere_sans_limite">זמן %1$s מתחיל מתחת למטוס.</string>
+    <string name="vol_rappel_fin_titre">עוד 30 דקות ל%1$s</string>
+    <string name="vol_rappel_fin_texte">סוף הזמן: %1$s.</string>
+    <string name="vol_rappel_omer_titre">ספירת העומר</string>
+    <string name="vol_rappel_omer_texte">צאת הכוכבים מתחת למטוס: הלילה סופרים יום %1$s לעומר.</string>
+    <string name="vol_direct_explication_opensky">כבוי כברירת מחדל. כשהוא פעיל, הוא מבקש מ־OpenSky Network, בחינם וללא חשבון, את המטוסים שנראים בריבוע של 10° סביב המיקום המשוער; אות הקריאה נשאר בטלפון, שמחפש בו את הטיסה. מעל אוקיינוסים המטוס לעיתים קרובות אינו נראה.</string>
     <string name="vol_source_aeroports">שדות תעופה: OurAirports (נחלת הכלל); אזורי זמן: timezone-boundary-builder ‏(ODbL, © תורמי OpenStreetMap)</string>
 </resources>

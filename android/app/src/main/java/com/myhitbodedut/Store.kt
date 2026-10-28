@@ -113,6 +113,9 @@ object Store {
     private const val KEY_VOL_RELEVE_T = "vol_releve_instant"
     private const val KEY_VOL_RELEVE_SOURCE = "vol_releve_source"
     private const val KEY_VOL_INDICATIF = "vol_indicatif"
+    private const val KEY_VOL_RAPPELS = "vol_rappels"
+    private const val KEY_VOL_RAPPELS_ACTIFS = "vol_rappels_actifs"
+    private const val KEY_VOL_RAPPEL_VU = "vol_rappel_vu"
     private const val KEY_SUIVI_DIRECT = "vol_suivi_direct"
     private const val KEY_ALLUMAGE = "allumage_minutes"
     private const val KEY_PAUSED_DATES = "paused_dates"
@@ -427,7 +430,7 @@ object Store {
         val e = prefs(context).edit()
         val releve = listOf(KEY_VOL_RELEVE_LAT, KEY_VOL_RELEVE_LON, KEY_VOL_RELEVE_T, KEY_VOL_RELEVE_SOURCE)
         if (plan == null) {
-            (listOf(KEY_VOL_NUMERO, KEY_VOL_DEPART, KEY_VOL_ARRIVEE, KEY_VOL_DECOLLAGE, KEY_VOL_ATTERRISSAGE) + releve).forEach { e.remove(it) }
+            (listOf(KEY_VOL_NUMERO, KEY_VOL_DEPART, KEY_VOL_ARRIVEE, KEY_VOL_DECOLLAGE, KEY_VOL_ATTERRISSAGE, KEY_VOL_RAPPELS) + releve).forEach { e.remove(it) }
         } else {
             e.putString(KEY_VOL_NUMERO, plan.numero)
                 .putString(KEY_VOL_DEPART, plan.depart.iata)
@@ -441,6 +444,37 @@ object Store {
                 .putLong(KEY_VOL_RELEVE_T, r.instant.toEpochMilli()).putString(KEY_VOL_RELEVE_SOURCE, plan.sourceReleve.name)
         }
         e.apply()
+    }
+
+    /** Les rappels en vol (VolRappels, VolAlerte) : actifs par défaut, un interrupteur sur l'écran du vol. */
+    fun volRappelsActifs(context: Context): Boolean = prefs(context).getBoolean(KEY_VOL_RAPPELS_ACTIFS, true)
+
+    fun setVolRappelsActifs(context: Context, actifs: Boolean) {
+        prefs(context).edit().putBoolean(KEY_VOL_RAPPELS_ACTIFS, actifs).apply()
+    }
+
+    /** Les rappels du vol enregistré, une ligne par rappel : « TYPE|instant|prière|limite|omer » (millisecondes). */
+    fun volRappels(context: Context): List<VolRappels.Rappel> =
+        prefs(context).getString(KEY_VOL_RAPPELS, "").orEmpty().lines().mapNotNull { ligne ->
+            val c = ligne.split("|")
+            if (c.size != 5) return@mapNotNull null
+            val type = runCatching { VolRappels.Type.valueOf(c[0]) }.getOrNull() ?: return@mapNotNull null
+            val t = c[1].toLongOrNull() ?: return@mapNotNull null
+            VolRappels.Rappel(type, java.time.Instant.ofEpochMilli(t), c[2].ifEmpty { null },
+                c[3].toLongOrNull()?.let(java.time.Instant::ofEpochMilli), c[4].toIntOrNull() ?: 0)
+        }
+
+    fun setVolRappels(context: Context, rappels: List<VolRappels.Rappel>) {
+        prefs(context).edit().putString(KEY_VOL_RAPPELS, rappels.joinToString("\n") { r ->
+            "${r.type.name}|${r.instant.toEpochMilli()}|${r.priere.orEmpty()}|${r.limite?.toEpochMilli() ?: ""}|${r.omer}"
+        }).apply()
+    }
+
+    /** L'instant du dernier rappel montré : un rappel n'est pas montré deux fois. */
+    fun volRappelVu(context: Context): Long = prefs(context).getLong(KEY_VOL_RAPPEL_VU, 0L)
+
+    fun setVolRappelVu(context: Context, instant: Long) {
+        prefs(context).edit().putLong(KEY_VOL_RAPPEL_VU, instant).apply()
     }
 
     /** Le suivi de vol en direct (SuiviVol) : désactivé tant que l'utilisateur ne l'active pas. */

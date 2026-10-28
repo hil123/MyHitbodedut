@@ -153,10 +153,11 @@ profil est à valider par un Rav.
 Tout est dans les `SharedPreferences` locales. Pas de compte, pas d'analytique.
 L'édition **Light** ne déclare aucune permission Internet. L'édition complète
 déclare INTERNET pour une seule fonction, désactivée par défaut : le suivi d'un
-vol en direct (28/10, `SuiviVol.kt`). Activé par l'utilisateur, il envoie à un
-relais (`tools/relais_vol`) l'indicatif du vol et une position approchée, rien
-d'autre, en HTTPS seulement ; sans relais configuré à la construction, il ne
-fait aucune requête. `OnboardingTest` tient la phrase de l'accueil de chaque
+vol en direct (28/10, `SuiviVol.kt`). Activé par l'utilisateur, il demande à
+OpenSky Network, en accès anonyme et gratuit, les avions d'une zone approchée,
+en HTTPS seulement ; l'indicatif du vol reste sur le téléphone. Le web, lui,
+passe par un relais (`tools/relais_vol`) qui reçoit l'indicatif et la position
+approchée ; sans relais configuré à la construction, il ne fait aucune requête. `OnboardingTest` tient la phrase de l'accueil de chaque
 édition à son manifeste.
 
 ### Construire

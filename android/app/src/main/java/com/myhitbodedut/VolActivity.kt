@@ -60,6 +60,7 @@ class VolActivity : AppCompatActivity() {
         if (r[Manifest.permission.ACCESS_FINE_LOCATION] == true) releverGps() else message(getString(R.string.vol_gps_refuse))
     }
     private var enCours = false
+    private val autorisationNotifications = registerForActivityResult(ActivityResultContracts.RequestPermission()) { afficherResultats() }
     private val minuterie = Handler(Looper.getMainLooper())
     private val rafraichir = object : Runnable {
         override fun run() {
@@ -272,6 +273,8 @@ class VolActivity : AppCompatActivity() {
                 if (isFinishing || isDestroyed) return@runOnUiThread
                 enCours = false
                 calcul = c
+                // Les rappels suivent le dernier calcul (un relevé GPS les recale aussi).
+                if (c != null) VolAlerte.enregistrer(this, VolRappels.rappels(c, Store.inIsrael(this)))
                 if (c == null) message(getString(R.string.vol_reserve_erreur)) else afficherResultats()
             }
         }.start()
@@ -279,6 +282,7 @@ class VolActivity : AppCompatActivity() {
 
     private fun effacer() {
         Store.setVol(this, null)
+        VolAlerte.enregistrer(this, emptyList())
         numero = ""
         depart = null
         arrivee = null
@@ -307,6 +311,7 @@ class VolActivity : AppCompatActivity() {
         val maintenant = Instant.now()
         zone.addView(cartePriere(c, maintenant))
         zone.addView(carteFiabilite(c))
+        zone.addView(carteRappels(c, maintenant))
         zone.addView(carteZmanim(c))
         carteJalons(c)?.let(zone::addView)
     }
@@ -342,13 +347,38 @@ class VolActivity : AppCompatActivity() {
      * « mar. 10 · 18:42 TLV · 11:42 JFK » : l'heure du départ et celle de l'arrivée, le jour s'il
      * change. Seuls « heure code » sont isolés de gauche à droite : le jour reste dans le sens de la langue.
      */
-    private fun deuxHeures(plan: Vol.Plan, t: Instant): String {
-        val jour = DateTimeFormatter.ofPattern("EEE d", locale)
-        val heure = DateTimeFormatter.ofPattern("HH:mm", locale)
-        val dep = Vol.zone(plan.depart.fuseau)?.let { t.atZone(it) } ?: return t.toString()
-        val arr = Vol.zone(plan.arrivee.fuseau)?.let { t.atZone(it) } ?: return t.toString()
-        val autreJour = if (arr.toLocalDate() != dep.toLocalDate()) "${arr.format(jour)} " else ""
-        return "${dep.format(jour)} \u2066${dep.format(heure)} ${plan.depart.iata}\u2069 · $autreJour\u2066${arr.format(heure)} ${plan.arrivee.iata}\u2069"
+    private fun deuxHeures(plan: Vol.Plan, t: Instant): String = VolAlerte.deuxHeures(plan, t, locale)
+
+    /**
+     * Les rappels pendant le vol (VolRappels) : l'interrupteur, puis chaque rappel à venir
+     * avec son heure. Les notifications partent de VolAlerte, même téléphone fermé.
+     */
+    private fun carteRappels(c: Vol.Calcul, maintenant: Instant) = VueJour.carte(this).apply {
+        addView(VueJour.texte(this@VolActivity, getString(R.string.vol_rappels_titre), 13f, R.color.muted))
+        val actifs = Store.volRappelsActifs(this@VolActivity)
+        addView(com.google.android.material.materialswitch.MaterialSwitch(this@VolActivity).apply {
+            text = getString(R.string.vol_rappels_activer)
+            isChecked = actifs
+            setOnCheckedChangeListener { _, v ->
+                Store.setVolRappelsActifs(this@VolActivity, v)
+                VolAlerte.programmer(this@VolActivity)
+                if (v && Build.VERSION.SDK_INT >= 33 && ContextCompat.checkSelfPermission(this@VolActivity, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                    autorisationNotifications.launch(Manifest.permission.POST_NOTIFICATIONS)
+                }
+                afficherResultats()
+            }
+        })
+        if (!actifs) return@apply
+        if (Build.VERSION.SDK_INT >= 33 && ContextCompat.checkSelfPermission(this@VolActivity, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+            addView(VueJour.texte(this@VolActivity, getString(R.string.vol_rappels_sans_permission), 13f, R.color.ink, haut = 4))
+        }
+        val aVenir = VolRappels.rappels(c, Store.inIsrael(this@VolActivity)).filter { it.instant.isAfter(maintenant) }
+        if (aVenir.isEmpty()) addView(VueJour.texte(this@VolActivity, getString(R.string.vol_rappels_aucun), 14f, R.color.ink, haut = 4))
+        aVenir.forEach { r ->
+            addView(VueJour.texte(this@VolActivity, VolAlerte.textes(this@VolActivity, r, c.plan).first, 15f, R.color.ink, gras = true, haut = 10))
+            addView(VueJour.texte(this@VolActivity, deuxHeures(c.plan, r.instant), 13f, R.color.ink, haut = 2))
+        }
+        addView(VueJour.texte(this@VolActivity, getString(R.string.vol_rappels_note), 12f, R.color.muted, haut = 10))
     }
 
     private fun cartePriere(c: Vol.Calcul, maintenant: Instant) = VueJour.carte(this).apply {
@@ -441,22 +471,19 @@ class VolActivity : AppCompatActivity() {
     /**
      * Le suivi en direct (SuiviVol), édition complète seulement : un interrupteur désactivé par
      * défaut, qui dit ce qui part ; l'indicatif ; le bouton. Sans relais configuré à la
-     * construction, l'option est visible mais inactive, et rien ne part.
+     * construction, OpenSky en accès anonyme et gratuit.
      */
     private fun ajouterSuiviDirect(carte: LinearLayout) {
         val actif = Store.suiviDirect(this)
         carte.addView(VueJour.texte(this, getString(R.string.vol_direct_titre), 15f, R.color.ink, haut = 14))
-        carte.addView(VueJour.texte(this, getString(R.string.vol_direct_explication), 12f, R.color.muted, haut = 2))
+        val relais = BuildConfig.RELAIS_VOL.startsWith("https://")
+        carte.addView(VueJour.texte(this, getString(if (relais) R.string.vol_direct_explication else R.string.vol_direct_explication_opensky), 12f, R.color.muted, haut = 2))
         carte.addView(com.google.android.material.materialswitch.MaterialSwitch(this).apply {
             text = getString(R.string.vol_direct_activer)
             isChecked = actif
             setOnCheckedChangeListener { _, v -> Store.setSuiviDirect(this@VolActivity, v); afficherResultats() }
         })
         if (!actif) return
-        if (!BuildConfig.RELAIS_VOL.startsWith("https://")) {
-            carte.addView(VueJour.texte(this, getString(R.string.vol_direct_inactif), 13f, R.color.muted, haut = 4))
-            return
-        }
         val champ = EditText(this).apply {
             hint = getString(R.string.vol_indicatif)
             setText(Store.volIndicatif(this@VolActivity))
@@ -487,7 +514,7 @@ class VolActivity : AppCompatActivity() {
         val estime = Vol.position(plan, maintenant)
         directEnCours = true
         afficherResultats()
-        val fournisseur: SuiviVol.FournisseurPosition = SuiviVol.Relais(BuildConfig.RELAIS_VOL)
+        val fournisseur: SuiviVol.FournisseurPosition = SuiviVol.fournisseur(BuildConfig.RELAIS_VOL)
         Thread {
             val r = fournisseur.position(indicatif, estime)
             runOnUiThread {

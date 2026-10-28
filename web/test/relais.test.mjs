@@ -51,3 +51,12 @@ test('près du méridien de 180°, deux carrés ; les indicatifs se comparent sa
   assert.ok(memeIndicatif('ELY001', 'ely1') && memeIndicatif('QFA93 ', 'QFA093'));
   assert.ok(!memeIndicatif('ELY1', 'ELY11') && !memeIndicatif('ELY1A', 'ELY1'));
 });
+
+test('sans client API, le relais passe par l’accès anonyme et gratuit, sans jeton', async () => {
+  const journal = [];
+  const t = 1_800_000_000;
+  const r = await traiter(new Request('https://relais.test/position?indicatif=ELY1&lat=50&lon=-20'), { ORIGINE_WEB: 'https://exemple.org' },
+    fauxOpenSky([ETAT('ELY1', 50.2, -20.1, t)], journal));
+  assert.equal((await r.json()).trouve, true);
+  assert.ok(journal.every((x) => x.url.startsWith(ETATS) && !x.options.headers));
+});
