@@ -54,6 +54,7 @@ for (const [langue, dossier] of [['fr', 'values'], ['en', 'values-en'], ['he', '
   const table = {
     chaines: { ...defaut.chaines, ...propre.chaines },
     pluriels: { ...defaut.pluriels, ...propre.pluriels },
+    tableaux: { ...defaut.tableaux, ...propre.tableaux },
   };
   writeFileSync(join(DIST, 'data', `strings.${langue}.json`), JSON.stringify(table));
 }

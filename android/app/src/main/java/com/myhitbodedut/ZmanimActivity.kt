@@ -99,7 +99,7 @@ class ZmanimActivity : AppCompatActivity() {
         addView(VueJour.texte(this@ZmanimActivity, getString(R.string.boussole_title), 15f, R.color.ink))
         val lieu = Store.lieuZmanim(this@ZmanimActivity)
         addView(VueJour.texte(this@ZmanimActivity, lieu?.let {
-            val p = DirectionJerusalem.directions(it.latitude, it.longitude, Store.boussoleCarte(this@ZmanimActivity)).first
+            val p = DirectionJerusalem.directions(it.latitude, it.longitude).first
             getString(R.string.boussole_par_rapport_nord, DirectionJerusalem.degres(p))
         } ?: getString(R.string.boussole_carte_sous), 13f, if (lieu != null) R.color.brand else R.color.muted, haut = 2))
         foreground = getDrawable(android.R.drawable.list_selector_background)

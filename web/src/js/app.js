@@ -20,6 +20,7 @@ import { pour as yalkutPour, recherche as rechercheYalkut, source as sourceYalku
 import { ajouts as ajoutsDuJour, dateHilloula, debutMoisHebreu, hilloulotPour, lienArticle, rechercheHilloula, horaires, illustration as illustrationDuJour, lienHalakha, lienHyomi, momentDuSiddour, moisHebreuVoisin, semaines, semainesHebreu } from './jour-affiche.js';
 import { ALLUMAGES, heure as heureZman, jour as zmanimDuJour } from './zmanim.js';
 import * as Vol from './vol.js';
+import * as Boussole from './boussole.js';
 import { RELAIS_VOL } from './relais.js';
 
 // --- Stockage ---------------------------------------------------------------
@@ -2263,9 +2264,174 @@ function ecranZmanim() {
         h('button', { class: 'secondaire', onclick: () => { jourHilloulot = iso; rechercheHilloulot = ''; ouvrir('hilloulot'); } }, tr.t('zmanim_bouton_hilloulot')),
         h('button', { class: 'secondaire', onclick: () => { jourCalendrier = iso; moisCalendrier = null; ouvrir('calendrier'); } }, tr.t('zmanim_calendrier'))),
       carteVol(),
+      carteBoussole(),
       listeZmanim(iso),
       ...sousHoraires(iso),
       ...piedZmanim())));
+}
+
+// --- La boussole de Jérusalem (BoussoleActivity, 28/10) : boussole.js ------------------------
+// Le hassid se tourne (design C, par défaut) ou la rose des vents. Le hassid suit
+// le plus court chemin, la direction réelle ; la direction sur la carte reste en
+// pointillé bleu. Le cap vient de l'orientation de l'appareil (iPhone : après un
+// toucher, qui demande l'autorisation), corrigé de la déclinaison (WMM2025).
+let capBoussole = null;
+let boussoleEcoute = false;
+let boussoleRecu = false;
+const SOURCE_BOUSSOLE = 'https://www.chabad.org/library/article_cdo/aid/3502321/jewish/Why-Do-We-Face-East-When-Praying-Or-Do-We.htm';
+const COULEURS_BOUSSOLE = { ciel: '#DFF5E8', sol: '#CBEBD8', horizon: '#9CC9B0', encre: '#173C32', marque: '#16775A', or: '#B8780F', bleu: '#2E7DB3' };
+
+function carteBoussole() {
+  const lieu = store.lieu();
+  return h('div', { class: 'carte' }, h('button', { class: 'ligne', onclick: () => ouvrir('boussole') },
+    h('span', { class: 'corps' }, h('div', { class: 'nom' }, tr.t('boussole_title')),
+      h('div', { class: 'etat' }, lieu ? tr.t('boussole_par_rapport_nord', Boussole.degres(Boussole.grandCercle(lieu.latitude, lieu.longitude))) : tr.t('boussole_carte_sous'))),
+    h('span', { class: 'chevron', 'aria-hidden': 'true' })));
+}
+
+function consigneBoussole(gc, cap) {
+  if (cap == null) return tr.t('boussole_par_rapport_nord', Boussole.degres(gc));
+  const e = Boussole.ecart(gc, cap);
+  if (Boussole.face(e)) return tr.t('boussole_face');
+  return e > 0 ? tr.t('boussole_droite', Math.round(e)) : tr.t('boussole_gauche', Math.round(-e));
+}
+
+const echapper = (t) => t.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
+
+/** Le dessin, en SVG : la scène C, la rose vivante, ou la rose fixe (nord en haut) sans cap. */
+function dessinBoussole(gc, rh, cap) {
+  const c = COULEURS_BOUSSOLE;
+  const texte = echapper(consigneBoussole(gc, cap));
+  if (cap == null) {
+    return `<svg viewBox="-160 -160 320 320" role="img" aria-label="${texte}"><rect x="-160" y="-160" width="320" height="320" fill="${c.ciel}"/>
+      <circle r="126" fill="none" stroke="${c.horizon}" stroke-width="3"/>
+      <image href="img/char_standing_back.webp" x="-34" y="-94" width="68" height="212"/>
+      <g transform="rotate(${gc})"><path d="M0,-151 L14,-106 L0,-114 L-14,-106 Z" fill="${c.or}"/></g>
+      <text y="-132" text-anchor="middle" font-size="22" font-weight="700" fill="${c.encre}">${echapper(tr.t('boussole_nord'))}</text>
+      <text x="108" y="146" text-anchor="middle" font-size="26" fill="${c.encre}">${Boussole.degres(gc)}°</text></svg>`;
+  }
+  const e = Boussole.ecart(gc, cap), ok = Boussole.face(e);
+  if (store.boussoleRose()) {
+    let grad = '';
+    for (let d = 0; d < 360; d += 10) grad += `<line x1="0" y1="-112" x2="0" y2="${-112 + (d % 90 === 0 ? 14 : d % 30 === 0 ? 9 : 5)}" stroke="${c.encre}" stroke-width="${d % 90 === 0 ? 2.5 : 1.2}" transform="rotate(${d})"/>`;
+    const lettres = tr.tab('boussole_cardinaux').map((n, i) => {
+      const a = (i * Math.PI) / 2;
+      return `<text x="${86 * Math.sin(a)}" y="${-86 * Math.cos(a) + 6}" transform="rotate(${cap} ${86 * Math.sin(a)} ${-86 * Math.cos(a)})" text-anchor="middle" font-size="17" font-weight="700" fill="${i === 0 ? c.or : c.encre}">${echapper(n)}</text>`;
+    }).join('');
+    const a = (Boussole.ecart(gc, cap) * Math.PI) / 180;
+    let x = Math.max(-120, Math.min(120, 128 * Math.sin(a)));
+    const y = Math.max(-118, Math.min(140, -128 * Math.cos(a)));
+    if (y < -100 && Math.abs(x) < 46) x = x < 0 ? -46 : 46;
+    const teinte = ok ? c.marque : c.or;
+    return `<svg viewBox="-160 -160 320 320" role="img" aria-label="${texte}"><rect x="-160" y="-160" width="320" height="320" fill="${c.ciel}"/>
+      <circle r="112" fill="none" stroke="${c.horizon}" stroke-width="2"/>
+      <g transform="rotate(${-cap})">${grad}${lettres}</g>
+      <line x1="0" y1="0" x2="0" y2="-100" stroke="${c.bleu}" stroke-width="3" stroke-dasharray="7 7" transform="rotate(${rh - cap})"/>
+      <g transform="rotate(${gc - cap})"><line x1="0" y1="18" x2="0" y2="-100" stroke="${teinte}" stroke-width="5" stroke-linecap="round"/><circle cy="-100" r="7" fill="${teinte}"/></g>
+      <circle r="6" fill="${c.encre}"/>
+      <rect x="${x - 34}" y="${y - 11}" width="68" height="22" rx="11" fill="${ok ? c.marque : '#fff'}"/>
+      <text x="${x}" y="${y + 5}" text-anchor="middle" font-family="serif" font-size="15" font-weight="700" fill="${ok ? '#fff' : c.marque}">ירושלים</text>
+      <path d="M0,-118 L-7,-130 L7,-130 Z" fill="${c.encre}"/>
+      <text y="-140" text-anchor="middle" font-size="14" fill="${c.encre}">${texte}</text></svg>`;
+  }
+  const xg = Boussole.xHorizon(e), xr = Boussole.xHorizon(Boussole.ecart(rh, cap));
+  return `<svg viewBox="-160 -160 320 320" role="img" aria-label="${texte}"><rect x="-160" y="-160" width="320" height="320" fill="${c.ciel}"/>
+    <path d="M-160,40 Q0,10 160,40 L160,160 L-160,160 Z" fill="${c.sol}"/>
+    <line x1="-150" y1="-90" x2="150" y2="-90" stroke="${c.horizon}" stroke-width="2"/>
+    <circle cx="${xr}" cy="-90" r="7" fill="none" stroke="${c.bleu}" stroke-width="2.5" stroke-dasharray="3 3"/>
+    <rect x="${xg - 34}" y="-124" width="68" height="22" rx="11" fill="${ok ? c.marque : '#fff'}"/>
+    <text x="${xg}" y="-108" text-anchor="middle" font-family="serif" font-size="15" font-weight="700" fill="${ok ? '#fff' : c.marque}">ירושלים</text>
+    <circle cx="${xg}" cy="-90" r="8" fill="${ok ? c.marque : c.or}"/>
+    <image href="img/char_standing_back.webp" x="-28" y="${ok ? -68 : -62}" width="56" height="176"/>
+    <text y="-132" text-anchor="middle" font-size="14" fill="${c.encre}">${texte}</text></svg>`;
+}
+
+/** Une mesure d'orientation : le cap vrai, lissé, et la scène seule redessinée. */
+function surOrientation(e) {
+  if (ecranCourant() !== 'boussole') return;
+  const lieu = store.lieu();
+  const magnetique = Boussole.capMagnetique(e, screen.orientation?.angle ?? window.orientation ?? 0);
+  if (!lieu || magnetique == null) return;
+  const avant = capBoussole;
+  capBoussole = Boussole.lisser(capBoussole, Boussole.capVrai(magnetique, lieu));
+  const scene = app.querySelector('.boussole-scene');
+  if (!scene) return;
+  const gc = Boussole.grandCercle(lieu.latitude, lieu.longitude);
+  scene.innerHTML = dessinBoussole(gc, Boussole.carte(lieu.latitude, lieu.longitude), capBoussole);
+  // Face à Jérusalem : une petite vibration, là où le navigateur le permet (pas sur iPhone).
+  if (avant != null && !Boussole.face(Boussole.ecart(gc, avant)) && Boussole.face(Boussole.ecart(gc, capBoussole))) navigator.vibrate?.(30);
+  if (!boussoleRecu) { boussoleRecu = true; rendre(); }
+}
+
+function ecouterBoussole() {
+  if (boussoleEcoute) return;
+  boussoleEcoute = true;
+  // Chrome et Android : l'orientation absolue ; iPhone : webkitCompassHeading sur deviceorientation.
+  if ('ondeviceorientationabsolute' in window) window.addEventListener('deviceorientationabsolute', surOrientation);
+  else window.addEventListener('deviceorientation', surOrientation);
+}
+
+/** L'iPhone demande l'autorisation, et seulement après un toucher. */
+const autorisationBoussole = () => typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function';
+
+function ecranBoussole() {
+  chargeVilles();
+  const lieu = store.lieu();
+  if (!autorisationBoussole()) ecouterBoussole();
+  const puce = h('button', {
+    type: 'button', class: 'puce-bandeau', 'aria-haspopup': 'dialog', onclick: choisirLieu,
+    'aria-label': `${tr.t('reglage_lieu')} : ${lieu ? lieu.nom : tr.t('reglage_lieu_aucun')}`,
+  }, h('span', {}, lieu ? lieu.nom : tr.t('zmanim_choisir_lieu')), icone('replier'));
+  const contenu = [];
+  if (!lieu) {
+    contenu.push(h('div', { class: 'carte' }, h('button', { class: 'ligne', onclick: choisirLieu },
+      h('span', { class: 'corps' }, h('div', { class: 'nom' }, tr.t('zmanim_choisir_lieu')), h('div', { class: 'etat' }, tr.t('boussole_carte_sous'))))));
+  } else {
+    const gc = Boussole.grandCercle(lieu.latitude, lieu.longitude);
+    const rh = Boussole.carte(lieu.latitude, lieu.longitude);
+    const scene = h('div', { class: 'boussole-scene' });
+    scene.innerHTML = dessinBoussole(gc, rh, capBoussole);
+    contenu.push(scene);
+    if (autorisationBoussole() && !boussoleEcoute) {
+      contenu.push(h('button', { class: 'principal boussole-activer', onclick: async () => {
+        try { if (await DeviceOrientationEvent.requestPermission() === 'granted') { ecouterBoussole(); rendre(); } } catch { /* refusé : la rose fixe reste */ }
+      } }, tr.t('boussole_activer')));
+    }
+    // Avant le toucher, rien n'est encore dit du capteur ; ensuite, sans mesure, la rose fixe reste.
+    const attente = autorisationBoussole() && !boussoleEcoute;
+    contenu.push(h('p', { class: 'indice' }, tr.t(attente || boussoleRecu ? 'boussole_a_plat' : 'boussole_sans_capteur')));
+    const points = tr.tab('boussole_points');
+    const km = new Intl.NumberFormat(tr.langue).format(Math.round(Boussole.distanceKm(lieu.latitude, lieu.longitude)));
+    contenu.push(h('div', { class: 'carte carte-texte' },
+      h('p', { class: 'boussole-principale' }, tr.t('boussole_grand_cercle', Boussole.degres(gc), points[Boussole.point(gc)])),
+      h('p', {}, tr.t('boussole_cap_constant', Boussole.degres(rh), points[Boussole.point(rh)])),
+      h('p', { class: 'indice' }, tr.t('boussole_distance', km)),
+      h('p', { class: 'indice' }, tr.t('boussole_legende'))));
+    contenu.push(h('div', { class: 'carte' }, h('button', { class: 'ligne', 'aria-haspopup': 'dialog', onclick: choisirAffichageBoussole },
+      h('span', { class: 'corps' }, h('div', { class: 'nom' }, tr.t('boussole_affichage')),
+        h('div', { class: 'etat' }, tr.t(store.boussoleRose() ? 'boussole_affichage_rose' : 'boussole_affichage_hassid'))),
+      h('span', { class: 'chevron', 'aria-hidden': 'true' }))));
+    const source = tr.t('boussole_source', '\u0000').split('\u0000');
+    contenu.push(h('div', { class: 'carte carte-texte' },
+      h('p', { class: 'nom' }, tr.t('boussole_note_titre')),
+      h('p', { class: 'indice' }, tr.t('boussole_note')),
+      h('p', {}, source[0], h('a', { href: SOURCE_BOUSSOLE, target: '_blank', rel: 'noopener' }, tr.t('boussole_source_titre')), source[1] ?? '')));
+  }
+  return h('div', { class: 'ecran avec-bandeau' }, bandeau(tr.t('boussole_title'), { puce, dessin: 'char_standing_back' }),
+    h('div', { class: 'defile' }, h('div', { class: 'contenu' }, ...contenu, ...piedZmanim())));
+}
+
+function choisirAffichageBoussole() {
+  feuille(tr.t('boussole_affichage'), (f, fermer) => {
+    f.append(h('div', { role: 'radiogroup', 'aria-label': tr.t('boussole_affichage') }, [false, true].map((rose) => {
+      const courant = store.boussoleRose() === rose;
+      return h('button', {
+        type: 'button', class: 'choix choix-radio', role: 'radio', 'aria-checked': String(courant),
+        onclick: () => { fermer(); if (!courant) { store.setBoussoleRose(rose); rendre(); } },
+      }, h('span', { class: 'radio', 'aria-hidden': 'true' }), tr.t(rose ? 'boussole_affichage_rose' : 'boussole_affichage_hassid'));
+    })));
+  });
+  document.querySelector('.feuille [aria-checked="true"]')?.focus();
 }
 
 // --- Les zmanim en vol (VolActivity, 28/10) : vol.js, hors ligne --------------------------
@@ -3674,7 +3840,7 @@ function arreteDanse() {
 // et le geste de retour ramènent à l'accueil, sur l'onglet quitté.
 function ecranCourant() {
   const e = location.hash.slice(1);
-  return ['musique', 'reglages', 'seance', 'bravo', 'tehilim', 'lecture', 'siddur', 'priere', 'tikkun', 'bibliotheque', 'livres', 'source', 'zmanim', 'vol', 'calendrier', 'paliers', 'hilloulot', 'halakha', 'recherche', 'hizouk', 'parcours'].includes(e) ? e : 'accueil';
+  return ['musique', 'reglages', 'seance', 'bravo', 'tehilim', 'lecture', 'siddur', 'priere', 'tikkun', 'bibliotheque', 'livres', 'source', 'zmanim', 'vol', 'boussole', 'calendrier', 'paliers', 'hilloulot', 'halakha', 'recherche', 'hizouk', 'parcours'].includes(e) ? e : 'accueil';
 }
 function ouvrir(ecran) {
   // L'entrée sur l'écran de séance tire le mot d'ouverture (SessionActivity.onCreate).
@@ -3734,6 +3900,7 @@ function rendre() {
   else if (ecran === 'reglages') app.append(ecranReglages());
   else if (ecran === 'zmanim') app.append(ecranZmanim());
   else if (ecran === 'vol') app.append(ecranVol());
+  else if (ecran === 'boussole') app.append(ecranBoussole());
   else if (ecran === 'calendrier') app.append(ecranCalendrier());
   else if (ecran === 'paliers') app.append(ecranPaliers());
   else if (ecran === 'hilloulot') app.append(ecranHilloulot());

@@ -101,8 +101,7 @@ class BoussoleActivity : AppCompatActivity(), SensorEventListener {
 
         declinaison = GeomagneticField(lieu.latitude.toFloat(), lieu.longitude.toFloat(), lieu.altitude.toFloat(),
             System.currentTimeMillis()).declination
-        val carte = Store.boussoleCarte(this)
-        val (principale, autre) = DirectionJerusalem.directions(lieu.latitude, lieu.longitude, carte)
+        val (principale, autre) = DirectionJerusalem.directions(lieu.latitude, lieu.longitude)
         boussole.directions(principale, autre)
         boussole.cap(lisse)
 
@@ -113,9 +112,9 @@ class BoussoleActivity : AppCompatActivity(), SensorEventListener {
             .format(Math.round(DirectionJerusalem.distanceKm(lieu.latitude, lieu.longitude)))
         contenu.addView(VueJour.carte(this).apply {
             addView(VueJour.texte(this@BoussoleActivity, getString(R.string.boussole_grand_cercle, DirectionJerusalem.degres(gc),
-                points[DirectionJerusalem.point(gc)]), 15f, if (carte) R.color.ink else R.color.brand, gras = !carte))
+                points[DirectionJerusalem.point(gc)]), 15f, R.color.brand, gras = true))
             addView(VueJour.texte(this@BoussoleActivity, getString(R.string.boussole_cap_constant, DirectionJerusalem.degres(rh),
-                points[DirectionJerusalem.point(rh)]), 15f, if (carte) R.color.brand else R.color.ink, gras = carte, haut = 6))
+                points[DirectionJerusalem.point(rh)]), 15f, R.color.ink, haut = 6))
             addView(VueJour.texte(this@BoussoleActivity, getString(R.string.boussole_distance, km), 13f, R.color.muted, haut = 6))
             addView(VueJour.texte(this@BoussoleActivity, getString(R.string.boussole_legende), 13f, R.color.muted, haut = 6))
         })
@@ -129,17 +128,10 @@ class BoussoleActivity : AppCompatActivity(), SensorEventListener {
         })
 
         contenu.addView(VueJour.carte(this).apply {
-            addView(VueJour.texte(this@BoussoleActivity, getString(R.string.boussole_principale), 15f, R.color.ink))
-            addView(VueJour.texte(this@BoussoleActivity, getString(if (carte) R.string.boussole_principale_carte else R.string.boussole_principale_gc),
-                13f, R.color.muted, haut = 2))
-            foreground = getDrawable(android.R.drawable.list_selector_background)
-            setOnClickListener { choisirPrincipale() }
-        })
-
-        contenu.addView(VueJour.carte(this).apply {
             addView(VueJour.texte(this@BoussoleActivity, getString(R.string.boussole_note_titre), 15f, R.color.ink))
             addView(VueJour.texte(this@BoussoleActivity, getString(R.string.boussole_note), 13f, R.color.muted, haut = 4))
-            addView(VueJour.texte(this@BoussoleActivity, HtmlCompat.fromHtml(getString(R.string.boussole_source), HtmlCompat.FROM_HTML_MODE_LEGACY),
+            addView(VueJour.texte(this@BoussoleActivity, HtmlCompat.fromHtml(getString(R.string.boussole_source,
+                "<a href=\"$SOURCE\">${android.text.TextUtils.htmlEncode(getString(R.string.boussole_source_titre))}</a>"), HtmlCompat.FROM_HTML_MODE_LEGACY),
                 13f, R.color.brand, haut = 6).apply { movementMethod = LinkMovementMethod.getInstance() })
         })
         contenu.addView(VueJour.pied(this))
@@ -154,19 +146,6 @@ class BoussoleActivity : AppCompatActivity(), SensorEventListener {
                 Store.setBoussoleRose(this, i == 1)
                 d.dismiss()
                 afficher()
-            }
-            .show()
-    }
-
-    private fun choisirPrincipale() {
-        MaterialAlertDialogBuilder(this)
-            .setTitle(R.string.boussole_principale)
-            .setSingleChoiceItems(arrayOf(getString(R.string.boussole_principale_gc), getString(R.string.boussole_principale_carte)),
-                if (Store.boussoleCarte(this)) 1 else 0) { d, i ->
-                Store.setBoussoleCarte(this, i == 1)
-                d.dismiss()
-                afficher()
-                BoussoleWidget.refresh(this)
             }
             .show()
     }
@@ -209,6 +188,9 @@ class BoussoleActivity : AppCompatActivity(), SensorEventListener {
     private fun dp(v: Int) = (v * resources.displayMetrics.density).toInt()
 
     companion object {
+        /** L'article qui expose les deux calculs (vérifié le 28/10). */
+        const val SOURCE = "https://www.chabad.org/library/article_cdo/aid/3502321/jewish/Why-Do-We-Face-East-When-Praying-Or-Do-We.htm"
+
         /** Un filtre doux sur le cercle : un cinquième du chemin à chaque mesure, par le plus court côté. */
         fun lisser(avant: Double?, mesure: Double): Double =
             avant?.let { DirectionJerusalem.norm(it + DirectionJerusalem.ecart(mesure, it) * 0.2) } ?: mesure

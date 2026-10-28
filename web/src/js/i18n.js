@@ -52,13 +52,19 @@ export function creeTraduction(langue, table) {
     const modele = formes[regles.select(n)] ?? formes.other;
     return formate(modele, args.length ? args : [n]);
   };
+  /** getStringArray (28/10). */
+  const tab = (nom) => {
+    const l = table.tableaux?.[nom];
+    if (!l) throw new Error(`Tableau inconnu : ${nom}`);
+    return l;
+  };
   /** Store.formatDuration : « 20 min », « 1 h », « 1 h 30 ». */
   const duree = (minutes) => {
     if (minutes < 60) return t('duration_minutes', minutes);
     if (minutes % 60 === 0) return t('duration_hours', minutes / 60);
     return t('duration_hours_minutes', Math.floor(minutes / 60), minutes % 60);
   };
-  return { langue, rtl: langue === 'he', t, p, duree };
+  return { langue, rtl: langue === 'he', t, p, tab, duree };
 }
 
 export async function chargeTraduction(langue) {

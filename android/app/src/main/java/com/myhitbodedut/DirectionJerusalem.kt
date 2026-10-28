@@ -12,12 +12,10 @@ import kotlin.math.tan
 
 /**
  * La direction de Jérusalem (Har haBayit) depuis un lieu (28/10, boussole C).
- * Elle se calcule de deux façons, et l'application ne tranche pas :
- * - par le plus court chemin sur le globe (grand cercle, cap initial) ;
- * - selon la direction sur la carte (loxodromie, cap constant).
- * De New York : environ 54° et 96°. Les deux restent affichées ; le réglage
- * « direction principale » (Store.boussoleCarte) dit seulement laquelle le
- * hassid suit. Calcul sur une sphère : à moins d'un demi-degré du calcul sur
+ Le hassid suit la direction réelle, le plus court chemin sur le globe (grand
+ * cercle, cap initial ; décision du 28/10). La direction sur la carte
+ * (loxodromie, cap constant) reste affichée pour information. De New York :
+ * environ 54° et 96°. Calcul sur une sphère : à moins d'un demi-degré du calcul sur
  * l'ellipsoïde (DirectionJerusalemTest).
  */
 object DirectionJerusalem {
@@ -76,10 +74,6 @@ object DirectionJerusalem {
     /** Le point cardinal le plus proche, de 0 (N) à 7 (NO), dans le sens des aiguilles. */
     fun point(d: Double): Int = (norm(d) / 45).roundToInt() % 8
 
-    /** La direction principale et l'autre, selon le réglage. */
-    fun directions(lat: Double, lon: Double, carteEnAvant: Boolean): Pair<Double, Double> {
-        val gc = grandCercle(lat, lon)
-        val rh = carte(lat, lon)
-        return if (carteEnAvant) rh to gc else gc to rh
-    }
+    /** Celle que suit le hassid (le grand cercle) et celle de la carte, affichée pour information. */
+    fun directions(lat: Double, lon: Double): Pair<Double, Double> = grandCercle(lat, lon) to carte(lat, lon)
 }

@@ -218,6 +218,9 @@ export function creeStore(stockage, { maintenant = () => new Date(), fuseau } = 
     },
     setVol: (v) => set('vol_zmanim', v),
     /** Le suivi de vol en direct (SuiviVol) : désactivé tant que l'utilisateur ne l'active pas. */
+    /** La boussole en rose des vents plutôt que le hassid (design C, par défaut ; 28/10). */
+    boussoleRose: () => get('boussole_rose', false) === true,
+    setBoussoleRose: (v) => set('boussole_rose', !!v),
     suiviDirect: () => get('vol_suivi_direct', false) === true,
     setSuiviDirect: (v) => set('vol_suivi_direct', !!v),
     volIndicatif: () => get('vol_indicatif', ''),

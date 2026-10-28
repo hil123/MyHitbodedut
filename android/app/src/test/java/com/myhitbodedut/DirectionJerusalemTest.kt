@@ -60,10 +60,10 @@ class DirectionJerusalemTest {
         assertEquals(1, DirectionJerusalem.point(54.0))
         assertEquals(2, DirectionJerusalem.point(95.8))
         assertEquals(0, DirectionJerusalem.point(350.0))
-        // Le réglage choisit laquelle est en avant ; les deux restent.
-        val (p, a) = DirectionJerusalem.directions(40.7128, -74.0060, carteEnAvant = true)
-        assertEquals(DirectionJerusalem.carte(40.7128, -74.0060), p, 1e-9)
-        assertEquals(DirectionJerusalem.grandCercle(40.7128, -74.0060), a, 1e-9)
+        // Le hassid suit le grand cercle ; la carte est l'autre, pour information.
+        val (p, a) = DirectionJerusalem.directions(40.7128, -74.0060)
+        assertEquals(DirectionJerusalem.grandCercle(40.7128, -74.0060), p, 1e-9)
+        assertEquals(DirectionJerusalem.carte(40.7128, -74.0060), a, 1e-9)
     }
 
     @Test

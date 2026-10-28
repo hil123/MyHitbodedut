@@ -400,21 +400,21 @@ elles-mêmes (Xinjiang, Abkhazie, Govi-Altaï) ne sont pas proposés.
 tourne »), widget 2 × 2 `BoussoleWidget`. Vers Har haBayit, 31,7781° N,
 35,2354° E, depuis le lieu des zmanim.
 
-- **Deux calculs, aucun tranché.** Plus court chemin (grand cercle, cap
-  initial) et direction sur la carte (loxodromie, cap constant). Selon
-  Chabad.org (« Why Do We Face East When Praying? Or Do We? »), le Choul'han
-  Aroukh haRav et beaucoup d'autres tiennent le grand cercle pour préférable ;
-  la page donne, de New York, 54° et environ 95°. Les deux sont affichés ; le
-  réglage « direction principale » (grand cercle par défaut) choisit seulement
-  celle que suit le hassid.
+- **Le hassid suit la direction réelle** (décision du 28/10) : le plus court
+  chemin sur le globe (grand cercle, cap initial). La direction sur la carte
+  (loxodromie, cap constant) reste affichée pour information, en pointillé
+  bleu. Selon Chabad.org (« Why Do We Face East When Praying? Or Do We? »), le
+  Choul'han Aroukh haRav et beaucoup d'autres tiennent le grand cercle pour
+  préférable ; la page donne, de New York, 54° et environ 95°.
 - **Deux affichages au choix** (réglage « Affichage de la boussole ») : le
   hassid qui se tourne (design C, par défaut) ou une rose des vents qui tourne
   avec le téléphone, l'aiguille d'or vers Jérusalem.
 - **Nord vrai.** Le capteur d'orientation donne le nord magnétique ; la
   déclinaison du lieu (`GeomagneticField`, modèle intégré à Android) est
-  ajoutée. Sans capteur, la rose orientée au nord.
+  ajoutée (Android) ; sur le web, le modèle WMM2025 de la NOAA
+  (`web/src/js/magnetisme.js`). Sans capteur, la rose orientée au nord.
 - **Widget.** Il ne lit pas le capteur : la direction par rapport au nord, en
-  haut ; redessiné quand le lieu ou le réglage change.
+  haut ; redessiné quand le lieu change.
 - **Tests.** `DirectionJerusalemTest` : six villes contre geographiclib
   (WGS84) à 0,5° près pour le grand cercle (calcul sur sphère), la loxodromie
   contre un calcul séparé, le méridien de 180°, l'écart, le filtre du cap.
