@@ -103,6 +103,11 @@ object Store {
     private const val KEY_LIEU_ALT = "lieu_altitude"
     private const val KEY_LIEU_FUSEAU = "lieu_fuseau"
     private const val KEY_LIEU_VILLE = "lieu_ville"
+    private const val KEY_VOL_NUMERO = "vol_numero"
+    private const val KEY_VOL_DEPART = "vol_depart"
+    private const val KEY_VOL_ARRIVEE = "vol_arrivee"
+    private const val KEY_VOL_DECOLLAGE = "vol_decollage"
+    private const val KEY_VOL_ATTERRISSAGE = "vol_atterrissage"
     private const val KEY_ALLUMAGE = "allumage_minutes"
     private const val KEY_PAUSED_DATES = "paused_dates"
     private const val KEY_REMINDER_ON = "reminder_on"
@@ -379,6 +384,43 @@ object Store {
             .putLong(KEY_LIEU_VILLE, ville?.id ?: -1L)
             .apply()
         setInIsrael(context, ville?.enIsrael ?: Holidays.defaultInIsrael(lieu.fuseau))
+    }
+
+    /**
+     * Le vol des zmanim en vol (28/10) : numéro, codes IATA, instants prévus en
+     * millisecondes UTC. Il reste sur l'appareil, comme tout le reste ; null
+     * tant qu'aucun vol complet n'a été calculé.
+     */
+    fun vol(context: Context, aeroports: List<Vol.Aeroport>): Vol.Plan? {
+        val p = prefs(context)
+        val depart = p.getString(KEY_VOL_DEPART, null)?.let { Aeroports.parIata(aeroports, it) } ?: return null
+        val arrivee = p.getString(KEY_VOL_ARRIVEE, null)?.let { Aeroports.parIata(aeroports, it) } ?: return null
+        val decollage = p.getLong(KEY_VOL_DECOLLAGE, -1L).takeIf { it >= 0 } ?: return null
+        val atterrissage = p.getLong(KEY_VOL_ATTERRISSAGE, -1L).takeIf { it >= 0 } ?: return null
+        return Vol.Plan(p.getString(KEY_VOL_NUMERO, "").orEmpty(), depart, arrivee,
+            java.time.Instant.ofEpochMilli(decollage), java.time.Instant.ofEpochMilli(atterrissage))
+    }
+
+    /** Le numéro et les codes du dernier vol, pour l'accès depuis l'onglet Zmanim, sans lire les aéroports. */
+    fun volResume(context: Context): Triple<String, String, String>? {
+        val p = prefs(context)
+        val depart = p.getString(KEY_VOL_DEPART, null) ?: return null
+        val arrivee = p.getString(KEY_VOL_ARRIVEE, null) ?: return null
+        return Triple(p.getString(KEY_VOL_NUMERO, "").orEmpty(), depart, arrivee)
+    }
+
+    fun setVol(context: Context, plan: Vol.Plan?) {
+        val e = prefs(context).edit()
+        if (plan == null) {
+            listOf(KEY_VOL_NUMERO, KEY_VOL_DEPART, KEY_VOL_ARRIVEE, KEY_VOL_DECOLLAGE, KEY_VOL_ATTERRISSAGE).forEach { e.remove(it) }
+        } else {
+            e.putString(KEY_VOL_NUMERO, plan.numero)
+                .putString(KEY_VOL_DEPART, plan.depart.iata)
+                .putString(KEY_VOL_ARRIVEE, plan.arrivee.iata)
+                .putLong(KEY_VOL_DECOLLAGE, plan.decollage.toEpochMilli())
+                .putLong(KEY_VOL_ATTERRISSAGE, plan.atterrissage.toEpochMilli())
+        }
+        e.apply()
     }
 
     /** Les minutes d'allumage avant la chki'a ; 18 par défaut (Zmanim.ALLUMAGES). */

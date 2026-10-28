@@ -206,6 +206,16 @@ export function creeStore(stockage, { maintenant = () => new Date(), fuseau } = 
       // téléphone, comme la valeur par défaut (israelParDefaut).
       set('in_israel', ville ? ville.pays === 'IL' : israelParDefaut(lieu.fuseau));
     },
+    /**
+     * Le vol des zmanim en vol (28/10, Store.vol) : { numero, depart, arrivee
+     * (codes IATA), decollage, atterrissage (« AAAA-MM-JJTHH:MM » à l'heure de
+     * chaque aéroport) } ; null tant qu'aucun vol complet n'est calculé.
+     */
+    vol: () => {
+      const v = get('vol_zmanim', null);
+      return v && v.depart && v.arrivee && v.decollage && v.atterrissage ? v : null;
+    },
+    setVol: (v) => set('vol_zmanim', v),
     /** Les minutes d'allumage avant la chki'a ; 18 par défaut. */
     allumage: () => ([18, 20, 22, 30, 40].includes(get('allumage_minutes', 18)) ? get('allumage_minutes', 18) : 18),
     setAllumage: (m) => set('allumage_minutes', m),

@@ -233,6 +233,75 @@ L'accord de deux moteurs ne prouve pas l'exactitude : ils partagent
 l'algorithme solaire de la NOAA. C'est pourquoi l'astronomie est vérifiée
 contre PyEphem, et les règles de prière restent à valider par un Rav.
 
+## En vol (phase 1, hors ligne)
+
+`Vol.kt` (Android) et `vol.js` (web), ligne pour ligne, ajoutés le 28/10.
+Rien ne quitte le téléphone, aucune permission n'est demandée.
+
+**Le calcul.** On saisit les deux aéroports et les heures du billet, à
+l'heure locale de chaque aéroport. L'avion est placé sur l'arc de grand
+cercle entre les deux, à vitesse constante entre décollage et atterrissage ;
+avant le décollage il est à l'aéroport de départ, après l'atterrissage à
+celui d'arrivée. Un zman a lieu en vol à l'instant t où le zman du point
+sous l'avion vaut t : t = zman(position(t)). Le zman du point est celui du
+moteur, sans changement (`Zmanim.jour`, même profil, au niveau de la mer) ;
+on échantillonne toutes les 5 minutes en vol, toutes les heures au sol, et
+chaque racine est affinée (fausse position) à la demi-seconde. Tout est en
+UTC. Le fuseau « nautique » du point (UTC + longitude / 15, arrondi) sert
+seulement à dire quel jour civil demander au moteur ; on demande toujours la
+veille, le jour et le lendemain. La prière du moment est
+`ZmanimWidget.prochaine`, sans règle nouvelle, nourrie des zmanim de la
+route (`VolPriere`).
+
+**Ce que l'écran dit, sans conseil** : la fiabilité (« route prévue », jamais
+une position réelle) ; de combien chaque horaire bouge si le départ a
+30 minutes de retard ; la haute latitude (au-delà de 60°) ; un zman absent
+sur une partie de la route ; un zman qui repasse (l'avion plus rapide que le
+soleil vers l'ouest) ; le passage du méridien de 180°, avec la date locale de
+part et d'autre. La vraie ligne de changement de date s'écarte de ce
+méridien (Kiribati, Samoa…) : seul le méridien est calculé.
+
+**Ce qui est vérifié, estimé, supposé.**
+
+- Vérifié par les tests (`VolTest`, `vol.test.mjs`) : chaque zman trouvé en
+  vol est le zman du moteur au point où est l'avion à cet instant, à 2 s
+  près ; au sol, avant le décollage, le calcul rend exactement les zmanim de
+  l'aéroport ; Android et web s'accordent à 2 s sur neuf vols
+  (`tools/vecteurs_vol`). Ce sont des vérifications de calcul, pas de
+  halakha.
+- Estimé : la position. Une route réelle s'écarte du grand cercle de
+  plusieurs centaines de kilomètres (vents, couloirs de l'Atlantique Nord),
+  le roulage et les retards déplacent tout. Vers l'ouest, quand l'avion suit
+  le soleil, un horaire peut bouger de beaucoup plus que le retard lui-même
+  (exemple calculé, Tel Aviv–New York : chki'a avancée de 86 min pour 30 min
+  de retard). L'écart affiché le montre ; il ne le corrige pas.
+- Supposé, et **à valider par un Rav** (aucune règle n'est tranchée ici) :
+  1. le zman du sol sous l'avion, au niveau de la mer, plutôt que l'horizon
+     vu de l'altitude. Les sources secondaires lues pendant l'audit (28/10)
+     présentent le sol sous l'avion comme l'avis majoritaire ; les sources
+     premières n'ont pas été vérifiées. À 11 000 m, l'horizon s'abaisse
+     d'environ 3,4° (géométrie seule, sans réfraction) : le soleil s'y lève
+     plus tôt et s'y couche plus tard, de l'ordre d'un quart d'heure ou plus
+     aux latitudes moyennes. Ce lever vu de l'avion n'est pas calculé ;
+  2. les heures saisonnières (fin du Chema, de la Téfila, Min'ha…) prennent
+     la journée du point sous l'avion à cet instant, pas la journée vécue à
+     bord, qui peut être bien plus longue ou plus courte. Laquelle compte
+     n'est pas tranché ;
+  3. la date (jour de fête, jeûne, Chabbat) quand on franchit la ligne de
+     changement de date : l'écran donne seulement le fait ;
+  4. au-delà de 60° de latitude, les méthodes en degrés et en minutes
+     divergent fortement ; certaines n'ont pas lieu.
+
+**Les aéroports** (`res/raw/aeroports.json`, `tools/aeroports_construction.py`) :
+OurAirports (domaine public, « sans garantie d'exactitude »), aéroports
+moyens et grands à vols réguliers ayant un code IATA. Le fuseau de chacun
+vient des contours de timezone-boundary-builder 2026e (ODbL : attribution
+affichée), par point dans polygone, à la construction seulement ; il est
+contre-vérifié par la localité GeoNames la plus proche. Chaque écart a été
+relu (liste dans l'outil) ; Gold Coast prend l'heure du Queensland, celle
+de son aérogare. Les aéroports dont le fuseau est disputé par les sources
+elles-mêmes (Xinjiang, Abkhazie, Govi-Altaï) ne sont pas proposés.
+
 ## Maintenance
 
 - **Changer de version de KosherJava** : relancer les tests Android, puis
@@ -245,3 +314,8 @@ contre PyEphem, et les règles de prière restent à valider par un Rav.
   l'indiquent.
 - **Ajouter une ville** : son identifiant GeoNames dans
   `tools/villes_construction.py`, puis relancer l'outil.
+- **Changer le calcul en vol** : `VolTest` échoue tant que
+  `web/test/vecteurs_vol.json` n'est pas régénéré (`tools/vecteurs_vol/README.md`).
+- **Mettre à jour les aéroports** : relancer `tools/aeroports_construction.py`
+  sur un `airports.csv` récent ; tout nouvel écart de fuseau l'arrête jusqu'à
+  ce qu'il soit relu et ajouté à l'une de ses listes.

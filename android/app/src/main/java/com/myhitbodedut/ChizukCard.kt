@@ -190,6 +190,13 @@ object Data {
         villes ?: Villes.parse(Json.readRaw(context.applicationContext, R.raw.villes)).also { villes = it }
 
     @Volatile
+    private var aeroports: List<Vol.Aeroport>? = null
+
+    /** Les aéroports des zmanim en vol (OurAirports), lus une fois, à la première ouverture de l'écran. */
+    fun aeroports(context: Context): List<Vol.Aeroport> =
+        aeroports ?: Aeroports.parse(Json.readRaw(context.applicationContext, R.raw.aeroports)).also { aeroports = it }
+
+    @Volatile
     private var livres: Siddur? = null
 
     /** Les livres entiers de la bibliothèque (res/raw/livres.json, au format du siddour), lus une fois. */

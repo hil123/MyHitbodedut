@@ -1,0 +1,284 @@
+// Les zmanim en vol (Vol.kt, 28/10), phase 1 : hors ligne, sur la route
+// prévue, sans réseau. Le même calcul qu'Android, ligne pour ligne : l'avion
+// sur le grand cercle à vitesse constante, et un zman a lieu en vol à
+// l'instant t où le zman du point sous l'avion vaut t. Le zman du point est
+// celui de zmanim.js (jour), au niveau de la mer, même profil. Choix et
+// limites : ZMANIM.md, « En vol ». Tout est en UTC (des Date).
+
+import { jour, CLES } from './zmanim.js';
+
+const H = 3600 * 1000;
+const MIN = 60 * 1000;
+export const MARGE = 30 * H;
+const PAS_VOL = 5 * MIN;
+const PAS_SOL = 60 * MIN;
+const APPARIEMENT = 3 * H;
+const TOLERANCE = 500;
+export const LATITUDE_HAUTE = 60;
+export const RETARD = 30 * MIN;
+export const DUREE_MAX = 22 * H;
+const COUVERT = 6 * H;
+
+/** [iata, nom, ville, pays, latitude, longitude, fuseau] (aeroports.json) → objet. */
+export function aeroports(donnees) {
+  return donnees.aeroports.map(([iata, nom, ville, pays, latitude, longitude, fuseau]) => ({ iata, nom, ville, pays, latitude, longitude, fuseau }));
+}
+
+const plier = (s) => s.normalize('NFD').replace(/\p{M}/gu, '').toLowerCase();
+
+/** Le code IATA exact d'abord, puis la ville, puis le nom (Aeroports.chercher). */
+export function chercher(liste, texte, max = 20) {
+  const q = plier(texte.trim());
+  if (!q) return [];
+  const exact = liste.filter((a) => plier(a.iata) === q);
+  const ville = liste.filter((a) => plier(a.ville).startsWith(q));
+  const nom = liste.filter((a) => plier(a.nom).includes(q) || plier(a.ville).includes(q));
+  return [...new Set([...exact, ...ville, ...nom])].slice(0, max);
+}
+
+/** Un fuseau que le navigateur ne connaît pas rend false plutôt que d'échouer. */
+export function fuseauConnu(fuseau) {
+  try { new Intl.DateTimeFormat('en', { timeZone: fuseau }); return true; } catch { return false; }
+}
+
+const parties = (instant, fuseau) => Object.fromEntries(new Intl.DateTimeFormat('en-US', {
+  timeZone: fuseau, hourCycle: 'h23', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit',
+}).formatToParts(instant).filter((p) => p.type !== 'literal').map((p) => [p.type, Number(p.value)]));
+
+/**
+ * L'heure du billet « AAAA-MM-JJTHH:MM », à l'heure locale de l'aéroport, en
+ * instant ; null si le fuseau est inconnu. Dans le trou du passage à l'heure
+ * d'été, l'heure avance d'autant, comme LocalDateTime.atZone.
+ */
+export function instant(local, aeroport) {
+  if (!fuseauConnu(aeroport.fuseau)) return null;
+  const [d, t] = local.split('T');
+  const [a, m, j] = d.split('-').map(Number);
+  const [hh, mm] = t.split(':').map(Number);
+  const voulu = Date.UTC(a, m - 1, j, hh, mm);
+  const decalage = (x) => {
+    const p = parties(new Date(x), aeroport.fuseau);
+    return Date.UTC(p.year, p.month - 1, p.day, p.hour, p.minute, p.second) - x;
+  };
+  // Le décalage avant le trou : un instant UTC tel que l'heure locale soit la voulue,
+  // ou la première qui la suit.
+  const avant = decalage(voulu - 12 * H);
+  const apres = decalage(voulu + 12 * H);
+  const essai1 = voulu - avant;
+  if (decalage(essai1) === avant) return new Date(essai1);
+  const essai2 = voulu - apres;
+  if (decalage(essai2) === apres) return new Date(essai2);
+  return new Date(voulu - avant);
+}
+
+export function verifier(plan) {
+  if (plan.depart.iata === plan.arrivee.iata) return 'meme_aeroport';
+  if (+plan.atterrissage <= +plan.decollage) return 'arrivee_avant_depart';
+  if (+plan.atterrissage - +plan.decollage > DUREE_MAX) return 'trop_long';
+  if (!fuseauConnu(plan.depart.fuseau) || !fuseauConnu(plan.arrivee.fuseau)) return 'fuseau_inconnu';
+  return null;
+}
+
+const rad = (d) => (d * Math.PI) / 180;
+const deg = (r) => (r * 180) / Math.PI;
+const vecteur = (lat, lon) => [Math.cos(rad(lat)) * Math.cos(rad(lon)), Math.cos(rad(lat)) * Math.sin(rad(lon)), Math.sin(rad(lat))];
+
+/** La position prévue à t : grand cercle, vitesse constante ; à l'aéroport hors du vol. */
+export function position(plan, t) {
+  const f = Math.min(1, Math.max(0, (+t - +plan.decollage) / (+plan.atterrissage - +plan.decollage)));
+  const a = vecteur(plan.depart.latitude, plan.depart.longitude);
+  const b = vecteur(plan.arrivee.latitude, plan.arrivee.longitude);
+  const omega = Math.acos(Math.min(1, Math.max(-1, a[0] * b[0] + a[1] * b[1] + a[2] * b[2])));
+  const p = omega < 1e-9 ? a : a.map((_, i) => (Math.sin((1 - f) * omega) * a[i] + Math.sin(f * omega) * b[i]) / Math.sin(omega));
+  return { instant: new Date(+t), latitude: deg(Math.asin(Math.min(1, Math.max(-1, p[2])))), longitude: deg(Math.atan2(p[1], p[0])) };
+}
+
+/** Haversine, rayon moyen de la Terre (Villes.distanceKm). */
+export function distanceKm(lat1, lon1, lat2, lon2) {
+  const dLat = rad(lat2 - lat1);
+  const dLon = rad(lon2 - lon1);
+  const h = Math.sin(dLat / 2) ** 2 + Math.cos(rad(lat1)) * Math.cos(rad(lat2)) * Math.sin(dLon / 2) ** 2;
+  return 2 * 6371 * Math.asin(Math.sqrt(Math.min(1, Math.max(0, h))));
+}
+
+/** UTC + n, n = longitude / 15 arrondi (Vol.decalageNautique) : il choisit seulement le jour civil demandé au moteur. */
+export const decalageNautique = (longitude) => Math.min(12, Math.max(-12, Math.round(longitude / 15)));
+
+/** « Etc/GMT-3 » pour UTC+3 : le signe des fuseaux Etc est inversé (tzdb). */
+export function fuseauNautique(longitude) {
+  const n = decalageNautique(longitude);
+  if (n === 0) return 'Etc/GMT';
+  return n > 0 ? `Etc/GMT-${n}` : `Etc/GMT+${-n}`;
+}
+
+export const lieuSous = (p) => ({ nom: '', latitude: p.latitude, longitude: p.longitude, altitude: 0, fuseau: fuseauNautique(p.longitude) });
+
+const isoDans = (t, fuseau) => new Intl.DateTimeFormat('en-CA', { timeZone: fuseau, year: 'numeric', month: '2-digit', day: '2-digit' }).format(t);
+const decale = (iso, n) => {
+  const [a, m, j] = iso.split('-').map(Number);
+  return new Date(Date.UTC(a, m - 1, j + n, 12)).toISOString().slice(0, 10);
+};
+
+/** Un jour du moteur en un point ; au sol, avant et après le vol, le même point revient : gardé. */
+const memo = new Map();
+function jourEn(lieu, iso) {
+  const k = `${lieu.latitude},${lieu.longitude},${iso}`;
+  if (!memo.has(k)) {
+    if (memo.size > 5000) memo.clear();
+    memo.set(k, jour(lieu, iso));
+  }
+  return memo.get(k);
+}
+
+/** Les zmanim du point pour la veille, le jour et le lendemain (jour du fuseau nautique). */
+function occurrences(p, signaler = () => {}) {
+  const lieu = lieuSous(p);
+  const iso = isoDans(p.instant, lieu.fuseau);
+  const parCle = {};
+  for (const d of [decale(iso, -1), iso, decale(iso, 1)]) {
+    for (const z of jourEn(lieu, d)) {
+      if (z.statut === 'ok') (parCle[z.cle] ??= []).push(+z.instant);
+      else signaler(z.statut === 'absent' ? 'absent' : 'erreur');
+    }
+  }
+  return parCle;
+}
+
+const plusProche = (liste, cible) => {
+  let m = null;
+  for (const x of liste ?? []) if (m === null || Math.abs(x - cible) < Math.abs(m - cible)) m = x;
+  return m;
+};
+
+/** Fausse position (Illinois) sur ]a, b] : t tel que zman(position(t)) = t, à la demi-seconde. */
+function racine(plan, cle, a, oa, b, ob) {
+  let ta = 0;
+  let tb = b - a;
+  let fa = oa - a;
+  let fb = ob - b;
+  let cote = 0;
+  for (let i = 0; i < 60; i++) {
+    const t = fb === fa ? (ta + tb) / 2 : tb - (fb * (tb - ta)) / (fb - fa);
+    const inst = a + Math.trunc(t);
+    const attendu = oa + Math.trunc((ob - oa) * (t / (b - a)));
+    const o = plusProche(occurrences(position(plan, inst))[cle], attendu);
+    if (o === null) return inst;
+    const f = o - inst;
+    if (Math.abs(f) <= TOLERANCE) return o;
+    if ((f > 0) === (fa > 0)) {
+      ta = t; fa = f;
+      if (cote === -1) fb /= 2;
+      cote = -1;
+    } else {
+      tb = t; fb = f;
+      if (cote === 1) fa /= 2;
+      cote = 1;
+    }
+  }
+  return a + Math.trunc((ta + tb) / 2);
+}
+
+function calculerSeul(plan) {
+  const reserves = new Set();
+  const dec = +plan.decollage;
+  const att = +plan.atterrissage;
+  const instants = [];
+  for (let t = dec - MARGE; t < dec; t += PAS_SOL) instants.push(t);
+  for (let t = dec; t < att; t += PAS_VOL) instants.push(t);
+  for (let t = att; t <= att + MARGE; t += PAS_SOL) instants.push(t);
+  const echantillons = instants.map((t) => {
+    const p = position(plan, t);
+    const enVol = t >= dec && t <= att;
+    if (enVol && Math.abs(p.latitude) > LATITUDE_HAUTE) reserves.add('haute_latitude');
+    return { t, p, occ: occurrences(p, (r) => { if (enVol) reserves.add(r); }) };
+  });
+  const trouves = [];
+  for (let i = 0; i < echantillons.length - 1; i++) {
+    const a = echantillons[i];
+    const b = echantillons[i + 1];
+    const enVol = a.t < att && b.t > dec;
+    for (const cle of CLES) {
+      for (const o of a.occ[cle] ?? []) {
+        // Sans vis-à-vis : la fenêtre de trois jours a glissé avec la date locale. Un zman
+        // vraiment absent est signalé par le moteur (statut « absent »), pas ici.
+        const apparie = plusProche(b.occ[cle], o);
+        if (apparie === null || Math.abs(apparie - o) > APPARIEMENT) continue;
+        const fa = o - a.t;
+        const fb = apparie - b.t;
+        const descend = fa > 0 && fb <= 0;
+        const remonte = fa < 0 && fb >= 0;
+        if (!descend && !remonte) continue;
+        if (remonte && enVol) reserves.add('a_rebours');
+        const t = racine(plan, cle, a.t, o, b.t, apparie);
+        const p = position(plan, t);
+        trouves.push({ cle, instant: new Date(t), latitude: p.latitude, longitude: p.longitude, ecartSiRetard: null });
+      }
+    }
+  }
+  trouves.sort((x, y) => x.instant - y.instant);
+  const evenements = [];
+  for (const e of trouves) if (!evenements.some((x) => x.cle === e.cle && Math.abs(x.instant - e.instant) < MIN)) evenements.push(e);
+  return { plan, evenements, reserves, lignesDate: lignesDate(plan, echantillons), fiabilite: 'route_prevue' };
+}
+
+/** Le passage du méridien de 180° en vol, et la date locale (fuseau nautique) de part et d'autre. */
+function lignesDate(plan, echantillons) {
+  const lignes = [];
+  for (let i = 0; i < echantillons.length - 1; i++) {
+    const a = echantillons[i].p;
+    const b = echantillons[i + 1].p;
+    if (+a.instant < +plan.decollage || +b.instant > +plan.atterrissage) continue;
+    if (Math.abs(b.longitude - a.longitude) <= 180) continue;
+    const avantLigne = 180 - Math.abs(a.longitude);
+    const part = avantLigne / (avantLigne + 180 - Math.abs(b.longitude));
+    const t = new Date(+a.instant + Math.trunc((b.instant - a.instant) * part));
+    lignes.push({ instant: t, avant: isoDans(t, fuseauNautique(a.longitude)), apres: isoDans(t, fuseauNautique(b.longitude)) });
+  }
+  return lignes;
+}
+
+export const enVol = (calcul) => calcul.evenements.filter((e) => +e.instant >= +calcul.plan.decollage && +e.instant <= +calcul.plan.atterrissage);
+
+/** Le calcul complet, avec l'écart de chaque horaire en vol si le départ glisse de 30 minutes. */
+export function calculer(plan) {
+  const base = calculerSeul(plan);
+  const retard = calculerSeul({ ...plan, decollage: new Date(+plan.decollage + RETARD), atterrissage: new Date(+plan.atterrissage + RETARD) });
+  base.evenements = base.evenements.map((e) => {
+    if (+e.instant < +plan.decollage || +e.instant > +plan.atterrissage) return e;
+    const memes = retard.evenements.filter((x) => x.cle === e.cle).map((x) => +x.instant);
+    const proche = plusProche(memes, +e.instant);
+    return { ...e, ecartSiRetard: proche !== null && Math.abs(proche - e.instant) <= APPARIEMENT ? proche - e.instant : null };
+  });
+  return base;
+}
+
+/**
+ * La prière du moment et sa limite : ZmanimWidget.prochaine, ligne pour ligne.
+ * horaires : { alot, szt_gra, chkia, chatsot_layla } en Date ou null.
+ */
+export function prochaine(horaires, maintenant) {
+  const alot = horaires.alot;
+  if (alot && +maintenant < +alot) {
+    const veille = horaires.chatsot_layla ? new Date(+horaires.chatsot_layla - 24 * H) : null;
+    return ['arvit', veille && +maintenant < +veille ? veille : null];
+  }
+  for (const [priere, limite] of [['chaharit', horaires.szt_gra], ['minha', horaires.chkia], ['arvit', horaires.chatsot_layla]]) {
+    if (limite && +maintenant < +limite) return [priere, limite];
+  }
+  return ['arvit', null];
+}
+
+/** Les horaires que prochaine attend, pris sur la route (Vol.horaires). */
+export function horaires(calcul, maintenant) {
+  const ev = calcul.evenements;
+  const alot = ev.filter((e) => e.cle === 'alot' && +e.instant <= +maintenant).at(-1)?.instant ?? null;
+  const apres = alot ?? maintenant;
+  const suivant = (cle) => ev.find((e) => e.cle === cle && +e.instant > +apres)?.instant ?? null;
+  return { alot, szt_gra: suivant('szt_gra'), chkia: suivant('chkia'), chatsot_layla: suivant('chatsot_layla') };
+}
+
+/** La prière du moment en vol et sa limite ; null loin du vol (la fenêtre ne couvre plus). */
+export function priere(calcul, maintenant) {
+  if (+maintenant < +calcul.plan.decollage - COUVERT || +maintenant > +calcul.plan.atterrissage + COUVERT) return null;
+  return prochaine(horaires(calcul, maintenant), maintenant);
+}

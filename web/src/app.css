@@ -1383,3 +1383,15 @@ body.avec-mini .seance .contenu { padding-bottom: calc(104px + env(safe-area-ins
   .ecran.entree .defile, .ecran.entree:not(.seance) .contenu > *, .fondu-neuf, .ecran.entree .sujet-plein { animation: none; }
   .principal:active, .secondaire:active, .bouton-trophees:active, .duree:active, .pastille:active, .maintenant:active, .livre:active { transform: none; }
 }
+
+/* Les zmanim en vol (28/10, VolActivity) : la prière du moment en grand, le compte à rebours en gras. */
+.carte-vol p { margin: 4px 0 0; }
+.carte-vol .indice { margin: 0; }
+.carte-vol .vol-priere { margin-top: 6px; color: var(--brand); font-size: 24px; font-weight: 700; }
+.carte-vol .vol-compte { font-size: 18px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.carte-vol p + p:not(.vol-priere):not(.vol-compte):not(.indice) { margin-top: 10px; }
+.champ-vol { margin-top: 4px; min-height: 44px; }
+.boutons-vol { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin: 12px 0 8px; }
+.boutons-vol button { width: 100%; min-width: 0; }
+.vol-heure { margin-top: 2px; font-weight: 700; font-variant-numeric: tabular-nums; text-align: start; }
+.liste-aeroports { max-height: 50vh; overflow-y: auto; margin-top: 8px; }

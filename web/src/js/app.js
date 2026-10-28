@@ -19,6 +19,7 @@ import { pour as halakhotPour, recherche as rechercheHalakha, source as sourceHa
 import { pour as yalkutPour, recherche as rechercheYalkut, source as sourceYalkut, texteCarte, titreCarte } from './yalkut.js';
 import { ajouts as ajoutsDuJour, dateHilloula, debutMoisHebreu, hilloulotPour, lienArticle, rechercheHilloula, horaires, illustration as illustrationDuJour, lienHalakha, lienHyomi, momentDuSiddour, moisHebreuVoisin, semaines, semainesHebreu } from './jour-affiche.js';
 import { ALLUMAGES, heure as heureZman, jour as zmanimDuJour } from './zmanim.js';
+import * as Vol from './vol.js';
 
 // --- Stockage ---------------------------------------------------------------
 function stockageDuNavigateur() {
@@ -2260,9 +2261,172 @@ function ecranZmanim() {
         h('button', { class: 'secondaire', onclick: () => { jourHalakha = iso; rechercheHalakhaTexte = ''; ouvrir('halakha'); } }, tr.t('zmanim_bouton_halakha')),
         h('button', { class: 'secondaire', onclick: () => { jourHilloulot = iso; rechercheHilloulot = ''; ouvrir('hilloulot'); } }, tr.t('zmanim_bouton_hilloulot')),
         h('button', { class: 'secondaire', onclick: () => { jourCalendrier = iso; moisCalendrier = null; ouvrir('calendrier'); } }, tr.t('zmanim_calendrier'))),
+      carteVol(),
       listeZmanim(iso),
       ...sousHoraires(iso),
       ...piedZmanim())));
+}
+
+// --- Les zmanim en vol (VolActivity, 28/10) : vol.js, hors ligne --------------------------
+let aeroportsVol = null;
+let aeroportsDemandes = false;
+function chargeAeroports() {
+  if (aeroportsVol) return true;
+  if (!aeroportsDemandes) {
+    aeroportsDemandes = true;
+    fetch('data/aeroports.json').then((r) => r.json()).then((d) => { aeroportsVol = Vol.aeroports(d); rendre(); }).catch(() => {});
+  }
+  return false;
+}
+/** Le formulaire en cours : { numero, depart, arrivee, decollage, atterrissage } ; repris du vol gardé. */
+let saisieVol = null;
+/** Le dernier calcul et la saisie qui l'a produit (deux passes de vol.js : on ne recalcule pas à chaque rendu). */
+let calculVol = null;
+let cleCalculVol = null;
+let minuterieVol = null;
+
+const libelleVol = (v) => tr.t('vol_carte_vol', v.numero || '✈', v.depart, v.arrivee);
+
+/** L'accès depuis l'onglet Zmanim : le dernier vol saisi, ou l'invitation à en saisir un. */
+function carteVol() {
+  const v = store.vol();
+  return h('div', { class: 'carte' }, h('button', { class: 'ligne', onclick: () => ouvrir('vol') },
+    h('span', { class: 'corps' }, h('div', { class: 'nom' }, tr.t('vol_title')),
+      h('div', { class: 'etat' }, v ? libelleVol(v) : tr.t('vol_carte_sous'))),
+    h('span', { class: 'chevron', 'aria-hidden': 'true' })));
+}
+
+function planDe(v) {
+  const depart = aeroportsVol.find((a) => a.iata === v.depart);
+  const arrivee = aeroportsVol.find((a) => a.iata === v.arrivee);
+  if (!depart || !arrivee || !v.decollage || !v.atterrissage) return null;
+  const decollage = Vol.instant(v.decollage, depart);
+  const atterrissage = Vol.instant(v.atterrissage, arrivee);
+  return decollage && atterrissage ? { numero: v.numero ?? '', depart, arrivee, decollage, atterrissage } : null;
+}
+
+function choisirAeroport(onChoisi) {
+  feuille(tr.t('vol_choisir_aeroport'), (f, fermer) => {
+    const liste = h('div', { class: 'liste-aeroports' });
+    const champ = h('input', { type: 'search', class: 'champ-recherche', placeholder: tr.t('vol_chercher'), oninput: (e) => {
+      const trouves = Vol.chercher(aeroportsVol, e.target.value);
+      liste.replaceChildren(...(trouves.length || !e.target.value.trim() ? trouves.map((a) => h('button', {
+        class: 'choix', onclick: () => { fermer(); onChoisi(a); },
+      }, `${a.iata} · ${a.ville} — ${a.nom} (${a.pays})`)) : [h('p', { class: 'message' }, tr.t('vol_aucun_resultat'))]));
+    } });
+    f.append(champ, liste, h('button', { class: 'secondaire', onclick: fermer }, tr.t('vol_fermer')));
+  });
+}
+
+/**
+ * « mar. 10 · 18:42 TLV · 11:42 JFK » : l'heure du départ et celle de l'arrivée, le jour s'il change
+ * (VolActivity.deuxHeures). Seuls « heure code » sont isolés de gauche à droite : le jour reste dans
+ * le sens de la langue.
+ */
+function deuxHeures(plan, t) {
+  const jour = (fuseau) => new Intl.DateTimeFormat(tr.langue, { timeZone: fuseau, weekday: 'short', day: 'numeric' }).format(t);
+  const heure = (a) => `\u2066${new Intl.DateTimeFormat(tr.langue, { timeZone: a.fuseau, hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }).format(t)} ${a.iata}\u2069`;
+  const civil = (fuseau) => new Intl.DateTimeFormat('en-CA', { timeZone: fuseau }).format(t);
+  const autreJour = civil(plan.arrivee.fuseau) !== civil(plan.depart.fuseau);
+  return `${jour(plan.depart.fuseau)} ${heure(plan.depart)} · ${autreJour ? `${jour(plan.arrivee.fuseau)} ` : ''}${heure(plan.arrivee)}`;
+}
+
+const ecartVol = (ms) => tr.t('vol_ecart', `${ms < 0 ? '−' : '+'}${Math.abs(Math.round(ms / 60000))}`);
+
+function positionVol(e) {
+  const n = (x) => Math.abs(x).toLocaleString(tr.langue, { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+  return tr.t('vol_position', tr.t(e.latitude >= 0 ? 'vol_lat_nord' : 'vol_lat_sud', n(e.latitude)),
+    tr.t(e.longitude >= 0 ? 'vol_lon_est' : 'vol_lon_ouest', n(e.longitude)));
+}
+
+function resultatsVol(c) {
+  const maintenant = new Date();
+  const p = Vol.priere(c, maintenant);
+  const NOMS = { chaharit: 'widget_zmanim_chaharit', minha: 'widget_zmanim_minha', arvit: 'widget_zmanim_arvit' };
+  const enVol = Vol.enVol(c);
+  let priere;
+  if (!p) priere = [h('p', { class: 'message' }, tr.t('vol_hors_fenetre'))];
+  else {
+    const [nom, limite] = p;
+    const minutes = limite ? Math.max(0, Math.floor((limite - maintenant) / 60000)) : 0;
+    const ecart = limite ? enVol.find((e) => +e.instant === +limite)?.ecartSiRetard : null;
+    priere = [h('p', { class: 'vol-priere' }, tr.t(NOMS[nom])),
+      limite ? h('p', {}, tr.t('vol_jusqua', deuxHeures(c.plan, limite))) : h('p', {}, tr.t('vol_sans_limite')),
+      limite ? h('p', { class: 'vol-compte' }, tr.t('vol_dans', JaugeSemaine.dureeCourte(minutes))) : null,
+      ecart !== null && ecart !== undefined ? h('p', { class: 'indice' }, ecartVol(ecart)) : null];
+  }
+  const RESERVES = ['haute_latitude', 'absent', 'erreur', 'a_rebours'];
+  const date = (iso) => new Intl.DateTimeFormat(tr.langue, { timeZone: 'UTC', weekday: 'short', day: 'numeric', month: 'short' }).format(new Date(`${iso}T12:00:00Z`));
+  return [
+    h('div', { class: 'carte carte-texte carte-vol' }, h('p', { class: 'indice' }, tr.t('vol_priere_titre')), ...priere),
+    h('div', { class: 'carte carte-texte carte-vol' }, h('p', { class: 'indice' }, tr.t('vol_fiabilite_titre')), h('p', {}, tr.t('vol_fiabilite')),
+      ...RESERVES.filter((r) => c.reserves.has(r)).map((r) => h('p', {}, tr.t(`vol_reserve_${r}`))),
+      ...c.lignesDate.map((l) => h('p', {}, tr.t('vol_ligne_date', deuxHeures(c.plan, l.instant), date(l.avant), date(l.apres))))),
+    h('div', { class: 'carte carte-zmanim' }, h('p', { class: 'indice' }, tr.t('vol_en_vol_titre')),
+      enVol.length ? enVol.map((e) => h('div', { class: 'zman' },
+        h('div', { class: 'zman-tete' }, h('span', { class: 'zman-nom' }, tr.t(`zman_${e.cle}`))),
+        h('div', { class: 'zman-heure vol-heure' }, deuxHeures(c.plan, e.instant)),
+        h('div', { class: 'zman-methode' }, [positionVol(e), e.ecartSiRetard !== null ? ecartVol(e.ecartSiRetard) : null].filter(Boolean).join(' · '))))
+        : h('p', { class: 'message' }, tr.t('vol_aucun_zman'))),
+  ];
+}
+
+function ecranVol() {
+  // La prière du moment et son compte à rebours suivent l'heure : un rendu toutes les 30 s,
+  // sauf pendant une saisie (le champ garderait le clavier).
+  if (!minuterieVol) {
+    minuterieVol = setInterval(() => {
+      if (ecranCourant() !== 'vol') { clearInterval(minuterieVol); minuterieVol = null; return; }
+      if (!document.querySelector('.voile') && !app.contains(document.activeElement?.closest('input'))) rendre();
+    }, 30000);
+  }
+  const pret = chargeAeroports();
+  saisieVol ??= { ...(store.vol() ?? { numero: '', depart: null, arrivee: null, decollage: '', atterrissage: '' }) };
+  const v = saisieVol;
+  const garde = store.vol();
+  if (pret && garde && cleCalculVol !== JSON.stringify(garde)) {
+    const plan = planDe(garde);
+    calculVol = plan && !Vol.verifier(plan) ? Vol.calculer(plan) : null;
+    cleCalculVol = JSON.stringify(garde);
+  }
+  const nomA = (iata) => {
+    const a = pret && iata ? aeroportsVol.find((x) => x.iata === iata) : null;
+    return a ? `${a.iata} · ${a.ville || a.nom}` : tr.t('vol_choisir_aeroport');
+  };
+  const villeA = (iata) => (pret ? aeroportsVol.find((x) => x.iata === iata) : null)?.ville || iata;
+  const message = (cle) => feuille(tr.t('vol_title'), (f, fermer) => f.append(h('p', {}, tr.t(cle)), h('button', { class: 'principal', onclick: fermer }, tr.t('vol_fermer'))));
+  const calculer = () => {
+    if (!v.depart || !v.arrivee || !v.decollage || !v.atterrissage) return message('vol_incomplet');
+    const plan = planDe(v);
+    if (!plan) return message('vol_invalide_fuseau_inconnu');
+    const faute = Vol.verifier(plan);
+    if (faute) return message(`vol_invalide_${faute}`);
+    store.setVol({ ...v });
+    rendre();
+  };
+  const ligne = (etiquette, valeur, onclick) => h('button', { class: 'ligne', onclick },
+    h('span', { class: 'corps' }, h('div', { class: 'etat' }, etiquette), h('div', { class: 'nom' }, valeur)), h('span', { class: 'chevron', 'aria-hidden': 'true' }));
+  const heure = (cle, etiquette) => h('label', { class: 'ligne' },
+    h('span', { class: 'corps' }, h('div', { class: 'etat' }, etiquette),
+      h('input', { type: 'datetime-local', class: 'champ-recherche champ-vol', value: v[cle] || null, onchange: (e) => { v[cle] = e.target.value; } })));
+  const formulaire = h('div', { class: 'carte' },
+    h('label', { class: 'ligne' }, h('span', { class: 'corps' }, h('div', { class: 'etat' }, tr.t('vol_numero')),
+      h('input', { type: 'text', class: 'champ-recherche champ-vol', maxlength: 12, autocapitalize: 'characters', value: v.numero || null, onchange: (e) => { v.numero = e.target.value.trim(); } }))),
+    ligne(tr.t('vol_depart'), nomA(v.depart), () => pret && choisirAeroport((a) => { v.depart = a.iata; rendre(); })),
+    ligne(tr.t('vol_arrivee'), nomA(v.arrivee), () => pret && choisirAeroport((a) => { v.arrivee = a.iata; rendre(); })),
+    v.depart ? heure('decollage', tr.t('vol_decollage', villeA(v.depart))) : null,
+    v.arrivee ? heure('atterrissage', tr.t('vol_atterrissage', villeA(v.arrivee))) : null,
+    h('div', { class: 'boutons-vol' },
+      h('button', { class: 'principal', onclick: calculer }, tr.t('vol_calculer')),
+      h('button', { class: 'secondaire', onclick: () => { store.setVol(null); saisieVol = null; calculVol = null; cleCalculVol = null; rendre(); } }, tr.t('vol_effacer'))));
+  const puce = h('span', { class: 'puce-bandeau' }, garde ? libelleVol(garde) : tr.t('vol_carte_sous'));
+  return h('div', { class: 'ecran avec-bandeau' }, bandeau(tr.t('vol_title'), { puce, dessin: 'char_torah' }),
+    h('div', { class: 'defile' }, h('div', { class: 'contenu' },
+      formulaire,
+      ...(garde && !pret ? [h('div', { class: 'carte carte-texte' }, h('p', { class: 'message' }, tr.t('vol_calcul_en_cours')))] : []),
+      ...(garde && calculVol ? resultatsVol(calculVol) : []),
+      ...piedZmanim().slice(0, 1),
+      h('p', { class: 'indice sources' }, tr.t('vol_source_aeroports')))));
 }
 
 /**
@@ -3419,7 +3583,7 @@ function arreteDanse() {
 // et le geste de retour ramènent à l'accueil, sur l'onglet quitté.
 function ecranCourant() {
   const e = location.hash.slice(1);
-  return ['musique', 'reglages', 'seance', 'bravo', 'tehilim', 'lecture', 'siddur', 'priere', 'tikkun', 'bibliotheque', 'livres', 'source', 'zmanim', 'calendrier', 'paliers', 'hilloulot', 'halakha', 'recherche', 'hizouk', 'parcours'].includes(e) ? e : 'accueil';
+  return ['musique', 'reglages', 'seance', 'bravo', 'tehilim', 'lecture', 'siddur', 'priere', 'tikkun', 'bibliotheque', 'livres', 'source', 'zmanim', 'vol', 'calendrier', 'paliers', 'hilloulot', 'halakha', 'recherche', 'hizouk', 'parcours'].includes(e) ? e : 'accueil';
 }
 function ouvrir(ecran) {
   // L'entrée sur l'écran de séance tire le mot d'ouverture (SessionActivity.onCreate).
@@ -3478,6 +3642,7 @@ function rendre() {
   if (ecran === 'musique') app.append(ecranMusique());
   else if (ecran === 'reglages') app.append(ecranReglages());
   else if (ecran === 'zmanim') app.append(ecranZmanim());
+  else if (ecran === 'vol') app.append(ecranVol());
   else if (ecran === 'calendrier') app.append(ecranCalendrier());
   else if (ecran === 'paliers') app.append(ecranPaliers());
   else if (ecran === 'hilloulot') app.append(ecranHilloulot());

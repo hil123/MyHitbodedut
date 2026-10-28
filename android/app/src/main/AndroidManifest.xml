@@ -186,6 +186,11 @@
             android:label="@string/zmanim_title" />
 
         <activity
+            android:name=".VolActivity"
+            android:exported="false"
+            android:label="@string/vol_title" />
+
+        <activity
             android:name=".CalendrierActivity"
             android:exported="false"
             android:label="@string/calendrier_title" />
