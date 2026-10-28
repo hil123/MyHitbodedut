@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/session_fond"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -255,52 +256,86 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp" />
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/session_stuck"
-                style="@style/Widget.Material3.Button.TextButton"
-                android:layout_width="match_parent"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="0dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="12dp"
+                android:minHeight="48dp"
+                android:paddingHorizontal="22dp"
                 android:text="@string/chizuk_stuck"
                 android:textColor="?attr/mhMint"
-                android:visibility="gone" />
+                android:textSize="15sp"
+                android:visibility="gone"
+                app:cornerRadius="999dp"
+                app:strokeColor="@color/contour_menthe"
+                app:strokeWidth="1dp" />
 
-            <!-- « Je ne sais pas quoi dire » (propositions 3 et 15, 19/10) : une question à la fois. -->
+            <!-- « Je ne sais pas quoi dire » (propositions 3 et 15, 19/10) : une question à la fois.
+                 Carte sobre : rang espacé, jauge fine, question, pastille fléchée. -->
             <LinearLayout
                 android:id="@+id/session_questions"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:background="@drawable/bg_hero_chip"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/bg_question_carte"
                 android:orientation="vertical"
-                android:paddingHorizontal="16dp"
-                android:paddingVertical="12dp"
+                android:paddingHorizontal="20dp"
+                android:paddingTop="18dp"
+                android:paddingBottom="12dp"
                 android:visibility="gone">
 
                 <TextView
                     android:id="@+id/session_question_rang"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:alpha="0.85"
+                    android:letterSpacing="0.12"
                     android:textColor="?attr/mhMint"
-                    android:textSize="12sp" />
+                    android:textSize="11sp"
+                    android:textStyle="bold" />
+
+                <com.google.android.material.progressindicator.LinearProgressIndicator
+                    android:id="@+id/session_question_jauge"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    app:indicatorColor="?attr/mhMint"
+                    app:trackColor="#1FFFFFFF"
+                    app:trackCornerRadius="2dp"
+                    app:trackThickness="2dp" />
 
                 <TextView
                     android:id="@+id/session_question"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="6dp"
-                    android:lineSpacingExtra="4dp"
+                    android:layout_marginTop="14dp"
+                    android:lineSpacingExtra="6dp"
                     android:textColor="@color/white"
-                    android:textSize="19sp" />
+                    android:textSize="20sp" />
 
-                <Button
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/session_question_suivante"
-                    style="@style/Widget.Material3.Button.TextButton"
+                    style="@style/Widget.Material3.Button.OutlinedButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="end"
+                    android:layout_marginTop="10dp"
+                    android:minHeight="44dp"
+                    android:paddingHorizontal="16dp"
                     android:text="@string/question_suivante"
-                    android:textColor="?attr/mhMint" />
+                    android:textColor="?attr/mhMint"
+                    android:textSize="14sp"
+                    app:cornerRadius="999dp"
+                    app:icon="@drawable/ic_fleche_suivante"
+                    app:iconGravity="textEnd"
+                    app:iconPadding="4dp"
+                    app:iconSize="18dp"
+                    app:iconTint="?attr/mhMint"
+                    app:strokeColor="@color/contour_menthe"
+                    app:strokeWidth="1dp" />
             </LinearLayout>
 
         </LinearLayout>

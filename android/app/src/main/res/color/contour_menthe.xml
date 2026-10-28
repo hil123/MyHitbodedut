@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Le filet des boutons « pastille » de la pratique : la menthe à 40 %. -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:alpha="0.4" android:color="?attr/mhMint" />
+</selector>

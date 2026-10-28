@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- La carte « une question à la fois » : voile clair dégradé, filet fin, coins 20dp. -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
+    <gradient android:angle="270" android:startColor="#17FFFFFF" android:endColor="#0AFFFFFF" />
+    <stroke android:width="1dp" android:color="#24FFFFFF" />
+    <corners android:radius="20dp" />
+</shape>

@@ -1170,10 +1170,10 @@ function ecranPriere() {
   const cleMarque = `${livre ? 'l' : 's'}:${x.id}`;
   const nusahMarque = livre ? '' : store.siddurNusah();
   const marquee = (si, i) => store.marques().some((m) => m.cle === cleMarque && m.nusah === nusahMarque && m.section === si && m.bloc === i);
-  const paragraphe = (s, i) => {
+  const paragraphe = (s, i, texte) => {
     const b = s.blocs[i];
     const si = x.sections.indexOf(s);
-    const p = h('p', { class: `${b.c !== undefined ? 'consigne' : 'priere'}${marquee(si, i) ? ' marque-page' : ''}${livre ? ' marque-etude' : ''}`, lang: 'he', dir: 'rtl', 'data-place': `${si}:${i}` }, riche(b.c ?? b.t));
+    const p = h('p', { class: `${b.c !== undefined ? 'consigne' : 'priere'}${marquee(si, i) ? ' marque-page' : ''}${livre ? ' marque-etude' : ''}`, lang: 'he', dir: 'rtl', 'data-place': `${si}:${i}` }, riche(texte ?? b.c ?? b.t));
     let minuteur = null;
     const poser = () => {
       const pose = store.basculerMarque({ cle: cleMarque, nusah: nusahMarque, section: si, bloc: i, apercu: apercuMarque(b.c ?? b.t) });
@@ -1197,9 +1197,17 @@ function ecranPriere() {
     return cible ? h('button', { type: 'button', class: 'renvoi-jour', lang: 'he', dir: 'rtl', onclick: () => ouvrirRenvoi(x.id, cible.id) },
       `${tr.t('siddur_aujourdhui')} · ${cible.titre.he}  ›`) : null;
   });
-  const avecIndices = (si, i, p) => {
-    const du = (idx.indices.get(`${si}:${i}`) ?? []).filter((a) => ajoutVrai(a.si, c));
-    return [p, ...du.map((a) => h('p', { class: 'indice-jour' },
+  // Une variante enchâssée hors du jour (המלך הקדוש, מוריד הטל…) : retirée du paragraphe,
+  // repliée dessous (28/10, SiddurJour.lignes). Celle du jour se lit dans le texte même.
+  const avecIndices = (s, si, i) => {
+    const tous = idx.indices.get(`${si}:${i}`) ?? [];
+    const hors = tous.filter((a) => a.retire && !ajoutVrai(a.si, c));
+    const brut = s.blocs[i].t ?? s.blocs[i].c;
+    const reduit = hors.reduce((t, a) => t.replace(a.retire, ''), brut).trim();
+    const du = tous.filter((a) => !a.retire && ajoutVrai(a.si, c));
+    const pli = hors.length && reduit !== brut
+      ? ajout(nom(hors[0], hors[0].si), false, hors.map((a) => h('p', { class: 'priere hors-jour', lang: 'he', dir: 'rtl' }, a.texte)), hors[0].si) : null;
+    return [paragraphe(s, i, reduit !== brut ? reduit : undefined), pli, ...du.map((a) => h('p', { class: 'indice-jour' },
       h('span', {}, `${tr.t('siddur_aujourdhui')} : `), h('span', { lang: 'he', dir: 'rtl' }, a.texte))), ...renvois(si, i)];
   };
   const contenu = h('div', { class: 'contenu lecture siddour' },
@@ -1213,7 +1221,7 @@ function ecranPriere() {
       const corps = [];
       for (let i = 0; i < s.blocs.length; i++) {
         const a = idx.blocs.get(`${si}:${i}`);
-        if (!a) { corps.push(...avecIndices(si, i, paragraphe(s, i)), ...seuls(si, i)); continue; }
+        if (!a) { corps.push(...avecIndices(s, si, i).filter(Boolean), ...seuls(si, i)); continue; }
         // Le groupe : les blocs suivants de même groupe, variantes comprises.
         const membres = [];
         while (i < s.blocs.length && idx.blocs.get(`${si}:${i}`)?.g === a.g) {
@@ -3262,8 +3270,9 @@ function ecranSeance() {
     enCours && aBlocage ? h('button', { class: 'texte-clair blocage', onclick: () => { tireChizuk('blocage'); if (questionSeance < 0) questionSeance = 0; rendre(); } }, tr.t('chizuk_stuck')) : null,
     enCours && questionSeance >= 0 ? h('div', { class: `question-seance${questionChange && !moinsDeMouvement() ? ' fondu-neuf' : ''}` },
       h('p', { class: 'question-rang' }, tr.t('question_rang', questionSeance + 1, QUESTIONS_BLOCAGE.length)),
+      h('div', { class: 'question-jauge', 'aria-hidden': 'true' }, h('span', { style: `width:${((questionSeance + 1) / QUESTIONS_BLOCAGE.length) * 100}%` })),
       h('p', { class: 'question-texte' }, tr.t(QUESTIONS_BLOCAGE[questionSeance])),
-      h('button', { class: 'texte-clair', onclick: () => { questionSeance = (questionSeance + 1) % QUESTIONS_BLOCAGE.length; questionChange = true; rendre(); questionChange = false; } }, tr.t('question_suivante'))) : null,
+      h('button', { class: 'question-suivante', onclick: () => { questionSeance = (questionSeance + 1) % QUESTIONS_BLOCAGE.length; questionChange = true; rendre(); questionChange = false; } }, tr.t('question_suivante'))) : null,
     h('button', { class: 'texte-clair', onclick: choisirSujet },
       sujet ? tr.t('session_theme_chosen', tr.t(`theme_${sujet}`)) : tr.t('session_theme_none')),
   ];

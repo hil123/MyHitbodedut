@@ -69,9 +69,18 @@ VARIANTES_YAALE = [
 ]
 
 # Les variantes enchâssées dans un bloc, après leur annonce.
+# Les mêmes variantes dans le texte brut : ce qu'on retire du bloc hors du jour (28/10).
+RETIRE = [
+    r"<small>\s*<small>\s*בעשרת ימי תשובה[^<]*</small>[^<]*</small>",
+    r"<small>בעשרת ימי תשובה [^<:]*: [^<]+</small> ?",
+    r" ?\(<small>בעשי״ת</small>[^)]*\)",
+    r" ?<small>\(בעשי״ת [^)]*\)</small>",
+    r"<small>בעשי״ת הַמֶּלֶךְ</small> ?",
+]
 INDICES = [
     (r"בעשרת ימי תשובה (?:אומרים|אומר|מסיימים)?:? ?([^:()]+)", "asseret_yemei_techouva"),
-    (r"\(בעשי״ת ([^)]+)\)", "asseret_yemei_techouva"),
+    (r"\( ?בעשי״ת:? ([^)]+)\)", "asseret_yemei_techouva"),
+    (r"(?<!\()\bבעשי״ת (המלך)(?= הקדוש)", "asseret_yemei_techouva"),
 ]
 
 
@@ -488,16 +497,29 @@ def annoter(texte_id, sections, nusah):
                 continue
             # Les variantes enchâssées : un repère, rien de replié.
             if bi not in pris and not cons[bi]:
-                for motif, c in INDICES:
-                    for m in re.finditer(motif, x):
-                        variante = m.group(1).strip(" ,.")
-                        if variante:
-                            note("indice", si, bi, c, {"texte": variante})
+                brut = sec["blocs"][bi].get("t", "")
+                retraits = sorted((m.start(), m.group(0)) for r in RETIRE for m in re.finditer(r, brut))
+                trouves = sorted((m.start(), c, m.group(1).strip(" ,.")) for motif, c in INDICES
+                                 for m in re.finditer(motif, x) if m.group(1).strip(" ,."))
+                # Le passage brut à replier hors du jour (demande du 28/10) : apparié dans
+                # l'ordre du texte, et seulement si les deux comptes s'accordent.
+                apparie = len(retraits) == len(trouves)
+                for k, (_, c, variante) in enumerate(trouves):
+                    extra = {"texte": variante}
+                    if apparie:
+                        extra["retire"] = retraits[k][1]
+                        # La variante exacte est dans le brut (« הַשָּׁלוֹם » seul, pas la suite).
+                        interne = re.match(r"<small>\s*(?:<small>[^<]*</small>|בעשרת ימי תשובה [^<:]*:)([^<]*)</small>", extra["retire"])
+                        if interne and nu(interne.group(1)).strip(" ,.:"):
+                            extra["texte"] = nu(interne.group(1)).strip(" ,.:")
+                    note("indice", si, bi, c, extra)
                 if re.fullmatch(r"בקיץ: מוריד הטל\. בחורף: משיב הרוח ומוריד הגשם\.?", x):
-                    note("indice", si, bi, "morid_hatal", {"texte": "מוריד הטל"})
-                    note("indice", si, bi, "machiv_harouah", {"texte": "משיב הרוח ומוריד הגשם"})
+                    brut = sec["blocs"][bi]["t"]
+                    k = brut.index("<small>בחורף")
+                    note("indice", si, bi, "morid_hatal", {"texte": "מוריד הטל", "retire": brut[:k]})
+                    note("indice", si, bi, "machiv_harouah", {"texte": "משיב הרוח ומוריד הגשם", "retire": brut[k:]})
             bi += 1
-        if office or texte_id == "arvit":
+        if office or texte_id in ("arvit", "moussaf_rosh_hodech"):
             minyan(txt, cons, pris, prend)
     # La passe « minyan » ajoute ses blocs après les autres : grouper veut l'ordre du texte.
     sortie.sort(key=lambda e: (e["s"], e.get("b", -1)))
@@ -521,8 +543,15 @@ FIN_COHANIM = ("שים שלום", "שלום רב")
 
 
 def colle(s, debut):
-    """Comme commence, sans tenir compte des mots soudés du siddour (« כבודיהוה », « אתשמך »)."""
+    """Comme commence, sans tenir compte des mots soudés du siddour (« כבודיהוה », « אתשמך »),
+    ni du « חזן: » / « לש״ץ - » qui précède la part de l'officiant."""
+    s = re.sub(r"^(חזן:|לש״ץ\s*-)\s*", "", s)
     return "".join(mots(s)).startswith(debut.replace(" ", ""))
+
+
+def soude(s):
+    """Le texte sans espaces : « מודים דרבנןבחזרת » et « מודים דרבנן בחזרת » se rejoignent."""
+    return re.sub(r"\s+", "", s)
 
 
 def minyan(txt, cons, pris, prend):
@@ -533,6 +562,7 @@ def minyan(txt, cons, pris, prend):
         k = bi
         while k > 0 and k - 1 not in pris and cons[k - 1] and (
                 txt[k - 1] in CONSIGNES_MINYAN or txt[k - 1].startswith(("בחזרת הש״ץ", "קדושה"))
+                or (len(txt[k - 1]) < 40 and "בחזרתהש״ץ" in soude(txt[k - 1]))
                 or re.fullmatch(r"\(?[^()]{0,30}קדיש[^()]{0,25}\)?:?", txt[k - 1])):
             k -= 1
         return k
@@ -563,12 +593,16 @@ def minyan(txt, cons, pris, prend):
             while fin < n and fin not in pris and not cons[fin] and any(commence(txt[fin], k) for k in KADDICH[1:]):
                 fin += 1
         # Modim derabanan, que l'assemblée dit pendant le « מודים » de l'officiant.
-        elif (cons[bi] and txt[bi].startswith("בחזרת הש״ץ כשהחזן אומר מודים")) or x.startswith("מודים דרבנן בחזרת"):
+        elif (cons[bi] and (soude(x).startswith(("בחזרתהש״ץכשהחזןאומרמודים", "מודיםדרבנן")))) \
+                or soude(x).startswith("מודיםדרבנןבחזרת"):
             fin = bi + 1
             if cons[bi] and fin < n and not cons[fin] and commence(txt[fin], "מודים אנחנו לך"):
                 fin += 1
+        # L'officiant répète ce que l'assemblée a dit (« וחוזר החזן: יהוה אלהיכם אמת »).
+        elif not cons[bi] and x.startswith("וחוזר החזן"):
+            fin = bi + 1
         # La bénédiction des Cohanim de la répétition, jusqu'à « שים שלום ».
-        elif (cons[bi] and (x == "ברכת כהנים" or x.startswith("הטעם שתקנו לברך את ישראל"))) or \
+        elif (cons[bi] and (x.rstrip(":") == "ברכת כהנים" or x.startswith("הטעם שתקנו לברך את ישראל"))) or \
                 (not cons[bi] and commence(x, "אלהינו ואלהי אבותינו ברכנו בברכה")):
             fin = bi + 1
             while fin < n and fin not in pris and not (

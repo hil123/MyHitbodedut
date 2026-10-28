@@ -34,6 +34,8 @@ object SiddurJour {
         val cible: String? = null,
         /** Pour une carte « seul » : la consigne qui précède son texte. */
         val consigne: String? = null,
+        /** Pour un indice : le passage brut du bloc, replié hors du jour (« המלך הקדוש », 28/10). */
+        val retire: String? = null,
     )
 
     /** Les annotations d'un nusah, par identifiant de texte. */
@@ -59,6 +61,7 @@ object SiddurJour {
                     libelle = a.optString("libelle", "").ifBlank { null },
                     cible = a.optString("cible", "").ifBlank { null },
                     consigne = a.optString("consigne", "").ifBlank { null },
+                    retire = a.optString("retire", "").ifBlank { null },
                 )
             }
         }
@@ -137,9 +140,26 @@ object SiddurJour {
             while (i < s.blocs.size) {
                 val a = blocs[si to i]
                 if (a == null) {
-                    sortie += Ligne.Bloc(s.blocs[i], Style.NORMAL)
-                    indices[si to i].orEmpty().filter { it.texte != null && vrai(it.condition, conditions) }
+                    // Une variante enchâssée hors du jour (המלך הקדוש, מוריד הטל…) : retirée du
+                    // bloc, et une ligne repliée la rend d'un geste (demande du 28/10).
+                    val ind = indices[si to i].orEmpty()
+                    val horsJour = ind.filter { it.retire != null && !vrai(it.condition, conditions) }
+                    val cleVariante = "v$si:$i"
+                    val ouverte = cleVariante in ouverts
+                    var bloc = s.blocs[i]
+                    if (!ouverte) {
+                        val reduit = horsJour.fold(bloc.texte) { t, v -> t.replaceFirst(v.retire!!, "") }.trim()
+                        if (reduit != bloc.texte) bloc = bloc.copy(texte = reduit)
+                    }
+                    sortie += Ligne.Bloc(bloc, Style.NORMAL)
+                    // Le texte du jour se lit dans le bloc même ; l'ancien « Aujourd'hui : … » ne
+                    // reste que pour les variantes qu'on ne sait pas replier.
+                    ind.filter { it.texte != null && it.retire == null && vrai(it.condition, conditions) }
                         .forEach { sortie += Ligne.Indice(it.texte!!) }
+                    if (horsJour.isNotEmpty() && (ouverte || bloc !== s.blocs[i])) {
+                        val v = horsJour.first()
+                        sortie += Ligne.Replie(cleVariante, v.condition, ouverte, nom(v, v.condition))
+                    }
                     seul(si, i)
                     renvoyer(si, i)
                     i++
@@ -222,6 +242,10 @@ object SiddurJour {
     fun libelleJour(libelleAnnotation: String?, condition: String, nusah: String, conditions: Set<String>): String = when {
         libelleAnnotation != null -> libelleAnnotation
         condition == CalendrierJuif.C.HALLEL -> libelleHallel(nusah, conditions) ?: libelle(condition)
+        // Les Edot changent toute la 9ᵉ bénédiction, pas une formule (demande du 28/10) : ברך עלינו / ברכנו.
+        nusah == "edot" && condition.removePrefix("!") == CalendrierJuif.C.TAL_OUMATAR ->
+            if (condition.startsWith("!")) "ajout_barkhenou" else "ajout_barekh_alenou"
+        nusah == "edot" && condition == "berakha" -> "ajout_barkhenou"
         else -> libelle(condition)
     }
 

@@ -68,6 +68,9 @@ export function libelleHallel(nusah, conditions) {
 export function libelleJour(libelleAnnotation, condition, nusah, conditions) {
   if (libelleAnnotation) return libelleAnnotation;
   if (condition === 'hallel') return libelleHallel(nusah, conditions) ?? libelle(condition);
+  // Les Edot changent toute la 9ᵉ bénédiction, pas une formule (28/10) : ברך עלינו / ברכנו.
+  if (nusah === 'edot' && condition === 'tal_oumatar') return 'ajout_barekh_alenou';
+  if (nusah === 'edot' && (condition === '!tal_oumatar' || condition === 'berakha')) return 'ajout_barkhenou';
   return libelle(condition);
 }
 

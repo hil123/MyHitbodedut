@@ -134,7 +134,18 @@ def sans_balisage(texte):
     texte = re.sub(r"(?m)^\s*#+\s*", "", texte)
     texte = texte.replace("**", "").replace("__", "")
     texte = re.sub(r"!?\[([^\]]*)\]\([^)]*\)", r"\1", texte)
-    return re.sub(r"\n{3,}", "\n\n", texte).strip()
+    return espaces(re.sub(r"\n{3,}", "\n\n", texte).strip())
+
+
+# La ponctuation collée au mot suivant (« משאץ.בשנת », 3 444 cas, capture du 28/10) : les
+# sauts de ligne de la source se sont perdus à l'extraction. Une espace après . , ; : ! ?
+# suivis d'une lettre hébraïque ; pas dans un nom de domaine (« קברים.קום »), pas dans
+# un nombre (« 3.5 »), pas entre deux guillemets d'abréviation.
+PONCTUATION_COLLEE = re.compile(r"(?<=[\u05D0-\u05EA\"'״׳)\]])([.,;:!?])(?=[\u05D0-\u05EA(])(?!קום\b|קו\.)")
+
+
+def espaces(texte):
+    return PONCTUATION_COLLEE.sub(r"\1 ", texte)
 
 
 def sources_autorisees(jours):
