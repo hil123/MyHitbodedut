@@ -1229,7 +1229,7 @@
     <string name="boussole_grand_cercle">Shortest route (great circle): %1$d° %2$s</string>
     <string name="boussole_cap_constant">Direction on the map (constant heading): %1$d° %2$s</string>
     <string name="boussole_distance">Distance: %1$s km</string>
-    <string name="boussole_legende">The ירושלים label follows the main direction; the small dashed blue circle, the other one.</string>
+    <string name="boussole_legende">The ירושלים label follows the main direction; the dashed blue mark, the other one.</string>
     <string name="boussole_a_plat">Hold the phone flat, away from metal objects and magnets.</string>
     <string name="boussole_calibrer">Compass not accurate: draw a figure 8 in the air with the phone.</string>
     <string name="boussole_sans_capteur">This phone has no compass: the direction is given relative to north, at the top.</string>
@@ -1242,6 +1242,15 @@
     <string name="boussole_widget_description">The chassid and the direction of Jerusalem from your zmanim location, relative to north. Tap to open the compass.</string>
     <string name="boussole_widget_lecture">Jerusalem from %1$s: %2$d° from north</string>
     <string name="boussole_source"><![CDATA[Source: <a href="https://www.chabad.org/library/article_cdo/aid/3502321/jewish/Why-Do-We-Face-East-When-Praying-Or-Do-We.htm">Chabad.org, “Why Do We Face East When Praying? Or Do We?”</a>]]></string>
+    <string name="boussole_affichage">Compass display</string>
+    <string name="boussole_affichage_hassid">The chassid turns (default)</string>
+    <string name="boussole_affichage_rose">Compass rose</string>
+    <string-array name="boussole_cardinaux">
+        <item>N</item>
+        <item>E</item>
+        <item>S</item>
+        <item>W</item>
+    </string-array>
     <string-array name="boussole_points">
         <item>N</item>
         <item>NE</item>

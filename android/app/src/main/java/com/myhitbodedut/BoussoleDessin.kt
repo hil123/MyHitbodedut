@@ -15,6 +15,9 @@ import android.graphics.Typeface
  * direction est le petit rond pointillé bleu. Dessiné dans un carré de 320
  * unités centré sur (0, 0), comme la maquette.
  *
+ * [roseVivante] est l'autre affichage au choix (28/10) : une rose des vents
+ * qui tourne avec le téléphone, l'aiguille d'or vers Jérusalem.
+ *
  * [rose] est la version sans boussole vivante : celle du widget, et de l'écran
  * quand le téléphone n'a pas de capteur. La direction y est donnée par rapport
  * au nord, en haut.
@@ -118,6 +121,74 @@ object BoussoleDessin {
         c.drawText(nord, 0f, -42f, petit.apply { textSize = 9f })
         c.drawText(degres, 38f, 51f, texte(ENCRE, 10f))
         c.drawText(JERUSALEM, -36f, 51f, texte(MARQUE, 9f, gras = true, serif = true))
+        c.restore()
+    }
+
+    /**
+     * La rose des vents vivante : le cadran tourne avec le téléphone, le repère
+     * du haut est le cap ; l'aiguille d'or va vers la direction principale, le
+     * trait bleu pointillé vers l'autre. [cardinaux] : N, E, S, O dans la langue.
+     */
+    fun roseVivante(c: Canvas, largeur: Int, hauteur: Int, principale: Double, autre: Double, cap: Double,
+                    consigne: String, cardinaux: Array<String>) {
+        c.save()
+        cadrer(c, largeur, hauteur)
+        val face = DirectionJerusalem.face(DirectionJerusalem.ecart(principale, cap))
+        c.drawRect(-160f, -160f, 160f, 160f, pinceau(CIEL))
+        val trait = pinceau(HORIZON, Paint.Style.STROKE).apply { strokeWidth = 2f }
+        c.drawCircle(0f, 0f, 112f, trait)
+
+        // Le cadran, tourné du cap : le nord du cadran reste au nord.
+        c.save()
+        c.rotate(-cap.toFloat())
+        val grad = pinceau(ENCRE, Paint.Style.STROKE)
+        for (d in 0 until 360 step 10) {
+            c.save()
+            c.rotate(d.toFloat())
+            grad.strokeWidth = if (d % 90 == 0) 2.5f else 1.2f
+            c.drawLine(0f, -112f, 0f, -112f + if (d % 90 == 0) 14f else if (d % 30 == 0) 9f else 5f, grad)
+            c.restore()
+        }
+        val lettre = texte(ENCRE, 17f, gras = true)
+        cardinaux.take(4).forEachIndexed { i, n ->
+            val a = Math.toRadians(i * 90.0)
+            c.save()
+            c.translate((86 * Math.sin(a)).toFloat(), (-86 * Math.cos(a)).toFloat())
+            c.rotate(cap.toFloat())
+            lettre.color = if (i == 0) OR else ENCRE
+            c.drawText(n, 0f, 6f, lettre)
+            c.restore()
+        }
+        c.restore()
+
+        // L'autre direction, puis la principale.
+        c.save()
+        c.rotate((autre - cap).toFloat())
+        c.drawLine(0f, 0f, 0f, -100f, pinceau(BLEU, Paint.Style.STROKE).apply {
+            strokeWidth = 3f
+            pathEffect = DashPathEffect(floatArrayOf(7f, 7f), 0f)
+        })
+        c.restore()
+        val couleur = if (face) MARQUE else OR
+        c.save()
+        c.rotate((principale - cap).toFloat())
+        c.drawLine(0f, 18f, 0f, -100f, pinceau(couleur, Paint.Style.STROKE).apply { strokeWidth = 5f; strokeCap = Paint.Cap.ROUND })
+        c.drawCircle(0f, -100f, 7f, pinceau(couleur))
+        c.restore()
+        c.drawCircle(0f, 0f, 6f, pinceau(ENCRE))
+
+        // L'étiquette au bout de l'aiguille, droite.
+        val a = Math.toRadians(principale - cap)
+        var x = (128 * Math.sin(a)).toFloat().coerceIn(-120f, 120f)
+        val y = (-128 * Math.cos(a)).toFloat().coerceIn(-118f, 140f)
+        // Près du haut, à côté du repère du cap plutôt que dessus.
+        if (y < -100f && kotlin.math.abs(x) < 46f) x = if (x < 0) -46f else 46f
+        c.drawRoundRect(RectF(x - 34f, y - 11f, x + 34f, y + 11f), 11f, 11f, pinceau(if (face) MARQUE else BLANC))
+        c.drawText(JERUSALEM, x, y + 5f, texte(if (face) BLANC else MARQUE, 15f, gras = true, serif = true))
+
+        // Le repère du haut : où pointe le téléphone.
+        c.drawPath(Path().apply { moveTo(0f, -118f); lineTo(-7f, -130f); lineTo(7f, -130f); close() }, pinceau(ENCRE))
+        c.drawText(consigne, 0f, -140f, texte(ENCRE, 14f))
         c.restore()
     }
 }

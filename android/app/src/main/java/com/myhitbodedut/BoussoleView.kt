@@ -23,6 +23,11 @@ class BoussoleView @JvmOverloads constructor(context: Context, attrs: AttributeS
     private var cap: Double? = null
     private var etaitFace = false
 
+    /** La rose des vents plutôt que le hassid (Store.boussoleRose) ; le hassid par défaut. */
+    var roseDesVents = false
+        set(v) { field = v; invalidate() }
+    private val cardinaux: Array<String> = resources.getStringArray(R.array.boussole_cardinaux)
+
     /** Les deux directions de Jérusalem, depuis le nord vrai ; null sans lieu. */
     fun directions(principale: Double?, autre: Double?) {
         this.principale = principale
@@ -73,7 +78,8 @@ class BoussoleView @JvmOverloads constructor(context: Context, attrs: AttributeS
         val p = principale
         val c = cap
         if (p != null && c != null) {
-            BoussoleDessin.ecran(canvas, width, height, p, autre ?: p, c, consigne(), image)
+            if (roseDesVents) BoussoleDessin.roseVivante(canvas, width, height, p, autre ?: p, c, consigne(), cardinaux)
+            else BoussoleDessin.ecran(canvas, width, height, p, autre ?: p, c, consigne(), image)
         } else {
             BoussoleDessin.rose(canvas, width, height, p, p?.let { "${DirectionJerusalem.degres(it)}°" } ?: "",
                 context.getString(R.string.boussole_nord), image)

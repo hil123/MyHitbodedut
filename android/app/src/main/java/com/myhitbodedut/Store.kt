@@ -118,6 +118,7 @@ object Store {
     private const val KEY_VOL_RAPPEL_VU = "vol_rappel_vu"
     private const val KEY_SUIVI_DIRECT = "vol_suivi_direct"
     private const val KEY_BOUSSOLE_CARTE = "boussole_carte"
+    private const val KEY_BOUSSOLE_ROSE = "boussole_rose"
     private const val KEY_ALLUMAGE = "allumage_minutes"
     private const val KEY_PAUSED_DATES = "paused_dates"
     private const val KEY_REMINDER_ON = "reminder_on"
@@ -484,6 +485,13 @@ object Store {
 
     fun setBoussoleCarte(context: Context, carte: Boolean) {
         prefs(context).edit().putBoolean(KEY_BOUSSOLE_CARTE, carte).apply()
+    }
+
+    /** L'affichage de la boussole (28/10) : le hassid (design C, par défaut) ou la rose des vents. */
+    fun boussoleRose(context: Context): Boolean = prefs(context).getBoolean(KEY_BOUSSOLE_ROSE, false)
+
+    fun setBoussoleRose(context: Context, rose: Boolean) {
+        prefs(context).edit().putBoolean(KEY_BOUSSOLE_ROSE, rose).apply()
     }
 
     fun suiviDirect(context: Context): Boolean = prefs(context).getBoolean(KEY_SUIVI_DIRECT, false)

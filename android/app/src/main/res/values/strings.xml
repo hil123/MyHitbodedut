@@ -1275,7 +1275,7 @@
     <string name="boussole_grand_cercle">Plus court chemin (grand cercle) : %1$d° %2$s</string>
     <string name="boussole_cap_constant">Direction sur la carte (cap constant) : %1$d° %2$s</string>
     <string name="boussole_distance">Distance : %1$s km</string>
-    <string name="boussole_legende">L’étiquette ירושלים suit la direction principale ; le petit rond bleu pointillé, l’autre.</string>
+    <string name="boussole_legende">L’étiquette ירושלים suit la direction principale ; le pointillé bleu, l’autre.</string>
     <string name="boussole_a_plat">Tenez le téléphone à plat, loin des objets métalliques et des aimants.</string>
     <string name="boussole_calibrer">Boussole peu précise : dessinez un 8 dans l’air avec le téléphone.</string>
     <string name="boussole_sans_capteur">Ce téléphone n’a pas de boussole : la direction est donnée par rapport au nord, en haut.</string>
@@ -1288,6 +1288,15 @@
     <string name="boussole_widget_description">Le hassid et la direction de Jérusalem depuis le lieu des zmanim, par rapport au nord. Le toucher ouvre la boussole.</string>
     <string name="boussole_widget_lecture">Jérusalem depuis %1$s : %2$d° depuis le nord</string>
     <string name="boussole_source"><![CDATA[Source : <a href="https://www.chabad.org/library/article_cdo/aid/3502321/jewish/Why-Do-We-Face-East-When-Praying-Or-Do-We.htm">Chabad.org, « Why Do We Face East When Praying? Or Do We? »</a>]]></string>
+    <string name="boussole_affichage">Affichage de la boussole</string>
+    <string name="boussole_affichage_hassid">Le hassid se tourne (par défaut)</string>
+    <string name="boussole_affichage_rose">Rose des vents</string>
+    <string-array name="boussole_cardinaux">
+        <item>N</item>
+        <item>E</item>
+        <item>S</item>
+        <item>O</item>
+    </string-array>
     <string-array name="boussole_points">
         <item>N</item>
         <item>NE</item>

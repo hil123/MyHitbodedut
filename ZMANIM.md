@@ -407,6 +407,9 @@ tourne »), widget 2 × 2 `BoussoleWidget`. Vers Har haBayit, 31,7781° N,
   la page donne, de New York, 54° et environ 95°. Les deux sont affichés ; le
   réglage « direction principale » (grand cercle par défaut) choisit seulement
   celle que suit le hassid.
+- **Deux affichages au choix** (réglage « Affichage de la boussole ») : le
+  hassid qui se tourne (design C, par défaut) ou une rose des vents qui tourne
+  avec le téléphone, l'aiguille d'or vers Jérusalem.
 - **Nord vrai.** Le capteur d'orientation donne le nord magnétique ; la
   déclinaison du lieu (`GeomagneticField`, modèle intégré à Android) est
   ajoutée. Sans capteur, la rose orientée au nord.

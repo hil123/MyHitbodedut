@@ -1262,7 +1262,7 @@
     <string name="boussole_grand_cercle">הדרך הקצרה ביותר (מעגל גדול): %1$d° %2$s</string>
     <string name="boussole_cap_constant">הכיוון על המפה (כיוון קבוע): %1$d° %2$s</string>
     <string name="boussole_distance">מרחק: %1$s ק״מ</string>
-    <string name="boussole_legende">התווית „ירושלים” עוקבת אחרי הכיוון הראשי; העיגול הכחול המקווקו – אחרי הכיוון השני.</string>
+    <string name="boussole_legende">התווית „ירושלים” עוקבת אחרי הכיוון הראשי; הסימון הכחול המקווקו – אחרי הכיוון השני.</string>
     <string name="boussole_a_plat">החזיקו את הטלפון שטוח, הרחק מחפצי מתכת ומגנטים.</string>
     <string name="boussole_calibrer">המצפן אינו מדויק: ציירו באוויר את הספרה 8 עם הטלפון.</string>
     <string name="boussole_sans_capteur">בטלפון זה אין מצפן: הכיוון מוצג ביחס לצפון, למעלה.</string>
@@ -1275,6 +1275,15 @@
     <string name="boussole_widget_description">החסיד וכיוון ירושלים ממקום הזמנים, ביחס לצפון. נגיעה פותחת את המצפן.</string>
     <string name="boussole_widget_lecture">ירושלים מ%1$s: %2$d° מהצפון</string>
     <string name="boussole_source"><![CDATA[מקור: <a href="https://www.chabad.org/library/article_cdo/aid/3502321/jewish/Why-Do-We-Face-East-When-Praying-Or-Do-We.htm">Chabad.org, “Why Do We Face East When Praying? Or Do We?”</a>]]></string>
+    <string name="boussole_affichage">תצוגת המצפן</string>
+    <string name="boussole_affichage_hassid">החסיד מסתובב (ברירת מחדל)</string>
+    <string name="boussole_affichage_rose">שושנת רוחות</string>
+    <string-array name="boussole_cardinaux">
+        <item>צ</item>
+        <item>מז</item>
+        <item>ד</item>
+        <item>מע</item>
+    </string-array>
     <string-array name="boussole_points">
         <item>צפון</item>
         <item>צפון־מזרח</item>

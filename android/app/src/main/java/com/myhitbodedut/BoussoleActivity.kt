@@ -83,6 +83,7 @@ class BoussoleActivity : AppCompatActivity(), SensorEventListener {
             setBackgroundResource(R.drawable.bg_stage)
             clipToOutline = true
             if (lieu == null) setOnClickListener { choixLieu.montrer() }
+            roseDesVents = Store.boussoleRose(this@BoussoleActivity)
         }
         contenu.addView(boussole)
         precision = VueJour.texte(this, getString(R.string.boussole_calibrer), 13f, R.color.warning, haut = 8)
@@ -120,6 +121,14 @@ class BoussoleActivity : AppCompatActivity(), SensorEventListener {
         })
 
         contenu.addView(VueJour.carte(this).apply {
+            addView(VueJour.texte(this@BoussoleActivity, getString(R.string.boussole_affichage), 15f, R.color.ink))
+            addView(VueJour.texte(this@BoussoleActivity, getString(if (Store.boussoleRose(this@BoussoleActivity))
+                R.string.boussole_affichage_rose else R.string.boussole_affichage_hassid), 13f, R.color.muted, haut = 2))
+            foreground = getDrawable(android.R.drawable.list_selector_background)
+            setOnClickListener { choisirAffichage() }
+        })
+
+        contenu.addView(VueJour.carte(this).apply {
             addView(VueJour.texte(this@BoussoleActivity, getString(R.string.boussole_principale), 15f, R.color.ink))
             addView(VueJour.texte(this@BoussoleActivity, getString(if (carte) R.string.boussole_principale_carte else R.string.boussole_principale_gc),
                 13f, R.color.muted, haut = 2))
@@ -134,6 +143,19 @@ class BoussoleActivity : AppCompatActivity(), SensorEventListener {
                 13f, R.color.brand, haut = 6).apply { movementMethod = LinkMovementMethod.getInstance() })
         })
         contenu.addView(VueJour.pied(this))
+    }
+
+    /** Le hassid (design C, par défaut) ou la rose des vents. */
+    private fun choisirAffichage() {
+        MaterialAlertDialogBuilder(this)
+            .setTitle(R.string.boussole_affichage)
+            .setSingleChoiceItems(arrayOf(getString(R.string.boussole_affichage_hassid), getString(R.string.boussole_affichage_rose)),
+                if (Store.boussoleRose(this)) 1 else 0) { d, i ->
+                Store.setBoussoleRose(this, i == 1)
+                d.dismiss()
+                afficher()
+            }
+            .show()
     }
 
     private fun choisirPrincipale() {
