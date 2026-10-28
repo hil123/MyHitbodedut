@@ -1244,7 +1244,8 @@
     <string name="vol_direct_erreur">המעקב אינו זמין (%1$s). החישוב נשאר לפי המסלול המתוכנן.</string>
     <string name="vol_direct_inactif">שרת הממסר של המעקב עדיין אינו פעיל בגרסה זו.</string>
     <string name="vol_fiabilite_direct">המסלול תוקן לפי המיקום שהתקבל מ־OpenSky Network ב־%1$s (%2$s), ומשם מעגל גדול עד הנחיתה, במהירות קבועה. זמני הנקודה שמתחת למטוס, בגובה פני הים, מחושבים במכשיר.</string>
-    <string name="vol_source_opensky">מיקום בזמן אמת: The OpenSky Network, ‏opensky-network.org</string>
+    <string name="vol_source_opensky">נתוני כלי טיס: OpenSky Network ‏(opensky-network.org)</string>
+    <string name="vol_direct_avertissement">לא לניווט ולא לבטיחות: הכיסוי של OpenSky משתנה לפי אזור וגובה, וחלק מהמטוסים אינם נראים בו.</string>
     <string name="vol_rappels_titre">תזכורות בטיסה</string>
     <string name="vol_rappels_activer">להזכיר לי במהלך הטיסה</string>
     <string name="vol_rappels_aucun">אין עוד תזכורות בטיסה הזאת.</string>

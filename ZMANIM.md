@@ -317,9 +317,17 @@ position estimée arrondie au dixième de degré, et interroge OpenSky en
 anonyme, ou avec un client API s'il en a un. Une position de plus de 10 minutes est écartée. La position reçue
 devient un relevé, comme celui du GPS, et la fiabilité le dit. OpenSky ne voit
 les avions que près de ses antennes au sol : au-dessus des océans, souvent
-rien. Usage **non commercial** d'OpenSky : une publication sur le Play Store ou
-l'App Store est à revoir avec ses conditions, ou avec un autre fournisseur
-(`SuiviVol.FournisseurPosition` est interchangeable). Sans adresse de relais à
+rien. Conditions d'OpenSky (courriel du 28/10, ticket 837455) : application
+gratuite sans publicité ni fonction payante = usage non commercial, compte
+gratuit ; données demandées par le relais avec le client OAuth2 du compte, pas
+par chaque téléphone ; une réponse partagée en cache temporaire par zone (relais :
+grille de 0,5°, 15 s) ; ni revente, ni redistribution, ni API ; attribution
+« Données aéronautiques : OpenSky Network (opensky-network.org) » dans
+l'application et sur la page du magasin, avec un avertissement « ni navigation
+ni sécurité » (affichés sous le suivi en direct). Détail :
+`tools/relais_vol/README.md`. L'accès direct depuis le téléphone (Android sans
+relais) ne suit pas la deuxième condition : pour une diffusion publique,
+construire avec le relais (`SuiviVol.FournisseurPosition` est interchangeable). Sans adresse de relais à
 la construction (`RELAIS_VOL=`), l'option est inactive sur le web et sa CSP
 n'autorise que le site.
 
