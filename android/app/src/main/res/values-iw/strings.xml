@@ -1242,6 +1242,13 @@
     <string name="vol_direct_attente">מבקש את המיקום…</string>
     <string name="vol_direct_introuvable">המטוס אינו נראה כרגע (מחוץ לכיסוי או אות קריאה שגוי). החישוב נשאר לפי המסלול המתוכנן.</string>
     <string name="vol_direct_erreur">המעקב אינו זמין (%1$s). החישוב נשאר לפי המסלול המתוכנן.</string>
+    <string name="vol_erreur_hors_ligne">אין חיבור</string>
+    <string name="vol_erreur_quota">המכסה היומית של OpenSky נוצלה</string>
+    <string name="vol_erreur_illisible">תשובה לא קריאה</string>
+    <string name="vol_erreur_position">מיקום לא תקין</string>
+    <string name="vol_erreur_relais_absent">הממסר לא הוגדר</string>
+    <string name="vol_erreur_service">השירות אינו זמין</string>
+    <string name="vol_erreur_serveur">שגיאת שרת %1$d</string>
     <string name="vol_direct_inactif">שרת הממסר של המעקב עדיין אינו פעיל בגרסה זו.</string>
     <string name="vol_fiabilite_direct">המסלול תוקן לפי המיקום שהתקבל מ־OpenSky Network ב־%1$s (%2$s), ומשם מעגל גדול עד הנחיתה, במהירות קבועה. זמני הנקודה שמתחת למטוס, בגובה פני הים, מחושבים במכשיר.</string>
     <string name="vol_source_opensky">נתוני כלי טיס: OpenSky Network ‏(opensky-network.org)</string>

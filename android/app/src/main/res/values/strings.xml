@@ -1255,6 +1255,13 @@
     <string name="vol_direct_attente">Demande de la position…</string>
     <string name="vol_direct_introuvable">L’avion n’est pas vu en ce moment (hors couverture ou indicatif inexact). Le calcul reste sur la route prévue.</string>
     <string name="vol_direct_erreur">Suivi indisponible (%1$s). Le calcul reste sur la route prévue.</string>
+    <string name="vol_erreur_hors_ligne">pas de connexion</string>
+    <string name="vol_erreur_quota">quota OpenSky du jour épuisé</string>
+    <string name="vol_erreur_illisible">réponse illisible</string>
+    <string name="vol_erreur_position">position invalide</string>
+    <string name="vol_erreur_relais_absent">relais non configuré</string>
+    <string name="vol_erreur_service">service indisponible</string>
+    <string name="vol_erreur_serveur">erreur du serveur %1$d</string>
     <string name="vol_direct_inactif">Le relais du suivi n’est pas encore en service dans cette version.</string>
     <string name="vol_fiabilite_direct">Route recalée sur la position reçue d’OpenSky Network à %1$s (%2$s), puis grand cercle jusqu’à l’arrivée, à vitesse constante. Zmanim du point sous l’avion, au niveau de la mer, calculés sur l’appareil.</string>
     <string name="vol_source_opensky">Données aéronautiques : OpenSky Network (opensky-network.org)</string>

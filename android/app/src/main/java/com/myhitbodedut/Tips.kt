@@ -16,6 +16,6 @@ object Tips {
         Tip(7, R.string.tip_7_title, R.string.tip_7_body, R.drawable.char_praise),
         Tip(8, R.string.tip_8_title, R.string.tip_8_body, R.drawable.char_praying),
         Tip(9, R.string.tip_9_title, R.string.tip_9_body, R.drawable.char_standing_back),
-        Tip(10, R.string.tip_10_title, R.string.tip_10_body, R.drawable.char_arms_raised)
+        Tip(10, R.string.tip_10_title, R.string.tip_10_body, R.drawable.char_open_arms)
     )
 }

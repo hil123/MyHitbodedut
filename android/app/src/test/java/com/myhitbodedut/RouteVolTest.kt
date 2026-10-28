@@ -43,7 +43,7 @@ class RouteVolTest {
         assertEquals("PER", (RouteVol.chercher("QF9", null, faux) as RouteVol.Resultat.Trouve).vers)
         assertEquals(RouteVol.Resultat.Introuvable, RouteVol.chercher("XX999", null, faux))
         assertEquals(RouteVol.Resultat.Invalide, RouteVol.chercher("nimporte", null, faux))
-        assertEquals(RouteVol.Resultat.Erreur("HTTP 503"), RouteVol.chercher("LY81", null) { 503 to "" })
+        assertEquals(RouteVol.Resultat.Erreur(SuiviVol.Raison.serveur(503)), RouteVol.chercher("LY81", null) { 503 to "" })
         // Seul le numéro part : ni position, ni aéroport de départ dans l'adresse.
         assertTrue(demandes.all { it.startsWith(RouteVol.ADSBDB + "/") && '?' !in it })
     }

@@ -85,7 +85,7 @@ def nettoie(im, sol_present=True):
 
 # Les personnages dont on voit les pieds posés au sol.
 AVEC_SOL = {
-    "char_arms_raised", "char_dancing", "char_dancing_joy", "char_guitar",
+    "char_dancing", "char_dancing_joy", "char_guitar",
     "char_open_arms", "char_praise", "char_standing_back", "char_thumbs_up",
     "char_walking", "char_welcome", "char_reading_seated",
 }

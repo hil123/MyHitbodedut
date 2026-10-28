@@ -175,14 +175,6 @@
             android:exported="false"
             android:label="@string/library_title" />
 
-        <!-- Écran de relecture. Déclaré ici pour que MainActivity puisse le
-             nommer, mais rien n'y mène hors compilation de test : le bouton
-             qui l'ouvre est masqué quand BuildConfig.DEBUG est faux. -->
-        <activity
-            android:name=".ProofreadActivity"
-            android:exported="false"
-            android:label="@string/proofread_title" />
-
         <activity
             android:name=".ZmanimActivity"
             android:exported="false"

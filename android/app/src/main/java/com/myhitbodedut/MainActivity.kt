@@ -217,11 +217,12 @@ class MainActivity : AppCompatActivity() {
         }
 
         // L'écran de relecture n'existe que pour lever les relu=false des
-        // données : il n'a rien à faire dans une version publiée.
+        // données : il n'a rien à faire dans une version publiée. Sa classe
+        // n'est compilée qu'en debug (src/debug) : on la nomme par son nom.
         findViewById<View>(R.id.proofread_button).apply {
             visibility = if (BuildConfig.DEBUG) View.VISIBLE else View.GONE
             setOnClickListener {
-                startActivity(Intent(this@MainActivity, ProofreadActivity::class.java))
+                startActivity(Intent().setClassName(this@MainActivity, "com.myhitbodedut.ProofreadActivity"))
             }
         }
         // La plaque ronde coupe l'illustration à son bord, au creux des anneaux.

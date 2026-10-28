@@ -1209,6 +1209,13 @@
     <string name="vol_direct_attente">Requesting the position…</string>
     <string name="vol_direct_introuvable">The aircraft is not seen right now (out of coverage or wrong callsign). The calculation stays on the planned route.</string>
     <string name="vol_direct_erreur">Tracking unavailable (%1$s). The calculation stays on the planned route.</string>
+    <string name="vol_erreur_hors_ligne">no connection</string>
+    <string name="vol_erreur_quota">today’s OpenSky quota is used up</string>
+    <string name="vol_erreur_illisible">unreadable response</string>
+    <string name="vol_erreur_position">invalid position</string>
+    <string name="vol_erreur_relais_absent">relay not configured</string>
+    <string name="vol_erreur_service">service unavailable</string>
+    <string name="vol_erreur_serveur">server error %1$d</string>
     <string name="vol_direct_inactif">The tracking relay is not in service yet in this version.</string>
     <string name="vol_fiabilite_direct">Route adjusted to the position received from OpenSky Network at %1$s (%2$s), then great circle to arrival, at constant speed. Zmanim of the point below the aircraft, at sea level, computed on the device.</string>
     <string name="vol_source_opensky">Aircraft data: OpenSky Network (opensky-network.org)</string>
