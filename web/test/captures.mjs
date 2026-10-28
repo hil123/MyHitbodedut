@@ -179,6 +179,19 @@ await capture('hilloulot-he', { langue: 'he', ecran: 'hilloulot', extra: JERUSAL
 await capture('livres-he', { langue: 'he', ecran: 'livres', actions: bas(0) });
 await capture('siddour-he', { langue: 'he', ecran: 'siddur', actions: bas(0) });
 await capture('siddour-he-occasions', { langue: 'he', ecran: 'siddur', actions: bas(100000) });
+// Le 28/10 : paragraphes aérés (premier mot agrandi), Chéva bérakhot repliées en fin de Birkat
+// haMazon, boussole de la tefila.
+const ouvrirTexte = (titre, y) => async (p) => {
+  // Les titres sont vocalisés : comparés sans voyelles.
+  await p.evaluate((t) => [...document.querySelectorAll('.ligne-he')]
+    .find((b) => b.querySelector('.nom-he').textContent.replace(/[\u0591-\u05C7]/g, '') .includes(t)).click(), titre);
+  await p.waitForSelector('.siddour .priere');
+  await p.evaluate((y) => { const d = document.querySelector('.defile'); d.scrollTop = y < 0 ? d.scrollHeight : y; }, y);
+};
+await capture('priere-aeree-he', { langue: 'he', ecran: 'siddur', actions: ouvrirTexte('תפלת שחרית', 1400) });
+await capture('birkat-cheva-he', { langue: 'he', ecran: 'siddur', actions: ouvrirTexte('ברכת המזון', -1) });
+await capture('boussole-fr', { langue: 'fr', ecran: 'boussole', extra: { lieu_zmanim: { nom: 'Paris', latitude: 48.8566, longitude: 2.3522, altitude: 35, fuseau: 'Europe/Paris', ville: 2988507 }, in_israel: false } });
+await capture('boussole-he', { langue: 'he', ecran: 'boussole', extra: JERUSALEM });
 await capture('bibliotheque-he', { langue: 'he', ecran: 'bibliotheque', actions: bas(0) });
 await capture('reglages-fr-personnalisation', { langue: 'fr', ecran: 'reglages', actions: bas(400) });
 await capture('reglages-he', { langue: 'he', ecran: 'reglages', mode: 'sombre', actions: bas(400) });

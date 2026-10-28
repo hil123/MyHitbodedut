@@ -357,6 +357,8 @@ class SessionActivity : AppCompatActivity() {
         findViewById<android.widget.TextView>(R.id.session_question).setText(QuestionsBlocage.QUESTIONS[question])
         findViewById<android.widget.TextView>(R.id.session_question_rang).text =
             getString(R.string.question_rang, question + 1, QuestionsBlocage.QUESTIONS.size)
+        findViewById<com.google.android.material.progressindicator.LinearProgressIndicator>(R.id.session_question_jauge)
+            .setProgressCompat((question + 1) * 100 / QuestionsBlocage.QUESTIONS.size, true)
     }
 
     /**

@@ -296,6 +296,9 @@ class ReglagesLecture private constructor(
             .setDuration(180L).withEndAction { pastille.isClickable = visible }.start()
     }
 
+    /** Le niveau de lecture sur le bord du texte (IndicateurDefilement, 28/10). */
+    private var indicateur: IndicateurDefilement? = null
+
     /** Le chemin parcouru dans un sens : un défilement lent cache aussi la pastille. */
     private var parcouru = 0
 
@@ -304,14 +307,24 @@ class ReglagesLecture private constructor(
         if (parcouru > dp(24)) { montrer(false); parcouru = 0 } else if (parcouru < -dp(24)) { montrer(true); parcouru = 0 }
     }
 
+    /**
+     * Un seul toucher sur le texte (28/10, « 2 clics pour faire réapparaître le bandeau ») :
+     * masqué, le bouton revient déplié ; effacé par le défilement, la pastille revient.
+     * L'appui long reste aussi, mais il pose d'abord un marque-page dans le siddour.
+     */
     private val appuiLong = GestureDetector(contexte, object : GestureDetector.SimpleOnGestureListener() {
         override fun onLongPress(e: MotionEvent) = retrouver()
+        override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
+            if (Store.lectureMasquee(contexte)) retrouver() else montrer(true)
+            return false
+        }
     })
 
     private fun suivreListe(liste: RecyclerView) {
         liste.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 defile(dy)
+                if (dy != 0) indicateur?.reveiller()
             }
         })
         liste.addOnItemTouchListener(object : RecyclerView.SimpleOnItemTouchListener() {
@@ -326,6 +339,7 @@ class ReglagesLecture private constructor(
     private fun suivreDefilement(defilement: View) {
         defilement.setOnScrollChangeListener { _, _, y, _, ancien ->
             defile(y - ancien)
+            if (y != ancien) indicateur?.reveiller()
         }
         // Le texte ne prend pas les touchers : ils arrivent à la vue qui défile,
         // qui les laisse passer (false) après les avoir montrés au détecteur.
@@ -372,6 +386,7 @@ class ReglagesLecture private constructor(
                 }
             }
             val reglages = ReglagesLecture(activite, avecNusah, auDessusDe, garderPlace)
+            reglages.indicateur = IndicateurDefilement.poser(activite.findViewById(android.R.id.content), defilement)
             if (defilement is RecyclerView) reglages.suivreListe(defilement) else reglages.suivreDefilement(defilement)
             // De quoi lire la fin du texte au-dessus de la barre ouverte.
             val d = activite.resources.displayMetrics.density

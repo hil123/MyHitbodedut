@@ -571,7 +571,7 @@
     <string name="police_serif">Hebrew serif</string>
     <string name="police_sans">Sans serif</string>
     <string name="police_arrondie">Rounded</string>
-    <string name="lecture_masque_info">Button hidden. Long-press the text to bring it back.</string>
+    <string name="lecture_masque_info">Button hidden. Tap the text to bring it back.</string>
     <string name="lecture_annuler_masque">Undo</string>
     <string name="lecture_taille">Text size: %1$d%%</string>
     <string name="lecture_pourcent">%1$d%%</string>
@@ -699,6 +699,8 @@
     <string name="ajout_yom_tov_chabbat">Yom Tov on Shabbat</string>
     <string name="ajout_roch_hachana_chabbat">Rosh Hashanah on Shabbat</string>
     <string name="ajout_motsae_chabbat_yt">Motzaei Shabbat and Yom Tov</string>
+    <string name="ajout_cheva_berakhot">Sheva Berakhot (wedding meal)</string>
+    <string name="ajout_embolismique">Leap year (וּלְכַפָּרַת פֶּשַׁע)</string>
     <string name="ajout_beit_avel">House of mourning</string>
     <string name="siddur_seul">Praying alone</string>
     <string name="ajout_minyan">With a minyan</string>
@@ -1127,4 +1129,23 @@
     <string name="widget_zmanim_petit_description">The prayer of the moment and when it closes.</string>
     <string name="widget_zmanim_grand_label">Zmanim · full day</string>
     <string name="widget_zmanim_grand_description">The date, the prayer of the moment and all of today’s zmanim.</string>
+    <string name="boussole_titre">Direction of prayer</string>
+    <string name="boussole_lieu">%1$s · %2$d km from the Temple Mount</string>
+    <string name="boussole_cap">%1$d° · %2$s (shortest route)</string>
+    <string name="boussole_loxodromie">On a map (constant bearing): %1$d° · %2$s</string>
+    <string name="boussole_a_plat">Hold the phone flat; the gold arrow points to Jerusalem.</string>
+    <string name="boussole_calibrer">Compass inaccurate: move the phone in a figure 8.</string>
+    <string name="boussole_sans_capteur">No compass on this device: face the bearing shown, measured from north.</string>
+    <string name="boussole_position_exacte">Exact position</string>
+    <string name="boussole_source">We face Jerusalem and the Holy of Holies (Berakhot 30a; Shulchan Aruch O.C. 94:1). Far from Israel, the shortest route and the constant bearing differ: both opinions exist. North is corrected for magnetic declination.</string>
+    <string-array name="boussole_points">
+        <item>north</item>
+        <item>northeast</item>
+        <item>east</item>
+        <item>southeast</item>
+        <item>south</item>
+        <item>southwest</item>
+        <item>west</item>
+        <item>northwest</item>
+    </string-array>
 </resources>

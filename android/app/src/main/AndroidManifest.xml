@@ -14,6 +14,7 @@
     <!-- Les zmanim (10/10) : la position approximative, seulement si on choisit
          « Ma position » plutôt qu'une ville, et demandée à ce moment-là. -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <!--
         Sans cette ligne, Android considere l'ecran tactile comme requis et
@@ -184,6 +185,12 @@
             android:name=".ZmanimActivity"
             android:exported="false"
             android:label="@string/zmanim_title" />
+
+        <activity
+            android:name=".BoussoleActivity"
+            android:exported="false"
+            android:label="@string/boussole_titre"
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".CalendrierActivity"

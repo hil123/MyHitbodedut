@@ -585,7 +585,7 @@
     <string name="police_serif">עברי עם תגים</string>
     <string name="police_sans">ללא תגים</string>
     <string name="police_arrondie">מעוגל</string>
-    <string name="lecture_masque_info">הכפתור הוסתר. לחיצה ארוכה על הטקסט תחזיר אותו.</string>
+    <string name="lecture_masque_info">הכפתור הוסתר. נגיעה בטקסט תחזיר אותו.</string>
     <string name="lecture_annuler_masque">ביטול</string>
     <string name="lecture_taille">גודל הטקסט: %1$d%%</string>
     <string name="lecture_pourcent">%1$d%%</string>
@@ -713,6 +713,8 @@
     <string name="ajout_yom_tov_chabbat">יום טוב שחל בשבת</string>
     <string name="ajout_roch_hachana_chabbat">ראש השנה שחל בשבת</string>
     <string name="ajout_motsae_chabbat_yt">מוצאי שבת ויום טוב</string>
+    <string name="ajout_cheva_berakhot">שבע ברכות</string>
+    <string name="ajout_embolismique">שנה מעוברת (וּלְכַפָּרַת פֶּשַׁע)</string>
     <string name="ajout_beit_avel">בית האבל</string>
     <string name="siddur_seul">ביחיד</string>
     <string name="ajout_minyan">במניין</string>
@@ -1160,4 +1162,23 @@
     <string name="widget_zmanim_petit_description">התפילה של השעה ועד מתי.</string>
     <string name="widget_zmanim_grand_label">זמנים · כל היום</string>
     <string name="widget_zmanim_grand_description">התאריך, התפילה של השעה וכל זמני היום.</string>
+    <string name="boussole_titre">כיוון התפילה</string>
+    <string name="boussole_lieu">%1$s · %2$d ק״מ מהר הבית</string>
+    <string name="boussole_cap">%1$d° · %2$s (הדרך הקצרה ביותר)</string>
+    <string name="boussole_loxodromie">על מפה (כיוון קבוע): %1$d° · %2$s</string>
+    <string name="boussole_a_plat">החזיקו את הטלפון שטוח; החץ הזהוב מצביע לירושלים.</string>
+    <string name="boussole_calibrer">המצפן אינו מדויק: הזיזו את הטלפון בצורת 8.</string>
+    <string name="boussole_sans_capteur">אין מצפן במכשיר: פנו לכיוון המצוין, מהצפון.</string>
+    <string name="boussole_position_exacte">מיקום מדויק</string>
+    <string name="boussole_source">פונים לירושלים ולבית קודש הקדשים (ברכות ל ע״א; שולחן ערוך או״ח צד, א). רחוק מארץ ישראל, הדרך הקצרה ביותר והכיוון הקבוע שונים: יש בזה שתי דעות. הצפון מתוקן לפי הסטייה המגנטית.</string>
+    <string-array name="boussole_points">
+        <item>צפון</item>
+        <item>צפון־מזרח</item>
+        <item>מזרח</item>
+        <item>דרום־מזרח</item>
+        <item>דרום</item>
+        <item>דרום־מערב</item>
+        <item>מערב</item>
+        <item>צפון־מערב</item>
+    </string-array>
 </resources>

@@ -12,6 +12,8 @@ import { creeStore, memoire } from './store.js';
 import { isoLocal } from './calendrier.js';
 import { JERUSALEM_GEONAMES, RAPPELS_TEFILA, dansIsrael, USAGES_LEVANA, aJerusalem, calendrier, jour as jourJuif, jourDeLaPriere, levana, rappelsTefila, usageLevana } from './calendrier-juif.js';
 import { conditionsPour, index as indexAjouts, libelleJour, vrai as ajoutVrai } from './siddur-jour.js';
+import { aerer } from './aeration.js';
+import { CIBLE_LAT, CIBLE_LON, distanceKm, loxodromie, octant, orthodromie } from './direction.js';
 import * as Paliers from './paliers.js';
 import * as Trophees from './trophees.js';
 import { FORMES, ICONES } from './trophees-formes.js';
@@ -672,8 +674,8 @@ function pastille(libelle, valeur, onclick) {
     h('span', { class: 'libelle' }, libelle), h('span', { class: 'valeur' }, valeur));
 }
 
-function ligne({ nom, etat, onclick, aVenir = false, fin = null }) {
-  return h('button', { class: `ligne${aVenir ? ' a-venir' : ''}`, onclick, 'aria-disabled': aVenir ? 'true' : null },
+function ligne({ nom, etat, onclick, aVenir = false, fin = null, class: classe = '' }) {
+  return h('button', { class: `ligne${aVenir ? ' a-venir' : ''}${classe ? ` ${classe}` : ''}`, onclick, 'aria-disabled': aVenir ? 'true' : null },
     h('span', { class: 'corps' }, h('div', { class: 'nom' }, nom), etat ? h('div', { class: 'etat' }, etat) : null),
     fin, h('span', { class: 'chevron', 'aria-hidden': 'true' }));
 }
@@ -816,7 +818,7 @@ const CHAINES_LECTURE = {
   lecture_plus: 'Lettres plus grandes',
   lecture_moins: 'Lettres plus petites',
   lecture_masquer: 'Masquer le bouton',
-  lecture_masque_info: 'Bouton masqué. Appui long sur le texte pour le faire revenir.',
+  lecture_masque_info: 'Bouton masqué. Touchez le texte pour le faire revenir.',
   lecture_annuler_masque: 'Annuler',
   lecture_replier: 'Replier',
   lecture_taille: 'Taille du texte : %1$d %%',
@@ -977,6 +979,23 @@ function appuiLongPourRamener(zone) {
 function ecranLu(titre, contenu, { avecNusah = false, pied = null, bande = null, entete = null } = {}) {
   const defile = h('div', { class: 'defile' }, contenu);
   const ctrl = reglagesLecture({ avecNusah });
+  // Le niveau de lecture (IndicateurDefilement.kt, 28/10) : un trait fin au bord droit, montré pendant le défilement.
+  const curseur = h('div', { class: 'niveau-curseur' });
+  const niveau = h('div', { class: 'niveau', 'aria-hidden': 'true' }, curseur);
+  let estompe = null;
+  const reveiller = () => {
+    const total = defile.scrollHeight;
+    const vu = defile.clientHeight;
+    if (total <= vu + 1) return;
+    const part = Math.min(1, Math.max(0, defile.scrollTop / (total - vu)));
+    const longueur = Math.max(8, (vu / total) * 100);
+    curseur.style.height = `${longueur}%`;
+    curseur.style.top = `${part * (100 - longueur)}%`;
+    niveau.classList.add('visible');
+    clearTimeout(estompe);
+    estompe = setTimeout(() => niveau.classList.remove('visible'), 1500);
+  };
+  defile.addEventListener('scroll', reveiller, { passive: true });
   let avant = 0;
   defile.addEventListener('scroll', () => {
     const p = ctrl?.querySelector('.lecture-pastille');
@@ -990,10 +1009,16 @@ function ecranLu(titre, contenu, { avecNusah = false, pied = null, bande = null,
     avant = y;
   }, { passive: true });
   appuiLongPourRamener(defile);
+  // Un seul toucher sur le texte (28/10) : masqué, le bouton revient ; effacé par le défilement, la pastille aussi.
+  defile.addEventListener('click', (e) => {
+    if (e.defaultPrevented || e.target.closest('button, a, input, select')) return;
+    if (store.lectureMasquee()) { ramenerLecture(); return; }
+    ctrl?.querySelector('.lecture-pastille')?.classList.remove('cachee');
+  });
   return h('div', { class: `ecran lu${store.lectureSombre() ? ' nuit' : ''}`, style: `--echelle: ${store.lectureEchelle()}` },
     entete ?? barre(titre),
     bande,
-    h('div', { class: `lu-zone${pied ? '' : ' sans-pied'}` }, defile, ctrl),
+    h('div', { class: `lu-zone${pied ? '' : ' sans-pied'}` }, defile, niveau, ctrl),
     pied);
 }
 
@@ -1176,7 +1201,8 @@ function ecranPriere() {
   const paragraphe = (s, i, texte) => {
     const b = s.blocs[i];
     const si = x.sections.indexOf(s);
-    const p = h('p', { class: `${b.c !== undefined ? 'consigne' : 'priere'}${marquee(si, i) ? ' marque-page' : ''}${livre ? ' marque-etude' : ''}`, lang: 'he', dir: 'rtl', 'data-place': `${si}:${i}` }, riche(texte ?? b.c ?? b.t));
+    const p = h('p', { class: `${b.c !== undefined ? 'consigne' : 'priere'}${marquee(si, i) ? ' marque-page' : ''}${livre ? ' marque-etude' : ''}`, lang: 'he', dir: 'rtl', 'data-place': `${si}:${i}` }, riche(b.c !== undefined ? (texte ?? b.c) : aerer(texte ?? b.t)));
+    if (p.firstChild?.nodeName === 'B') p.firstChild.classList.add('premier-mot');
     let minuteur = null;
     const poser = () => {
       const pose = store.basculerMarque({ cle: cleMarque, nusah: nusahMarque, section: si, bloc: i, apercu: apercuMarque(b.c ?? b.t) });
@@ -1373,9 +1399,10 @@ function repriseFavoris() {
     if (t) lignes.push(ligne({ nom: `★ ${t}`, onclick: () => ouvrirCle(cle) }));
   }
   // Les marque-pages (15/10) : le texte et les premiers mots du paragraphe marqué.
-  for (const m of store.marques().slice(0, 12)) {
+  // Plus discrets que les favoris (28/10) : une ligne chacun, petite, en gris, cinq au plus.
+  for (const m of store.marques().slice(0, 5)) {
     const t = titre(m.cle);
-    if (t) lignes.push(ligne({ nom: h('span', { class: 'nom-marque' }, iconeMarque(m.cle.startsWith('l:'), 18), t), etat: `${m.apercu}…`, onclick: () => { marqueAOuvrir = m; ouvrirCle(m.cle); } }));
+    if (t) lignes.push(ligne({ class: 'marque-discrete', nom: h('span', { class: 'nom-marque' }, iconeMarque(m.cle.startsWith('l:'), 14), t), etat: `${m.apercu}…`, onclick: () => { marqueAOuvrir = m; ouvrirCle(m.cle); } }));
   }
   return lignes.length ? h('div', { class: 'carte' }, ...lignes) : null;
 }
@@ -1435,7 +1462,7 @@ function ajout(nom, applique, blocs, cond = '') {
 }
 
 /** Les ajouts qui ne sont jamais « du jour » : « toucher pour lire », pas « pas aujourd'hui ». */
-const JAMAIS_DU_JOUR = new Set(['minyan', 'beit_avel', 'oubli']);
+const JAMAIS_DU_JOUR = new Set(['minyan', 'beit_avel', 'oubli', 'cheva_berakhot']);
 
 /**
  * La bande de signets en tête de la lecture (demande du 10/10, comme
@@ -1755,36 +1782,60 @@ let moisHebreuCalendrier = null;
 const parametre = (p) => (p !== '' && !Number.isNaN(Number(p)) ? Number(p).toLocaleString(tr.langue) : p);
 
 /** Choisir le lieu : la position du téléphone, ou une ville de la liste (GeoNames). */
+/**
+ * La position du téléphone (16/10 ; précise depuis le 28/10, « en fonction de la position exacte ») :
+ * haute précision, un point de moins d'une minute ; sans réponse, la dernière connue, même
+ * ancienne. La ville la plus proche nomme le lieu. Silencieux : aucun message, aucune demande.
+ */
+function localiserPosition({ etat = null, apres = rendre, silencieux = false } = {}) {
+  const dire = (cle) => { if (etat && !silencieux) etat.textContent = tr.t(cle); };
+  if (!navigator.geolocation) { dire('zmanim_position_refusee'); return; }
+  dire('zmanim_position_attente');
+  const poser = (p, ancienne) => {
+    const proche = villePlusProche(villes ?? [], p.coords.latitude, p.coords.longitude);
+    store.setLieu({
+      nom: proche ? tr.t('zmanim_position_pres', titreTexte(proche.nom)) : tr.t('zmanim_position'),
+      latitude: p.coords.latitude, longitude: p.coords.longitude,
+      // Le fuseau du téléphone ; Israël ou diaspora d'après le territoire (TerritoireIsrael, 16/10).
+      altitude: proche?.altitude ?? 0, fuseau: Intl.DateTimeFormat().resolvedOptions().timeZone,
+    });
+    store.setInIsrael(dansIsrael(p.coords.latitude, p.coords.longitude));
+    if (ancienne && !silencieux) signale(tr.t('zmanim_position_ancienne'));
+    apres();
+  };
+  const refus = () => dire('zmanim_position_refusee');
+  navigator.geolocation.getCurrentPosition((p) => poser(p, false), (e) => {
+    if (e.code === 1) { refus(); return; } // refusée : inutile d'insister
+    if (!silencieux) navigator.geolocation.getCurrentPosition((p) => poser(p, true), refus, { maximumAge: Infinity, timeout: 10_000 });
+  }, { enableHighAccuracy: true, maximumAge: 60_000, timeout: 20_000 });
+}
+
+/**
+ * À l'ouverture des zmanim ou de la boussole : si le lieu est la position du téléphone (pas une
+ * ville) et que la localisation est déjà permise, la reprendre sans rien dire, au plus toutes
+ * les cinq minutes ; la page se redessine si le point a bougé de plus de 100 m.
+ */
+let dernierRafraichissement = 0;
+function rafraichirPosition() {
+  const lieu = store.lieu();
+  if (!lieu || lieu.ville != null || !navigator.permissions || Date.now() - dernierRafraichissement < 300_000) return;
+  dernierRafraichissement = Date.now();
+  navigator.permissions.query({ name: 'geolocation' }).then((r) => {
+    if (r.state !== 'granted') return;
+    localiserPosition({ silencieux: true, apres: () => {
+      const n = store.lieu();
+      if (distanceKm(lieu.latitude, lieu.longitude, n.latitude, n.longitude) > 0.1) rendre();
+    } });
+  }).catch(() => {});
+}
+
 function choisirLieu() {
   chargeVilles();
   feuille(tr.t('zmanim_choisir_lieu'), (f, fermer) => {
     const etat = h('p', { class: 'message', 'aria-live': 'polite' });
     f.append(h('button', {
       class: 'choix',
-      onclick: () => {
-        if (!navigator.geolocation) { etat.textContent = tr.t('zmanim_position_refusee'); return; }
-        etat.textContent = tr.t('zmanim_position_attente');
-        // La position (16/10) : basse précision d'abord (plus rapide, et assez pour des zmanim) ;
-        // sans réponse, la dernière connue, même ancienne. La ville la plus proche nomme le lieu.
-        const poser = (p, ancienne) => {
-          const proche = villePlusProche(villes ?? [], p.coords.latitude, p.coords.longitude);
-          store.setLieu({
-            nom: proche ? tr.t('zmanim_position_pres', titreTexte(proche.nom)) : tr.t('zmanim_position'),
-            latitude: p.coords.latitude, longitude: p.coords.longitude,
-            // Le fuseau du téléphone ; Israël ou diaspora d'après le territoire (TerritoireIsrael, 16/10).
-            altitude: proche?.altitude ?? 0, fuseau: Intl.DateTimeFormat().resolvedOptions().timeZone,
-          });
-          store.setInIsrael(dansIsrael(p.coords.latitude, p.coords.longitude));
-          if (ancienne) signale(tr.t('zmanim_position_ancienne'));
-          fermer();
-          rendre();
-        };
-        const refus = () => { etat.textContent = tr.t('zmanim_position_refusee'); };
-        navigator.geolocation.getCurrentPosition((p) => poser(p, false), (e) => {
-          if (e.code === 1) { refus(); return; } // refusée : inutile d'insister
-          navigator.geolocation.getCurrentPosition((p) => poser(p, true), refus, { maximumAge: Infinity, timeout: 10_000 });
-        }, { enableHighAccuracy: false, maximumAge: 3_600_000, timeout: 20_000 });
-      },
+      onclick: () => localiserPosition({ etat, apres: () => { fermer(); rendre(); } }),
     }, tr.t('zmanim_position')), etat);
     const courant = store.lieu()?.ville;
     for (const v of villes ?? []) {
@@ -2246,6 +2297,7 @@ const piedZmanim = () => [h('p', { class: 'indice sources' }, tr.t('zmanim_a_val
 
 function ecranZmanim() {
   chargeVilles();
+  rafraichirPosition();
   const iso = isoLocal(new Date());
   const lieu = store.lieu();
   const puce = h('button', {
@@ -2260,9 +2312,102 @@ function ecranZmanim() {
         h('button', { class: 'secondaire', onclick: () => { jourHalakha = iso; rechercheHalakhaTexte = ''; ouvrir('halakha'); } }, tr.t('zmanim_bouton_halakha')),
         h('button', { class: 'secondaire', onclick: () => { jourHilloulot = iso; rechercheHilloulot = ''; ouvrir('hilloulot'); } }, tr.t('zmanim_bouton_hilloulot')),
         h('button', { class: 'secondaire', onclick: () => { jourCalendrier = iso; moisCalendrier = null; ouvrir('calendrier'); } }, tr.t('zmanim_calendrier'))),
+      lieu ? carteDirection(lieu) : null,
       listeZmanim(iso),
       ...sousHoraires(iso),
       ...piedZmanim())));
+}
+
+/** La direction de la tefila (DirectionTefila, 28/10) : une ligne, le cap ; touchée, la boussole. */
+function carteDirection(lieu) {
+  const c = orthodromie(lieu.latitude, lieu.longitude);
+  return h('button', { type: 'button', class: 'carte carte-direction', onclick: () => ouvrir('boussole') },
+    h('span', { class: 'nom' }, `🧭  ${tr.t('boussole_titre')}`),
+    h('span', { class: 'etat' }, tr.t('boussole_cap', Math.round(c), tr.t(`boussole_points_${octant(c)}`))));
+}
+
+// Ce que le web ne partage pas avec Android : son nord est magnétique (pas de modèle embarqué).
+const CHAINES_BOUSSOLE = {
+  fr: { nord: 'Sur le web, le nord du téléphone est le nord magnétique : quelques degrés d’écart sont possibles selon la région. L’application Android corrige la déclinaison.', activer: 'Activer la boussole' },
+  en: { nord: 'On the web, the phone’s north is magnetic north: a few degrees of error are possible depending on the region. The Android app corrects for declination.', activer: 'Enable the compass' },
+  he: { nord: 'באתר, הצפון של הטלפון הוא הצפון המגנטי: ייתכנו כמה מעלות סטייה לפי האזור. אפליקציית אנדרואיד מתקנת את הסטייה.', activer: 'הפעלת המצפן' },
+};
+const tb = (k) => (CHAINES_BOUSSOLE[tr.langue] ?? CHAINES_BOUSSOLE.fr)[k];
+
+let ecouteBoussole = null;
+function arreteBoussole() {
+  if (!ecouteBoussole) return;
+  window.removeEventListener('deviceorientationabsolute', ecouteBoussole);
+  window.removeEventListener('deviceorientation', ecouteBoussole);
+  ecouteBoussole = null;
+}
+
+/** La boussole (BoussoleActivity) : le cadran tourne avec le téléphone, la flèche dorée montre Jérusalem. */
+function ecranBoussole() {
+  rafraichirPosition();
+  const lieu = store.lieu();
+  const etat = h('p', { class: 'indice boussole-etat', 'aria-live': 'polite' });
+  if (!lieu) {
+    return h('div', { class: 'ecran' }, barre(tr.t('boussole_titre')), h('div', { class: 'defile' }, h('div', { class: 'contenu boussole' },
+      h('p', {}, tr.t('zmanim_choisir_lieu')), h('button', { class: 'principal', onclick: choisirLieu }, tr.t('zmanim_choisir_lieu')))));
+  }
+  const ortho = orthodromie(lieu.latitude, lieu.longitude);
+  const loxo = loxodromie(lieu.latitude, lieu.longitude);
+  const ns = 'http://www.w3.org/2000/svg';
+  const el = (n, a) => { const e = document.createElementNS(ns, n); for (const [k, v] of Object.entries(a)) e.setAttribute(k, v); return e; };
+  const couronne = el('g', {});
+  couronne.append(el('circle', { cx: 100, cy: 100, r: 92, class: 'b-cercle' }));
+  for (let g = 0; g < 360; g += 15) {
+    const l = g % 90 === 0 ? 12 : g % 45 === 0 ? 8 : 4;
+    const a = (g * Math.PI) / 180;
+    couronne.append(el('line', { x1: 100 + 92 * Math.sin(a), y1: 100 - 92 * Math.cos(a), x2: 100 + (92 - l) * Math.sin(a), y2: 100 - (92 - l) * Math.cos(a), class: g % 90 === 0 ? 'b-grad fort' : 'b-grad' }));
+  }
+  for (const [l, g] of [['N', 0], ['E', 90], ['S', 180], ['O', 270]]) {
+    const a = (g * Math.PI) / 180;
+    const t = el('text', { x: 100 + 66 * Math.sin(a), y: 100 - 66 * Math.cos(a) + 5, class: g === 0 ? 'b-lettre nord' : 'b-lettre' });
+    t.textContent = l;
+    couronne.append(t);
+  }
+  const fleche = el('g', { transform: `rotate(${ortho} 100 100)` });
+  fleche.append(el('path', { d: 'M100 22 L88 108 L100 100 L112 108 Z', class: 'b-fleche' }));
+  couronne.append(fleche);
+  const svg = el('svg', { viewBox: '0 -8 200 216', class: 'cadran', 'aria-hidden': 'true' });
+  svg.append(couronne, el('path', { d: 'M100 -8 L94 2 L106 2 Z', class: 'b-repere' }), el('circle', { cx: 100, cy: 100, r: 3, class: 'b-centre' }));
+  let lisse = null;
+  const tourner = (nord) => {
+    lisse = lisse === null ? nord : (lisse + ((((nord - lisse) % 360) + 540) % 360 - 180) * 0.2 + 360) % 360;
+    couronne.setAttribute('transform', `rotate(${-lisse} 100 100)`);
+  };
+  const ecouter = () => {
+    arreteBoussole();
+    let absolu = false;
+    ecouteBoussole = (e) => {
+      if (e.type === 'deviceorientationabsolute') absolu = true;
+      else if (absolu) return;
+      // iOS : le cap boussole ; ailleurs, alpha d'une orientation absolue (sens inverse des aiguilles).
+      const nord = typeof e.webkitCompassHeading === 'number' ? e.webkitCompassHeading
+        : (e.absolute || e.type === 'deviceorientationabsolute') && e.alpha != null ? (360 - e.alpha) % 360 : null;
+      if (nord == null) return;
+      etat.textContent = tr.t('boussole_a_plat');
+      tourner(nord);
+    };
+    window.addEventListener('deviceorientationabsolute', ecouteBoussole);
+    window.addEventListener('deviceorientation', ecouteBoussole);
+  };
+  // iOS demande la permission d'un geste ; ailleurs, on écoute tout de suite.
+  const permission = typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function';
+  etat.textContent = tr.t('boussole_sans_capteur');
+  if (!permission) ecouter();
+  return h('div', { class: 'ecran' }, barre(tr.t('boussole_titre')), h('div', { class: 'defile' }, h('div', { class: 'contenu boussole' },
+    h('p', { class: 'boussole-lieu' }, tr.t('boussole_lieu', lieu.nom, Math.round(distanceKm(lieu.latitude, lieu.longitude, CIBLE_LAT, CIBLE_LON)))),
+    svg,
+    h('p', { class: 'boussole-cap' }, tr.t('boussole_cap', Math.round(ortho), tr.t(`boussole_points_${octant(ortho)}`))),
+    h('p', { class: 'indice' }, tr.t('boussole_loxodromie', Math.round(loxo), tr.t(`boussole_points_${octant(loxo)}`))),
+    etat,
+    permission ? h('button', { class: 'secondaire', onclick: () => DeviceOrientationEvent.requestPermission().then((r) => { if (r === 'granted') ecouter(); }).catch(() => {}) }, tb('activer')) : null,
+    h('button', { class: 'secondaire', onclick: () => localiserPosition({ etat }) }, tr.t('boussole_position_exacte')),
+    h('p', { class: 'indice sources' }, tr.t('boussole_source')),
+    h('p', { class: 'indice sources' }, tb('nord')))));
 }
 
 /**
@@ -3419,7 +3564,7 @@ function arreteDanse() {
 // et le geste de retour ramènent à l'accueil, sur l'onglet quitté.
 function ecranCourant() {
   const e = location.hash.slice(1);
-  return ['musique', 'reglages', 'seance', 'bravo', 'tehilim', 'lecture', 'siddur', 'priere', 'tikkun', 'bibliotheque', 'livres', 'source', 'zmanim', 'calendrier', 'paliers', 'hilloulot', 'halakha', 'recherche', 'hizouk', 'parcours'].includes(e) ? e : 'accueil';
+  return ['musique', 'reglages', 'seance', 'bravo', 'tehilim', 'lecture', 'siddur', 'priere', 'tikkun', 'bibliotheque', 'livres', 'source', 'zmanim', 'boussole', 'calendrier', 'paliers', 'hilloulot', 'halakha', 'recherche', 'hizouk', 'parcours'].includes(e) ? e : 'accueil';
 }
 function ouvrir(ecran) {
   // L'entrée sur l'écran de séance tire le mot d'ouverture (SessionActivity.onCreate).
@@ -3472,12 +3617,14 @@ function rendre() {
   // n'était vue qu'au toucher suivant (audit du 16/10).
   if (ecran !== 'seance' && !store.isSessionRunning()) arreteTic();
   if (ecran !== 'bravo') arreteDanse();
+  if (ecran !== 'boussole') arreteBoussole();
   queueMicrotask(majMini);
   const memeEcran = app.dataset.ecran === `${ecran}/${onglet}`;
   app.replaceChildren();
   if (ecran === 'musique') app.append(ecranMusique());
   else if (ecran === 'reglages') app.append(ecranReglages());
   else if (ecran === 'zmanim') app.append(ecranZmanim());
+  else if (ecran === 'boussole') app.append(ecranBoussole());
   else if (ecran === 'calendrier') app.append(ecranCalendrier());
   else if (ecran === 'paliers') app.append(ecranPaliers());
   else if (ecran === 'hilloulot') app.append(ecranHilloulot());

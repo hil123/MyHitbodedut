@@ -29,8 +29,10 @@ class ZmanimActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        // Le jour a pu changer, et le lieu avec les réglages.
+        // Le jour a pu changer, et le lieu avec les réglages ; la position du téléphone se reprend
+        // sans bruit (28/10, « les zmanim en fonction de la position exacte »).
         afficher()
+        choixLieu.rafraichir()
     }
 
     private fun afficher() {
@@ -53,6 +55,16 @@ class ZmanimActivity : AppCompatActivity() {
                 startActivity(Intent(this@ZmanimActivity, HilloulotActivity::class.java).putExtra(HilloulotActivity.EXTRA_DATE, aujourdhui.toString()))
             })
             addView(bouton(R.string.zmanim_calendrier, 8) { startActivity(Intent(this@ZmanimActivity, CalendrierActivity::class.java)) })
+        })
+        // La direction de la tefila (28/10) : une ligne, le cap ; touchée, la boussole.
+        if (lieu != null) contenu.addView(VueJour.carte(this).apply {
+            val c = DirectionTefila.orthodromie(lieu.latitude, lieu.longitude)
+            val points = resources.getStringArray(R.array.boussole_points)
+            addView(VueJour.texte(this@ZmanimActivity, "🧭  " + getString(R.string.boussole_titre), 15f, R.color.ink))
+            addView(VueJour.texte(this@ZmanimActivity, getString(R.string.boussole_cap, Math.round(c).toInt(),
+                points[DirectionTefila.octant(c)]), 13f, R.color.muted, haut = 2))
+            foreground = getDrawable(android.R.drawable.list_selector_background)
+            setOnClickListener { BoussoleActivity.ouvrir(this@ZmanimActivity) }
         })
         contenu.addView(VueJour.horaires(this, aujourdhui, israel) { choixLieu.montrer() })
         VueJour.sousHoraires(this, aujourdhui, israel).forEach { contenu.addView(it) }

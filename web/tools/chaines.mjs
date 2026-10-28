@@ -66,6 +66,10 @@ export function litChaines(xml) {
   for (const m of sansCommentaires.matchAll(/<string\b([^>]*)\/>/g)) {
     chaines[attribut(m[1], 'name')] = '';
   }
+  // Les tableaux (<string-array>, ex. boussole_points) : « nom_0 », « nom_1 »…
+  for (const m of sansCommentaires.matchAll(/<string-array\b([^>]*)>([\s\S]*?)<\/string-array>/g)) {
+    [...m[2].matchAll(/<item>([\s\S]*?)<\/item>/g)].forEach((item, i) => { chaines[`${attribut(m[1], 'name')}_${i}`] = valeurAndroid(item[1]); });
+  }
   for (const m of sansCommentaires.matchAll(/<plurals\b([^>]*)>([\s\S]*?)<\/plurals>/g)) {
     const formes = {};
     for (const item of m[2].matchAll(/<item\b([^>]*)>([\s\S]*?)<\/item>/g)) {

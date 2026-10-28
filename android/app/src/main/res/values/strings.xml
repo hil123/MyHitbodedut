@@ -615,7 +615,7 @@
     <string name="police_serif">Hébraïque à empattements</string>
     <string name="police_sans">Sans empattements</string>
     <string name="police_arrondie">Arrondie</string>
-    <string name="lecture_masque_info">Bouton masqué. Appui long sur le texte pour le faire revenir.</string>
+    <string name="lecture_masque_info">Bouton masqué. Touchez le texte pour le faire revenir.</string>
     <string name="lecture_annuler_masque">Annuler</string>
     <string name="lecture_taille">Taille du texte : %1$d %%</string>
     <string name="lecture_pourcent">%1$d %%</string>
@@ -745,6 +745,8 @@
     <string name="ajout_yom_tov_chabbat">Yom tov un Chabbat</string>
     <string name="ajout_roch_hachana_chabbat">Roch Hachana un Chabbat</string>
     <string name="ajout_motsae_chabbat_yt">Motsaé Chabbat et Yom tov</string>
+    <string name="ajout_cheva_berakhot">Chéva bérakhot (repas de noces)</string>
+    <string name="ajout_embolismique">Année embolismique (וּלְכַפָּרַת פֶּשַׁע)</string>
     <string name="ajout_beit_avel">Maison endeuillée</string>
     <string name="siddur_seul">Si l’on prie seul</string>
     <string name="ajout_minyan">Avec minyan</string>
@@ -1173,4 +1175,23 @@
     <string name="widget_zmanim_petit_description">La prière du moment et l’heure où elle se ferme.</string>
     <string name="widget_zmanim_grand_label">Zmanim · journée</string>
     <string name="widget_zmanim_grand_description">La date, la prière du moment et tous les zmanim du jour.</string>
+    <string name="boussole_titre">Direction de la tefila</string>
+    <string name="boussole_lieu">%1$s · %2$d km du mont du Temple</string>
+    <string name="boussole_cap">%1$d° · %2$s (route la plus courte)</string>
+    <string name="boussole_loxodromie">Sur une carte (cap constant) : %1$d° · %2$s</string>
+    <string name="boussole_a_plat">Tenez le téléphone à plat ; la flèche dorée montre Jérusalem.</string>
+    <string name="boussole_calibrer">Boussole imprécise : décrivez un 8 avec le téléphone.</string>
+    <string name="boussole_sans_capteur">Pas de boussole sur cet appareil : orientez-vous au cap indiqué, depuis le nord.</string>
+    <string name="boussole_position_exacte">Position exacte</string>
+    <string name="boussole_source">On se tourne vers Jérusalem et le Saint des saints (Berakhot 30a ; Choul’han Aroukh O.H. 94:1). Loin d’Israël, route la plus courte et cap constant diffèrent : les deux opinions existent. Le nord est corrigé de la déclinaison magnétique.</string>
+    <string-array name="boussole_points">
+        <item>nord</item>
+        <item>nord-est</item>
+        <item>est</item>
+        <item>sud-est</item>
+        <item>sud</item>
+        <item>sud-ouest</item>
+        <item>ouest</item>
+        <item>nord-ouest</item>
+    </string-array>
 </resources>

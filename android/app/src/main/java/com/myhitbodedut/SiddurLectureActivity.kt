@@ -106,6 +106,15 @@ class SiddurLectureActivity : AppCompatActivity() {
         }
     }
 
+    /** Le gras qui ouvre le paragraphe, un quart plus grand. */
+    private fun premierMotAgrandi(texte: android.text.Spanned): CharSequence {
+        val s = android.text.SpannableStringBuilder(texte)
+        s.getSpans(0, minOf(1, s.length), android.text.style.StyleSpan::class.java)
+            .firstOrNull { s.getSpanStart(it) == 0 && it.style == android.graphics.Typeface.BOLD }
+            ?.let { s.setSpan(android.text.style.RelativeSizeSpan(1.25f), 0, s.getSpanEnd(it), android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE) }
+        return s
+    }
+
     /** « s:chaharit » pour le siddour, « l:likoutei_etsot » pour un livre : la clé des favoris et de la reprise. */
     private fun cle(): String = (if (livre) "l:" else "s:") + id
 
@@ -332,7 +341,7 @@ class SiddurLectureActivity : AppCompatActivity() {
     private fun nom(libelle: String): String = Libelles.res(libelle)?.let { getString(it) } ?: libelle
 
     /** Les ajouts qui ne sont jamais « du jour » : on dit « toucher pour lire », pas « pas aujourd'hui ». */
-    private val jamaisDuJour = setOf(CalendrierJuif.C.MINYAN, CalendrierJuif.C.BEIT_AVEL, CalendrierJuif.C.OUBLI)
+    private val jamaisDuJour = setOf(CalendrierJuif.C.MINYAN, CalendrierJuif.C.BEIT_AVEL, CalendrierJuif.C.OUBLI, CalendrierJuif.C.CHEVA_BERAKHOT)
 
     /** Le chevron d'un repli, tourné d'un quart de tour quand l'ajout est ouvert ; [haut] : vers le haut. */
     private fun chevron(couleur: Int, ouvert: Boolean, haut: Boolean = false): android.graphics.drawable.RotateDrawable {
@@ -449,8 +458,10 @@ class SiddurLectureActivity : AppCompatActivity() {
                     PoliceHebraique.appliquer(this)
                     val consigne = ligne.bloc.consigne
                     // Des paragraphes aérés ; les consignes, petites, collées au texte qu'elles annoncent (12/10).
-                    setPadding(dp(16), dp(if (consigne) 24 else 12), dp(16), dp(if (consigne) 4 else 20))
-                    text = Html.fromHtml(ligne.bloc.texte, Html.FROM_HTML_MODE_LEGACY)
+                    setPadding(dp(16), dp(if (consigne) 24 else 14), dp(16), dp(if (consigne) 4 else 26))
+                    // Aéré (28/10) : les longs paragraphes coupés aux fins de phrase, le premier mot en gras, agrandi.
+                    text = if (consigne) Html.fromHtml(ligne.bloc.texte, Html.FROM_HTML_MODE_LEGACY)
+                    else premierMotAgrandi(Html.fromHtml(Aeration.aerer(ligne.bloc.texte), Html.FROM_HTML_MODE_LEGACY))
                     textSize = (if (consigne) 12f else 19f) * e
                     setLineSpacing(dp(if (consigne) 3 else 8).toFloat() * e, 1f)
                     setTextColor(if (consigne) rendu.discret else rendu.texte)
