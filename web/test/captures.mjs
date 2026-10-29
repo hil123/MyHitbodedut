@@ -174,8 +174,12 @@ await capture('zmanim-he', { langue: 'he', ecran: 'zmanim', extra: JERUSALEM, ac
 await capture('zmanim-he-suite', { langue: 'he', ecran: 'zmanim', extra: JERUSALEM, actions: bas(700) });
 await capture('zmanim-fr', { langue: 'fr', ecran: 'zmanim', extra: JERUSALEM, actions: bas(0) });
 // Les accès en tuiles (29/10), en hébreu et pour צדקת, en sombre.
-await capture('zmanim-tuiles-fr', { langue: 'fr', ecran: 'zmanim', extra: JERUSALEM, actions: bas(440) });
-await capture('zmanim-tuiles-he-f', { langue: 'he', mode: 'sombre', adresse: 'f', ecran: 'zmanim', extra: JERUSALEM, actions: bas(440) });
+// Les tuiles dans les quatre combinaisons צדיק/צדקת × clair/sombre.
+for (const adresse of ['m', 'f']) {
+  for (const mode of ['clair', 'sombre']) {
+    await capture(`zmanim-tuiles-he-${adresse}-${mode}`, { langue: 'he', mode, adresse, ecran: 'zmanim', extra: JERUSALEM, actions: bas(440) });
+  }
+}
 await capture('calendrier-he', { langue: 'he', ecran: 'calendrier', extra: JERUSALEM, actions: bas(0) });
 await capture('halakha-he', { langue: 'he', ecran: 'halakha', extra: JERUSALEM, actions: bas(0) });
 await capture('halakha-he-ben-ish-hai', { langue: 'he', ecran: 'halakha', extra: { ...JERUSALEM, halakha_source: 'ben_ish_hai' }, actions: bas(0) });
