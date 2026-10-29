@@ -43,4 +43,7 @@ l'accueil avec la date hébraïque, les zmanim du jour, le choix de la langue
 et de la ville. Le reste suit l'ordre du cahier des charges.
 
 Non encore fait : signature et envoi vers App Store Connect (il faut le
-compte Apple Developer de l'association), icône 1024 × 1024.
+compte Apple Developer de l'association).
+
+Icône : `MyHitbodedut/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png`,
+fournie par le porteur le 29/10 (1254 px, ramenée à 1024 × 1024, sans transparence).
