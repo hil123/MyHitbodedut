@@ -33,7 +33,7 @@ class BoussoleWidget : AppWidgetProvider() {
             val b = Bitmap.createBitmap(COTE, COTE, Bitmap.Config.ARGB_8888)
             val lieu = Store.lieuZmanim(context)
             val principale = lieu?.let { DirectionJerusalem.directions(it.latitude, it.longitude).first }
-            val hassid = runCatching { BitmapFactory.decodeResource(context.resources, R.drawable.char_standing_back) }.getOrNull()
+            val hassid = runCatching { BitmapFactory.decodeResource(context.resources, Personnage.pour(context, R.drawable.char_standing_back)) }.getOrNull()
             BoussoleDessin.rose(Canvas(b), COTE, COTE, principale, principale?.let { "${DirectionJerusalem.degres(it)}°" } ?: "",
                 context.getString(R.string.boussole_nord), hassid)
             return b

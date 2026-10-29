@@ -136,7 +136,7 @@ object VueJour {
         val carte = carte(c)
         // Fête ou Chabbat : l'illustration du jour (11/10).
         JourAffiche.illustration(j.fetes, date)?.let { nom ->
-            carte.addView(ImageView(c).apply {
+            carte.addView(PersonnageImageView(c).apply {
                 setImageResource(illustration(nom))
                 adjustViewBounds = true
                 contentDescription = null

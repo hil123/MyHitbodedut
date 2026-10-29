@@ -367,15 +367,32 @@ export function memeIndicatif(a, b) {
   return pa !== undefined && pa === parties(b);
 }
 
+/**
+ * Les raisons d'échec, en codes (SuiviVol.Raison) : l'écran les dit dans la langue de
+ * l'interface (« vol_erreur_* »), jamais en français dans les trois langues (audit 1.390).
+ */
+export const Raison = {
+  HORS_LIGNE: 'hors_ligne', QUOTA: 'quota', ILLISIBLE: 'illisible', POSITION_INVALIDE: 'position_invalide',
+  RELAIS_ABSENT: 'relais_absent', SERVICE: 'service',
+  serveur: (code) => (code === 429 ? 'quota' : `serveur_${code}`),
+  /** Le code HTTP d'une raison serveur(), sinon null. */
+  codeServeur: (raison) => (/^serveur_\d+$/.test(raison) ? +raison.slice(8) : null),
+  /** Le message du relais (tools/relais_vol) : « opensky 429 », « opensky injoignable »… */
+  duRelais: (message) => {
+    const m = /^opensky (\d+)$/.exec(String(message).trim());
+    return m ? Raison.serveur(+m[1]) : 'service';
+  },
+};
+
 /** La réponse du relais (SuiviVol.lire) : { statut: 'trouve' | 'introuvable' | 'erreur', point, altitude, raison }. */
 export function lireReponse(o, maintenant) {
-  if (!o || typeof o !== 'object') return { statut: 'erreur', raison: 'réponse illisible' };
-  if (o.erreur) return { statut: 'erreur', raison: String(o.erreur) };
+  if (!o || typeof o !== 'object') return { statut: 'erreur', raison: Raison.ILLISIBLE };
+  if (o.erreur) return { statut: 'erreur', raison: Raison.duRelais(o.erreur) };
   if (!o.trouve) return { statut: 'introuvable' };
   const instant = new Date(o.instant);
   const { latitude, longitude } = o;
-  if (Number.isNaN(+instant) || typeof latitude !== 'number' || typeof longitude !== 'number') return { statut: 'erreur', raison: 'réponse illisible' };
-  if (Math.abs(latitude) > 90 || Math.abs(longitude) > 180) return { statut: 'erreur', raison: 'position invalide' };
+  if (Number.isNaN(+instant) || typeof latitude !== 'number' || typeof longitude !== 'number') return { statut: 'erreur', raison: Raison.ILLISIBLE };
+  if (Math.abs(latitude) > 90 || Math.abs(longitude) > 180) return { statut: 'erreur', raison: Raison.POSITION_INVALIDE };
   if (+maintenant - +instant > FRAICHEUR_MAX) return { statut: 'introuvable' };
   const altitude = [o.altitude_geo, o.altitude_baro].find((v) => typeof v === 'number') ?? null;
   return { statut: 'trouve', point: { instant, latitude, longitude }, altitude };
@@ -386,13 +403,15 @@ export const adresseRelais = (relais, indicatif, estime) =>
 
 /** Le relais OpenSky, en HTTPS seulement ; [chercher] est fetch, remplaçable dans les tests. */
 export async function positionEnDirect(relais, indicatif, estime, chercher = fetch, maintenant = new Date()) {
-  if (!relais || !relais.startsWith('https://')) return { statut: 'erreur', raison: 'relais non configuré' };
+  if (!relais || !relais.startsWith('https://')) return { statut: 'erreur', raison: Raison.RELAIS_ABSENT };
   try {
     const r = await chercher(adresseRelais(relais, indicatif, estime), { credentials: 'omit', redirect: 'error' });
-    if (r.status >= 500) return { statut: 'erreur', raison: `relais ${r.status}` };
-    return lireReponse(await r.json(), maintenant);
+    if (r.status >= 500) return { statut: 'erreur', raison: Raison.serveur(r.status) };
+    let o;
+    try { o = await r.json(); } catch { return { statut: 'erreur', raison: Raison.ILLISIBLE }; }
+    return lireReponse(o, maintenant);
   } catch {
-    return { statut: 'erreur', raison: 'pas de connexion' };
+    return { statut: 'erreur', raison: Raison.HORS_LIGNE };
   }
 }
 
@@ -436,8 +455,8 @@ export async function chercherRoute(numero, depart = null, chercher = fetch) {
   const demande = async (chemin) => {
     const r = await chercher(`${ADSBDB}/${chemin}`);
     if (r.status === 404 || r.status === 400) return null;
-    if (!r.ok) throw new Error(`HTTP ${r.status}`);
-    return r.json();
+    if (!r.ok) throw Object.assign(new Error(`HTTP ${r.status}`), { raison: Raison.serveur(r.status) });
+    try { return await r.json(); } catch { throw Object.assign(new Error('JSON'), { raison: Raison.ILLISIBLE }); }
   };
   try {
     const direct = await demande(`callsign/${encodeURIComponent(n.code + n.chiffres + n.suffixe)}`);
@@ -451,6 +470,6 @@ export async function chercherRoute(numero, depart = null, chercher = fetch) {
     }
     return { statut: 'introuvable' };
   } catch (e) {
-    return { statut: 'erreur', raison: e.message };
+    return { statut: 'erreur', raison: e.raison ?? Raison.HORS_LIGNE };
   }
 }

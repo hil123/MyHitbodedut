@@ -106,7 +106,7 @@
                     style="@style/CardHint" />
             </LinearLayout>
 
-            <ImageView style="@style/SectionChevron" />
+            <ImageView style="@style/SectionChevron" android:importantForAccessibility="no" />
         </LinearLayout>
     </LinearLayout>
 

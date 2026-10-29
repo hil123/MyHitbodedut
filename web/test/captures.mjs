@@ -173,6 +173,14 @@ const bas = (n) => async (p) => { await p.waitForTimeout(1200); await p.evaluate
 await capture('zmanim-he', { langue: 'he', ecran: 'zmanim', extra: JERUSALEM, actions: bas(0) });
 await capture('zmanim-he-suite', { langue: 'he', ecran: 'zmanim', extra: JERUSALEM, actions: bas(700) });
 await capture('zmanim-fr', { langue: 'fr', ecran: 'zmanim', extra: JERUSALEM, actions: bas(0) });
+// Les accès en tuiles (29/10), en hébreu et pour צדקת, en sombre.
+// L'écran Zmanim dans les quatre combinaisons צדיק/צדקת × clair/sombre.
+await capture('zmanim-boutons-fr', { langue: 'fr', ecran: 'zmanim', extra: JERUSALEM, actions: bas(440) });
+for (const adresse of ['m', 'f']) {
+  for (const mode of ['clair', 'sombre']) {
+    await capture(`zmanim-boutons-he-${adresse}-${mode}`, { langue: 'he', mode, adresse, ecran: 'zmanim', extra: JERUSALEM, actions: bas(440) });
+  }
+}
 await capture('calendrier-he', { langue: 'he', ecran: 'calendrier', extra: JERUSALEM, actions: bas(0) });
 await capture('halakha-he', { langue: 'he', ecran: 'halakha', extra: JERUSALEM, actions: bas(0) });
 await capture('halakha-he-ben-ish-hai', { langue: 'he', ecran: 'halakha', extra: { ...JERUSALEM, halakha_source: 'ben_ish_hai' }, actions: bas(0) });
@@ -221,6 +229,12 @@ const ouvrirTexte = (titre, y) => async (p) => {
 };
 await capture('priere-aeree-he', { langue: 'he', ecran: 'siddur', actions: ouvrirTexte('תפלת שחרית', 1400) });
 await capture('birkat-cheva-he', { langue: 'he', ecran: 'siddur', actions: ouvrirTexte('ברכת המזון', -1) });
+await capture('birkat-zimun-fr', { langue: 'fr', ecran: 'siddur', actions: ouvrirTexte('ברכת המזון', 560) });
+// Le 29/10 : Méèn chaloch, les ajouts de fêtes repliés (le 29/09 est 'Hol hamoed Soukkot :
+// Soukkot du jour, le reste replié) ; le meteg masqué dans la police par défaut (עָלֶֽיהָ).
+for (const nusah of ['edot', 'sefard', 'ashkenaz']) {
+  await capture(`meen-chaloch-${nusah}`, { langue: 'he', ecran: 'siddur', extra: { siddur_nusah: nusah }, actions: ouvrirTexte('מעין שלש', 250) });
+}
 // Le capteur simulé : quarante lectures au même cap, pour que le lissage s'y pose.
 const cap = (nord) => async (p) => {
   await p.waitForSelector('.boussole-scene svg');

@@ -56,7 +56,7 @@ comprise, et ce qu'elle contient (vérifié, `AndroidManifest.xml` et
 | `compileSdk` | 36, avec le plugin Android 8.11.1 (était 8.7.3) | ≥ `targetSdk` | **Fait** |
 | `minSdk` | 26 | aucune contrainte | OK |
 | Format | APK pour GitHub ; **AAB** pour Play (`-Pplay=true bundleFullRelease`, flux `play.yml`) | **AAB** obligatoire pour une nouvelle app | **Fait** — AAB de 28,5 Mo construit le 29/10 |
-| Taille | `res/raw` = 160 Mo (130 Mo de MP3, 30 Mo de JSON) | Module de base ≤ 500 Mo compressés ; au-delà de 200 Mo, avertissement non bloquant en données mobiles | OK — vérifié |
+| Taille | `res/raw` ≈ 110 Mo (82 Mo d'audio AAC pour la version GitHub, 30 Mo de JSON) ; version Play bien moins lourde (2 morceaux) | Module de base ≤ 500 Mo compressés ; au-delà de 200 Mo, avertissement non bloquant en données mobiles | OK — vérifié |
 | Bibliothèques natives | aucune `.so` | page mémoire 16 Ko exigée pour les `.so` ciblant API 35+ | Sans objet — vérifié |
 | Signature | clé de dev pour GitHub ; `play.yml` exige la clé d'envoi (secrets `PLAY_*`) et refuse un AAB signé par la clé de dev | clé d'envoi privée + Play App Signing | **Reste à faire par le propriétaire** : créer la clé et les secrets (§ 5.1, § 5.2) |
 | `versionCode` | `1 + github.run_number` | strictement croissant | OK, à garder |
@@ -231,7 +231,7 @@ morceaux livrés par Play, déclarés dans `MusiquePlay.kt`. Les 31 autres sont
 dans `src/musique_hors_play/` (fichiers et liste `MusiqueHorsPlay.kt`), que
 seule la construction GitHub ajoute ; avec `-Pplay=true`, Gradle prend
 `src/musique_play/`, où la même liste est vide. Vérifié sur l'AAB : il ne
-contient que `hamelech_basade.mp3` et `yanuka_nigoun_3.mp3`. `MusicFilesTest`
+contient que `hamelech_basade.m4a` et `yanuka_nigoun_3.m4a` (AAC 96 kb/s depuis le 29/10). `MusicFilesTest`
 tient la liste ; `play.yml` recontrôle l'AAB lui-même. Le site web garde les
 33 morceaux, comme avant.
 

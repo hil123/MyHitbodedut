@@ -412,7 +412,7 @@
                                 style="@style/SectionState" />
                         </LinearLayout>
 
-                        <ImageView style="@style/SectionChevron" />
+                        <ImageView style="@style/SectionChevron" android:importantForAccessibility="no" />
                     </LinearLayout>
                     <!-- Le siddour : les prières du jour et les bénédictions (04/10). -->
                     <LinearLayout
@@ -434,7 +434,7 @@
                                 android:text="@string/siddur_hint" />
                         </LinearLayout>
 
-                        <ImageView style="@style/SectionChevron" />
+                        <ImageView style="@style/SectionChevron" android:importantForAccessibility="no" />
                     </LinearLayout>
                     <!-- Le livre entier, et la part du jour (04/10). -->
                     <LinearLayout
@@ -456,7 +456,7 @@
                                 style="@style/SectionState" />
                         </LinearLayout>
 
-                        <ImageView style="@style/SectionChevron" />
+                        <ImageView style="@style/SectionChevron" android:importantForAccessibility="no" />
                     </LinearLayout>
                     <LinearLayout
                         android:id="@+id/tefilot_button"
@@ -477,7 +477,7 @@
                                 android:text="@string/tefilot_hint" />
                         </LinearLayout>
 
-                        <ImageView style="@style/SectionChevron" />
+                        <ImageView style="@style/SectionChevron" android:importantForAccessibility="no" />
                     </LinearLayout>
                     <!-- Les livres entiers : Likoutei Moharan, les méguilot … (13/10). -->
                     <LinearLayout
@@ -499,7 +499,7 @@
                                 android:text="@string/livres_hint" />
                         </LinearLayout>
 
-                        <ImageView style="@style/SectionChevron" />
+                        <ImageView style="@style/SectionChevron" android:importantForAccessibility="no" />
                     </LinearLayout>
                     <LinearLayout
                         android:id="@+id/library_button"
@@ -520,7 +520,7 @@
                                 android:text="@string/library_hint" />
                         </LinearLayout>
 
-                        <ImageView style="@style/SectionChevron" />
+                        <ImageView style="@style/SectionChevron" android:importantForAccessibility="no" />
                     </LinearLayout>
                     <LinearLayout
                         android:id="@+id/chizuk_button"
@@ -541,7 +541,7 @@
                                 android:text="@string/chizuk_demande_hint" />
                         </LinearLayout>
 
-                        <ImageView style="@style/SectionChevron" />
+                        <ImageView style="@style/SectionChevron" android:importantForAccessibility="no" />
                     </LinearLayout>
                     <LinearLayout
                         android:id="@+id/tips_button"
@@ -562,7 +562,7 @@
                                 android:text="@string/tips_hint" />
                         </LinearLayout>
 
-                        <ImageView style="@style/SectionChevron" />
+                        <ImageView style="@style/SectionChevron" android:importantForAccessibility="no" />
                     </LinearLayout>
                     <LinearLayout
                         android:id="@+id/proofread_button"
@@ -580,7 +580,7 @@
                                 android:text="@string/proofread_open" />
                         </LinearLayout>
 
-                        <ImageView style="@style/SectionChevron" />
+                        <ImageView style="@style/SectionChevron" android:importantForAccessibility="no" />
                     </LinearLayout>
                 </LinearLayout>
 
@@ -623,7 +623,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content" />
 
-                        <ImageView style="@style/SectionChevron" />
+                        <ImageView style="@style/SectionChevron" android:importantForAccessibility="no" />
                     </LinearLayout>
                     <LinearLayout
                         android:id="@+id/reminders_button"
@@ -644,7 +644,7 @@
                                 style="@style/SectionState" />
                         </LinearLayout>
 
-                        <ImageView style="@style/SectionChevron" />
+                        <ImageView style="@style/SectionChevron" android:importantForAccessibility="no" />
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>

@@ -59,10 +59,6 @@
             android:name=".MainActivity"
             android:exported="true"
             android:theme="@style/Theme.MyHitbodedut.Ouverture">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
 
             <!--
                 La fenetre au lancement sur un bureau ou en fenetre libre.
@@ -77,6 +73,156 @@
                 android:minHeight="320dp"
                 android:minWidth="320dp" />
         </activity>
+
+        <!--
+            L'icône de lancement suit le choix צדיק / צדקת et la couleur des
+            boutons (IconeLanceur) : une entrée par combinaison, une seule
+            active. Le hassid sur le vert d'origine l'est par défaut.
+        -->
+        <activity-alias
+            android:name=".Icone_m_vert"
+            android:enabled="true"
+            android:exported="true"
+            android:icon="@mipmap/ic_launcher_m_vert"
+            android:roundIcon="@mipmap/ic_launcher_m_vert"
+            android:targetActivity=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+        <activity-alias
+            android:name=".Icone_m_bleu"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@mipmap/ic_launcher_m_bleu"
+            android:roundIcon="@mipmap/ic_launcher_m_bleu"
+            android:targetActivity=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+        <activity-alias
+            android:name=".Icone_m_violet"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@mipmap/ic_launcher_m_violet"
+            android:roundIcon="@mipmap/ic_launcher_m_violet"
+            android:targetActivity=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+        <activity-alias
+            android:name=".Icone_m_bordeaux"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@mipmap/ic_launcher_m_bordeaux"
+            android:roundIcon="@mipmap/ic_launcher_m_bordeaux"
+            android:targetActivity=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+        <activity-alias
+            android:name=".Icone_m_ambre"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@mipmap/ic_launcher_m_ambre"
+            android:roundIcon="@mipmap/ic_launcher_m_ambre"
+            android:targetActivity=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+        <activity-alias
+            android:name=".Icone_m_turquoise"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@mipmap/ic_launcher_m_turquoise"
+            android:roundIcon="@mipmap/ic_launcher_m_turquoise"
+            android:targetActivity=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+        <activity-alias
+            android:name=".Icone_f_vert"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@mipmap/ic_launcher_f_vert"
+            android:roundIcon="@mipmap/ic_launcher_f_vert"
+            android:targetActivity=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+        <activity-alias
+            android:name=".Icone_f_bleu"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@mipmap/ic_launcher_f_bleu"
+            android:roundIcon="@mipmap/ic_launcher_f_bleu"
+            android:targetActivity=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+        <activity-alias
+            android:name=".Icone_f_violet"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@mipmap/ic_launcher_f_violet"
+            android:roundIcon="@mipmap/ic_launcher_f_violet"
+            android:targetActivity=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+        <activity-alias
+            android:name=".Icone_f_bordeaux"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@mipmap/ic_launcher_f_bordeaux"
+            android:roundIcon="@mipmap/ic_launcher_f_bordeaux"
+            android:targetActivity=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+        <activity-alias
+            android:name=".Icone_f_ambre"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@mipmap/ic_launcher_f_ambre"
+            android:roundIcon="@mipmap/ic_launcher_f_ambre"
+            android:targetActivity=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+        <activity-alias
+            android:name=".Icone_f_turquoise"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@mipmap/ic_launcher_f_turquoise"
+            android:roundIcon="@mipmap/ic_launcher_f_turquoise"
+            android:targetActivity=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
 
         <activity
             android:name=".SettingsActivity"
@@ -183,14 +329,6 @@
             android:name=".LibraryEntryActivity"
             android:exported="false"
             android:label="@string/library_title" />
-
-        <!-- Écran de relecture. Déclaré ici pour que MainActivity puisse le
-             nommer, mais rien n'y mène hors compilation de test : le bouton
-             qui l'ouvre est masqué quand BuildConfig.DEBUG est faux. -->
-        <activity
-            android:name=".ProofreadActivity"
-            android:exported="false"
-            android:label="@string/proofread_title" />
 
         <activity
             android:name=".ZmanimActivity"

@@ -75,11 +75,11 @@ jobs:
         working-directory: android
         run: |
           aab=app/build/outputs/bundle/fullRelease/app-full-release.aab
-          mp3=$(unzip -Z1 "$aab" | grep '\.mp3$' | sed 's#.*/##' | sort | tr '\n' ' ')
-          echo "Morceaux livrés : $mp3"
-          attendus=$(grep -o 'Bundled("[a-z0-9_]*"' app/src/main/java/com/myhitbodedut/MusiquePlay.kt | sed 's/Bundled("//; s/"$/.mp3/' | sort | tr '\n' ' ')
+          livres=$(unzip -Z1 "$aab" | grep -E '/raw/.*\.(m4a|mp3)$' | sed 's#.*/##' | sort | tr '\n' ' ')
+          echo "Morceaux livrés : $livres"
+          attendus=$(grep -o 'Bundled("[a-z0-9_]*"' app/src/main/java/com/myhitbodedut/MusiquePlay.kt | sed 's/Bundled("//; s/"$/.m4a/' | sort | tr '\n' ' ')
           echo "Attendus (MusiquePlay.kt) : $attendus"
-          [ -n "$mp3" ] && [ "$mp3" = "$attendus" ] || { echo "::error::morceaux inattendus dans l'AAB"; exit 1; }
+          [ -n "$livres" ] && [ "$livres" = "$attendus" ] || { echo "::error::morceaux inattendus dans l'AAB"; exit 1; }
           # Empreinte de keystore/myhitbodedut-dev.jks, dont le mot de passe est public.
           if keytool -printcert -jarfile "$aab" | grep -q "ED:78:70:52:56:33:9D:AB:37:28:66:83:9B:8B:62:6A"; then
             echo "::error::AAB signé avec la clé de développement"; exit 1

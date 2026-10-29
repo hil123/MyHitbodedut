@@ -115,11 +115,11 @@ const listes = [
 ];
 const morceaux = listes.flatMap(({ kt, raw }) =>
   [...readFileSync(kt, 'utf8').matchAll(/Bundled\("([a-z0-9_]+)", R\.raw\.\1, R\.string\.(track_[a-z0-9_]+)\)/g)]
-    .map(([, id, titre]) => ({ id, titre, fichier: `musique/${id}.mp3`, raw })));
+    .map(([, id, titre]) => ({ id, titre, fichier: `musique/${id}.m4a`, raw })));
 if (morceaux.length === 0) throw new Error('Aucun morceau trouvé dans MusiquePlay.kt ni MusiqueHorsPlay.kt');
 mkdirSync(join(DIST, 'musique'), { recursive: true });
 for (const m of morceaux) {
-  const source = join(m.raw, `${m.id}.mp3`);
+  const source = join(m.raw, `${m.id}.m4a`);
   delete m.raw;
   if (!existsSync(source)) throw new Error(`Morceau manquant : ${source}`);
   cpSync(source, join(DIST, m.fichier));

@@ -14,8 +14,8 @@ import java.time.LocalTime
  * TefilaRules pour les ajouts. Aucune règle n'est écrite ici : chaque
  * condition renvoie à une méthode de la bibliothèque, lue dans le jar et dans
  * ses sources (zmanim-2.5.0-sources.jar). Les coutumes de Ta'hanoun sont les
- * réglages par défaut de TefilaRules, les mêmes pour les trois nusah : à
- * valider par un Rav (ZMANIM.md).
+ * réglages par défaut de TefilaRules, les mêmes pour les trois nusah
+ * (ZMANIM.md).
  *
  * Le même calcul existe côté web (web/src/js/tefila.js), vérifié jour par
  * jour contre ce fichier-ci par des vecteurs que KosherJava a produits
@@ -108,6 +108,9 @@ object CalendrierJuif {
         /** Les Chéva bérakhot de la table, à la fin de Birkat haMazon (28/10) : jamais du jour, repliées. */
         const val CHEVA_BERAKHOT = "cheva_berakhot"
 
+        /** Le zimoun de Birkat haMazon, à trois convives ou plus (29/10) : jamais du jour, replié. */
+        const val ZIMUN = "zimun"
+
         /** Roch 'Hodech d'une année embolismique ; avant Nissan (« וּלְכַפָּרַת פָּשַׁע », 28/10). */
         const val EMBOLISMIQUE = "embolismique"
         const val EMBOLISMIQUE_AVANT_NISSAN = "embolismique_avant_nissan"
@@ -117,7 +120,7 @@ object CalendrierJuif {
         val DERIVEES = listOf(AVINOU_MALKENOU, KRIAT_HATORAH) + JOURS_SEMAINE +
             listOf(TSOM_GUEDALIA_TEVET, LENDEMAIN_KIPPOUR, ESTHER_POURIM, CHIVA_ASSAR_TAMOUZ, BASCULE_PLUIE, EREV_KIPPOUR_VENDREDI,
                 LAMNATSEAH, LEDAVID, TECHOUVA_HOCHAANA, YOM_TOV, MOED, CHABBAT_ROCH_HODECH, YOM_TOV_CHABBAT, ROCH_HACHANA_CHABBAT,
-                MOTSAE_CHABBAT_YT, BEIT_AVEL, OUBLI, MINYAN, CHEVA_BERAKHOT, EMBOLISMIQUE, EMBOLISMIQUE_AVANT_NISSAN)
+                MOTSAE_CHABBAT_YT, BEIT_AVEL, OUBLI, MINYAN, CHEVA_BERAKHOT, ZIMUN, EMBOLISMIQUE, EMBOLISMIQUE_AVANT_NISSAN)
     }
 
     /**

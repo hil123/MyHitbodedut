@@ -12,7 +12,7 @@ const DIST = join(dirname(fileURLToPath(import.meta.url)), '..', 'dist');
 
 const TYPES = {
   '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.css': 'text/css', '.json': 'application/json',
-  '.webp': 'image/webp', '.png': 'image/png', '.svg': 'image/svg+xml', '.mp3': 'audio/mpeg',
+  '.webp': 'image/webp', '.png': 'image/png', '.svg': 'image/svg+xml', '.mp3': 'audio/mpeg', '.m4a': 'audio/mp4',
   '.webmanifest': 'application/manifest+json', '.txt': 'text/plain',
 };
 

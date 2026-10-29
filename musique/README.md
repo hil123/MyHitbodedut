@@ -4,6 +4,16 @@ Ces fichiers sont **versionnés dans le dépôt mais absents de l'application**.
 Ils ne sont pas dans `android/app/src/main/res/raw/`, donc ils n'entrent pas
 dans l'APK et n'en augmentent pas le poids.
 
+Depuis le 29/10 (audit 1.390), les morceaux embarqués sont en AAC 96 kb/s
+(`.m4a`) : l'audio de l'APK est passé de 130 à 85 Mo. Ceux d'ici gardent leurs
+MP3 d'origine ; `tools/echange_musique.py` et `tools/ajoute_musique.py`
+réencodent en AAC ce qui entre dans l'APK (`tools/audio.py`, ffmpeg requis).
+
+Le 29/10 (audit 1.390), `ribo_sans_titre` est sorti de l'APK et du site, sur
+décision du propriétaire : aucun morceau d'Ishay Ribo n'est diffusé tant qu'il
+n'y a pas d'accord écrit de l'artiste ou de son label. Il revient ici en MP3
+d'origine.
+
 ## Pourquoi
 
 L'audio embarqué a atteint le plafond de **130 Mo** — le chiffre exact est
@@ -62,6 +72,7 @@ prochain échange, quand les autres auront un nom.
 | `ribo_halev_sheli` | 5,6 Mo |
 | `ribo_nafshi` | 6,1 Mo |
 | `ribo_ochila` | 5,3 Mo |
+| `ribo_sans_titre` | 4,6 Mo |
 | `ribo_seder_haavoda` | 8,1 Mo |
 | `ribo_zusha` | 4,4 Mo |
 | `shmuel_one_prayer` | 2,6 Mo |
@@ -82,13 +93,13 @@ prochain échange, quand les autres auront un nom.
 | `yosef_karduner` | 6,6 Mo |
 | `niggoun_08`, `niggoun_09`, `niggoun_16` *(3 sans titre)* | 27,4 Mo |
 
-**34 morceaux, 199,7 Mo.** L'APK est à 123,1 Mo d'audio sur 33 morceaux.
+**35 morceaux, 197,6 Mo.** L'APK est à 82,1 Mo d'audio sur 32 morceaux.
 
 > Cet inventaire est régénéré depuis les fichiers, pas tenu à la main.
 
 ## Titres
 
-Ceux qui portent un nom l'ont gardé. Les deux `niggoun_NN` n'en ont aucun :
+Ceux qui portent un nom l'ont gardé. Les trois `niggoun_NN` n'en ont aucun :
 leurs noms de fichiers étaient entièrement en hébreu et le transfert les a
 remplacés par des underscores, et les tags ID3 sont vides. D'où la
 numérotation — on ne devine pas un titre. Les vrais noms sont les bienvenus.

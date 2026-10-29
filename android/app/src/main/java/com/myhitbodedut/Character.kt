@@ -22,7 +22,9 @@ object Character {
 
     /** Pendant la séance : seul, tourné vers le haut. */
     private val DURING = intArrayOf(
-        R.drawable.char_arms_raised,
+        // char_arms_raised était une copie exacte de char_open_arms (audit 1.390) :
+        // supprimée, la même image reste ici sous son seul nom.
+        R.drawable.char_open_arms,
         R.drawable.char_praying,
         R.drawable.char_standing_back,
         // Les mains levées, la louange (demande du 13/10).

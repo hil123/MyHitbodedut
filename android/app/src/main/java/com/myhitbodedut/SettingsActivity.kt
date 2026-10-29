@@ -435,6 +435,7 @@ class SettingsActivity : AppCompatActivity() {
             .setSingleChoiceItems(noms, courante) { dialog, choisi ->
                 dialog.dismiss()
                 Store.setLangueApp(this, Langues.TOUTES[choisi].etiquette)
+                Store.setLangueRepli(this, false)
                 AppCompatDelegate.setApplicationLocales(
                     LocaleListCompat.forLanguageTags(Langues.TOUTES[choisi].etiquette)
                 )

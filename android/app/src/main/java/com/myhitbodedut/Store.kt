@@ -55,7 +55,7 @@ object Store {
     private const val PREFS = "myhitbodedut"
 
     /**
-     * Journal et notes vivent dans un fichier séparé, exclu de la sauvegarde
+     * Journal, notes et prénom vivent dans un fichier séparé, exclu de la sauvegarde
      * automatique d'Android. La sauvegarde raisonne par fichier et non par
      * clé : garder les réglages tout en écartant le journal impose la
      * séparation. L'export JSON manuel reste la voie pour les emporter.
@@ -141,6 +141,7 @@ object Store {
     private const val KEY_FOND = "apparence_fond"
     private const val KEY_ACCENT = "apparence_accent"
     private const val KEY_LANGUE_APP = "langue_app"
+    private const val KEY_LANGUE_REPLI = "langue_repli"
     private const val KEY_MUSIC_ON = "music_enabled"
     private const val KEY_MUSIC_TRACK = "music_track"
     private const val KEY_MUSIC_VOLUME = "music_volume"
@@ -1140,14 +1141,27 @@ object Store {
      * Le prénom, pour que l'accueil s'adresse à quelqu'un.
      *
      * Vide par défaut, et vide est une réponse : l'accueil se tait alors
-     * plutôt que de saluer un blanc. Il ne sort pas de l'appareil, comme
-     * le reste.
+     * plutôt que de saluer un blanc.
+     *
+     * L'écran promet qu'il ne quitte pas le téléphone : il vit donc avec le
+     * journal, hors de la sauvegarde dans le nuage (audit 1.390 : il partait
+     * avec les réglages sur Google Drive). Un prénom resté dans les réglages,
+     * par une version antérieure ou une sauvegarde restaurée, y est déplacé
+     * à la première lecture.
      */
-    fun firstName(context: Context): String =
-        prefs(context).getString(KEY_NAME, "").orEmpty().trim()
+    fun firstName(context: Context): String {
+        val j = journalPrefs(context)
+        val ancien = prefs(context).getString(KEY_NAME, null)
+        if (ancien != null) {
+            if (!j.contains(KEY_NAME)) j.edit().putString(KEY_NAME, ancien).commit()
+            prefs(context).edit().remove(KEY_NAME).commit()
+        }
+        return j.getString(KEY_NAME, "").orEmpty().trim()
+    }
 
     fun setFirstName(context: Context, name: String) {
-        prefs(context).edit().putString(KEY_NAME, name.trim().take(40)).apply()
+        journalPrefs(context).edit().putString(KEY_NAME, name.trim().take(40)).apply()
+        prefs(context).edit().remove(KEY_NAME).apply()
     }
 
     /** צדיק ou צדקת ; null tant que rien n'est choisi. */
@@ -1158,6 +1172,7 @@ object Store {
         prefs(context).edit().apply {
             if (adresse == null) remove(KEY_ADRESSE) else putString(KEY_ADRESSE, adresse.cle)
         }.apply()
+        IconeLanceur.appliquer(context)
     }
 
     /** Copie du choix de langue d'AppCompat, pour les services (LangueApp). */
@@ -1166,6 +1181,13 @@ object Store {
 
     fun setLangueApp(context: Context, etiquettes: String) {
         prefs(context).edit().putString(KEY_LANGUE_APP, etiquettes).apply()
+    }
+
+    /** Vrai si l'anglais a été posé par LangueApp.appliquerRepli, non choisi dans les réglages. */
+    fun langueRepli(context: Context): Boolean = prefs(context).getBoolean(KEY_LANGUE_REPLI, false)
+
+    fun setLangueRepli(context: Context, auto: Boolean) {
+        prefs(context).edit().putBoolean(KEY_LANGUE_REPLI, auto).apply()
     }
 
     // --- Apparence -----------------------------------------------------------
@@ -1189,6 +1211,7 @@ object Store {
 
     fun setAccent(context: Context, accent: Apparence.Accent) {
         prefs(context).edit().putString(KEY_ACCENT, accent.cle).apply()
+        IconeLanceur.appliquer(context)
     }
 
     /** Le bravo en attente, et le jour de la note qu'il proposera ensuite. */

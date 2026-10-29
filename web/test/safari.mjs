@@ -124,7 +124,7 @@ try {
       .then(() => setTimeout(() => fin({ duree: a.duration, joue: !a.paused, position: a.currentTime }), 2000))
       .catch((e) => fin({ duree: a.duration, joue: false, refus: e.name })), { once: true });
     a.addEventListener('error', () => fin({ erreur: a.error && a.error.code }), { once: true });
-    setTimeout(() => fin({ delai: true }), 20000);`, [`${base}musique/niggoun_01.mp3`]);
+    setTimeout(() => fin({ delai: true }), 20000);`, [`${base}musique/niggoun_01.m4a`]);
   rapport.push(`Musique (niggoun_01) : ${JSON.stringify(son)}`);
   if (!(son.duree > 0)) erreurs.push(`musique : le morceau ne se charge pas ${JSON.stringify(son)}`);
 } finally {

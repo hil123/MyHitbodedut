@@ -11,7 +11,8 @@
 const VERSION = '__VERSION__';
 const COQUILLE = __COQUILLE__;
 const CACHE_COQUILLE = `coquille-${VERSION}`;
-const CACHE_MUSIQUE = 'musique-1';
+// musique-2 : les morceaux en AAC (.m4a, 29/10) ; les MP3 de musique-1 sont effacés.
+const CACHE_MUSIQUE = 'musique-2';
 
 self.addEventListener('install', (e) => {
   e.waitUntil(caches.open(CACHE_COQUILLE).then((c) => c.addAll(COQUILLE)).then(() => self.skipWaiting()));
@@ -21,6 +22,7 @@ self.addEventListener('activate', (e) => {
   e.waitUntil((async () => {
     for (const nom of await caches.keys()) {
       if (nom.startsWith('coquille-') && nom !== CACHE_COQUILLE) await caches.delete(nom);
+      if (nom.startsWith('musique-') && nom !== CACHE_MUSIQUE) await caches.delete(nom);
     }
     await self.clients.claim();
   })());
@@ -40,7 +42,7 @@ async function tranche(requete, reponse) {
   return new Response(corps.slice(debut, fin + 1), {
     status: 206,
     headers: {
-      'Content-Type': reponse.headers.get('Content-Type') || 'audio/mpeg',
+      'Content-Type': reponse.headers.get('Content-Type') || 'audio/mp4',
       'Content-Range': `bytes ${debut}-${fin}/${taille}`,
       'Content-Length': String(fin - debut + 1),
       'Accept-Ranges': 'bytes',

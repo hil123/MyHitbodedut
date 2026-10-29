@@ -64,4 +64,16 @@
     <color name="danger">#B3261E</color>
     <!-- L'or de la boussole de la tefila : l'aiguille, la zone de Jérusalem, l'éclat quand on y fait face. -->
     <color name="boussole_or">#B8891A</color>
+
+    <!--
+        Le fond de l'icône de lancement, une par couleur des boutons
+        (IconeLanceur) : la plaque claire « mhMint » de chaque palette, en
+        valeur fixe, puisque le lanceur ne connaît ni le thème ni la nuit.
+    -->
+    <color name="icone_fond_vert">#DFF5E8</color>
+    <color name="icone_fond_bleu">#DDEBFA</color>
+    <color name="icone_fond_violet">#ECE3F7</color>
+    <color name="icone_fond_bordeaux">#F8E1E5</color>
+    <color name="icone_fond_ambre">#FBEFD6</color>
+    <color name="icone_fond_turquoise">#D9F3F5</color>
 </resources>

@@ -13,7 +13,7 @@ Rien n'est recopié à la main. À chaque construction, `build.mjs` relit les re
 | Illustrations | `res/drawable-nodpi/*.webp` |
 | Couleurs, jour et nuit | `res/values*/colors.xml`, `palettes.xml` |
 | Icônes des onglets | `res/drawable/ic_nav_*.xml` |
-| Musique et titres | `res/raw/*.mp3`, dans l'ordre de `MusicLibrary.kt` |
+| Musique et titres | `res/raw/*.m4a` (AAC 96 kb/s), dans l'ordre de `MusicLibrary.kt` |
 | Villes des zmanim, ajouts du siddour | `res/raw/villes.json`, `res/raw/siddur_annotations.json` |
 
 Les règles d'Android (`Langue.kt`, `Reference.kt`, `JaugeSemaine.kt`, `DureeSeance.kt`, les fêtes de `Holidays.kt`, l'export et l'import de `Store.kt`) sont portées dans `src/js/`, avec leurs tests dans `test/`.

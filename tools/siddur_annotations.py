@@ -68,6 +68,21 @@ VARIANTES_YAALE = [
     (r"^ילדים האוכלים ביו״כ", "kippour"),
 ]
 
+# Méèn chaloch : le début d'un bloc d'ajout (sans voyelles), et sa condition. Edot : « בשבת ורצה »,
+# « בפסח ושמחנו » ; Sfard : « (בשבת:) ורצה », « (ביו״ט:) ושמחנו » ; Ashkenaz : « בשבת: ורצה »,
+# « ביום טוב ובחוה״מ: ושמחנו ביום », « בפסח: חג המצות », puis « ביום (טוב) מקרא קדש הזה. ».
+MEEN_CHALOCH = [
+    (r"^\(?בשבת:?\)? ?ורצה", "chabbat"),
+    (r"^\(?(בראש ?חודש|בר״ח):?\)? ?וזכרנו", "roch_hodech"),
+    (r"^\(?(בראש ?השנה|בר״ה):?\)? ?וזכרנו", "roch_hachana"),
+    (r"^\(?(ביו״ט|ביום טוב ובחוה״מ):?\)? ?ושמחנו", "moed"),
+    (r"^ביום \(טוב\) מקרא קדש", "moed"),
+    (r"^בפסח:? (ושמחנו|חג המצות)", "pessah"),
+    (r"^בשבועות:? (ושמחנו|חג השבועות)", "chavouot"),
+    (r"^בסוכות:? (ושמחנו|חג הסכות)", "soukkot"),
+    (r"^בשמיני עצרת:? (ושמחנו|שמיני)", "chemini_atseret"),
+]
+
 # Les variantes enchâssées dans un bloc, après leur annonce.
 # Les mêmes variantes dans le texte brut : ce qu'on retire du bloc hors du jour (28/10).
 RETIRE = [
@@ -304,6 +319,24 @@ def annoter(texte_id, sections, nusah):
                         j += 1
                 bi = j
                 continue
+            # Le zimoun (29/10, « fais en sorte que le zimun se replie ») : seulement à trois
+            # convives ou plus, jamais du jour, toujours replié (dépliable). De sa consigne
+            # (« שלושה שאכלו כאחד חייבין בזימון », Edot « אם המסובים שלושה ») jusqu'à la
+            # première bénédiction, « ברוך אתה… הזן », qui se dit toujours ; le zimoun des
+            # noces (Sfard) est dedans.
+            if texte_id == "birkat_hamazon" and cons[bi] and (
+                    x.startswith("שלושה שאכלו כאחד חייבין בזימון") or x.startswith("אם המסובים שלושה")):
+                fin = bi
+                while fin < n and not (not cons[fin] and commence(txt[fin], "ברוך אתה")):
+                    fin += 1
+                # La consigne qui annonce la première bénédiction (Ashkenaz : « ברכה זו משה
+                # רבינו… תקנה ») est à elle, pas au zimoun.
+                while fin - 1 > bi and cons[fin - 1]:
+                    fin -= 1
+                for j in range(bi, fin):
+                    prend(j, "zimun")
+                bi = fin
+                continue
             # Les Chéva bérakhot de la table (28/10, tools/siddur_cheva_berakhot.py) : à la fin de
             # Birkat haMazon, jamais un jour du calendrier, toujours repliées (dépliables).
             if cons[bi] and x.startswith("בסעודת שבע ברכות"):
@@ -470,7 +503,12 @@ def annoter(texte_id, sections, nusah):
             # Avinou malkénou des jeûnes (Ashkenaz : « בתענית ציבור: אבינו מלכנו ברך עלינו » ; relevé le 14/10).
             elif not cons[bi] and (x.startswith("בתענית ציבור:") or x.startswith("לתענית ציבור:")):
                 prend(bi, "jeune", JEUNE)
-            # Les ajouts de Chabbat et de Roch 'Hodech annoncés dans leur bloc (Méèn chaloch, relevé le 14/10).
+            # Les ajouts du jour annoncés dans leur bloc (Méèn chaloch, relevés le 14/10 et le 29/10 :
+            # « il y a des choses qui ne sont pas repliées ») : Chabbat, Roch 'Hodech, Roch haChana,
+            # les fêtes ; Ashkenaz en lignes (tools/siddur_meen_chaloch.py), où « ושמחנו ביום » ouvre le
+            # groupe des fêtes et chacune y est une variante (SOUS).
+            elif not cons[bi] and texte_id == "meen_chaloch" and any(re.match(r, x) for r, _ in MEEN_CHALOCH):
+                prend(bi, next(c for r, c in MEEN_CHALOCH if re.match(r, x)))
             elif not cons[bi] and re.match(r"בשבת ורצה", x):
                 prend(bi, "chabbat")
             elif not cons[bi] and re.match(r"בראש ?חודש וזכרנו", x):
@@ -714,6 +752,7 @@ JEUNE = "ajout_jeune_public"
 SOUS = {
     "yaale_veyavo": {"roch_hodech", "pessah", "soukkot", "chavouot", "roch_hachana", "chemini_atseret", "kippour"},
     "al_hanissim": {"hanouka", "pourim"},
+    "moed": {"pessah", "chavouot", "soukkot", "chemini_atseret"},
     "avinou_malkenou": {"jeune", "asseret_yemei_techouva"},
 }
 
@@ -824,7 +863,7 @@ def main():
         "outil": "tools/siddur_annotations.py",
         "conditions": "clés de CalendrierJuif.C (KosherJava) ; « ! » : la clé fausse",
         "regle": "les textes ne sont pas modifiés ; un ajout hors du jour est replié, jamais retiré",
-        "a_valider": "indicatif : le texte et ses consignes font foi ; relecture par un Rav souhaitée",
+        "a_valider": "indicatif : le texte et ses consignes font foi",
     }}
     for nusah in ("edot", "sefard", "ashkenaz"):
         siddur = json.load(open(os.path.join(RAW, f"siddur_{nusah}.json"), encoding="utf-8"))

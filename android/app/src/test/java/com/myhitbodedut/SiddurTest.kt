@@ -17,7 +17,7 @@ class SiddurTest {
     private val attendus = listOf(
         "birkot_hachahar", "chaharit", "minha", "arvit", "chema_coucher", "tikoun_hatsot",
         "acher_yatsar", "birkat_hamazon", "meen_chaloch", "bore_nefachot", "tefilat_haderekh",
-        "birkat_halevana", "hallel", "moussaf_rosh_hodech", "cheva_berakhot", "parachat_haman", "kaddich", "hachkavot",
+        "birkat_halevana", "hallel", "moussaf_rosh_hodech", "parachat_haman", "kaddich", "hachkavot",
         // Les bénédictions des occasions (14/10, tools/siddur_occasions.py).
         "birkat_hailanot", "keshet", "barakim", "yam", "nehenin", "hagomel", "mezouza", "hala", "tevilat_kelim",
         "maakeh", "maasrot", "refoua", "nerot_hanouka", "megila", "sefirat_haomer", "soukka", "loulav",

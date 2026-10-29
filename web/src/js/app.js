@@ -24,6 +24,7 @@ import { ALLUMAGES, heure as heureZman, jour as zmanimDuJour } from './zmanim.js
 import * as Vol from './vol.js';
 import * as Boussole from './boussole.js';
 import { RELAIS_VOL } from './relais.js';
+import { chemin as cheminPersonnage } from './personnage.js';
 
 // --- Stockage ---------------------------------------------------------------
 function stockageDuNavigateur() {
@@ -49,14 +50,26 @@ function h(tag, attrs = {}, ...enfants) {
     if (v === null || v === undefined || v === false) continue;
     if (k === 'class') el.className = v;
     else if (k.startsWith('on')) el.addEventListener(k.slice(2), v);
+    else if (k === 'src') el.setAttribute(k, perso(v));
     else el.setAttribute(k, v === true ? '' : v);
   }
   for (const e of enfants.flat()) {
     if (e === null || e === undefined || e === false) continue;
-    el.append(e instanceof Node ? e : document.createTextNode(String(e)));
+    el.append(e instanceof Node ? e : document.createTextNode(meteg(String(e))));
   }
   return el;
 }
+// Le meteg (U+05BD) tombe sur la voyelle dans Noto Serif Hebrew et Noto Rashi : un patah
+// devient un faux qamats, un segol se brouille (capture du 29/10, עָלֶֽיהָ). David, Miriam et
+// Varela ne l'ont pas et l'empruntent à la première. Masqué à l'affichage par U+034F, invisible
+// et de même longueur, comme PoliceHebraique.ABSENTS ; seule Frank Ruhl le dessine à part.
+const SANS_METEG = new Set(['serif', 'rachi', 'david', 'miriam', 'arrondie']);
+const meteg = (t) => (SANS_METEG.has(store.lecturePolice()) ? t.replace(/\u05BD/g, '\u034F') : t);
+// Le personnage au féminin pour qui a choisi צדקת (personnage.js) : chaque
+// image passe par ici, celles de h() comme celles écrites en SVG.
+const perso = (src) => cheminPersonnage(src, store.adresse());
+// L'écran d'ouverture est écrit dans index.html : on le reprend dès le départ.
+for (const img of document.querySelectorAll('#ouverture img.hassid')) img.setAttribute('src', perso(img.getAttribute('src')));
 const SVG = 'http://www.w3.org/2000/svg';
 function s(tag, attrs = {}) {
   const el = document.createElementNS(SVG, tag);
@@ -100,6 +113,10 @@ function appliqueApparence() {
   racine.dataset.accent = store.accent();
   racine.lang = tr.langue;
   racine.dir = tr.rtl ? 'rtl' : 'ltr';
+  // L'icône suit צדיק / צדקת et la couleur des boutons, comme sur Android (IconeLanceur) ;
+  // iOS la lit au moment de « Sur l'écran d'accueil » (web/tools/icones.mjs).
+  const icone = `icones/apple-touch-icon-${store.adresse() === 'f' ? 'f' : 'm'}-${store.accent()}.png`;
+  for (const lien of document.querySelectorAll('link[rel="apple-touch-icon"], link[rel="icon"]')) lien.setAttribute('href', icone);
 }
 
 // --- Feuille de choix : ce que sont les AlertDialog d'Android -----------------------
@@ -1044,7 +1061,7 @@ function riche(html) {
     // Une ligne vide dans un paragraphe (aération, 28/10) : un saut plus court qu'entre deux paragraphes.
     else if (morceau === '<br><br>') pile.at(-1).append(h('span', { class: 'saut', 'aria-hidden': 'true' }));
     else if (morceau === '<br>') pile.at(-1).append(document.createElement('br'));
-    else pile.at(-1).append(document.createTextNode(morceau));
+    else pile.at(-1).append(document.createTextNode(meteg(morceau)));
   }
   return racine;
 }
@@ -1306,9 +1323,10 @@ function ecranPriere() {
 
 // --- La recherche dans toute l'application (RechercheActivity.kt, 14/10) ------------------
 let texteRecherche = '';
-/** Où chercher (19/10) : tout, les prières, les halakhot ou les livres (RechercheGlobale.Portee). */
+/** Où chercher (19/10) : tout, les prières, les halakhot, les livres ou les hilloulot (RechercheGlobale.Portee). */
 let porteeRecherche = 'tout';
-const nuRecherche = (t) => t.replace(/<[^>]+>/g, ' ').replace(/[־׀]/g, ' ').replace(/[\u0591-\u05C7"'״׳]/g, '').replace(/\s+/g, ' ').trim().toLowerCase();
+// Sans accents latins ni apostrophe typographique : « priere » trouve « Prières » (29/10).
+const nuRecherche = (t) => t.normalize('NFD').replace(/[\u0300-\u036F’‘]/g, '').replace(/<[^>]+>/g, ' ').replace(/[־׀]/g, ' ').replace(/[\u0591-\u05C7"'״׳]/g, '').replace(/\s+/g, ' ').trim().toLowerCase();
 function extraitRecherche(texte, q) {
   const t = nuRecherche(texte);
   const i = Math.max(0, t.indexOf(q));
@@ -1342,21 +1360,26 @@ function ecranRecherche() {
     const halakhot = p === 'tout' || p === 'halakhot';
     const yy = halakhot && livreYalkut ? rechercheYalkut(livreYalkut, texteRecherche).slice(0, 30) : [];
     const bih = halakhot && livreHalakha ? rechercheHalakha(livreHalakha, texteRecherche).slice(0, 30) : [];
-    const hil = p === 'tout' && tableHilloulot() ? rechercheHilloula(tableHilloulot(), texteRecherche).slice(0, 30) : [];
+    const hil = (p === 'tout' || p === 'hilloulot') && tableHilloulot() ? rechercheHilloula(tableHilloulot(), texteRecherche).slice(0, 30) : [];
     yalkutDuJour(); livreDuJour();
     const total = sid.length + liv.length + yy.length + bih.length + hil.length;
     groupes.push(h('p', { class: 'jour-sous-titre' }, tr.t('hilloulot_resultats', total)));
     const groupe = (nom, l) => (l.length ? [h('h2', { class: 'section' }, tr.t(nom)), ...l] : []);
-    groupes.push(...groupe('siddur_title', sid.map((r) => resultat(r.t.titre.he, r.extrait, () => { priere = r.t.id; ouvrir('priere'); }))));
+    // Les titres des groupes reprennent les noms des filtres (audit 1.390).
+    groupes.push(...groupe('recherche_tefilot', sid.map((r) => resultat(r.t.titre.he, r.extrait, () => { priere = r.t.id; ouvrir('priere'); }))));
     groupes.push(...groupe('recherche_livres', liv.map((r) => resultat(r.t.titre.he, r.extrait, () => { priere = `livre:${r.t.id}`; ouvrir('priere'); }))));
-    groupes.push(...groupe('halakha_title', [...yy.map((x) => resultat(sourceYalkut(x), extraitRecherche(x.t, q), () => { rechercheHalakhaTexte = texteRecherche; ouvrir('halakha'); })),
+    groupes.push(...groupe('recherche_halakhot', [...yy.map((x) => resultat(sourceYalkut(x), extraitRecherche(x.t, q), () => { rechercheHalakhaTexte = texteRecherche; ouvrir('halakha'); })),
       ...bih.map((x) => resultat(sourceHalakha(x, (n) => Reference.lettres(n)), extraitRecherche(x.texte, q), () => { rechercheHalakhaTexte = texteRecherche; ouvrir('halakha'); }))]));
-    groupes.push(...groupe('hilloulot_title', hil.map(([, x]) => resultat(x.he, x.a ?? '', () => { rechercheHilloulot = texteRecherche; ouvrir('hilloulot'); }))));
+    // Le nom dans la langue de l'interface s'il existe, sinon l'hébreu (RechercheGlobale.resultatHilloula).
+    const nomHilloula = nomTraduitHilloula;
+    groupes.push(...groupe('hilloulot_title', hil.map(([, x]) => resultat(nomHilloula(x) ?? x.he,
+      [nomHilloula(x) ? `\u2068${x.he}\u2069` : null, x.a || null].filter(Boolean).join(' · '),
+      () => { rechercheHilloulot = texteRecherche; ouvrir('hilloulot'); }))));
   }
   return h('div', { class: 'ecran' }, barre(tr.t('recherche_titre')),
     h('div', { class: 'defile' }, h('div', { class: 'contenu' }, h('div', { class: 'carte' }, champ,
       h('div', { class: 'puces-recherche', role: 'radiogroup', 'aria-label': tr.t('recherche_titre') },
-        [['tout', 'recherche_tout'], ['tefilot', 'recherche_tefilot'], ['halakhot', 'recherche_halakhot'], ['sefarim', 'recherche_sefarim']]
+        [['tout', 'recherche_tout'], ['tefilot', 'recherche_tefilot'], ['halakhot', 'recherche_halakhot'], ['sefarim', 'recherche_sefarim'], ['hilloulot', 'hilloulot_title']]
           .map(([cle, nom]) => h('button', { type: 'button', class: 'puce-choix', role: 'radio', 'aria-checked': String(cle === porteeRecherche),
             onclick: () => { porteeRecherche = cle; rendre(); } }, tr.t(nom))))), ...groupes)));
 }
@@ -1393,6 +1416,9 @@ function allerAMarque(ecran, m) {
     : [...ecran.querySelectorAll('[data-place]')].find((p) => p.offsetParent !== null && Number(p.dataset.place.split(':')[0]) >= m.section);
   if (visible && defile) defile.scrollTop += visible.getBoundingClientRect().top - defile.getBoundingClientRect().top - 8;
 }
+
+/** Le nom d'une hilloula dans la langue de l'interface, FR → EN (audit 1.390) ; null en hébreu ou sans traduction. */
+const nomTraduitHilloula = (x) => (tr.langue === 'fr' ? x.fr || x.en : tr.langue === 'en' ? x.en : null) || null;
 
 /** Le titre hébreu d'une clé « s:id » ou « l:id », ou null tant que son recueil n'est pas chargé. */
 function titreCle(cle) {
@@ -1519,7 +1545,7 @@ function ajout(nom, applique, blocs, cond = '') {
 }
 
 /** Les ajouts qui ne sont jamais « du jour » : « toucher pour lire », pas « pas aujourd'hui ». */
-const JAMAIS_DU_JOUR = new Set(['minyan', 'beit_avel', 'oubli', 'cheva_berakhot']);
+const JAMAIS_DU_JOUR = new Set(['minyan', 'beit_avel', 'oubli', 'cheva_berakhot', 'zimun']);
 
 /**
  * La bande de signets en tête de la lecture (demande du 10/10, comme
@@ -2281,7 +2307,7 @@ function ecranHilloulot() {
   const iso = jourHilloulot ?? isoLocal(new Date());
   const carte = (x, date) => h('div', { class: 'carte carte-hilloula' },
     h('p', { class: 'hilloula-nom', lang: 'he', dir: 'rtl' }, x.he),
-    (tr.langue === 'fr' ? x.fr : tr.langue === 'en' ? x.en : null) ? h('p', { class: 'hilloula-traduit' }, tr.langue === 'fr' ? x.fr : x.en) : null,
+    nomTraduitHilloula(x) ? h('p', { class: 'hilloula-traduit' }, nomTraduitHilloula(x)) : null,
     // Isolés (FSI … PDI) : la date et l'année hébraïques ne renversent pas la ligne.
     [date, x.a].some(Boolean)
       ? h('p', { class: 'hilloula-annee' }, [date ? `\u2068${date}\u2069` : null, x.a ? tr.t('hilloula_annee', `\u2068${x.a}\u2069`) : null].filter(Boolean).join(' · ')) : null,
@@ -2418,7 +2444,7 @@ function dessinBoussole(gc, rh, cap) {
   if (cap == null) {
     return `<svg viewBox="-160 -160 320 320" role="img" aria-label="${texte}"><rect x="-160" y="-160" width="320" height="320" fill="${c.ciel}"/>
       <circle r="126" fill="none" stroke="${c.horizon}" stroke-width="3"/>
-      <image href="img/char_standing_back.webp" x="-34" y="-94" width="68" height="212"/>
+      <image href="${perso('img/char_standing_back.webp')}" x="-34" y="-94" width="68" height="212"/>
       <g transform="rotate(${gc})"><path d="M0,-151 L14,-106 L0,-114 L-14,-106 Z" fill="${c.or}"/></g>
       <text y="-132" text-anchor="middle" font-size="22" font-weight="700" fill="${c.encre}">${echapper(tr.t('boussole_nord'))}</text>
       <text x="108" y="146" text-anchor="middle" font-size="26" fill="${c.encre}">${Boussole.degres(gc)}°</text></svg>`;
@@ -2435,7 +2461,7 @@ function dessinBoussole(gc, rh, cap) {
     <rect x="${xe - 34}" y="-124" width="68" height="22" rx="11" fill="${ok ? c.marque : '#fff'}"/>
     <text x="${xe}" y="-108" text-anchor="middle" font-family="serif" font-size="15" font-weight="700" fill="${ok ? '#fff' : c.marque}">ירושלים</text>
     <circle cx="${xg}" cy="-90" r="8" fill="${ok ? c.marque : c.or}"/>
-    <image href="img/char_standing_back.webp" x="-28" y="${ok ? -68 : -62}" width="56" height="176"/>
+    <image href="${perso('img/char_standing_back.webp')}" x="-28" y="${ok ? -68 : -62}" width="56" height="176"/>
     <text y="-132" text-anchor="middle" font-size="14" fill="${c.encre}">${texte}</text></svg>`;
 }
 
@@ -2688,9 +2714,20 @@ async function chercherRouteVol(v) {
   } else if (r.statut === 'autre_depart') texte = tr.t('vol_route_autre_depart', v.numero.toUpperCase(), r.escales.join(' → '), v.depart);
   else if (r.statut === 'introuvable') texte = tr.t('vol_route_introuvable');
   else if (r.statut === 'invalide') texte = tr.t('vol_route_invalide');
-  else texte = tr.t('vol_route_erreur', r.raison);
+  else texte = tr.t('vol_route_erreur', raisonVol(r.raison));
   routeVol = { attente: false, texte };
   rendre();
+}
+
+/** Une raison de Vol.Raison, dans la langue de l'interface (VolActivity.raisonLisible). */
+function raisonVol(raison) {
+  const code = Vol.Raison.codeServeur(raison);
+  if (code !== null) return tr.t('vol_erreur_serveur', code);
+  return tr.t({
+    [Vol.Raison.HORS_LIGNE]: 'vol_erreur_hors_ligne', [Vol.Raison.QUOTA]: 'vol_erreur_quota',
+    [Vol.Raison.ILLISIBLE]: 'vol_erreur_illisible', [Vol.Raison.POSITION_INVALIDE]: 'vol_erreur_position',
+    [Vol.Raison.RELAIS_ABSENT]: 'vol_erreur_relais_absent',
+  }[raison] ?? 'vol_erreur_service');
 }
 
 /** Le GPS du téléphone, par le navigateur (VolActivity.releverGps) : 90 s au plus, sans réseau. */
@@ -2711,7 +2748,7 @@ async function demanderDirect(indicatif) {
     const releve = { latitude: r.point.latitude, longitude: r.point.longitude, instant: r.point.instant.toISOString(), source: 'direct' };
     if (!Vol.releveUtilisable({ ...plan, releve: r.point })) { rendre(); return signale(tr.t('vol_gps_hors_vol')); }
     store.setVol({ ...garde, releve });
-  } else signale(r.statut === 'introuvable' ? tr.t('vol_direct_introuvable') : tr.t('vol_direct_erreur', r.raison));
+  } else signale(r.statut === 'introuvable' ? tr.t('vol_direct_introuvable') : tr.t('vol_direct_erreur', raisonVol(r.raison)));
   rendre();
 }
 
@@ -3502,7 +3539,7 @@ function presentation() {
       h('h1', { class: 'presentation-titre' }, tr.t(e.titre)),
       h('p', { class: 'presentation-corps' }, tr.t(e.corps)),
       e.duree ? puces(DUREES_PRESENTATION, store.targetMinutes(), (m) => tr.duree(m), (m) => store.setTargetMinutes(m)) : null,
-      e.adresse ? puces(['m', 'f'], store.adresse(), (a) => tr.t(a === 'm' ? 'adresse_tsadik' : 'adresse_tsadeket'), (a) => store.setAdresse(a)) : null,
+      e.adresse ? puces(['m', 'f'], store.adresse(), (a) => tr.t(a === 'm' ? 'adresse_tsadik' : 'adresse_tsadeket'), (a) => { store.setAdresse(a); appliqueApparence(); }) : null,
       h('button', { class: 'principal', onclick: () => { if (dernier) fermer(); else { i++; dessiner(); } } },
         tr.t(dernier ? 'onboarding_start' : 'onboarding_next')),
       h('div', { class: 'presentation-bas' },
@@ -3743,7 +3780,7 @@ function majMini() {
   const joue = !lecteur.paused && !lecteur.ended;
   mini.classList.toggle('joue', joue);
   mini.querySelector('.mini-titre').textContent = m ? titreMorceau(m) : tr.t('music_off_short');
-  const image = m?.image ?? 'img/char_guitar.webp';
+  const image = m?.image ?? perso('img/char_guitar.webp');
   for (const img of mini.querySelectorAll('.mini-disque img')) {
     if (img.getAttribute('src') !== image) img.src = image;
     img.classList.toggle('pochette', !!m?.image);

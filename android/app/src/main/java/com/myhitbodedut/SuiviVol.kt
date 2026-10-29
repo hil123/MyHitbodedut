@@ -30,7 +30,33 @@ object SuiviVol {
         /** L'avion n'est pas vu autour de la position estimée (hors couverture, indicatif inexact). */
         object Introuvable : Resultat()
 
+        /** [raison] est un code de [Raison], traduit à l'affichage : jamais du texte montré tel quel. */
         data class Erreur(val raison: String) : Resultat()
+    }
+
+    /**
+     * Les raisons d'une erreur, partagées avec RouteVol. Des codes et non des
+     * phrases : écrites en français ici, elles s'affichaient telles quelles en
+     * anglais et en hébreu (audit 1.390). VolActivity les traduit.
+     */
+    object Raison {
+        const val HORS_LIGNE = "hors_ligne"
+        const val QUOTA = "quota"
+        const val ILLISIBLE = "illisible"
+        const val POSITION_INVALIDE = "position_invalide"
+        const val RELAIS_ABSENT = "relais_absent"
+        /** Le relais a répondu une erreur qu'on ne sait pas nommer. */
+        const val SERVICE = "service"
+        private const val SERVEUR = "serveur_"
+
+        fun serveur(code: Int): String = if (code == 429) QUOTA else "$SERVEUR$code"
+
+        /** Le code HTTP d'une raison [serveur], sinon null. */
+        fun codeServeur(raison: String): Int? = raison.removePrefix(SERVEUR).takeIf { raison.startsWith(SERVEUR) }?.toIntOrNull()
+
+        /** Le message du relais (tools/relais_vol) : « opensky 429 », « opensky injoignable »… */
+        fun duRelais(message: String): String =
+            Regex("opensky (\\d+)").matchEntire(message.trim())?.let { serveur(it.groupValues[1].toInt()) } ?: SERVICE
     }
 
     /** D'où vient la position : un relais, un autre service plus tard, un faux dans les tests. */
@@ -55,14 +81,14 @@ object SuiviVol {
     fun lire(json: String, maintenant: Instant): Resultat = try {
         val o = JSONObject(json)
         when {
-            o.has("erreur") -> Resultat.Erreur(o.getString("erreur"))
+            o.has("erreur") -> Resultat.Erreur(Raison.duRelais(o.getString("erreur")))
             !o.optBoolean("trouve", false) -> Resultat.Introuvable
             else -> {
                 val instant = Instant.parse(o.getString("instant"))
                 val lat = o.getDouble("latitude")
                 val lon = o.getDouble("longitude")
                 when {
-                    lat !in -90.0..90.0 || lon !in -180.0..180.0 -> Resultat.Erreur("position invalide")
+                    lat !in -90.0..90.0 || lon !in -180.0..180.0 -> Resultat.Erreur(Raison.POSITION_INVALIDE)
                     Duration.between(instant, maintenant) > FRAICHEUR_MAX -> Resultat.Introuvable
                     else -> Resultat.Trouve(Vol.Point(instant, lat, lon),
                         listOf("altitude_geo", "altitude_baro").firstNotNullOfOrNull { k -> o.optDouble(k).takeIf { !it.isNaN() } })
@@ -70,7 +96,7 @@ object SuiviVol {
             }
         }
     } catch (e: Exception) {
-        Resultat.Erreur("réponse illisible")
+        Resultat.Erreur(Raison.ILLISIBLE)
     }
 
     /** L'adresse demandée au relais : seulement l'indicatif et la position estimée, arrondie au dixième de degré. */
@@ -122,7 +148,7 @@ object SuiviVol {
         }
         trouve
     } catch (e: Exception) {
-        Resultat.Erreur("réponse illisible")
+        Resultat.Erreur(Raison.ILLISIBLE)
     }
 
     private fun lireUrl(adresse: String): Pair<Int, String> {
@@ -145,14 +171,13 @@ object SuiviVol {
             var r: Resultat = Resultat.Introuvable
             for (carre in carres(estime.latitude, estime.longitude)) {
                 val (code, corps) = lireUrl(adresseEtats(carre))
-                if (code == 429) { r = Resultat.Erreur("quota OpenSky du jour épuisé"); break }
-                if (code !in 200..299) { r = Resultat.Erreur("opensky $code"); break }
+                if (code !in 200..299) { r = Resultat.Erreur(Raison.serveur(code)); break }
                 r = lireEtats(corps, indicatif, Instant.now())
                 if (r !is Resultat.Introuvable) break
             }
             r
         } catch (e: java.io.IOException) {
-            Resultat.Erreur("pas de connexion")
+            Resultat.Erreur(Raison.HORS_LIGNE)
         }
     }
 
@@ -162,20 +187,20 @@ object SuiviVol {
     /** Le relais OpenSky (tools/relais_vol), en HTTPS seulement ; à appeler hors du fil de l'interface. */
     class Relais(private val relais: String) : FournisseurPosition {
         override fun position(indicatif: String, estime: Vol.Point): Resultat {
-            if (!relais.startsWith("https://")) return Resultat.Erreur("relais non configuré")
+            if (!relais.startsWith("https://")) return Resultat.Erreur(Raison.RELAIS_ABSENT)
             return try {
                 val c = URL(adresse(relais, indicatif, estime)).openConnection() as HttpURLConnection
                 c.connectTimeout = 15_000
                 c.readTimeout = 20_000
                 c.instanceFollowRedirects = false
                 try {
-                    val flux = if (c.responseCode in 200..499) (c.errorStream ?: c.inputStream) else return Resultat.Erreur("relais ${c.responseCode}")
+                    val flux = if (c.responseCode in 200..499) (c.errorStream ?: c.inputStream) else return Resultat.Erreur(Raison.serveur(c.responseCode))
                     lire(flux.bufferedReader().use { it.readText() }, Instant.now())
                 } finally {
                     c.disconnect()
                 }
             } catch (e: java.io.IOException) {
-                Resultat.Erreur("pas de connexion")
+                Resultat.Erreur(Raison.HORS_LIGNE)
             }
         }
     }

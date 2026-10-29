@@ -49,16 +49,24 @@ jobs:
       # Sans ffmpeg : le runner ne l'a pas, la première tentative est morte
       # sur « ffmpeg: command not found ». tools/silence_mp3.py écrit les
       # trames à la main, ce qui se vérifie hors du runner.
+      #
+      # Les morceaux sont en .m4a depuis le 29/10 : le silence MP3 prend leur
+      # nom. Android reconnaît le format au contenu, pas à l'extension, et
+      # cette édition ne passe pas les tests (MusicFilesTest refuserait).
       - name: Replace the music with silence
         run: |
           set -e
-          avant=$(du -sh android/app/src/main/res/raw | cut -f1)
+          shopt -s nullglob
+          raw="android/app/src/main/res/raw android/app/src/musique_hors_play/res/raw"
+          avant=$(du -shc $raw | tail -1 | cut -f1)
           python3 tools/silence_mp3.py /tmp/silence.mp3 1
-          for f in android/app/src/main/res/raw/*.mp3 android/app/src/musique_hors_play/res/raw/*.mp3; do
+          morceaux=(android/app/src/main/res/raw/*.m4a android/app/src/musique_hors_play/res/raw/*.m4a)
+          [ ${#morceaux[@]} -gt 0 ] || { echo "::error::aucun morceau .m4a trouvé"; exit 1; }
+          for f in "${morceaux[@]}"; do
             cp /tmp/silence.mp3 "$f"
           done
-          apres=$(du -sh android/app/src/main/res/raw | cut -f1)
-          echo "res/raw : $avant -> $apres pour $(ls android/app/src/main/res/raw/*.mp3 | wc -l) morceaux"
+          apres=$(du -shc $raw | tail -1 | cut -f1)
+          echo "res/raw : $avant -> $apres pour ${#morceaux[@]} morceaux"
 
       - name: Build the test edition
         working-directory: android

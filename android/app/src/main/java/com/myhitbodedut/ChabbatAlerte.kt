@@ -69,7 +69,7 @@ class ChabbatAlerteReceiver : BroadcastReceiver() {
         val texte = context.getString(R.string.chabbat_alerte_texte)
         val notification = Notification.Builder(context, Notifications.CHANNEL_REMINDER)
             .setSmallIcon(R.drawable.ic_notification)
-            .setLargeIcon(BitmapFactory.decodeResource(context.resources, R.drawable.char_shabbat))
+            .setLargeIcon(BitmapFactory.decodeResource(context.resources, Personnage.pour(context, R.drawable.char_shabbat)))
             .setContentTitle(context.getString(R.string.chabbat_alerte_titre))
             .setContentText(texte)
             .setStyle(Notification.BigTextStyle().bigText(texte))

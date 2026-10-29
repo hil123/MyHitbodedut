@@ -57,7 +57,7 @@ object RouteVol {
             }
         }
     } catch (e: Exception) {
-        Resultat.Erreur("réponse illisible")
+        Resultat.Erreur(SuiviVol.Raison.ILLISIBLE)
     }
 
     /**
@@ -71,7 +71,7 @@ object RouteVol {
         fun demande(chemin: String): String? {
             val (code, corps) = lecteur.lire("$ADSBDB/$chemin")
             if (code == 404 || code == 400) return null
-            if (code !in 200..299) throw java.io.IOException("HTTP $code")
+            if (code !in 200..299) throw ErreurHttp(code)
             return corps
         }
         return try {
@@ -84,12 +84,17 @@ object RouteVol {
                 demande("callsign/$icao${n.chiffres}${n.suffixe}")?.let { return lire(it, depart) }
             }
             Resultat.Introuvable
+        } catch (e: ErreurHttp) {
+            Resultat.Erreur(SuiviVol.Raison.serveur(e.code))
         } catch (e: java.io.IOException) {
-            Resultat.Erreur(e.message?.takeIf { it.startsWith("HTTP") } ?: "pas de connexion")
+            Resultat.Erreur(SuiviVol.Raison.HORS_LIGNE)
         } catch (e: org.json.JSONException) {
-            Resultat.Erreur("réponse illisible")
+            Resultat.Erreur(SuiviVol.Raison.ILLISIBLE)
         }
     }
+
+    /** Un refus du serveur, distinct d'une connexion absente. */
+    private class ErreurHttp(val code: Int) : java.io.IOException("HTTP $code")
 
     /** HTTPS seulement, sans redirection. */
     object Reseau : Lecteur {

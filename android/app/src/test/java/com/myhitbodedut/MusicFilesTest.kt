@@ -30,8 +30,10 @@ class MusicFilesTest {
     private val codeHorsPlay = File("src/musique_hors_play/java/com/myhitbodedut/MusiqueHorsPlay.kt").readText()
     private val code = codePlay + codeHorsPlay
 
-    private fun mp3(dossier: File): List<File> = dossier.listFiles { f -> f.name.endsWith(".mp3") }.orEmpty().toList()
-    private fun mp3s(): List<File> = mp3(rawPlay) + mp3(rawHorsPlay)
+    /** Les morceaux d'un dossier : AAC (.m4a) depuis le 29/10, un .mp3 n'y est relevé que pour être refusé. */
+    private fun audio(dossier: File): List<File> =
+        dossier.listFiles { f -> f.name.endsWith(".m4a") || f.name.endsWith(".mp3") }.orEmpty().toList()
+    private fun embarques(): List<File> = audio(rawPlay) + audio(rawHorsPlay)
     private val strings = File("src/main/res/values/strings.xml").readText()
 
     /** Les identifiants déclarés dans BUNDLED, dans l'ordre du fichier. */
@@ -49,7 +51,7 @@ class MusicFilesTest {
         declares.forEach { ligne ->
             val (id, res, titre) = ligne.split("|")
             assertEquals("l'identifiant et le fichier doivent porter le même nom", id, res)
-            val f = mp3s().firstOrNull { it.name == "$res.mp3" } ?: File(rawPlay, "$res.mp3")
+            val f = embarques().firstOrNull { it.nameWithoutExtension == res } ?: File(rawPlay, "$res.m4a")
             assertTrue("fichier absent : ${f.path}", f.isFile)
             assertTrue("${f.name} est vide", f.length() > 1_000)
             assertTrue(
@@ -61,8 +63,8 @@ class MusicFilesTest {
 
     @Test
     fun `aucun morceau n est livre deux fois sous deux noms`() {
-        val fichiers = mp3s()
-        assertTrue("aucun mp3 trouvé", fichiers.isNotEmpty())
+        val fichiers = embarques()
+        assertTrue("aucun morceau trouvé", fichiers.isNotEmpty())
         val parEmpreinte = fichiers.groupBy { f ->
             MessageDigest.getInstance("SHA-256").digest(f.readBytes()).joinToString("") {
                 "%02x".format(it)
@@ -79,11 +81,11 @@ class MusicFilesTest {
     }
 
     @Test
-    fun `tous les mp3 livres sont declares, et reciproquement`() {
-        val surDisque = mp3s().map { it.name.removeSuffix(".mp3") }.sorted()
+    fun `tous les morceaux livres sont declares, et reciproquement`() {
+        val surDisque = embarques().map { it.nameWithoutExtension }.sorted()
         val cites = declares.map { it.split("|")[1] }.sorted()
         assertEquals(
-            "un mp3 embarqué que personne ne joue, ou un morceau déclaré sans fichier",
+            "un morceau embarqué que personne ne joue, ou un morceau déclaré sans fichier",
             surDisque,
             cites,
         )
@@ -114,7 +116,7 @@ class MusicFilesTest {
      */
     @Test
     fun `le poids embarque reste sous les yeux`() {
-        val octets = mp3s().sumOf { it.length() }
+        val octets = embarques().sumOf { it.length() }
         val mo = octets / 1_048_576.0
         assertTrue(
             "audio embarqué : %.1f Mo. Seuil relevé trois fois ".format(mo) +
@@ -128,13 +130,19 @@ class MusicFilesTest {
         )
     }
 
+    /**
+     * Les morceaux embarqués sont en AAC 96 kb/s depuis le 29/10 (audit 1.390, écoute validée
+     * par le propriétaire) : 130 Mo de MP3 devenus 85. Un MP3 revenu dans raw/ sans passer par
+     * tools/audio.py ramènerait le poids d'avant.
+     */
     @Test
-    fun `chaque mp3 est bien un mp3`() {
-        mp3s().forEach { f ->
-            val tete = f.inputStream().use { it.readNBytes(3) }
-            val ok = tete.contentEquals("ID3".toByteArray()) ||
-                (tete.size >= 2 && tete[0] == 0xFF.toByte() && (tete[1].toInt() and 0xE0) == 0xE0)
-            assertTrue("${f.name} ne commence ni par ID3 ni par une trame MPEG", ok)
+    fun `chaque morceau embarque est en AAC`() {
+        assertTrue("un mp3 dans raw/ : le réencoder (tools/audio.py)",
+            embarques().none { it.name.endsWith(".mp3") })
+        embarques().forEach { f ->
+            val tete = f.inputStream().use { it.readNBytes(8) }
+            assertTrue("${f.name} n'est pas un MP4 (« ftyp » absent)",
+                tete.size == 8 && String(tete, 4, 4, Charsets.US_ASCII) == "ftyp")
         }
     }
 
@@ -147,19 +155,23 @@ class MusicFilesTest {
      */
     @Test
     fun `le dossier musique ne double ni ne contredit ce qui est embarque`() {
-        val hors = File("../../musique").listFiles { f -> f.name.endsWith(".mp3") }.orEmpty()
+        val hors = File("../../musique").listFiles { f -> f.name.endsWith(".mp3") || f.name.endsWith(".m4a") }.orEmpty()
         assertTrue("dossier musique/ vide ou introuvable", hors.isNotEmpty())
 
-        val embarques = mp3s()
+        val embarques = embarques()
             .associateBy { empreinte(it) }
+        // Réencodés, les embarqués n'ont plus les octets de leur MP3 d'origine : le nom tranche aussi.
+        val nomsEmbarques = embarques.values.map { it.nameWithoutExtension }.toSet()
         val vues = HashMap<String, String>()
         hors.forEach { f ->
-            val tete = f.inputStream().use { it.readNBytes(3) }
+            val tete = f.inputStream().use { it.readNBytes(8) }
             assertTrue(
-                "${f.name} ne commence ni par ID3 ni par une trame MPEG",
-                tete.contentEquals("ID3".toByteArray()) ||
-                    (tete.size >= 2 && tete[0] == 0xFF.toByte() && (tete[1].toInt() and 0xE0) == 0xE0),
+                "${f.name} n'est ni un MP3 (ID3, trame MPEG) ni un MP4",
+                tete.copyOf(3).contentEquals("ID3".toByteArray()) ||
+                    (tete.size >= 2 && tete[0] == 0xFF.toByte() && (tete[1].toInt() and 0xE0) == 0xE0) ||
+                    (tete.size == 8 && String(tete, 4, 4, Charsets.US_ASCII) == "ftyp"),
             )
+            assertTrue("${f.name} est à la fois dans musique/ et embarqué", f.nameWithoutExtension !in nomsEmbarques)
             val h = empreinte(f)
             assertTrue(
                 "${f.name} est déjà embarqué sous le nom ${embarques[h]?.name} : " +
@@ -174,7 +186,7 @@ class MusicFilesTest {
             assertTrue(
                 "${f.name} est dans musique/ mais déclaré dans MusicLibrary : " +
                     "il serait joué sans être dans l'APK",
-                !code.contains("R.raw.${f.name.removeSuffix(".mp3")}"),
+                !code.contains("R.raw.${f.nameWithoutExtension},"),
             )
         }
     }
@@ -187,12 +199,12 @@ class MusicFilesTest {
             "res/raw de main est livré par la version Play : n'y mettre qu'un morceau dont la " +
                 "diffusion publique est établie (PUBLICATION_PLAY_STORE.md § 3.2), sinon dans src/musique_hors_play",
             autorises,
-            mp3(rawPlay).map { it.name.removeSuffix(".mp3") }.sorted(),
+            audio(rawPlay).map { it.nameWithoutExtension }.sorted(),
         )
         assertEquals(autorises, declaresDans(codePlay).map { it.split("|")[0] }.sorted())
         assertEquals(
             "les morceaux de src/musique_hors_play sont déclarés dans sa propre liste",
-            mp3(rawHorsPlay).map { it.name.removeSuffix(".mp3") }.sorted(),
+            audio(rawHorsPlay).map { it.nameWithoutExtension }.sorted(),
             declaresDans(codeHorsPlay).map { it.split("|")[0] }.sorted(),
         )
     }

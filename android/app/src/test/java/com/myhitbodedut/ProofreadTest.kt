@@ -11,8 +11,8 @@ import java.io.File
  */
 class ProofreadTest {
 
-    private val item = File("src/main/res/layout/item_proofread.xml").readText()
-    private val activity = File("src/main/java/com/myhitbodedut/ProofreadActivity.kt").readText()
+    private val item = File("src/debug/res/layout/item_proofread.xml").readText()
+    private val activity = File("src/debug/java/com/myhitbodedut/ProofreadActivity.kt").readText()
     private val main = File("src/main/java/com/myhitbodedut/MainActivity.kt").readText()
     private val mainLayout = File("src/main/res/layout/activity_main.xml").readText()
 

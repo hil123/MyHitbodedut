@@ -50,6 +50,18 @@ class TraductionAffichageTest {
     }
 
     @Test
+    fun `les nombres de mauvais augure sont inverses`() {
+        mapOf(
+            270 to "ע״ר", 272 to "ער״ב", 274 to "ער״ד", 275 to "ער״ה",
+            298 to "רח״צ", 304 to "ד״ש", 344 to "שד״מ",
+        ).forEach { (n, attendu) -> assertEquals("$n", attendu, Reference.lettres(n)) }
+        // Les voisins restent dans l'ordre habituel.
+        assertEquals("רע״א", Reference.lettres(271))
+        assertEquals("שמ״ה", Reference.lettres(345))
+        assertEquals("שיחות הר״ן ער״ה", Reference.localise("Si'hot HaRan 275", "he"))
+    }
+
+    @Test
     fun `en anglais une reference ne garde aucune graphie francaise`() {
         val francais = Regex("""Likoutei|Si'hot|'Hayé|Chiv'hei|Michlé|Hit'hazkout|\bTefila\b| ; """)
         refs.forEach { ref ->

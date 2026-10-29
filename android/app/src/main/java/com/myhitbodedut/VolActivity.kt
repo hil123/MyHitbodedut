@@ -628,12 +628,23 @@ class VolActivity : AppCompatActivity() {
                     is RouteVol.Resultat.AutreDepart -> getString(R.string.vol_route_autre_depart, n.uppercase(), r.escales.joinToString(" → "), d)
                     RouteVol.Resultat.Introuvable -> getString(R.string.vol_route_introuvable)
                     RouteVol.Resultat.Invalide -> getString(R.string.vol_route_invalide)
-                    is RouteVol.Resultat.Erreur -> getString(R.string.vol_route_erreur, r.raison)
+                    is RouteVol.Resultat.Erreur -> getString(R.string.vol_route_erreur, raisonLisible(r.raison))
                 }
                 afficherFormulaire()
             }
         }.start()
     }
+
+    /** Une raison de SuiviVol.Raison, dans la langue de l'interface. */
+    private fun raisonLisible(raison: String): String = SuiviVol.Raison.codeServeur(raison)?.let { getString(R.string.vol_erreur_serveur, it) }
+        ?: getString(when (raison) {
+            SuiviVol.Raison.HORS_LIGNE -> R.string.vol_erreur_hors_ligne
+            SuiviVol.Raison.QUOTA -> R.string.vol_erreur_quota
+            SuiviVol.Raison.ILLISIBLE -> R.string.vol_erreur_illisible
+            SuiviVol.Raison.POSITION_INVALIDE -> R.string.vol_erreur_position
+            SuiviVol.Raison.RELAIS_ABSENT -> R.string.vol_erreur_relais_absent
+            else -> R.string.vol_erreur_service
+        })
 
     /** La position en direct, hors du fil de l'interface : seulement pendant le vol prévu. */
     private fun demanderDirect(indicatif: String) {
@@ -652,7 +663,7 @@ class VolActivity : AppCompatActivity() {
                 when (r) {
                     is SuiviVol.Resultat.Trouve -> appliquerReleve(r.point, Vol.SourceReleve.DIRECT)
                     SuiviVol.Resultat.Introuvable -> { afficherResultats(); message(getString(R.string.vol_direct_introuvable)) }
-                    is SuiviVol.Resultat.Erreur -> { afficherResultats(); message(getString(R.string.vol_direct_erreur, r.raison)) }
+                    is SuiviVol.Resultat.Erreur -> { afficherResultats(); message(getString(R.string.vol_direct_erreur, raisonLisible(r.raison))) }
                 }
             }
         }.start()
