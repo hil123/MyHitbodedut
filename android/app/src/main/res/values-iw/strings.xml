@@ -611,6 +611,11 @@
     <string name="zmanim_position_pres">המיקום שלי · ליד %1$s</string>
     <string name="zmanim_position_ancienne">אין מיקום עדכני: נעשה שימוש במיקום הידוע האחרון.</string>
     <string name="zmanim_calendrier">לוח שנה</string>
+    <string name="zmanim_bouton_vol">בטיסה</string>
+    <string name="zmanim_bouton_boussole">מצפן תפילה</string>
+    <string name="boussole_vide_titre">איפה אתם?</string>
+    <string name="boussole_vide_position">שימוש במיקום שלי</string>
+    <string name="boussole_vide_ville">או בחירת עיר</string>
     <string name="zmanim_absent">אינו מתרחש היום</string>
     <string name="zmanim_erreur">החישוב נכשל</string>
     <string name="zmanim_a_valider">השיטה כתובה מתחת לכל זמן. יש לברר את השיטות עם רב. החישוב בגובה פני הים, במכשיר, ללא רשת.</string>
@@ -843,7 +848,7 @@
     <string name="trophees_aucun_gagne">עוד אין גביע: הראשון יגיע עם ההתבודדות הראשונה.</string>
     <string name="trophees_tous">כל הגביעים הושגו!</string>
     <string name="trophees_compte">%1$d מתוך %2$d</string>
-    <string name="trophees_paliers">🏆  גביעים ויעדים</string>
+    <string name="trophees_paliers">🏆  גביעים</string>
     <string name="channel_celebration">יעדים וגביעים</string>
     <string name="channel_celebration_description">חגיגה כשמגיעים ליעד או לגביע</string>
     <string name="reset_title">איפוס האפליקציה</string>
@@ -1168,6 +1173,20 @@
     <string name="vol_carte_sous">הזינו טיסה: הזמנים מחושבים לאורך המסלול המתוכנן, במכשיר.</string>
     <string name="vol_carte_vol">%1$s · %2$s → %3$s</string>
     <string name="vol_numero">מספר טיסה (רשות)</string>
+    <string name="vol_duree_heures">%1$s שעות</string>
+    <string name="vol_duree_heures_minutes">%1$s שע׳ ו־%2$s דק׳</string>
+    <string name="vol_duree_une_minute">דקה אחת</string>
+    <string name="vol_duree_minutes">%1$s דקות</string>
+    <string name="vol_sources">שיטה ומקורות</string>
+    <string name="vol_frise_decollage">המראה %1$s</string>
+    <string name="vol_frise_atterrissage">נחיתה %1$s</string>
+    <string name="vol_frise_maintenant">עכשיו</string>
+    <string name="vol_frise_retard">אם הטיסה תתעכב הזמנים ישתנו בהתאם</string>
+    <string name="vol_fiabilite_court">📍 הערכה לאורך המסלול המתוכנן</string>
+    <string name="vol_comment_calcule">איך זה מחושב?</string>
+    <string name="vol_preciser_titre">דיוק המיקום</string>
+    <string name="vol_route_aide">הזכוכית המגדלת 🔍 ממלאת את היעד: רק המספר נשלח ל־adsbdb.com. את השעות יש להזין מהכרטיס.</string>
+    <string name="vol_modifier">עריכה</string>
     <string name="vol_route_bouton">מציאת היעד לפי מספר הטיסה</string>
     <string name="vol_route_attente">מחפש את הטיסה…</string>
     <string name="vol_route_explication">בלחיצה נשלח ל־adsbdb.com (חינם, בלי חשבון) רק מספר הטיסה. הוא מחזיר את התחנות הידועות ואת אות הקריאה, לא את השעות: יש להזין אותן מהכרטיס.</string>
@@ -1245,7 +1264,6 @@
     <string name="vol_direct_inactif">שרת הממסר של המעקב עדיין אינו פעיל בגרסה זו.</string>
     <string name="vol_fiabilite_direct">המסלול תוקן לפי המיקום שהתקבל מ־OpenSky Network ב־%1$s (%2$s), ומשם מעגל גדול עד הנחיתה, במהירות קבועה. זמני הנקודה שמתחת למטוס, בגובה פני הים, מחושבים במכשיר.</string>
     <string name="vol_source_opensky">נתוני כלי טיס: OpenSky Network ‏(opensky-network.org)</string>
-    <string name="vol_direct_avertissement">לא לניווט ולא לבטיחות: הכיסוי של OpenSky משתנה לפי אזור וגובה, וחלק מהמטוסים אינם נראים בו.</string>
     <string name="vol_rappels_titre">תזכורות בטיסה</string>
     <string name="vol_rappels_activer">להזכיר לי במהלך הטיסה</string>
     <string name="vol_rappels_aucun">אין עוד תזכורות בטיסה הזאת.</string>
@@ -1265,7 +1283,7 @@
     <string name="vol_source_aeroports">שדות תעופה: OurAirports (נחלת הכלל); אזורי זמן: timezone-boundary-builder ‏(ODbL, © תורמי OpenStreetMap); שמות בעברית ובצרפתית: Wikidata (CC0)</string>
 
     <!-- La boussole de Jérusalem (28/10, design C). -->
-    <string name="boussole_title">כיוון ירושלים</string>
+    <string name="boussole_title">לכיוון ירושלים</string>
     <string name="boussole_carte_sous">בחרו מקום: החסיד מסתובב לעבר ירושלים.</string>
     <string name="boussole_face">מול ירושלים</string>
     <string name="boussole_droite">הסתובבו ימינה %1$d°</string>

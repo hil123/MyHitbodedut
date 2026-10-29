@@ -77,7 +77,11 @@ class BoussoleActivity : AppCompatActivity(), SensorEventListener {
 
     private fun afficher() {
         val lieu = Store.lieuZmanim(this)
-        findViewById<TextView>(R.id.boussole_lieu).text = lieu?.nom?.ifEmpty { null } ?: getString(R.string.zmanim_choisir_lieu)
+        // Sans lieu, l'état vide propose le choix : pas de seconde pastille dans le bandeau (29/10).
+        findViewById<TextView>(R.id.boussole_lieu).apply {
+            visibility = if (lieu == null) android.view.View.GONE else android.view.View.VISIBLE
+            text = lieu?.nom?.ifEmpty { null } ?: getString(R.string.zmanim_choisir_lieu)
+        }
         val contenu = findViewById<LinearLayout>(R.id.boussole_contenu)
         contenu.removeAllViews()
         boussole = BoussoleView(this).apply {
@@ -87,6 +91,13 @@ class BoussoleActivity : AppCompatActivity(), SensorEventListener {
             clipToOutline = true
             if (lieu == null) setOnClickListener { choixLieu.montrer() }
             roseDesVents = Store.boussoleRose(this@BoussoleActivity)
+        }
+        if (lieu == null) {
+            aLieu = false
+            boussole.directions(null, null)
+            contenu.addView(etatVide())
+            contenu.addView(VueJour.texte(this, getString(R.string.zmanim_source_villes), 12f, R.color.muted, haut = 16).apply { setPadding(dp(16), 0, dp(16), 0) })
+            return
         }
         contenu.addView(boussole)
         precision = VueJour.texte(this, getString(R.string.boussole_calibrer), 13f, R.color.warning, haut = 8)
@@ -101,12 +112,7 @@ class BoussoleActivity : AppCompatActivity(), SensorEventListener {
             layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
                 .apply { setMargins(dp(16), dp(8), dp(16), 0) }
         })
-        aLieu = lieu != null
-        if (lieu == null) {
-            boussole.directions(null, null)
-            contenu.addView(VueJour.pied(this))
-            return
-        }
+        aLieu = true
 
         declinaison = GeomagneticField(lieu.latitude.toFloat(), lieu.longitude.toFloat(), lieu.altitude.toFloat(),
             System.currentTimeMillis()).declination
@@ -143,7 +149,31 @@ class BoussoleActivity : AppCompatActivity(), SensorEventListener {
                 "<a href=\"$SOURCE\">${android.text.TextUtils.htmlEncode(getString(R.string.boussole_source_titre))}</a>"), HtmlCompat.FROM_HTML_MODE_LEGACY),
                 13f, R.color.brand, haut = 6).apply { movementMethod = LinkMovementMethod.getInstance() })
         })
-        contenu.addView(VueJour.pied(this))
+        contenu.addView(VueJour.texte(this, getString(R.string.zmanim_source_villes), 12f, R.color.muted, haut = 16).apply { setPadding(dp(16), 0, dp(16), 0) })
+    }
+
+    /** Sans lieu (29/10) : le hassid, une question, la position en un toucher, ou une ville. */
+    private fun etatVide() = VueJour.carte(this).apply {
+        gravity = android.view.Gravity.CENTER_HORIZONTAL
+        addView(android.widget.ImageView(this@BoussoleActivity).apply {
+            setImageResource(R.drawable.char_standing_back)
+            setBackgroundResource(R.drawable.bg_stage)
+            setPadding(dp(6), dp(6), dp(6), dp(6))
+            contentDescription = null
+            layoutParams = LinearLayout.LayoutParams(dp(96), dp(116)).apply { topMargin = dp(4) }
+        })
+        addView(VueJour.texte(this@BoussoleActivity, getString(R.string.boussole_vide_titre), 20f, R.color.ink, gras = true, haut = 8).apply { gravity = android.view.Gravity.CENTER })
+        addView(VueJour.texte(this@BoussoleActivity, getString(R.string.boussole_carte_sous), 14f, R.color.muted, haut = 4).apply { gravity = android.view.Gravity.CENTER })
+        addView(MaterialButton(this@BoussoleActivity).apply {
+            text = getString(R.string.boussole_vide_position)
+            setOnClickListener { choixLieu.positionExacte() }
+            layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply { topMargin = dp(16) }
+        })
+        addView(MaterialButton(this@BoussoleActivity, null, com.google.android.material.R.attr.borderlessButtonStyle).apply {
+            text = android.text.SpannableString(getString(R.string.boussole_vide_ville)).apply { setSpan(android.text.style.UnderlineSpan(), 0, length, 0) }
+            setTextColor(Apparence.couleur(this@BoussoleActivity, R.color.muted))
+            setOnClickListener { choixLieu.montrer() }
+        })
     }
 
     /** Le hassid (design C, par défaut) ou la rose des vents. */

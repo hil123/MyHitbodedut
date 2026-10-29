@@ -323,8 +323,9 @@ gratuit ; données demandées par le relais avec le client OAuth2 du compte, pas
 par chaque téléphone ; une réponse partagée en cache temporaire par zone (relais :
 grille de 0,5°, 15 s) ; ni revente, ni redistribution, ni API ; attribution
 « Données aéronautiques : OpenSky Network (opensky-network.org) » dans
-l'application et sur la page du magasin, avec un avertissement « ni navigation
-ni sécurité » (affichés sous le suivi en direct). Détail :
+l'application (sous le suivi en direct) et sur la page du magasin.
+L'avertissement « ni navigation ni sécurité », conseillé et non exigé par
+OpenSky, a été retiré à la demande de l'utilisateur (29/10). Détail :
 `tools/relais_vol/README.md`. L'accès direct depuis le téléphone (Android sans
 relais) ne suit pas la deuxième condition : pour une diffusion publique,
 construire avec le relais (`SuiviVol.FournisseurPosition` est interchangeable). Sans adresse de relais à
@@ -415,6 +416,15 @@ si ses coordonnées sont à moins de 30 km de celles d'OurAirports (24 écartés
 3 144 aéroports nommés, 2 462 en hébreu. La recherche ignore les points-voyelles
 et la ponctuation (« תל-אביב » = « תל אביב ») ; les lieux desservis servent à la
 recherche seulement (Wikidata fait desservir Jérusalem par TLV).
+
+**L'écran du vol, revu le 29/10** (validé écran par écran par l'utilisateur) : une fois
+calculé, le vol se résume en une carte (« Modifier » rouvre le formulaire) ; la loupe au bout
+du champ du numéro cherche la route ; la prière du moment est mise en avant, son compte à
+rebours en toutes lettres ; la position tient en une étiquette, le détail du calcul se déplie ;
+les zmanim du vol forment une frise du décollage à l'atterrissage, une icône par zman dans la
+couleur de son ciel (nuit, aube, jour, coucher) et « maintenant » à sa place. La phrase du retard
+est dite une fois ; l'écart d'une ligne n'y figure que s'il s'éloigne de 5 min ou plus de l'écart
+médian. Les sources sont repliées. Rien du calcul ne change.
 
 **Les aéroports** (`res/raw/aeroports.json`, `tools/aeroports_construction.py`) :
 OurAirports (domaine public, « sans garantie d'exactitude »), aéroports

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- La loupe au bout du champ du numéro de vol (29/10) : la route du numéro (RouteVol). -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android" android:width="22dp" android:height="22dp" android:viewportWidth="24" android:viewportHeight="24">
+    <path android:strokeColor="#FFFFFFFF" android:strokeWidth="2.2" android:pathData="M10.5,4a6.5,6.5 0,1 0,0.001 0Z" />
+    <path android:strokeColor="#FFFFFFFF" android:strokeWidth="2.2" android:strokeLineCap="round" android:pathData="M15.5,15.5 L21,21" />
+</vector>
