@@ -32,7 +32,7 @@ struct ZmanimView: View {
                     } header: {
                         Text(ville.nom(en: appli.langue))
                     } footer: {
-                        Text(appli.tr.t("zmanim_source_villes"))
+                        Text(appli.tr.t("zmanim_a_valider") + "\n" + appli.tr.t("zmanim_source_villes"))
                     }
                 }
             }

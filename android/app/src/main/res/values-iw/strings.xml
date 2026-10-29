@@ -613,7 +613,7 @@
     <string name="zmanim_calendrier">לוח שנה</string>
     <string name="zmanim_absent">אינו מתרחש היום</string>
     <string name="zmanim_erreur">החישוב נכשל</string>
-    <string name="zmanim_a_valider">השיטה כתובה מתחת לכל זמן. יש לברר את השיטות עם רב. החישוב בגובה פני הים, במכשיר, ללא רשת.</string>
+    <string name="zmanim_a_valider">השיטה כתובה מתחת לכל זמן. החישוב בגובה פני הים, במכשיר, ללא רשת.</string>
     <string name="zmanim_ajouts_titre">בתפילות</string>
     <string name="zmanim_aucun_ajout">אין תוספות</string>
     <string name="zmanim_omer">%1$d לעומר</string>

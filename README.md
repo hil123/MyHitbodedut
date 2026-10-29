@@ -146,7 +146,7 @@ hanissim, Tal oumatar, Anénou, Ta'hanoun…). Les autres sont repliés derrièr
 une flèche, jamais retirés.
 
 Moteurs, méthodes, sources, limites, tests et maintenance : **ZMANIM.md**. Le
-profil est à valider par un Rav.
+profil a été validé par un Rav (déclaration du porteur, 29/10/2026).
 
 ### Aucune donnée ne sort de l'appareil
 

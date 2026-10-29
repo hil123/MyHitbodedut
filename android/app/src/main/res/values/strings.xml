@@ -645,7 +645,7 @@
     <string name="zmanim_calendrier">Calendrier</string>
     <string name="zmanim_absent">n’a pas lieu ce jour</string>
     <string name="zmanim_erreur">calcul impossible</string>
-    <string name="zmanim_a_valider">La méthode est écrite sous chaque horaire. Profil à valider par un Rav. Calcul au niveau de la mer, sur l’appareil, sans réseau.</string>
+    <string name="zmanim_a_valider">La méthode est écrite sous chaque horaire. Calcul au niveau de la mer, sur l’appareil, sans réseau.</string>
     <string name="zmanim_ajouts_titre">Dans les prières</string>
     <string name="zmanim_aucun_ajout">Rien de particulier</string>
     <string name="zmanim_omer">Omer : jour %1$d</string>

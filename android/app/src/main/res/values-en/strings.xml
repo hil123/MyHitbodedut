@@ -599,7 +599,7 @@
     <string name="zmanim_calendrier">Calendar</string>
     <string name="zmanim_absent">does not occur today</string>
     <string name="zmanim_erreur">cannot be calculated</string>
-    <string name="zmanim_a_valider">Each time shows its method. Profile to be checked by a rabbi. Calculated at sea level, on the device, offline.</string>
+    <string name="zmanim_a_valider">Each time shows its method. Calculated at sea level, on the device, offline.</string>
     <string name="zmanim_ajouts_titre">In the prayers</string>
     <string name="zmanim_aucun_ajout">Nothing special</string>
     <string name="zmanim_omer">Omer: day %1$d</string>
