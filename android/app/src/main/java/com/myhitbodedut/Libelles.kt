@@ -26,6 +26,7 @@ object Libelles {
         "ajout_chabbat" -> R.string.ajout_chabbat
         "ajout_chabbat_roch_hodech" -> R.string.ajout_chabbat_roch_hodech
         "ajout_cheva_berakhot" -> R.string.ajout_cheva_berakhot
+        "ajout_zimun" -> R.string.ajout_zimun
         "ajout_chiva_assar_tamouz" -> R.string.ajout_chiva_assar_tamouz
         "ajout_chol" -> R.string.ajout_chol
         "ajout_embolismique" -> R.string.ajout_embolismique

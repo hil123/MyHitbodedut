@@ -1539,7 +1539,7 @@ function ajout(nom, applique, blocs, cond = '') {
 }
 
 /** Les ajouts qui ne sont jamais « du jour » : « toucher pour lire », pas « pas aujourd'hui ». */
-const JAMAIS_DU_JOUR = new Set(['minyan', 'beit_avel', 'oubli', 'cheva_berakhot']);
+const JAMAIS_DU_JOUR = new Set(['minyan', 'beit_avel', 'oubli', 'cheva_berakhot', 'zimun']);
 
 /**
  * La bande de signets en tête de la lecture (demande du 10/10, comme

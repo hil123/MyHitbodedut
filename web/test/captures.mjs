@@ -221,6 +221,7 @@ const ouvrirTexte = (titre, y) => async (p) => {
 };
 await capture('priere-aeree-he', { langue: 'he', ecran: 'siddur', actions: ouvrirTexte('תפלת שחרית', 1400) });
 await capture('birkat-cheva-he', { langue: 'he', ecran: 'siddur', actions: ouvrirTexte('ברכת המזון', -1) });
+await capture('birkat-zimun-fr', { langue: 'fr', ecran: 'siddur', actions: ouvrirTexte('ברכת המזון', 560) });
 // Le capteur simulé : quarante lectures au même cap, pour que le lissage s'y pose.
 const cap = (nord) => async (p) => {
   await p.waitForSelector('.boussole-scene svg');
