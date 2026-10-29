@@ -300,7 +300,6 @@
     <string name="track_niggoun_31">Niggoun 31</string>
     <string name="track_niggoun_32">Niggoun 32</string>
     <string name="track_niggoun_33">Niggoun 33</string>
-    <string name="track_ribo_sans_titre">Ishay Ribo — sans titre</string>
     <string name="track_yanuka_nigoun_3" translatable="false">ניגון — הינוקא (3)</string>
 
     <!-- En reserve : ces morceaux sont dans musique/, hors de l'APK.
@@ -310,6 +309,7 @@
     <string name="track_ribo_halev_sheli" translatable="false">Halev Sheli — Ishay Ribo</string>
     <string name="track_ribo_nafshi" translatable="false">Nafshi — Ishay Ribo &amp; Motty Steinmetz</string>
     <string name="track_ribo_ochila" translatable="false">Ochila — Ishay Ribo</string>
+    <string name="track_ribo_sans_titre">Ishay Ribo — sans titre</string>
     <string name="track_ribo_seder_haavoda" translatable="false">Seder HaAvoda — Ishay Ribo</string>
     <string name="track_ribo_zusha" translatable="false">Ishay Ribo feat. Zusha</string>
     <string name="track_shmuel_one_prayer" translatable="false">Give Me One Prayer — Shmuel</string>

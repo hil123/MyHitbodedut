@@ -55,7 +55,6 @@ object MusicLibrary {
         Bundled("niggoun_31", R.raw.niggoun_31, R.string.track_niggoun_31),
         Bundled("niggoun_32", R.raw.niggoun_32, R.string.track_niggoun_32),
         Bundled("niggoun_33", R.raw.niggoun_33, R.string.track_niggoun_33),
-        Bundled("ribo_sans_titre", R.raw.ribo_sans_titre, R.string.track_ribo_sans_titre),
         Bundled("yanuka_nigoun_3", R.raw.yanuka_nigoun_3, R.string.track_yanuka_nigoun_3),
     )
 
