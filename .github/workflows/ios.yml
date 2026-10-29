@@ -1,0 +1,75 @@
+name: iOS
+
+# L'application iPhone et iPad (ios/). Elle se construit sur un Mac de
+# GitHub : le projet Xcode est généré par XcodeGen, les ressources par
+# ios/tools/prepare.sh, puis les tests tournent sur un iPhone simulé.
+# Les minutes macOS comptent dix fois sur le quota gratuit d'un dépôt privé :
+# ce flux ne part que quand l'iOS ou le moteur partagé change.
+
+on:
+  push:
+    branches: [main, ccr-cecd4970-21fy58]
+    paths:
+      - 'ios/**'
+      - 'web/src/js/**'
+      - 'web/src/vendor/**'
+      - 'web/test/vecteurs_kosherjava.json'
+      - 'web/build.mjs'
+      - '.github/workflows/ios.yml'
+  pull_request:
+    paths:
+      - 'ios/**'
+      - '.github/workflows/ios.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ios:
+    runs-on: macos-15
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      # Depuis le 28/04/2026, l'App Store n'accepte que Xcode 26 et le SDK iOS 26.
+      - name: Select Xcode 26
+        run: |
+          ls -d /Applications/Xcode*.app
+          XCODE=$(ls -d /Applications/Xcode_26*.app | sort -V | tail -1)
+          sudo xcode-select -s "$XCODE/Contents/Developer"
+          xcodebuild -version
+
+      - name: Resources (web build, JS engine checked against KosherJava)
+        run: bash ios/tools/prepare.sh
+
+      - name: Generate the Xcode project
+        working-directory: ios
+        run: |
+          brew install xcodegen
+          xcodegen generate
+
+      - name: Build and test on a simulated iPhone
+        working-directory: ios
+        run: |
+          UDID=$(xcrun simctl list devices available -j | python3 -c '
+          import json, sys
+          d = json.load(sys.stdin)["devices"]
+          ios = sorted((k for k in d if "iOS" in k), key=lambda k: [int(x) for x in k.rsplit("iOS-", 1)[1].split("-")])
+          print(next(v["udid"] for k in reversed(ios) for v in d[k] if v["name"].startswith("iPhone")))')
+          echo "Simulateur : $UDID"
+          xcodebuild test \
+            -project MyHitbodedut.xcodeproj \
+            -scheme MyHitbodedut \
+            -destination "id=$UDID" \
+            CODE_SIGNING_ALLOWED=NO \
+            | tee xcodebuild.log | grep -E '(error|warning: .*Swift|Test Case .* (passed|failed)|TEST (SUCCEEDED|FAILED)|\*\* )' || true
+          grep -q 'TEST SUCCEEDED' xcodebuild.log

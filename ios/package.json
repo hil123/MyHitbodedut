@@ -1,0 +1,9 @@
+{
+  "name": "myhitbodedut-ios-outils",
+  "private": true,
+  "type": "module",
+  "description": "Outils de construction de l'application iOS : empaquetage du moteur de calcul JS pour JavaScriptCore.",
+  "devDependencies": {
+    "esbuild": "0.25.10"
+  }
+}

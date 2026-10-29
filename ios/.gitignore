@@ -1,0 +1,5 @@
+MyHitbodedut/Genere/
+*.xcodeproj/
+build/
+DerivedData/
+Info.plist
