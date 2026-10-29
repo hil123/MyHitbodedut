@@ -216,7 +216,7 @@ class TraductionTest {
         // « Parnassa » d'un côté et « Gagner sa vie » de l'autre désignaient
         // la même chose sur deux écrans de la même application.
         val attendus = mapOf(
-            "tefila_simcha" to ("Sim’ha" to "Simha"),
+            "tefila_simcha" to ("Sim’ha" to "Simcha"),
             "tefila_kdusha" to ("Kedoucha" to "Kedusha"),
             "tefila_parnassa" to ("Parnassa" to "Parnassa"),
             "tefila_geula" to ("Guéoula" to "Geula"),

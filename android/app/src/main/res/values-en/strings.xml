@@ -145,7 +145,7 @@
     <string name="widget_resume">Back to the hitbodedut</string>
     <string name="widget_minutes">%1$d / %2$d min</string>
     <string name="settings_hitbodedut">Guided hitbodedut</string>
-    <string name="settings_hitbodedut_hint">Five movements, so you know what comes next — from Likutei Moharan II, 25 and the Rambam (Hilchot Tefillah 1:2).</string>
+    <string name="settings_hitbodedut_hint">Five movements, so you know what comes next — from Likutei Moharan II, 25 and the Rambam (Hilchot Tefila 1:2).</string>
     <string name="hitbodedut_step">%1$d / %2$d</string>
     <string name="hitbodedut_previous">Back</string>
     <string name="hitbodedut_next">Next</string>
@@ -412,7 +412,7 @@
     <string name="tefilot_count">%d prayers</string>
     <string name="tefilot_warning">The lesson cited deals with another subject; it is the prayer that carries this plea.</string>
     <string name="tefila_hitbodedut">Hitbodedut</string>
-    <string name="tefila_simcha">Simha</string>
+    <string name="tefila_simcha">Simcha</string>
     <string name="tefila_uman">Uman, Rosh Hashana</string>
     <string name="tefila_kdusha">Kedusha</string>
     <string name="tefila_zera">Zera shel kayama</string>
@@ -580,7 +580,7 @@
     <string name="siddur_maintenant">For this hour</string>
     <string name="lecture_plus">Larger letters</string>
     <string name="lecture_moins">Smaller letters</string>
-    <string name="siddur_choose">Nusah</string>
+    <string name="siddur_choose">Nusach</string>
     <string name="siddur_signets">Sections</string>
     <string name="siddur_nusah_edot">Sephardi (Edot HaMizrah)</string>
     <string name="siddur_nusah_sefard">Sfard (Arizal)</string>
@@ -671,7 +671,7 @@
     <string name="ajout_jour_4">Wednesday’s psalm</string>
     <string name="ajout_jour_5">Thursday’s psalm</string>
     <string name="ajout_jour_6">Friday’s psalm</string>
-    <string name="ajout_tsom_guedalia_tevet">Fast of Gedaliah and 10 Tevet</string>
+    <string name="ajout_tsom_guedalia_tevet">Fast of Gedalia and 10 Tevet</string>
     <string name="ajout_lendemain_kippour">Day after Yom Kippur</string>
     <string name="ajout_esther_pourim">Fast of Esther and Purim</string>
     <string name="ajout_chiva_assar_tamouz">17 Tammuz</string>
@@ -697,7 +697,7 @@
     <string name="ajout_moed">Festivals</string>
     <string name="ajout_chabbat_roch_hodech">Rosh Chodesh on Shabbat</string>
     <string name="ajout_yom_tov_chabbat">Yom Tov on Shabbat</string>
-    <string name="ajout_roch_hachana_chabbat">Rosh Hashanah on Shabbat</string>
+    <string name="ajout_roch_hachana_chabbat">Rosh Hashana on Shabbat</string>
     <string name="ajout_motsae_chabbat_yt">Motzaei Shabbat and Yom Tov</string>
     <string name="ajout_cheva_berakhot">Sheva Berakhot (wedding meal)</string>
     <string name="ajout_embolismique">Leap year (וּלְכַפָּרַת פֶּשַׁע)</string>
@@ -755,8 +755,8 @@
         <item quantity="other">and %1$d more</item>
     </plurals>
     <string name="hilloula_lien">Sages of the day on hyomi.org.il</string>
-    <string name="halakha_yomit_titre">Halakha Yomit</string>
-    <string name="halakha_yomit_lien">Today’s halakha on halachayomit.co.il</string>
+    <string name="halakha_yomit_titre">Halacha Yomit</string>
+    <string name="halakha_yomit_lien">Today’s halacha on halachayomit.co.il</string>
     <!-- Les paliers d'objectifs (11/10) -->
     <string name="paliers_title">My milestones</string>
     <string name="paliers_sous_titre">Each milestone leads to the next</string>
@@ -799,11 +799,11 @@
     <string name="hilloula_reduire">Show less</string>
     <string name="hilloulot_tout">All hillulot ›</string>
     <!-- La halakha du jour hors ligne : le Ben Ish 'Haï (11/10) -->
-    <string name="halakha_title">Halakha of the day</string>
-    <string name="halakha_afficher">Show the halakha of the day</string>
-    <string name="halakha_recherche">Search the halakha</string>
-    <string name="halakha_aucune">No halakha for this day</string>
-    <string name="halakha_tout">The whole halakha of the day ›</string>
+    <string name="halakha_title">Halacha of the day</string>
+    <string name="halakha_afficher">Show the halacha of the day</string>
+    <string name="halakha_recherche">Search the halacha</string>
+    <string name="halakha_aucune">No halacha for this day</string>
+    <string name="halakha_tout">The whole halacha of the day ›</string>
     <string name="halakha_livre">Yalkut Yosef, Kitzur Shulchan Aruch</string>
     <string name="halakha_note">Original Hebrew text, verbatim. For practice, ask a rabbi.</string>
     <!-- Les trophées et la fête (11/10) -->
@@ -935,13 +935,13 @@
     <string name="settings_police">Hebrew font</string>
     <string name="settings_ouverture">Opening screen</string>
     <string name="section_zmanim_ecran">Zmanim screen</string>
-    <string name="section_zmanim_ecran_hint">What appears below the times, and the book of the daily halakha.</string>
+    <string name="section_zmanim_ecran_hint">What appears below the times, and the book of the daily halacha.</string>
     <string name="reglage_levana">Show Birkat HaLevana</string>
-    <string name="halakha_source_titre">Halakha book</string>
+    <string name="halakha_source_titre">Halacha book</string>
     <string name="halakha_source_yalkut">Yalkut Yosef</string>
     <string name="halakha_source_bih">Ben Ish Chai</string>
     <string name="halakha_source_deux">Both</string>
-    <string name="zmanim_bouton_halakha">Daily halakha</string>
+    <string name="zmanim_bouton_halakha">Daily halacha</string>
     <string name="zmanim_bouton_hilloulot">Hillulot</string>
     <!-- Birkat haLevana revue sur le texte (14/10). -->
     <string name="levana_lune">Moon tonight: %1$s lit, %2$s</string>
@@ -972,7 +972,7 @@
     <string name="settings_ne_pas_deranger">Do not disturb during hitbodedut</string>
     <string name="settings_ne_pas_deranger_hint">The phone switches to priority mode for the hitbodedut, then returns to how it was. Android asks for permission the first time.</string>
     <string name="recherche_titre">Search</string>
-    <string name="recherche_indice">Search the siddur, books, halakha, hillulot</string>
+    <string name="recherche_indice">Search the siddur, books, halacha, hillulot</string>
     <string name="recherche_tout">All</string>
     <string name="recherche_tefilot">Prayers</string>
     <string name="recherche_halakhot">Halachot</string>
