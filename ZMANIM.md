@@ -233,7 +233,7 @@ conditions. Vecteurs dans `web/test/vecteurs_kosherjava.json`, produits par
 
 L'accord de deux moteurs ne prouve pas l'exactitude : ils partagent
 l'algorithme solaire de la NOAA. C'est pourquoi l'astronomie est vérifiée
-contre PyEphem, et les règles de prière restent à valider par un Rav.
+contre PyEphem ; les règles de prière ont été vérifiées par le propriétaire (29/10).
 
 ## En vol (phase 1, hors ligne)
 
@@ -279,7 +279,7 @@ méridien (Kiribati, Samoa…) : seul le méridien est calculé.
   le soleil, un horaire peut bouger de beaucoup plus que le retard lui-même
   (exemple calculé, Tel Aviv–New York : chki'a avancée de 86 min pour 30 min
   de retard). L'écart affiché le montre ; il ne le corrige pas.
-- Supposé, et **à valider par un Rav** (aucune règle n'est tranchée ici) :
+- Choix de calcul (aucune règle n'est tranchée ici) :
   1. le zman du sol sous l'avion, au niveau de la mer, plutôt que l'horizon
      vu de l'altitude. Les sources secondaires lues pendant l'audit (28/10)
      présentent le sol sous l'avion comme l'avis majoritaire ; les sources
@@ -371,7 +371,7 @@ chômé suivi d'un jour ouvré : sortie ; suivi d'un autre jour chômé : le jou
 suivant commence ; tsét pendant le Omer : le jour compté ce soir. Le jour civil
 est celui du point sous l'avion (fuseau nautique), le calendrier d'Israël ou
 de diaspora celui du réglage de l'application. Ce sont deux choix de calcul,
-**à valider par un Rav**, comme la question de la date après la ligne de
+comme la question de la date après la ligne de
 changement de date ; l'écran ne donne aucun conseil (allumer à bord, compter
 avant ou après une escale…).
 

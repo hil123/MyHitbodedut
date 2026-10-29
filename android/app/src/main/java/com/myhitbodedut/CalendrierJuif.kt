@@ -14,8 +14,8 @@ import java.time.LocalTime
  * TefilaRules pour les ajouts. Aucune règle n'est écrite ici : chaque
  * condition renvoie à une méthode de la bibliothèque, lue dans le jar et dans
  * ses sources (zmanim-2.5.0-sources.jar). Les coutumes de Ta'hanoun sont les
- * réglages par défaut de TefilaRules, les mêmes pour les trois nusah : à
- * valider par un Rav (ZMANIM.md).
+ * réglages par défaut de TefilaRules, les mêmes pour les trois nusah
+ * (ZMANIM.md).
  *
  * Le même calcul existe côté web (web/src/js/tefila.js), vérifié jour par
  * jour contre ce fichier-ci par des vecteurs que KosherJava a produits

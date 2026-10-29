@@ -760,8 +760,9 @@ fixes.
 3. Le siddour met en évidence les ajouts du jour et replie les autres
    derrière une flèche.
 4. Le profil des zmanim et les coutumes de Ta'hanoun sont marqués « à
-   valider par un Rav ». *29/10 : zmanim vérifiés selon le propriétaire,
-   la mention est retirée de l'écran des zmanim.*
+   valider par un Rav ». *29/10 : vérifiés selon le propriétaire ; toutes
+   les mentions « à valider / demander à un Rav » sont retirées (zmanim,
+   halakha du jour, notes du siddour, documentation).*
 
 **Construit** :
 

@@ -824,7 +824,7 @@ def main():
         "outil": "tools/siddur_annotations.py",
         "conditions": "clés de CalendrierJuif.C (KosherJava) ; « ! » : la clé fausse",
         "regle": "les textes ne sont pas modifiés ; un ajout hors du jour est replié, jamais retiré",
-        "a_valider": "indicatif : le texte et ses consignes font foi ; relecture par un Rav souhaitée",
+        "a_valider": "indicatif : le texte et ses consignes font foi",
     }}
     for nusah in ("edot", "sefard", "ashkenaz"):
         siddur = json.load(open(os.path.join(RAW, f"siddur_{nusah}.json"), encoding="utf-8"))

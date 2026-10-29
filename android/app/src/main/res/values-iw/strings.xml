@@ -820,7 +820,7 @@
     <string name="halakha_aucune">אין הלכה ליום זה</string>
     <string name="halakha_tout">כל ההלכה היומית ›</string>
     <string name="halakha_livre">ילקוט יוסף, קיצור שולחן ערוך</string>
-    <string name="halakha_note">לשון המקור. להלכה למעשה יש לשאול רב.</string>
+    <string name="halakha_note">לשון המקור.</string>
     <!-- Les trophées et la fête (11/10) -->
     <string name="celebration_titre">מזל טוב!</string>
     <string name="trophees_paliers_titre">גביעים ויעדים</string>
