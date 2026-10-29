@@ -27,7 +27,7 @@
     <string name="section_data">הנתונים שלי</string>
     <string name="section_data_hint">הכול נשמר בטלפון הזה בלבד. כדאי לייצא מדי פעם.</string>
 
-    <string name="gate_armed_title">«אני עם השם» פעיל</string>
+    <string name="gate_armed_title">„אני עם השם” פעיל</string>
     <plurals name="gate_armed_detail">
         <item quantity="one">אפליקציה אחת חסומה עד %2$s או עד להתבודדות.</item>
         <item quantity="two">שתי אפליקציות חסומות עד %2$s או עד להתבודדות.</item>
@@ -36,7 +36,7 @@
     <string name="gate_permissions_title">חסרות הרשאות</string>
     <string name="gate_permissions_detail">אשרו הצגה מעל אפליקציות אחרות וגישה לנתוני שימוש, למטה.</string>
     <string name="gate_disabled_title">המצב כבוי</string>
-    <string name="gate_disabled_detail">הפעילו את המתג «אני עם השם» כדי שהמצב יפעל.</string>
+    <string name="gate_disabled_detail">הפעילו את המתג „אני עם השם” כדי שהמצב יפעל.</string>
     <string name="gate_no_apps_title">לא נבחרה אפליקציה</string>
     <string name="gate_no_apps_detail">אין מה לעכב. בחרו לפחות אפליקציה אחת.</string>
     <string name="gate_done_title">היום אושר</string>
@@ -53,7 +53,7 @@
     <string name="action_back_to_session">חזרה להתבודדות</string>
     <string name="action_write_note">לכתוב הערה</string>
     <string name="action_journal">לפתוח את היומן</string>
-    <string name="action_preview_gate">להציג את מסך «אני עם השם» עכשיו</string>
+    <string name="action_preview_gate">להציג את מסך „אני עם השם” עכשיו</string>
     <string name="action_pick_apps">בחירת אפליקציות</string>
     <string name="action_grant">אישור</string>
     <string name="action_export">ייצוא</string>
@@ -91,7 +91,7 @@
     <string name="permission_notifications">התראות</string>
     <string name="permission_notifications_why">בלעדיהן התזכורת נקבעת ולעולם אינה מופיעה, וההתבודדות לא מציגה דבר כשהטלפון מונח.</string>
     <string name="permission_battery_why">בלעדיה אנדרואיד עלול לעכב את התזכורת בשעות, כדי לחסוך בסוללה.</string>
-    <string name="permission_overlay_why">כדי להציג את מסך «אני עם השם» מעל האפליקציה שנפתחת בבוקר.</string>
+    <string name="permission_overlay_why">כדי להציג את מסך „אני עם השם” מעל האפליקציה שנפתחת בבוקר.</string>
     <string name="permission_usage_why">כדי לדעת איזו אפליקציה נפתחה זה עתה. שום דבר אינו נשמר ואינו נשלח.</string>
     <string name="permission_granted">אושרה</string>
     <string name="permission_missing">חסרה</string>
@@ -182,7 +182,7 @@
     <string name="reminder_title">הגיע זמן ההתבודדות</string>
     <string name="reminder_text">התבודדות של %1$s מחכה.</string>
     <string name="channel_gate">אני עם השם</string>
-    <string name="channel_gate_description">התראה קבועה שאנדרואיד דורש כל עוד «אני עם השם» פעיל.</string>
+    <string name="channel_gate_description">התראה קבועה שאנדרואיד דורש כל עוד „אני עם השם” פעיל.</string>
     <string name="channel_session">התבודדות בעיצומה</string>
     <string name="channel_session_description">ספירה לאחור בזמן ההתבודדות.</string>
     <string name="channel_reminder">תזכורות</string>
@@ -927,13 +927,13 @@
     <string name="metal_platine">פלטינה</string>
     <string name="trophee_niveau">דרגה %1$d מתוך %2$d · %3$s</string>
     <string name="trophee_niveau_court">דרגה %1$d מתוך %2$d</string>
-    <string name="trophees_explication">כל גביע עולה מדרגה לדרגה: ארד, כסף, זהב ופלטינה. מתחת לכל אחד: הדרגה שלך, מה דורשת הבאה, וכמה כבר עשית.</string>
+    <string name="trophees_explication">כל גביע עולה מדרגה לדרגה: ארד, כסף, זהב ופלטינה. מתחת לכל אחד: הדרגה שלכם, מה דורשת הבאה, וכמה כבר עשיתם.</string>
     <string name="trophee_a_venir">עוד לא הושג</string>
     <string name="trophee_niveau_gagne">גביע „%1$s”: דרגה %2$d, %3$s!</string>
     <string name="trophee_prochain">הדרגה הבאה: %1$s</string>
     <string name="trophee_sommet">הדרגה הגבוהה ביותר הושגה</string>
-    <string name="trophee_vedette">הגביע הכי יפה שלך</string>
-    <string name="trophee_vedette_aucune">הגביע הראשון שלך מחכה</string>
+    <string name="trophee_vedette">הגביע הכי יפה שלכם</string>
+    <string name="trophee_vedette_aucune">הגביע הראשון שלכם מחכה</string>
     <string name="chabbat_alerte_titre">שבת בעוד 3 שעות, תתכוננו לכיף!</string>
     <string name="chabbat_alerte_texte">נשמה כפולה, שמחה כפולה וסעודה כפולה! נסו התבודדות כפולה.</string>
     <!-- L’onglet Bibliothèque : les livres entiers (13/10) -->
@@ -1173,7 +1173,7 @@
     <string name="vol_route_explication">בלחיצה נשלח ל־adsbdb.com (חינם, בלי חשבון) רק מספר הטיסה. הוא מחזיר את התחנות הידועות ואת אות הקריאה, לא את השעות: יש להזין אותן מהכרטיס.</string>
     <string name="vol_route_trouvee">%1$s: %2$s. המראה %3$s, נחיתה %4$s. המסלול ידוע ל־adsbdb.com ולפעמים אינו מעודכן: יש לבדוק מול הכרטיס.</string>
     <string name="vol_route_autre_depart">לפי adsbdb.com, %1$s טסה %2$s ואינה ממריאה מ־%3$s. יש לבדוק את המספר או את שדה ההמראה; המסלול הידוע עשוי להיות ישן.</string>
-    <string name="vol_route_inconnue">שדה התעופה %1$s, שנמסר על ידי adsbdb.com, אינו ברשימת היישום: יש לבחור אותו ידנית.</string>
+    <string name="vol_route_inconnue">שדה התעופה %1$s, שנמסר על ידי adsbdb.com, אינו ברשימת האפליקציה: יש לבחור אותו ידנית.</string>
     <string name="vol_route_introuvable">מספר הטיסה אינו מוכר ל־adsbdb.com: יש לבחור את שדות התעופה ידנית.</string>
     <string name="vol_route_invalide">יש להזין את קוד החברה ואחריו המספר, לדוגמה LY81.</string>
     <string name="vol_route_erreur">החיפוש נכשל (%1$s). אפשר לבחור את שדות התעופה ידנית.</string>
