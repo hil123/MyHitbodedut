@@ -171,6 +171,32 @@ Play, monde entier », conservé hors dépôt et produit à la première demande
 Google. À défaut, retirer le morceau de la version Play ; l'utilisateur peut
 toujours l'ajouter depuis son téléphone (`MusicActivity` → `OpenDocument`).
 
+**Décision du 29/10.** Le propriétaire a l'accord du Yanuka. La provenance
+des 30 niggounim sans titre (`niggoun_01` à `niggoun_33`) est inconnue : leurs
+noms hébreux ont été perdus au transfert. Aucun écrit n'est cité pour
+*המלך בשדה* ni pour Ishay Ribo. D'où, **pour la version Play seulement** :
+
+| Morceau livré | Version Play | Version GitHub |
+| --- | --- | --- |
+| `yanuka_nigoun_3` — ניגון — הינוקא (3) | **Livré** (accord du Yanuka, à conserver par écrit) | Livré |
+| `niggoun_01` … `niggoun_33` (30 fichiers) | **Retirés** tant que la provenance n'est pas établie | Livrés |
+| `hamelech_basade` — המלך בשדה | **Retiré** | Livré |
+| `ribo_sans_titre` — Ishay Ribo | **Retiré** | Livré |
+
+Audio de la version Play : environ 6,7 Mo au lieu de 130 Mo. Un morceau
+retiré revient par simple mise à jour dès que son écrit existe ; si un
+niggoun s'avère être du Yanuka, il rentre sous le même accord. Pour cela, il
+faut retrouver les titres hébreux d'origine (fichiers sources reçus le
+22/09).
+
+**Mise en œuvre** (étape 3 du § 9, pas encore faite) : les 32 fichiers retirés
+quittent `main/res/raw` pour un dossier de ressources ajouté seulement aux
+constructions GitHub, et `MusicLibrary` ne liste un morceau que si sa
+ressource existe dans la construction. La construction Play se distingue
+par une propriété Gradle (`-Pplay=true`), comme `relaisVol`. Un test vérifie
+que la construction Play ne livre que les morceaux de la liste blanche
+ci-dessus.
+
 ### 3.3 Droits sur les textes
 
 | Source (`res/raw/*.json`) | Licence déclarée | Action |
@@ -477,8 +503,8 @@ et chacun doit rester inscrit les 14 jours.
 
 1. ~~**Suivi de vol en direct**~~ — **tranché le 29/10** : conservé (accord
    OpenSky reçu, à vérifier selon § 3.1) ; route adsbdb conservée.
-2. **Musique** *(reportée à la fin, à la demande du propriétaire)* : dispose-t-on d'écrits couvrant la distribution publique sur
-   Google Play pour les 33 morceaux ? Sinon, lesquels retirer ?
+2. ~~**Musique**~~ — **tranché le 29/10** : la version Play ne livre que le
+   niggoun du Yanuka ; les 32 autres restent dans la version GitHub (§ 3.2).
 3. ~~**7 textes de licence inconnue**~~ — **tranché le 29/10** : domaine
    public, texte seul sans vocalisation (§ 3.3).
 4. ~~**Compte personnel ou organisation**~~ — **tranché le 29/10** : compte
