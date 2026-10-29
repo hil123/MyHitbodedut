@@ -11,7 +11,7 @@ test('sans choix ou pour צדיק, le hassid reste', () => {
 });
 
 test('pour צדקת, chaque pose prend la pose feminine', () => {
-  assert.equal(chemin('img/char_guitar.webp', 'f'), 'img/char_f_joy.webp');
+  assert.equal(chemin('img/char_guitar.webp', 'f'), 'img/char_f_guitar.webp');
   assert.equal(chemin('img/char_standing_back.webp', 'f'), 'img/char_f_standing_back.webp');
   // Une pochette ou une autre image ne bouge pas, et la table ne s'applique qu'une fois.
   assert.equal(chemin('img/scene_ouverture_tombe.webp', 'f'), 'img/scene_ouverture_tombe.webp');

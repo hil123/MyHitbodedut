@@ -28,7 +28,7 @@ class PersonnageTest {
     @Test
     fun `la table ne touche qu au personnage et ne s applique qu une fois`() {
         assertEquals(R.drawable.ic_chevron, Personnage.feminin(R.drawable.ic_chevron))
-        assertEquals(R.drawable.char_f_joy, Personnage.feminin(R.drawable.char_guitar))
+        assertEquals(R.drawable.char_f_guitar, Personnage.feminin(R.drawable.char_guitar))
         assertEquals(R.drawable.char_f_joy, Personnage.feminin(R.drawable.char_f_joy))
     }
 

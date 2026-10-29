@@ -13,6 +13,13 @@ le noir ne rend que des morceaux épais, pas le liseré d'un ou deux pixels de
 décalage. Les couleurs viennent toutes de la planche blanche.
 L'ombre au sol, gris clair, devient une ombre noire translucide : laissée
 telle quelle, elle fait un halo blanc sur un fond sombre.
+
+La seconde planche (29/10, six poses : guitare, bras levés, danse, lecture à
+genoux, livre contre soi, de dos bras levés) n'existe que sur fond noir, où la
+jupe, le foulard et les chaussures sont noirs eux aussi. Le fond n'y est que le
+noir pur (≤ 4) relié au bord, ou une poche fermée d'au moins 400 pixels ; la
+frange est démélangée du noir ; au bas de la pose, une fermeture rend aux
+chaussures leurs reflets noirs, que le fond avait pris.
 """
 import pathlib
 import numpy as np
@@ -22,6 +29,8 @@ from scipy import ndimage as nd
 RACINE = pathlib.Path(__file__).resolve().parent.parent
 PLANCHE = RACINE / 'tools/sources-images/personnage_feminin_planche.png'
 PLANCHE_NOIR = RACINE / 'tools/sources-images/personnage_feminin_planche_noir.png'
+PLANCHE2 = RACINE / 'tools/sources-images/personnage_feminin_planche2_noir.png'
+SEUIL_NOIR = 4
 SORTIE = RACINE / 'android/app/src/main/res/drawable-nodpi'
 SEUIL = 251
 HAUTEUR = 640   # celle des poses du hassid : en wrap_content, les deux tiennent la même place
@@ -42,6 +51,14 @@ POSES = {
     'offering':      ((818, 1172, 752, 1024), False),
     'reading':       ((1180, 1514, 252, 530), True),
     'standing_back': ((1168, 1530, 560, 720), True),
+}
+POSES2 = {
+    'guitar':        (0, 720, 0, 475),
+    'arms_up':       (0, 684, 470, 830),
+    'dancing':       (0, 700, 780, 1215),
+    'kneel_reading': (720, 1295, 0, 470),
+    'book_side':     (686, 1295, 470, 800),
+    'back_arms':     (640, 1295, 800, 1215),
 }
 # La planche a aussi une pose assise qui lace ses chaussures et un portrait :
 # aucun écran ne les demande, ils ne sont pas livrés.
@@ -83,14 +100,56 @@ def pose(a, noir, ombre):
     return im.resize((round(im.width * HAUTEUR / im.height), HAUTEUR), Image.LANCZOS)
 
 
+def personnage(garde):
+    """La plus grande tache et ce qui lui est comparable, sans trous."""
+    lab, n = nd.label(garde)
+    tailles = nd.sum(garde, lab, range(1, n + 1))
+    return nd.binary_fill_holes(np.isin(lab, [k + 1 for k, t in enumerate(tailles) if t >= 0.15 * tailles.max()]))
+
+
+def pose_noir(a):
+    mx = a.max(2)
+    noir = mx <= SEUIL_NOIR
+    lab, n = nd.label(noir)
+    tailles = nd.sum(noir, lab, range(1, n + 1))
+    bords = set(np.unique(np.r_[lab[0], lab[-1], lab[:, 0], lab[:, -1]])) - {0}
+    fond = np.isin(lab, [k for k in range(1, n + 1) if k in bords or tailles[k - 1] >= 400])
+    garde = personnage(~fond)
+    # Les chaussures : leur noir pur touche le sol, le fond l'a pris.
+    ys = np.where(garde.any(1))[0]
+    bas = np.zeros_like(garde)
+    bas[ys[-1] - int((ys[-1] - ys[0]) * 0.13):] = True
+    ferme = nd.binary_closing(np.pad(garde & bas, 20), structure=np.ones((17, 17)))[20:-20, 20:-20]
+    garde |= nd.binary_fill_holes(ferme) & bas
+    # La frange : son opacité est sa clarté rapportée à celle de l'intérieur
+    # voisin, et sa couleur est démélangée du noir.
+    interieur = nd.binary_erosion(garde, iterations=3)
+    frange = garde & ~interieur
+    ref = nd.grey_dilation(np.where(interieur, mx, 0), size=9).astype(float)
+    k = np.clip(mx / np.where(ref > 0, ref, 255.0), 0, 1)
+    alpha = np.where(garde, 255.0, 0.0)
+    alpha[frange] = k[frange] * 255
+    rgb = a.astype(float)
+    rgb[frange] = np.clip(rgb[frange] / np.maximum(k[frange], 1e-3)[:, None], 0, 255)
+    im = Image.fromarray(np.dstack([rgb.astype(np.uint8), alpha.astype(np.uint8)]), 'RGBA')
+    im = im.crop(im.getbbox())
+    return im.resize((round(im.width * HAUTEUR / im.height), HAUTEUR), Image.LANCZOS)
+
+
+def enregistre(im, nom):
+    cible = SORTIE / f'char_f_{nom}.webp'
+    im.save(cible, 'WEBP', quality=85, method=6)
+    print(f'{cible.name:28s} {im.width}×{im.height}  {cible.stat().st_size // 1024} ko')
+
+
 def main():
     planche = np.asarray(Image.open(PLANCHE).convert('RGB')).astype(np.int16)
     noir = np.asarray(Image.open(PLANCHE_NOIR).convert('RGB')).astype(np.int16)
     for nom, ((y0, y1, x0, x1), ombre) in POSES.items():
-        im = pose(planche[y0:y1, x0:x1], noir[y0:y1, x0:x1], ombre)
-        cible = SORTIE / f'char_f_{nom}.webp'
-        im.save(cible, 'WEBP', quality=85, method=6)
-        print(f'{cible.name:28s} {im.width}×{im.height}  {cible.stat().st_size // 1024} ko')
+        enregistre(pose(planche[y0:y1, x0:x1], noir[y0:y1, x0:x1], ombre), nom)
+    planche2 = np.asarray(Image.open(PLANCHE2).convert('RGB')).astype(np.int16)
+    for nom, (y0, y1, x0, x1) in POSES2.items():
+        enregistre(pose_noir(planche2[y0:y1, x0:x1]), nom)
 
 
 if __name__ == '__main__':

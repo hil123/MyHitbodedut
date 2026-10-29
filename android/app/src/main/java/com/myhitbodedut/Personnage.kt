@@ -9,35 +9,37 @@ import com.google.android.material.theme.MaterialComponentsViewInflater
 /**
  * Le personnage au féminin (audit 1.390, point 8) : qui a choisi צדקת voit,
  * à la place de chaque pose du hassid, la plus proche de la planche féminine
- * du 29/10 (tools/personnage_feminin.py). Sans choix, ou צדיק, rien ne change.
+ * du 29/10 et de sa seconde planche (tools/personnage_feminin.py). Sans
+ * choix, ou צדיק, rien ne change.
  *
- * La planche n'a ni guitare, ni tefillin, ni matsa, ni costume de Pourim :
- * ces poses prennent la plus proche — la joie, la prière, le livre serré
- * contre soi. La même table vit côté site (web/src/js/personnage.js).
+ * Sans tefillin, matsa ni costume de Pourim, ces poses prennent la plus
+ * proche : la prière, la lecture (la Haggada), le livre contre soi (la
+ * Meguila) ; l'ouverture, debout, la prière de dos bras levés. La même table
+ * vit côté site (web/src/js/personnage.js).
  */
 object Personnage {
 
     private val FEMININ: Map<Int, Int> = mapOf(
         R.drawable.char_welcome to R.drawable.char_f_welcome,
-        R.drawable.char_open_arms to R.drawable.char_f_welcome,
-        R.drawable.char_debout to R.drawable.char_f_welcome,
+        R.drawable.char_open_arms to R.drawable.char_f_arms_up,
+        R.drawable.char_debout to R.drawable.char_f_back_arms,
         R.drawable.char_thumbs_up to R.drawable.char_f_thumbs_up,
         R.drawable.char_tehilim to R.drawable.char_f_tehilim,
         R.drawable.char_praise to R.drawable.char_f_praise,
-        R.drawable.char_dancing_joy to R.drawable.char_f_praise,
+        R.drawable.char_dancing_joy to R.drawable.char_f_joy,
         R.drawable.char_writing to R.drawable.char_f_writing,
         R.drawable.char_thinking to R.drawable.char_f_thinking,
         R.drawable.char_pointing to R.drawable.char_f_pointing,
         R.drawable.char_walking to R.drawable.char_f_walking,
         R.drawable.char_praying to R.drawable.char_f_praying,
         R.drawable.char_tefillin to R.drawable.char_f_praying,
-        R.drawable.char_dancing to R.drawable.char_f_joy,
-        R.drawable.char_guitar to R.drawable.char_f_joy,
-        R.drawable.char_purim to R.drawable.char_f_joy,
+        R.drawable.char_dancing to R.drawable.char_f_dancing,
+        R.drawable.char_guitar to R.drawable.char_f_guitar,
+        R.drawable.char_purim to R.drawable.char_f_book_side,
         R.drawable.char_shabbat to R.drawable.char_f_tehilim_hug,
-        R.drawable.char_matsa to R.drawable.char_f_tehilim_hug,
+        R.drawable.char_matsa to R.drawable.char_f_reading,
         R.drawable.char_offering to R.drawable.char_f_offering,
-        R.drawable.char_torah to R.drawable.char_f_reading,
+        R.drawable.char_torah to R.drawable.char_f_kneel_reading,
         R.drawable.char_standing_back to R.drawable.char_f_standing_back
     )
 
