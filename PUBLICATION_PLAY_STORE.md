@@ -354,7 +354,7 @@ autorisations ; vérifier que le texte dit ce qui est fait de la donnée.
 
 | Champ | Limite | Proposition (fr) |
 | --- | --- | --- |
-| Titre | 30 caractères, **un par langue** | he : `MyHitbodedut – התבודדות` (23) · fr : `MyHitbodedut – Hitbodedout` (26) · en : `MyHitbodedut – Hitbodedut` (25) *(proposé, à confirmer)* |
+| Titre | 30 caractères, **un par langue** | he : `MyHitbodedut – התבודדות` (23) · fr : `MyHitbodedut – Hitbodedout` (26) · en : `MyHitbodedut – Hitbodedut` (25) *(tranché le 29/10)* |
 | Description courte | 80 caractères | `La hitbodedout chaque jour : séance, musique, journal, zmanim et siddour.` (73) |
 | Description complète | 4 000 caractères | Plan : la pratique · la séance · la barrière du matin (avec l'argument de 6.7) · textes · zmanim et calendrier · widgets · vie privée (aucune donnée ne sort) · crédits et licences |
 
@@ -484,9 +484,8 @@ et chacun doit rester inscrit les 14 jours.
 4. ~~**Compte personnel ou organisation**~~ — **tranché le 29/10** : compte
    **personnel, nouveau**. Test fermé obligatoire : 12 testeurs, 14 jours
    (§ 4, § 9 étape 7). Recruter les testeurs dès la création du compte.
-5. **Titre, catégorie, tranche d'âge** — **catégorie et âge tranchés le
-   29/10** : Style de vie, 18 ans et plus. Titre : proposition d'un titre par
-   langue (§ 7.1), en attente de confirmation.
+5. ~~**Titre, catégorie, tranche d'âge**~~ — **tranchés le
+   29/10** : Style de vie, 18 ans et plus, un titre par langue (§ 7.1).
 6. ~~**Édition `light` sur Play**~~ — **tranché le 29/10** : non, gardée
    en réserve (plan de repli du § 9) ; elle reste distribuée par GitHub.
 
