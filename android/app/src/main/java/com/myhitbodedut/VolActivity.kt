@@ -515,7 +515,6 @@ class VolActivity : AppCompatActivity() {
             }
         })
         carte.addView(VueJour.texte(this, getString(R.string.vol_source_opensky), 11f, R.color.muted, haut = 2))
-        carte.addView(VueJour.texte(this, getString(R.string.vol_direct_avertissement), 11f, R.color.muted, haut = 2))
     }
 
     private var directEnCours = false

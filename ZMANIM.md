@@ -323,8 +323,9 @@ gratuit ; données demandées par le relais avec le client OAuth2 du compte, pas
 par chaque téléphone ; une réponse partagée en cache temporaire par zone (relais :
 grille de 0,5°, 15 s) ; ni revente, ni redistribution, ni API ; attribution
 « Données aéronautiques : OpenSky Network (opensky-network.org) » dans
-l'application et sur la page du magasin, avec un avertissement « ni navigation
-ni sécurité » (affichés sous le suivi en direct). Détail :
+l'application (sous le suivi en direct) et sur la page du magasin.
+L'avertissement « ni navigation ni sécurité », conseillé et non exigé par
+OpenSky, a été retiré à la demande de l'utilisateur (29/10). Détail :
 `tools/relais_vol/README.md`. L'accès direct depuis le téléphone (Android sans
 relais) ne suit pas la deuxième condition : pour une diffusion publique,
 construire avec le relais (`SuiviVol.FournisseurPosition` est interchangeable). Sans adresse de relais à
