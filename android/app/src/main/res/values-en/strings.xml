@@ -1152,7 +1152,6 @@
     <string name="vol_fiabilite_court">📍 Estimate along the planned route</string>
     <string name="vol_comment_calcule">How is it calculated?</string>
     <string name="vol_preciser_titre">Refine the position</string>
-    <string name="vol_direct_ce_qui_part">What tracking sends over the Internet</string>
     <string name="vol_route_aide">The 🔍 fills in the arrival: only the number is sent to adsbdb.com. Enter the times from your ticket.</string>
     <string name="vol_modifier">Edit</string>
     <string name="vol_route_bouton">Find the arrival from the number</string>

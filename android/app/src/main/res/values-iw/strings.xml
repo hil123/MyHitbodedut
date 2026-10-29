@@ -1185,7 +1185,6 @@
     <string name="vol_fiabilite_court">📍 הערכה לאורך המסלול המתוכנן</string>
     <string name="vol_comment_calcule">איך זה מחושב?</string>
     <string name="vol_preciser_titre">דיוק המיקום</string>
-    <string name="vol_direct_ce_qui_part">מה המעקב שולח לאינטרנט</string>
     <string name="vol_route_aide">הזכוכית המגדלת 🔍 ממלאת את היעד: רק המספר נשלח ל־adsbdb.com. את השעות יש להזין מהכרטיס.</string>
     <string name="vol_modifier">עריכה</string>
     <string name="vol_route_bouton">מציאת היעד לפי מספר הטיסה</string>

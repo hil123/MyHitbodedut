@@ -2719,8 +2719,7 @@ function suiviDirect() {
   const actif = store.suiviDirect();
   const bloc = [
     h('label', { class: 'ligne' }, h('span', { class: 'corps' }, h('div', { class: 'nom' }, tr.t('vol_direct_activer'))),
-      h('input', { type: 'checkbox', role: 'switch', class: 'interrupteur', checked: actif, onchange: (e) => { store.setSuiviDirect(e.target.checked); rendre(); } })),
-    h('details', { class: 'vol-details' }, h('summary', {}, tr.t('vol_direct_ce_qui_part')), h('p', {}, tr.t('vol_direct_explication')))];
+      h('input', { type: 'checkbox', role: 'switch', class: 'interrupteur', checked: actif, onchange: (e) => { store.setSuiviDirect(e.target.checked); rendre(); } }))];
   if (!actif) return bloc;
   if (!RELAIS_VOL) return [...bloc, h('p', { class: 'indice' }, tr.t('vol_direct_inactif'))];
   const champ = h('input', { type: 'text', class: 'champ-recherche champ-vol', maxlength: 9, autocapitalize: 'characters', placeholder: tr.t('vol_indicatif'), value: store.volIndicatif() || null });

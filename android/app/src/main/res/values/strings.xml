@@ -1198,7 +1198,6 @@
     <string name="vol_fiabilite_court">📍 Estimation sur la route prévue</string>
     <string name="vol_comment_calcule">Comment c’est calculé ?</string>
     <string name="vol_preciser_titre">Préciser la position</string>
-    <string name="vol_direct_ce_qui_part">Ce que le suivi envoie sur Internet</string>
     <string name="vol_route_aide">La loupe 🔍 remplit l’arrivée : seul le numéro part vers adsbdb.com. Les heures restent à saisir, celles du billet.</string>
     <string name="vol_modifier">Modifier</string>
     <string name="vol_route_bouton">Trouver l’arrivée par le numéro</string>
