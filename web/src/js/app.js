@@ -2651,6 +2651,13 @@ function deuxHeures(plan, t) {
   return `${jour(plan.depart.fuseau)} ${heure(plan.depart)} · ${autreJour ? `${jour(plan.arrivee.fuseau)} ` : ''}${heure(plan.arrivee)}`;
 }
 
+/** « 10 minutes », « 1 minute », « 1 h 11 min », « 2 h » : le compte à rebours en toutes lettres. */
+function dureeEnMots(minutes) {
+  if (minutes < 60) return minutes === 1 ? tr.t('vol_duree_une_minute') : tr.t('vol_duree_minutes', String(minutes));
+  const h = Math.floor(minutes / 60), m = minutes % 60;
+  return m ? tr.t('vol_duree_heures_minutes', String(h), String(m)) : tr.t('vol_duree_heures', String(h));
+}
+
 /** « mer. 28 19:20 TLV » : l'heure locale d'un aéroport (celle du billet). */
 const heureAeroport = (a, t) => `${new Intl.DateTimeFormat(tr.langue, { timeZone: a.fuseau, weekday: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }).format(t)} ⁦${a.iata}⁩`;
 
@@ -2765,14 +2772,14 @@ function resultatsVol(c) {
     const ecart = limite ? enVol.find((e) => +e.instant === +limite)?.ecartSiRetard : null;
     priere = [h('p', { class: 'vol-priere' }, tr.t(NOMS[nom])),
       limite ? h('p', {}, tr.t('vol_jusqua', deuxHeures(c.plan, limite))) : h('p', {}, tr.t('vol_sans_limite')),
-      limite ? h('p', { class: 'vol-compte' }, tr.t('vol_dans', JaugeSemaine.dureeCourte(minutes))) : null,
+      limite ? h('p', { class: 'vol-compte' }, tr.t('vol_dans', dureeEnMots(minutes))) : null,
       ecart !== null && ecart !== undefined ? h('p', { class: 'indice' }, ecartVol(ecart)) : null];
   }
   const RESERVES = ['haute_latitude', 'absent', 'erreur', 'a_rebours'];
   const date = (iso) => new Intl.DateTimeFormat(tr.langue, { timeZone: 'UTC', weekday: 'short', day: 'numeric', month: 'short' }).format(new Date(`${iso}T12:00:00Z`));
   return [
     h('div', { class: 'carte carte-texte carte-vol carte-heros' }, h('p', { class: 'indice' }, tr.t('vol_priere_titre')), ...priere),
-    h('div', { class: 'carte carte-texte carte-vol' }, h('p', { class: 'indice' }, tr.t('vol_fiabilite_titre')),
+    h('div', { class: 'carte carte-texte carte-vol' },
       // La route prévue tient en une étiquette ; le détail du calcul se déplie.
       c.fiabilite === 'route_prevue' ? h('p', { class: 'vol-etiquette' }, tr.t('vol_fiabilite_court'))
         : h('p', {}, tr.t(c.fiabilite === 'releve_direct' ? 'vol_fiabilite_direct' : 'vol_fiabilite_gps', deuxHeures(c.plan, c.plan.releve.instant), positionVol(c.plan.releve))),

@@ -1417,7 +1417,7 @@ body.avec-mini .seance .contenu { padding-bottom: calc(104px + env(safe-area-ins
 .carte-heros { background: color-mix(in srgb, var(--brand) 9%, var(--card)); border-color: color-mix(in srgb, var(--brand) 28%, var(--line)); }
 .carte-heros .vol-priere { font-size: 30px; }
 .carte-heros .vol-compte { font-size: 22px; color: var(--brand); }
-.vol-etiquette { display: inline-block; margin-top: 6px !important; padding: 6px 12px; border-radius: 999px; background: color-mix(in srgb, var(--brand) 10%, transparent); color: var(--ink); font-weight: 600; font-size: 14px; }
+.vol-etiquette { display: inline-block; margin-top: 4px !important; padding: 6px 12px; border-radius: 999px; background: color-mix(in srgb, var(--brand) 10%, transparent); color: var(--ink); font-weight: 600; font-size: 14px; }
 .vol-details { margin-top: 6px; }
 .vol-details summary { min-height: 44px; display: flex; align-items: center; color: var(--brand); font-weight: 600; font-size: 14px; cursor: pointer; list-style: none; }
 .vol-details summary::-webkit-details-marker { display: none; }

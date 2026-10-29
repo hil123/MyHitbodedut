@@ -1140,6 +1140,10 @@
     <string name="vol_carte_sous">Enter a flight: times are computed along the planned route, on the device.</string>
     <string name="vol_carte_vol">%1$s · %2$s → %3$s</string>
     <string name="vol_numero">Flight number (optional)</string>
+    <string name="vol_duree_heures">%1$s h</string>
+    <string name="vol_duree_heures_minutes">%1$s h %2$s min</string>
+    <string name="vol_duree_une_minute">1 minute</string>
+    <string name="vol_duree_minutes">%1$s minutes</string>
     <string name="vol_sources">Method and sources</string>
     <string name="vol_frise_decollage">Take-off %1$s</string>
     <string name="vol_frise_atterrissage">Landing %1$s</string>
@@ -1148,7 +1152,7 @@
     <string name="vol_fiabilite_court">📍 Estimate along the planned route</string>
     <string name="vol_comment_calcule">How is it calculated?</string>
     <string name="vol_preciser_titre">Refine the position</string>
-    <string name="vol_direct_ce_qui_part">What is sent</string>
+    <string name="vol_direct_ce_qui_part">What tracking sends over the Internet</string>
     <string name="vol_route_aide">The 🔍 fills in the arrival: only the number is sent to adsbdb.com. Enter the times from your ticket.</string>
     <string name="vol_modifier">Edit</string>
     <string name="vol_route_bouton">Find the arrival from the number</string>

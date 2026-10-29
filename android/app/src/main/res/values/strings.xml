@@ -1186,6 +1186,10 @@
     <string name="vol_carte_sous">Saisissez un vol : les horaires sont calculés sur la route prévue, sur l’appareil.</string>
     <string name="vol_carte_vol">%1$s · %2$s → %3$s</string>
     <string name="vol_numero">Numéro de vol (facultatif)</string>
+    <string name="vol_duree_heures">%1$s h</string>
+    <string name="vol_duree_heures_minutes">%1$s h %2$s min</string>
+    <string name="vol_duree_une_minute">1 minute</string>
+    <string name="vol_duree_minutes">%1$s minutes</string>
     <string name="vol_sources">Méthode et sources</string>
     <string name="vol_frise_decollage">Décollage %1$s</string>
     <string name="vol_frise_atterrissage">Atterrissage %1$s</string>
@@ -1194,7 +1198,7 @@
     <string name="vol_fiabilite_court">📍 Estimation sur la route prévue</string>
     <string name="vol_comment_calcule">Comment c’est calculé ?</string>
     <string name="vol_preciser_titre">Préciser la position</string>
-    <string name="vol_direct_ce_qui_part">Ce qui est envoyé</string>
+    <string name="vol_direct_ce_qui_part">Ce que le suivi envoie sur Internet</string>
     <string name="vol_route_aide">La loupe 🔍 remplit l’arrivée : seul le numéro part vers adsbdb.com. Les heures restent à saisir, celles du billet.</string>
     <string name="vol_modifier">Modifier</string>
     <string name="vol_route_bouton">Trouver l’arrivée par le numéro</string>

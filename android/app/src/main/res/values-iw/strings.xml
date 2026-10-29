@@ -1173,6 +1173,10 @@
     <string name="vol_carte_sous">הזינו טיסה: הזמנים מחושבים לאורך המסלול המתוכנן, במכשיר.</string>
     <string name="vol_carte_vol">%1$s · %2$s → %3$s</string>
     <string name="vol_numero">מספר טיסה (רשות)</string>
+    <string name="vol_duree_heures">%1$s שעות</string>
+    <string name="vol_duree_heures_minutes">%1$s שע׳ ו־%2$s דק׳</string>
+    <string name="vol_duree_une_minute">דקה אחת</string>
+    <string name="vol_duree_minutes">%1$s דקות</string>
     <string name="vol_sources">שיטה ומקורות</string>
     <string name="vol_frise_decollage">המראה %1$s</string>
     <string name="vol_frise_atterrissage">נחיתה %1$s</string>
@@ -1181,7 +1185,7 @@
     <string name="vol_fiabilite_court">📍 הערכה לאורך המסלול המתוכנן</string>
     <string name="vol_comment_calcule">איך זה מחושב?</string>
     <string name="vol_preciser_titre">דיוק המיקום</string>
-    <string name="vol_direct_ce_qui_part">מה נשלח</string>
+    <string name="vol_direct_ce_qui_part">מה המעקב שולח לאינטרנט</string>
     <string name="vol_route_aide">הזכוכית המגדלת 🔍 ממלאת את היעד: רק המספר נשלח ל־adsbdb.com. את השעות יש להזין מהכרטיס.</string>
     <string name="vol_modifier">עריכה</string>
     <string name="vol_route_bouton">מציאת היעד לפי מספר הטיסה</string>
