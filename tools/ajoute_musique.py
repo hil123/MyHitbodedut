@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Range les mp3 reçus : dans l'APK tant qu'il y a la place, sinon à côté.
+"""Range les mp3 reçus : dans l'APK (réencodés en AAC, tools/audio.py) tant qu'il y a la place, sinon à côté.
 
 Trois choses qu'on a apprises à la dure et qui sont codées ici :
 
@@ -21,6 +21,8 @@ Trois choses qu'on a apprises à la dure et qui sont codées ici :
 Usage :  python3 tools/ajoute_musique.py <dossier des envois> [--plafond 130]
 """
 import argparse, hashlib, pathlib, re, shutil, sys
+
+from audio import morceaux, vers_aac
 
 RACINE = pathlib.Path(__file__).resolve().parent.parent
 RAW = RACINE / 'android/app/src/main/res/raw'
@@ -83,7 +85,7 @@ def cle(titre, pris, prefixe_muet='nigoun_sans_titre_'):
 
 
 def poids(dossier):
-    return sum(p.stat().st_size for p in dossier.glob('*.mp3'))
+    return sum(p.stat().st_size for p in morceaux(dossier))
 
 
 def main():
@@ -94,8 +96,8 @@ def main():
     args = ap.parse_args()
 
     HORS.mkdir(exist_ok=True)
-    connus = {empreinte(p): p.stem for p in list(RAW.glob('*.mp3')) + list(HORS.glob('*.mp3'))}
-    pris = {p.stem for p in RAW.glob('*.mp3')}
+    connus = {empreinte(p): p.stem for p in morceaux(RAW) + morceaux(HORS)}
+    pris = {p.stem for p in morceaux(RAW)}
     kt, xml = KT.read_text(), XML.read_text()
     embarques, ecartes, doublons, refuses = [], [], [], []
 
@@ -111,12 +113,12 @@ def main():
         if (poids(RAW) + f.stat().st_size) / MO <= args.plafond:
             c = cle(titre, pris)
             pris.add(c)
-            shutil.copy(f, RAW / (c + '.mp3'))
+            vers_aac(f, RAW / (c + '.m4a'))
             embarques.append((c, titre))
         else:
             # Un morceau ecarte garde son nom lisible comme les autres : le
             # numeroter jetterait le peu de titre qui a survecu au transfert.
-            c = cle(titre, {q.stem for q in HORS.glob('*.mp3')}, 'niggoun_')
+            c = cle(titre, {q.stem for q in morceaux(HORS)}, 'niggoun_')
             shutil.copy(f, HORS / (c + '.mp3'))
             ecartes.append(c)
         connus[h] = f.name
@@ -152,8 +154,8 @@ def main():
         print('EMBARQUÉ  %-30s %s' % (c, t))
     for c in ecartes:
         print('ÉCARTÉ    %-30s → musique/ (plafond atteint)' % c)
-    print('\nAPK      : %d morceaux, %.1f Mo' % (len(list(RAW.glob('*.mp3'))), poids(RAW) / MO))
-    print('musique/ : %d morceaux, %.1f Mo' % (len(list(HORS.glob('*.mp3'))), poids(HORS) / MO))
+    print('\nAPK      : %d morceaux, %.1f Mo' % (len(morceaux(RAW)), poids(RAW) / MO))
+    print('musique/ : %d morceaux, %.1f Mo' % (len(morceaux(HORS)), poids(HORS) / MO))
     if embarques:
         print('\nÀ FAIRE : régénérer le R.java de contrôle, puis relancer MusicFilesTest.')
 

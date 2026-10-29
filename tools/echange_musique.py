@@ -20,6 +20,8 @@ Usage :  python3 tools/echange_musique.py --embarque <stem> [<stem> ...]
 """
 import argparse, pathlib, re, shutil, sys
 
+from audio import morceaux, vers_aac
+
 RACINE = pathlib.Path(__file__).resolve().parent.parent
 RAW = RACINE / 'android/app/src/main/res/raw'
 HORS = RACINE / 'musique'
@@ -61,7 +63,7 @@ def main():
     if not voulus:
         sys.exit('rien à embarquer : donnez au moins un morceau')
 
-    ou = {p.stem: p for p in list(RAW.glob('*.mp3')) + list(HORS.glob('*.mp3'))}
+    ou = {p.stem: p for p in morceaux(RAW) + morceaux(HORS)}
     inconnus = [s for s in voulus if s not in ou]
     if inconnus:
         sys.exit('introuvables : ' + ', '.join(inconnus))
@@ -75,15 +77,21 @@ def main():
 
     garde, titres = set(voulus), titres_existants()
     entrent = [s for s in voulus if ou[s].parent == HORS]
-    sortent = [p.stem for p in sorted(RAW.glob('*.mp3')) if p.stem not in garde]
+    sortent = [p.stem for p in morceaux(RAW) if p.stem not in garde]
 
+    # Ce qui entre dans l'APK y est en AAC (tools/audio.py) ; ce qui en sort garde son AAC.
     for s in entrent:
-        shutil.move(str(ou[s]), str(RAW / (s + '.mp3')))
+        if ou[s].suffix == '.m4a':
+            shutil.move(str(ou[s]), str(RAW / (s + '.m4a')))
+        else:
+            vers_aac(ou[s], RAW / (s + '.m4a'))
+            ou[s].unlink()
     for s in sortent:
-        shutil.move(str(RAW / (s + '.mp3')), str(HORS / (s + '.mp3')))
+        p = next(q for q in morceaux(RAW) if q.stem == s)
+        shutil.move(str(p), str(HORS / p.name))
 
-    embarques = sorted(p.stem for p in RAW.glob('*.mp3'))
-    reserve = sorted(p.stem for p in HORS.glob('*.mp3'))
+    embarques = sorted(p.stem for p in morceaux(RAW))
+    reserve = sorted(p.stem for p in morceaux(HORS))
 
     kt = KT.read_text()
     bloc = re.compile(r'(?<=private val BUNDLED = listOf\(\n).*?(?=\n    \)\n)', re.S)
@@ -118,9 +126,9 @@ def main():
     for s in sortent:
         print('SORT      %-30s → musique/' % s)
     print('\nAPK      : %d morceaux, %.1f Mo' %
-          (len(embarques), sum((RAW / (s + '.mp3')).stat().st_size for s in embarques) / MO))
+          (len(embarques), sum(p.stat().st_size for p in morceaux(RAW)) / MO))
     print('musique/ : %d morceaux, %.1f Mo' %
-          (len(reserve), sum((HORS / (s + '.mp3')).stat().st_size for s in reserve) / MO))
+          (len(reserve), sum(p.stat().st_size for p in morceaux(HORS)) / MO))
     print('\nÀ FAIRE : régénérer le R.java de contrôle, puis relancer MusicFilesTest.')
 
 

@@ -34,7 +34,7 @@ class MusicFilesTest {
         declares.forEach { ligne ->
             val (id, res, titre) = ligne.split("|")
             assertEquals("l'identifiant et le fichier doivent porter le même nom", id, res)
-            val f = File(raw, "$res.mp3")
+            val f = File(raw, "$res.m4a")
             assertTrue("fichier absent : ${f.path}", f.isFile)
             assertTrue("${f.name} est vide", f.length() > 1_000)
             assertTrue(
@@ -46,8 +46,8 @@ class MusicFilesTest {
 
     @Test
     fun `aucun morceau n est livre deux fois sous deux noms`() {
-        val fichiers = raw.listFiles { f -> f.name.endsWith(".mp3") }.orEmpty()
-        assertTrue("aucun mp3 trouvé", fichiers.isNotEmpty())
+        val fichiers = raw.listFiles { f -> f.name.endsWith(".m4a") }.orEmpty()
+        assertTrue("aucun morceau trouvé", fichiers.isNotEmpty())
         val parEmpreinte = fichiers.groupBy { f ->
             MessageDigest.getInstance("SHA-256").digest(f.readBytes()).joinToString("") {
                 "%02x".format(it)
@@ -64,12 +64,12 @@ class MusicFilesTest {
     }
 
     @Test
-    fun `tous les mp3 livres sont declares, et reciproquement`() {
-        val surDisque = raw.listFiles { f -> f.name.endsWith(".mp3") }
-            .orEmpty().map { it.name.removeSuffix(".mp3") }.sorted()
+    fun `tous les morceaux livres sont declares, et reciproquement`() {
+        val surDisque = raw.listFiles { f -> f.name.endsWith(".m4a") || f.name.endsWith(".mp3") }
+            .orEmpty().map { it.nameWithoutExtension }.sorted()
         val cites = declares.map { it.split("|")[1] }.sorted()
         assertEquals(
-            "un mp3 embarqué que personne ne joue, ou un morceau déclaré sans fichier",
+            "un morceau embarqué que personne ne joue, ou un morceau déclaré sans fichier",
             surDisque,
             cites,
         )
@@ -100,7 +100,7 @@ class MusicFilesTest {
      */
     @Test
     fun `le poids embarque reste sous les yeux`() {
-        val octets = raw.listFiles { f -> f.name.endsWith(".mp3") }.orEmpty().sumOf { it.length() }
+        val octets = raw.listFiles { f -> f.name.endsWith(".m4a") || f.name.endsWith(".mp3") }.orEmpty().sumOf { it.length() }
         val mo = octets / 1_048_576.0
         assertTrue(
             "audio embarqué : %.1f Mo. Seuil relevé trois fois ".format(mo) +
@@ -114,13 +114,19 @@ class MusicFilesTest {
         )
     }
 
+    /**
+     * Les morceaux embarqués sont en AAC 96 kb/s depuis le 29/10 (audit 1.390, écoute validée
+     * par le propriétaire) : 130 Mo de MP3 devenus 85. Un MP3 revenu dans raw/ sans passer par
+     * tools/audio.py ramènerait le poids d'avant.
+     */
     @Test
-    fun `chaque mp3 est bien un mp3`() {
-        raw.listFiles { f -> f.name.endsWith(".mp3") }.orEmpty().forEach { f ->
-            val tete = f.inputStream().use { it.readNBytes(3) }
-            val ok = tete.contentEquals("ID3".toByteArray()) ||
-                (tete.size >= 2 && tete[0] == 0xFF.toByte() && (tete[1].toInt() and 0xE0) == 0xE0)
-            assertTrue("${f.name} ne commence ni par ID3 ni par une trame MPEG", ok)
+    fun `chaque morceau embarque est en AAC`() {
+        assertTrue("un mp3 dans raw/ : le réencoder (tools/audio.py)",
+            raw.listFiles { f -> f.name.endsWith(".mp3") }.orEmpty().isEmpty())
+        raw.listFiles { f -> f.name.endsWith(".m4a") }.orEmpty().forEach { f ->
+            val tete = f.inputStream().use { it.readNBytes(8) }
+            assertTrue("${f.name} n'est pas un MP4 (« ftyp » absent)",
+                tete.size == 8 && String(tete, 4, 4, Charsets.US_ASCII) == "ftyp")
         }
     }
 
@@ -133,19 +139,23 @@ class MusicFilesTest {
      */
     @Test
     fun `le dossier musique ne double ni ne contredit ce qui est embarque`() {
-        val hors = File("../../musique").listFiles { f -> f.name.endsWith(".mp3") }.orEmpty()
+        val hors = File("../../musique").listFiles { f -> f.name.endsWith(".mp3") || f.name.endsWith(".m4a") }.orEmpty()
         assertTrue("dossier musique/ vide ou introuvable", hors.isNotEmpty())
 
-        val embarques = raw.listFiles { f -> f.name.endsWith(".mp3") }.orEmpty()
+        val embarques = raw.listFiles { f -> f.name.endsWith(".m4a") }.orEmpty()
             .associateBy { empreinte(it) }
+        // Réencodés, les embarqués n'ont plus les octets de leur MP3 d'origine : le nom tranche aussi.
+        val nomsEmbarques = embarques.values.map { it.nameWithoutExtension }.toSet()
         val vues = HashMap<String, String>()
         hors.forEach { f ->
-            val tete = f.inputStream().use { it.readNBytes(3) }
+            val tete = f.inputStream().use { it.readNBytes(8) }
             assertTrue(
-                "${f.name} ne commence ni par ID3 ni par une trame MPEG",
-                tete.contentEquals("ID3".toByteArray()) ||
-                    (tete.size >= 2 && tete[0] == 0xFF.toByte() && (tete[1].toInt() and 0xE0) == 0xE0),
+                "${f.name} n'est ni un MP3 (ID3, trame MPEG) ni un MP4",
+                tete.copyOf(3).contentEquals("ID3".toByteArray()) ||
+                    (tete.size >= 2 && tete[0] == 0xFF.toByte() && (tete[1].toInt() and 0xE0) == 0xE0) ||
+                    (tete.size == 8 && String(tete, 4, 4, Charsets.US_ASCII) == "ftyp"),
             )
+            assertTrue("${f.name} est à la fois dans musique/ et embarqué", f.nameWithoutExtension !in nomsEmbarques)
             val h = empreinte(f)
             assertTrue(
                 "${f.name} est déjà embarqué sous le nom ${embarques[h]?.name} : " +
@@ -160,7 +170,7 @@ class MusicFilesTest {
             assertTrue(
                 "${f.name} est dans musique/ mais déclaré dans MusicLibrary : " +
                     "il serait joué sans être dans l'APK",
-                !code.contains("R.raw.${f.name.removeSuffix(".mp3")}"),
+                !code.contains("R.raw.${f.nameWithoutExtension},"),
             )
         }
     }

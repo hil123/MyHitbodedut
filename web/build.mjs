@@ -107,11 +107,11 @@ for (const nom of readdirSync(join(RES, 'drawable-nodpi'))) {
 // l'application Android, lue dans son source.
 const musicLibrary = readFileSync(join(ANDROID, 'java', 'com', 'myhitbodedut', 'MusicLibrary.kt'), 'utf8');
 const morceaux = [...musicLibrary.matchAll(/Bundled\("([a-z0-9_]+)", R\.raw\.\1, R\.string\.(track_[a-z0-9_]+)\)/g)]
-  .map(([, id, titre]) => ({ id, titre, fichier: `musique/${id}.mp3` }));
+  .map(([, id, titre]) => ({ id, titre, fichier: `musique/${id}.m4a` }));
 if (morceaux.length === 0) throw new Error('Aucun morceau trouvé dans MusicLibrary.kt');
 mkdirSync(join(DIST, 'musique'), { recursive: true });
 for (const m of morceaux) {
-  const source = join(RES, 'raw', `${m.id}.mp3`);
+  const source = join(RES, 'raw', `${m.id}.m4a`);
   if (!existsSync(source)) throw new Error(`Morceau manquant : ${source}`);
   cpSync(source, join(DIST, m.fichier));
   m.octets = statSync(source).size;

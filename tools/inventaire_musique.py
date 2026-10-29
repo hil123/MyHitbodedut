@@ -10,6 +10,8 @@ Usage :  python3 tools/inventaire_musique.py
 """
 import pathlib, re
 
+from audio import morceaux
+
 RACINE = pathlib.Path(__file__).resolve().parent.parent
 HORS = RACINE / 'musique'
 RAW = RACINE / 'android/app/src/main/res/raw'
@@ -23,7 +25,7 @@ def mo(n):
 
 
 def main():
-    fichiers = sorted(HORS.glob('*.mp3'), key=lambda p: p.stem)
+    fichiers = sorted(morceaux(HORS), key=lambda p: p.stem)
     nommes = [p for p in fichiers if not MUET.fullmatch(p.stem)]
     muets = [p for p in fichiers if MUET.fullmatch(p.stem)]
 
@@ -42,7 +44,7 @@ def main():
                          else '%d sans titre' % len(muets),
                          mo(sum(p.stat().st_size for p in muets))))
 
-    embarques = list(RAW.glob('*.mp3'))
+    embarques = morceaux(RAW)
     lignes += ['', "**%d morceaux, %s Mo.** L'APK est à %s Mo d'audio sur %d morceaux."
                % (len(fichiers), mo(sum(p.stat().st_size for p in fichiers)),
                   mo(sum(p.stat().st_size for p in embarques)), len(embarques)),
