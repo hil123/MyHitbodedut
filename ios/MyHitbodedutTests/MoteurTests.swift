@@ -25,8 +25,10 @@ final class MoteurTests: XCTestCase {
     func testZmanimIdentiquesAKosherJava() throws {
         let moteur = try Moteur()
         let lignes = try XCTUnwrap(try vecteurs()["zmanim"] as? [[String: Any]])
-        let iso = ISO8601DateFormatter()
-        iso.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+        // Les vecteurs écrivent la fraction de seconde seulement quand elle n'est pas nulle.
+        let avecFraction = ISO8601DateFormatter()
+        avecFraction.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+        let sansFraction = ISO8601DateFormatter()
         var compares = 0
         for r in lignes {
             let lieu = Lieu(nom: r["lieu"] as? String ?? "", latitude: r["lat"] as? Double ?? 0,
@@ -37,7 +39,7 @@ final class MoteurTests: XCTestCase {
                 XCTAssertNotEqual(z.statut, "erreur", ou)
                 let attendu = try XCTUnwrap(r[z.cle] as? String, ou)
                 if attendu == "ABSENT" { XCTAssertEqual(z.statut, "absent", ou); continue }
-                let instant = try XCTUnwrap(iso.date(from: attendu), ou)
+                let instant = try XCTUnwrap(avecFraction.date(from: attendu) ?? sansFraction.date(from: attendu), ou)
                 let obtenu = try XCTUnwrap(z.instant, ou)
                 XCTAssertLessThanOrEqual(abs(obtenu.timeIntervalSince(instant)), 1, ou)
                 compares += 1
