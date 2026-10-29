@@ -94,7 +94,7 @@
                         style="@style/SectionState" />
                 </LinearLayout>
 
-                <ImageView style="@style/SectionChevron" />
+                <ImageView style="@style/SectionChevron" android:importantForAccessibility="no" />
             </LinearLayout>
 
             <LinearLayout
@@ -116,7 +116,7 @@
                         style="@style/SectionState" />
                 </LinearLayout>
 
-                <ImageView style="@style/SectionChevron" />
+                <ImageView style="@style/SectionChevron" android:importantForAccessibility="no" />
             </LinearLayout>
             </LinearLayout>
 
