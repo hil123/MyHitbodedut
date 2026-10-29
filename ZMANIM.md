@@ -2,8 +2,10 @@
 
 Demande du 10/10/2026, sur Android et sur le web. Ce fichier dit ce que
 l'application calcule, avec quoi, selon quelle méthode, et où elle s'arrête.
-**Le profil halakhique est à valider par un Rav** : rien ici n'est une
-décision halakhique, chaque méthode est nommée à l'écran sous son horaire.
+Rien ici n'est une décision halakhique : chaque méthode est nommée à l'écran
+sous son horaire. *29/10 : le propriétaire indique que les zmanim ont été
+vérifiés ; la mention « profil à valider par un Rav » est retirée de l'écran
+(audit 1.390).*
 
 ## Les moteurs
 

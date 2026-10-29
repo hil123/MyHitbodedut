@@ -147,8 +147,7 @@ Dans le siddour, les ajouts du jour sont mis en évidence (Ya'alé véyavo, Al
 hanissim, Tal oumatar, Anénou, Ta'hanoun…). Les autres sont repliés derrière
 une flèche, jamais retirés.
 
-Moteurs, méthodes, sources, limites, tests et maintenance : **ZMANIM.md**. Le
-profil est à valider par un Rav.
+Moteurs, méthodes, sources, limites, tests et maintenance : **ZMANIM.md**.
 
 ### Aucune donnée ne sort de l'appareil
 
