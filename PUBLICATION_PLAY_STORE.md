@@ -289,7 +289,7 @@ ce jour.*
 
 ### 6.4 Public cible et contenu
 
-- **Tranche d'âge : 18 ans et plus** *(supposé)*. Cocher une tranche
+- **Tranche d'âge : 18 ans et plus** *(tranché le 29/10)*. Cocher une tranche
   inférieure à 13 ans fait entrer l'app dans le programme Familles, avec des
   exigences supplémentaires sans bénéfice ici.
 - Classification du contenu (questionnaire IARC) : contenu religieux, aucune
@@ -354,9 +354,18 @@ autorisations ; vérifier que le texte dit ce qui est fait de la donnée.
 
 | Champ | Limite | Proposition (fr) |
 | --- | --- | --- |
-| Titre | 30 caractères | `MyHitbodedut` (12) — ou `MyHitbodedut – Hitbodedout` (26) |
+| Titre | 30 caractères, **un par langue** | he : `MyHitbodedut – התבודדות` (23) · fr : `MyHitbodedut – Hitbodedout` (26) · en : `MyHitbodedut – Hitbodedut` (25) *(proposé, à confirmer)* |
 | Description courte | 80 caractères | `La hitbodedout chaque jour : séance, musique, journal, zmanim et siddour.` (73) |
 | Description complète | 4 000 caractères | Plan : la pratique · la séance · la barrière du matin (avec l'argument de 6.7) · textes · zmanim et calendrier · widgets · vie privée (aucune donnée ne sort) · crédits et licences |
+
+**Recherche en hébreu.** Play affiche la fiche dans la langue du téléphone
+et indexe titre, description courte et description longue ; une traduction
+automatique n'est pas indexée. Google ne dit pas si un mot hébreu tapé sur un
+téléphone en français trouve la fiche hébraïque. D'où : « התבודדות » dans la
+description courte des trois langues, et les graphies latines (hitbodedut,
+hitbodedout, hisbodedus) dans une phrase de chaque description longue, y
+compris l'hébraïque. *Vérifié pour l'indexation des champs (aide Play
+« Get discovered on Google Play search ») ; déduit pour le reste.*
 
 Interdits : classement ou récompense (« n° 1 », « meilleure »), emojis
 répétés, mots-clés empilés. *Vérifié (bonnes pratiques Play).*
@@ -389,7 +398,7 @@ pour la note en anglais.*
 
 ### 7.4 Catégorie et coordonnées
 
-- Catégorie : **Style de vie** *(supposé ; alternative : Livres et références)*.
+- Catégorie : **Style de vie** *(tranché le 29/10)*.
 - Tags : méditation, prière, judaïsme, calendrier.
 - Adresse e-mail de contact : obligatoire et publique. Site web : facultatif.
 
@@ -475,9 +484,11 @@ et chacun doit rester inscrit les 14 jours.
 4. ~~**Compte personnel ou organisation**~~ — **tranché le 29/10** : compte
    **personnel, nouveau**. Test fermé obligatoire : 12 testeurs, 14 jours
    (§ 4, § 9 étape 7). Recruter les testeurs dès la création du compte.
-5. **Titre, catégorie, tranche d'âge** (propositions § 6.4 et § 7).
-6. **Édition `light` sur Play** : non pour l'instant (recommandé), ou en
-   parallèle ?
+5. **Titre, catégorie, tranche d'âge** — **catégorie et âge tranchés le
+   29/10** : Style de vie, 18 ans et plus. Titre : proposition d'un titre par
+   langue (§ 7.1), en attente de confirmation.
+6. ~~**Édition `light` sur Play**~~ — **tranché le 29/10** : non, gardée
+   en réserve (plan de repli du § 9) ; elle reste distribuée par GitHub.
 
 ---
 
