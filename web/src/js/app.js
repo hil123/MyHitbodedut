@@ -1308,7 +1308,8 @@ function ecranPriere() {
 let texteRecherche = '';
 /** Où chercher (19/10) : tout, les prières, les halakhot, les livres ou les hilloulot (RechercheGlobale.Portee). */
 let porteeRecherche = 'tout';
-const nuRecherche = (t) => t.replace(/<[^>]+>/g, ' ').replace(/[־׀]/g, ' ').replace(/[\u0591-\u05C7"'״׳]/g, '').replace(/\s+/g, ' ').trim().toLowerCase();
+// Sans accents latins ni apostrophe typographique : « priere » trouve « Prières » (29/10).
+const nuRecherche = (t) => t.normalize('NFD').replace(/[\u0300-\u036F’‘]/g, '').replace(/<[^>]+>/g, ' ').replace(/[־׀]/g, ' ').replace(/[\u0591-\u05C7"'״׳]/g, '').replace(/\s+/g, ' ').trim().toLowerCase();
 function extraitRecherche(texte, q) {
   const t = nuRecherche(texte);
   const i = Math.max(0, t.indexOf(q));

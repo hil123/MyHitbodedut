@@ -49,7 +49,10 @@ class DixAmeliorationsTest {
         val s = Siddur(emptyList(), listOf(SiddurTexte("t", "g", LocalizedText("עלינו", "Alénou", "Aleinu"), "",
             listOf(SiddurSection("", listOf(SiddurBloc("וַאֲנַחְנוּ כּוֹרְעִים", false)))))))
         assertEquals("t", RechercheGlobale.dansRecueil(s, RechercheGlobale.nu("כורעים"), RechercheGlobale.Sorte.SIDDOUR, "fr").single().id)
-        assertEquals("t", RechercheGlobale.dansRecueil(s, "alénou", RechercheGlobale.Sorte.SIDDOUR, "fr").single().id)
+        assertEquals("t", RechercheGlobale.dansRecueil(s, RechercheGlobale.nu("alénou"), RechercheGlobale.Sorte.SIDDOUR, "fr").single().id)
+        // Sans accents ni apostrophe typographique (29/10) : « alenou », « hachahar ».
+        assertEquals("t", RechercheGlobale.dansRecueil(s, RechercheGlobale.nu("Alenou"), RechercheGlobale.Sorte.SIDDOUR, "fr").single().id)
+        assertEquals("birkot hachahar prieres", RechercheGlobale.nu("Birkot hacha’har Prières"))
         assertTrue(RechercheGlobale.dansRecueil(s, "שבת", RechercheGlobale.Sorte.SIDDOUR, "fr").isEmpty())
     }
 

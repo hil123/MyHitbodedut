@@ -14,7 +14,11 @@ object RechercheGlobale {
 
     const val PAR_SORTE = 30
 
-    fun nu(t: String): String = t.replace(Regex("<[^>]+>"), " ").replace(Regex("[־׀]"), " ").replace(Regex("[֑-ׇ\"'״׳]"), "").replace(Regex("\\s+"), " ").trim().lowercase()
+    /**
+     * Les accents latins et l'apostrophe typographique tombent aussi : « priere » trouve
+     * « Prières », « hachahar » trouve « Birkot hacha’har » (vérification du 29/10).
+     */
+    fun nu(t: String): String = java.text.Normalizer.normalize(t, java.text.Normalizer.Form.NFD).replace(Regex("[\u0300-\u036F’‘]"), "").replace(Regex("<[^>]+>"), " ").replace(Regex("[־׀]"), " ").replace(Regex("[֑-ׇ\"'״׳]"), "").replace(Regex("\\s+"), " ").trim().lowercase()
 
     /** Un extrait d'une quarantaine de caractères autour de la trouvaille, dans le texte sans voyelles. */
     fun extrait(texte: String, q: String): String {

@@ -574,6 +574,10 @@ test('hilloulot : date lisible et recherche par nom', async () => {
   const table = JSON.parse(readFileSync(join(RES, 'raw', 'hilloulot.json'), 'utf8')).jours;
   assert.ok(J.rechercheHilloula(table, 'צבי הירש חיות').some(([cle]) => cle === '7-30'));
   assert.deepEqual(J.rechercheHilloula(table, 'א'), []);
+  // En français et en anglais, avec ou sans accents (29/10).
+  assert.ok(J.rechercheHilloula(table, 'Chelah').length > 0);
+  assert.ok(J.rechercheHilloula(table, 'Shelah').length > 0);
+  assert.equal(J.rechercheHilloula(table, 'Moché').length, J.rechercheHilloula(table, 'moche').length);
 });
 
 // --- Trophées (Trophees.kt, 11/10) ---
