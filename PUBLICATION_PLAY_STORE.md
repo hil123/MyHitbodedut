@@ -181,7 +181,7 @@ toujours l'ajouter depuis son téléphone (`MusicActivity` → `OpenDocument`).
 | or-breslev.co.il | Accord déclaré le 13/10 | Écrit à conserver |
 | Villes (GeoNames) | CC BY 4.0, attribution dans les réglages | OK — vérifié |
 | Polices (6 × OFL) | `assets/licences/` | OK — vérifié |
-| **7 entrées `"licence": "unknown"`** (4 dans `chizuk.json`, 3 dans `bibliotheque.json`) | Inconnue | **À résoudre ou retirer avant publication** |
+| Si'hot haRan, Chiv'hei haRan, Likoutei Etsot (rabenubook), Likoutei Tefilot (Maleh Vigadish 2021) — les 7 anciennes entrées `"unknown"` | Œuvres de Rabbi Natan (m. 1844), domaine public ; licence des éditions non déclarée par Sefaria (vérifié le 29/10) | **Tranché le 29/10** : livrées en texte seul, sans la vocalisation de l'éditeur ; licence réécrite « Public Domain (texte seul) » ; `LicencesEditionsTest` interdit tout retour d'un « unknown » ou de la vocalisation |
 
 ---
 
@@ -468,9 +468,10 @@ et chacun doit rester inscrit les 14 jours.
 
 1. ~~**Suivi de vol en direct**~~ — **tranché le 29/10** : conservé (accord
    OpenSky reçu, à vérifier selon § 3.1) ; route adsbdb conservée.
-2. **Musique** : dispose-t-on d'écrits couvrant la distribution publique sur
+2. **Musique** *(reportée à la fin, à la demande du propriétaire)* : dispose-t-on d'écrits couvrant la distribution publique sur
    Google Play pour les 33 morceaux ? Sinon, lesquels retirer ?
-3. **7 textes de licence inconnue** : identifier ou retirer.
+3. ~~**7 textes de licence inconnue**~~ — **tranché le 29/10** : domaine
+   public, texte seul sans vocalisation (§ 3.3).
 4. **Compte personnel ou organisation** (organisation = D-U-N-S, mais pas de
    test fermé obligatoire).
 5. **Titre, catégorie, tranche d'âge** (propositions § 6.4 et § 7).
