@@ -101,25 +101,55 @@ anonyme. Les conditions d'utilisation d'OpenSky (vérifié, page citée) :
 > into a live product, service, or automated system […] — requires a previous
 > written agreement, even for non-profit or governmental entities. »
 
-Une application publiée sur Google Play est un produit en service. **Sans
-accord écrit d'OpenSky, la fonction n'a pas à être dans la version Play.**
+Une application publiée sur Google Play est un produit en service : il faut
+l'accord écrit d'OpenSky.
 
-Options, au choix du propriétaire :
+**Décision du 29/10 : fonction conservée.** Le propriétaire déclare avoir
+déjà reçu cet accord. Restent trois vérifications, à faire sur le texte de
+l'accord lui-même, qui n'est pas dans le dépôt :
 
-| Option | Effet | Coût |
-| --- | --- | --- |
-| A. Désactiver pour Play (`SUIVI_VOL = false` dans une variante ou un paramètre de construction) | Le reste du module Vol (zmanim, prières, rappels) demeure | Une ligne de configuration ; recommandé pour la première version |
-| B. Demander une licence écrite à OpenSky | Fonction conservée | Délai inconnu, issue incertaine |
-| C. Autre fournisseur sous licence commerciale | Fonction conservée | Contrat, coût, développement |
+- [ ] l'accord couvre une **application mobile publique et gratuite**
+      distribuée sur Google Play, et pas seulement le site ou un usage de test ;
+- [ ] il autorise l'**accès anonyme** que fait `SuiviVol.kt`, ou bien il
+      impose un compte (identifiants d'API). Dans ce cas, ne pas mettre
+      d'identifiants dans l'APK, où n'importe qui les extrairait : passer par
+      le relais (`-PrelaisVol=https://…`, `tools/relais_vol`), qui les garde
+      côté serveur ;
+- [ ] il fixe une **attribution** : l'app affiche déjà « Données
+      aéronautiques : OpenSky Network » (`vol_source_opensky`), à aligner sur
+      le libellé exigé s'il y en a un.
 
-`RouteVol.kt` appelle `api.adsbdb.com`. **Leurs conditions n'ont pas été
-trouvées** lors de la rédaction : à lire avant publication, avec la même
-question (usage dans un produit publié autorisé ?). *Non vérifié.*
+Conserver l'écrit hors dépôt, avec ceux des ayants droit (§ 3.2) : Google ou
+OpenSky peuvent le demander.
 
-Si les deux fonctions réseau sortent, l'édition Play n'a plus besoin de la
-permission `INTERNET`, et peut à nouveau dire « aucun accès réseau » — ce que
-le README revendiquait jusqu'au 28/10. C'est aussi le formulaire Sécurité des
-données le plus simple (§ 6.2).
+**Route d'un numéro de vol (adsbdb) — décision du 29/10 : conservée, après
+vérification.** Ce qu'on a trouvé le 29/10 (vérifié, adsbdb.com et dépôt
+GitHub `mrjackwills/adsbdb`) :
+
+- pas de conditions d'utilisation publiées : API publique, gratuite, sans
+  compte, seulement des limites de débit (512 requêtes par minute avant
+  blocage de 60 s). `RouteVol` ne fait qu'une requête par toucher, loin du
+  seuil ;
+- le logiciel est sous licence MIT ;
+- **les routes elles-mêmes** sont l'œuvre de David J. Taylor et Jim Mason, et
+  « may not be copied, published, or incorporated into other databases
+  without the explicit permission of David J Taylor ».
+
+Afficher à l'utilisateur la route du vol qu'il demande n'est ni une copie de
+la base ni une base concurrente. `RouteVol` ne stocke aucune route, et
+l'attribution est déjà affichée (`vol_source_adsbdb`). *Déduit : lecture
+raisonnable, pas un avis juridique.* Deux règles en découlent :
+
+- ne jamais ajouter de cache ou de liste de routes embarquée construite à
+  partir d'adsbdb ;
+- facultatif mais prudent : un courriel au mainteneur d'adsbdb décrivant
+  l'usage (une requête au toucher, attribution affichée), dont la réponse
+  rejoint les autres écrits.
+
+**Conséquence pour Play.** L'édition complète garde la permission
+`INTERNET`. Le formulaire Sécurité des données doit déclarer les deux envois
+(§ 6.2, ligne « Vol en direct conservé »), et les règles de confidentialité
+doivent les décrire (§ 6.1).
 
 ### 3.2 Droits sur la musique livrée **(bloquant à la revue)**
 
@@ -436,8 +466,8 @@ et chacun doit rester inscrit les 14 jours.
 
 ## 11. Décisions attendues du propriétaire
 
-1. **Suivi de vol en direct** : retirer de la version Play (recommandé), ou
-   demander une licence à OpenSky ?
+1. ~~**Suivi de vol en direct**~~ — **tranché le 29/10** : conservé (accord
+   OpenSky reçu, à vérifier selon § 3.1) ; route adsbdb conservée.
 2. **Musique** : dispose-t-on d'écrits couvrant la distribution publique sur
    Google Play pour les 33 morceaux ? Sinon, lesquels retirer ?
 3. **7 textes de licence inconnue** : identifier ou retirer.
