@@ -191,7 +191,7 @@ toujours l'ajouter depuis son téléphone (`MusicActivity` → `OpenDocument`).
 | --- | --- | --- |
 | Créer le compte | play.google.com/console, compte Google dédié recommandé | — |
 | Frais d'inscription | **25 USD, une fois**, carte non prépayée | Vérifié |
-| Type de compte | **Personnel** (nom réel affiché) ou **Organisation** (exige un numéro D-U-N-S, mais dispense du test fermé ci-dessous) | Supposé : personnel |
+| Type de compte | **Personnel** (nom réel affiché) ou **Organisation** (exige un numéro D-U-N-S, mais dispense du test fermé ci-dessous) | **Tranché le 29/10 : personnel, nouveau** |
 | Vérification d'identité | pièce d'identité, adresse ; nom public du développeur | Vérifié |
 | Vérification d'appareil | accès à un appareil Android via l'appli Play Console | Vérifié |
 | **Test fermé obligatoire** (compte personnel créé après le 13/11/2023) | **12 testeurs inscrits sans interruption pendant 14 jours**, puis demande d'accès à la production | Vérifié |
@@ -472,8 +472,9 @@ et chacun doit rester inscrit les 14 jours.
    Google Play pour les 33 morceaux ? Sinon, lesquels retirer ?
 3. ~~**7 textes de licence inconnue**~~ — **tranché le 29/10** : domaine
    public, texte seul sans vocalisation (§ 3.3).
-4. **Compte personnel ou organisation** (organisation = D-U-N-S, mais pas de
-   test fermé obligatoire).
+4. ~~**Compte personnel ou organisation**~~ — **tranché le 29/10** : compte
+   **personnel, nouveau**. Test fermé obligatoire : 12 testeurs, 14 jours
+   (§ 4, § 9 étape 7). Recruter les testeurs dès la création du compte.
 5. **Titre, catégorie, tranche d'âge** (propositions § 6.4 et § 7).
 6. **Édition `light` sur Play** : non pour l'instant (recommandé), ou en
    parallèle ?
