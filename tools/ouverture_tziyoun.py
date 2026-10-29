@@ -1,9 +1,10 @@
+"""L'image d'ouverture : python3 tools/ouverture_tziyoun.py tools/sources-images/tombe_rabbi_nahman_uman.jpg android/app/src/main/res/drawable-nodpi/scene_ouverture_tombe.webp"""
 import sys
 from PIL import Image, ImageDraw, ImageFilter
 src = Image.open(sys.argv[1]).convert('RGB')
-k = src.width / 1280
-# Façade, inscription et fenêtres (coordonnées dans la vignette de 1280 px).
-x0, y0, x1, y1 = 290, 160, 960, 720
+k = src.width / 816
+# La matséva, l'aron et le drap du tsiyoun (coordonnées dans une vignette de 816 px de large).
+x0, y0, x1, y1 = 40, 0, 700, 612
 crop = src.crop((int(x0*k), int(y0*k), int(x1*k), int(y1*k)))
 W, H = 900, 2000
 band = crop.resize((W, round(crop.height * W / crop.width)), Image.LANCZOS)

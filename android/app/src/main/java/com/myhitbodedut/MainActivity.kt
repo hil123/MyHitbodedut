@@ -937,10 +937,10 @@ class MainActivity : AppCompatActivity() {
 
     /**
      * L'écran d'ouverture (13/10, refait le 15/10) : le 'hassid debout, souriant, devant
-     * le היכל הציון de Rabbi Na'hman à Ouman, une seconde et demie au démarrage, puis un
+     * le tsiyoun de Rabbi Na'hman à Ouman, une seconde et demie au démarrage, puis un
      * fondu. Il se pose par-dessus l'accueil dès le premier dessin : plus d'écran vide
      * pendant que l'application attend (capture du 15/10, trois secondes de menthe).
-     * Photo : la façade du היכל הציון à Ouman, par Aniskov (Wikimedia Commons, CC BY-SA 4.0),
+     * Photo : le tsiyoun, sous la matséva (Lord Mountbatten, Wikimedia Commons, domaine public),
      * depuis le 29/10 : la précédente portait le filigrane d'une banque d'images (audit 1.390).
      */
     private fun ouverture(demarrage: Boolean) {
@@ -955,7 +955,7 @@ class MainActivity : AppCompatActivity() {
             setBackgroundColor(getColor(R.color.ouverture_fond))
             isClickable = true
             importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS
-            // Le היכל הציון, centré : l'inscription « ציון רביה"ק רבי נחמן מברסלב » reste entière (15/10).
+            // Le tsiyoun, centré : la plaque de la matséva reste entière (29/10).
             addView(android.widget.ImageView(context).apply {
                 setImageResource(R.drawable.scene_ouverture_tombe)
                 scaleType = android.widget.ImageView.ScaleType.MATRIX
@@ -980,15 +980,6 @@ class MainActivity : AppCompatActivity() {
                 scaleType = android.widget.ImageView.ScaleType.FIT_END
             }, android.widget.FrameLayout.LayoutParams(-2, (haut * 0.5).toInt(), android.view.Gravity.BOTTOM or android.view.Gravity.LEFT).apply {
                 bottomMargin = (haut * 0.03).toInt()
-            })
-            // La photo est sous CC BY-SA 4.0 : l'auteur et la licence restent visibles (audit 1.390).
-            addView(android.widget.TextView(context).apply {
-                text = getString(R.string.ouverture_credit_photo)
-                textSize = 10f
-                setTextColor(0x99FFFFFF.toInt())
-            }, android.widget.FrameLayout.LayoutParams(-2, -2, android.view.Gravity.BOTTOM or android.view.Gravity.RIGHT).apply {
-                val m = (12 * resources.displayMetrics.density).toInt()
-                setMargins(m, m, m, m)
             })
         }
         decor.addView(voile, android.view.ViewGroup.LayoutParams(-1, -1))

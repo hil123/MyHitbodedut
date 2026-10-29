@@ -835,7 +835,6 @@
     <string name="hilloula_annee">Décès : %1$s</string>
     <string name="hilloulot_aucune">Aucune hilloula ce jour</string>
     <string name="hilloulot_resultats">Résultats : %1$d</string>
-    <string name="ouverture_credit_photo" translatable="false">Aniskov · CC BY-SA 4.0</string>
     <string name="hilloula_source_wiki">Wikipédia (CC BY-SA)</string>
     <string name="hilloula_source_hyomi">HaHakham HaYomi</string>
     <string name="hilloula_source_mytzadik">MyTzadik</string>
