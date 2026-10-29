@@ -644,7 +644,7 @@
     <string name="zmanim_position_ancienne">Pas de position fraîche : la dernière connue est utilisée.</string>
     <string name="zmanim_calendrier">Calendrier</string>
     <string name="zmanim_bouton_vol">En vol</string>
-    <string name="zmanim_bouton_boussole">Jérusalem</string>
+    <string name="zmanim_bouton_boussole">Boussole prière</string>
     <string name="boussole_vide_titre">Où êtes-vous ?</string>
     <string name="boussole_vide_position">Utiliser ma position</string>
     <string name="boussole_vide_ville">ou choisir une ville</string>

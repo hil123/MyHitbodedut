@@ -612,7 +612,7 @@
     <string name="zmanim_position_ancienne">אין מיקום עדכני: נעשה שימוש במיקום הידוע האחרון.</string>
     <string name="zmanim_calendrier">לוח שנה</string>
     <string name="zmanim_bouton_vol">בטיסה</string>
-    <string name="zmanim_bouton_boussole">ירושלים</string>
+    <string name="zmanim_bouton_boussole">מצפן תפילה</string>
     <string name="boussole_vide_titre">איפה אתם?</string>
     <string name="boussole_vide_position">שימוש במיקום שלי</string>
     <string name="boussole_vide_ville">או בחירת עיר</string>

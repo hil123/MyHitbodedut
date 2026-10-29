@@ -598,7 +598,7 @@
     <string name="zmanim_position_ancienne">No fresh location: the last known one is used.</string>
     <string name="zmanim_calendrier">Calendar</string>
     <string name="zmanim_bouton_vol">In flight</string>
-    <string name="zmanim_bouton_boussole">Jerusalem</string>
+    <string name="zmanim_bouton_boussole">Prayer compass</string>
     <string name="boussole_vide_titre">Where are you?</string>
     <string name="boussole_vide_position">Use my location</string>
     <string name="boussole_vide_ville">or choose a city</string>
