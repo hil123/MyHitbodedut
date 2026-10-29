@@ -940,8 +940,8 @@ class MainActivity : AppCompatActivity() {
      * le היכל הציון de Rabbi Na'hman à Ouman, une seconde et demie au démarrage, puis un
      * fondu. Il se pose par-dessus l'accueil dès le premier dessin : plus d'écran vide
      * pendant que l'application attend (capture du 15/10, trois secondes de menthe).
-     * Photo : la façade du היכל הציון à Ouman, fournie par le porteur le 15/10
-     * (tools/sources-images/heikhal_tziyoun_uman.jpg), retouchée par IA.
+     * Photo : la façade du היכל הציון à Ouman, par Aniskov (Wikimedia Commons, CC BY-SA 4.0),
+     * depuis le 29/10 : la précédente portait le filigrane d'une banque d'images (audit 1.390).
      */
     private fun ouverture(demarrage: Boolean) {
         // Le fond du thème (la palette choisie) remplace celui de l'ouverture.
@@ -980,6 +980,15 @@ class MainActivity : AppCompatActivity() {
                 scaleType = android.widget.ImageView.ScaleType.FIT_END
             }, android.widget.FrameLayout.LayoutParams(-2, (haut * 0.5).toInt(), android.view.Gravity.BOTTOM or android.view.Gravity.LEFT).apply {
                 bottomMargin = (haut * 0.03).toInt()
+            })
+            // La photo est sous CC BY-SA 4.0 : l'auteur et la licence restent visibles (audit 1.390).
+            addView(android.widget.TextView(context).apply {
+                text = getString(R.string.ouverture_credit_photo)
+                textSize = 10f
+                setTextColor(0x99FFFFFF.toInt())
+            }, android.widget.FrameLayout.LayoutParams(-2, -2, android.view.Gravity.BOTTOM or android.view.Gravity.RIGHT).apply {
+                val m = (12 * resources.displayMetrics.density).toInt()
+                setMargins(m, m, m, m)
             })
         }
         decor.addView(voile, android.view.ViewGroup.LayoutParams(-1, -1))

@@ -104,11 +104,15 @@ liseré ne se voit pas.
 
 L'écran d'ouverture (15/10) pose le 'hassid debout (`char_debout.webp`, détouré
 par connexité depuis le bord, seuil 249 : la chemise plafonne à 245) devant le
-היכל הציון de Rabbi Na'hman à Ouman (`scene_ouverture_tombe.webp`) : la photo
-de la façade fournie par le porteur le 15/10 (`tools/sources-images/heikhal_tziyoun_uman.jpg`),
-sur un fond uni (#1E3A30) ; image retouchée par IA, fournie par le porteur.
-La photo précédente (« Rabbi Nahman Tomb (Uman, Ukraine) »,
-Lord Mountbatten, Wikimedia Commons, domaine public) reste dans `tools/sources-images/`.
+היכל הציון de Rabbi Na'hman à Ouman (`scene_ouverture_tombe.webp`) : la façade
+photographiée par Aniskov le 16/10/2021 (« Могила цадика Нахмана.jpg »,
+Wikimedia Commons, Wiki Loves Monuments 2022, CC BY-SA 4.0), recadrée sur
+l'inscription et fondue dans un fond uni (#1E3A30) par `tools/ouverture_tziyoun.py`
+depuis `tools/sources-images/heikhal_tziyoun_aniskov_2021.jpg`. L'image dérivée
+est sous la même licence ; l'écran d'ouverture affiche « Aniskov · CC BY-SA 4.0 ». Elle remplace (29/10, audit 1.390) une photo retouchée qui
+portait le filigrane d'une banque d'images (`heikhal_tziyoun_uman.jpg`, retirée).
+« Rabbi Nahman Tomb (Uman, Ukraine) » (Lord Mountbatten, Wikimedia Commons,
+domaine public) reste dans `tools/sources-images/`.
 
 `Character.kt` répartit les images par moment : accueil, appel à la pratique,
 pendant la séance, après la séance. Le choix est stable sur une journée entière
