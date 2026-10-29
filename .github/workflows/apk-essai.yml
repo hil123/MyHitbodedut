@@ -39,8 +39,8 @@ jobs:
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
 
-      - name: Ensure Android platform 35
-        run: yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "platforms;android-35" "build-tools;35.0.0" || true
+      - name: Ensure Android platform 36
+        run: yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "platforms;android-36" "build-tools;36.0.0" || true
 
       # Une seconde de silence à la place de chaque morceau. Les noms de
       # fichiers ne bougent pas, donc aucun R.raw ne disparaît et le code
@@ -54,7 +54,7 @@ jobs:
           set -e
           avant=$(du -sh android/app/src/main/res/raw | cut -f1)
           python3 tools/silence_mp3.py /tmp/silence.mp3 1
-          for f in android/app/src/main/res/raw/*.mp3; do
+          for f in android/app/src/main/res/raw/*.mp3 android/app/src/musique_hors_play/res/raw/*.mp3; do
             cp /tmp/silence.mp3 "$f"
           done
           apres=$(du -sh android/app/src/main/res/raw | cut -f1)

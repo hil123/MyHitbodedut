@@ -49,6 +49,16 @@ def titre_par_defaut(stem):
 
 
 def main():
+    # 29/10 : la liste des morceaux livrés est coupée en deux (MusiquePlay.kt
+    # pour la version Play, src/musique_hors_play pour la seule version
+    # GitHub), selon les droits de diffusion de chaque morceau. Cet outil
+    # recomposait une liste unique : il ferait entrer dans la version Play un
+    # morceau sans autorisation. Il s'arrête donc, jusqu'à être réécrit pour
+    # les deux listes. PUBLICATION_PLAY_STORE.md § 3.2.
+    sys.exit('echange_musique.py est suspendu depuis le 29/10 : la version Play ne livre que '
+             'les morceaux autorisés (PUBLICATION_PLAY_STORE.md § 3.2). Déplacer un morceau '
+             'à la main entre android/app/src/main/res/raw et src/musique_hors_play/res/raw, '
+             'avec sa ligne dans MusiquePlay.kt ou MusiqueHorsPlay.kt ; MusicFilesTest vérifie.')
     ap = argparse.ArgumentParser()
     ap.add_argument('--embarque', nargs='*', default=[])
     ap.add_argument('--embarque-fichier')

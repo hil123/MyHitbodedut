@@ -29,6 +29,14 @@
         android:required="false" />
 
     <!--
+        enableOnBackInvokedCallback="false" (29/10, targetSdk 36) : Android 16
+        n'envoie plus la touche retour (KEYCODE_BACK) aux applications qui le
+        visent, sauf si elles s'en retirent ainsi. L'écran de garde
+        (BlockerView) l'intercepte pour qu'on ne le quitte pas d'un geste ;
+        sans cette ligne, le geste retour le traverserait. Dérogation
+        temporaire selon Google : à remplacer par OnBackInvokedCallback.
+    -->
+    <!--
         resizeableActivity : c'est deja le defaut, mais il decide de l'ecran
         partage, de la fenetre libre et du bureau — il est donc ecrit plutot
         que subi.
@@ -44,6 +52,7 @@
         android:resizeableActivity="true"
         android:localeConfig="@xml/locales_config"
         android:supportsRtl="true"
+        android:enableOnBackInvokedCallback="false"
         android:theme="@style/Theme.MyHitbodedut">
 
         <activity

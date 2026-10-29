@@ -175,10 +175,19 @@ class FiabiliteTest {
         }
     }
 
+    /**
+     * targetSdk 36 (29/10) : Android 16 ignore la dérogation au plein écran.
+     * Les marges des barres sont rendues une fois pour tous les écrans
+     * (Barres, posé par Apparence.installer), et la dérogation ne doit pas
+     * revenir : sur Android 15 elle agirait encore, et les deux versions ne
+     * se ressembleraient plus.
+     */
     @Test
-    fun `android 15 garde l affichage sous la barre d etat`() {
-        val v35 = lire("src/main/res/values-v35/themes.xml")
-        assertTrue(v35.contains("android:windowOptOutEdgeToEdgeEnforcement\">true"))
+    fun `les barres du systeme sont gerees pour tous les ecrans`() {
+        File("src/main/res").walkTopDown().filter { it.extension == "xml" }.forEach { f ->
+            assertFalse("${f.path} : dérogation au plein écran", f.readText().contains("windowOptOutEdgeToEdgeEnforcement"))
+        }
+        assertTrue(lire("src/main/java/com/myhitbodedut/Apparence.kt").contains("Barres.installer(activity)"))
         assertTrue(lire("src/main/res/values/themes.xml").contains("parent=\"Base.Theme.MyHitbodedut\""))
     }
 }

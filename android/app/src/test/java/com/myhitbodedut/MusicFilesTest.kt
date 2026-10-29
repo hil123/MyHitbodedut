@@ -17,16 +17,31 @@ import org.junit.Test
  */
 class MusicFilesTest {
 
-    private val raw = File("src/main/res/raw")
-    private val code = File("src/main/java/com/myhitbodedut/MusicLibrary.kt").readText()
+    /**
+     * Deux dossiers depuis le 29/10 : res/raw de main, que toute construction
+     * livre, et celui de src/musique_hors_play, que seule la version GitHub
+     * livre (PUBLICATION_PLAY_STORE.md § 3.2). Les tests valent pour leur
+     * réunion, c'est-à-dire pour la version GitHub ; ceux du bas tiennent la
+     * version Play.
+     */
+    private val rawPlay = File("src/main/res/raw")
+    private val rawHorsPlay = File("src/musique_hors_play/res/raw")
+    private val codePlay = File("src/main/java/com/myhitbodedut/MusiquePlay.kt").readText()
+    private val codeHorsPlay = File("src/musique_hors_play/java/com/myhitbodedut/MusiqueHorsPlay.kt").readText()
+    private val code = codePlay + codeHorsPlay
+
+    private fun mp3(dossier: File): List<File> = dossier.listFiles { f -> f.name.endsWith(".mp3") }.orEmpty().toList()
+    private fun mp3s(): List<File> = mp3(rawPlay) + mp3(rawHorsPlay)
     private val strings = File("src/main/res/values/strings.xml").readText()
 
     /** Les identifiants déclarés dans BUNDLED, dans l'ordre du fichier. */
-    private val declares: List<String> =
+    private fun declaresDans(code: String): List<String> =
         Regex("""Bundled\("([a-z0-9_]+)", R\.raw\.([a-z0-9_]+), R\.string\.([a-z0-9_]+)\)""")
             .findAll(code)
             .map { it.groupValues[1] + "|" + it.groupValues[2] + "|" + it.groupValues[3] }
             .toList()
+
+    private val declares: List<String> = declaresDans(code)
 
     @Test
     fun `chaque morceau declare a son fichier et son titre`() {
@@ -34,7 +49,7 @@ class MusicFilesTest {
         declares.forEach { ligne ->
             val (id, res, titre) = ligne.split("|")
             assertEquals("l'identifiant et le fichier doivent porter le même nom", id, res)
-            val f = File(raw, "$res.mp3")
+            val f = mp3s().firstOrNull { it.name == "$res.mp3" } ?: File(rawPlay, "$res.mp3")
             assertTrue("fichier absent : ${f.path}", f.isFile)
             assertTrue("${f.name} est vide", f.length() > 1_000)
             assertTrue(
@@ -46,7 +61,7 @@ class MusicFilesTest {
 
     @Test
     fun `aucun morceau n est livre deux fois sous deux noms`() {
-        val fichiers = raw.listFiles { f -> f.name.endsWith(".mp3") }.orEmpty()
+        val fichiers = mp3s()
         assertTrue("aucun mp3 trouvé", fichiers.isNotEmpty())
         val parEmpreinte = fichiers.groupBy { f ->
             MessageDigest.getInstance("SHA-256").digest(f.readBytes()).joinToString("") {
@@ -65,8 +80,7 @@ class MusicFilesTest {
 
     @Test
     fun `tous les mp3 livres sont declares, et reciproquement`() {
-        val surDisque = raw.listFiles { f -> f.name.endsWith(".mp3") }
-            .orEmpty().map { it.name.removeSuffix(".mp3") }.sorted()
+        val surDisque = mp3s().map { it.name.removeSuffix(".mp3") }.sorted()
         val cites = declares.map { it.split("|")[1] }.sorted()
         assertEquals(
             "un mp3 embarqué que personne ne joue, ou un morceau déclaré sans fichier",
@@ -100,7 +114,7 @@ class MusicFilesTest {
      */
     @Test
     fun `le poids embarque reste sous les yeux`() {
-        val octets = raw.listFiles { f -> f.name.endsWith(".mp3") }.orEmpty().sumOf { it.length() }
+        val octets = mp3s().sumOf { it.length() }
         val mo = octets / 1_048_576.0
         assertTrue(
             "audio embarqué : %.1f Mo. Seuil relevé trois fois ".format(mo) +
@@ -116,7 +130,7 @@ class MusicFilesTest {
 
     @Test
     fun `chaque mp3 est bien un mp3`() {
-        raw.listFiles { f -> f.name.endsWith(".mp3") }.orEmpty().forEach { f ->
+        mp3s().forEach { f ->
             val tete = f.inputStream().use { it.readNBytes(3) }
             val ok = tete.contentEquals("ID3".toByteArray()) ||
                 (tete.size >= 2 && tete[0] == 0xFF.toByte() && (tete[1].toInt() and 0xE0) == 0xE0)
@@ -136,7 +150,7 @@ class MusicFilesTest {
         val hors = File("../../musique").listFiles { f -> f.name.endsWith(".mp3") }.orEmpty()
         assertTrue("dossier musique/ vide ou introuvable", hors.isNotEmpty())
 
-        val embarques = raw.listFiles { f -> f.name.endsWith(".mp3") }.orEmpty()
+        val embarques = mp3s()
             .associateBy { empreinte(it) }
         val vues = HashMap<String, String>()
         hors.forEach { f ->
@@ -163,6 +177,35 @@ class MusicFilesTest {
                 !code.contains("R.raw.${f.name.removeSuffix(".mp3")}"),
             )
         }
+    }
+
+    /** Ce que la version Play livre, et rien d'autre (29/10). */
+    @Test
+    fun `la version Play ne livre que les morceaux autorises`() {
+        val autorises = listOf("hamelech_basade", "yanuka_nigoun_3")
+        assertEquals(
+            "res/raw de main est livré par la version Play : n'y mettre qu'un morceau dont la " +
+                "diffusion publique est établie (PUBLICATION_PLAY_STORE.md § 3.2), sinon dans src/musique_hors_play",
+            autorises,
+            mp3(rawPlay).map { it.name.removeSuffix(".mp3") }.sorted(),
+        )
+        assertEquals(autorises, declaresDans(codePlay).map { it.split("|")[0] }.sorted())
+        assertEquals(
+            "les morceaux de src/musique_hors_play sont déclarés dans sa propre liste",
+            mp3(rawHorsPlay).map { it.name.removeSuffix(".mp3") }.sorted(),
+            declaresDans(codeHorsPlay).map { it.split("|")[0] }.sorted(),
+        )
+    }
+
+    @Test
+    fun `la construction Play remplace la liste hors Play par une liste vide`() {
+        val vide = File("src/musique_play/java/com/myhitbodedut/MusiqueHorsPlay.kt").readText()
+        assertTrue(vide.contains("object MusiqueHorsPlay"))
+        assertTrue("aucun morceau ne doit y être déclaré", declaresDans(vide).isEmpty())
+        assertTrue(File("src/musique_play/res").exists().not())
+        val gradle = File("build.gradle.kts").readText()
+        assertTrue(gradle.contains("if (play) \"src/musique_play\" else \"src/musique_hors_play\""))
+        assertTrue(gradle.contains("if (!play) res.srcDir"))
     }
 
     private fun empreinte(f: File): String =

@@ -10,7 +10,8 @@ on:
     paths:
       - 'web/**'
       - 'android/app/src/main/res/**'
-      - 'android/app/src/main/java/com/myhitbodedut/MusicLibrary.kt'
+      - 'android/app/src/main/java/com/myhitbodedut/MusiquePlay.kt'
+      - 'android/app/src/musique_hors_play/**'
       - 'android/app/src/main/java/com/myhitbodedut/Zmanim.kt'
       - '.github/workflows/web.yml'
   pull_request:

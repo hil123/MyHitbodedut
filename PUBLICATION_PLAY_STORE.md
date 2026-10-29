@@ -52,13 +52,13 @@ comprise, et ce qu'elle contient (vérifié, `AndroidManifest.xml` et
 
 | Élément | Valeur dans le dépôt | Exigence Play | Statut |
 | --- | --- | --- | --- |
-| `targetSdk` | **35** (`app/build.gradle.kts`) | **36** pour toute nouvelle app depuis le 31/08/2026 ; prolongation possible jusqu'au 01/11/2026 seulement | **Bloquant** — vérifié |
-| `compileSdk` | 35 | ≥ `targetSdk` | Bloquant (suit le précédent) |
+| `targetSdk` | **36** depuis le 29/10 (était 35) | **36** pour toute nouvelle app depuis le 31/08/2026 ; prolongation possible jusqu'au 01/11/2026 seulement | **Fait** — compilé et testé ; reste l'essai sur appareil (§ 2.1) |
+| `compileSdk` | 36, avec le plugin Android 8.11.1 (était 8.7.3) | ≥ `targetSdk` | **Fait** |
 | `minSdk` | 26 | aucune contrainte | OK |
-| Format | APK (`assembleRelease`) | **AAB** obligatoire pour une nouvelle app | À faire — `bundleRelease` |
+| Format | APK pour GitHub ; **AAB** pour Play (`-Pplay=true bundleFullRelease`, flux `play.yml`) | **AAB** obligatoire pour une nouvelle app | **Fait** — AAB de 28,5 Mo construit le 29/10 |
 | Taille | `res/raw` = 160 Mo (130 Mo de MP3, 30 Mo de JSON) | Module de base ≤ 500 Mo compressés ; au-delà de 200 Mo, avertissement non bloquant en données mobiles | OK — vérifié |
 | Bibliothèques natives | aucune `.so` | page mémoire 16 Ko exigée pour les `.so` ciblant API 35+ | Sans objet — vérifié |
-| Signature | clé de dev versionnée, mot de passe public (`keystore/README.md`) | clé d'envoi privée + Play App Signing | **Bloquant** |
+| Signature | clé de dev pour GitHub ; `play.yml` exige la clé d'envoi (secrets `PLAY_*`) et refuse un AAB signé par la clé de dev | clé d'envoi privée + Play App Signing | **Reste à faire par le propriétaire** : créer la clé et les secrets (§ 5.1, § 5.2) |
 | `versionCode` | `1 + github.run_number` | strictement croissant | OK, à garder |
 | R8 / réduction | activés en release | — | OK ; garder le fichier de correspondance (§ 5.4) |
 | Écran de relecture | masqué hors `BuildConfig.DEBUG` | pas de fonction cachée en production | OK — vérifié |
@@ -81,8 +81,28 @@ liste déjà notée dans la feuille de route (proposition 12) :
   après redémarrage, économie de batterie, autorisation retirée en cours de
   séance.
 
-**Critère d'acceptation** : `./gradlew lint testFullReleaseUnitTest
-bundleFullRelease` passe avec `targetSdk = 36`, et la recette du § 8 passe sur
+**Fait le 29/10** (vérifié par compilation, 570 tests unitaires et lint) :
+
+- **Plein écran** : `Barres.kt`, posé pour tous les écrans par
+  `Apparence.installer`. Chaque écran est affiché sous les barres sur toutes
+  les versions d'Android, puis reçoit en marge intérieure la place des barres,
+  de la découpe et du clavier ; la bande du haut garde la couleur de barre
+  d'état de la palette. La dérogation `values-v35/themes.xml` est retirée, et
+  `FiabiliteTest` interdit son retour.
+- **Geste retour** : `android:enableOnBackInvokedCallback="false"` sur
+  `<application>`, pour que l'écran de garde continue de recevoir la touche
+  retour. Dérogation temporaire selon Google, à remplacer un jour par
+  `OnBackInvokedCallback`.
+- **Grands écrans** : rien à faire, l'application ne verrouille aucune
+  orientation.
+
+**Pas encore vérifié** : le rendu sur un appareil ou un émulateur Android 16.
+Aucun émulateur n'était disponible ; c'est le premier point de la recette du
+§ 8, avec un œil sur chaque écran (titres sous la barre d'état ? boutons
+sous la barre de gestes ? clavier qui cache un champ ?).
+
+**Critère d'acceptation** : `./gradlew -Pplay=true testFullDebugUnitTest
+bundleFullRelease` passe (vrai le 29/10), et la recette du § 8 passe sur
 Android 13, 14, 15 et 16.
 
 ---
@@ -206,13 +226,20 @@ niggoun s'avère être du Yanuka, il rentre sous le même accord. Pour cela, il
 faut retrouver les titres hébreux d'origine (fichiers sources reçus le
 22/09).
 
-**Mise en œuvre** (étape 3 du § 9, pas encore faite) : les 31 fichiers retirés
-quittent `main/res/raw` pour un dossier de ressources ajouté seulement aux
-constructions GitHub, et `MusicLibrary` ne liste un morceau que si sa
-ressource existe dans la construction. La construction Play se distingue
-par une propriété Gradle (`-Pplay=true`), comme `relaisVol`. Un test vérifie
-que la construction Play ne livre que les morceaux de la liste blanche
-ci-dessus.
+**Mise en œuvre — faite le 29/10.** `main/res/raw` ne contient plus que les
+morceaux livrés par Play, déclarés dans `MusiquePlay.kt`. Les 31 autres sont
+dans `src/musique_hors_play/` (fichiers et liste `MusiqueHorsPlay.kt`), que
+seule la construction GitHub ajoute ; avec `-Pplay=true`, Gradle prend
+`src/musique_play/`, où la même liste est vide. Vérifié sur l'AAB : il ne
+contient que `hamelech_basade.mp3` et `yanuka_nigoun_3.mp3`. `MusicFilesTest`
+tient la liste ; `play.yml` recontrôle l'AAB lui-même. Le site web garde les
+33 morceaux, comme avant.
+
+**Ajouter un morceau autorisé** (נעם שפייר, יניר קילינסקי) : le fichier dans
+`main/res/raw`, sa ligne dans `MusiquePlay.kt`, son titre dans
+`values/strings.xml` — ce que fait `tools/ajoute_musique.py`. Il entre alors
+dans les deux versions et dans le site. `tools/echange_musique.py`, qui
+recomposait une liste unique, est suspendu.
 
 ### 3.3 Droits sur les textes
 
@@ -266,13 +293,17 @@ appareils certifiés des régions concernées. *Déduit.*
 
 ### 5.2 Intégration continue
 
-Nouveau flux `.github/workflows/play.yml`, déclenché sur une étiquette
-`play-v*` :
+Flux `.github/workflows/play.yml` **(fait le 29/10)**, lancé à la main
+(Actions → Play → Run workflow) ou par une étiquette `play-v*` :
 
-- secrets GitHub : `KEYSTORE_BASE64`, `KEYSTORE_PASSWORD`, `KEY_ALIAS`,
-  `KEY_PASSWORD` (déjà lus par `build.gradle.kts`) ;
-- `./gradlew lint testFullReleaseUnitTest bundleFullRelease` ;
-- artefacts : `app-full-release.aab` et `mapping.txt` ;
+- secrets GitHub à créer : `PLAY_KEYSTORE_BASE64` (la clé d'envoi en base64,
+  `base64 -w0 upload-myhitbodedut.jks`), `PLAY_KEYSTORE_PASSWORD`,
+  `PLAY_KEY_ALIAS`, `PLAY_KEY_PASSWORD`. Sans eux le flux s'arrête ;
+- `./gradlew -Pplay=true testFullDebugUnitTest`, puis
+  `-Pplay=true bundleFullRelease` signé avec la clé d'envoi ;
+- contrôle de l'AAB : seuls les morceaux de `MusiquePlay.kt`, et pas de
+  signature par la clé de développement ;
+- artefact `play-N` (30 jours) : `MyHitbodedut-N.aab` et `mapping-N.txt` ;
 - envoi vers la piste de test interne : optionnel, par l'API Google Play
   Developer avec un compte de service. À défaut, envoi manuel dans la console.
 
@@ -483,7 +514,7 @@ local) :
 | --- | --- | --- | --- |
 | 1 | Décisions § 3 : vol en direct, écrits des ayants droit, 7 licences inconnues | propriétaire | — |
 | 2 | Compte développeur, paiement, vérifications | 1–3 jours | — |
-| 3 | `targetSdk 36`, clé d'envoi, flux `play.yml`, retrait éventuel du vol | 2–5 jours | 1 |
+| 3 | `targetSdk 36`, flux `play.yml`, musique de la version Play — **fait le 29/10** ; clé d'envoi et secrets — propriétaire | 1 jour | 1 |
 | 4 | Règles de confidentialité en ligne | 1 jour | 1 |
 | 5 | Contenu de l'application (§ 6), fiche (§ 7), vidéos | 2–3 jours | 3, 4 |
 | 6 | Piste de test interne, recette § 8 | 3–5 jours | 3 |

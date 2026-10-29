@@ -1,0 +1,98 @@
+# Le fichier à envoyer sur Google Play (29/10, PUBLICATION_PLAY_STORE.md § 5).
+#
+# Construit l'édition complète au format AAB, signée avec la clé d'envoi Play,
+# et la dépose en artefact avec la table de R8. L'envoi dans la Play Console
+# reste manuel. Lancé à la main (Actions → Play → Run workflow) ou par une
+# étiquette play-v* (git tag play-v1.0 && git push origin play-v1.0).
+#
+# Secrets à créer dans le dépôt (Settings → Secrets and variables → Actions) :
+#   PLAY_KEYSTORE_BASE64  la clé d'envoi, en base64 (base64 -w0 upload.jks)
+#   PLAY_KEYSTORE_PASSWORD, PLAY_KEY_ALIAS, PLAY_KEY_PASSWORD
+# Sans eux le flux s'arrête : il ne signe jamais avec la clé de développement.
+name: Play
+
+on:
+  workflow_dispatch:
+  push:
+    tags: ['play-v*']
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  aab:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Ensure Android platform 36
+        run: yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "platforms;android-36" "build-tools;36.0.0" || true
+
+      - name: Upload key
+        env:
+          PLAY_KEYSTORE_BASE64: ${{ secrets.PLAY_KEYSTORE_BASE64 }}
+        run: |
+          if [ -z "$PLAY_KEYSTORE_BASE64" ]; then
+            echo "::error::Secret PLAY_KEYSTORE_BASE64 absent : créer la clé d'envoi (PUBLICATION_PLAY_STORE.md § 5.1)."
+            exit 1
+          fi
+          echo "$PLAY_KEYSTORE_BASE64" | base64 -d > "$RUNNER_TEMP/upload.jks"
+
+      # Les tests tournent sur la construction Play : la liste vide de
+      # src/musique_play doit compiler, et MusicFilesTest tient ce qu'elle livre.
+      - name: Unit tests (Play build)
+        working-directory: android
+        env:
+          VERSION_CODE: ${{ github.run_number }}
+        run: ./gradlew --no-daemon -Pplay=true testFullDebugUnitTest
+
+      - name: Build the signed bundle
+        working-directory: android
+        env:
+          VERSION_CODE: ${{ github.run_number }}
+          KEYSTORE_PATH: ${{ runner.temp }}/upload.jks
+          KEYSTORE_PASSWORD: ${{ secrets.PLAY_KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.PLAY_KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.PLAY_KEY_PASSWORD }}
+        run: ./gradlew --no-daemon -Pplay=true bundleFullRelease
+
+      # Dernier contrôle sur le fichier lui-même, pas sur les sources : seuls
+      # les morceaux dont la diffusion publique est établie y entrent.
+      - name: Check the bundle
+        working-directory: android
+        run: |
+          aab=app/build/outputs/bundle/fullRelease/app-full-release.aab
+          mp3=$(unzip -Z1 "$aab" | grep '\.mp3$' | sed 's#.*/##' | sort | tr '\n' ' ')
+          echo "Morceaux livrés : $mp3"
+          attendus=$(grep -o 'Bundled("[a-z0-9_]*"' app/src/main/java/com/myhitbodedut/MusiquePlay.kt | sed 's/Bundled("//; s/"$/.mp3/' | sort | tr '\n' ' ')
+          echo "Attendus (MusiquePlay.kt) : $attendus"
+          [ -n "$mp3" ] && [ "$mp3" = "$attendus" ] || { echo "::error::morceaux inattendus dans l'AAB"; exit 1; }
+          # Empreinte de keystore/myhitbodedut-dev.jks, dont le mot de passe est public.
+          if keytool -printcert -jarfile "$aab" | grep -q "ED:78:70:52:56:33:9D:AB:37:28:66:83:9B:8B:62:6A"; then
+            echo "::error::AAB signé avec la clé de développement"; exit 1
+          fi
+          printf 'Taille : %s\n' "$(du -h "$aab" | cut -f1)"
+          cp "$aab" "MyHitbodedut-${{ github.run_number }}.aab"
+          cp app/build/outputs/mapping/fullRelease/mapping.txt "mapping-${{ github.run_number }}.txt"
+
+      - name: Upload bundle
+        uses: actions/upload-artifact@v4
+        with:
+          name: play-${{ github.run_number }}
+          path: |
+            android/MyHitbodedut-${{ github.run_number }}.aab
+            android/mapping-${{ github.run_number }}.txt
+          retention-days: 30

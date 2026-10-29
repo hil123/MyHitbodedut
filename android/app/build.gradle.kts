@@ -5,12 +5,12 @@ plugins {
 
 android {
     namespace = "com.myhitbodedut"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.myhitbodedut"
         minSdk = 26
-        targetSdk = 35
+        targetSdk = 36
         // Sans numéro croissant, ni Android ni un gestionnaire de mises à jour
         // ne peuvent voir qu'une version est plus récente que l'installée.
         // L'intégration continue passe le numéro d'exécution.
@@ -158,6 +158,20 @@ android {
             buildConfigField("boolean", "SUIVI_VOL", "false")
             buildConfigField("String", "RELAIS_VOL", "\"\"")
         }
+    }
+
+    /*
+     * La construction Play (29/10) : ./gradlew -Pplay=true bundleFullRelease.
+     * Elle ne livre que les morceaux dont la diffusion publique est établie
+     * (PUBLICATION_PLAY_STORE.md § 3.2). Les autres sont dans
+     * src/musique_hors_play, que seule la construction GitHub ajoute ;
+     * src/musique_play lui substitue une liste vide.
+     */
+    val play = (project.findProperty("play") as String?) == "true"
+    sourceSets.getByName("main") {
+        val musique = if (play) "src/musique_play" else "src/musique_hors_play"
+        java.srcDir("$musique/java")
+        if (!play) res.srcDir("$musique/res")
     }
 
     lint {
