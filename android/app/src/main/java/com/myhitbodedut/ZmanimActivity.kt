@@ -2,6 +2,7 @@ package com.myhitbodedut
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -40,8 +41,11 @@ class ZmanimActivity : AppCompatActivity() {
     private fun afficher() {
         val israel = Store.inIsrael(this)
         val lieu = Store.lieuZmanim(this)
-        findViewById<TextView>(R.id.zmanim_lieu).text = if (lieu == null) getString(R.string.zmanim_choisir_lieu)
-        else getString(R.string.zmanim_lieu_detail, lieu.nom, getString(if (israel) R.string.region_israel else R.string.region_diaspora))
+        // Sans lieu, la grande carte « Choisir le lieu » suffit : pas de seconde pastille dans le bandeau (29/10).
+        findViewById<TextView>(R.id.zmanim_lieu).apply {
+            visibility = if (lieu == null) View.GONE else View.VISIBLE
+            if (lieu != null) text = getString(R.string.zmanim_lieu_detail, lieu.nom, getString(if (israel) R.string.region_israel else R.string.region_diaspora))
+        }
         val aujourdhui = LocalDate.now()
         val contenu = findViewById<LinearLayout>(R.id.zmanim_contenu)
         contenu.removeAllViews()
@@ -58,8 +62,14 @@ class ZmanimActivity : AppCompatActivity() {
             })
             addView(bouton(R.string.zmanim_calendrier, 8) { startActivity(Intent(this@ZmanimActivity, CalendrierActivity::class.java)) })
         })
-        contenu.addView(carteVol())
-        contenu.addView(carteBoussole())
+        // Le vol et la boussole rejoignent les boutons (29/10) : les horaires du jour passent avant.
+        contenu.addView(LinearLayout(this).apply {
+            orientation = LinearLayout.HORIZONTAL
+            layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+                .apply { setMargins(dp(16), dp(8), dp(16), 0) }
+            addView(bouton(R.string.zmanim_bouton_vol, 0, "✈") { startActivity(Intent(this@ZmanimActivity, VolActivity::class.java)) })
+            addView(bouton(R.string.zmanim_bouton_boussole, 8, "🧭") { startActivity(Intent(this@ZmanimActivity, BoussoleActivity::class.java)) })
+        })
         contenu.addView(VueJour.horaires(this, aujourdhui, israel) { choixLieu.montrer() })
         VueJour.sousHoraires(this, aujourdhui, israel).forEach { contenu.addView(it) }
         contenu.addView(VueJour.carte(this).apply {
@@ -84,28 +94,6 @@ class ZmanimActivity : AppCompatActivity() {
             })
         }
         contenu.addView(VueJour.pied(this))
-    }
-
-    /** L'accès aux zmanim en vol (28/10) : le dernier vol saisi, ou l'invitation à en saisir un. */
-    private fun carteVol() = VueJour.carte(this).apply {
-        addView(VueJour.texte(this@ZmanimActivity, getString(R.string.vol_title), 15f, R.color.ink))
-        val vol = Store.volResume(this@ZmanimActivity)
-        addView(VueJour.texte(this@ZmanimActivity, vol?.let { (numero, de, vers) -> getString(R.string.vol_carte_vol, numero.ifEmpty { "✈" }, de, vers) }
-            ?: getString(R.string.vol_carte_sous), 13f, if (vol != null) R.color.brand else R.color.muted, haut = 2))
-        foreground = getDrawable(android.R.drawable.list_selector_background)
-        setOnClickListener { startActivity(Intent(this@ZmanimActivity, VolActivity::class.java)) }
-    }
-
-    /** La boussole de Jérusalem (28/10) : la direction depuis le lieu choisi. */
-    private fun carteBoussole() = VueJour.carte(this).apply {
-        addView(VueJour.texte(this@ZmanimActivity, getString(R.string.boussole_title), 15f, R.color.ink))
-        val lieu = Store.lieuZmanim(this@ZmanimActivity)
-        addView(VueJour.texte(this@ZmanimActivity, lieu?.let {
-            val p = DirectionJerusalem.directions(it.latitude, it.longitude).first
-            getString(R.string.boussole_par_rapport_nord, DirectionJerusalem.degres(p))
-        } ?: getString(R.string.boussole_carte_sous), 13f, if (lieu != null) R.color.brand else R.color.muted, haut = 2))
-        foreground = getDrawable(android.R.drawable.list_selector_background)
-        setOnClickListener { startActivity(Intent(this@ZmanimActivity, BoussoleActivity::class.java)) }
     }
 
     private fun choisirAllumage() {
@@ -139,13 +127,13 @@ class ZmanimActivity : AppCompatActivity() {
             .show()
     }
 
-    /** Un des trois boutons sous la carte du jour : même largeur, texte sur deux lignes au besoin. */
-    private fun bouton(texte: Int, marge: Int, action: () -> Unit) =
+    /** Un des boutons sous la carte du jour : même largeur, texte sur deux lignes au besoin ; une icône devant, au choix. */
+    private fun bouton(texte: Int, marge: Int, icone: String? = null, action: () -> Unit) =
         MaterialButton(this, null, com.google.android.material.R.attr.materialButtonOutlinedStyle).apply {
-            text = getString(texte)
+            text = icone?.let { "$it  ${getString(texte)}" } ?: getString(texte)
             // Un mot seul (« Calendrier ») tient sur une ligne, réduit s'il le faut, plutôt
             // que d'être coupé en deux (petit écran, texte agrandi ; 15/10).
-            maxLines = text.trim().split(" ").size.coerceAtMost(2)
+            maxLines = if (icone != null) 1 else text.trim().split(" ").size.coerceAtMost(2)
             letterSpacing = 0f
             androidx.core.widget.TextViewCompat.setAutoSizeTextTypeUniformWithConfiguration(
                 this, 9, 14, 1, android.util.TypedValue.COMPLEX_UNIT_SP)

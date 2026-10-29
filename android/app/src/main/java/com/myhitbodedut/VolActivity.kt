@@ -114,76 +114,133 @@ class VolActivity : AppCompatActivity() {
     private val contenu get() = findViewById<LinearLayout>(R.id.vol_contenu)
     private val locale get() = Locale.forLanguageTag(ChizukCard.language(this))
 
-    /** Le formulaire, puis une zone de résultats que la minuterie récrit seule (le champ garde le clavier). */
+    /** Le formulaire rouvert pour modifier le vol calculé ; replié en résumé sinon (29/10). */
+    private var modifier = false
+
+    /**
+     * Le formulaire, ou son résumé une fois le vol calculé, puis une zone de résultats que la
+     * minuterie récrit seule (le champ garde le clavier).
+     */
     private fun afficherFormulaire() {
         contenu.removeAllViews()
-        contenu.addView(VueJour.carte(this).apply {
-            addView(EditText(this@VolActivity).apply {
-                hint = getString(R.string.vol_numero)
-                setText(numero)
-                inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS
-                isSingleLine = true
-                filters = arrayOf(android.text.InputFilter.LengthFilter(12))
-                addTextChangedListener(object : TextWatcher {
-                    override fun beforeTextChanged(s: CharSequence?, a: Int, b: Int, c: Int) = Unit
-                    override fun onTextChanged(s: CharSequence?, a: Int, b: Int, c: Int) = Unit
-                    override fun afterTextChanged(s: Editable?) { numero = s?.toString()?.trim().orEmpty() }
-                })
-            })
-            if (BuildConfig.SUIVI_VOL) {
-                addView(MaterialButton(this@VolActivity, null, com.google.android.material.R.attr.materialButtonOutlinedStyle).apply {
-                    text = getString(if (routeEnCours) R.string.vol_route_attente else R.string.vol_route_bouton)
-                    isEnabled = !routeEnCours
-                    setOnClickListener { chercherRoute() }
-                })
-                addView(VueJour.texte(this@VolActivity, routeTexte ?: getString(R.string.vol_route_explication), 12f, R.color.muted, haut = 2).apply {
-                    accessibilityLiveRegion = View.ACCESSIBILITY_LIVE_REGION_POLITE
-                })
-            }
-            addView(champ(getString(R.string.vol_depart), depart?.let(::nomAeroport) ?: getString(R.string.vol_choisir_aeroport)) {
-                choisirAeroport { depart = it; afficherFormulaire() }
-            })
-            addView(champ(getString(R.string.vol_arrivee), arrivee?.let(::nomAeroport) ?: getString(R.string.vol_choisir_aeroport)) {
-                choisirAeroport { arrivee = it; afficherFormulaire() }
-            })
-            depart?.let { a ->
-                addView(champ(getString(R.string.vol_decollage, a.ville.ifEmpty { a.iata }), decollage?.format(formatSaisie()) ?: getString(R.string.vol_choisir_heure)) {
-                    choisirHeure(decollage) { decollage = it; afficherFormulaire() }
-                })
-            }
-            arrivee?.let { a ->
-                addView(champ(getString(R.string.vol_atterrissage, a.ville.ifEmpty { a.iata }), atterrissage?.format(formatSaisie()) ?: getString(R.string.vol_choisir_heure)) {
-                    choisirHeure(atterrissage ?: decollage) { atterrissage = it; afficherFormulaire() }
-                })
-            }
-            addView(LinearLayout(this@VolActivity).apply {
-                orientation = LinearLayout.HORIZONTAL
-                layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-                    .apply { topMargin = dp(12) }
-                addView(MaterialButton(this@VolActivity).apply {
-                    text = getString(R.string.vol_calculer)
-                    layoutParams = LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f)
-                    setOnClickListener { calculer() }
-                })
-                addView(MaterialButton(this@VolActivity, null, com.google.android.material.R.attr.materialButtonOutlinedStyle).apply {
-                    text = getString(R.string.vol_effacer)
-                    layoutParams = LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f).apply { marginStart = dp(8) }
-                    setOnClickListener { effacer() }
-                })
-            })
-        })
+        val garde = Store.vol(this, aeroports)
+        contenu.addView(if (garde != null && !modifier) carteResume(garde) else carteFormulaire())
         contenu.addView(LinearLayout(this).apply {
             id = R.id.vol_resultats
             orientation = LinearLayout.VERTICAL
         })
-        contenu.addView(VueJour.pied(this))
-        contenu.addView(VueJour.texte(this, getString(R.string.vol_source_aeroports), 12f, R.color.muted, haut = 6).apply {
-            setPadding(dp(16), 0, dp(16), 0)
-        })
-        if (BuildConfig.SUIVI_VOL) contenu.addView(VueJour.texte(this, getString(R.string.vol_source_adsbdb), 12f, R.color.muted, haut = 4).apply {
-            setPadding(dp(16), 0, dp(16), 0)
-        })
+        contenu.addView(sources())
         afficherResultats()
+    }
+
+    /** « LY81 · TLV → BKK », « Modifier », et les heures du billet. */
+    private fun carteResume(plan: Vol.Plan) = VueJour.carte(this).apply {
+        addView(LinearLayout(this@VolActivity).apply {
+            orientation = LinearLayout.HORIZONTAL
+            gravity = android.view.Gravity.CENTER_VERTICAL
+            addView(VueJour.texte(this@VolActivity, getString(R.string.vol_carte_vol, plan.numero.ifEmpty { "✈" }, plan.depart.iata, plan.arrivee.iata),
+                17f, R.color.ink, gras = true).apply { layoutParams = LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f) })
+            addView(MaterialButton(this@VolActivity, null, com.google.android.material.R.attr.borderlessButtonStyle).apply {
+                text = getString(R.string.vol_modifier)
+                setOnClickListener { modifier = true; afficherFormulaire() }
+            })
+        })
+        val fleche = if (resources.configuration.layoutDirection == View.LAYOUT_DIRECTION_RTL) "←" else "→"
+        addView(VueJour.texte(this@VolActivity, "\u2068${heureAeroport(plan.depart, plan.decollage)}\u2069 $fleche " +
+            "\u2068${heureAeroport(plan.arrivee, plan.atterrissage)}\u2069", 14f, R.color.muted, haut = 2).apply { fontFeatureSettings = "tnum" })
+    }
+
+    /** « mer. 28 19:20 TLV » : l'heure locale d'un aéroport (celle du billet). */
+    private fun heureAeroport(a: Vol.Aeroport, t: Instant): String {
+        val z = Vol.zone(a.fuseau) ?: return a.iata
+        return "${DateTimeFormatter.ofPattern("EEE d HH:mm", locale).format(t.atZone(z))} \u2066${a.iata}\u2069"
+    }
+
+    private fun carteFormulaire() = VueJour.carte(this).apply {
+        val champNumero = EditText(this@VolActivity).apply {
+            hint = getString(R.string.vol_numero)
+            setText(numero)
+            inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS
+            isSingleLine = true
+            filters = arrayOf(android.text.InputFilter.LengthFilter(12))
+            addTextChangedListener(object : TextWatcher {
+                override fun beforeTextChanged(s: CharSequence?, a: Int, b: Int, c: Int) = Unit
+                override fun onTextChanged(s: CharSequence?, a: Int, b: Int, c: Int) = Unit
+                override fun afterTextChanged(s: Editable?) { numero = s?.toString()?.trim().orEmpty() }
+            })
+        }
+        if (BuildConfig.SUIVI_VOL) {
+            // La loupe au bout du champ cherche la route du numéro (RouteVol) ; une ligne dit ce qui part.
+            champNumero.setPaddingRelative(champNumero.paddingStart, champNumero.paddingTop, dp(52), champNumero.paddingBottom)
+            addView(android.widget.FrameLayout(this@VolActivity).apply {
+                addView(champNumero, android.widget.FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
+                addView(android.widget.ImageButton(this@VolActivity).apply {
+                    setImageResource(R.drawable.ic_loupe)
+                    imageTintList = android.content.res.ColorStateList.valueOf(Apparence.couleur(this@VolActivity, R.color.brand))
+                    background = getDrawable(android.R.drawable.list_selector_background)
+                    contentDescription = getString(R.string.vol_route_bouton)
+                    isEnabled = !routeEnCours
+                    alpha = if (routeEnCours) 0.4f else 1f
+                    setOnClickListener { chercherRoute() }
+                }, android.widget.FrameLayout.LayoutParams(dp(48), dp(48), android.view.Gravity.END or android.view.Gravity.CENTER_VERTICAL))
+            })
+            addView(VueJour.texte(this@VolActivity, routeTexte ?: getString(if (routeEnCours) R.string.vol_route_attente else R.string.vol_route_aide),
+                12f, R.color.muted, haut = 2).apply { accessibilityLiveRegion = View.ACCESSIBILITY_LIVE_REGION_POLITE })
+        } else addView(champNumero)
+        addView(champ(getString(R.string.vol_depart), depart?.let(::nomAeroport) ?: getString(R.string.vol_choisir_aeroport)) {
+            choisirAeroport { depart = it; afficherFormulaire() }
+        })
+        addView(champ(getString(R.string.vol_arrivee), arrivee?.let(::nomAeroport) ?: getString(R.string.vol_choisir_aeroport)) {
+            choisirAeroport { arrivee = it; afficherFormulaire() }
+        })
+        depart?.let { a ->
+            addView(champ(getString(R.string.vol_decollage, a.ville.ifEmpty { a.iata }), decollage?.format(formatSaisie()) ?: getString(R.string.vol_choisir_heure)) {
+                choisirHeure(decollage) { decollage = it; afficherFormulaire() }
+            })
+        }
+        arrivee?.let { a ->
+            addView(champ(getString(R.string.vol_atterrissage, a.ville.ifEmpty { a.iata }), atterrissage?.format(formatSaisie()) ?: getString(R.string.vol_choisir_heure)) {
+                choisirHeure(atterrissage ?: decollage) { atterrissage = it; afficherFormulaire() }
+            })
+        }
+        // « Calculer » sur toute la largeur ; « Effacer le vol », rare et destructif, en simple lien.
+        addView(MaterialButton(this@VolActivity).apply {
+            text = getString(R.string.vol_calculer)
+            layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply { topMargin = dp(12) }
+            setOnClickListener { calculer() }
+        })
+        addView(MaterialButton(this@VolActivity, null, com.google.android.material.R.attr.borderlessButtonStyle).apply {
+            text = android.text.SpannableString(getString(R.string.vol_effacer)).apply { setSpan(android.text.style.UnderlineSpan(), 0, length, 0) }
+            setTextColor(Apparence.couleur(this@VolActivity, R.color.muted))
+            layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply { gravity = android.view.Gravity.CENTER_HORIZONTAL }
+            setOnClickListener { effacer() }
+        })
+    }
+
+    /** La méthode, les aéroports, les routes : repliés sous « Méthode et sources ». */
+    private fun sources() = LinearLayout(this).apply {
+        orientation = LinearLayout.VERTICAL
+        setPadding(dp(16), dp(8), dp(16), 0)
+        val detail = LinearLayout(this@VolActivity).apply {
+            orientation = LinearLayout.VERTICAL
+            visibility = View.GONE
+            addView(VueJour.texte(this@VolActivity, getString(R.string.zmanim_a_valider), 12f, R.color.muted))
+            addView(VueJour.texte(this@VolActivity, getString(R.string.vol_source_aeroports), 12f, R.color.muted, haut = 6))
+            if (BuildConfig.SUIVI_VOL) addView(VueJour.texte(this@VolActivity, getString(R.string.vol_source_adsbdb), 12f, R.color.muted, haut = 4))
+        }
+        addView(depliant(getString(R.string.vol_sources), detail, R.color.muted))
+        addView(detail)
+    }
+
+    /** « Titre ⌄ » : un toucher montre ou cache `detail`. */
+    private fun depliant(titre: String, detail: View, couleur: Int = R.color.brand) = VueJour.texte(this, "$titre  ⌄", 14f, couleur, gras = true).apply {
+        minHeight = dp(44)
+        gravity = android.view.Gravity.CENTER_VERTICAL or android.view.Gravity.START
+        setOnClickListener {
+            val ouvert = detail.visibility != View.VISIBLE
+            detail.visibility = if (ouvert) View.VISIBLE else View.GONE
+            text = "$titre  ${if (ouvert) "⌃" else "⌄"}"
+        }
     }
 
     private fun champ(etiquette: String, valeur: String, action: () -> Unit) = LinearLayout(this).apply {
@@ -264,6 +321,8 @@ class VolActivity : AppCompatActivity() {
         val plan = Vol.Plan(numero, d, a, i1, i2, garde?.releve, garde?.sourceReleve ?: Vol.SourceReleve.GPS)
         Vol.verifier(plan)?.let { return message(getString(invalide(it))) }
         Store.setVol(this, plan)
+        modifier = false
+        afficherFormulaire()
         lancer(plan)
     }
 
@@ -302,6 +361,7 @@ class VolActivity : AppCompatActivity() {
         decollage = null
         atterrissage = null
         calcul = null
+        modifier = false
         afficherFormulaire()
     }
 
@@ -394,7 +454,14 @@ class VolActivity : AppCompatActivity() {
         addView(VueJour.texte(this@VolActivity, getString(R.string.vol_rappels_note), 12f, R.color.muted, haut = 10))
     }
 
+    /** La prière du moment mise en avant (29/10) : fond vert pâle, nom en grand, compte à rebours en vert. */
     private fun cartePriere(c: Vol.Calcul, maintenant: Instant) = VueJour.carte(this).apply {
+        val marque = Apparence.couleur(this@VolActivity, R.color.brand)
+        background = android.graphics.drawable.GradientDrawable().apply {
+            cornerRadius = dp(20).toFloat()
+            setColor(androidx.core.graphics.ColorUtils.blendARGB(Apparence.couleur(this@VolActivity, R.color.card), marque, 0.09f))
+            setStroke(dp(1), androidx.core.graphics.ColorUtils.blendARGB(Apparence.couleur(this@VolActivity, R.color.line), marque, 0.28f))
+        }
         addView(VueJour.texte(this@VolActivity, getString(R.string.vol_priere_titre), 13f, R.color.muted))
         val p = VolPriere.priere(c, maintenant)
         if (p == null) {
@@ -407,17 +474,25 @@ class VolActivity : AppCompatActivity() {
             "minha" -> R.string.widget_zmanim_minha
             else -> R.string.widget_zmanim_arvit
         }
-        addView(VueJour.texte(this@VolActivity, getString(nom), 24f, R.color.brand, gras = true, haut = 4))
+        addView(VueJour.texte(this@VolActivity, getString(nom), 30f, R.color.brand, gras = true, haut = 4))
         if (limite == null) {
             addView(VueJour.texte(this@VolActivity, getString(R.string.vol_sans_limite), 14f, R.color.ink, haut = 2))
         } else {
             addView(VueJour.texte(this@VolActivity, getString(R.string.vol_jusqua, deuxHeures(c.plan, limite)), 14f, R.color.ink, haut = 2))
             val minutes = Duration.between(maintenant, limite).toMinutes().toInt().coerceAtLeast(0)
-            addView(VueJour.texte(this@VolActivity, getString(R.string.vol_dans, JaugeSemaine.dureeCourte(minutes)), 18f, R.color.ink, gras = true, haut = 4))
+            addView(VueJour.texte(this@VolActivity, getString(R.string.vol_dans, dureeEnMots(minutes)), 22f, R.color.brand, gras = true, haut = 4))
             c.enVol.firstOrNull { it.instant == limite }?.ecartSiRetard?.let {
                 addView(VueJour.texte(this@VolActivity, ecart(it), 12f, R.color.muted, haut = 2))
             }
         }
+    }
+
+    /** « 10 minutes », « 1 minute », « 1 h 11 min », « 2 h » : le compte à rebours en toutes lettres. */
+    private fun dureeEnMots(minutes: Int): String = when {
+        minutes == 1 -> getString(R.string.vol_duree_une_minute)
+        minutes < 60 -> getString(R.string.vol_duree_minutes, minutes.toString())
+        minutes % 60 == 0 -> getString(R.string.vol_duree_heures, (minutes / 60).toString())
+        else -> getString(R.string.vol_duree_heures_minutes, (minutes / 60).toString(), (minutes % 60).toString())
     }
 
     private fun ecart(d: Duration) = getString(if (calcul?.fiabilite != null && calcul?.fiabilite != Vol.Fiabilite.ROUTE_PREVUE) R.string.vol_ecart_gps else R.string.vol_ecart,
@@ -488,9 +563,6 @@ class VolActivity : AppCompatActivity() {
      */
     private fun ajouterSuiviDirect(carte: LinearLayout) {
         val actif = Store.suiviDirect(this)
-        carte.addView(VueJour.texte(this, getString(R.string.vol_direct_titre), 15f, R.color.ink, haut = 14))
-        val relais = BuildConfig.RELAIS_VOL.startsWith("https://")
-        carte.addView(VueJour.texte(this, getString(if (relais) R.string.vol_direct_explication else R.string.vol_direct_explication_opensky), 12f, R.color.muted, haut = 2))
         carte.addView(com.google.android.material.materialswitch.MaterialSwitch(this).apply {
             text = getString(R.string.vol_direct_activer)
             isChecked = actif
@@ -598,14 +670,31 @@ class VolActivity : AppCompatActivity() {
         lancer(nouveau)
     }
 
+    /**
+     * La position (29/10) : une étiquette pour la route prévue, le détail du calcul à déplier,
+     * puis « Préciser la position » (GPS, suivi en direct).
+     */
     private fun carteFiabilite(c: Vol.Calcul) = VueJour.carte(this).apply {
-        addView(VueJour.texte(this@VolActivity, getString(R.string.vol_fiabilite_titre), 13f, R.color.muted))
         val r = c.plan.releve
-        addView(VueJour.texte(this@VolActivity, when {
-            r == null || c.fiabilite == Vol.Fiabilite.ROUTE_PREVUE -> getString(R.string.vol_fiabilite)
-            else -> getString(if (c.fiabilite == Vol.Fiabilite.RELEVE_DIRECT) R.string.vol_fiabilite_direct else R.string.vol_fiabilite_gps,
-                deuxHeures(c.plan, r.instant), position(Vol.Evenement("", r.instant, r.latitude, r.longitude)))
-        }, 14f, R.color.ink, haut = 4))
+        if (r == null || c.fiabilite == Vol.Fiabilite.ROUTE_PREVUE) {
+            addView(VueJour.texte(this@VolActivity, getString(R.string.vol_fiabilite_court), 14f, R.color.ink, gras = true).apply {
+                layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+                setPadding(dp(12), dp(6), dp(12), dp(6))
+                background = android.graphics.drawable.GradientDrawable().apply {
+                    cornerRadius = dp(999).toFloat()
+                    setColor(androidx.core.graphics.ColorUtils.setAlphaComponent(Apparence.couleur(this@VolActivity, R.color.brand), 26))
+                }
+            })
+        } else addView(VueJour.texte(this@VolActivity, getString(if (c.fiabilite == Vol.Fiabilite.RELEVE_DIRECT) R.string.vol_fiabilite_direct else R.string.vol_fiabilite_gps,
+            deuxHeures(c.plan, r.instant), position(Vol.Evenement("", r.instant, r.latitude, r.longitude))), 14f, R.color.ink))
+        val detail = VueJour.texte(this@VolActivity, getString(R.string.vol_fiabilite), 14f, R.color.muted).apply { visibility = View.GONE }
+        addView(depliant(getString(R.string.vol_comment_calcule), detail))
+        addView(detail)
+        addView(View(this@VolActivity).apply {
+            setBackgroundColor(Apparence.couleur(this@VolActivity, R.color.line))
+            layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, dp(1)).apply { topMargin = dp(8) }
+        })
+        addView(VueJour.texte(this@VolActivity, getString(R.string.vol_preciser_titre), 15f, R.color.ink, gras = true, haut = 12))
         addView(MaterialButton(this@VolActivity, null, com.google.android.material.R.attr.materialButtonOutlinedStyle).apply {
             text = getString(if (gpsEnCours) R.string.vol_gps_attente else R.string.vol_gps)
             isEnabled = !gpsEnCours
@@ -633,19 +722,97 @@ class VolActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * La frise du vol (29/10) : du décollage à l'atterrissage, une icône par zman dans la couleur de
+     * son ciel (nuit, aube, jour, coucher), et « maintenant » à sa place. La phrase du retard est
+     * dite une fois en tête ; l'écart d'une ligne n'y figure que s'il s'éloigne de 5 min ou plus.
+     */
     private fun carteZmanim(c: Vol.Calcul) = VueJour.carte(this).apply {
         addView(VueJour.texte(this@VolActivity, getString(R.string.vol_en_vol_titre), 13f, R.color.muted))
         if (c.enVol.isEmpty()) {
             addView(VueJour.texte(this@VolActivity, getString(R.string.vol_aucun_zman), 14f, R.color.ink, haut = 4))
             return@apply
         }
+        val ecarts = c.enVol.mapNotNull { it.ecartSiRetard }.sorted()
+        val median = ecarts.getOrNull(ecarts.size / 2)
+        if (median != null) addView(VueJour.texte(this@VolActivity, getString(R.string.vol_frise_retard), 13f, R.color.muted, haut = 2))
+        val frise = LinearLayout(this@VolActivity).apply {
+            orientation = LinearLayout.VERTICAL
+            layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply { topMargin = dp(12) }
+        }
+        addView(frise)
+        val lignes = mutableListOf<View>()
+        lignes += pointFrise(Ciel.BOUT, getString(R.string.vol_frise_decollage, c.plan.depart.iata), c.plan, c.plan.decollage, null)
+        val maintenant = Instant.now()
+        var place = maintenant.isBefore(c.plan.decollage) || maintenant.isAfter(c.plan.atterrissage)
         c.enVol.forEach { e ->
-            addView(VueJour.texte(this@VolActivity, Libelles.res("zman_${e.cle}")?.let(::getString) ?: e.cle, 15f, R.color.ink, haut = 12))
-            addView(VueJour.texte(this@VolActivity, deuxHeures(c.plan, e.instant), 16f, R.color.ink, gras = true, haut = 2).apply {
-                fontFeatureSettings = "tnum"
-            })
-            val details = listOfNotNull(position(e), e.ecartSiRetard?.let(::ecart)).joinToString(" · ")
-            addView(VueJour.texte(this@VolActivity, details, 12f, R.color.muted, haut = 1))
+            if (!place && maintenant.isBefore(e.instant)) { lignes += pointFrise(Ciel.MAINTENANT, getString(R.string.vol_frise_maintenant), c.plan, null, null); place = true }
+            val ecartLigne = e.ecartSiRetard?.takeIf { median != null && it.minus(median).abs() >= Duration.ofMinutes(5) }?.let(::ecart)
+            lignes += pointFrise(CIEL[e.cle] ?: Ciel.JOUR, Libelles.res("zman_${e.cle}")?.let(::getString) ?: e.cle, c.plan, e.instant,
+                listOfNotNull(position(e), ecartLigne).joinToString(" · "))
+        }
+        lignes += pointFrise(Ciel.BOUT, getString(R.string.vol_frise_atterrissage, c.plan.arrivee.iata), c.plan, c.plan.atterrissage, null)
+        lignes.forEachIndexed { i, v ->
+            if (i == lignes.lastIndex) v.findViewWithTag<View>(TRAIT)?.visibility = View.INVISIBLE
+            frise.addView(v)
+        }
+    }
+
+    private enum class Ciel(val icone: Int, val couleur: Int) {
+        NUIT(R.drawable.ic_frise_nuit, 0xFF3E4F86.toInt()), AUBE(R.drawable.ic_frise_aube, 0xFFD4856B.toInt()),
+        JOUR(R.drawable.ic_frise_jour, 0xFFC99A2E.toInt()), CREPUSCULE(R.drawable.ic_frise_crepuscule, 0xFFB5543A.toInt()),
+        BOUT(R.drawable.ic_frise_avion, 0), MAINTENANT(0, 0),
+    }
+
+    /** Une ligne de la frise : l'icône sur son trait, le nom, l'heure du départ en gras, celle de l'arrivée plus légère. */
+    private fun pointFrise(ciel: Ciel, nom: String, plan: Vol.Plan, t: Instant?, detail: String?): View {
+        val marque = Apparence.couleur(this, R.color.brand)
+        val teinte = if (ciel.couleur == 0) marque else ciel.couleur
+        val gauche = android.widget.FrameLayout(this).apply {
+            addView(View(this@VolActivity).apply {
+                tag = TRAIT
+                setBackgroundColor(Apparence.couleur(this@VolActivity, R.color.line))
+            }, android.widget.FrameLayout.LayoutParams(dp(2), ViewGroup.LayoutParams.MATCH_PARENT, android.view.Gravity.CENTER_HORIZONTAL).apply { topMargin = dp(30) })
+            addView(if (ciel == Ciel.MAINTENANT) View(this@VolActivity).apply {
+                background = android.graphics.drawable.GradientDrawable().apply {
+                    shape = android.graphics.drawable.GradientDrawable.OVAL
+                    setColor(Apparence.couleur(this@VolActivity, R.color.card))
+                    setStroke(dp(3), marque)
+                }
+            } else android.widget.ImageView(this@VolActivity).apply {
+                setImageResource(ciel.icone)
+                imageTintList = android.content.res.ColorStateList.valueOf(teinte)
+                scaleType = android.widget.ImageView.ScaleType.CENTER
+                background = android.graphics.drawable.GradientDrawable().apply {
+                    shape = android.graphics.drawable.GradientDrawable.OVAL
+                    setColor(androidx.core.graphics.ColorUtils.blendARGB(Apparence.couleur(this@VolActivity, R.color.card), teinte, 0.14f))
+                }
+            }, if (ciel == Ciel.MAINTENANT) android.widget.FrameLayout.LayoutParams(dp(16), dp(16), android.view.Gravity.CENTER_HORIZONTAL).apply { topMargin = dp(7) }
+            else android.widget.FrameLayout.LayoutParams(dp(30), dp(30), android.view.Gravity.CENTER_HORIZONTAL))
+        }
+        val corps = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            setPaddingRelative(dp(14), 0, 0, dp(14))
+            if (ciel == Ciel.MAINTENANT) {
+                addView(VueJour.texte(this@VolActivity, nom.uppercase(locale), 14f, R.color.brand, gras = true, haut = 4).apply { letterSpacing = 0.06f })
+            } else {
+                addView(VueJour.texte(this@VolActivity, nom, 15f, R.color.ink))
+                if (t != null) {
+                    val parties = deuxHeures(plan, t).split(" · ", limit = 2)
+                    val heure = android.text.SpannableStringBuilder(parties[0]).apply {
+                        setSpan(android.text.style.StyleSpan(android.graphics.Typeface.BOLD), 0, length, 0)
+                        setSpan(android.text.style.ForegroundColorSpan(Apparence.couleur(this@VolActivity, R.color.ink)), 0, length, 0)
+                        parties.getOrNull(1)?.let { append(" · $it") }
+                    }
+                    addView(VueJour.texte(this@VolActivity, heure, 16f, R.color.muted, haut = 2).apply { fontFeatureSettings = "tnum" })
+                }
+                if (!detail.isNullOrEmpty()) addView(VueJour.texte(this@VolActivity, detail, 12f, R.color.muted, haut = 1))
+            }
+        }
+        return LinearLayout(this).apply {
+            orientation = LinearLayout.HORIZONTAL
+            addView(gauche, LinearLayout.LayoutParams(dp(30), ViewGroup.LayoutParams.MATCH_PARENT))
+            addView(corps, LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
         }
     }
 
@@ -660,6 +827,9 @@ class VolActivity : AppCompatActivity() {
     private fun dp(v: Int) = VueJour.dp(this, v)
 
     private companion object {
+        const val TRAIT = "trait"
+        val CIEL = mapOf("chatsot_layla" to Ciel.NUIT, "tset" to Ciel.NUIT, "tset_rt" to Ciel.NUIT,
+            "alot" to Ciel.AUBE, "misheyakir" to Ciel.AUBE, "netz" to Ciel.AUBE, "chkia" to Ciel.CREPUSCULE)
         const val RAFRAICHISSEMENT_MS = 30_000L
         const val GPS_MS = 90_000L
         const val ETAT_NUMERO = "vol_numero"
