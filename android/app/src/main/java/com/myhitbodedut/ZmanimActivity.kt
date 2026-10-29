@@ -2,6 +2,7 @@ package com.myhitbodedut
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -38,8 +39,11 @@ class ZmanimActivity : AppCompatActivity() {
     private fun afficher() {
         val israel = Store.inIsrael(this)
         val lieu = Store.lieuZmanim(this)
-        findViewById<TextView>(R.id.zmanim_lieu).text = if (lieu == null) getString(R.string.zmanim_choisir_lieu)
-        else getString(R.string.zmanim_lieu_detail, lieu.nom, getString(if (israel) R.string.region_israel else R.string.region_diaspora))
+        // Sans lieu, la grande carte « Choisir le lieu » suffit : pas de seconde pastille dans le bandeau (29/10).
+        findViewById<TextView>(R.id.zmanim_lieu).apply {
+            visibility = if (lieu == null) View.GONE else View.VISIBLE
+            if (lieu != null) text = getString(R.string.zmanim_lieu_detail, lieu.nom, getString(if (israel) R.string.region_israel else R.string.region_diaspora))
+        }
         val aujourdhui = LocalDate.now()
         val contenu = findViewById<LinearLayout>(R.id.zmanim_contenu)
         contenu.removeAllViews()
@@ -52,8 +56,8 @@ class ZmanimActivity : AppCompatActivity() {
             Acces(R.string.zmanim_bouton_hilloulot, R.drawable.char_tehilim) {
                 startActivity(Intent(this, HilloulotActivity::class.java).putExtra(HilloulotActivity.EXTRA_DATE, aujourdhui.toString()))
             },
-            Acces(R.string.vol_title, R.drawable.char_walking) { startActivity(Intent(this, VolActivity::class.java)) },
-            Acces(R.string.boussole_title, R.drawable.char_standing_back) { startActivity(Intent(this, BoussoleActivity::class.java)) },
+            Acces(R.string.zmanim_bouton_vol, R.drawable.char_walking) { startActivity(Intent(this, VolActivity::class.java)) },
+            Acces(R.string.zmanim_bouton_boussole, R.drawable.char_standing_back) { startActivity(Intent(this, BoussoleActivity::class.java)) },
         )))
         contenu.addView(VueJour.horaires(this, aujourdhui, israel) { choixLieu.montrer() })
         VueJour.sousHoraires(this, aujourdhui, israel).forEach { contenu.addView(it) }
@@ -173,7 +177,6 @@ class ZmanimActivity : AppCompatActivity() {
             .show()
     }
 
-    /** Un des trois boutons sous la carte du jour : même largeur, texte sur deux lignes au besoin. */
     private fun dp(v: Int) = (v * resources.displayMetrics.density).toInt()
 
     private companion object {

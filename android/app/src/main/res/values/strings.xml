@@ -636,6 +636,11 @@
     <string name="zmanim_position_pres">Ma position · près de %1$s</string>
     <string name="zmanim_position_ancienne">Pas de position fraîche : la dernière connue est utilisée.</string>
     <string name="zmanim_calendrier">Calendrier</string>
+    <string name="zmanim_bouton_vol">En vol</string>
+    <string name="zmanim_bouton_boussole">Boussole prière</string>
+    <string name="boussole_vide_titre">Où êtes-vous ?</string>
+    <string name="boussole_vide_position">Utiliser ma position</string>
+    <string name="boussole_vide_ville">ou choisir une ville</string>
     <string name="zmanim_absent">n’a pas lieu ce jour</string>
     <string name="zmanim_erreur">calcul impossible</string>
     <string name="zmanim_a_valider">La méthode est écrite sous chaque horaire. Calcul au niveau de la mer, sur l’appareil, sans réseau.</string>
@@ -867,7 +872,7 @@
     <string name="trophees_aucun_gagne">Pas encore de trophée : le premier arrive avec votre première hitbodedout.</string>
     <string name="trophees_tous">Tous les trophées sont gagnés !</string>
     <string name="trophees_compte">%1$d sur %2$d</string>
-    <string name="trophees_paliers">🏆  Trophées et paliers</string>
+    <string name="trophees_paliers">🏆  Trophées</string>
     <string name="channel_celebration">Paliers et trophées</string>
     <string name="channel_celebration_description">Une fête quand un palier ou un trophée est atteint</string>
     <string name="reset_title">Réinitialiser l’application</string>
@@ -1175,6 +1180,20 @@
     <string name="vol_carte_sous">Saisissez un vol : les horaires sont calculés sur la route prévue, sur l’appareil.</string>
     <string name="vol_carte_vol">%1$s · %2$s → %3$s</string>
     <string name="vol_numero">Numéro de vol (facultatif)</string>
+    <string name="vol_duree_heures">%1$s h</string>
+    <string name="vol_duree_heures_minutes">%1$s h %2$s min</string>
+    <string name="vol_duree_une_minute">1 minute</string>
+    <string name="vol_duree_minutes">%1$s minutes</string>
+    <string name="vol_sources">Méthode et sources</string>
+    <string name="vol_frise_decollage">Décollage %1$s</string>
+    <string name="vol_frise_atterrissage">Atterrissage %1$s</string>
+    <string name="vol_frise_maintenant">Maintenant</string>
+    <string name="vol_frise_retard">Si le vol est retardé, les horaires changeront en conséquence.</string>
+    <string name="vol_fiabilite_court">📍 Estimation sur la route prévue</string>
+    <string name="vol_comment_calcule">Comment c’est calculé ?</string>
+    <string name="vol_preciser_titre">Préciser la position</string>
+    <string name="vol_route_aide">La loupe 🔍 remplit l’arrivée : seul le numéro part vers adsbdb.com. Les heures restent à saisir, celles du billet.</string>
+    <string name="vol_modifier">Modifier</string>
     <string name="vol_route_bouton">Trouver l’arrivée par le numéro</string>
     <string name="vol_route_attente">Recherche du vol…</string>
     <string name="vol_route_explication">Au toucher, seul le numéro du vol est envoyé à adsbdb.com (gratuit, sans compte). Il rend les escales connues et l’indicatif radio, pas les heures : elles restent à saisir, celles du billet.</string>
@@ -1258,8 +1277,7 @@
     <string name="vol_erreur_serveur">erreur du serveur %1$d</string>
     <string name="vol_direct_inactif">Le relais du suivi n’est pas encore en service dans cette version.</string>
     <string name="vol_fiabilite_direct">Route recalée sur la position reçue d’OpenSky Network à %1$s (%2$s), puis grand cercle jusqu’à l’arrivée, à vitesse constante. Zmanim du point sous l’avion, au niveau de la mer, calculés sur l’appareil.</string>
-    <string name="vol_source_opensky">Données aéronautiques : OpenSky Network (opensky-network.org)</string>
-    <string name="vol_direct_avertissement">Ne sert ni à la navigation ni à la sécurité : la couverture d’OpenSky varie selon la région et l’altitude, et certains avions n’y sont pas vus.</string>
+    <string name="vol_source_opensky">Données aéronautiques : OpenSky Network (opensky-network.org)</string>
     <string name="vol_rappels_titre">Rappels pendant le vol</string>
     <string name="vol_rappels_activer">Me rappeler pendant le vol</string>
     <string name="vol_rappels_aucun">Plus aucun rappel pendant ce vol.</string>
@@ -1279,8 +1297,8 @@
     <string name="vol_source_aeroports">Aéroports : OurAirports (domaine public) ; fuseaux : timezone-boundary-builder (ODbL, © contributeurs OpenStreetMap) ; noms en hébreu et en français : Wikidata (CC0)</string>
 
     <!-- La boussole de Jérusalem (28/10, design C). -->
-    <string name="boussole_title">Direction de Jérusalem</string>
-    <string name="boussole_carte_sous">Choisissez un lieu : le hassid se tourne vers Jérusalem.</string>
+    <string name="boussole_title">Vers Jérusalem</string>
+    <string name="boussole_carte_sous">Choisissez un lieu : le hassid se tourne vers Jérusalem.</string>
     <string name="boussole_face">Face à Jérusalem</string>
     <string name="boussole_droite">Tournez à droite de %1$d°</string>
     <string name="boussole_gauche">Tournez à gauche de %1$d°</string>
