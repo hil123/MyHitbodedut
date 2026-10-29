@@ -230,6 +230,11 @@ const ouvrirTexte = (titre, y) => async (p) => {
 await capture('priere-aeree-he', { langue: 'he', ecran: 'siddur', actions: ouvrirTexte('תפלת שחרית', 1400) });
 await capture('birkat-cheva-he', { langue: 'he', ecran: 'siddur', actions: ouvrirTexte('ברכת המזון', -1) });
 await capture('birkat-zimun-fr', { langue: 'fr', ecran: 'siddur', actions: ouvrirTexte('ברכת המזון', 560) });
+// Le 29/10 : Méèn chaloch, les ajouts de fêtes repliés (le 29/09 est 'Hol hamoed Soukkot :
+// Soukkot du jour, le reste replié) ; le meteg masqué dans la police par défaut (עָלֶֽיהָ).
+for (const nusah of ['edot', 'sefard', 'ashkenaz']) {
+  await capture(`meen-chaloch-${nusah}`, { langue: 'he', ecran: 'siddur', extra: { siddur_nusah: nusah }, actions: ouvrirTexte('מעין שלש', 250) });
+}
 // Le capteur simulé : quarante lectures au même cap, pour que le lissage s'y pose.
 const cap = (nord) => async (p) => {
   await p.waitForSelector('.boussole-scene svg');

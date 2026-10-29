@@ -80,8 +80,14 @@ object PoliceHebraique {
      * Mesuré sur les fichiers de res/font avec fontTools (28/10) : Noto Serif
      * Hebrew et Noto Rashi ont les 31 טעמים et les 24 points ; les autres non.
      * La police du téléphone (SANS) varie selon l'appareil : laissée telle quelle.
+     *
+     * Le meteg (U+05BD) est masqué aussi dans Noto Serif Hebrew et Noto Rashi :
+     * il s'y pose au même point que la voyelle, un patah devient un faux qamats
+     * et un segol se brouille (capture du 29/10, עָלֶֽיהָ dans Méèn chaloch).
      */
     private val ABSENTS: Map<Police, Masque> = mapOf(
+        Police.SERIF to Masque("\u05BD"),
+        Police.RACHI to Masque("\u05BD"),
         Police.FRANK to Masque(TEAMIM + "\u05C4\u05C5"),
         Police.DAVID to Masque(TEAMIM + "\u05BD"),
         Police.MIRIAM to Masque(TEAMIM + "\u05BD\u05BF\u05C4\u05C5"),
