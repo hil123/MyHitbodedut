@@ -228,6 +228,14 @@ button.corps { border: 0; background: none; padding: 0; text-align: start; curso
   mask: url(icones/ic_chevron.svg) center / contain no-repeat;
 }
 [dir="rtl"] .chevron { transform: scaleX(-1); }
+/* Les accès de l'écran Zmanim en tuiles (29/10, ZmanimActivity.tuiles). */
+.tuiles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 12px; }
+.tuile {
+  display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 12px 6px 10px;
+  background: var(--card); border: 1px solid var(--line); border-radius: 20px; cursor: pointer;
+  color: var(--ink); font: inherit; font-size: 13px; font-weight: 700; line-height: 1.25; text-align: center;
+}
+.tuile img { width: 56px; height: 56px; object-fit: contain; padding: 4px; border-radius: 14px; background: var(--mint); }
 /* Ce que la version web ne sait pas encore faire : visible, mais inerte. */
 .a-venir { opacity: 0.45; pointer-events: none; }
 
@@ -748,9 +756,6 @@ input[type="range"] { width: 100%; accent-color: var(--brand); }
 .jour-sous-titre { margin: 12px 0 0px; font-size: 12px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); }
 .jour-ajouts { margin: 0; color: var(--ink); font-size: 15px; line-height: 1.5; }
 .bouton-calendrier { margin: 12px 0; }
-/* Écran Zmanim (14/10) : trois boutons sous le jour, puis les horaires ; Levana, hilloula, halakha après. */
-.boutons-jour { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin: 12px 0; }
-.boutons-jour .secondaire { width: 100%; min-width: 0; padding: 12px 4px; font-size: 14px; white-space: normal; line-height: 1.2; }
 .carte-sous-horaires { margin-top: 12px; }
 .carte-sous-horaires > .levana, .carte-sous-horaires > .jour-sous-titre:first-child { margin-top: 0; }
 /* Le livre de la halakha (14/10) : trois puces, une cochée. */

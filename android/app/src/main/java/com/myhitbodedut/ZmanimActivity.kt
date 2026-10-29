@@ -6,15 +6,13 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import com.google.android.material.button.MaterialButton
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import java.time.LocalDate
 
 /**
  * L'onglet Zmanim (demande du 10/10) : la date hébraïque du jour, ce qu'elle
- * change aux prières, les boutons halakha, hilloulot et calendrier, l'accès
- * aux zmanim en vol (28/10, VolActivity) et à la boussole de Jérusalem
- * (BoussoleActivity), puis tous les horaires de la
+ * change aux prières, cinq tuiles (calendrier, halakha, hilloulot, zmanim en
+ * vol — VolActivity —, boussole de Jérusalem — BoussoleActivity), puis tous les horaires de la
  * journée, chacun avec sa méthode (ZMANIM.md) ; ensuite
  * Birkat haLevana, la hilloula et la halakha du jour (14/10). Le lieu se choisit sur le
  * bandeau ; l'allumage des bougies, en bas de page.
@@ -45,21 +43,18 @@ class ZmanimActivity : AppCompatActivity() {
         val aujourdhui = LocalDate.now()
         val contenu = findViewById<LinearLayout>(R.id.zmanim_contenu)
         contenu.removeAllViews()
-        // Le jour seul, puis trois boutons, puis les horaires (14/10, « trop de choses avant les זמנים ») :
-        // Levana, hilloula et halakha viennent après, chacune masquable dans les réglages.
+        // Le jour seul, les accès en tuiles, puis les horaires (29/10, option C : une seule forme de
+        // bouton au lieu de trois). Levana, hilloula et halakha viennent après, masquables dans les réglages.
         contenu.addView(VueJour.carteJour(this, aujourdhui, israel, complet = false))
-        contenu.addView(LinearLayout(this).apply {
-            orientation = LinearLayout.HORIZONTAL
-            layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-                .apply { setMargins(dp(16), dp(12), dp(16), 0) }
-            addView(bouton(R.string.zmanim_bouton_halakha, 0) { VueJour.ouvrirHalakha(this@ZmanimActivity, aujourdhui) })
-            addView(bouton(R.string.zmanim_bouton_hilloulot, 8) {
-                startActivity(Intent(this@ZmanimActivity, HilloulotActivity::class.java).putExtra(HilloulotActivity.EXTRA_DATE, aujourdhui.toString()))
-            })
-            addView(bouton(R.string.zmanim_calendrier, 8) { startActivity(Intent(this@ZmanimActivity, CalendrierActivity::class.java)) })
-        })
-        contenu.addView(carteVol())
-        contenu.addView(carteBoussole())
+        contenu.addView(tuiles(listOf(
+            Acces(R.string.zmanim_calendrier, R.drawable.char_writing) { startActivity(Intent(this, CalendrierActivity::class.java)) },
+            Acces(R.string.zmanim_bouton_halakha, R.drawable.char_torah) { VueJour.ouvrirHalakha(this, aujourdhui) },
+            Acces(R.string.zmanim_bouton_hilloulot, R.drawable.char_tehilim) {
+                startActivity(Intent(this, HilloulotActivity::class.java).putExtra(HilloulotActivity.EXTRA_DATE, aujourdhui.toString()))
+            },
+            Acces(R.string.vol_title, R.drawable.char_walking) { startActivity(Intent(this, VolActivity::class.java)) },
+            Acces(R.string.boussole_title, R.drawable.char_standing_back) { startActivity(Intent(this, BoussoleActivity::class.java)) },
+        )))
         contenu.addView(VueJour.horaires(this, aujourdhui, israel) { choixLieu.montrer() })
         VueJour.sousHoraires(this, aujourdhui, israel).forEach { contenu.addView(it) }
         contenu.addView(VueJour.carte(this).apply {
@@ -86,26 +81,65 @@ class ZmanimActivity : AppCompatActivity() {
         contenu.addView(VueJour.pied(this))
     }
 
-    /** L'accès aux zmanim en vol (28/10) : le dernier vol saisi, ou l'invitation à en saisir un. */
-    private fun carteVol() = VueJour.carte(this).apply {
-        addView(VueJour.texte(this@ZmanimActivity, getString(R.string.vol_title), 15f, R.color.ink))
-        val vol = Store.volResume(this@ZmanimActivity)
-        addView(VueJour.texte(this@ZmanimActivity, vol?.let { (numero, de, vers) -> getString(R.string.vol_carte_vol, numero.ifEmpty { "✈" }, de, vers) }
-            ?: getString(R.string.vol_carte_sous), 13f, if (vol != null) R.color.brand else R.color.muted, haut = 2))
-        foreground = getDrawable(android.R.drawable.list_selector_background)
-        setOnClickListener { startActivity(Intent(this@ZmanimActivity, VolActivity::class.java)) }
+    /**
+     * Les accès du jour en tuiles, trois par rangée (29/10) : une illustration du personnage
+     * (au féminin pour צדקת, PersonnageImageView) sur la plaque claire, et le nom dessous.
+     */
+    private fun tuiles(acces: List<Acces>) = LinearLayout(this).apply {
+        orientation = LinearLayout.VERTICAL
+        layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+            .apply { setMargins(dp(16), dp(4), dp(16), 0) }
+        acces.chunked(PAR_RANGEE).forEach { rangee ->
+            addView(LinearLayout(this@ZmanimActivity).apply {
+                orientation = LinearLayout.HORIZONTAL
+                layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+                    .apply { topMargin = dp(8) }
+                rangee.forEachIndexed { i, (nom, dessin, action) -> addView(tuile(nom, dessin, if (i == 0) 0 else 8, action)) }
+                // Une rangée incomplète garde la largeur des tuiles du dessus.
+                repeat(PAR_RANGEE - rangee.size) {
+                    addView(android.view.View(this@ZmanimActivity).apply {
+                        layoutParams = LinearLayout.LayoutParams(0, 0, 1f).apply { marginStart = dp(8) }
+                    })
+                }
+            })
+        }
     }
 
-    /** La boussole de Jérusalem (28/10) : la direction depuis le lieu choisi. */
-    private fun carteBoussole() = VueJour.carte(this).apply {
-        addView(VueJour.texte(this@ZmanimActivity, getString(R.string.boussole_title), 15f, R.color.ink))
-        val lieu = Store.lieuZmanim(this@ZmanimActivity)
-        addView(VueJour.texte(this@ZmanimActivity, lieu?.let {
-            val p = DirectionJerusalem.directions(it.latitude, it.longitude).first
-            getString(R.string.boussole_par_rapport_nord, DirectionJerusalem.degres(p))
-        } ?: getString(R.string.boussole_carte_sous), 13f, if (lieu != null) R.color.brand else R.color.muted, haut = 2))
+    /** Une tuile : son nom, son dessin (char_…), ce qu'elle ouvre. */
+    private data class Acces(val nom: Int, val dessin: Int, val action: () -> Unit)
+
+    private fun tuile(nom: Int, dessin: Int, marge: Int, action: () -> Unit) = LinearLayout(this).apply {
+        orientation = LinearLayout.VERTICAL
+        gravity = android.view.Gravity.CENTER_HORIZONTAL
+        setBackgroundResource(R.drawable.bg_card)
+        setPadding(dp(6), dp(12), dp(6), dp(10))
+        layoutParams = LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 1f).apply { marginStart = dp(marge) }
         foreground = getDrawable(android.R.drawable.list_selector_background)
-        setOnClickListener { startActivity(Intent(this@ZmanimActivity, BoussoleActivity::class.java)) }
+        Effets.presse(this)
+        setOnClickListener { action() }
+        contentDescription = getString(nom)
+        addView(PersonnageImageView(this@ZmanimActivity).apply {
+            setImageResource(dessin)
+            scaleType = android.widget.ImageView.ScaleType.FIT_CENTER
+            setPadding(dp(4), dp(4), dp(4), dp(4))
+            background = android.graphics.drawable.GradientDrawable().apply {
+                cornerRadius = dp(14).toFloat()
+                setColor(Apparence.couleur(this@ZmanimActivity, R.color.mint))
+            }
+            contentDescription = null
+            importantForAccessibility = android.view.View.IMPORTANT_FOR_ACCESSIBILITY_NO
+            layoutParams = LinearLayout.LayoutParams(dp(56), dp(56))
+        })
+        addView(TextView(this@ZmanimActivity).apply {
+            text = getString(nom)
+            textSize = 13f
+            setTypeface(typeface, android.graphics.Typeface.BOLD)
+            gravity = android.view.Gravity.CENTER
+            setTextColor(Apparence.couleur(this@ZmanimActivity, R.color.ink))
+            importantForAccessibility = android.view.View.IMPORTANT_FOR_ACCESSIBILITY_NO
+            layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+                .apply { topMargin = dp(6) }
+        })
     }
 
     private fun choisirAllumage() {
@@ -140,23 +174,10 @@ class ZmanimActivity : AppCompatActivity() {
     }
 
     /** Un des trois boutons sous la carte du jour : même largeur, texte sur deux lignes au besoin. */
-    private fun bouton(texte: Int, marge: Int, action: () -> Unit) =
-        MaterialButton(this, null, com.google.android.material.R.attr.materialButtonOutlinedStyle).apply {
-            text = getString(texte)
-            // Un mot seul (« Calendrier ») tient sur une ligne, réduit s'il le faut, plutôt
-            // que d'être coupé en deux (petit écran, texte agrandi ; 15/10).
-            maxLines = text.trim().split(" ").size.coerceAtMost(2)
-            letterSpacing = 0f
-            androidx.core.widget.TextViewCompat.setAutoSizeTextTypeUniformWithConfiguration(
-                this, 9, 14, 1, android.util.TypedValue.COMPLEX_UNIT_SP)
-            setPadding(dp(4), paddingTop, dp(4), paddingBottom)
-            layoutParams = LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f).apply { marginStart = dp(marge) }
-            setOnClickListener { action() }
-        }
-
     private fun dp(v: Int) = (v * resources.displayMetrics.density).toInt()
 
     private companion object {
         const val ALLUMAGE_JERUSALEM = 40
+        const val PAR_RANGEE = 3
     }
 }
