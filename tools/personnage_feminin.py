@@ -18,7 +18,7 @@ La seconde planche (29/10, six poses : guitare, bras levés, danse, lecture à
 genoux, livre contre soi, de dos bras levés) n'existe que sur fond noir, où la
 jupe, le foulard et les chaussures sont noirs eux aussi. Le fond n'y est que le
 noir pur (≤ 4) relié au bord, ou une poche fermée d'au moins 400 pixels ; la
-frange est démélangée du noir ; au bas de la pose, une fermeture rend aux
+frange prend la couleur de l'intérieur voisin ; au bas de la pose, une fermeture rend aux
 chaussures leurs reflets noirs, que le fond avait pris.
 """
 import pathlib
@@ -113,8 +113,29 @@ def pose_noir(a):
     lab, n = nd.label(noir)
     tailles = nd.sum(noir, lab, range(1, n + 1))
     bords = set(np.unique(np.r_[lab[0], lab[-1], lab[:, 0], lab[:, -1]])) - {0}
+    # Une poche noire fermée de moins de 400 pixels reste : une pupille, un pli
+    # de jupe. (L'en retirer, entre deux doigts, retirait aussi les yeux.)
     fond = np.isin(lab, [k for k in range(1, n + 1) if k in bords or tailles[k - 1] >= 400])
     garde = personnage(~fond)
+    # Le halo : des taches sombres collées au bord d'une partie claire
+    # (chemise, mains), surtout entourées de fond. Un œil de profil touche aussi
+    # le fond, mais il est surtout entouré de peau ; la jupe et le foulard sont
+    # bien plus grands.
+    sombre = garde & (mx < 60)
+    lab, n = nd.label(sombre)
+    if n:
+        _, (iy, ix) = nd.distance_transform_edt(~sombre, return_indices=True)
+        anneau = np.where(nd.binary_dilation(sombre, iterations=2) & ~sombre, lab[iy, ix], 0)
+        ids = range(1, n + 1)
+        part_fond = nd.mean(~garde, anneau, ids)
+        part_clair = nd.mean(garde & (mx >= 150), anneau, ids)
+        tailles = nd.sum(sombre, lab, ids)
+        halo = [k for k in ids if part_fond[k - 1] >= 0.3 and part_clair[k - 1] > 0 and tailles[k - 1] < 400]
+        garde &= ~np.isin(lab, halo)
+        garde = personnage(garde)
+    # Un cil noir au bord du visage, de profil, touche le fond et part avec lui :
+    # une fermeture de quelques pixels referme ces encoches.
+    garde = nd.binary_closing(np.pad(garde, 8), structure=np.ones((9, 9)))[8:-8, 8:-8]
     # Les chaussures : leur noir pur touche le sol, le fond l'a pris.
     ys = np.where(garde.any(1))[0]
     bas = np.zeros_like(garde)
@@ -129,9 +150,13 @@ def pose_noir(a):
     k = np.clip(mx / np.where(ref > 0, ref, 255.0), 0, 1)
     alpha = np.where(garde, 255.0, 0.0)
     alpha[frange] = k[frange] * 255
-    rgb = a.astype(float)
-    rgb[frange] = np.clip(rgb[frange] / np.maximum(k[frange], 1e-3)[:, None], 0, 255)
-    im = Image.fromarray(np.dstack([rgb.astype(np.uint8), alpha.astype(np.uint8)]), 'RGBA')
+    # Sa couleur, et celle du fond transparent, est celle de l'intérieur le plus
+    # proche : ni le redimensionnement ni la compression WebP n'y ramènent de noir.
+    _, (iy, ix) = nd.distance_transform_edt(~interieur, return_indices=True)
+    rgb = a.astype(np.uint8)
+    dehors = ~interieur
+    rgb[dehors] = rgb[iy[dehors], ix[dehors]]
+    im = Image.fromarray(np.dstack([rgb, alpha.astype(np.uint8)]), 'RGBA')
     im = im.crop(im.getbbox())
     return im.resize((round(im.width * HAUTEUR / im.height), HAUTEUR), Image.LANCZOS)
 
