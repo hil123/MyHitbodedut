@@ -301,6 +301,7 @@
     <string name="track_niggoun_32">Niggoun 32</string>
     <string name="track_niggoun_33">Niggoun 33</string>
     <string name="track_yanuka_nigoun_3" translatable="false">ניגון — הינוקא (3)</string>
+    <string name="track_shpayer_beyond" translatable="false">Beyond — נעם שפייר</string>
 
     <!-- En reserve : ces morceaux sont dans musique/, hors de l'APK.
          Leurs titres restent ici pour ne pas etre perdus au retour. -->
