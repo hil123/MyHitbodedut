@@ -1044,7 +1044,9 @@ Non vérifié : Eretz Hemdah (avis de Rav Ovadia sur le sud), le site ne répond
 **Droits et sources en attente**
 - breslev.co.il : accord écrit nécessaire ; « יד מאיר » : site à préciser.
 - Pour la trace : de qui vient l'accord du 13/10 (or-breslev, Yalkut Yosef),
-  quand, et sur quoi il porte.
+  quand, et sur quoi il porte. *29/10 (audit 1.390) : le propriétaire juge
+  l'accord suffisant pour le Yalkut Yosef (« l'accord suffit ») ; la sélection
+  reste telle quelle. Aucune pièce écrite n'est versée au dépôt.*
 - Les icônes signalées le 12/10 : lesquelles.
 
 ## Mise à jour (19/10) : « oui tout »
