@@ -349,11 +349,13 @@ capture du suivi de vol si la fonction est retirée.
 > L'application ne demande aucun compte. Pour voir la fonction de barrière :
 > Accueil → autorisations (affichage par-dessus les autres applications,
 > accès aux données d'utilisation) → choisir une application → bouton
-> « Voir l'écran de garde » (s'affiche à toute heure, sans effet).
+> « Voir l’écran « Je suis avec Hachem » maintenant » (s'affiche à toute
+> heure, sans effet).
 > La barrière est un outil d'autodiscipline que l'utilisateur configure et
 > peut désactiver à tout moment. Aucune donnée d'usage ne quitte l'appareil.
 
-*Le libellé exact du bouton est à recopier depuis `values/strings.xml`.*
+*Libellé repris de `action_preview_gate` (`values/strings.xml`) ; le traduire
+pour la note en anglais.*
 
 ### 7.4 Catégorie et coordonnées
 
