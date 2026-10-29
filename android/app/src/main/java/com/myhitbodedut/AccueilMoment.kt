@@ -49,7 +49,7 @@ object AccueilMoment {
         foreground = c.getDrawable(android.R.drawable.list_selector_background)
         Effets.presse(this)
         setOnClickListener { ouvrir() }
-        addView(ImageView(c).apply {
+        addView(PersonnageImageView(c).apply {
             setImageResource(image)
             adjustViewBounds = true
             contentDescription = null

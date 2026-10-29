@@ -974,7 +974,7 @@ class MainActivity : AppCompatActivity() {
                     android.graphics.drawable.GradientDrawable.Orientation.TOP_BOTTOM,
                     intArrayOf(0x00000000, 0x00000000, 0x99102820.toInt()))
             }, android.widget.FrameLayout.LayoutParams(-1, -1))
-            addView(android.widget.ImageView(context).apply {
+            addView(PersonnageImageView(context).apply {
                 setImageResource(R.drawable.char_debout)
                 adjustViewBounds = true
                 scaleType = android.widget.ImageView.ScaleType.FIT_END

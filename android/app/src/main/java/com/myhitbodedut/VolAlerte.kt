@@ -94,7 +94,7 @@ object VolAlerte {
 
     /** L'illustration en carré : une image haute (le hassid debout) garde le haut, le visage. */
     fun icone(c: Context, r: VolRappels.Rappel): android.graphics.Bitmap {
-        val b = BitmapFactory.decodeResource(c.resources, illustration(r))
+        val b = BitmapFactory.decodeResource(c.resources, Personnage.pour(c, illustration(r)))
         return if (b.height > b.width) android.graphics.Bitmap.createBitmap(b, 0, 0, b.width, b.width) else b
     }
 

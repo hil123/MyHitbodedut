@@ -24,6 +24,7 @@ import { ALLUMAGES, heure as heureZman, jour as zmanimDuJour } from './zmanim.js
 import * as Vol from './vol.js';
 import * as Boussole from './boussole.js';
 import { RELAIS_VOL } from './relais.js';
+import { chemin as cheminPersonnage } from './personnage.js';
 
 // --- Stockage ---------------------------------------------------------------
 function stockageDuNavigateur() {
@@ -49,6 +50,7 @@ function h(tag, attrs = {}, ...enfants) {
     if (v === null || v === undefined || v === false) continue;
     if (k === 'class') el.className = v;
     else if (k.startsWith('on')) el.addEventListener(k.slice(2), v);
+    else if (k === 'src') el.setAttribute(k, perso(v));
     else el.setAttribute(k, v === true ? '' : v);
   }
   for (const e of enfants.flat()) {
@@ -57,6 +59,11 @@ function h(tag, attrs = {}, ...enfants) {
   }
   return el;
 }
+// Le personnage au féminin pour qui a choisi צדקת (personnage.js) : chaque
+// image passe par ici, celles de h() comme celles écrites en SVG.
+const perso = (src) => cheminPersonnage(src, store.adresse());
+// L'écran d'ouverture est écrit dans index.html : on le reprend dès le départ.
+for (const img of document.querySelectorAll('#ouverture img.hassid')) img.setAttribute('src', perso(img.getAttribute('src')));
 const SVG = 'http://www.w3.org/2000/svg';
 function s(tag, attrs = {}) {
   const el = document.createElementNS(SVG, tag);
@@ -2421,7 +2428,7 @@ function dessinBoussole(gc, rh, cap) {
   if (cap == null) {
     return `<svg viewBox="-160 -160 320 320" role="img" aria-label="${texte}"><rect x="-160" y="-160" width="320" height="320" fill="${c.ciel}"/>
       <circle r="126" fill="none" stroke="${c.horizon}" stroke-width="3"/>
-      <image href="img/char_standing_back.webp" x="-34" y="-94" width="68" height="212"/>
+      <image href="${perso('img/char_standing_back.webp')}" x="-34" y="-94" width="68" height="212"/>
       <g transform="rotate(${gc})"><path d="M0,-151 L14,-106 L0,-114 L-14,-106 Z" fill="${c.or}"/></g>
       <text y="-132" text-anchor="middle" font-size="22" font-weight="700" fill="${c.encre}">${echapper(tr.t('boussole_nord'))}</text>
       <text x="108" y="146" text-anchor="middle" font-size="26" fill="${c.encre}">${Boussole.degres(gc)}°</text></svg>`;
@@ -2438,7 +2445,7 @@ function dessinBoussole(gc, rh, cap) {
     <rect x="${xe - 34}" y="-124" width="68" height="22" rx="11" fill="${ok ? c.marque : '#fff'}"/>
     <text x="${xe}" y="-108" text-anchor="middle" font-family="serif" font-size="15" font-weight="700" fill="${ok ? '#fff' : c.marque}">ירושלים</text>
     <circle cx="${xg}" cy="-90" r="8" fill="${ok ? c.marque : c.or}"/>
-    <image href="img/char_standing_back.webp" x="-28" y="${ok ? -68 : -62}" width="56" height="176"/>
+    <image href="${perso('img/char_standing_back.webp')}" x="-28" y="${ok ? -68 : -62}" width="56" height="176"/>
     <text y="-132" text-anchor="middle" font-size="14" fill="${c.encre}">${texte}</text></svg>`;
 }
 
@@ -3673,7 +3680,7 @@ function majMini() {
   const joue = !lecteur.paused && !lecteur.ended;
   mini.classList.toggle('joue', joue);
   mini.querySelector('.mini-titre').textContent = m ? titreMorceau(m) : tr.t('music_off_short');
-  const image = m?.image ?? 'img/char_guitar.webp';
+  const image = m?.image ?? perso('img/char_guitar.webp');
   for (const img of mini.querySelectorAll('.mini-disque img')) {
     if (img.getAttribute('src') !== image) img.src = image;
     img.classList.toggle('pochette', !!m?.image);
