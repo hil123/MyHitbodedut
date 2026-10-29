@@ -453,7 +453,7 @@ répétés, mots-clés empilés. *Vérifié (bonnes pratiques Play).*
 
 | Élément | Spécification | Source dans le dépôt |
 | --- | --- | --- |
-| Icône | 512 × 512, PNG 32 bits avec alpha, ≤ 1 Mo | À exporter depuis `mipmap` |
+| Icône | 512 × 512, PNG 32 bits avec alpha, ≤ 1 Mo | **Prête** : `play/icone-512.png` (313 Ko), à envoyer telle quelle. Original en 1024 × 1024 : `play/icone-1024.png`. Même personnage que l'icône de l'appli, en plein cadre ; Google arrondit lui-même les coins |
 | Image de présentation | 1024 × 500, JPEG ou PNG 24 bits sans alpha | À créer : personnage + היכל הציון (`scene_ouverture_tombe.webp`) |
 | Captures téléphone | 2 minimum, 8 maximum, 320–3 840 px, 16:9 ou 9:16 | `captures-calendrier/`, à compléter : accueil, séance, barrière, siddour, zmanim, widgets |
 | Captures tablette 7" et 10" | recommandées (l'app gère les grands écrans) | À produire |
