@@ -173,23 +173,34 @@ toujours l'ajouter depuis son téléphone (`MusicActivity` → `OpenDocument`).
 
 **Décision du 29/10.** Le propriétaire a l'accord du Yanuka. La provenance
 des 30 niggounim sans titre (`niggoun_01` à `niggoun_33`) est inconnue : leurs
-noms hébreux ont été perdus au transfert. Aucun écrit n'est cité pour
-*המלך בשדה* ni pour Ishay Ribo. D'où, **pour la version Play seulement** :
+noms hébreux ont été perdus au transfert. *המלך בשדה* est déclaré libre de
+droits ; l'autorisation d'Ishay Ribo et de MBD n'a pas été demandée. D'où, **pour la version Play seulement** :
 
 | Morceau livré | Version Play | Version GitHub |
 | --- | --- | --- |
 | `yanuka_nigoun_3` — ניגון — הינוקא (3) | **Livré** (accord du Yanuka, à conserver par écrit) | Livré |
 | `niggoun_01` … `niggoun_33` (30 fichiers) | **Retirés** tant que la provenance n'est pas établie | Livrés |
-| `hamelech_basade` — המלך בשדה | **Retiré** | Livré |
-| `ribo_sans_titre` — Ishay Ribo | **Retiré** | Livré |
+| `hamelech_basade` — המלך בשדה | **Livré** — déclaré libre de droits par le propriétaire (29/10) ; voir la réserve ci-dessous | Livré |
+| `ribo_sans_titre` — Ishay Ribo | **Retiré** — autorisation non demandée (29/10), comme pour MBD | Livré |
 
-Audio de la version Play : environ 6,7 Mo au lieu de 130 Mo. Un morceau
+**Réserve sur המלך בשדה.** Une mélodie traditionnelle peut être libre alors
+que son **enregistrement** ne l'est pas : l'interprète et le producteur ont
+leurs propres droits. Noter d'où vient ce fichier (interprète, source, date)
+et ce qui le rend libre ; c'est ce que Google demanderait en cas de
+réclamation.
+
+**Ishay Ribo, MBD, Motty Steinmetz, Shmuel** : autorisation non demandée.
+Hors de la version Play ; le propriétaire décide de leur place dans la
+version GitHub, qui est elle aussi une diffusion.
+
+Audio de la version Play : environ 16 Mo (Yanuka 6,7 + המלך בשדה 9,7) au
+lieu de 130 Mo. Un morceau
 retiré revient par simple mise à jour dès que son écrit existe ; si un
 niggoun s'avère être du Yanuka, il rentre sous le même accord. Pour cela, il
 faut retrouver les titres hébreux d'origine (fichiers sources reçus le
 22/09).
 
-**Mise en œuvre** (étape 3 du § 9, pas encore faite) : les 32 fichiers retirés
+**Mise en œuvre** (étape 3 du § 9, pas encore faite) : les 31 fichiers retirés
 quittent `main/res/raw` pour un dossier de ressources ajouté seulement aux
 constructions GitHub, et `MusicLibrary` ne liste un morceau que si sa
 ressource existe dans la construction. La construction Play se distingue
@@ -376,21 +387,26 @@ autorisations ; vérifier que le texte dit ce qui est fait de la donnée.
 
 ## 7. Fiche Play Store
 
-### 7.1 Textes (× 3 langues : fr-FR par défaut, en-US, iw-IL)
+### 7.1 Textes (× 2 langues : en-US par défaut, iw-IL)
 
-| Champ | Limite | Proposition (fr) |
+**Tranché le 29/10 : pas de fiche en français.** La fiche Play existe en
+anglais et en hébreu seulement ; un téléphone en français (ou toute autre
+langue) voit la fiche anglaise, langue par défaut. L'interface de
+l'application garde ses trois langues.
+
+| Champ | Limite | Proposition |
 | --- | --- | --- |
-| Titre | 30 caractères, **un par langue** | he : `MyHitbodedut – התבודדות` (23) · fr : `MyHitbodedut – Hitbodedout` (26) · en : `MyHitbodedut – Hitbodedut` (25) *(tranché le 29/10)* |
-| Description courte | 80 caractères | `La hitbodedout chaque jour : séance, musique, journal, zmanim et siddour.` (73) |
+| Titre | 30 caractères, **un par langue** | he : `MyHitbodedut – התבודדות` (23) · en : `MyHitbodedut – Hitbodedut` (25) *(tranché le 29/10)* |
+| Description courte | 80 caractères | en : à rédiger, avec « התבודדות » · he : à rédiger |
 | Description complète | 4 000 caractères | Plan : la pratique · la séance · la barrière du matin (avec l'argument de 6.7) · textes · zmanim et calendrier · widgets · vie privée (aucune donnée ne sort) · crédits et licences |
 
 **Recherche en hébreu.** Play affiche la fiche dans la langue du téléphone
 et indexe titre, description courte et description longue ; une traduction
 automatique n'est pas indexée. Google ne dit pas si un mot hébreu tapé sur un
 téléphone en français trouve la fiche hébraïque. D'où : « התבודדות » dans la
-description courte des trois langues, et les graphies latines (hitbodedut,
-hitbodedout, hisbodedus) dans une phrase de chaque description longue, y
-compris l'hébraïque. *Vérifié pour l'indexation des champs (aide Play
+description courte anglaise, et les graphies latines (hitbodedut,
+hisbodedus) dans une phrase de chaque description longue, y compris
+l'hébraïque. *Vérifié pour l'indexation des champs (aide Play
 « Get discovered on Google Play search ») ; déduit pour le reste.*
 
 Interdits : classement ou récompense (« n° 1 », « meilleure »), emojis
@@ -446,7 +462,7 @@ local) :
       avion
 - [ ] Les 6 widgets posés et mis à jour
 - [ ] Export / import JSON entre l'édition GitHub et l'édition Play
-- [ ] Trois langues, droite-à-gauche en hébreu
+- [ ] Trois langues dans l'app, droite-à-gauche en hébreu
 - [ ] Tablette, fenêtre libre, Chromebook (écran tactile non requis)
 - [ ] Pré-lancement Play Console (rapport automatique) : aucun plantage,
       aucun avertissement d'accessibilité bloquant
@@ -503,8 +519,9 @@ et chacun doit rester inscrit les 14 jours.
 
 1. ~~**Suivi de vol en direct**~~ — **tranché le 29/10** : conservé (accord
    OpenSky reçu, à vérifier selon § 3.1) ; route adsbdb conservée.
-2. ~~**Musique**~~ — **tranché le 29/10** : la version Play ne livre que le
-   niggoun du Yanuka ; les 32 autres restent dans la version GitHub (§ 3.2).
+2. ~~**Musique**~~ — **tranché le 29/10** : la version Play livre le niggoun
+   du Yanuka et המלך בשדה ; les 30 niggounim sans titre et Ishay Ribo
+   restent hors de Play (§ 3.2).
 3. ~~**7 textes de licence inconnue**~~ — **tranché le 29/10** : domaine
    public, texte seul sans vocalisation (§ 3.3).
 4. ~~**Compte personnel ou organisation**~~ — **tranché le 29/10** : compte
