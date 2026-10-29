@@ -141,6 +141,7 @@ object Store {
     private const val KEY_FOND = "apparence_fond"
     private const val KEY_ACCENT = "apparence_accent"
     private const val KEY_LANGUE_APP = "langue_app"
+    private const val KEY_LANGUE_REPLI = "langue_repli"
     private const val KEY_MUSIC_ON = "music_enabled"
     private const val KEY_MUSIC_TRACK = "music_track"
     private const val KEY_MUSIC_VOLUME = "music_volume"
@@ -1179,6 +1180,13 @@ object Store {
 
     fun setLangueApp(context: Context, etiquettes: String) {
         prefs(context).edit().putString(KEY_LANGUE_APP, etiquettes).apply()
+    }
+
+    /** Vrai si l'anglais a été posé par LangueApp.appliquerRepli, non choisi dans les réglages. */
+    fun langueRepli(context: Context): Boolean = prefs(context).getBoolean(KEY_LANGUE_REPLI, false)
+
+    fun setLangueRepli(context: Context, auto: Boolean) {
+        prefs(context).edit().putBoolean(KEY_LANGUE_REPLI, auto).apply()
     }
 
     // --- Apparence -----------------------------------------------------------

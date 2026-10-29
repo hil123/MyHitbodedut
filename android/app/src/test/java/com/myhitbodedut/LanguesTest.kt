@@ -103,4 +103,19 @@ class LanguesTest {
             )
         }
     }
+
+    @Test
+    fun `un telephone dont aucune langue n est livree passe en anglais`() {
+        // Audit 1.390, choix du propriétaire le 29/10 : l'anglais, non plus le français de values/.
+        assertEquals("en", LangueApp.repli(listOf("es-ES")))
+        assertEquals("en", LangueApp.repli(listOf("de-DE", "ru-RU")))
+        assertEquals("en", LangueApp.repli(emptyList()))
+        // Une langue livrée, même en second : on suit le téléphone.
+        assertEquals(null, LangueApp.repli(listOf("es-ES", "fr-FR")))
+        assertEquals(null, LangueApp.repli(listOf("iw-IL")))
+        assertEquals(null, LangueApp.repli(listOf("he")))
+        assertEquals(null, LangueApp.repli(listOf("en-GB")))
+        assertTrue(File("src/main/java/com/myhitbodedut/MyHitbodedutApp.kt").readText().contains("LangueApp.appliquerRepli(this)"))
+        assertTrue("un choix dans les réglages efface le repli", reglages.contains("Store.setLangueRepli(this, false)"))
+    }
 }

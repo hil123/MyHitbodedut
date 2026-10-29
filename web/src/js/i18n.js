@@ -12,8 +12,8 @@ export const LANGUES = [
 
 /**
  * La langue à montrer : celle choisie dans les réglages, sinon celle du
- * téléphone si l'application la connaît, sinon le français — la langue par
- * défaut des ressources Android.
+ * téléphone si l'application la connaît, sinon l'anglais (audit 1.390, 29/10 ;
+ * comme LangueApp.repli sur Android).
  */
 export function langueInitiale(choisie, languesDuTelephone) {
   const connues = LANGUES.map((l) => l.code);
@@ -23,7 +23,8 @@ export function langueInitiale(choisie, languesDuTelephone) {
     const n = RegleLangue.normalise(l);
     if (connues.includes(n)) return n;
   }
-  return 'fr';
+  // Aucune langue du téléphone n'est livrée : l'anglais (audit 1.390, LangueApp.repli).
+  return 'en';
 }
 
 /** Le String.format d'Android, réduit à ce que les chaînes emploient : %s %d %1$s %2$02d %%. */

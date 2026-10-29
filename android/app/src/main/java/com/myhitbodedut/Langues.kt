@@ -28,7 +28,10 @@ object Langues {
         Langue("fr", "Français"),
     )
 
-    /** Le français est la langue de `values/`, donc celle du dernier recours. */
+    /**
+     * Le français est la langue de `values/`. Un téléphone dont aucune langue n'est livrée
+     * passe pourtant en anglais : LangueApp.repli, au lancement (29/10).
+     */
     const val DEFAUT = "fr"
 
     /** Ramène une étiquette de langue, quelle que soit sa forme, à l'une des nôtres. */

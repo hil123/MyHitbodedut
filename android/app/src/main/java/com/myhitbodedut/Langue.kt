@@ -81,4 +81,41 @@ object LangueApp {
     fun retenir(context: Context) {
         Store.setLangueApp(context, AppCompatDelegate.getApplicationLocales().toLanguageTags())
     }
+
+    /**
+     * La langue d'un téléphone dont aucune langue n'est livrée : l'anglais, non plus le
+     * français de `values/` (audit 1.390, choix du propriétaire le 29/10). Null si l'une
+     * des langues du téléphone est livrée : on la suit.
+     */
+    fun repli(systeme: List<String>): String? =
+        if (systeme.none { RegleLangue.normalise(it) in setOf("fr", "en", "he") }) "en" else null
+
+    /**
+     * Au lancement, avant le premier écran : un téléphone en espagnol passe l'application en
+     * anglais, tant que personne n'a choisi de langue dans les réglages. Le repli est noté
+     * (Store.langueRepli) pour être retiré si le téléphone passe à une langue livrée.
+     * Dans Application.onCreate, AppCompat ne joint pas encore LocaleManager (Android 13+) :
+     * on s'adresse à lui directement ; avant 13, AppCompat applique le choix aux activités
+     * qu'il crée, et la copie de Store dit ce que l'utilisateur avait choisi.
+     */
+    fun appliquerRepli(context: Context) {
+        val choisie = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) context.getSystemService(android.app.LocaleManager::class.java).applicationLocales.toLanguageTags()
+            else Store.langueApp(context)
+        val auto = Store.langueRepli(context)
+        // Choisie dans les réglages depuis le repli : c'est le choix de l'utilisateur.
+        if (auto && choisie != "en") { Store.setLangueRepli(context, false); return }
+        if (choisie.isNotEmpty() && !auto) return
+        val locales = android.content.res.Resources.getSystem().configuration.locales
+        val repli = repli((0 until locales.size()).map { locales[it].toLanguageTag() })
+        val cible = when {
+            repli != null && choisie.isEmpty() -> repli
+            repli == null && auto -> ""
+            else -> return
+        }
+        Store.setLangueRepli(context, cible.isNotEmpty())
+        Store.setLangueApp(context, cible)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+            context.getSystemService(android.app.LocaleManager::class.java).applicationLocales = LocaleList.forLanguageTags(cible)
+        else AppCompatDelegate.setApplicationLocales(androidx.core.os.LocaleListCompat.forLanguageTags(cible))
+    }
 }

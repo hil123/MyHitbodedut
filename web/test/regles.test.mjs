@@ -207,7 +207,9 @@ test('la langue : le choix, sinon le téléphone, sinon le français', () => {
   assert.equal(langueInitiale('en', ['fr-FR']), 'en');
   assert.equal(langueInitiale('', ['iw-IL', 'en']), 'he');
   assert.equal(langueInitiale('', ['de-DE', 'en-GB']), 'en');
-  assert.equal(langueInitiale('', ['de-DE']), 'fr');
+  assert.equal(langueInitiale('', ['de-DE']), 'en');
+  assert.equal(langueInitiale('', ['es-ES', 'fr-FR']), 'fr');
+  assert.equal(langueInitiale('', []), 'en');
 });
 
 // --- Store : série, semaine, sauvegarde --------------------------------------------------

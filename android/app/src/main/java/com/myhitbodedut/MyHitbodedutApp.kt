@@ -2,11 +2,12 @@ package com.myhitbodedut
 
 import android.app.Application
 
-/** Le seul travail fait au lancement : poser les couleurs choisies avant le premier écran. */
+/** Au lancement, avant le premier écran : la langue de repli, puis les couleurs choisies. */
 class MyHitbodedutApp : Application() {
 
     override fun onCreate() {
         super.onCreate()
+        LangueApp.appliquerRepli(this)
         Apparence.installer(this)
     }
 }
