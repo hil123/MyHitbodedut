@@ -16,12 +16,12 @@
       },
       "sh": {
         "titre": "Sichot HaRan — rabenubook (via API Sefaria)",
-        "licence": "unknown",
+        "licence": "Public Domain (texte seul) : Si'hot haRan, Rabbi Natan de Breslev (m. 1844). Licence de l'édition rabenubook non déclarée par Sefaria : sa vocalisation n'est pas reprise.",
         "nikkoud_ok": false
       },
       "shr": {
         "titre": "Shivchei HaRan — rabenubook (via API Sefaria)",
-        "licence": "unknown",
+        "licence": "Public Domain (texte seul) : Chiv'hei haRan, Rabbi Natan de Breslev (m. 1844). Licence de l'édition rabenubook non déclarée par Sefaria : sa vocalisation n'est pas reprise.",
         "nikkoud_ok": false
       },
       "cm": {
@@ -41,7 +41,7 @@
       },
       "lt": {
         "titre": "Likutei Tefilot — Maleh Vigadish 2021 (via export Sefaria)",
-        "licence": "unknown",
+        "licence": "Public Domain (texte seul) : Likoutei Tefilot, Rabbi Natan de Breslev (m. 1844). Licence de l'édition Maleh Vigadish 2021 non déclarée par Sefaria : sa vocalisation n'est pas reprise.",
         "nikkoud_ok": false,
         "note": "Texte de Rabbi Natan de Breslev (m. 1844) : domaine public. La vocalisation est un travail editorial de l'edition 2021, dont Sefaria ne declare pas la licence — on ne la reprend donc pas."
       }

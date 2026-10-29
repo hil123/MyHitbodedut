@@ -17,16 +17,33 @@ import org.junit.Test
  */
 class MusicFilesTest {
 
-    private val raw = File("src/main/res/raw")
-    private val code = File("src/main/java/com/myhitbodedut/MusicLibrary.kt").readText()
+    /**
+     * Deux dossiers depuis le 29/10 : res/raw de main, que toute construction
+     * livre, et celui de src/musique_hors_play, que seule la version GitHub
+     * livre (PUBLICATION_PLAY_STORE.md § 3.2). Les tests valent pour leur
+     * réunion, c'est-à-dire pour la version GitHub ; ceux du bas tiennent la
+     * version Play.
+     */
+    private val rawPlay = File("src/main/res/raw")
+    private val rawHorsPlay = File("src/musique_hors_play/res/raw")
+    private val codePlay = File("src/main/java/com/myhitbodedut/MusiquePlay.kt").readText()
+    private val codeHorsPlay = File("src/musique_hors_play/java/com/myhitbodedut/MusiqueHorsPlay.kt").readText()
+    private val code = codePlay + codeHorsPlay
+
+    /** Les morceaux d'un dossier : AAC (.m4a) depuis le 29/10, un .mp3 n'y est relevé que pour être refusé. */
+    private fun audio(dossier: File): List<File> =
+        dossier.listFiles { f -> f.name.endsWith(".m4a") || f.name.endsWith(".mp3") }.orEmpty().toList()
+    private fun embarques(): List<File> = audio(rawPlay) + audio(rawHorsPlay)
     private val strings = File("src/main/res/values/strings.xml").readText()
 
     /** Les identifiants déclarés dans BUNDLED, dans l'ordre du fichier. */
-    private val declares: List<String> =
+    private fun declaresDans(code: String): List<String> =
         Regex("""Bundled\("([a-z0-9_]+)", R\.raw\.([a-z0-9_]+), R\.string\.([a-z0-9_]+)\)""")
             .findAll(code)
             .map { it.groupValues[1] + "|" + it.groupValues[2] + "|" + it.groupValues[3] }
             .toList()
+
+    private val declares: List<String> = declaresDans(code)
 
     @Test
     fun `chaque morceau declare a son fichier et son titre`() {
@@ -34,7 +51,7 @@ class MusicFilesTest {
         declares.forEach { ligne ->
             val (id, res, titre) = ligne.split("|")
             assertEquals("l'identifiant et le fichier doivent porter le même nom", id, res)
-            val f = File(raw, "$res.m4a")
+            val f = embarques().firstOrNull { it.nameWithoutExtension == res } ?: File(rawPlay, "$res.m4a")
             assertTrue("fichier absent : ${f.path}", f.isFile)
             assertTrue("${f.name} est vide", f.length() > 1_000)
             assertTrue(
@@ -46,7 +63,7 @@ class MusicFilesTest {
 
     @Test
     fun `aucun morceau n est livre deux fois sous deux noms`() {
-        val fichiers = raw.listFiles { f -> f.name.endsWith(".m4a") }.orEmpty()
+        val fichiers = embarques()
         assertTrue("aucun morceau trouvé", fichiers.isNotEmpty())
         val parEmpreinte = fichiers.groupBy { f ->
             MessageDigest.getInstance("SHA-256").digest(f.readBytes()).joinToString("") {
@@ -65,8 +82,7 @@ class MusicFilesTest {
 
     @Test
     fun `tous les morceaux livres sont declares, et reciproquement`() {
-        val surDisque = raw.listFiles { f -> f.name.endsWith(".m4a") || f.name.endsWith(".mp3") }
-            .orEmpty().map { it.nameWithoutExtension }.sorted()
+        val surDisque = embarques().map { it.nameWithoutExtension }.sorted()
         val cites = declares.map { it.split("|")[1] }.sorted()
         assertEquals(
             "un morceau embarqué que personne ne joue, ou un morceau déclaré sans fichier",
@@ -100,7 +116,7 @@ class MusicFilesTest {
      */
     @Test
     fun `le poids embarque reste sous les yeux`() {
-        val octets = raw.listFiles { f -> f.name.endsWith(".m4a") || f.name.endsWith(".mp3") }.orEmpty().sumOf { it.length() }
+        val octets = embarques().sumOf { it.length() }
         val mo = octets / 1_048_576.0
         assertTrue(
             "audio embarqué : %.1f Mo. Seuil relevé trois fois ".format(mo) +
@@ -122,8 +138,8 @@ class MusicFilesTest {
     @Test
     fun `chaque morceau embarque est en AAC`() {
         assertTrue("un mp3 dans raw/ : le réencoder (tools/audio.py)",
-            raw.listFiles { f -> f.name.endsWith(".mp3") }.orEmpty().isEmpty())
-        raw.listFiles { f -> f.name.endsWith(".m4a") }.orEmpty().forEach { f ->
+            embarques().none { it.name.endsWith(".mp3") })
+        embarques().forEach { f ->
             val tete = f.inputStream().use { it.readNBytes(8) }
             assertTrue("${f.name} n'est pas un MP4 (« ftyp » absent)",
                 tete.size == 8 && String(tete, 4, 4, Charsets.US_ASCII) == "ftyp")
@@ -142,7 +158,7 @@ class MusicFilesTest {
         val hors = File("../../musique").listFiles { f -> f.name.endsWith(".mp3") || f.name.endsWith(".m4a") }.orEmpty()
         assertTrue("dossier musique/ vide ou introuvable", hors.isNotEmpty())
 
-        val embarques = raw.listFiles { f -> f.name.endsWith(".m4a") }.orEmpty()
+        val embarques = embarques()
             .associateBy { empreinte(it) }
         // Réencodés, les embarqués n'ont plus les octets de leur MP3 d'origine : le nom tranche aussi.
         val nomsEmbarques = embarques.values.map { it.nameWithoutExtension }.toSet()
@@ -173,6 +189,35 @@ class MusicFilesTest {
                 !code.contains("R.raw.${f.nameWithoutExtension},"),
             )
         }
+    }
+
+    /** Ce que la version Play livre, et rien d'autre (29/10). */
+    @Test
+    fun `la version Play ne livre que les morceaux autorises`() {
+        val autorises = listOf("hamelech_basade", "shpayer_beyond", "yanuka_nigoun_3")
+        assertEquals(
+            "res/raw de main est livré par la version Play : n'y mettre qu'un morceau dont la " +
+                "diffusion publique est établie (PUBLICATION_PLAY_STORE.md § 3.2), sinon dans src/musique_hors_play",
+            autorises,
+            audio(rawPlay).map { it.nameWithoutExtension }.sorted(),
+        )
+        assertEquals(autorises, declaresDans(codePlay).map { it.split("|")[0] }.sorted())
+        assertEquals(
+            "les morceaux de src/musique_hors_play sont déclarés dans sa propre liste",
+            audio(rawHorsPlay).map { it.nameWithoutExtension }.sorted(),
+            declaresDans(codeHorsPlay).map { it.split("|")[0] }.sorted(),
+        )
+    }
+
+    @Test
+    fun `la construction Play remplace la liste hors Play par une liste vide`() {
+        val vide = File("src/musique_play/java/com/myhitbodedut/MusiqueHorsPlay.kt").readText()
+        assertTrue(vide.contains("object MusiqueHorsPlay"))
+        assertTrue("aucun morceau ne doit y être déclaré", declaresDans(vide).isEmpty())
+        assertTrue(File("src/musique_play/res").exists().not())
+        val gradle = File("build.gradle.kts").readText()
+        assertTrue(gradle.contains("if (play) \"src/musique_play\" else \"src/musique_hors_play\""))
+        assertTrue(gradle.contains("if (!play) res.srcDir"))
     }
 
     private fun empreinte(f: File): String =

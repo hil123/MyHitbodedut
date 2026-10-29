@@ -146,6 +146,7 @@ object Apparence {
             override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
                 appliquer(activity)
                 appliquees[activity] = signature(activity)
+                Barres.installer(activity)
             }
 
             override fun onActivityResumed(activity: Activity) {

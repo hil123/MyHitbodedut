@@ -103,15 +103,24 @@ for (const nom of readdirSync(join(RES, 'drawable-nodpi'))) {
 }
 
 // --- La musique ---------------------------------------------------------------
-// L'ordre et les titres sont ceux de MusicLibrary.kt : la même liste que
-// l'application Android, lue dans son source.
-const musicLibrary = readFileSync(join(ANDROID, 'java', 'com', 'myhitbodedut', 'MusicLibrary.kt'), 'utf8');
-const morceaux = [...musicLibrary.matchAll(/Bundled\("([a-z0-9_]+)", R\.raw\.\1, R\.string\.(track_[a-z0-9_]+)\)/g)]
-  .map(([, id, titre]) => ({ id, titre, fichier: `musique/${id}.m4a` }));
-if (morceaux.length === 0) throw new Error('Aucun morceau trouvé dans MusicLibrary.kt');
+// L'ordre et les titres sont ceux de l'application Android, lus dans son
+// source. Depuis le 29/10 la liste y est en deux (PUBLICATION_PLAY_STORE.md
+// § 3.2) : MusiquePlay.kt, fichiers dans main/res/raw, puis MusiqueHorsPlay.kt
+// de src/musique_hors_play, fichiers dans son propre res/raw. Le site garde
+// les deux, comme avant.
+const HORS_PLAY = join(ANDROID, '..', 'musique_hors_play');
+const listes = [
+  { kt: join(ANDROID, 'java', 'com', 'myhitbodedut', 'MusiquePlay.kt'), raw: join(RES, 'raw') },
+  { kt: join(HORS_PLAY, 'java', 'com', 'myhitbodedut', 'MusiqueHorsPlay.kt'), raw: join(HORS_PLAY, 'res', 'raw') },
+];
+const morceaux = listes.flatMap(({ kt, raw }) =>
+  [...readFileSync(kt, 'utf8').matchAll(/Bundled\("([a-z0-9_]+)", R\.raw\.\1, R\.string\.(track_[a-z0-9_]+)\)/g)]
+    .map(([, id, titre]) => ({ id, titre, fichier: `musique/${id}.m4a`, raw })));
+if (morceaux.length === 0) throw new Error('Aucun morceau trouvé dans MusiquePlay.kt ni MusiqueHorsPlay.kt');
 mkdirSync(join(DIST, 'musique'), { recursive: true });
 for (const m of morceaux) {
-  const source = join(RES, 'raw', `${m.id}.m4a`);
+  const source = join(m.raw, `${m.id}.m4a`);
+  delete m.raw;
   if (!existsSync(source)) throw new Error(`Morceau manquant : ${source}`);
   cpSync(source, join(DIST, m.fichier));
   m.octets = statSync(source).size;

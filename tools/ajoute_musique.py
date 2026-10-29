@@ -27,7 +27,12 @@ from audio import morceaux, vers_aac
 RACINE = pathlib.Path(__file__).resolve().parent.parent
 RAW = RACINE / 'android/app/src/main/res/raw'
 HORS = RACINE / 'musique'
-KT = RACINE / 'android/app/src/main/java/com/myhitbodedut/MusicLibrary.kt'
+# Depuis le 29/10, res/raw de main est ce que la version Play livre : n'y
+# faire entrer que des morceaux dont la diffusion publique est établie
+# (PUBLICATION_PLAY_STORE.md § 3.2). Les morceaux que seule la version GitHub
+# livre sont dans RAW_HORS_PLAY, et comptent dans le même plafond.
+RAW_HORS_PLAY = RACINE / 'android/app/src/musique_hors_play/res/raw'
+KT = RACINE / 'android/app/src/main/java/com/myhitbodedut/MusiquePlay.kt'
 XML = RACINE / 'android/app/src/main/res/values/strings.xml'
 MO = 1024 * 1024
 
@@ -96,8 +101,8 @@ def main():
     args = ap.parse_args()
 
     HORS.mkdir(exist_ok=True)
-    connus = {empreinte(p): p.stem for p in morceaux(RAW) + morceaux(HORS)}
-    pris = {p.stem for p in morceaux(RAW)}
+    connus = {empreinte(p): p.stem for p in morceaux(RAW) + morceaux(RAW_HORS_PLAY) + morceaux(HORS)}
+    pris = {p.stem for p in morceaux(RAW) + morceaux(RAW_HORS_PLAY)}
     kt, xml = KT.read_text(), XML.read_text()
     embarques, ecartes, doublons, refuses = [], [], [], []
 
@@ -110,7 +115,7 @@ def main():
             refuses.append(f.name)
             continue
         titre = titre_lisible(f.name)
-        if (poids(RAW) + f.stat().st_size) / MO <= args.plafond:
+        if (poids(RAW) + poids(RAW_HORS_PLAY) + f.stat().st_size) / MO <= args.plafond:
             c = cle(titre, pris)
             pris.add(c)
             vers_aac(f, RAW / (c + '.m4a'))
@@ -129,9 +134,9 @@ def main():
         # Un morceau precis ne fait pas une ancre : celui qui servait de
         # repere (hamelech_basade) est parti dans musique/ au premier echange,
         # et l'outil serait mort avec lui. On s'accroche a la structure.
-        anc = '    private val BUNDLED = listOf(\n'
+        anc = '    val MORCEAUX = listOf(\n'
         if anc not in kt:
-            sys.exit('liste BUNDLED introuvable dans MusicLibrary.kt')
+            sys.exit('liste MORCEAUX introuvable dans MusiquePlay.kt')
         KT.write_text(kt.replace(anc, anc + lignes, 1))
 
         def echappe(t):
@@ -154,7 +159,7 @@ def main():
         print('EMBARQUÉ  %-30s %s' % (c, t))
     for c in ecartes:
         print('ÉCARTÉ    %-30s → musique/ (plafond atteint)' % c)
-    print('\nAPK      : %d morceaux, %.1f Mo' % (len(morceaux(RAW)), poids(RAW) / MO))
+    print('\nAPK      : %d morceaux, %.1f Mo' % (len(morceaux(RAW)) + len(morceaux(RAW_HORS_PLAY)), (poids(RAW) + poids(RAW_HORS_PLAY)) / MO))
     print('musique/ : %d morceaux, %.1f Mo' % (len(morceaux(HORS)), poids(HORS) / MO))
     if embarques:
         print('\nÀ FAIRE : régénérer le R.java de contrôle, puis relancer MusicFilesTest.')

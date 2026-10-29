@@ -256,12 +256,17 @@ l'application, menu à trois points, « Autoriser les paramètres restreints ».
 
 ### Publier sur Google Play
 
+Le cahier des charges complet est dans `PUBLICATION_PLAY_STORE.md`.
+
 Ce que le dépôt fournit et ce qui reste à faire :
 
 - [x] Code source complet et compilable
 - [x] `applicationId`, icône, nom, traductions français, hébreu, anglais
 - [ ] Compte développeur Google Play, frais uniques de 25 dollars
-- [ ] Clé de signature et build `release` signé, `./gradlew bundleRelease`
+- [x] `targetSdk 36`, AAB Play : `./gradlew -Pplay=true bundleFullRelease`,
+      ou le flux GitHub Actions `Play` (29/10)
+- [ ] Clé d'envoi Play et ses quatre secrets `PLAY_*` (voir
+      `PUBLICATION_PLAY_STORE.md`, § 5)
 - [ ] Politique de confidentialité en ligne, obligatoire dès qu'une
       autorisation sensible est demandée
 - [ ] Formulaire Sécurité des données, à remplir « aucune donnée collectée »
