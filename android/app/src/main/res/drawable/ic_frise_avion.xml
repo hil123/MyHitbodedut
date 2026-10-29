@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- La frise du vol (29/10) : le décollage et l'atterrissage, un avion. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android" android:width="20dp" android:height="20dp" android:viewportWidth="24" android:viewportHeight="24" android:autoMirrored="false">
+    <path android:fillColor="#FFFFFFFF" android:pathData="M21,15.5v-2l-8,-5V3.8a1.3,1.3 0,0 0,-2.6 0V8.5l-8,5v2l8,-2.5V18l-2,1.5V21l3.3,-1 3.3,1v-1.5l-2,-1.5v-5Z" />
+</vector>

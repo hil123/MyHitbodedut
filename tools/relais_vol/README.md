@@ -26,7 +26,9 @@ gratuit enregistré, sans frais. À condition que :
   API (le relais ne rend que l'avion demandé) ;
 - l'attribution « Données aéronautiques : OpenSky Network
   (opensky-network.org) » figure dans l'application **et sur la page du
-  magasin**, avec un avertissement : ni navigation ni sécurité.
+  magasin**. OpenSky *conseille* aussi un avertissement « ni navigation ni
+  sécurité » : retiré à la demande de l'utilisateur (29/10), ce n'est pas une
+  condition.
 
 Publicité, abonnement, fonction payante ou gestion par une entreprise :
 licence commerciale (Startup, 99 $/mois selon ce courriel).

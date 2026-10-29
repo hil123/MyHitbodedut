@@ -749,7 +749,9 @@ input[type="range"] { width: 100%; accent-color: var(--brand); }
 .jour-ajouts { margin: 0; color: var(--ink); font-size: 15px; line-height: 1.5; }
 .bouton-calendrier { margin: 12px 0; }
 /* Écran Zmanim (14/10) : trois boutons sous le jour, puis les horaires ; Levana, hilloula, halakha après. */
-.boutons-jour { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin: 12px 0; }
+.boutons-jour { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 8px; margin: 12px 0; }
+.boutons-jour > .secondaire { grid-column: span 2; }
+.boutons-jour > .bouton-large { grid-column: span 3; display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
 .boutons-jour .secondaire { width: 100%; min-width: 0; padding: 12px 4px; font-size: 14px; white-space: normal; line-height: 1.2; }
 .carte-sous-horaires { margin-top: 12px; }
 .carte-sous-horaires > .levana, .carte-sous-horaires > .jour-sous-titre:first-child { margin-top: 0; }
@@ -1399,6 +1401,59 @@ body.avec-mini .seance .contenu { padding-bottom: calc(104px + env(safe-area-ins
 .boutons-vol { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin: 12px 0 8px; }
 .boutons-vol button { width: 100%; min-width: 0; }
 .vol-heure { margin-top: 2px; font-weight: 700; font-variant-numeric: tabular-nums; text-align: start; }
+.vol-resume { padding: 12px 16px; }
+.vol-resume-tete { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.vol-resume-titre { font-size: 17px; font-weight: 700; color: var(--ink); }
+.vol-resume-tete .lien-bouton { color: var(--brand); min-height: 44px; }
+.vol-resume-heures { margin: 2px 0 0; color: var(--muted); font-size: 14px; font-variant-numeric: tabular-nums; }
+.champ-et-loupe { position: relative; display: block; }
+.champ-et-loupe .champ-vol { width: 100%; padding-inline-end: 52px; }
+.loupe-vol { position: absolute; inset-inline-end: 4px; top: 50%; transform: translateY(-50%); margin-top: 2px; width: 44px; height: 44px; display: grid; place-items: center;
+  border: 0; border-radius: 999px; background: none; color: var(--brand); cursor: pointer; }
+.loupe-vol:active { background: color-mix(in srgb, var(--brand) 12%, transparent); }
+.loupe-attente { width: 18px; height: 18px; border: 2.5px solid currentColor; border-right-color: transparent; border-radius: 50%; animation: tourne .8s linear infinite; }
+@keyframes tourne { to { transform: rotate(360deg); } }
+.lien-discret { display: block; margin: 4px auto 8px; min-height: 44px; padding: 4px 12px; border: 0; background: none; color: var(--muted); font-size: 14px; font-weight: 600; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+.carte-heros { background: color-mix(in srgb, var(--brand) 9%, var(--card)); border-color: color-mix(in srgb, var(--brand) 28%, var(--line)); }
+.carte-heros .vol-priere { font-size: 30px; }
+.carte-heros .vol-compte { font-size: 22px; color: var(--brand); }
+.vol-etiquette { display: inline-block; margin-top: 4px !important; padding: 6px 12px; border-radius: 999px; background: color-mix(in srgb, var(--brand) 10%, transparent); color: var(--ink); font-weight: 600; font-size: 14px; }
+.vol-details { margin-top: 6px; }
+.vol-details summary { min-height: 44px; display: flex; align-items: center; color: var(--brand); font-weight: 600; font-size: 14px; cursor: pointer; list-style: none; }
+.vol-details summary::-webkit-details-marker { display: none; }
+.vol-details summary::after { content: '⌄'; margin-inline-start: 6px; transform: translateY(-3px); }
+.vol-details[open] summary::after { content: '⌃'; transform: translateY(3px); }
+.vol-details p { margin: 0 0 6px !important; color: var(--muted); font-size: 14px; }
+.vol-sous-titre { margin-top: 14px !important; padding-top: 12px; border-top: 1px solid var(--line); font-weight: 700; }
+.carte-vol .secondaire { margin-top: 8px; }
+.frise-retard { margin: 4px 0 0 !important; color: var(--muted); font-size: 13px; }
+.frise { list-style: none; margin: 12px 0 8px; padding: 0; }
+.frise-point { position: relative; display: flex; gap: 14px; padding-bottom: 14px; }
+.frise-point:not(:last-child)::before { content: ''; position: absolute; inset-inline-start: 14px; top: 32px; bottom: 2px; width: 2px; background: var(--line); }
+.frise-puce { flex: none; display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; color: var(--c, var(--brand)); background: color-mix(in srgb, var(--c, var(--brand)) 14%, var(--card)); }
+.frise-puce svg { display: block; }
+.frise-nuit { --c: #3E4F86; } .frise-aube { --c: #D4856B; } .frise-jour { --c: #C99A2E; } .frise-crepuscule { --c: #B5543A; }
+.frise-bout { --c: var(--brand); }
+.frise-maintenant { --c: var(--brand); padding-bottom: 10px; }
+.frise-maintenant .frise-puce { width: 30px; height: 30px; background: none; }
+.frise-maintenant .frise-puce::after { content: ''; width: 14px; height: 14px; border-radius: 50%; background: var(--card); border: 3px solid var(--brand); }
+.frise-maintenant .frise-corps { align-self: center; }
+.frise-maintenant .frise-nom { color: var(--brand); font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: .06em; }
+.frise-nom { color: var(--ink); font-size: 15px; }
+.frise-heure { font-variant-numeric: tabular-nums; font-size: 16px; color: var(--muted); }
+.frise-heure strong { color: var(--ink); font-size: 17px; white-space: nowrap; }
+.frise-heure strong, .frise-heure span { display: inline-block; }
+.frise-heure span { white-space: nowrap; margin-inline-start: .3em; }
+.frise-detail { color: var(--muted); font-size: 12px; margin-top: 1px; }
+.sources-vol { margin: 12px 0 0; }
+.sources-vol summary { min-height: 44px; display: flex; align-items: center; color: var(--muted); font-size: 13px; font-weight: 600; cursor: pointer; list-style: none; }
+.sources-vol summary::-webkit-details-marker { display: none; }
+.sources-vol summary::after { content: '⌄'; margin-inline-start: 6px; transform: translateY(-3px); }
+.sources-vol .indice { margin-top: 6px; }
+.carte-vide { padding: 20px 16px 8px; text-align: center; }
+.carte-vide .plateau-vide { display: block; width: 96px; height: 116px; margin: 0 auto 8px; padding: 6px; }
+.carte-vide-titre { margin: 4px 0 0; font-size: 20px; font-weight: 700; color: var(--ink); }
+.carte-vide .principal { margin-top: 16px; }
 .liste-aeroports { max-height: 50vh; overflow-y: auto; margin-top: 8px; }
 .carte-vol .vol-jalon { margin-top: 12px; font-weight: 700; }
 
