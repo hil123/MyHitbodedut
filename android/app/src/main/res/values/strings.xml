@@ -1194,8 +1194,7 @@
     <string name="vol_frise_decollage">Décollage %1$s</string>
     <string name="vol_frise_atterrissage">Atterrissage %1$s</string>
     <string name="vol_frise_maintenant">Maintenant</string>
-    <string name="vol_frise_retard">Avec 30 min de retard au décollage, ces horaires seraient environ %1$s min plus tard (sauf mention sur la ligne).</string>
-    <string name="vol_frise_retard_tot">Avec 30 min de retard au décollage, ces horaires seraient environ %1$s min plus tôt (sauf mention sur la ligne).</string>
+    <string name="vol_frise_retard">Si le vol est retardé, les horaires changeront en conséquence.</string>
     <string name="vol_fiabilite_court">📍 Estimation sur la route prévue</string>
     <string name="vol_comment_calcule">Comment c’est calculé ?</string>
     <string name="vol_preciser_titre">Préciser la position</string>

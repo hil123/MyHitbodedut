@@ -1148,8 +1148,7 @@
     <string name="vol_frise_decollage">Take-off %1$s</string>
     <string name="vol_frise_atterrissage">Landing %1$s</string>
     <string name="vol_frise_maintenant">Now</string>
-    <string name="vol_frise_retard">With a 30-min late take-off, these times would be about %1$s min later (unless noted on the line).</string>
-    <string name="vol_frise_retard_tot">With a 30-min late take-off, these times would be about %1$s min earlier (unless noted on the line).</string>
+    <string name="vol_frise_retard">If the flight is delayed, the times will change accordingly.</string>
     <string name="vol_fiabilite_court">📍 Estimate along the planned route</string>
     <string name="vol_comment_calcule">How is it calculated?</string>
     <string name="vol_preciser_titre">Refine the position</string>
