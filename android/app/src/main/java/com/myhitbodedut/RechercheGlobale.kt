@@ -32,9 +32,21 @@ object RechercheGlobale {
             ?.let { Resultat(sorte, t.id, titre, extrait(it.texte, q)) }
     }.take(PAR_SORTE)
 
-    /** Où chercher (19/10) : tout, ou seulement les prières, les halakhot ou les livres. */
+    /** Où chercher (19/10) : tout, ou seulement les prières, les halakhot, les livres ou les hilloulot. */
     enum class Portee(val sortes: Set<Sorte>) {
-        TOUT(Sorte.values().toSet()), TEFILOT(setOf(Sorte.SIDDOUR)), HALAKHOT(setOf(Sorte.HALAKHA)), SEFARIM(setOf(Sorte.LIVRE))
+        TOUT(Sorte.values().toSet()), TEFILOT(setOf(Sorte.SIDDOUR)), HALAKHOT(setOf(Sorte.HALAKHA)), SEFARIM(setOf(Sorte.LIVRE)),
+        HILLOULOT(setOf(Sorte.HILLOULA)),
+    }
+
+    /**
+     * Une hilloula trouvée : le nom dans la langue de l'interface quand il existe, sinon l'hébreu
+     * (audit 1.390 : l'hébreu s'affichait même quand le nom français existait). L'hébreu, isolé
+     * (FSI … PDI), passe alors sous le nom, avec l'année.
+     */
+    fun resultatHilloula(texte: String, x: Hilloulot.Hilloula, langue: String): Resultat {
+        val traduit = (if (langue.startsWith("en")) x.en else if (langue.startsWith("fr")) x.fr else null)?.takeIf { it.isNotBlank() }
+        val extrait = listOfNotNull(traduit?.let { "\u2068${x.he}\u2069" }, x.annee.takeIf { it.isNotBlank() }).joinToString(" · ")
+        return Resultat(Sorte.HILLOULA, texte, traduit ?: x.he, extrait)
     }
 
     fun chercher(
@@ -50,7 +62,7 @@ object RechercheGlobale {
             if (Sorte.LIVRE in s) livres?.let { addAll(dansRecueil(it, q, Sorte.LIVRE, langue)) }
             if (Sorte.HALAKHA in s) yalkut?.let { y -> addAll(YalkutYosef.recherche(y, texte).take(PAR_SORTE).map { Resultat(Sorte.HALAKHA, texte, YalkutYosef.source(it), extrait(it.texte, q)) }) }
             if (Sorte.HALAKHA in s) benIshHai?.let { b -> addAll(Halakha.recherche(b, texte).take(PAR_SORTE).map { Resultat(Sorte.HALAKHA, texte, HalakhaActivity.source(it), extrait(it.texte, q)) }) }
-            if (Sorte.HILLOULA in s) hilloulot?.let { h -> addAll(Hilloulot.recherche(h, texte).take(PAR_SORTE).map { (_, x) -> Resultat(Sorte.HILLOULA, texte, x.he, x.annee) }) }
+            if (Sorte.HILLOULA in s) hilloulot?.let { h -> addAll(Hilloulot.recherche(h, texte).take(PAR_SORTE).map { (_, x) -> resultatHilloula(texte, x, langue) }) }
         }
     }
 }

@@ -1306,7 +1306,7 @@ function ecranPriere() {
 
 // --- La recherche dans toute l'application (RechercheActivity.kt, 14/10) ------------------
 let texteRecherche = '';
-/** Où chercher (19/10) : tout, les prières, les halakhot ou les livres (RechercheGlobale.Portee). */
+/** Où chercher (19/10) : tout, les prières, les halakhot, les livres ou les hilloulot (RechercheGlobale.Portee). */
 let porteeRecherche = 'tout';
 const nuRecherche = (t) => t.replace(/<[^>]+>/g, ' ').replace(/[־׀]/g, ' ').replace(/[\u0591-\u05C7"'״׳]/g, '').replace(/\s+/g, ' ').trim().toLowerCase();
 function extraitRecherche(texte, q) {
@@ -1342,21 +1342,26 @@ function ecranRecherche() {
     const halakhot = p === 'tout' || p === 'halakhot';
     const yy = halakhot && livreYalkut ? rechercheYalkut(livreYalkut, texteRecherche).slice(0, 30) : [];
     const bih = halakhot && livreHalakha ? rechercheHalakha(livreHalakha, texteRecherche).slice(0, 30) : [];
-    const hil = p === 'tout' && tableHilloulot() ? rechercheHilloula(tableHilloulot(), texteRecherche).slice(0, 30) : [];
+    const hil = (p === 'tout' || p === 'hilloulot') && tableHilloulot() ? rechercheHilloula(tableHilloulot(), texteRecherche).slice(0, 30) : [];
     yalkutDuJour(); livreDuJour();
     const total = sid.length + liv.length + yy.length + bih.length + hil.length;
     groupes.push(h('p', { class: 'jour-sous-titre' }, tr.t('hilloulot_resultats', total)));
     const groupe = (nom, l) => (l.length ? [h('h2', { class: 'section' }, tr.t(nom)), ...l] : []);
-    groupes.push(...groupe('siddur_title', sid.map((r) => resultat(r.t.titre.he, r.extrait, () => { priere = r.t.id; ouvrir('priere'); }))));
+    // Les titres des groupes reprennent les noms des filtres (audit 1.390).
+    groupes.push(...groupe('recherche_tefilot', sid.map((r) => resultat(r.t.titre.he, r.extrait, () => { priere = r.t.id; ouvrir('priere'); }))));
     groupes.push(...groupe('recherche_livres', liv.map((r) => resultat(r.t.titre.he, r.extrait, () => { priere = `livre:${r.t.id}`; ouvrir('priere'); }))));
-    groupes.push(...groupe('halakha_title', [...yy.map((x) => resultat(sourceYalkut(x), extraitRecherche(x.t, q), () => { rechercheHalakhaTexte = texteRecherche; ouvrir('halakha'); })),
+    groupes.push(...groupe('recherche_halakhot', [...yy.map((x) => resultat(sourceYalkut(x), extraitRecherche(x.t, q), () => { rechercheHalakhaTexte = texteRecherche; ouvrir('halakha'); })),
       ...bih.map((x) => resultat(sourceHalakha(x, (n) => Reference.lettres(n)), extraitRecherche(x.texte, q), () => { rechercheHalakhaTexte = texteRecherche; ouvrir('halakha'); }))]));
-    groupes.push(...groupe('hilloulot_title', hil.map(([, x]) => resultat(x.he, x.a ?? '', () => { rechercheHilloulot = texteRecherche; ouvrir('hilloulot'); }))));
+    // Le nom dans la langue de l'interface s'il existe, sinon l'hébreu (RechercheGlobale.resultatHilloula).
+    const nomHilloula = (x) => (tr.langue === 'fr' ? x.fr : tr.langue === 'en' ? x.en : null) || null;
+    groupes.push(...groupe('hilloulot_title', hil.map(([, x]) => resultat(nomHilloula(x) ?? x.he,
+      [nomHilloula(x) ? `\u2068${x.he}\u2069` : null, x.a || null].filter(Boolean).join(' · '),
+      () => { rechercheHilloulot = texteRecherche; ouvrir('hilloulot'); }))));
   }
   return h('div', { class: 'ecran' }, barre(tr.t('recherche_titre')),
     h('div', { class: 'defile' }, h('div', { class: 'contenu' }, h('div', { class: 'carte' }, champ,
       h('div', { class: 'puces-recherche', role: 'radiogroup', 'aria-label': tr.t('recherche_titre') },
-        [['tout', 'recherche_tout'], ['tefilot', 'recherche_tefilot'], ['halakhot', 'recherche_halakhot'], ['sefarim', 'recherche_sefarim']]
+        [['tout', 'recherche_tout'], ['tefilot', 'recherche_tefilot'], ['halakhot', 'recherche_halakhot'], ['sefarim', 'recherche_sefarim'], ['hilloulot', 'hilloulot_title']]
           .map(([cle, nom]) => h('button', { type: 'button', class: 'puce-choix', role: 'radio', 'aria-checked': String(cle === porteeRecherche),
             onclick: () => { porteeRecherche = cle; rendre(); } }, tr.t(nom))))), ...groupes)));
 }
