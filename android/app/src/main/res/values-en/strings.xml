@@ -213,8 +213,8 @@
     </plurals>
 
     <plurals name="journal_summary">
-        <item quantity="one">%1$d hitbodedut, %2$s in total</item>
-        <item quantity="other">%1$d hitbodedut, %2$s in total</item>
+        <item quantity="one">%1$d time hitbodedut, %2$s in total</item>
+        <item quantity="other">%1$d times hitbodedut, %2$s in total</item>
     </plurals>
 
     <!-- Music -->
