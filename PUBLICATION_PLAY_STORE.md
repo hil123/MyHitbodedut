@@ -182,12 +182,18 @@ droits ; l'autorisation d'Ishay Ribo et de MBD n'a pas été demandée. D'où, *
 | `niggoun_01` … `niggoun_33` (30 fichiers) | **Retirés** tant que la provenance n'est pas établie | Livrés |
 | `hamelech_basade` — המלך בשדה | **Livré** — déclaré libre de droits par le propriétaire (29/10) ; voir la réserve ci-dessous | Livré |
 | `ribo_sans_titre` — Ishay Ribo | **Retiré** — autorisation non demandée (29/10), comme pour MBD | Livré |
+| Toute la musique de **נעם שפייר** et de **יניר קילינסקי** (à recevoir) | **À livrer** — accord écrit reçu par le propriétaire (29/10) pour télécharger et utiliser toutes leurs musiques | À livrer, ainsi que dans la version web |
 
 **Réserve sur המלך בשדה.** Une mélodie traditionnelle peut être libre alors
 que son **enregistrement** ne l'est pas : l'interprète et le producteur ont
 leurs propres droits. Noter d'où vient ce fichier (interprète, source, date)
 et ce qui le rend libre ; c'est ce que Google demanderait en cas de
 réclamation.
+
+**נעם שפייר et יניר קילינסקי** : accord écrit couvrant toutes leurs musiques,
+à conserver hors dépôt avec les autres écrits. Les fichiers sont à fournir
+par le propriétaire (dossier `musique/`, avec le titre de chaque morceau) ;
+ils entrent dans l'app, version Play comprise, et dans la version web.
 
 **Ishay Ribo, MBD, Motty Steinmetz, Shmuel** : autorisation non demandée.
 Hors de la version Play ; le propriétaire décide de leur place dans la
