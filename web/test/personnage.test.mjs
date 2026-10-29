@@ -24,3 +24,14 @@ test('la table couvre chaque pose du hassid, et chaque pose feminine existe', ()
   assert.deepEqual(Object.keys(FEMININ).sort(), hassid.sort());
   assert.deepEqual([...new Set(Object.values(FEMININ))].sort(), DESSINS.filter((n) => n.startsWith('char_f_')).sort());
 });
+
+test('une icône d\'écran d\'accueil par combinaison צדיק / צדקת × couleur des boutons', async () => {
+  const { existsSync, readFileSync } = await import('node:fs');
+  for (const g of ['m', 'f']) {
+    for (const a of ['vert', 'bleu', 'violet', 'bordeaux', 'ambre', 'turquoise']) {
+      assert.ok(existsSync(new URL(`../src/icones/apple-touch-icon-${g}-${a}.png`, import.meta.url)), `${g}-${a}`);
+    }
+  }
+  const app = readFileSync(new URL('../src/js/app.js', import.meta.url), 'utf8');
+  assert.match(app, /apple-touch-icon-\$\{store\.adresse\(\) === 'f' \? 'f' : 'm'\}-\$\{store\.accent\(\)\}\.png/);
+});

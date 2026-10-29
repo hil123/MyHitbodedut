@@ -1172,6 +1172,7 @@ object Store {
         prefs(context).edit().apply {
             if (adresse == null) remove(KEY_ADRESSE) else putString(KEY_ADRESSE, adresse.cle)
         }.apply()
+        IconeLanceur.appliquer(context)
     }
 
     /** Copie du choix de langue d'AppCompat, pour les services (LangueApp). */
@@ -1210,6 +1211,7 @@ object Store {
 
     fun setAccent(context: Context, accent: Apparence.Accent) {
         prefs(context).edit().putString(KEY_ACCENT, accent.cle).apply()
+        IconeLanceur.appliquer(context)
     }
 
     /** Le bravo en attente, et le jour de la note qu'il proposera ensuite. */

@@ -107,6 +107,10 @@ function appliqueApparence() {
   racine.dataset.accent = store.accent();
   racine.lang = tr.langue;
   racine.dir = tr.rtl ? 'rtl' : 'ltr';
+  // L'icône suit צדיק / צדקת et la couleur des boutons, comme sur Android (IconeLanceur) ;
+  // iOS la lit au moment de « Sur l'écran d'accueil » (web/tools/icones.mjs).
+  const icone = `icones/apple-touch-icon-${store.adresse() === 'f' ? 'f' : 'm'}-${store.accent()}.png`;
+  for (const lien of document.querySelectorAll('link[rel="apple-touch-icon"], link[rel="icon"]')) lien.setAttribute('href', icone);
 }
 
 // --- Feuille de choix : ce que sont les AlertDialog d'Android -----------------------
@@ -3453,7 +3457,7 @@ function presentation() {
       h('h1', { class: 'presentation-titre' }, tr.t(e.titre)),
       h('p', { class: 'presentation-corps' }, tr.t(e.corps)),
       e.duree ? puces(DUREES_PRESENTATION, store.targetMinutes(), (m) => tr.duree(m), (m) => store.setTargetMinutes(m)) : null,
-      e.adresse ? puces(['m', 'f'], store.adresse(), (a) => tr.t(a === 'm' ? 'adresse_tsadik' : 'adresse_tsadeket'), (a) => store.setAdresse(a)) : null,
+      e.adresse ? puces(['m', 'f'], store.adresse(), (a) => tr.t(a === 'm' ? 'adresse_tsadik' : 'adresse_tsadeket'), (a) => { store.setAdresse(a); appliqueApparence(); }) : null,
       h('button', { class: 'principal', onclick: () => { if (dernier) fermer(); else { i++; dessiner(); } } },
         tr.t(dernier ? 'onboarding_start' : 'onboarding_next')),
       h('div', { class: 'presentation-bas' },

@@ -60,8 +60,10 @@ POSES2 = {
     'book_side':     (686, 1295, 470, 800),
     'back_arms':     (640, 1295, 800, 1215),
 }
-# La planche a aussi une pose assise qui lace ses chaussures et un portrait :
-# aucun écran ne les demande, ils ne sont pas livrés.
+# Le portrait de la première planche (foulard blanc) devient le visage de
+# l'icône, découpé sur sa version noire. La pose assise qui lace ses
+# chaussures n'est demandée par aucun écran : elle n'est pas livrée.
+PORTRAIT = (1168, 1517, 742, 1024)  # le buste s'arrête à 1517, le bas de la planche est noir
 
 
 def pose(a, noir, ombre):
@@ -107,7 +109,7 @@ def personnage(garde):
     return nd.binary_fill_holes(np.isin(lab, [k + 1 for k, t in enumerate(tailles) if t >= 0.15 * tailles.max()]))
 
 
-def pose_noir(a):
+def detoure_noir(a):
     mx = a.max(2)
     noir = mx <= SEUIL_NOIR
     lab, n = nd.label(noir)
@@ -157,8 +159,27 @@ def pose_noir(a):
     dehors = ~interieur
     rgb[dehors] = rgb[iy[dehors], ix[dehors]]
     im = Image.fromarray(np.dstack([rgb, alpha.astype(np.uint8)]), 'RGBA')
-    im = im.crop(im.getbbox())
+    return im.crop(im.getbbox())
+
+
+def pose_noir(a):
+    im = detoure_noir(a)
     return im.resize((round(im.width * HAUTEUR / im.height), HAUTEUR), Image.LANCZOS)
+
+
+def icone(planche_noir):
+    """Le visage de l'icône au féminin (ic_launcher_face_f), cadré comme celui du
+    hassid (ic_launcher_face, 432 px) : le buste jusqu'au bord bas, le haut de la
+    tête à 102 px, au milieu ; tout tient dans la zone sûre de l'icône adaptative."""
+    y0, y1, x0, x1 = PORTRAIT
+    im = detoure_noir(planche_noir[y0:y1, x0:x1])
+    h = 432 - 102
+    im = im.resize((round(im.width * h / im.height), h), Image.LANCZOS)
+    toile = Image.new('RGBA', (432, 432), (0, 0, 0, 0))
+    toile.alpha_composite(im, ((432 - im.width) // 2, 102))
+    cible = SORTIE / 'ic_launcher_face_f.webp'
+    toile.save(cible, 'WEBP', quality=90, method=6)
+    print(f'{cible.name:28s} 432×432 (visage {im.width}×{im.height})')
 
 
 def enregistre(im, nom):
@@ -175,6 +196,7 @@ def main():
     planche2 = np.asarray(Image.open(PLANCHE2).convert('RGB')).astype(np.int16)
     for nom, (y0, y1, x0, x1) in POSES2.items():
         enregistre(pose_noir(planche2[y0:y1, x0:x1]), nom)
+    icone(noir)
 
 
 if __name__ == '__main__':
