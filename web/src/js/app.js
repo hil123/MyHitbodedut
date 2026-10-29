@@ -666,7 +666,7 @@ function momentAccueil() {
       h('p', { class: 'source-du-jour-texte', lang: 'he', dir: 'rtl' }, SourceDuJour.extrait(p.texte)),
       h('p', { class: 'source-du-jour-ref' }, Reference.localise(p.source.ref, tr.langue)),
       h('div', { class: 'source-du-jour-actions' },
-        h('button', { class: 'principal', onclick: () => ouvrir('seance') }, tr.t('source_du_jour_commencer')),
+        // Un seul « Commencer » sur l'accueil, celui du haut : la source invite à lire.
         h('button', { class: 'secondaire', onclick: () => { entreeBiblio = p.source.id; ouvrir('source'); } }, tr.t('source_du_jour_lire')))));
   }
   return cartes.length ? [h('div', { class: 'accueil-moment' }, ...cartes)] : [];
@@ -2363,16 +2363,18 @@ function ecranZmanim() {
     type: 'button', class: 'puce-bandeau', 'aria-haspopup': 'dialog', onclick: choisirLieu,
     'aria-label': `${tr.t('reglage_lieu')} : ${lieu ? lieu.nom : tr.t('reglage_lieu_aucun')}`,
   }, h('span', {}, lieu ? tr.t('zmanim_lieu_detail', lieu.nom, tr.t(store.inIsrael() ? 'region_israel' : 'region_diaspora')) : tr.t('zmanim_choisir_lieu')), icone('replier'));
-  return h('div', { class: 'ecran avec-bandeau' }, bandeau(tr.t('zmanim_title'), { puce, dessin: 'char_torah' }),
+  // Sans lieu, la grande carte « Choisir le lieu » suffit : pas de seconde pastille dans le bandeau.
+  return h('div', { class: 'ecran avec-bandeau' }, bandeau(tr.t('zmanim_title'), { puce: lieu ? puce : null, dessin: 'char_torah' }),
     h('div', { class: 'defile' }, h('div', { class: 'contenu' },
       // Le jour seul, trois boutons, puis les horaires (14/10, « trop de choses avant les זמנים »).
       carteJour(iso, { complet: false }),
       h('div', { class: 'boutons-jour' },
         h('button', { class: 'secondaire', onclick: () => { jourHalakha = iso; rechercheHalakhaTexte = ''; ouvrir('halakha'); } }, tr.t('zmanim_bouton_halakha')),
         h('button', { class: 'secondaire', onclick: () => { jourHilloulot = iso; rechercheHilloulot = ''; ouvrir('hilloulot'); } }, tr.t('zmanim_bouton_hilloulot')),
-        h('button', { class: 'secondaire', onclick: () => { jourCalendrier = iso; moisCalendrier = null; ouvrir('calendrier'); } }, tr.t('zmanim_calendrier'))),
-      carteVol(),
-      carteBoussole(),
+        h('button', { class: 'secondaire', onclick: () => { jourCalendrier = iso; moisCalendrier = null; ouvrir('calendrier'); } }, tr.t('zmanim_calendrier')),
+        // Le vol et la boussole rejoignent les boutons : les horaires du jour passent avant.
+        h('button', { class: 'secondaire bouton-large', onclick: () => ouvrir('vol') }, `✈ ${tr.t('zmanim_bouton_vol')}`),
+        h('button', { class: 'secondaire bouton-large', onclick: () => ouvrir('boussole') }, `🧭 ${tr.t('zmanim_bouton_boussole')}`)),
       listeZmanim(iso),
       ...sousHoraires(iso),
       ...piedZmanim())));
@@ -2523,8 +2525,13 @@ function ecranBoussole() {
   }, h('span', {}, lieu ? lieu.nom : tr.t('zmanim_choisir_lieu')), icone('replier'));
   const contenu = [];
   if (!lieu) {
-    contenu.push(h('div', { class: 'carte' }, h('button', { class: 'ligne', onclick: choisirLieu },
-      h('span', { class: 'corps' }, h('div', { class: 'nom' }, tr.t('zmanim_choisir_lieu')), h('div', { class: 'etat' }, tr.t('boussole_carte_sous'))))));
+    // L'état vide : le hassid, une question, la position en un toucher, ou une ville.
+    const etat = h('p', { class: 'indice', 'aria-live': 'polite' });
+    contenu.push(h('div', { class: 'carte carte-vide' }, plateau('char_standing_back', 'plateau-vide'),
+      h('p', { class: 'carte-vide-titre' }, tr.t('boussole_vide_titre')),
+      h('p', { class: 'indice' }, tr.t('boussole_carte_sous')),
+      h('button', { class: 'principal', onclick: () => localiserPosition({ etat }) }, tr.t('boussole_vide_position')),
+      h('button', { class: 'lien-discret', onclick: choisirLieu }, tr.t('boussole_vide_ville')), etat));
   } else {
     const gc = Boussole.grandCercle(lieu.latitude, lieu.longitude);
     const rh = Boussole.carte(lieu.latitude, lieu.longitude);
@@ -2559,8 +2566,8 @@ function ecranBoussole() {
       h('p', { class: 'indice' }, tr.t('boussole_note')),
       h('p', {}, source[0], h('a', { href: SOURCE_BOUSSOLE, target: '_blank', rel: 'noopener' }, tr.t('boussole_source_titre')), source[1] ?? '')));
   }
-  return h('div', { class: 'ecran avec-bandeau' }, bandeau(tr.t('boussole_title'), { puce, dessin: 'char_standing_back' }),
-    h('div', { class: 'defile' }, h('div', { class: 'contenu' }, ...contenu, ...piedZmanim())));
+  return h('div', { class: 'ecran avec-bandeau' }, bandeau(tr.t('boussole_title'), { puce: lieu ? puce : null, dessin: 'char_standing_back' }),
+    h('div', { class: 'defile' }, h('div', { class: 'contenu' }, ...contenu, ...piedZmanim().slice(1))));
 }
 
 function choisirAffichageBoussole() {
@@ -2594,6 +2601,8 @@ let saisieVol = null;
 let calculVol = null;
 let cleCalculVol = null;
 let minuterieVol = null;
+/** Le formulaire déplié pour modifier le vol calculé ; replié en résumé sinon (VolActivity.modifier). */
+let modifierVol = false;
 
 const libelleVol = (v) => tr.t('vol_carte_vol', v.numero || '✈', v.depart, v.arrivee);
 
@@ -2641,6 +2650,9 @@ function deuxHeures(plan, t) {
   const autreJour = civil(plan.arrivee.fuseau) !== civil(plan.depart.fuseau);
   return `${jour(plan.depart.fuseau)} ${heure(plan.depart)} · ${autreJour ? `${jour(plan.arrivee.fuseau)} ` : ''}${heure(plan.arrivee)}`;
 }
+
+/** « mer. 28 19:20 TLV » : l'heure locale d'un aéroport (celle du billet). */
+const heureAeroport = (a, t) => `${new Intl.DateTimeFormat(tr.langue, { timeZone: a.fuseau, weekday: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }).format(t)} ⁦${a.iata}⁩`;
 
 const ecartVol = (ms) => tr.t(calculVol && calculVol.fiabilite !== 'route_prevue' ? 'vol_ecart_gps' : 'vol_ecart', `${ms < 0 ? '−' : '+'}${Math.abs(Math.round(ms / 60000))}`);
 
@@ -2698,9 +2710,10 @@ async function demanderDirect(indicatif) {
 /** Le suivi en direct : un interrupteur désactivé par défaut, qui dit ce qui part ; l'indicatif ; le bouton. */
 function suiviDirect() {
   const actif = store.suiviDirect();
-  const bloc = [h('p', { class: 'vol-jalon' }, tr.t('vol_direct_titre')), h('p', { class: 'indice' }, tr.t('vol_direct_explication')),
+  const bloc = [
     h('label', { class: 'ligne' }, h('span', { class: 'corps' }, h('div', { class: 'nom' }, tr.t('vol_direct_activer'))),
-      h('input', { type: 'checkbox', role: 'switch', class: 'interrupteur', checked: actif, onchange: (e) => { store.setSuiviDirect(e.target.checked); rendre(); } }))];
+      h('input', { type: 'checkbox', role: 'switch', class: 'interrupteur', checked: actif, onchange: (e) => { store.setSuiviDirect(e.target.checked); rendre(); } })),
+    h('details', { class: 'vol-details' }, h('summary', {}, tr.t('vol_direct_ce_qui_part')), h('p', {}, tr.t('vol_direct_explication')))];
   if (!actif) return bloc;
   if (!RELAIS_VOL) return [...bloc, h('p', { class: 'indice' }, tr.t('vol_direct_inactif'))];
   const champ = h('input', { type: 'text', class: 'champ-recherche champ-vol', maxlength: 9, autocapitalize: 'characters', placeholder: tr.t('vol_indicatif'), value: store.volIndicatif() || null });
@@ -2758,24 +2771,54 @@ function resultatsVol(c) {
   const RESERVES = ['haute_latitude', 'absent', 'erreur', 'a_rebours'];
   const date = (iso) => new Intl.DateTimeFormat(tr.langue, { timeZone: 'UTC', weekday: 'short', day: 'numeric', month: 'short' }).format(new Date(`${iso}T12:00:00Z`));
   return [
-    h('div', { class: 'carte carte-texte carte-vol' }, h('p', { class: 'indice' }, tr.t('vol_priere_titre')), ...priere),
+    h('div', { class: 'carte carte-texte carte-vol carte-heros' }, h('p', { class: 'indice' }, tr.t('vol_priere_titre')), ...priere),
     h('div', { class: 'carte carte-texte carte-vol' }, h('p', { class: 'indice' }, tr.t('vol_fiabilite_titre')),
-      h('p', {}, c.fiabilite === 'route_prevue' ? tr.t('vol_fiabilite')
-        : tr.t(c.fiabilite === 'releve_direct' ? 'vol_fiabilite_direct' : 'vol_fiabilite_gps', deuxHeures(c.plan, c.plan.releve.instant), positionVol(c.plan.releve))),
-      h('div', { class: 'boutons-vol' },
-        h('button', { class: 'secondaire', disabled: gpsVol, onclick: releverGps }, tr.t(gpsVol ? 'vol_gps_attente' : 'vol_gps')),
-        c.plan.releve ? h('button', { class: 'secondaire', onclick: () => { const g = store.vol(); delete g.releve; store.setVol(g); rendre(); } }, tr.t('vol_gps_oublier')) : null),
+      // La route prévue tient en une étiquette ; le détail du calcul se déplie.
+      c.fiabilite === 'route_prevue' ? h('p', { class: 'vol-etiquette' }, tr.t('vol_fiabilite_court'))
+        : h('p', {}, tr.t(c.fiabilite === 'releve_direct' ? 'vol_fiabilite_direct' : 'vol_fiabilite_gps', deuxHeures(c.plan, c.plan.releve.instant), positionVol(c.plan.releve))),
+      h('details', { class: 'vol-details' }, h('summary', {}, tr.t('vol_comment_calcule')), h('p', {}, tr.t('vol_fiabilite'))),
+      h('p', { class: 'vol-sous-titre' }, tr.t('vol_preciser_titre')),
+      h('button', { class: 'secondaire', disabled: gpsVol, onclick: releverGps }, tr.t(gpsVol ? 'vol_gps_attente' : 'vol_gps')),
+      c.plan.releve ? h('button', { class: 'lien-discret', onclick: () => { const g = store.vol(); delete g.releve; store.setVol(g); rendre(); } }, tr.t('vol_gps_oublier')) : null,
       ...suiviDirect(),
       ...RESERVES.filter((r) => c.reserves.has(r)).map((r) => h('p', {}, tr.t(`vol_reserve_${r}`))),
       ...c.lignesDate.map((l) => h('p', {}, tr.t('vol_ligne_date', deuxHeures(c.plan, l.instant), date(l.avant), date(l.apres))))),
-    h('div', { class: 'carte carte-zmanim' }, h('p', { class: 'indice' }, tr.t('vol_en_vol_titre')),
-      enVol.length ? enVol.map((e) => h('div', { class: 'zman' },
-        h('div', { class: 'zman-tete' }, h('span', { class: 'zman-nom' }, tr.t(`zman_${e.cle}`))),
-        h('div', { class: 'zman-heure vol-heure' }, deuxHeures(c.plan, e.instant)),
-        h('div', { class: 'zman-methode' }, [positionVol(e), e.ecartSiRetard !== null ? ecartVol(e.ecartSiRetard) : null].filter(Boolean).join(' · '))))
-        : h('p', { class: 'message' }, tr.t('vol_aucun_zman'))),
+    friseVol(c, enVol, maintenant),
     carteJalons(c),
   ];
+}
+
+/**
+ * La frise du vol (VolActivity.frise) : du décollage à l'atterrissage, un point par zman, coloré
+ * selon le ciel (nuit, aube, jour, crépuscule), et « maintenant » à sa place. L'écart en cas de
+ * retard se dit une fois en tête ; sur une ligne seulement s'il s'en écarte de 5 min ou plus.
+ */
+const CIEL = { chatsot_layla: 'nuit', tset: 'nuit', tset_rt: 'nuit', alot: 'aube', misheyakir: 'aube', netz: 'aube', chkia: 'crepuscule' };
+function friseVol(c, enVol, maintenant) {
+  if (!enVol.length) return h('div', { class: 'carte carte-zmanim' }, h('p', { class: 'indice' }, tr.t('vol_en_vol_titre')), h('p', { class: 'message' }, tr.t('vol_aucun_zman')));
+  const ecarts = enVol.map((e) => e.ecartSiRetard).filter((x) => x !== null).sort((a, b) => a - b);
+  const median = ecarts.length ? ecarts[Math.floor(ecarts.length / 2)] : null;
+  const deux = (t) => {
+    const [a, b] = deuxHeures(c.plan, t).split(' · ');
+    return h('div', { class: 'frise-heure' }, h('strong', {}, a), b ? h('span', {}, ` · ${b}`) : null);
+  };
+  const point = (classe, nom, t, detail = null) => h('li', { class: `frise-point ${classe}` },
+    h('span', { class: 'frise-puce', 'aria-hidden': 'true' }), h('div', { class: 'frise-corps' }, h('div', { class: 'frise-nom' }, nom), deux(t), detail));
+  const lignes = [point('frise-bout', `✈ ${tr.t('vol_frise_decollage', c.plan.depart.iata)}`, c.plan.decollage)];
+  let maintenantPlace = +maintenant < +c.plan.decollage || +maintenant > +c.plan.atterrissage;
+  for (const e of enVol) {
+    if (!maintenantPlace && +maintenant < +e.instant) {
+      lignes.push(h('li', { class: 'frise-point frise-maintenant' }, h('span', { class: 'frise-puce', 'aria-hidden': 'true' }), h('div', { class: 'frise-corps' }, h('div', { class: 'frise-nom' }, tr.t('vol_frise_maintenant')))));
+      maintenantPlace = true;
+    }
+    const ecart = e.ecartSiRetard !== null && median !== null && Math.abs(e.ecartSiRetard - median) >= 5 * 60000 ? ecartVol(e.ecartSiRetard) : null;
+    lignes.push(point(`frise-${CIEL[e.cle] ?? 'jour'}`, tr.t(`zman_${e.cle}`), e.instant,
+      h('div', { class: 'frise-detail' }, [positionVol(e), ecart].filter(Boolean).join(' · '))));
+  }
+  lignes.push(point('frise-bout', `✈ ${tr.t('vol_frise_atterrissage', c.plan.arrivee.iata)}`, c.plan.atterrissage));
+  return h('div', { class: 'carte carte-texte carte-vol' }, h('p', { class: 'indice' }, tr.t('vol_en_vol_titre')),
+    median !== null ? h('p', { class: 'frise-retard' }, tr.t('vol_frise_retard', `${median < 0 ? '−' : '+'}${Math.abs(Math.round(median / 60000))}`)) : null,
+    h('ol', { class: 'frise' }, ...lignes));
 }
 
 /** Chabbat, fêtes et Omer sur la route (VolActivity.carteJalons) : des heures, sans conseil. */
@@ -2831,6 +2874,7 @@ function ecranVol() {
     const memeVol = garde && ['depart', 'arrivee', 'decollage', 'atterrissage'].every((k) => garde[k] === v[k]);
     const { releve, ...saisie } = v;
     store.setVol(memeVol && garde.releve ? { ...saisie, releve: garde.releve } : saisie);
+    modifierVol = false;
     rendre();
   };
   const ligne = (etiquette, valeur, onclick) => h('button', { class: 'ligne', onclick },
@@ -2839,27 +2883,38 @@ function ecranVol() {
     h('span', { class: 'corps' }, h('div', { class: 'etat' }, etiquette),
       h('input', { type: 'datetime-local', class: 'champ-recherche champ-vol', value: v[cle] || null, onchange: (e) => { v[cle] = e.target.value; } })));
   const champNumero = h('input', { type: 'text', class: 'champ-recherche champ-vol', maxlength: 12, autocapitalize: 'characters', value: v.numero || null, onchange: (e) => { v.numero = e.target.value.trim(); } });
+  // La loupe au bout du champ cherche la route du numéro (adsbdb) ; une ligne dit ce qui part.
+  const loupe = h('button', { class: 'loupe-vol', type: 'button', disabled: routeVol.attente, 'aria-label': tr.t('vol_route_bouton'), title: tr.t('vol_route_bouton'),
+    onclick: () => { v.numero = champNumero.value.trim(); chercherRouteVol(v); } });
+  loupe.innerHTML = routeVol.attente ? '<span class="loupe-attente" aria-hidden="true"></span>'
+    : '<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M15.5 15.5 21 21" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>';
   const formulaire = h('div', { class: 'carte' },
-    h('label', { class: 'ligne' }, h('span', { class: 'corps' }, h('div', { class: 'etat' }, tr.t('vol_numero')), champNumero)),
-    h('div', { class: 'boutons-vol' }, h('button', { class: 'secondaire', disabled: routeVol.attente, onclick: () => { v.numero = champNumero.value.trim(); chercherRouteVol(v); } },
-      tr.t(routeVol.attente ? 'vol_route_attente' : 'vol_route_bouton'))),
-    h('p', { class: 'indice', 'aria-live': 'polite' }, routeVol.texte || tr.t('vol_route_explication')),
+    h('label', { class: 'ligne' }, h('span', { class: 'corps' }, h('div', { class: 'etat' }, tr.t('vol_numero')),
+      h('span', { class: 'champ-et-loupe' }, champNumero, loupe))),
+    h('p', { class: 'indice', 'aria-live': 'polite' }, routeVol.texte || tr.t('vol_route_aide')),
     ligne(tr.t('vol_depart'), nomA(v.depart), () => pret && choisirAeroport((a) => { v.depart = a.iata; rendre(); })),
     ligne(tr.t('vol_arrivee'), nomA(v.arrivee), () => pret && choisirAeroport((a) => { v.arrivee = a.iata; rendre(); })),
     v.depart ? heure('decollage', tr.t('vol_decollage', villeA(v.depart))) : null,
     v.arrivee ? heure('atterrissage', tr.t('vol_atterrissage', villeA(v.arrivee))) : null,
-    h('div', { class: 'boutons-vol' },
-      h('button', { class: 'principal', onclick: calculer }, tr.t('vol_calculer')),
-      h('button', { class: 'secondaire', onclick: () => { store.setVol(null); saisieVol = null; calculVol = null; cleCalculVol = null; rendre(); } }, tr.t('vol_effacer'))));
+    h('button', { class: 'principal', onclick: calculer }, tr.t('vol_calculer')),
+    h('button', { class: 'lien-discret', onclick: () => { store.setVol(null); saisieVol = null; calculVol = null; cleCalculVol = null; modifierVol = false; rendre(); } }, tr.t('vol_effacer')));
+  // Le vol calculé se résume en une carte ; « Modifier » rouvre le formulaire.
+  const planGarde = pret && garde ? planDe(garde) : null;
+  const resume = planGarde && calculVol && !modifierVol ? h('div', { class: 'carte vol-resume' },
+    h('div', { class: 'vol-resume-tete' }, h('span', { class: 'vol-resume-titre' }, libelleVol(garde)),
+      h('button', { class: 'lien-bouton', onclick: () => { modifierVol = true; rendre(); } }, tr.t('vol_modifier'))),
+    h('p', { class: 'vol-resume-heures' }, `${heureAeroport(planGarde.depart, planGarde.decollage)} → ${heureAeroport(planGarde.arrivee, planGarde.atterrissage)}`)) : null;
   const puce = h('span', { class: 'puce-bandeau' }, garde ? libelleVol(garde) : tr.t('vol_carte_sous'));
   return h('div', { class: 'ecran avec-bandeau' }, bandeau(tr.t('vol_title'), { puce, dessin: 'scene_airport' }),
     h('div', { class: 'defile' }, h('div', { class: 'contenu' },
-      formulaire,
+      resume ?? formulaire,
       ...(garde && !pret ? [h('div', { class: 'carte carte-texte' }, h('p', { class: 'message' }, tr.t('vol_calcul_en_cours')))] : []),
       ...(garde && calculVol ? resultatsVol(calculVol) : []),
-      ...piedZmanim().slice(0, 1),
-      h('p', { class: 'indice sources' }, tr.t('vol_source_aeroports')),
-      h('p', { class: 'indice sources' }, tr.t('vol_source_adsbdb')))));
+      // La méthode, les aéroports, les routes : repliés sous « Sources ».
+      h('details', { class: 'sources-vol' }, h('summary', {}, tr.t('vol_sources')),
+        ...piedZmanim().slice(0, 1),
+        h('p', { class: 'indice sources' }, tr.t('vol_source_aeroports')),
+        h('p', { class: 'indice sources' }, tr.t('vol_source_adsbdb'))))));
 }
 
 /**
