@@ -1181,7 +1181,8 @@
     <string name="vol_frise_decollage">המראה %1$s</string>
     <string name="vol_frise_atterrissage">נחיתה %1$s</string>
     <string name="vol_frise_maintenant">עכשיו</string>
-    <string name="vol_frise_retard">אם ההמראה מתעכבת ב־30 דקות, הזמנים זזים בכ־%1$s דקות; הפרש אחר מצוין בשורה שלו.</string>
+    <string name="vol_frise_retard">אם ההמראה תתעכב ב־30 דקות, הזמנים האלה יהיו בערך %1$s דקות מאוחר יותר (אלא אם צוין אחרת בשורה).</string>
+    <string name="vol_frise_retard_tot">אם ההמראה תתעכב ב־30 דקות, הזמנים האלה יהיו בערך %1$s דקות מוקדם יותר (אלא אם צוין אחרת בשורה).</string>
     <string name="vol_fiabilite_court">📍 הערכה לאורך המסלול המתוכנן</string>
     <string name="vol_comment_calcule">איך זה מחושב?</string>
     <string name="vol_preciser_titre">דיוק המיקום</string>

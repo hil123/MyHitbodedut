@@ -2837,7 +2837,7 @@ function friseVol(c, enVol, maintenant) {
   }
   lignes.push(point('bout', tr.t('vol_frise_atterrissage', c.plan.arrivee.iata), c.plan.atterrissage));
   return h('div', { class: 'carte carte-texte carte-vol' }, h('p', { class: 'indice' }, tr.t('vol_en_vol_titre')),
-    median !== null ? h('p', { class: 'frise-retard' }, tr.t('vol_frise_retard', `\u2066${median < 0 ? '−' : '+'}${Math.abs(Math.round(median / 60000))}\u2069`)) : null,
+    median !== null ? h('p', { class: 'frise-retard' }, tr.t(median < 0 ? 'vol_frise_retard_tot' : 'vol_frise_retard', String(Math.abs(Math.round(median / 60000))))) : null,
     h('ol', { class: 'frise' }, ...lignes));
 }
 
