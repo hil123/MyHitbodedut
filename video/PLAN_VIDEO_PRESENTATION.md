@@ -111,6 +111,32 @@ pas seulement explicatif) :
 vocalisé + français), une sans-serif claire pour l'interface. Au plus 2 lignes
 à la fois, zone sûre 9:16 (haut ≈ 14 %, bas ≈ 35 % libres).
 
+## 4 bis. Effets visuels réels (demande du 29/10 : « des vrais effets visuels »)
+
+Plus de simple parallaxe : chaque acte est une **vraie scène 3D temps réel**
+(Three.js dans Remotion via `@remotion/three`), avec post-traitement
+cinéma (`@react-three/postprocessing`). Un teaser de 15,7 s qui démontre la
+pile est dans `video/remotion/` (composition `TeaserVFX`).
+
+| Acte | Effets réels | Statut |
+|---|---|---|
+| I. Le bruit | 150 notifications en 3D qui jaillissent de l'écran vers la caméra (profondeur, trajectoires en spirale, rebond), lumière d'écran bleue qui vacille sur les avatars, **bloom**, **aberration chromatique** qui monte jusqu'au glitch, grain, vignette, caméra qui tremble de plus en plus | fait dans le teaser |
+| II. L'arrêt | coupe nette, silence, écran de barrière ; la carte s'emplit de lumière | fait |
+| II→III. La porte | la carte devient une porte de lumière en 3D : **rayons volumétriques (god rays)**, poussière éclairée seulement dans le faisceau, lumière qui coule au sol, les notifications se transforment en étoiles et montent ; la caméra **traverse la porte** jusqu'au blanc | fait |
+| III. L'aube | ciel procédural en shader (dégradé nuit → aube, étoiles qui s'éteignent), soleil qui se lève avec god rays, 3 couches de collines avec **perspective atmosphérique** (brouillard), brume qui dérive, poussière dorée, avatars en contre-jour avec halo, grue lente | fait |
+| À ajouter en production | vrais gestes des avatars (image → vidéo IA, un mouvement par clip, fiche + GO) ; transition « ligne de partage → horizon » ; particules de lumière sur la citation de Rabbi Na'hman ; flou de mouvement sur la traversée ; étalonnage final commun | à faire |
+
+Limite connue : les avatars font 640 px de haut. En gros plan plein écran
+ils restent un peu doux ; la production doit soit les garder à mi-cadre,
+soit passer par un agrandissement (Higgsfield upscale, crédits : fiche + GO).
+Le détourage de l'avatar féminin montre des bords crénelés sur le voile en
+gros plan : à nettoyer avant le film final.
+
+Note technique : en rendu WebGL logiciel (conteneur sans GPU), le
+compositeur d'effets sort des images vides sur la première image vue par
+chaque onglet de rendu ; `Avance` (`src/fx/Camera.tsx`) force deux rendus
+de plus avant chaque capture. Les textures sont chargées hors du canevas 3D.
+
 ## 5. Script — version 60 s (9:16)
 
 Voix : deux voix alternées, une masculine et une féminine, qui finissent par
