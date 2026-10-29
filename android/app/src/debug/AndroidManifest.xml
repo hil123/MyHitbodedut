@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
     Ce que l'édition de test ajoute : la vitrine des vignettes, pour les
-    voir (et les capturer) sans les poser sur un écran d'accueil. Absente
-    de la release : ce dossier n'est compilé que pour « debug ».
+    voir (et les capturer) sans les poser sur un écran d'accueil, et
+    l'écran de relecture des chizuk. Absents de la release : ce dossier
+    n'est compilé que pour « debug » (audit 1.390 : l'écran de relecture
+    était livré, seulement masqué).
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
@@ -11,5 +13,10 @@
             android:name="com.myhitbodedut.VitrineWidgetActivity"
             android:exported="true"
             android:label="@string/widget_label" />
+
+        <activity
+            android:name="com.myhitbodedut.ProofreadActivity"
+            android:exported="false"
+            android:label="@string/proofread_title" />
     </application>
 </manifest>

@@ -1,6 +1,6 @@
 // Les icônes de l'écran d'accueil, en PNG : iOS n'accepte pas d'autre format
 // pour apple-touch-icon. Même composition que l'icône adaptative Android
-// (mipmap-anydpi/ic_launcher.xml) : le visage sur la menthe, jamais sur du
+// (mipmap-anydpi/ic_launcher_*.xml) : le visage sur la menthe, jamais sur du
 // vert foncé (la frange blanche du détourage s'y verrait, voir ce fichier).
 //
 // À relancer seulement si l'icône Android change :
@@ -20,11 +20,23 @@ const SORTIE = join(ICI, '..', 'src', 'icones');
 const require = createRequire(import.meta.url);
 const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
 
-const menthe = readFileSync(join(RES, 'values', 'colors.xml'), 'utf8').match(/<color name="mint">(#[0-9A-Fa-f]{6})</)[1];
-const visage = readFileSync(join(RES, 'drawable-nodpi', 'ic_launcher_face.webp')).toString('base64');
+const couleurs = readFileSync(join(RES, 'values', 'colors.xml'), 'utf8');
+const fond = (nom) => couleurs.match(new RegExp(`<color name="${nom}">(#[0-9A-Fa-f]{6})<`))[1];
+const visages = {
+  m: readFileSync(join(RES, 'drawable-nodpi', 'ic_launcher_face.webp')).toString('base64'),
+  f: readFileSync(join(RES, 'drawable-nodpi', 'ic_launcher_face_f.webp')).toString('base64'),
+};
+const ACCENTS = ['vert', 'bleu', 'violet', 'bordeaux', 'ambre', 'turquoise'];
+
+// Le manifeste garde le hassid sur le vert ; apple-touch-icon suit les réglages (29/10) :
+// une icône par combinaison צדיק / צדקת × couleur des boutons, comme IconeLanceur.
+const icones = [['apple-touch-icon.png', 180, 'm', 'vert'], ['icon-192.png', 192, 'm', 'vert'], ['icon-512.png', 512, 'm', 'vert'],
+  ...['m', 'f'].flatMap((g) => ACCENTS.map((a) => [`apple-touch-icon-${g}-${a}.png`, 180, g, a]))];
 
 const navigateur = await chromium.launch({ executablePath: process.env.CHROMIUM_PATH });
-for (const [nom, cote] of [['apple-touch-icon.png', 180], ['icon-192.png', 192], ['icon-512.png', 512]]) {
+for (const [nom, cote, genre, accent] of icones) {
+  const menthe = fond(`icone_fond_${accent}`);
+  const visage = visages[genre];
   const page = await navigateur.newPage({ viewport: { width: cote, height: cote } });
   await page.setContent(`<html><body style="margin:0;background:${menthe}">
     <img src="data:image/webp;base64,${visage}" style="width:${cote}px;height:${cote}px;display:block;object-fit:contain"></body></html>`);

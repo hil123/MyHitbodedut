@@ -66,10 +66,13 @@ object Reference {
 
     /**
      * Un nombre en lettres hébraïques, de 1 à 999 : כ״ה, תל״ז, ז׳.
-     * 15 et 16 s'écrivent ט״ו et ט״ז, pour ne pas former le Nom.
+     * 15 et 16 s'écrivent ט״ו et ט״ז, pour ne pas former le Nom ; les
+     * nombres de [INVERSES] sont inversés pour ne pas former un mot de
+     * mauvais augure (Si'hot HaRan 275 s'affichait « רע״ה »).
      */
     fun lettres(n: Int): String {
         if (n <= 0 || n >= 1000) return n.toString()
+        INVERSES[n]?.let { return StringBuilder(it).insert(it.length - 1, '״').toString() }
         val b = StringBuilder()
         var reste = n
         while (reste >= 400) { b.append('ת'); reste -= 400 }
@@ -88,6 +91,12 @@ object Reference {
     private const val UNITES = " אבגדהוזחט"
     private const val DIZAINES = " יכלמנסעפצ"
     private const val CENTAINES = " קרש"
+
+    /** רע, רעב, רעד, רעה, רצח, שד, שמד : l'usage les écrit à l'envers. */
+    private val INVERSES = mapOf(
+        270 to "ער", 272 to "ערב", 274 to "ערד", 275 to "ערה",
+        298 to "רחצ", 304 to "דש", 344 to "שדמ",
+    )
 
     fun localise(context: Context, ref: String): String =
         localise(ref, ChizukCard.language(context))

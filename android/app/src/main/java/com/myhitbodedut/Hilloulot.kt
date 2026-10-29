@@ -98,7 +98,7 @@ object Hilloulot {
 
     /** La recherche par nom, sans voyelles ni guillemets, dans toute l'année. */
     fun recherche(table: Map<String, List<Hilloula>>, texte: String): List<Pair<String, Hilloula>> {
-        val nu = { t: String -> t.replace(Regex("[־׀]"), " ").replace(Regex("[\u0591-\u05C7\"'״׳]"), "").lowercase() }
+        val nu = RechercheGlobale::nu
         val q = nu(texte.trim())
         if (q.length < 2) return emptyList()
         return table.entries.flatMap { (cle, l) -> l.map { cle to it } }

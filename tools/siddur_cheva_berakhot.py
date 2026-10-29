@@ -16,6 +16,10 @@ Les sources libres du siddur suivent l'ordre de la 'houppa (Edot, Sefard) ;
 la version Ashkenaz (Wikipédia) est déjà dans l'ordre de la table. Ne
 réordonne que les paragraphes existants, mot pour mot ; idempotent.
 
+Le 29/10 (« Enlève ce שבע ברכות, תשאיר את זה שבברכת המזון ») : une fois
+copiées dans Birkat haMazon, le texte autonome « cheva_berakhot » est retiré
+de la liste ; relancé sans lui, l'outil ne change rien.
+
   python3 tools/siddur_cheva_berakhot.py
 """
 import json, os, re
@@ -77,7 +81,9 @@ def main():
     for n in NUSAH:
         nom = os.path.join(RAW, f"siddur_{n}.json")
         d = json.load(open(nom, encoding="utf-8"))
-        t = next(x for x in d["textes"] if x["id"] == "cheva_berakhot")
+        t = next((x for x in d["textes"] if x["id"] == "cheva_berakhot"), None)
+        if t is None:
+            continue  # déjà copié dans Birkat haMazon et retiré
         for s in t["sections"]:
             if isinstance(s, dict) and any(est_gefen(b) for b in s["blocs"]):
                 s["blocs"] = reordonne(s["blocs"])
@@ -92,6 +98,7 @@ def main():
                     del blocs[k:k + len(ajout)]
                 k = next((i for i, b in enumerate(blocs) if sans_balises(b.get("c", "")).startswith("דיני שכחה")), len(blocs))
                 blocs[k:k] = ajout
+        d["textes"].remove(t)
         json.dump(d, open(nom, "w", encoding="utf-8"), ensure_ascii=False, separators=(",", ":"))
 
 

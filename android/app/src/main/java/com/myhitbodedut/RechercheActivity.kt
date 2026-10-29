@@ -44,7 +44,7 @@ class RechercheActivity : AppCompatActivity() {
                 })
             })
         })
-        // Où chercher (19/10) : tout, les prières, les halakhot ou les livres.
+        // Où chercher (19/10) : tout, les prières, les halakhot, les livres ou les hilloulot.
         contenu.addView(com.google.android.material.chip.ChipGroup(this).apply {
             isSingleSelection = true
             isSelectionRequired = true
@@ -56,6 +56,7 @@ class RechercheActivity : AppCompatActivity() {
                         RechercheGlobale.Portee.TEFILOT -> R.string.recherche_tefilot
                         RechercheGlobale.Portee.HALAKHOT -> R.string.recherche_halakhot
                         RechercheGlobale.Portee.SEFARIM -> R.string.recherche_sefarim
+                        RechercheGlobale.Portee.HILLOULOT -> R.string.hilloulot_title
                     })
                     isCheckable = true
                     isChecked = p == portee
@@ -99,9 +100,10 @@ class RechercheActivity : AppCompatActivity() {
             val de = resultats.filter { it.sorte == sorte }
             if (de.isEmpty()) return@forEach
             liste.addView(VueJour.texte(this, getString(when (sorte) {
-                RechercheGlobale.Sorte.SIDDOUR -> R.string.siddur_title
+                // Les titres des groupes reprennent les noms des filtres (audit 1.390).
+                RechercheGlobale.Sorte.SIDDOUR -> R.string.recherche_tefilot
                 RechercheGlobale.Sorte.LIVRE -> R.string.recherche_livres
-                RechercheGlobale.Sorte.HALAKHA -> R.string.halakha_title
+                RechercheGlobale.Sorte.HALAKHA -> R.string.recherche_halakhot
                 RechercheGlobale.Sorte.HILLOULA -> R.string.hilloulot_title
             }), 13f, R.color.brand, gras = true, haut = 16))
             de.forEach { r -> liste.addView(ligne(r)) }

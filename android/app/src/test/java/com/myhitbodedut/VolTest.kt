@@ -367,8 +367,8 @@ class VolTest {
         assertEquals("https://r.test/position?indicatif=ELY1&lat=50.1&lon=-20.4",
             SuiviVol.adresse("https://r.test/", "ELY1", Vol.Point(maintenant, 50.123, -20.36)))
         // Sans relais en HTTPS, aucune connexion.
-        assertEquals(SuiviVol.Resultat.Erreur("relais non configuré"), SuiviVol.Relais("").position("ELY1", Vol.Point(maintenant, 0.0, 0.0)))
-        assertEquals(SuiviVol.Resultat.Erreur("relais non configuré"), SuiviVol.Relais("http://r.test").position("ELY1", Vol.Point(maintenant, 0.0, 0.0)))
+        assertEquals(SuiviVol.Resultat.Erreur(SuiviVol.Raison.RELAIS_ABSENT), SuiviVol.Relais("").position("ELY1", Vol.Point(maintenant, 0.0, 0.0)))
+        assertEquals(SuiviVol.Resultat.Erreur(SuiviVol.Raison.RELAIS_ABSENT), SuiviVol.Relais("http://r.test").position("ELY1", Vol.Point(maintenant, 0.0, 0.0)))
         // Le fournisseur est interchangeable ; sa position recale la route comme un relevé.
         val faux = SuiviVol.FournisseurPosition { _, _ -> SuiviVol.Resultat.Trouve(Vol.Point(Instant.parse("2026-11-10T18:30:00Z"), 56.0, -30.0), null) }
         val r = faux.position("ELY1", Vol.position(versOuest, maintenant)) as SuiviVol.Resultat.Trouve

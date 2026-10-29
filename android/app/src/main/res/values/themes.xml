@@ -9,6 +9,8 @@
     <style name="Base.Theme.MyHitbodedut" parent="Theme.Material3.DayNight.NoActionBar" />
 
     <style name="Theme.MyHitbodedut" parent="Base.Theme.MyHitbodedut">
+        <!-- Le personnage au féminin pour qui a choisi צדקת (audit 1.390) : voir Personnage.kt. -->
+        <item name="viewInflaterClass">com.myhitbodedut.PersonnageViewInflater</item>
         <!-- Le passage d'un écran à l'autre (19/10, effets) : glissement court et fondu. -->
         <item name="android:windowAnimationStyle">@style/Effets.Fenetres</item>
         <item name="colorPrimary">@color/brand</item>

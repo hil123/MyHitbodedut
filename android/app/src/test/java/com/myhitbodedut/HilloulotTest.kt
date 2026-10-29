@@ -64,6 +64,10 @@ class HilloulotTest {
         assertEquals("ז׳ אדר ב׳", Hilloulot.dateDe("adar2-7"))
         assertTrue(Hilloulot.recherche(table, "צבי הירש חיות").any { it.first == "7-30" })
         assertTrue(Hilloulot.recherche(table, "א").isEmpty())
+        // En français et en anglais, avec ou sans accents (29/10).
+        assertTrue(Hilloulot.recherche(table, "Chelah").isNotEmpty())
+        assertTrue(Hilloulot.recherche(table, "Shelah").isNotEmpty())
+        assertEquals(Hilloulot.recherche(table, "Moché").size, Hilloulot.recherche(table, "moche").size)
     }
 
     @Test

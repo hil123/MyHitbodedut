@@ -58,7 +58,7 @@ class RegleLangueTest {
 
     @Test
     fun `l ecran de relecture ne montre plus deux traductions a la fois`() {
-        val src = File("src/main/java/com/myhitbodedut/ProofreadActivity.kt").readText()
+        val src = File("src/debug/java/com/myhitbodedut/ProofreadActivity.kt").readText()
         assertTrue(
             "les deux lignes s'affichaient ensemble quelle que soit la langue",
             src.contains("holder.en.visibility = View.GONE"),

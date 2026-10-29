@@ -86,7 +86,7 @@ class LevanaAlerteReceiver : BroadcastReceiver() {
         val texte = context.getString(R.string.levana_rappel_texte)
         val notification = Notification.Builder(context, Notifications.CHANNEL_REMINDER)
             .setSmallIcon(R.drawable.ic_notification)
-            .setLargeIcon(BitmapFactory.decodeResource(context.resources, R.drawable.char_praise))
+            .setLargeIcon(BitmapFactory.decodeResource(context.resources, Personnage.pour(context, R.drawable.char_praise)))
             .setContentTitle(context.getString(soir.titre))
             .setContentText(texte)
             .setStyle(Notification.BigTextStyle().bigText(texte))

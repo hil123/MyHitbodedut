@@ -115,7 +115,7 @@ if __name__ == '__main__':
         im, k = detoure(src.crop(box), S)
         im.save(chemin, 'WEBP', quality=90, method=6)
         print(n, im.size, 'trous', k)
-    for n in ('char_arms_raised', 'char_dancing_joy', 'char_guitar', 'char_open_arms'):
+    for n in ('char_dancing_joy', 'char_guitar', 'char_open_arms'):
         chemin = os.path.join(dest, n + '.webp')
         im, k = sans_planche(chemin)
         im.save(chemin, 'WEBP', quality=90, method=6)

@@ -304,6 +304,24 @@ def annoter(texte_id, sections, nusah):
                         j += 1
                 bi = j
                 continue
+            # Le zimoun (29/10, « fais en sorte que le zimun se replie ») : seulement à trois
+            # convives ou plus, jamais du jour, toujours replié (dépliable). De sa consigne
+            # (« שלושה שאכלו כאחד חייבין בזימון », Edot « אם המסובים שלושה ») jusqu'à la
+            # première bénédiction, « ברוך אתה… הזן », qui se dit toujours ; le zimoun des
+            # noces (Sfard) est dedans.
+            if texte_id == "birkat_hamazon" and cons[bi] and (
+                    x.startswith("שלושה שאכלו כאחד חייבין בזימון") or x.startswith("אם המסובים שלושה")):
+                fin = bi
+                while fin < n and not (not cons[fin] and commence(txt[fin], "ברוך אתה")):
+                    fin += 1
+                # La consigne qui annonce la première bénédiction (Ashkenaz : « ברכה זו משה
+                # רבינו… תקנה ») est à elle, pas au zimoun.
+                while fin - 1 > bi and cons[fin - 1]:
+                    fin -= 1
+                for j in range(bi, fin):
+                    prend(j, "zimun")
+                bi = fin
+                continue
             # Les Chéva bérakhot de la table (28/10, tools/siddur_cheva_berakhot.py) : à la fin de
             # Birkat haMazon, jamais un jour du calendrier, toujours repliées (dépliables).
             if cons[bi] and x.startswith("בסעודת שבע ברכות"):
@@ -824,7 +842,7 @@ def main():
         "outil": "tools/siddur_annotations.py",
         "conditions": "clés de CalendrierJuif.C (KosherJava) ; « ! » : la clé fausse",
         "regle": "les textes ne sont pas modifiés ; un ajout hors du jour est replié, jamais retiré",
-        "a_valider": "indicatif : le texte et ses consignes font foi ; relecture par un Rav souhaitée",
+        "a_valider": "indicatif : le texte et ses consignes font foi",
     }}
     for nusah in ("edot", "sefard", "ashkenaz"):
         siddur = json.load(open(os.path.join(RAW, f"siddur_{nusah}.json"), encoding="utf-8"))

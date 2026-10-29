@@ -128,7 +128,7 @@ class SiddurActivity : AppCompatActivity() {
         layoutParams = LinearLayout.LayoutParams(dp(largeur), dp(hauteur))
         setBackgroundResource(R.drawable.bg_stage)
         setPadding(dp(4), dp(4), dp(4), dp(4))
-        addView(ImageView(context).apply {
+        addView(PersonnageImageView(context).apply {
             layoutParams = FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
             scaleType = ImageView.ScaleType.FIT_CENTER
             setImageResource(dessin)

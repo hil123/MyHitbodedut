@@ -298,7 +298,7 @@ class MiniLecteur(private val activite: Activity) {
         }
     }
 
-    private fun rond(taille: Int) = ImageView(activite).apply {
+    private fun rond(taille: Int) = PersonnageImageView(activite).apply {
         background = GradientDrawable().apply {
             shape = GradientDrawable.OVAL
             setColor(Apparence.couleur(activite, R.color.stage_soft))

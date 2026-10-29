@@ -27,7 +27,7 @@
     <string name="section_data">My data</string>
     <string name="section_data_hint">Everything is stored on this phone only. Export from time to time.</string>
 
-    <string name="gate_armed_title">“I am with Hashem” is watching</string>
+    <string name="gate_armed_title">“I am with Hashem” is on</string>
     <plurals name="gate_armed_detail">
         <item quantity="one">%1$d app is blocked until %2$s or until your hitbodedut.</item>
         <item quantity="other">%1$d apps are blocked until %2$s or until your hitbodedut.</item>
@@ -120,10 +120,10 @@
     <string name="session_start">Start, %1$s</string>
     <string name="session_target">%1$s hitbodedut</string>
     <string name="session_finish_now">Finish now</string>
-    <string name="session_cancel">Abandon</string>
+    <string name="session_cancel">Discard</string>
     <string name="session_finish_title">Finish the hitbodedut?</string>
     <string name="session_finish_message">The time already elapsed will be recorded and the day confirmed.</string>
-    <string name="session_cancel_title">Abandon the hitbodedut?</string>
+    <string name="session_cancel_title">Discard this hitbodedut?</string>
     <string name="session_cancel_message">Nothing will be recorded and the day stays open.</string>
     <string name="session_running_title">Hitbodedut in progress</string>
     <string name="session_remaining">%1$s left</string>
@@ -154,7 +154,7 @@
     <string name="hitbodedut_harata">Regret for the past</string>
     <string name="hitbodedut_harata_invite">Say what you regret, and say it plainly. Regret before Him is not a trial.</string>
     <string name="hitbodedut_bakasha">Asking</string>
-    <string name="hitbodedut_bakasha_invite">Ask for what you lack, and first of all to be brought close to Him. Even what you believe yourself too far from.</string>
+    <string name="hitbodedut_bakasha_invite">Ask for what you lack, and first of all to be brought close to Him. Even for what feels out of your reach.</string>
     <string name="hitbodedut_torah">Turn learning into prayer</string>
     <string name="hitbodedut_torah_invite">Take a teaching you heard today, and ask to reach it yourself.</string>
     <string name="hitbodedut_hodaa">Thanksgiving</string>
@@ -213,8 +213,8 @@
     </plurals>
 
     <plurals name="journal_summary">
-        <item quantity="one">%1$d hitbodedut, %2$s in total</item>
-        <item quantity="other">%1$d hitbodedut, %2$s in total</item>
+        <item quantity="one">%1$d time hitbodedut, %2$s in total</item>
+        <item quantity="other">%1$d times hitbodedut, %2$s in total</item>
     </plurals>
 
     <!-- Music -->
@@ -412,8 +412,8 @@
     <string name="tefilot_count">%d prayers</string>
     <string name="tefilot_warning">The lesson cited deals with another subject; it is the prayer that carries this plea.</string>
     <string name="tefila_hitbodedut">Hitbodedut</string>
-    <string name="tefila_simcha">Simha</string>
-    <string name="tefila_uman">Uman, Rosh Hashana</string>
+    <string name="tefila_simcha">Simcha</string>
+    <string name="tefila_uman">Uman, Rosh Hashanah</string>
     <string name="tefila_kdusha">Kedusha</string>
     <string name="tefila_zera">Zera shel kayama</string>
     <string name="tefila_parnassa">Parnassa</string>
@@ -509,7 +509,6 @@
     <string name="track_niggoun_31">Niggun 31</string>
     <string name="track_niggoun_32">Niggun 32</string>
     <string name="track_niggoun_33">Niggun 33</string>
-    <string name="track_ribo_sans_titre">Ishay Ribo — untitled</string>
 
     <!-- Les durées, dans la langue de l’interface (Store.formatDuration). -->
     <string name="duration_minutes">%1$d min</string>
@@ -580,7 +579,7 @@
     <string name="siddur_maintenant">For this hour</string>
     <string name="lecture_plus">Larger letters</string>
     <string name="lecture_moins">Smaller letters</string>
-    <string name="siddur_choose">Nusah</string>
+    <string name="siddur_choose">Nusach</string>
     <string name="siddur_signets">Sections</string>
     <string name="siddur_nusah_edot">Sephardi (Edot HaMizrah)</string>
     <string name="siddur_nusah_sefard">Sfard (Arizal)</string>
@@ -604,7 +603,7 @@
     <string name="boussole_vide_ville">or choose a city</string>
     <string name="zmanim_absent">does not occur today</string>
     <string name="zmanim_erreur">cannot be calculated</string>
-    <string name="zmanim_a_valider">Each time shows its method. Profile to be checked by a rabbi. Calculated at sea level, on the device, offline.</string>
+    <string name="zmanim_a_valider">Each time shows its method. Calculated at sea level, on the device, offline.</string>
     <string name="zmanim_ajouts_titre">In the prayers</string>
     <string name="zmanim_aucun_ajout">Nothing special</string>
     <string name="zmanim_omer">Omer: day %1$d</string>
@@ -632,8 +631,8 @@
     <string name="zman_netz">Sunrise (Netz)</string>
     <string name="zman_szks_mga">Latest Shema (Magen Avraham)</string>
     <string name="zman_szks_gra">Latest Shema (Gra)</string>
-    <string name="zman_szt_mga">Latest Tefila (Magen Avraham)</string>
-    <string name="zman_szt_gra">Latest Tefila (Gra)</string>
+    <string name="zman_szt_mga">Latest Tefillah (Magen Avraham)</string>
+    <string name="zman_szt_gra">Latest Tefillah (Gra)</string>
     <string name="zman_chatsot">Midday (Chatzot)</string>
     <string name="zman_minha_gedola">Mincha gedola</string>
     <string name="zman_minha_ketana">Mincha ketana</string>
@@ -687,7 +686,7 @@
     <string name="ajout_roch_hodech">Rosh Chodesh</string>
     <string name="ajout_hallel_annonce">Hallel</string>
     <string name="ajout_anenou_officiant">Aneinu of the chazzan (repetition)</string>
-    <string name="ajout_anenou_particulier">Aneinu of the individual (Shomea tefila)</string>
+    <string name="ajout_anenou_particulier">Aneinu of the individual (Shomea tefillah)</string>
     <string name="ajout_anenou_particulier_matin_minha">Aneinu of the individual, at Shacharit and Mincha</string>
     <string name="ajout_anenou_particulier_trois">Aneinu of the individual, at Arvit, Shacharit and Mincha</string>
     <string name="ajout_anenou_particulier_minha">Aneinu of the individual, at Mincha only</string>
@@ -705,6 +704,7 @@
     <string name="ajout_roch_hachana_chabbat">Rosh Hashanah on Shabbat</string>
     <string name="ajout_motsae_chabbat_yt">Motzaei Shabbat and Yom Tov</string>
     <string name="ajout_cheva_berakhot">Sheva Berakhot (wedding meal)</string>
+    <string name="ajout_zimun">Zimun (three or more who ate together)</string>
     <string name="ajout_embolismique">Leap year (וּלְכַפָּרַת פֶּשַׁע)</string>
     <string name="ajout_beit_avel">House of mourning</string>
     <string name="siddur_seul">Praying alone</string>
@@ -725,15 +725,15 @@
     <string name="fete_tamouz_17">Fast of 17 Tammuz</string>
     <string name="fete_ticha_beav">Tisha B’Av</string>
     <string name="fete_tou_beav">Tu B’Av</string>
-    <string name="fete_erev_roch_hachana">Erev Rosh Hashana</string>
-    <string name="fete_roch_hachana">Rosh Hashana</string>
-    <string name="fete_jeune_guedalia">Fast of Gedalia</string>
+    <string name="fete_erev_roch_hachana">Erev Rosh Hashanah</string>
+    <string name="fete_roch_hachana">Rosh Hashanah</string>
+    <string name="fete_jeune_guedalia">Fast of Gedaliah</string>
     <string name="fete_erev_yom_kippour">Erev Yom Kippur</string>
     <string name="fete_yom_kippour">Yom Kippur</string>
     <string name="fete_erev_soukkot">Erev Sukkot</string>
     <string name="fete_soukkot">Sukkot</string>
     <string name="fete_hol_hamoed_soukkot">Chol HaMoed Sukkot</string>
-    <string name="fete_hochaana_rabba">Hoshana Rabba</string>
+    <string name="fete_hochaana_rabba">Hoshana Rabbah</string>
     <string name="fete_chemini_atseret">Shemini Atzeret</string>
     <string name="fete_simhat_torah">Simchat Torah</string>
     <string name="fete_hanouka">Chanukah</string>
@@ -760,8 +760,8 @@
         <item quantity="other">and %1$d more</item>
     </plurals>
     <string name="hilloula_lien">Sages of the day on hyomi.org.il</string>
-    <string name="halakha_yomit_titre">Halakha Yomit</string>
-    <string name="halakha_yomit_lien">Today’s halakha on halakhayomit.co.il</string>
+    <string name="halakha_yomit_titre">Halacha Yomit</string>
+    <string name="halakha_yomit_lien">Today’s halacha on halachayomit.co.il</string>
     <!-- Les paliers d'objectifs (11/10) -->
     <string name="paliers_title">My milestones</string>
     <string name="paliers_sous_titre">Each milestone leads to the next</string>
@@ -804,13 +804,13 @@
     <string name="hilloula_reduire">Show less</string>
     <string name="hilloulot_tout">All hillulot ›</string>
     <!-- La halakha du jour hors ligne : le Ben Ish 'Haï (11/10) -->
-    <string name="halakha_title">Halakha of the day</string>
-    <string name="halakha_afficher">Show the halakha of the day</string>
-    <string name="halakha_recherche">Search the halakha</string>
-    <string name="halakha_aucune">No halakha for this day</string>
-    <string name="halakha_tout">The whole halakha of the day ›</string>
+    <string name="halakha_title">Halacha of the day</string>
+    <string name="halakha_afficher">Show the halacha of the day</string>
+    <string name="halakha_recherche">Search the halacha</string>
+    <string name="halakha_aucune">No halacha for this day</string>
+    <string name="halakha_tout">The whole halacha of the day ›</string>
     <string name="halakha_livre">Yalkut Yosef, Kitzur Shulchan Aruch</string>
-    <string name="halakha_note">Original Hebrew text, verbatim. For practice, ask a rabbi.</string>
+    <string name="halakha_note">Original Hebrew text, verbatim.</string>
     <!-- Les trophées et la fête (11/10) -->
     <string name="celebration_titre">Mazal tov!</string>
     <string name="trophees_paliers_titre">Trophies and milestones</string>
@@ -866,7 +866,7 @@
     <string name="trophee_plume">The pen</string>
     <plurals name="trophee_premier_pas_desc">
         <item quantity="one">A first hitbodedut</item>
-        <item quantity="other">%1$d first hitbodedut</item>
+        <item quantity="other">First %1$d times hitbodedut</item>
     </plurals>
     <plurals name="trophee_seance_longue_desc">
         <item quantity="one">%1$d minute in one day</item>
@@ -940,13 +940,13 @@
     <string name="settings_police">Hebrew font</string>
     <string name="settings_ouverture">Opening screen</string>
     <string name="section_zmanim_ecran">Zmanim screen</string>
-    <string name="section_zmanim_ecran_hint">What appears below the times, and the book of the daily halakha.</string>
+    <string name="section_zmanim_ecran_hint">What appears below the times, and the book of the daily halacha.</string>
     <string name="reglage_levana">Show Birkat HaLevana</string>
-    <string name="halakha_source_titre">Halakha book</string>
+    <string name="halakha_source_titre">Halacha book</string>
     <string name="halakha_source_yalkut">Yalkut Yosef</string>
     <string name="halakha_source_bih">Ben Ish Chai</string>
     <string name="halakha_source_deux">Both</string>
-    <string name="zmanim_bouton_halakha">Daily halakha</string>
+    <string name="zmanim_bouton_halakha">Daily halacha</string>
     <string name="zmanim_bouton_hilloulot">Hillulot</string>
     <!-- Birkat haLevana revue sur le texte (14/10). -->
     <string name="levana_lune">Moon tonight: %1$s lit, %2$s</string>
@@ -977,7 +977,7 @@
     <string name="settings_ne_pas_deranger">Do not disturb during hitbodedut</string>
     <string name="settings_ne_pas_deranger_hint">The phone switches to priority mode for the hitbodedut, then returns to how it was. Android asks for permission the first time.</string>
     <string name="recherche_titre">Search</string>
-    <string name="recherche_indice">Search the siddur, books, halakha, hillulot</string>
+    <string name="recherche_indice">Search the siddur, books, halacha, hillulot</string>
     <string name="recherche_tout">All</string>
     <string name="recherche_tefilot">Prayers</string>
     <string name="recherche_halakhot">Halachot</string>
@@ -1059,11 +1059,11 @@
     <string name="chizuk_demande_title">I need hizuk</string>
     <string name="chizuk_demande_hint">A text to lift you up, whenever you want.</string>
     <string name="chizuk_autre">Another</string>
-    <string name="chizuk_garder">Keep</string>
-    <string name="chizuk_garde">Kept ✓</string>
+    <string name="chizuk_garder">Save</string>
+    <string name="chizuk_garde">Saved ✓</string>
     <string name="chizuk_partager">Share</string>
     <string name="chizuk_commencer">Start a hitbodedut</string>
-    <string name="chizuk_favoris">Kept texts</string>
+    <string name="chizuk_favoris">Saved texts</string>
     <string name="source_du_jour">Source of the day</string>
     <string name="source_du_jour_commencer">Start</string>
     <string name="source_du_jour_lire">Read more</string>
@@ -1228,6 +1228,13 @@
     <string name="vol_direct_attente">Requesting the position…</string>
     <string name="vol_direct_introuvable">The aircraft is not seen right now (out of coverage or wrong callsign). The calculation stays on the planned route.</string>
     <string name="vol_direct_erreur">Tracking unavailable (%1$s). The calculation stays on the planned route.</string>
+    <string name="vol_erreur_hors_ligne">no connection</string>
+    <string name="vol_erreur_quota">today’s OpenSky quota is used up</string>
+    <string name="vol_erreur_illisible">unreadable response</string>
+    <string name="vol_erreur_position">invalid position</string>
+    <string name="vol_erreur_relais_absent">relay not configured</string>
+    <string name="vol_erreur_service">service unavailable</string>
+    <string name="vol_erreur_serveur">server error %1$d</string>
     <string name="vol_direct_inactif">The tracking relay is not in service yet in this version.</string>
     <string name="vol_fiabilite_direct">Route adjusted to the position received from OpenSky Network at %1$s (%2$s), then great circle to arrival, at constant speed. Zmanim of the point below the aircraft, at sea level, computed on the device.</string>
     <string name="vol_source_opensky">Aircraft data: OpenSky Network (opensky-network.org)</string>

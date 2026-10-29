@@ -206,13 +206,13 @@ test('suivi en direct : indicatifs, réponse du relais, adresse, fiabilité', as
   // Sans relais configuré, aucune requête.
   let appels = 0;
   const compte = async () => { appels++; return new Response('{}'); };
-  assert.equal((await Vol.positionEnDirect('', 'ELY1', { latitude: 0, longitude: 0 }, compte)).raison, 'relais non configuré');
+  assert.equal((await Vol.positionEnDirect('', 'ELY1', { latitude: 0, longitude: 0 }, compte)).raison, 'relais_absent');
   assert.equal((await Vol.positionEnDirect('http://r.test', 'ELY1', { latitude: 0, longitude: 0 }, compte)).statut, 'erreur');
   assert.equal(appels, 0);
   const trouve = await Vol.positionEnDirect('https://r.test', 'ELY1', { latitude: 50, longitude: -20 },
     async () => new Response(JSON.stringify({ trouve: true, latitude: 56, longitude: -30, instant: '2026-11-10T18:30:00Z' })), maintenant);
   assert.equal(trouve.statut, 'trouve');
-  assert.equal((await Vol.positionEnDirect('https://r.test', 'ELY1', { latitude: 0, longitude: 0 }, async () => { throw new Error('hors ligne'); })).raison, 'pas de connexion');
+  assert.equal((await Vol.positionEnDirect('https://r.test', 'ELY1', { latitude: 0, longitude: 0 }, async () => { throw new Error('hors ligne'); })).raison, 'hors_ligne');
   // La position reçue recale la route comme un relevé, avec sa propre fiabilité.
   const c = Vol.calculer({ ...versOuest, releve: trouve.point, sourceReleve: 'direct' });
   assert.equal(c.fiabilite, 'releve_direct');
@@ -242,7 +242,23 @@ test('la route d\'un numéro de vol (adsbdb) : tronçon depuis le départ, repli
   assert.equal((await Vol.chercherRoute('XX999', null, faux(table))).statut, 'introuvable');
   assert.equal((await Vol.chercherRoute('nimporte', null, faux(table))).statut, 'invalide');
   const panne = await Vol.chercherRoute('LY81', null, async () => ({ ok: false, status: 503 }));
-  assert.deepEqual(panne, { statut: 'erreur', raison: 'HTTP 503' });
+  assert.deepEqual(panne, { statut: 'erreur', raison: 'serveur_503' });
   // Seul le numéro part : ni position, ni aéroport de départ dans l'adresse.
   assert.ok(demandes.every((u) => u.startsWith(Vol.ADSBDB + '/') && !u.includes('?')));
+});
+
+test('les raisons d\'échec du vol sont des codes, traduits par l\'écran (audit 1.390)', async () => {
+  const maintenant = new Date('2026-11-10T18:31:00Z');
+  assert.equal(Vol.lireReponse(null, maintenant).raison, 'illisible');
+  assert.equal(Vol.lireReponse({ erreur: 'opensky 429' }, maintenant).raison, 'quota');
+  assert.equal(Vol.lireReponse({ erreur: 'opensky 502' }, maintenant).raison, 'serveur_502');
+  assert.equal(Vol.lireReponse({ erreur: 'opensky injoignable' }, maintenant).raison, 'service');
+  assert.equal(Vol.Raison.codeServeur('serveur_502'), 502);
+  assert.equal(Vol.Raison.codeServeur('quota'), null);
+  const enPanne = async () => ({ status: 500 });
+  assert.equal((await Vol.positionEnDirect('https://r.test', 'ELY1', { latitude: 0, longitude: 0 }, enPanne)).raison, 'serveur_500');
+  for (const fichier of ['vol.js', 'app.js']) {
+    const source = readFileSync(new URL(`../src/js/${fichier}`, import.meta.url), 'utf8');
+    for (const fr of ['pas de connexion', 'réponse illisible', 'position invalide', 'relais non configuré']) assert.ok(!source.includes(`'${fr}'`), `${fichier} : ${fr}`);
+  }
 });

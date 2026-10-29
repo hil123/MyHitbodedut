@@ -16,7 +16,7 @@ import android.view.View
  */
 class BoussoleView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null) : View(context, attrs) {
 
-    private val image: Bitmap? = runCatching { BitmapFactory.decodeResource(resources, R.drawable.char_standing_back) }.getOrNull()
+    private val image: Bitmap? = runCatching { BitmapFactory.decodeResource(resources, Personnage.pour(context, R.drawable.char_standing_back)) }.getOrNull()
 
     private var principale: Double? = null
     private var autre: Double? = null

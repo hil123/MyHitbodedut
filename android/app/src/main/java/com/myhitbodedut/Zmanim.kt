@@ -16,8 +16,8 @@ import java.util.TimeZone
  * (ComplexZmanimCalendar). Le profil est fixe et chaque ligne nomme sa
  * méthode : aucune appellation de communauté (« séfarade »…) ne choisit à
  * la place de l'utilisateur. Formules, sources et limites : ZMANIM.md. Les
- * méthodes ont été lues dans zmanim-2.5.0-sources.jar ; le profil est à
- * valider par un Rav.
+ * méthodes ont été lues dans zmanim-2.5.0-sources.jar ; le profil a été
+ * vérifié par le propriétaire (29/10).
  *
  * Le même profil existe côté web (web/src/js/zmanim.js, sur kosher-zmanim),
  * comparé à celui-ci par les vecteurs de web/test/vecteurs_kosherjava.json.

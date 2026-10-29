@@ -711,7 +711,8 @@ class StreakWidget : AppWidgetProvider() {
         }
 
         /** L'illustration, réduite à la lecture : les originaux font 900 px de haut. */
-        private fun dessin(context: Context, res: Int, hauteurVoulue: Int): Bitmap? = runCatching {
+        private fun dessin(context: Context, resDemande: Int, hauteurVoulue: Int): Bitmap? = runCatching {
+            val res = Personnage.pour(context, resDemande)
             val bornes = BitmapFactory.Options().apply { inJustDecodeBounds = true }
             BitmapFactory.decodeResource(context.resources, res, bornes)
             var echelle = 1
