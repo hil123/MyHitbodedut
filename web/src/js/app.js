@@ -2374,11 +2374,6 @@ function listeZmanim(iso) {
 const piedZmanim = () => [h('p', { class: 'indice sources' }, tr.t('zmanim_a_valider')),
   h('p', { class: 'indice sources' }, tr.t('zmanim_source_villes'))];
 
-/** Les accès du jour en tuiles, trois par rangée : le personnage (au féminin pour צדקת) et le nom. */
-const tuilesZmanim = (acces) => h('div', { class: 'tuiles' }, ...acces.map(([cle, dessin, action]) =>
-  h('button', { type: 'button', class: 'tuile', onclick: action },
-    h('img', { src: `img/${dessin}.webp`, alt: '' }), h('span', {}, tr.t(cle)))));
-
 function ecranZmanim() {
   chargeVilles();
   rafraichirPosition();
@@ -2391,16 +2386,16 @@ function ecranZmanim() {
   // Sans lieu, la grande carte « Choisir le lieu » suffit : pas de seconde pastille dans le bandeau.
   return h('div', { class: 'ecran avec-bandeau' }, bandeau(tr.t('zmanim_title'), { puce: lieu ? puce : null, dessin: 'char_torah' }),
     h('div', { class: 'defile' }, h('div', { class: 'contenu' },
-      // Le jour seul, les accès en tuiles, puis les horaires (29/10, option C : une seule forme de
-      // bouton au lieu de trois ; ZmanimActivity.tuiles).
+      // Le jour seul, trois boutons, puis les horaires (14/10, « trop de choses avant les זמנים »).
       carteJour(iso, { complet: false }),
-      tuilesZmanim([
-        ['zmanim_calendrier', 'char_writing', () => { jourCalendrier = iso; moisCalendrier = null; ouvrir('calendrier'); }],
-        ['zmanim_bouton_halakha', 'char_torah', () => { jourHalakha = iso; rechercheHalakhaTexte = ''; ouvrir('halakha'); }],
-        ['zmanim_bouton_hilloulot', 'char_tehilim', () => { jourHilloulot = iso; rechercheHilloulot = ''; ouvrir('hilloulot'); }],
-        ['zmanim_bouton_vol', 'char_walking', () => ouvrir('vol')],
-        ['zmanim_bouton_boussole', 'char_standing_back', () => ouvrir('boussole')],
-      ]),
+      h('div', { class: 'boutons-jour' },
+        h('button', { class: 'secondaire', onclick: () => { jourHalakha = iso; rechercheHalakhaTexte = ''; ouvrir('halakha'); } }, tr.t('zmanim_bouton_halakha')),
+        h('button', { class: 'secondaire', onclick: () => { jourHilloulot = iso; rechercheHilloulot = ''; ouvrir('hilloulot'); } }, tr.t('zmanim_bouton_hilloulot')),
+        h('button', { class: 'secondaire', onclick: () => { jourCalendrier = iso; moisCalendrier = null; ouvrir('calendrier'); } }, tr.t('zmanim_calendrier')),
+        // Le vol et la boussole rejoignent les boutons : les horaires du jour passent avant.
+        // L'icône est un élément à part : elle reste au début du bouton, à droite en hébreu.
+        h('button', { class: 'secondaire bouton-large', onclick: () => ouvrir('vol') }, h('span', { 'aria-hidden': 'true' }, '✈'), h('span', {}, tr.t('zmanim_bouton_vol'))),
+        h('button', { class: 'secondaire bouton-large', onclick: () => ouvrir('boussole') }, h('span', { 'aria-hidden': 'true' }, '🧭'), h('span', {}, tr.t('zmanim_bouton_boussole')))),
       listeZmanim(iso),
       ...sousHoraires(iso),
       ...piedZmanim())));
@@ -2418,6 +2413,14 @@ let boussoleRecu = false;
 let boussolePermise = false;
 const SOURCE_BOUSSOLE = 'https://www.chabad.org/library/article_cdo/aid/3502321/jewish/Why-Do-We-Face-East-When-Praying-Or-Do-We.htm';
 const COULEURS_BOUSSOLE = { ciel: '#DFF5E8', sol: '#CBEBD8', horizon: '#9CC9B0', encre: '#173C32', marque: '#16775A', or: '#B8780F', bleu: '#2E7DB3' };
+
+function carteBoussole() {
+  const lieu = store.lieu();
+  return h('div', { class: 'carte' }, h('button', { class: 'ligne', onclick: () => ouvrir('boussole') },
+    h('span', { class: 'corps' }, h('div', { class: 'nom' }, tr.t('boussole_title')),
+      h('div', { class: 'etat' }, lieu ? tr.t('boussole_par_rapport_nord', Boussole.degres(Boussole.grandCercle(lieu.latitude, lieu.longitude))) : tr.t('boussole_carte_sous'))),
+    h('span', { class: 'chevron', 'aria-hidden': 'true' })));
+}
 
 function consigneBoussole(gc, cap) {
   if (cap == null) return tr.t('boussole_par_rapport_nord', Boussole.degres(gc));
@@ -2623,6 +2626,15 @@ let minuterieVol = null;
 let modifierVol = false;
 
 const libelleVol = (v) => tr.t('vol_carte_vol', v.numero || '✈', v.depart, v.arrivee);
+
+/** L'accès depuis l'onglet Zmanim : le dernier vol saisi, ou l'invitation à en saisir un. */
+function carteVol() {
+  const v = store.vol();
+  return h('div', { class: 'carte' }, h('button', { class: 'ligne', onclick: () => ouvrir('vol') },
+    h('span', { class: 'corps' }, h('div', { class: 'nom' }, tr.t('vol_title')),
+      h('div', { class: 'etat' }, v ? libelleVol(v) : tr.t('vol_carte_sous'))),
+    h('span', { class: 'chevron', 'aria-hidden': 'true' })));
+}
 
 function planDe(v) {
   const depart = aeroportsVol.find((a) => a.iata === v.depart);
