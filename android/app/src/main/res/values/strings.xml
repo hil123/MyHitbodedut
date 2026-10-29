@@ -305,13 +305,6 @@
     <!-- En reserve : ces morceaux sont dans musique/, hors de l'APK.
          Leurs titres restent ici pour ne pas etre perdus au retour. -->
     <string name="track_niggoun_08">Niggoun 08</string>
-    <string name="track_ribo_ata_zocher" translatable="false">Ata Zocher — Ishay Ribo &amp; MBD</string>
-    <string name="track_ribo_halev_sheli" translatable="false">Halev Sheli — Ishay Ribo</string>
-    <string name="track_ribo_nafshi" translatable="false">Nafshi — Ishay Ribo &amp; Motty Steinmetz</string>
-    <string name="track_ribo_ochila" translatable="false">Ochila — Ishay Ribo</string>
-    <string name="track_ribo_sans_titre">Ishay Ribo — sans titre</string>
-    <string name="track_ribo_seder_haavoda" translatable="false">Seder HaAvoda — Ishay Ribo</string>
-    <string name="track_ribo_zusha" translatable="false">Ishay Ribo feat. Zusha</string>
     <string name="track_shmuel_one_prayer" translatable="false">Give Me One Prayer — Shmuel</string>
     <string name="track_yanuka_a_part_of_me" translatable="false">A Part of Me — The Yanuka’s Melodies</string>
     <string name="track_yanuka_anticipation" translatable="false">Anticipation — The Yanuka’s Melodies</string>

@@ -509,7 +509,6 @@
     <string name="track_niggoun_31">Niggun 31</string>
     <string name="track_niggoun_32">Niggun 32</string>
     <string name="track_niggoun_33">Niggun 33</string>
-    <string name="track_ribo_sans_titre">Ishay Ribo — untitled</string>
 
     <!-- Les durées, dans la langue de l’interface (Store.formatDuration). -->
     <string name="duration_minutes">%1$d min</string>
@@ -728,7 +727,7 @@
     <string name="fete_erev_soukkot">Erev Sukkot</string>
     <string name="fete_soukkot">Sukkot</string>
     <string name="fete_hol_hamoed_soukkot">Chol HaMoed Sukkot</string>
-    <string name="fete_hochaana_rabba">Hoshana Rabba</string>
+    <string name="fete_hochaana_rabba">Hoshana Rabbah</string>
     <string name="fete_chemini_atseret">Shemini Atzeret</string>
     <string name="fete_simhat_torah">Simchat Torah</string>
     <string name="fete_hanouka">Chanukah</string>

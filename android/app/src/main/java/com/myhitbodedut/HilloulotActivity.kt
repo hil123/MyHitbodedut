@@ -120,7 +120,8 @@ class HilloulotActivity : AppCompatActivity() {
             textDirection = View.TEXT_DIRECTION_RTL; PoliceHebraique.appliquer(this)
         })
         val langue = ChizukCard.language(context)
-        val traduit = if (langue.startsWith("en")) h.en else if (langue.startsWith("fr")) h.fr else null
+        // Repli FR → EN (audit 1.390) : un nom traduit en anglais vaut mieux que l'hébreu seul.
+        val traduit = if (langue.startsWith("en")) h.en else if (langue.startsWith("fr")) h.fr ?: h.en else null
         if (!traduit.isNullOrBlank()) addView(VueJour.texte(context, traduit, 13f, R.color.muted, haut = 2))
         // Isolés (FSI … PDI) : la date et l'année hébraïques ne renversent pas la ligne.
         listOfNotNull(date?.let { "\u2068$it\u2069" }, h.annee.takeIf { it.isNotBlank() }?.let { getString(R.string.hilloula_annee, "\u2068$it\u2069") })

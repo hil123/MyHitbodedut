@@ -1361,7 +1361,7 @@ function ecranRecherche() {
     groupes.push(...groupe('recherche_halakhot', [...yy.map((x) => resultat(sourceYalkut(x), extraitRecherche(x.t, q), () => { rechercheHalakhaTexte = texteRecherche; ouvrir('halakha'); })),
       ...bih.map((x) => resultat(sourceHalakha(x, (n) => Reference.lettres(n)), extraitRecherche(x.texte, q), () => { rechercheHalakhaTexte = texteRecherche; ouvrir('halakha'); }))]));
     // Le nom dans la langue de l'interface s'il existe, sinon l'hébreu (RechercheGlobale.resultatHilloula).
-    const nomHilloula = (x) => (tr.langue === 'fr' ? x.fr : tr.langue === 'en' ? x.en : null) || null;
+    const nomHilloula = nomTraduitHilloula;
     groupes.push(...groupe('hilloulot_title', hil.map(([, x]) => resultat(nomHilloula(x) ?? x.he,
       [nomHilloula(x) ? `\u2068${x.he}\u2069` : null, x.a || null].filter(Boolean).join(' · '),
       () => { rechercheHilloulot = texteRecherche; ouvrir('hilloulot'); }))));
@@ -1406,6 +1406,9 @@ function allerAMarque(ecran, m) {
     : [...ecran.querySelectorAll('[data-place]')].find((p) => p.offsetParent !== null && Number(p.dataset.place.split(':')[0]) >= m.section);
   if (visible && defile) defile.scrollTop += visible.getBoundingClientRect().top - defile.getBoundingClientRect().top - 8;
 }
+
+/** Le nom d'une hilloula dans la langue de l'interface, FR → EN (audit 1.390) ; null en hébreu ou sans traduction. */
+const nomTraduitHilloula = (x) => (tr.langue === 'fr' ? x.fr || x.en : tr.langue === 'en' ? x.en : null) || null;
 
 /** Le titre hébreu d'une clé « s:id » ou « l:id », ou null tant que son recueil n'est pas chargé. */
 function titreCle(cle) {
@@ -2294,7 +2297,7 @@ function ecranHilloulot() {
   const iso = jourHilloulot ?? isoLocal(new Date());
   const carte = (x, date) => h('div', { class: 'carte carte-hilloula' },
     h('p', { class: 'hilloula-nom', lang: 'he', dir: 'rtl' }, x.he),
-    (tr.langue === 'fr' ? x.fr : tr.langue === 'en' ? x.en : null) ? h('p', { class: 'hilloula-traduit' }, tr.langue === 'fr' ? x.fr : x.en) : null,
+    nomTraduitHilloula(x) ? h('p', { class: 'hilloula-traduit' }, nomTraduitHilloula(x)) : null,
     // Isolés (FSI … PDI) : la date et l'année hébraïques ne renversent pas la ligne.
     [date, x.a].some(Boolean)
       ? h('p', { class: 'hilloula-annee' }, [date ? `\u2068${date}\u2069` : null, x.a ? tr.t('hilloula_annee', `\u2068${x.a}\u2069`) : null].filter(Boolean).join(' · ')) : null,
@@ -2681,9 +2684,20 @@ async function chercherRouteVol(v) {
   } else if (r.statut === 'autre_depart') texte = tr.t('vol_route_autre_depart', v.numero.toUpperCase(), r.escales.join(' → '), v.depart);
   else if (r.statut === 'introuvable') texte = tr.t('vol_route_introuvable');
   else if (r.statut === 'invalide') texte = tr.t('vol_route_invalide');
-  else texte = tr.t('vol_route_erreur', r.raison);
+  else texte = tr.t('vol_route_erreur', raisonVol(r.raison));
   routeVol = { attente: false, texte };
   rendre();
+}
+
+/** Une raison de Vol.Raison, dans la langue de l'interface (VolActivity.raisonLisible). */
+function raisonVol(raison) {
+  const code = Vol.Raison.codeServeur(raison);
+  if (code !== null) return tr.t('vol_erreur_serveur', code);
+  return tr.t({
+    [Vol.Raison.HORS_LIGNE]: 'vol_erreur_hors_ligne', [Vol.Raison.QUOTA]: 'vol_erreur_quota',
+    [Vol.Raison.ILLISIBLE]: 'vol_erreur_illisible', [Vol.Raison.POSITION_INVALIDE]: 'vol_erreur_position',
+    [Vol.Raison.RELAIS_ABSENT]: 'vol_erreur_relais_absent',
+  }[raison] ?? 'vol_erreur_service');
 }
 
 /** Le GPS du téléphone, par le navigateur (VolActivity.releverGps) : 90 s au plus, sans réseau. */
@@ -2704,7 +2718,7 @@ async function demanderDirect(indicatif) {
     const releve = { latitude: r.point.latitude, longitude: r.point.longitude, instant: r.point.instant.toISOString(), source: 'direct' };
     if (!Vol.releveUtilisable({ ...plan, releve: r.point })) { rendre(); return signale(tr.t('vol_gps_hors_vol')); }
     store.setVol({ ...garde, releve });
-  } else signale(r.statut === 'introuvable' ? tr.t('vol_direct_introuvable') : tr.t('vol_direct_erreur', r.raison));
+  } else signale(r.statut === 'introuvable' ? tr.t('vol_direct_introuvable') : tr.t('vol_direct_erreur', raisonVol(r.raison)));
   rendre();
 }
 

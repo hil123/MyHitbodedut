@@ -520,7 +520,6 @@
     <string name="track_niggoun_31">ניגון 31</string>
     <string name="track_niggoun_32">ניגון 32</string>
     <string name="track_niggoun_33">ניגון 33</string>
-    <string name="track_ribo_sans_titre">ישי ריבו — ללא שם</string>
 
     <!-- Les durées, dans la langue de l’interface (Store.formatDuration). -->
     <string name="duration_minutes">%1$d דק׳</string>
