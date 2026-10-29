@@ -2373,8 +2373,9 @@ function ecranZmanim() {
         h('button', { class: 'secondaire', onclick: () => { jourHilloulot = iso; rechercheHilloulot = ''; ouvrir('hilloulot'); } }, tr.t('zmanim_bouton_hilloulot')),
         h('button', { class: 'secondaire', onclick: () => { jourCalendrier = iso; moisCalendrier = null; ouvrir('calendrier'); } }, tr.t('zmanim_calendrier')),
         // Le vol et la boussole rejoignent les boutons : les horaires du jour passent avant.
-        h('button', { class: 'secondaire bouton-large', onclick: () => ouvrir('vol') }, `✈ ${tr.t('zmanim_bouton_vol')}`),
-        h('button', { class: 'secondaire bouton-large', onclick: () => ouvrir('boussole') }, `🧭 ${tr.t('zmanim_bouton_boussole')}`)),
+        // L'icône est un élément à part : elle reste au début du bouton, à droite en hébreu.
+        h('button', { class: 'secondaire bouton-large', onclick: () => ouvrir('vol') }, h('span', { 'aria-hidden': 'true' }, '✈'), h('span', {}, tr.t('zmanim_bouton_vol'))),
+        h('button', { class: 'secondaire bouton-large', onclick: () => ouvrir('boussole') }, h('span', { 'aria-hidden': 'true' }, '🧭'), h('span', {}, tr.t('zmanim_bouton_boussole')))),
       listeZmanim(iso),
       ...sousHoraires(iso),
       ...piedZmanim())));
@@ -2836,7 +2837,7 @@ function friseVol(c, enVol, maintenant) {
   }
   lignes.push(point('bout', tr.t('vol_frise_atterrissage', c.plan.arrivee.iata), c.plan.atterrissage));
   return h('div', { class: 'carte carte-texte carte-vol' }, h('p', { class: 'indice' }, tr.t('vol_en_vol_titre')),
-    median !== null ? h('p', { class: 'frise-retard' }, tr.t('vol_frise_retard', `${median < 0 ? '−' : '+'}${Math.abs(Math.round(median / 60000))}`)) : null,
+    median !== null ? h('p', { class: 'frise-retard' }, tr.t('vol_frise_retard', `\u2066${median < 0 ? '−' : '+'}${Math.abs(Math.round(median / 60000))}\u2069`)) : null,
     h('ol', { class: 'frise' }, ...lignes));
 }
 
@@ -2922,7 +2923,8 @@ function ecranVol() {
   const resume = planGarde && calculVol && !modifierVol ? h('div', { class: 'carte vol-resume' },
     h('div', { class: 'vol-resume-tete' }, h('span', { class: 'vol-resume-titre' }, libelleVol(garde)),
       h('button', { class: 'lien-bouton', onclick: () => { modifierVol = true; rendre(); } }, tr.t('vol_modifier'))),
-    h('p', { class: 'vol-resume-heures' }, `${heureAeroport(planGarde.depart, planGarde.decollage)} → ${heureAeroport(planGarde.arrivee, planGarde.atterrissage)}`)) : null;
+    // Chaque heure isolée, la flèche dans le sens de lecture (← en hébreu).
+    h('p', { class: 'vol-resume-heures' }, `\u2068${heureAeroport(planGarde.depart, planGarde.decollage)}\u2069 ${tr.rtl ? '←' : '→'} \u2068${heureAeroport(planGarde.arrivee, planGarde.atterrissage)}\u2069`)) : null;
   const puce = h('span', { class: 'puce-bandeau' }, garde ? libelleVol(garde) : tr.t('vol_carte_sous'));
   return h('div', { class: 'ecran avec-bandeau' }, bandeau(tr.t('vol_title'), { puce, dessin: 'scene_airport' }),
     h('div', { class: 'defile' }, h('div', { class: 'contenu' },
