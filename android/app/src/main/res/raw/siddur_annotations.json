@@ -3222,6 +3222,51 @@
     "empreinte": "בראשחודש וזכרנו לטובה ביום ראש חדש הזה.",
     "g": 1,
     "racine": "roch_hodech"
+   },
+   {
+    "sorte": "bloc",
+    "s": 0,
+    "si": "roch_hachana",
+    "b": 7,
+    "empreinte": "בראשהשנה וזכרנו לטובה ביום הזכרון הזה.",
+    "g": 2,
+    "racine": "roch_hachana"
+   },
+   {
+    "sorte": "bloc",
+    "s": 0,
+    "si": "pessah",
+    "b": 8,
+    "empreinte": "בפסח ושמחנו ביום חג המצות הזה, ביום ביום",
+    "g": 3,
+    "racine": "pessah"
+   },
+   {
+    "sorte": "bloc",
+    "s": 0,
+    "si": "chavouot",
+    "b": 9,
+    "empreinte": "בשבועות ושמחנו ביום חג השבועות הזה ביום ",
+    "g": 4,
+    "racine": "chavouot"
+   },
+   {
+    "sorte": "bloc",
+    "s": 0,
+    "si": "soukkot",
+    "b": 10,
+    "empreinte": "בסוכות ושמחנו ביום הסכות הזה, ביום ביום ",
+    "g": 5,
+    "racine": "soukkot"
+   },
+   {
+    "sorte": "bloc",
+    "s": 0,
+    "si": "chemini_atseret",
+    "b": 11,
+    "empreinte": "בשמיני עצרת ושמחנו ביום שמיני חג עצרת הז",
+    "g": 6,
+    "racine": "chemini_atseret"
    }
   ],
   "hallel": [
@@ -8054,6 +8099,44 @@
     "empreinte": "ברוך אתה יהוה אלהינו מלך העולם אשר נתן ש",
     "g": 7,
     "racine": "oubli"
+   }
+  ],
+  "meen_chaloch": [
+   {
+    "sorte": "bloc",
+    "s": 0,
+    "si": "chabbat",
+    "b": 7,
+    "empreinte": "(בשבת:) ורצה והחליצנו ביום השבת הזה:",
+    "g": 0,
+    "racine": "chabbat"
+   },
+   {
+    "sorte": "bloc",
+    "s": 0,
+    "si": "roch_hodech",
+    "b": 8,
+    "empreinte": "(בר״ח:) וזכרנו לטובה ביום ראש החדש הזה:",
+    "g": 1,
+    "racine": "roch_hodech"
+   },
+   {
+    "sorte": "bloc",
+    "s": 0,
+    "si": "roch_hachana",
+    "b": 9,
+    "empreinte": "(בר״ה:) וזכרנו לטובה ביום הזכרון הזה:",
+    "g": 2,
+    "racine": "roch_hachana"
+   },
+   {
+    "sorte": "bloc",
+    "s": 0,
+    "si": "moed",
+    "b": 10,
+    "empreinte": "(ביו״ט:) ושמחנו ביום חג (פלוני) הזה:",
+    "g": 3,
+    "racine": "moed"
    }
   ],
   "hallel": [
@@ -13279,6 +13362,89 @@
     "empreinte": "ברוך אתה יהוה אלהינו מלך העולם אשר נתן ש",
     "g": 12,
     "racine": "oubli"
+   }
+  ],
+  "meen_chaloch": [
+   {
+    "sorte": "bloc",
+    "s": 0,
+    "si": "chabbat",
+    "b": 5,
+    "empreinte": "בשבת: ורצה והחליצנו ביום השבת הזה.",
+    "g": 0,
+    "racine": "chabbat"
+   },
+   {
+    "sorte": "bloc",
+    "s": 0,
+    "si": "roch_hodech",
+    "b": 6,
+    "empreinte": "בר״ח: וזכרנו לטובה ביום ראש החדש הזה.",
+    "g": 1,
+    "racine": "roch_hodech"
+   },
+   {
+    "sorte": "bloc",
+    "s": 0,
+    "si": "roch_hachana",
+    "b": 7,
+    "empreinte": "בר״ה: וזכרנו לטובה ביום הזכרון הזה.",
+    "g": 2,
+    "racine": "roch_hachana"
+   },
+   {
+    "sorte": "bloc",
+    "s": 0,
+    "si": "moed",
+    "b": 8,
+    "empreinte": "ביום טוב ובחוה״מ: ושמחנו ביום",
+    "g": 3,
+    "racine": "moed"
+   },
+   {
+    "sorte": "bloc",
+    "s": 0,
+    "si": "pessah",
+    "b": 9,
+    "empreinte": "בפסח: חג המצות הזה,",
+    "g": 3,
+    "racine": "moed"
+   },
+   {
+    "sorte": "bloc",
+    "s": 0,
+    "si": "chavouot",
+    "b": 10,
+    "empreinte": "בשבועות: חג השבועות הזה,",
+    "g": 3,
+    "racine": "moed"
+   },
+   {
+    "sorte": "bloc",
+    "s": 0,
+    "si": "soukkot",
+    "b": 11,
+    "empreinte": "בסוכות: חג הסכות הזה,",
+    "g": 3,
+    "racine": "moed"
+   },
+   {
+    "sorte": "bloc",
+    "s": 0,
+    "si": "chemini_atseret",
+    "b": 12,
+    "empreinte": "בשמיני עצרת: שמיני, חג עצרת הזה,",
+    "g": 3,
+    "racine": "moed"
+   },
+   {
+    "sorte": "bloc",
+    "s": 0,
+    "si": "moed",
+    "b": 13,
+    "empreinte": "ביום (טוב) מקרא קדש הזה.",
+    "g": 3,
+    "racine": "moed"
    }
   ],
   "hallel": [

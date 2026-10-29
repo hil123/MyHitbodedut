@@ -55,10 +55,16 @@ function h(tag, attrs = {}, ...enfants) {
   }
   for (const e of enfants.flat()) {
     if (e === null || e === undefined || e === false) continue;
-    el.append(e instanceof Node ? e : document.createTextNode(String(e)));
+    el.append(e instanceof Node ? e : document.createTextNode(meteg(String(e))));
   }
   return el;
 }
+// Le meteg (U+05BD) tombe sur la voyelle dans Noto Serif Hebrew et Noto Rashi : un patah
+// devient un faux qamats, un segol se brouille (capture du 29/10, עָלֶֽיהָ). David, Miriam et
+// Varela ne l'ont pas et l'empruntent à la première. Masqué à l'affichage par U+034F, invisible
+// et de même longueur, comme PoliceHebraique.ABSENTS ; seule Frank Ruhl le dessine à part.
+const SANS_METEG = new Set(['serif', 'rachi', 'david', 'miriam', 'arrondie']);
+const meteg = (t) => (SANS_METEG.has(store.lecturePolice()) ? t.replace(/\u05BD/g, '\u034F') : t);
 // Le personnage au féminin pour qui a choisi צדקת (personnage.js) : chaque
 // image passe par ici, celles de h() comme celles écrites en SVG.
 const perso = (src) => cheminPersonnage(src, store.adresse());
@@ -1055,7 +1061,7 @@ function riche(html) {
     // Une ligne vide dans un paragraphe (aération, 28/10) : un saut plus court qu'entre deux paragraphes.
     else if (morceau === '<br><br>') pile.at(-1).append(h('span', { class: 'saut', 'aria-hidden': 'true' }));
     else if (morceau === '<br>') pile.at(-1).append(document.createElement('br'));
-    else pile.at(-1).append(document.createTextNode(morceau));
+    else pile.at(-1).append(document.createTextNode(meteg(morceau)));
   }
   return racine;
 }

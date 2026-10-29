@@ -68,6 +68,21 @@ VARIANTES_YAALE = [
     (r"^ילדים האוכלים ביו״כ", "kippour"),
 ]
 
+# Méèn chaloch : le début d'un bloc d'ajout (sans voyelles), et sa condition. Edot : « בשבת ורצה »,
+# « בפסח ושמחנו » ; Sfard : « (בשבת:) ורצה », « (ביו״ט:) ושמחנו » ; Ashkenaz : « בשבת: ורצה »,
+# « ביום טוב ובחוה״מ: ושמחנו ביום », « בפסח: חג המצות », puis « ביום (טוב) מקרא קדש הזה. ».
+MEEN_CHALOCH = [
+    (r"^\(?בשבת:?\)? ?ורצה", "chabbat"),
+    (r"^\(?(בראש ?חודש|בר״ח):?\)? ?וזכרנו", "roch_hodech"),
+    (r"^\(?(בראש ?השנה|בר״ה):?\)? ?וזכרנו", "roch_hachana"),
+    (r"^\(?(ביו״ט|ביום טוב ובחוה״מ):?\)? ?ושמחנו", "moed"),
+    (r"^ביום \(טוב\) מקרא קדש", "moed"),
+    (r"^בפסח:? (ושמחנו|חג המצות)", "pessah"),
+    (r"^בשבועות:? (ושמחנו|חג השבועות)", "chavouot"),
+    (r"^בסוכות:? (ושמחנו|חג הסכות)", "soukkot"),
+    (r"^בשמיני עצרת:? (ושמחנו|שמיני)", "chemini_atseret"),
+]
+
 # Les variantes enchâssées dans un bloc, après leur annonce.
 # Les mêmes variantes dans le texte brut : ce qu'on retire du bloc hors du jour (28/10).
 RETIRE = [
@@ -488,7 +503,12 @@ def annoter(texte_id, sections, nusah):
             # Avinou malkénou des jeûnes (Ashkenaz : « בתענית ציבור: אבינו מלכנו ברך עלינו » ; relevé le 14/10).
             elif not cons[bi] and (x.startswith("בתענית ציבור:") or x.startswith("לתענית ציבור:")):
                 prend(bi, "jeune", JEUNE)
-            # Les ajouts de Chabbat et de Roch 'Hodech annoncés dans leur bloc (Méèn chaloch, relevé le 14/10).
+            # Les ajouts du jour annoncés dans leur bloc (Méèn chaloch, relevés le 14/10 et le 29/10 :
+            # « il y a des choses qui ne sont pas repliées ») : Chabbat, Roch 'Hodech, Roch haChana,
+            # les fêtes ; Ashkenaz en lignes (tools/siddur_meen_chaloch.py), où « ושמחנו ביום » ouvre le
+            # groupe des fêtes et chacune y est une variante (SOUS).
+            elif not cons[bi] and texte_id == "meen_chaloch" and any(re.match(r, x) for r, _ in MEEN_CHALOCH):
+                prend(bi, next(c for r, c in MEEN_CHALOCH if re.match(r, x)))
             elif not cons[bi] and re.match(r"בשבת ורצה", x):
                 prend(bi, "chabbat")
             elif not cons[bi] and re.match(r"בראש ?חודש וזכרנו", x):
@@ -732,6 +752,7 @@ JEUNE = "ajout_jeune_public"
 SOUS = {
     "yaale_veyavo": {"roch_hodech", "pessah", "soukkot", "chavouot", "roch_hachana", "chemini_atseret", "kippour"},
     "al_hanissim": {"hanouka", "pourim"},
+    "moed": {"pessah", "chavouot", "soukkot", "chemini_atseret"},
     "avinou_malkenou": {"jeune", "asseret_yemei_techouva"},
 }
 
