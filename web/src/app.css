@@ -1429,19 +1429,21 @@ body.avec-mini .seance .contenu { padding-bottom: calc(104px + env(safe-area-ins
 .frise-retard { margin: 4px 0 0 !important; color: var(--muted); font-size: 13px; }
 .frise { list-style: none; margin: 12px 0 8px; padding: 0; }
 .frise-point { position: relative; display: flex; gap: 14px; padding-bottom: 14px; }
-.frise-point:not(:last-child)::before { content: ''; position: absolute; inset-inline-start: 7px; top: 18px; bottom: -2px; width: 2px; background: var(--line); }
-.frise-puce { flex: none; width: 16px; height: 16px; margin-top: 3px; border-radius: 50%; background: var(--c, var(--brand)); box-shadow: 0 0 0 3px color-mix(in srgb, var(--c, var(--brand)) 20%, transparent); }
+.frise-point:not(:last-child)::before { content: ''; position: absolute; inset-inline-start: 14px; top: 32px; bottom: 2px; width: 2px; background: var(--line); }
+.frise-puce { flex: none; display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; color: var(--c, var(--brand)); background: color-mix(in srgb, var(--c, var(--brand)) 14%, var(--card)); }
+.frise-puce svg { display: block; }
 .frise-nuit { --c: #3E4F86; } .frise-aube { --c: #D4856B; } .frise-jour { --c: #C99A2E; } .frise-crepuscule { --c: #B5543A; }
 .frise-bout { --c: var(--brand); }
-.frise-bout .frise-puce { border-radius: 4px; }
 .frise-maintenant { --c: var(--brand); padding-bottom: 10px; }
-.frise-maintenant .frise-puce { width: 16px; height: 16px; background: var(--card); border: 3px solid var(--brand); box-shadow: none; }
+.frise-maintenant .frise-puce { width: 30px; height: 30px; background: none; }
+.frise-maintenant .frise-puce::after { content: ''; width: 14px; height: 14px; border-radius: 50%; background: var(--card); border: 3px solid var(--brand); }
+.frise-maintenant .frise-corps { align-self: center; }
 .frise-maintenant .frise-nom { color: var(--brand); font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: .06em; }
 .frise-nom { color: var(--ink); font-size: 15px; }
 .frise-heure { font-variant-numeric: tabular-nums; font-size: 16px; color: var(--muted); }
 .frise-heure strong { color: var(--ink); font-size: 17px; white-space: nowrap; }
 .frise-heure strong, .frise-heure span { display: inline-block; }
-.frise-heure span { white-space: nowrap; }
+.frise-heure span { white-space: nowrap; margin-inline-start: .3em; }
 .frise-detail { color: var(--muted); font-size: 12px; margin-top: 1px; }
 .sources-vol { margin: 12px 0 0; }
 .sources-vol summary { min-height: 44px; display: flex; align-items: center; color: var(--muted); font-size: 13px; font-weight: 600; cursor: pointer; list-style: none; }

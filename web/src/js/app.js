@@ -2800,17 +2800,30 @@ function resultatsVol(c) {
  * retard se dit une fois en tête ; sur une ligne seulement s'il s'en écarte de 5 min ou plus.
  */
 const CIEL = { chatsot_layla: 'nuit', tset: 'nuit', tset_rt: 'nuit', alot: 'aube', misheyakir: 'aube', netz: 'aube', chkia: 'crepuscule' };
+/** Les icônes de la frise, au trait, dans la couleur de leur ciel (currentColor). */
+const ICONES_FRISE = {
+  nuit: '<path d="M15.5 4.5a7.5 7.5 0 1 0 4 13.2A8 8 0 0 1 15.5 4.5Z" fill="currentColor"/>',
+  aube: '<path d="M4 18h16M7 18a5 5 0 0 1 10 0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M12 4v5M9.5 6.5 12 4l2.5 2.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>',
+  jour: '<circle cx="12" cy="12" r="4" fill="currentColor"/><path d="M12 2.5v2.5M12 19v2.5M2.5 12H5M19 12h2.5M5.3 5.3l1.8 1.8M16.9 16.9l1.8 1.8M5.3 18.7l1.8-1.8M16.9 7.1l1.8-1.8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>',
+  crepuscule: '<path d="M4 18h16M7 18a5 5 0 0 1 10 0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M12 4v5M9.5 6.5 12 9l2.5-2.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>',
+  avion: '<path d="M21 15.5v-2l-8-5V3.8a1.3 1.3 0 0 0-2.6 0V8.5l-8 5v2l8-2.5V18l-2 1.5V21l3.3-1 3.3 1v-1.5l-2-1.5v-5Z" fill="currentColor"/>',
+};
+function iconeFrise(nom) {
+  const e = h('span', { class: 'frise-puce', 'aria-hidden': 'true' });
+  e.innerHTML = `<svg viewBox="0 0 24 24" width="20" height="20">${ICONES_FRISE[nom]}</svg>`;
+  return e;
+}
 function friseVol(c, enVol, maintenant) {
   if (!enVol.length) return h('div', { class: 'carte carte-zmanim' }, h('p', { class: 'indice' }, tr.t('vol_en_vol_titre')), h('p', { class: 'message' }, tr.t('vol_aucun_zman')));
   const ecarts = enVol.map((e) => e.ecartSiRetard).filter((x) => x !== null).sort((a, b) => a - b);
   const median = ecarts.length ? ecarts[Math.floor(ecarts.length / 2)] : null;
   const deux = (t) => {
     const [a, b] = deuxHeures(c.plan, t).split(' · ');
-    return h('div', { class: 'frise-heure' }, h('strong', {}, a), b ? h('span', {}, ` · ${b}`) : null);
+    return h('div', { class: 'frise-heure' }, h('strong', {}, a), b ? h('span', {}, `· ${b}`) : null);
   };
-  const point = (classe, nom, t, detail = null) => h('li', { class: `frise-point ${classe}` },
-    h('span', { class: 'frise-puce', 'aria-hidden': 'true' }), h('div', { class: 'frise-corps' }, h('div', { class: 'frise-nom' }, nom), deux(t), detail));
-  const lignes = [point('frise-bout', `✈ ${tr.t('vol_frise_decollage', c.plan.depart.iata)}`, c.plan.decollage)];
+  const point = (ciel, nom, t, detail = null) => h('li', { class: `frise-point frise-${ciel}` },
+    iconeFrise(ciel === 'bout' ? 'avion' : ciel), h('div', { class: 'frise-corps' }, h('div', { class: 'frise-nom' }, nom), deux(t), detail));
+  const lignes = [point('bout', tr.t('vol_frise_decollage', c.plan.depart.iata), c.plan.decollage)];
   let maintenantPlace = +maintenant < +c.plan.decollage || +maintenant > +c.plan.atterrissage;
   for (const e of enVol) {
     if (!maintenantPlace && +maintenant < +e.instant) {
@@ -2818,10 +2831,10 @@ function friseVol(c, enVol, maintenant) {
       maintenantPlace = true;
     }
     const ecart = e.ecartSiRetard !== null && median !== null && Math.abs(e.ecartSiRetard - median) >= 5 * 60000 ? ecartVol(e.ecartSiRetard) : null;
-    lignes.push(point(`frise-${CIEL[e.cle] ?? 'jour'}`, tr.t(`zman_${e.cle}`), e.instant,
+    lignes.push(point(CIEL[e.cle] ?? 'jour', tr.t(`zman_${e.cle}`), e.instant,
       h('div', { class: 'frise-detail' }, [positionVol(e), ecart].filter(Boolean).join(' · '))));
   }
-  lignes.push(point('frise-bout', `✈ ${tr.t('vol_frise_atterrissage', c.plan.arrivee.iata)}`, c.plan.atterrissage));
+  lignes.push(point('bout', tr.t('vol_frise_atterrissage', c.plan.arrivee.iata), c.plan.atterrissage));
   return h('div', { class: 'carte carte-texte carte-vol' }, h('p', { class: 'indice' }, tr.t('vol_en_vol_titre')),
     median !== null ? h('p', { class: 'frise-retard' }, tr.t('vol_frise_retard', `${median < 0 ? '−' : '+'}${Math.abs(Math.round(median / 60000))}`)) : null,
     h('ol', { class: 'frise' }, ...lignes));
