@@ -7,3 +7,4 @@ nokia/app/build/
 nokia/app/outils/
 .attach_pid*
 __pycache__/
+video/_RENDU_SESSION/
