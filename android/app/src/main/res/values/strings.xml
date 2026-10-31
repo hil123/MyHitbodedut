@@ -103,7 +103,6 @@
     <string name="permission_usage_why">Pour savoir quelle application vient de s’ouvrir. Rien n’est enregistré ni envoyé.</string>
     <string name="permission_granted">Accordée</string>
     <string name="permission_missing">Manquante</string>
-    <string name="preview_needs_overlay">Accordez d’abord l’affichage par-dessus les autres applications.</string>
 
     <!-- Applications -->
     <string name="apps_title">Applications à bloquer</string>
@@ -1342,4 +1341,12 @@
         <item>O</item>
         <item>NO</item>
     </string-array>
+
+    <!-- La divulgation avant les deux accès spéciaux de la barrière (31/10, Divulgation). -->
+    <string name="divulgation_overlay_titre">Affichage par-dessus les autres applications</string>
+    <string name="divulgation_overlay_texte">Ce qui est utilisé : l’affichage d’un écran par-dessus les autres applications.\n\nPourquoi : pour la barrière du matin, le mode « Je suis avec Hachem », que vous avez choisi. Quand vous ouvrez l’une des applications que vous avez sélectionnées, pendant la plage horaire que vous avez fixée, l’écran « Je suis avec Hachem » s’affiche devant elle, jusqu’à ce que la pratique du jour soit faite.\n\nRien n’est envoyé ni partagé : tout reste sur ce téléphone.\n\nPour couper la barrière à tout moment : Réglages, interrupteur « Je suis avec Hachem ». Vous pouvez aussi retirer cet accès dans les réglages d’Android.</string>
+    <string name="divulgation_usage_titre">Accès aux données d’utilisation</string>
+    <string name="divulgation_usage_texte">Ce qui est lu : quelle application est affichée au premier plan. Seule la dernière ouverte est retenue, en mémoire ; aucun historique n’est gardé.\n\nPourquoi : pour la barrière du matin, le mode « Je suis avec Hachem », que vous avez choisi. Pendant la plage horaire que vous avez fixée, et tant que la pratique du jour n’est pas faite, l’application vérifie si celle qui vient de s’ouvrir fait partie de celles que vous avez sélectionnées.\n\nRien n’est enregistré, envoyé ni partagé : tout reste sur ce téléphone.\n\nPour couper la barrière à tout moment : Réglages, interrupteur « Je suis avec Hachem ». Vous pouvez aussi retirer cet accès dans les réglages d’Android.</string>
+    <string name="divulgation_continuer">Continuer</string>
+    <string name="divulgation_pas_maintenant">Pas maintenant</string>
 </resources>

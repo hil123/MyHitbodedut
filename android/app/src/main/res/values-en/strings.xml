@@ -94,7 +94,6 @@
     <string name="permission_usage_why">To know which app has just opened. Nothing is recorded or sent.</string>
     <string name="permission_granted">Granted</string>
     <string name="permission_missing">Missing</string>
-    <string name="preview_needs_overlay">Grant display over other apps first.</string>
 
     <string name="apps_title">Apps to block</string>
     <string name="apps_loading">Loading apps…</string>
@@ -1300,4 +1299,12 @@
         <item>W</item>
         <item>NW</item>
     </string-array>
+
+    <!-- La divulgation avant les deux accès spéciaux de la barrière (31/10, Divulgation). -->
+    <string name="divulgation_overlay_titre">Display over other apps</string>
+    <string name="divulgation_overlay_texte">What is used: showing a screen over other apps.\n\nWhy: for the morning gate, the “I am with Hashem” mode, which you chose. When you open one of the apps you selected, during the time window you set, the “I am with Hashem” screen appears in front of it until the practice of the day is done.\n\nNothing is sent or shared: everything stays on this phone.\n\nTo turn the gate off at any time: Settings, “I am with Hashem” switch. You can also remove this access in Android settings.</string>
+    <string name="divulgation_usage_titre">Usage access</string>
+    <string name="divulgation_usage_texte">What is read: which app is shown in the foreground. Only the last one opened is kept, in memory; no history is stored.\n\nWhy: for the morning gate, the “I am with Hashem” mode, which you chose. During the time window you set, and until the practice of the day is done, the app checks whether the one just opened is among those you selected.\n\nNothing is recorded, sent or shared: everything stays on this phone.\n\nTo turn the gate off at any time: Settings, “I am with Hashem” switch. You can also remove this access in Android settings.</string>
+    <string name="divulgation_continuer">Continue</string>
+    <string name="divulgation_pas_maintenant">Not now</string>
 </resources>

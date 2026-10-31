@@ -217,8 +217,8 @@ class SettingsActivity : AppCompatActivity() {
     private fun previewGate() {
         if (!BuildConfig.HAS_GATE) return
         if (!Permissions.canDrawOverlays(this)) {
-            Toast.makeText(this, R.string.preview_needs_overlay, Toast.LENGTH_LONG).show()
-            safeStart(Permissions.overlayIntent(this))
+            // L'aperçu demande l'affichage par-dessus : la divulgation dit d'abord pourquoi (31/10).
+            Divulgation.montrer(this, Autorisation.OVERLAY, ::safeStart)
             return
         }
         GateService.preview(this)
@@ -279,8 +279,8 @@ class SettingsActivity : AppCompatActivity() {
     private fun demander(autorisation: Autorisation) = when (autorisation) {
         Autorisation.NOTIFICATIONS -> askNotifications()
         Autorisation.BATTERIE -> safeStart(Permissions.batteryIntent())
-        Autorisation.OVERLAY -> safeStart(Permissions.overlayIntent(this))
-        Autorisation.USAGE -> safeStart(Permissions.usageAccessIntent())
+        // Les deux accès spéciaux passent par la divulgation, jamais directement (31/10).
+        Autorisation.OVERLAY, Autorisation.USAGE -> Divulgation.montrer(this, autorisation, ::safeStart)
     }
 
     private fun renderDiagnostic() {

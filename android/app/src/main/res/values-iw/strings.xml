@@ -95,7 +95,6 @@
     <string name="permission_usage_why">כדי לדעת איזו אפליקציה נפתחה זה עתה. שום דבר אינו נשמר ואינו נשלח.</string>
     <string name="permission_granted">אושרה</string>
     <string name="permission_missing">חסרה</string>
-    <string name="preview_needs_overlay">קודם אשרו הצגה מעל אפליקציות אחרות.</string>
 
     <string name="apps_title">אפליקציות לחסימה</string>
     <string name="apps_loading">האפליקציות נטענות…</string>
@@ -1333,4 +1332,12 @@
         <item>מערב</item>
         <item>צפון־מערב</item>
     </string-array>
+
+    <!-- La divulgation avant les deux accès spéciaux de la barrière (31/10, Divulgation). -->
+    <string name="divulgation_overlay_titre">הצגה מעל אפליקציות אחרות</string>
+    <string name="divulgation_overlay_texte">במה משתמשים: הצגת מסך מעל אפליקציות אחרות.\n\nלמה: בשביל מחסום הבוקר, מצב „אני עם השם”, שבחרתם. כשתפתחו אחת מהאפליקציות שבחרתם, בשעות שקבעתם, מסך „אני עם השם” יופיע לפניה, עד שההתבודדות של היום תיעשה.\n\nשום דבר לא נשלח ולא משותף: הכול נשאר בטלפון הזה.\n\nכדי לכבות את המחסום בכל רגע: הגדרות, המתג „אני עם השם”. אפשר גם לבטל את הגישה הזו בהגדרות של Android.</string>
+    <string name="divulgation_usage_titre">גישה לנתוני שימוש</string>
+    <string name="divulgation_usage_texte">מה נקרא: איזו אפליקציה מוצגת בחזית. רק האחרונה שנפתחה נשמרת, בזיכרון; שום היסטוריה לא נשמרת.\n\nלמה: בשביל מחסום הבוקר, מצב „אני עם השם”, שבחרתם. בשעות שקבעתם, וכל עוד ההתבודדות של היום לא נעשתה, האפליקציה בודקת אם זו שנפתחה עכשיו היא אחת מאלה שבחרתם.\n\nשום דבר לא נרשם, לא נשלח ולא משותף: הכול נשאר בטלפון הזה.\n\nכדי לכבות את המחסום בכל רגע: הגדרות, המתג „אני עם השם”. אפשר גם לבטל את הגישה הזו בהגדרות של Android.</string>
+    <string name="divulgation_continuer">המשך</string>
+    <string name="divulgation_pas_maintenant">לא עכשיו</string>
 </resources>
