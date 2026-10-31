@@ -19,6 +19,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.net.toUri
 import androidx.core.os.LocaleListCompat
 import com.google.android.material.materialswitch.MaterialSwitch
 
@@ -169,6 +170,7 @@ class SettingsActivity : AppCompatActivity() {
         findViewById<Button>(R.id.import_data).setOnClickListener {
             importFile.launch(arrayOf("application/json", "text/plain", "*/*"))
         }
+        findViewById<Button>(R.id.privacy_policy).setOnClickListener { ouvrirConfidentialite() }
         findViewById<Button>(R.id.reset_app).setOnClickListener { confirmerReinitialisation() }
     }
 
@@ -602,6 +604,19 @@ class SettingsActivity : AppCompatActivity() {
             .show()
     }
 
+    /**
+     * Les règles de confidentialité (31/10, Google Play), publiées avec le site web
+     * (web/src/confidentialite.html), ouvertes dans le navigateur à la langue de l'interface.
+     */
+    private fun ouvrirConfidentialite() {
+        val ancre = when (ChizukCard.language(this)) {
+            "he" -> "he"
+            "en" -> "en"
+            else -> "fr"
+        }
+        safeStart(Intent(Intent.ACTION_VIEW, "$LIEN_CONFIDENTIALITE#$ancre".toUri()))
+    }
+
     private fun safeStart(intent: Intent) {
         runCatching { startActivity(intent) }.onFailure {
             Toast.makeText(this, R.string.settings_screen_missing, Toast.LENGTH_LONG).show()
@@ -629,6 +644,8 @@ class SettingsActivity : AppCompatActivity() {
 
     private companion object {
         const val ETAT_DEMANDE = "notifications_demandees"
+        /** La page publique des règles de confidentialité, sur GitHub Pages avec le site (web/build.mjs). */
+        const val LIEN_CONFIDENTIALITE = CelebrationActivity.LIEN_WEB + "confidentialite.html"
         /** Au-delà, ce n'est pas une sauvegarde de cette application. */
         const val IMPORT_MAX_OCTETS = 2 * 1024 * 1024
         /** Grand texte (14/10) : l'échelle des textes de lecture. */

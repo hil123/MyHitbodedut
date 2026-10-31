@@ -1349,4 +1349,7 @@
     <string name="divulgation_usage_texte">Ce qui est lu : quelle application est affichée au premier plan. Seule la dernière ouverte est retenue, en mémoire ; aucun historique n’est gardé.\n\nPourquoi : pour la barrière du matin, le mode « Je suis avec Hachem », que vous avez choisi. Pendant la plage horaire que vous avez fixée, et tant que la pratique du jour n’est pas faite, l’application vérifie si celle qui vient de s’ouvrir fait partie de celles que vous avez sélectionnées.\n\nRien n’est enregistré, envoyé ni partagé : tout reste sur ce téléphone.\n\nPour couper la barrière à tout moment : Réglages, interrupteur « Je suis avec Hachem ». Vous pouvez aussi retirer cet accès dans les réglages d’Android.</string>
     <string name="divulgation_continuer">Continuer</string>
     <string name="divulgation_pas_maintenant">Pas maintenant</string>
+
+    <!-- Le lien vers la page publique des règles de confidentialité (31/10, SettingsActivity). -->
+    <string name="settings_confidentialite">Règles de confidentialité</string>
 </resources>

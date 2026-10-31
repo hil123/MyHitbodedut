@@ -1340,4 +1340,7 @@
     <string name="divulgation_usage_texte">מה נקרא: איזו אפליקציה מוצגת בחזית. רק האחרונה שנפתחה נשמרת, בזיכרון; שום היסטוריה לא נשמרת.\n\nלמה: בשביל מחסום הבוקר, מצב „אני עם השם”, שבחרתם. בשעות שקבעתם, וכל עוד ההתבודדות של היום לא נעשתה, האפליקציה בודקת אם זו שנפתחה עכשיו היא אחת מאלה שבחרתם.\n\nשום דבר לא נרשם, לא נשלח ולא משותף: הכול נשאר בטלפון הזה.\n\nכדי לכבות את המחסום בכל רגע: הגדרות, המתג „אני עם השם”. אפשר גם לבטל את הגישה הזו בהגדרות של Android.</string>
     <string name="divulgation_continuer">המשך</string>
     <string name="divulgation_pas_maintenant">לא עכשיו</string>
+
+    <!-- Le lien vers la page publique des règles de confidentialité (31/10, SettingsActivity). -->
+    <string name="settings_confidentialite">מדיניות פרטיות</string>
 </resources>

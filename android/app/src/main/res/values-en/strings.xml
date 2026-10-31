@@ -1307,4 +1307,7 @@
     <string name="divulgation_usage_texte">What is read: which app is shown in the foreground. Only the last one opened is kept, in memory; no history is stored.\n\nWhy: for the morning gate, the “I am with Hashem” mode, which you chose. During the time window you set, and until the practice of the day is done, the app checks whether the one just opened is among those you selected.\n\nNothing is recorded, sent or shared: everything stays on this phone.\n\nTo turn the gate off at any time: Settings, “I am with Hashem” switch. You can also remove this access in Android settings.</string>
     <string name="divulgation_continuer">Continue</string>
     <string name="divulgation_pas_maintenant">Not now</string>
+
+    <!-- Le lien vers la page publique des règles de confidentialité (31/10, SettingsActivity). -->
+    <string name="settings_confidentialite">Privacy policy</string>
 </resources>
