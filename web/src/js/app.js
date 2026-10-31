@@ -2573,9 +2573,9 @@ function ecranBoussole() {
     // Avant le toucher, rien n'est encore dit du capteur ; ensuite, sans mesure, la rose fixe reste.
     const attente = autorisationBoussole() && !boussoleEcoute;
     contenu.push(h('p', { class: 'indice' }, tr.t(attente || boussoleRecu ? 'boussole_a_plat' : 'boussole_sans_capteur')));
-    // « Position exacte » (28/10) : la localisation précise, le message de l'attente dessous.
+    // « Actualiser ma position » (31/10, ex-« Position exacte ») : le message de l'attente dessous.
     const etat = h('p', { class: 'indice', 'aria-live': 'polite' });
-    contenu.push(h('button', { class: 'secondaire boussole-position', onclick: () => localiserPosition({ etat }) }, tr.t('boussole_position_exacte')), etat);
+    contenu.push(h('button', { class: 'secondaire boussole-position', onclick: () => localiserPosition({ etat }) }, tr.t('boussole_actualiser_position')), etat);
     const points = tr.tab('boussole_points');
     const km = new Intl.NumberFormat(tr.langue).format(Math.round(Boussole.distanceKm(lieu.latitude, lieu.longitude)));
     contenu.push(h('div', { class: 'carte carte-texte' },

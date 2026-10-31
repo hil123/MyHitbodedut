@@ -1314,8 +1314,8 @@
     <string name="boussole_affichage">תצוגת המצפן</string>
     <string name="boussole_affichage_hassid">החסיד מסתובב (ברירת מחדל)</string>
     <string name="boussole_affichage_rose">שושנת רוחות</string>
-    <!-- Relance la localisation précise (ChoixLieu.positionExacte). -->
-    <string name="boussole_position_exacte">מיקום מדויק</string>
+    <!-- Reprend la position, approximative (ChoixLieu.maPosition, 31/10). -->
+    <string name="boussole_actualiser_position">עדכון המיקום שלי</string>
     <string-array name="boussole_cardinaux">
         <item>צ</item>
         <item>מז</item>

@@ -1281,8 +1281,8 @@
     <string name="boussole_affichage">Compass display</string>
     <string name="boussole_affichage_hassid">The chassid turns (default)</string>
     <string name="boussole_affichage_rose">Compass rose</string>
-    <!-- Relance la localisation précise (ChoixLieu.positionExacte). -->
-    <string name="boussole_position_exacte">Exact position</string>
+    <!-- Reprend la position, approximative (ChoixLieu.maPosition, 31/10). -->
+    <string name="boussole_actualiser_position">Update my location</string>
     <string-array name="boussole_cardinaux">
         <item>N</item>
         <item>E</item>

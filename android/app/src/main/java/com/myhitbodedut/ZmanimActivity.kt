@@ -33,7 +33,7 @@ class ZmanimActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         // Le jour a pu changer, et le lieu avec les réglages ; la position du téléphone se reprend
-        // sans bruit (28/10, « les zmanim en fonction de la position exacte »).
+        // sans bruit (28/10 ; approximative depuis le 31/10, ChoixLieu).
         afficher()
         choixLieu.rafraichir()
     }

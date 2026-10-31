@@ -1323,8 +1323,8 @@
     <string name="boussole_affichage">Affichage de la boussole</string>
     <string name="boussole_affichage_hassid">Le hassid se tourne (par défaut)</string>
     <string name="boussole_affichage_rose">Rose des vents</string>
-    <!-- Relance la localisation précise (ChoixLieu.positionExacte). -->
-    <string name="boussole_position_exacte">Position exacte</string>
+    <!-- Reprend la position, approximative (ChoixLieu.maPosition, 31/10). -->
+    <string name="boussole_actualiser_position">Actualiser ma position</string>
     <string-array name="boussole_cardinaux">
         <item>N</item>
         <item>E</item>
