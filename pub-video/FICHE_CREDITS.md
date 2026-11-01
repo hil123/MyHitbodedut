@@ -21,3 +21,9 @@ Plans aujourd'hui PROVISOIRES (dessin vectoriel + illustrations de l'app) : scè
 
 ## Trophées (01/11)
 Captures réelles de l'app web : `web_trophees_semaine`, `web_trophees_haut`, `web_accueil_serie`. Pour montrer une progression, l'app a été remplie avec un historique de démonstration : 24 journées de 15 à 30 min sur 4 semaines, Chabbat exclus (script `troph2.js`). Les trophées, le grade et la série affichés sont calculés par l'app elle-même à partir de cet historique.
+
+## Musique n° 2 (01/11)
+`musique_lumiere.wav` : composition originale par script (`outils/musique_lumiere.py`), en ré majeur, avec une clarinette hassidique. Rendue avec FluidSynth et FluidR3_GM (licence MIT). Elle remplace `musique_nigoun.wav`.
+
+## Calendrier (01/11)
+Scène 5 : « Le calendrier juif » remplace « Respect du Shabbat ». Voix `s10c`. Captures réelles de l'app web (lieu : Jérusalem) : `web_calendrier`, `web_zmanim`.

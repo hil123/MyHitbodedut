@@ -20,6 +20,7 @@ const BLOCS: Record<string, {t: number; txt: string}[]> = {
   s01: [{t: 0.1, txt: 'Chaque jour, nous sommes occupés.'}, {t: 3.1, txt: 'Le travail,'}, {t: 4.18, txt: 'les responsabilités,'}, {t: 5.71, txt: 'les soucis…'}],
   s03: [{t: 0.1, txt: 'La Hitbodedut, c’est s’arrêter…'}, {t: 2.22, txt: 'et prendre un moment rien que pour Hachem.'}],
   s04: [{t: 0.1, txt: 'Lui parler avec tes propres mots.'}, {t: 2.7, txt: 'Lui raconter tes difficultés,'}, {t: 4.71, txt: 'tes rêves,'}, {t: 5.54, txt: 'tes joies et tes remerciements.'}],
+  s10c: [{t: 0.1, txt: 'Avec le calendrier juif,'}, {t: 1.94, txt: 'retrouve chaque jour la date hébraïque,'}, {t: 3.99, txt: 'les zmanim et les ajouts de la prière.'}],
   s11: [{t: 0.1, txt: 'Ne laisse pas passer une journée'}, {t: 1.45, txt: 'sans prendre un moment pour Hachem.'}, {t: 4.04, txt: 'Commence aujourd’hui.'}],
 };
 const VOIX = [
@@ -32,7 +33,7 @@ const VOIX = [
   {f: 's07', at: 1340, dur: 4.87, txt: 'Choisis la durée de ton rendez-vous quotidien et avance à ton rythme.'},
   {f: 's08', at: 1520, dur: 7.66, txt: 'Bloque les distractions. Mets ton téléphone de côté. Ce moment est consacré à Hachem.'},
   {f: 's09', at: 1785, dur: 4.63, txt: 'Personnalise ton expérience selon tes préférences et ton rythme de vie.'},
-  {f: 's10', at: 1975, dur: 4.49, txt: 'Et même pour Shabbat, MY HITBODEDUT s’adapte à ton quotidien.'},
+  {f: 's10c', at: 1975, dur: 6.72, txt: 'Avec le calendrier juif, retrouve chaque jour la date hébraïque, les zmanim et les ajouts de la prière.'},
   {f: 's11', at: 2262, dur: 6.02, txt: 'Ne laisse pas passer une journée sans prendre un moment pour Hachem. Commence aujourd’hui.'},
 ];
 const volumeMusique = (f: number) => {
@@ -65,7 +66,7 @@ const POSES: Pose[] = [
   {de: 928, a: 946, src: 'char_dancing_joy', type: 'perso', mot: 'tes joies', teinte: '#fbf3df', dir: 1},
   {de: 946, a: 1050, src: 'char_open_arms', type: 'perso', mot: 'tes remerciements', teinte: '#f8eedb', dir: -1},
   {de: 1050, a: 1130, src: 'char_offering', type: 'perso', mot: 'avec ton cœur', teinte: '#e8f3ef', dir: 1},
-  // 1130–2200 : les fonctions (captures réelles) — 1960–2080 : table de Chabbat
+  // 1130–2200 : les fonctions (captures réelles) — 1960–2200 : le calendrier juif
   // s11 « Ne laisse pas passer une journée | sans prendre un moment pour Hachem. | Commence aujourd'hui. »
   {de: 2200, a: 2302, src: 'scene_sleeping', type: 'carte', mot: 'une journée', teinte: '#ebeef6', dir: -1},
   {de: 2302, a: 2380, src: 'scene_nature', type: 'carte', mot: 'un moment pour Hachem', teinte: '#f6efe2', dir: 1},
@@ -137,7 +138,10 @@ const PLANS_TEL: PlanTel[] = [
   {de: 1866, a: 1898, src: 'web_reglages', y: 48, z0: 1.4, z1: 1.8},                    // Apparence : clair ou sombre
   {de: 1898, a: 1929, src: '', y: 50, z0: 1, z1: 1.15, aFournir: '« Heures du mode »'},
   {de: 1929, a: T.chabbat, src: '', y: 50, z0: 1, z1: 1.15, aFournir: '« Durée du report »'},
-  {de: T.chabbat, a: T.retour, src: 'web_bougies', y: 108, z0: 1.4, z1: 2.2},           // Allumage des bougies
+  // 5. le calendrier juif (captures réelles, lieu : Jérusalem)
+  {de: T.chabbat, a: 2092, src: 'web_calendrier', y: 33, z0: 1.4, z1: 1.9},             // le mois, dates hébraïques et grégoriennes
+  {de: 2092, a: 2128, src: 'web_zmanim', y: 100, z0: 1.7, z1: 1.85},                   // « les zmanim »
+  {de: 2128, a: T.retour, src: 'web_calendrier', y: 96, z0: 1.7, z1: 2.0},             // la date hébraïque du jour, « dans les prières »
 ];
 const planTel = (f: number) => PLANS_TEL.find((p) => f >= p.de && f < p.a);
 const camTel = (f: number) => {
@@ -204,12 +208,6 @@ export const PubV5: React.FC = () => {
         return <div key={i} style={{position: 'absolute', left: i % 2 ? 880 : 90, top: Z.sujetHaut + 150 + Math.floor(i / 2) * 220, width: 110, height: 110, borderRadius: 28,
           background: c, opacity: e, transform: `scale(${0.7 + 0.3 * e})`, filter: `blur(${(1 - e) * 10}px)`}} />;
       })}
-      {f >= T.chabbat && f < T.chabbat + 120 && (
-        <div style={{position: 'absolute', left: 0, right: 0, top: Z.sujetHaut, height: H, background: '#fff', overflow: 'hidden'}}>
-          <AbsoluteFill style={{background: `radial-gradient(circle at 70% 50%, rgba(255,190,100,${0.35 + 0.08 * Math.sin(f / 3)}) 0, rgba(255,255,255,0) 60%)`}} />
-          <Img src={staticFile('img/char_shabbat.webp')} style={{position: 'absolute', width: 740, left: L(f, T.chabbat, T.chabbat + 120, 190, 150), bottom: -10}} />
-        </div>
-      )}
 
       {/* textes écran */}
       <Sequence from={0} durationInFrames={300}><TexteEcran texte="Le monde ne s’arrête jamais…" debut={14} fin={296} sombre /></Sequence>
@@ -223,12 +221,12 @@ export const PubV5: React.FC = () => {
       {f >= T.duree && f < T.avec && <Titre n={2} texte="Ton objectif quotidien" f={f - T.duree} />}
       {f >= T.avec && f < T.perso && <Titre n={3} texte="Je suis avec Hachem" f={f - T.avec} />}
       {f >= T.perso && f < T.chabbat && <Titre n={4} texte="Une application à ton rythme" f={f - T.perso} />}
-      {f >= T.chabbat && f < T.retour && <Titre n={5} texte="Respect du Shabbat" f={f - T.chabbat} />}
+      {f >= T.chabbat && f < T.retour && <Titre n={5} texte="Le calendrier juif" f={f - T.chabbat} />}
       <Sequence from={T.etapes} durationInFrames={T.duree - T.etapes}><TexteEcran texte="5 étapes pour avancer." debut={10} fin={T.duree - T.etapes - 4} y={310} taille={44} sombre /></Sequence>
       <Sequence from={T.duree} durationInFrames={T.avec - T.duree}><TexteEcran texte="Chaque jour, un pas de plus." debut={10} fin={T.avec - T.duree - 4} y={310} taille={44} sombre /></Sequence>
       <Sequence from={T.avec} durationInFrames={T.perso - T.avec}><TexteEcran texte="Moins de distractions. Plus de concentration." debut={10} fin={T.perso - T.avec - 4} y={310} taille={38} sombre /></Sequence>
       <Sequence from={T.perso} durationInFrames={T.chabbat - T.perso}><TexteEcran texte="Ton application. Tes habitudes." debut={10} fin={T.chabbat - T.perso - 4} y={310} taille={44} sombre /></Sequence>
-      <Sequence from={T.chabbat} durationInFrames={T.retour - T.chabbat}><TexteEcran texte="Un rythme qui respecte Shabbat." debut={10} fin={T.retour - T.chabbat - 4} y={310} taille={44} sombre /></Sequence>
+      <Sequence from={T.chabbat} durationInFrames={T.retour - T.chabbat}><TexteEcran texte="Ton calendrier, jour après jour." debut={10} fin={T.retour - T.chabbat - 4} y={310} taille={44} sombre /></Sequence>
 
       {f >= T.fin && (
         <AbsoluteFill style={{background: '#fff', opacity: L(f, T.fin, T.fin + 14, 0, 1)}}>
@@ -250,7 +248,7 @@ export const PubV5: React.FC = () => {
           <SousTitres texte={v.txt} debut={0} duree={v.dur} blocs={BLOCS[v.f]} />
         </Sequence>
       ))}
-      <Audio src={staticFile('musique/musique_nigoun.wav')} volume={volumeMusique} />
+      <Audio src={staticFile('musique/musique_lumiere.wav')} volume={volumeMusique} />
     </AbsoluteFill>
   );
 };
