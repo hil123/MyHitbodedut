@@ -63,6 +63,12 @@ Aucun crédit obligatoire.
 - 14,33–14,96 s : silence. 14,73 s : la voix annonce « MY HITBODEDUT. » (s05a), puis 16,7 s « Pour t'accompagner dans cette démarche. » (s05b).
 - 16,07–90 s : « Beyond », Noam Shpayer (נעם שפייר), fichier de l'app (musique/shpayer_beyond.m4a).
   Droits : accord écrit du 29/10 noté dans MyHitbodedut/PUBLICATION_PLAY_STORE.md § 3.2 (« Livré (accord écrit) »).
-  À confirmer : que cet accord couvre aussi l'usage publicitaire (pub Meta / YouTube).
+  Preuve : preuves/accord_noam_shpayer_whatsapp.png (capture WhatsApp fournie par Hillel le 01/11).
+  Demande (Avraham, 12:15) : remerciement pour l'autorisation d'utiliser ses niggounim, demande d'un dossier Drive
+  des fichiers MP3/WAV des créations autorisées, engagement d'un crédit « נעם שפייר » dans l'application.
+  Réponse de Noam Shpayer (16:20) : « שלום, אין לי תיקיה ששם הם מרוכזים. אתה יכול להוריד מהרשת ולהשתמש »
+  (« Je n'ai pas de dossier où elles sont rassemblées. Tu peux les télécharger sur le net et les utiliser. »).
+  Portée : autorisation d'utiliser, sans restriction écrite ; la demande portait sur l'application, la publicité
+  n'y est pas nommée explicitement. Le crédit « נעם שפייר » a été promis dans l'application.
   Montage : morceau pris à 8,8 s pour que le « drop » (66 s) tombe à 73,3 s, sur le retour du plan d'ouverture ;
   à 83,5 s fondu enchaîné vers la fin du morceau (150 s →), fondu final. Fichier : musique/beyond.wav.
