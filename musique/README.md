@@ -59,15 +59,6 @@ prochain échange, quand les autres auront un nom.
 
 | fichier | poids |
 |---|---|
-| `ani_maamin` | 2,0 Mo |
-| `anim_zemirot` | 2,1 Mo |
-| `bratslav_melodies_piano` | 3,3 Mo |
-| `breslov_playing_field_sea_waves` | 4,8 Mo |
-| `chabad_shabbos_shneor_lerer` | 4,7 Mo |
-| `chabad_yamim_noraim_shneor_lerer` | 8,6 Mo |
-| `nigun_abaal_shem_tov_for_babies` | 6,7 Mo |
-| `nigunim_for_neshama_shneor_lerer` | 27,8 Mo |
-| `relaxing_chabad_melodies_shneor_lerer` | 7,5 Mo |
 | `ribo_ata_zocher` | 5,6 Mo |
 | `ribo_halev_sheli` | 5,6 Mo |
 | `ribo_nafshi` | 6,1 Mo |
@@ -75,12 +66,6 @@ prochain échange, quand les autres auront un nom.
 | `ribo_sans_titre` | 4,6 Mo |
 | `ribo_seder_haavoda` | 8,1 Mo |
 | `ribo_zusha` | 4,4 Mo |
-| `shmuel_one_prayer` | 2,6 Mo |
-| `tremendous_threat_breslau_piano` | 9,5 Mo |
-| `tzama_with_orchestra` | 2,4 Mo |
-| `tzomo_lecho_s_lerer` | 2,4 Mo |
-| `vehi_sheamda_piano_shneor_lerer` | 2,0 Mo |
-| `vehi_sheamda_s_lerer` | 2,1 Mo |
 | `yanuka_a_part_of_me` | 4,0 Mo |
 | `yanuka_anticipation` | 1,4 Mo |
 | `yanuka_harping_his_praise` | 7,1 Mo |
@@ -90,10 +75,9 @@ prochain échange, quand les autres auront un nom.
 | `yanuka_the_king_will_return` | 2,7 Mo |
 | `yanuka_the_truth_will_rise` | 2,4 Mo |
 | `yanuka_yearning` | 5,6 Mo |
-| `yosef_karduner` | 6,6 Mo |
 | `niggoun_08`, `niggoun_09`, `niggoun_16` *(3 sans titre)* | 27,4 Mo |
 
-**35 morceaux, 197,6 Mo.** L'APK est à 82,1 Mo d'audio sur 32 morceaux.
+**19 morceaux, 102,7 Mo.** L'APK est à 8,0 Mo d'audio sur 3 morceaux.
 
 > Cet inventaire est régénéré depuis les fichiers, pas tenu à la main.
 
@@ -118,7 +102,13 @@ que tout le monde voit, il faut me le dire — il entre alors dans
 
 ## Droits
 
-Shneor Lerer s'ajoute aux noms déjà couverts par les déclarations du
-propriétaire (Rav Arush et le Yanuka ; puis Ishay Ribo, Motty Steinmetz, MBD
-et Shmuel). Il est noté ici parce que le registre ne vaut que s'il est tenu à
-jour — voir `FEUILLE_DE_ROUTE.md`.
+**Retirés du dépôt le 01/11, à la demande du propriétaire** : les six
+morceaux de Shneor Lerer, *Ani Maamin*, *Anim Zemirot*, *Bratslav Melodies*
+(piano), *Breslov Playing Field (Sea Waves)*, *Nigun Baal Shem Tov for
+Babies*, *Tremendous Threat Breslau* (piano), *Tzama with orchestra*,
+*Give Me One Prayer* (Shmuel) et *Yosef Karduner* — seize fichiers, 95 Mo.
+Aucun n'était dans l'APK ni sur le site ; ils restent dans l'historique git.
+
+Restent ici les morceaux du Yanuka (déclaration du 22/09), ceux d'Ishay Ribo
+(hors application tant qu'il n'y a pas d'accord écrit) et trois sans titre.
+Le registre est tenu dans `FEUILLE_DE_ROUTE.md`.
