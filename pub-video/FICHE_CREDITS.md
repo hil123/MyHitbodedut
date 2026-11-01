@@ -15,3 +15,6 @@ Plans aujourd'hui PROVISOIRES (dessin vectoriel + illustrations de l'app) : scè
 - Plan B : photos libres de droits animées en parallaxe 2,5D (0 crédit).
 - Voix finale : ElevenLabs sur GO ; aujourd'hui voix témoin edge-tts (fr-FR-HenriNeural).
 - Musique finale : aujourd'hui MUSIQUE TÉMOIN composée par script (`outils/musique_temoin.py`, sans droits tiers). Les morceaux du dossier `musique/` de l'app (Shneor Lerer, Yanuka, Karduner…) ne sont PAS utilisés : pas de licence publicitaire documentée.
+
+## Musique (01/11)
+`remotion/public/musique/musique_nigoun.wav` : composition originale par script (`outils/musique_nigoun.py`), dans le mode Ahava Rabba sur ré. Rendue avec FluidSynth et la banque de sons FluidR3_GM (Frank Wen, licence MIT). Aucun droit tiers. Elle remplace la musique témoin synthétique.

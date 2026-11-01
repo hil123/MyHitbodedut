@@ -248,7 +248,7 @@ export const PubV5: React.FC = () => {
           <SousTitres texte={v.txt} debut={0} duree={v.dur} blocs={BLOCS[v.f]} />
         </Sequence>
       ))}
-      <Audio src={staticFile('musique/musique_temoin.wav')} volume={volumeMusique} />
+      <Audio src={staticFile('musique/musique_nigoun.wav')} volume={volumeMusique} />
     </AbsoluteFill>
   );
 };
