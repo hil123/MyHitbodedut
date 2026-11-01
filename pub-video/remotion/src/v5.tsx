@@ -28,7 +28,9 @@ const BLOCS: Record<string, {t: number; txt: string}[]> = {
 const VOIX = [
   {f: 's01', at: 12, dur: 7.32, txt: 'Chaque jour, nous sommes occupés. Le travail, les responsabilités, les soucis…'},
   {f: 's02', at: 300, dur: 3.5, txt: 'Mais prenons-nous vraiment le temps de parler à Hachem ?'},
-  {f: 's05', at: 450, dur: 3.8, txt: 'Pour t’accompagner dans cette démarche, découvre MY HITBODEDUT.'},
+  // v12 : le bruit de la foule coupe net à 430, silence, puis la voix annonce le nom
+  {f: 's05a', at: 442, dur: 1.3, txt: 'MY HITBODEDUT.'},
+  {f: 's05b', at: 500, dur: 2.0, txt: 'Pour t’accompagner dans cette démarche.'},
   {f: 's03', at: 600, dur: 4.4, txt: 'La Hitbodedut, c’est s’arrêter… et prendre un moment rien que pour Hachem.'},
   {f: 's04', at: 765, dur: 7.6, txt: 'Lui parler avec tes propres mots. Lui raconter tes difficultés, tes rêves, tes joies… et tes remerciements.'},
   {f: 's06', at: 1065, dur: 5.2, txt: 'Cinq étapes pour t’aider à structurer ta Hitbodedut, inspirées des enseignements de nos Sages.'},
@@ -198,7 +200,16 @@ const CompteurJour: React.FC<{texte: string; dur: number}> = ({texte, dur}) => {
 };
 
 /* Musique choisie au rendu : --props='{"musique":"m_dvorak_americain_lento"}' (domaine public, voir FICHE_CREDITS.md). */
-const MUSIQUE: string = (getInputProps() as {musique?: string}).musique ?? 'musique_deux_temps';
+/* v12 : 0–430 bruits de foule (CC0) ; coupe nette ; à 482 la musique de présentation.
+   « Beyond » de Noam Shpayer (fichier de l'app, accord écrit du 29/10, voir PUBLICATION_PLAY_STORE.md § 3.2),
+   calé pour que le « drop » du morceau tombe à 73,3 s (retour du plan d'ouverture). Autres choix : joie_provisoire, musique_deux_temps. */
+const MUSIQUE: string = (getInputProps() as {musique?: string}).musique ?? 'beyond';
+const DEBUT_MUSIQUE = 482;
+const volumeAmbiance = (f: number) => {
+  let d = 0;
+  for (const v of VOIX) d = Math.max(d, interpolate(f, [v.at - 8, v.at, v.at + v.dur * FPS, v.at + v.dur * FPS + 12], [0, 1, 1, 0], clamp));
+  return 1 - d * 0.5;
+};
 
 export const PubV5: React.FC = () => {
   const f = useCurrentFrame();
@@ -256,9 +267,9 @@ export const PubV5: React.FC = () => {
       {/* textes écran */}
       <Sequence from={0} durationInFrames={300}><TexteEcran texte="Le monde ne s’arrête jamais…" debut={14} fin={296} sombre /></Sequence>
       <Sequence from={300} durationInFrames={130}><TexteEcran texte="Et toi, prends-tu ce moment ?" debut={6} fin={126} sombre /></Sequence>
-      {f >= 460 && f < 600 && (
+      {f >= 442 && f < 600 && (
         <div style={{position: 'absolute', top: Z.texteHaut, height: Z.texteBas - Z.texteHaut, left: 0, right: 0, display: 'flex', alignItems: 'center', justifyContent: 'center',
-          fontFamily: 'Inter', fontWeight: 700, fontSize: 66, letterSpacing: 6, color: C.petrole, opacity: spring({frame: f - 460, fps, config: {damping: 200}})}}>MY HITBODEDUT</div>
+          fontFamily: 'Inter', fontWeight: 700, fontSize: 66, letterSpacing: 6, color: C.petrole, opacity: spring({frame: f - 442, fps, config: {damping: 200}})}}>MY HITBODEDUT</div>
       )}
       <Sequence from={962} durationInFrames={93}><TexteEcran texte="Parle-Lui avec ton cœur." debut={4} fin={89} sombre /></Sequence>
       {f >= T5.etapes && f < T5.duree && <Titre n={1} texte="Une Hitbodedut guidée" f={f - T5.etapes} />}
@@ -293,7 +304,8 @@ export const PubV5: React.FC = () => {
           <SousTitres texte={v.txt} debut={0} duree={v.dur} blocs={BLOCS[v.f]} />
         </Sequence>
       ))}
-      <Audio src={staticFile(`musique/${MUSIQUE}.wav`)} volume={volumeMusique} />
+      <Sequence durationInFrames={430}><Audio src={staticFile('musique/ambiance_foule.wav')} volume={volumeAmbiance} /></Sequence>
+      <Sequence from={DEBUT_MUSIQUE}><Audio src={staticFile(`musique/${MUSIQUE}.wav`)} volume={(f) => volumeMusique(f + DEBUT_MUSIQUE)} /></Sequence>
     </AbsoluteFill>
   );
 };

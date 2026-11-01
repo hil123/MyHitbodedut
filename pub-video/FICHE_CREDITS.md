@@ -55,3 +55,14 @@ Script : outils/musique_deux_temps.py. Fichier : remotion/public/musique/musique
   Enregistrement Musopen Symphony, Public Domain Mark 1.0 (même source). 0–57,3 s du mouvement, fondu enchaîné d'1 s vers
   ses 19,4 dernières secondes (accords finaux sur le logo).
 Aucun crédit obligatoire.
+
+## Son v12 (01/11) — foule, coupe nette, annonce, « Beyond »
+- 0–14,33 s : bruits de rue et brouhaha de foule — Red Library « Crowds Outdoor » (USC Cinema / Sunset Editorial),
+  licence CC0 1.0 (https://archive.org/details/Red_Library_Crowds_Outdoor) : R07-52 Busy City Ambience, R08-02 Outdoor Crowd,
+  R08-06 Outdoor Voices. La pression monte jusqu'à la coupe nette à 14,33 s. Fichier : musique/ambiance_foule.wav.
+- 14,33–14,96 s : silence. 14,73 s : la voix annonce « MY HITBODEDUT. » (s05a), puis 16,7 s « Pour t'accompagner dans cette démarche. » (s05b).
+- 16,07–90 s : « Beyond », Noam Shpayer (נעם שפייר), fichier de l'app (musique/shpayer_beyond.m4a).
+  Droits : accord écrit du 29/10 noté dans MyHitbodedut/PUBLICATION_PLAY_STORE.md § 3.2 (« Livré (accord écrit) »).
+  À confirmer : que cet accord couvre aussi l'usage publicitaire (pub Meta / YouTube).
+  Montage : morceau pris à 8,8 s pour que le « drop » (66 s) tombe à 73,3 s, sur le retour du plan d'ouverture ;
+  à 83,5 s fondu enchaîné vers la fin du morceau (150 s →), fondu final. Fichier : musique/beyond.wav.

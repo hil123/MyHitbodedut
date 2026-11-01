@@ -11,6 +11,8 @@ TEXTES = {
  's04a': "Lui parler avec tes propres mots. Lui raconter tes difficultés, tes rêves, tes joies…",
  's04b': "et tes remerciements.",
  's05': f"Pour t'accompagner dans cette démarche, découvre My {H}.",
+ 's05a': f"My {H}.",
+ 's05b': "Pour t'accompagner dans cette démarche.",
  's06': f"Cinq étapes pour t'aider à structurer ta {H}, inspirées des enseignements de nos Sages.",
 }
 async def une(k, t):
