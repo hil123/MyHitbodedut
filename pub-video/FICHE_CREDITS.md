@@ -74,3 +74,9 @@ Aucun crédit obligatoire.
   Crédit affiché dans la pub (v13) : carte finale, « Musique : « Beyond » — Noam Shpayer · נעם שפייר ».
   Montage : morceau pris à 8,8 s pour que le « drop » (66 s) tombe à 73,3 s, sur le retour du plan d'ouverture ;
   à 83,5 s fondu enchaîné vers la fin du morceau (150 s →), fondu final. Fichier : musique/beyond.wav.
+
+## Ambiance v15 (01/11) — « trouve quelque chose d'autre qui ressemble »
+Remplace la Red Library. Enregistrements réels, Radio Aporee, Creative Commons Public Domain Mark 1.0 :
+- Mahane Yehuda, Jérusalem — promenade sonore dans le shouk couvert (https://archive.org/details/aporee_27456_31642), extrait 272–286,3 s.
+- Tel-Aviv, rue principale vers midi — murmure, voitures, oiseaux (https://archive.org/details/aporee_31564_36259), extrait 132–146,3 s, à 45 %.
+Extraits choisis pour leur régularité (pas de pic ni de cri), filtre 120 Hz–6 kHz, −26 LUFS, coupe nette à 14,33 s. Aucun crédit obligatoire.
