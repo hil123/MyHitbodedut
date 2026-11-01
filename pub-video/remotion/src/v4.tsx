@@ -124,7 +124,7 @@ const Monde: React.FC<{zoom: number; flou: number; bulles: number; apaise: numbe
 };
 
 /* ---------------- le téléphone vu par-dessus son épaule ---------------- */
-const EcranOuverture: React.FC<{f: number}> = ({f}) => {
+export const EcranOuverture: React.FC<{f: number}> = ({f}) => {
   const s = spring({frame: f - 12, fps: FPS, config: {damping: 12}});
   return (
     <AbsoluteFill style={{background: '#dff5ec', alignItems: 'center', justifyContent: 'center'}}>
@@ -133,12 +133,12 @@ const EcranOuverture: React.FC<{f: number}> = ({f}) => {
   );
 };
 
-const AFournir: React.FC<{titre: string}> = ({titre}) => (
+export const AFournir: React.FC<{titre: string}> = ({titre}) => (
   <AbsoluteFill style={{background: '#10302c', alignItems: 'center', justifyContent: 'center', padding: 26, textAlign: 'center',
     fontFamily: 'Inter', color: '#ffdf8a', fontSize: 24, fontWeight: 700, lineHeight: 1.4}}>CAPTURE ANDROID À FOURNIR<br />{titre}</AbsoluteFill>
 );
 
-const Titre: React.FC<{n: number; texte: string; f: number}> = ({n, texte, f}) => {
+export const Titre: React.FC<{n: number; texte: string; f: number}> = ({n, texte, f}) => {
   const s = spring({frame: f, fps: FPS, config: {damping: 200}});
   return (
     <div style={{position: 'absolute', top: Z.texteHaut - 10, left: 0, right: 0, display: 'flex', justifyContent: 'center', opacity: s, transform: `translateY(${(1 - s) * -14}px)`}}>
@@ -149,35 +149,35 @@ const Titre: React.FC<{n: number; texte: string; f: number}> = ({n, texte, f}) =
   );
 };
 
-const ETAPES = ['Dire ce qu’on a sur le cœur', 'Le regret du passé', 'La demande', 'Faire de l’étude une prière', 'L’action de grâce'];
-const MONTAGE = [
+export const ETAPES = ['Dire ce qu’on a sur le cœur', 'Le regret du passé', 'La demande', 'Faire de l’étude une prière', 'L’action de grâce'];
+export const MONTAGE = [
   {src: 'captures/web_langue.png', leg: 'Langue', z: 1.5, o: '50% 92%'},
-  {src: 'captures/web_onboarding_6.png', leg: 'Comment t’appeler', z: 1.5, o: '50% 62%'},
+  {src: 'captures/web_onboarding_6.png', leg: 'Comment t’appeler', z: 2.0, o: '50% 78%'},
   {src: 'captures/web_couleur_fond.png', leg: 'Couleurs', z: 1.5, o: '50% 88%'},
-  {src: 'captures/web_accueil_sombre.png', leg: 'Clair ou sombre', z: 1.2, o: '50% 30%'},
+  {src: 'captures/web_reglages.png', leg: 'Clair ou sombre', z: 1.6, o: '50% 42%'},
   {src: '', leg: 'Horaires', z: 1, o: '50% 50%'},
   {src: '', leg: 'Durée du report', z: 1, o: '50% 50%'},
 ];
 
 /** Contenu de l'écran du téléphone selon le moment (captures réelles). */
-const Ecran: React.FC<{f: number}> = ({f}) => {
+export const Ecran: React.FC<{f: number}> = ({f}) => {
   if (f < T.parler) return null;
   if (f < T.etapes) return <Img src={staticFile(f < 900 ? 'captures/web_onboarding_1.png' : 'captures/web_accueil.png')} style={{width: '100%', height: '100%'}} />;
   if (f < T.duree) return <AFournir titre="« Hitbodedout guidée »" />;
   if (f < T.avec) {
     const a = f < 1420;
     return <Img src={staticFile(a ? 'captures/web_choix_duree.png' : 'captures/web_seance.png')} style={{width: '100%', height: '100%',
-      transform: `scale(${a ? L(f, 1340, 1420, 1, 1.6) : L(f, 1420, 1510, 1.5, 1.1)})`, transformOrigin: a ? '50% 82%' : '50% 38%'}} />;
+      transform: `scale(${a ? L(f, 1330, 1420, 1.7, 1.9) : L(f, 1420, 1510, 1.7, 1.5)})`, transformOrigin: a ? '50% 86%' : '50% 64%'}} />;
   }
-  if (f < T.perso) return f < 1630 ? <AFournir titre="« Je suis avec Hachem » : choix des applications" /> : <Img src={staticFile('captures/web_seance.png')} style={{width: '100%', height: '100%'}} />;
+  if (f < T.perso) return f < 1630 ? <AFournir titre="« Je suis avec Hachem » : choix des applications" /> : <Img src={staticFile('captures/web_seance.png')} style={{width: '100%', height: '100%', transform: 'scale(1.6)', transformOrigin: '50% 64%'}} />;
   if (f < T.chabbat) {
     const per = (T.chabbat - T.perso) / MONTAGE.length;
     const i = Math.min(MONTAGE.length - 1, Math.floor((f - T.perso) / per));
     const m = MONTAGE[i];
     const loc = f - T.perso - i * per;
-    return m.src ? <Img src={staticFile(m.src)} style={{width: '100%', height: '100%', transform: `scale(${L(loc, 0, per, 1, m.z)})`, transformOrigin: m.o}} /> : <AFournir titre={`« ${m.leg} »`} />;
+    return m.src ? <Img src={staticFile(m.src)} style={{width: '100%', height: '100%', transform: `scale(${L(loc, 0, per, m.z * 0.85, m.z)})`, transformOrigin: m.o}} /> : <AFournir titre={`« ${m.leg} »`} />;
   }
-  return <Img src={staticFile('captures/web_bougies.png')} style={{width: '100%', height: '100%', transform: `scale(${L(f, 2080, 2200, 1, 1.45)})`, transformOrigin: '50% 75%'}} />;
+  return <Img src={staticFile('captures/web_bougies.png')} style={{width: '100%', height: '100%', transform: `scale(${L(f, 2080, 2200, 1.5, 1.7)})`, transformOrigin: '50% 82%'}} />;
 };
 
 /* ---------------- composition ---------------- */
