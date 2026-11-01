@@ -40,8 +40,20 @@ export const TexteEcran: React.FC<{texte: string; debut?: number; fin: number; y
 };
 
 /** Sous-titres synchronisés : la phrase est découpée en segments (ponctuation), durée au prorata des caractères. */
-export const SousTitres: React.FC<{texte: string; debut: number; duree: number}> = ({texte, debut, duree}) => {
+export const SousTitres: React.FC<{texte: string; debut: number; duree: number; blocs?: {t: number; txt: string}[]}> = ({texte, debut, duree, blocs: blocsCales}) => {
   const f = useCurrentFrame();
+  if (blocsCales) {
+    // blocs calés sur l'horodatage réel des mots de la voix (secondes)
+    const pl = blocsCales.map((b, i) => ({b: b.txt, a: debut + b.t * FPS, z: debut + (i + 1 < blocsCales.length ? blocsCales[i + 1].t : duree) * FPS}));
+    const c = pl.find((p, i) => f >= p.a && f < p.z + (i === pl.length - 1 ? 12 : 0));
+    if (!c) return null;
+    const o = Math.min(lerp(f, c.a, c.a + 4, 0, 1), lerp(f, c.z + 8, c.z + 12, 1, 0));
+    return (
+      <div style={{position: 'absolute', left: 80, right: 80, top: Z.stHaut, height: Z.stBas - Z.stHaut, display: 'flex', alignItems: 'flex-start', justifyContent: 'center', opacity: o}}>
+        <div style={{fontFamily: 'Inter', fontWeight: 600, fontSize: 40, lineHeight: 1.3, color: C.blanc, textAlign: 'center', background: 'rgba(7,17,17,.62)', padding: '14px 26px', borderRadius: 18, maxWidth: 900}}>{c.b}</div>
+      </div>
+    );
+  }
   const segs = texte.match(/[^.,?!…]+[.,?!…]*/g)!.map((s) => s.trim()).filter(Boolean);
   // regroupe les segments trop courts
   const blocs: string[] = [];

@@ -16,6 +16,12 @@ const H = Z.sujetBas - Z.sujetHaut;
 const L = (f: number, a: number, b: number, x: number, y: number, e = IO) => interpolate(f, [a, b], [x, y], {...clamp, easing: e});
 
 /* Voix : mêmes fichiers, nouveau calage. */
+const BLOCS: Record<string, {t: number; txt: string}[]> = {
+  s01: [{t: 0.1, txt: 'Chaque jour, nous sommes occupés.'}, {t: 3.1, txt: 'Le travail,'}, {t: 4.18, txt: 'les responsabilités,'}, {t: 5.71, txt: 'les soucis…'}],
+  s03: [{t: 0.1, txt: 'La Hitbodedut, c’est s’arrêter…'}, {t: 2.22, txt: 'et prendre un moment rien que pour Hachem.'}],
+  s04: [{t: 0.1, txt: 'Lui parler avec tes propres mots.'}, {t: 2.7, txt: 'Lui raconter tes difficultés,'}, {t: 4.71, txt: 'tes rêves,'}, {t: 5.54, txt: 'tes joies et tes remerciements.'}],
+  s11: [{t: 0.1, txt: 'Ne laisse pas passer une journée'}, {t: 1.45, txt: 'sans prendre un moment pour Hachem.'}, {t: 4.04, txt: 'Commence aujourd’hui.'}],
+};
 const VOIX = [
   {f: 's01', at: 12, dur: 7.32, txt: 'Chaque jour, nous sommes occupés. Le travail, les responsabilités, les soucis…'},
   {f: 's02', at: 300, dur: 3.5, txt: 'Mais prenons-nous vraiment le temps de parler à Hachem ?'},
@@ -42,28 +48,28 @@ const volumeMusique = (f: number) => {
 type Pose = {de: number; a: number; src: string; type: 'perso' | 'carte'; mot: string; bulle?: string; teinte: string; dir: 1 | -1; marche?: boolean};
 const POSES: Pose[] = [
   // s01 « Chaque jour, nous sommes occupés. | Le travail, | les responsabilités, | les soucis… »
-  {de: 0, a: 108, src: 'char_walking', type: 'perso', mot: 'occupés', bulle: 'En retard !', teinte: '#e8f1f0', dir: 1, marche: true},
-  {de: 108, a: 142, src: 'char_writing', type: 'perso', mot: 'le travail', bulle: 'Encore 3 dossiers…', teinte: '#eef0f5', dir: -1},
-  {de: 142, a: 200, src: 'scene_airport', type: 'carte', mot: 'les responsabilités', bulle: 'Tout repose sur moi', teinte: '#eef3f6', dir: 1},
-  {de: 200, a: 300, src: 'char_thinking', type: 'perso', mot: 'les soucis', bulle: 'Et demain ?', teinte: '#f1efec', dir: -1},
+  {de: 0, a: 102, src: 'char_walking', type: 'perso', mot: 'occupés', bulle: 'En retard !', teinte: '#e8f1f0', dir: 1, marche: true},
+  {de: 102, a: 134, src: 'char_writing', type: 'perso', mot: 'le travail', bulle: 'Encore 3 dossiers…', teinte: '#eef0f5', dir: -1},
+  {de: 134, a: 180, src: 'scene_airport', type: 'carte', mot: 'les responsabilités', bulle: 'Tout repose sur moi', teinte: '#eef3f6', dir: 1},
+  {de: 180, a: 300, src: 'char_thinking', type: 'perso', mot: 'les soucis', bulle: 'Et demain ?', teinte: '#f1efec', dir: -1},
   // s02 « Mais prenons-nous vraiment le temps de parler à Hachem ? »
   {de: 300, a: 430, src: 'char_face', type: 'perso', mot: 'la question', teinte: '#e6f2ef', dir: 1},
   // 430–600 : le téléphone, l'application s'ouvre (s05)
   // s03 « La Hitbodedut, c'est s'arrêter… | et prendre un moment rien que pour Hachem. »
-  {de: 600, a: 678, src: 'char_debout', type: 'perso', mot: 's’arrêter', teinte: '#eaf4f1', dir: -1},
-  {de: 678, a: 765, src: 'scene_nature', type: 'carte', mot: 'un moment pour Hachem', teinte: '#f6efe2', dir: 1},
+  {de: 600, a: 664, src: 'char_debout', type: 'perso', mot: 's’arrêter', teinte: '#eaf4f1', dir: -1},
+  {de: 664, a: 765, src: 'scene_nature', type: 'carte', mot: 'un moment pour Hachem', teinte: '#f6efe2', dir: 1},
   // s04 « Lui parler avec tes propres mots. | Lui raconter tes difficultés, | tes rêves, | tes joies | et tes remerciements. »
-  {de: 765, a: 840, src: 'char_praise', type: 'perso', mot: 'parler', teinte: '#f6efe2', dir: -1},
-  {de: 840, a: 906, src: 'char_praying', type: 'perso', mot: 'tes difficultés', teinte: '#ecf0f4', dir: 1},
-  {de: 906, a: 929, src: 'char_pointing', type: 'perso', mot: 'tes rêves', teinte: '#eef0fa', dir: -1},
-  {de: 929, a: 962, src: 'char_dancing_joy', type: 'perso', mot: 'tes joies', teinte: '#fbf3df', dir: 1},
-  {de: 962, a: 1050, src: 'char_open_arms', type: 'perso', mot: 'tes remerciements', teinte: '#f8eedb', dir: -1},
+  {de: 765, a: 843, src: 'char_praise', type: 'perso', mot: 'parler', teinte: '#f6efe2', dir: -1},
+  {de: 843, a: 903, src: 'char_praying', type: 'perso', mot: 'tes difficultés', teinte: '#ecf0f4', dir: 1},
+  {de: 903, a: 928, src: 'char_pointing', type: 'perso', mot: 'tes rêves', teinte: '#eef0fa', dir: -1},
+  {de: 928, a: 946, src: 'char_dancing_joy', type: 'perso', mot: 'tes joies', teinte: '#fbf3df', dir: 1},
+  {de: 946, a: 1050, src: 'char_open_arms', type: 'perso', mot: 'tes remerciements', teinte: '#f8eedb', dir: -1},
   {de: 1050, a: 1130, src: 'char_offering', type: 'perso', mot: 'avec ton cœur', teinte: '#e8f3ef', dir: 1},
   // 1130–2200 : les fonctions (captures réelles) — 1960–2080 : table de Chabbat
   // s11 « Ne laisse pas passer une journée | sans prendre un moment pour Hachem. | Commence aujourd'hui. »
-  {de: 2200, a: 2328, src: 'scene_sleeping', type: 'carte', mot: 'une journée', teinte: '#ebeef6', dir: -1},
-  {de: 2328, a: 2400, src: 'scene_nature', type: 'carte', mot: 'un moment pour Hachem', teinte: '#f6efe2', dir: 1},
-  {de: 2400, a: 2462, src: 'char_thumbs_up', type: 'perso', mot: 'commence', teinte: '#e8f3ef', dir: -1},
+  {de: 2200, a: 2302, src: 'scene_sleeping', type: 'carte', mot: 'une journée', teinte: '#ebeef6', dir: -1},
+  {de: 2302, a: 2380, src: 'scene_nature', type: 'carte', mot: 'un moment pour Hachem', teinte: '#f6efe2', dir: 1},
+  {de: 2380, a: 2462, src: 'char_thumbs_up', type: 'perso', mot: 'commence', teinte: '#e8f3ef', dir: -1},
 ];
 
 const RATIO: Record<string, number> = {char_walking: 328 / 640, char_writing: 637 / 640, char_thinking: 544 / 640, char_face: 465 / 640, char_debout: 800 / 1200,
@@ -208,7 +214,7 @@ export const PubV5: React.FC = () => {
       {VOIX.map((v) => (
         <Sequence key={v.f} from={v.at} durationInFrames={Math.ceil(v.dur * FPS) + 14}>
           <Audio src={staticFile(`voix/${v.f}.wav`)} />
-          <SousTitres texte={v.txt} debut={0} duree={v.dur} />
+          <SousTitres texte={v.txt} debut={0} duree={v.dur} blocs={BLOCS[v.f]} />
         </Sequence>
       ))}
       <Audio src={staticFile('musique/musique_temoin.wav')} volume={volumeMusique} />
