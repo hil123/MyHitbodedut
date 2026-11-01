@@ -1,6 +1,8 @@
 import React from 'react';
 import {AbsoluteFill, Audio, Img, Sequence, interpolate, spring, staticFile, useCurrentFrame, useVideoConfig, random} from 'remotion';
 import {C, EASE, SCENES, VO_DELAY, FPS, Z} from './theme';
+import {Scene1R, Scene2R, Scene3R, Scene4R, ShabbatReel, LeverReel} from './scenesReel';
+import {PHOTO_S2, VISAGE_S2, S3_A, S3_B, S3_C, S4_A, HORIZON_S4} from './choix';
 import {BandeTexte, Cadre, Collines, Etalonnage, FlashLumiere, LARGEUR_TEL, Provisoire, Silhouette, SousTitres, Telephone, TexteEcran, ZoneSujet, fontFaces, lerp} from './ui';
 
 /*
@@ -298,14 +300,7 @@ const Scene10: React.FC = () => {
   return (
     <AbsoluteFill>
       {table ? (
-        <AbsoluteFill style={{background: 'radial-gradient(circle at 60% 50%, #6b3d1d 0%, #2a160b 55%, #0d0705 100%)'}}>
-          <Cadre>
-            <AbsoluteFill style={{background: `radial-gradient(circle at 66% 55%, rgba(255,190,100,${0.45 * flamme}) 0, rgba(255,150,60,.12) 380px, rgba(0,0,0,0) 650px)`}} />
-            <Img src={staticFile('img/char_shabbat.webp')} style={{position: 'absolute', width: 1080, left: lerp(f, 0, 105, 0, -30), top: H - 1080 * 640 / 565 + 60,
-              filter: `brightness(${0.75 + 0.1 * flamme}) sepia(.25)`}} />
-          </Cadre>
-          <Provisoire texte="PROVISOIRE — illustration de l'app, plan réel à générer" />
-        </AbsoluteFill>
+        <ShabbatReel />
       ) : (
         <AbsoluteFill>
           <FondApp />
@@ -331,15 +326,12 @@ const Scene11: React.FC = () => {
   const sec = spring({frame: f - 230, fps, config: {damping: 200}});
   return (
     <AbsoluteFill style={{background: C.noir}}>
-      <AbsoluteFill style={{transform: `scale(${lerp(f, 0, 200, 1.15, 1.0)})`, opacity: 1 - versNoir}}>
-        <Collines ciel={['#1d3550', '#7fa3b8', '#f4cf8e']} teintes={['#6f6a5c', '#4b473d', '#2e2b25']} soleilY={1000 - lever * 220} />
-        <Img src={staticFile('img/char_open_arms.webp')} style={{position: 'absolute', height: 480, left: 395, top: Z.sujetBas - 520,
-          filter: 'brightness(.1) drop-shadow(0 0 26px rgba(255,220,150,.7))'}} />
+      <AbsoluteFill style={{opacity: 1 - versNoir}}>
+        <LeverReel horizon={HORIZON_LEVER} />
       </AbsoluteFill>
-      {f < 185 && <Provisoire />}
       {f >= 185 && (
         <AbsoluteFill style={{background: `radial-gradient(circle at 50% 45%, ${C.petrole} 0%, ${C.noir} 70%)`, opacity: versNoir}}>
-          <div style={{position: 'absolute', top: 520, left: 80, right: 80, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 44}}>
+          <div style={{position: 'absolute', top: 520, left: 80, right: 80, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 44, transform: `scale(${lerp(f, 185, 300, 1, 1.06)})`}}>
             <Logo taille={260} apparition={carte} />
             <div style={{fontFamily: 'Inter', fontWeight: 700, fontSize: 70, letterSpacing: 6, color: C.blanc, opacity: carte}}>MY HITBODEDUT</div>
             <div style={{fontFamily: 'Inter', fontWeight: 600, fontSize: 32, letterSpacing: 3, color: C.or, opacity: slogan, transform: `translateY(${(1 - slogan) * 20}px)`, textAlign: 'center', lineHeight: 1.5}}>
@@ -355,7 +347,13 @@ const Scene11: React.FC = () => {
   );
 };
 
-const COMPOSANTS = [Scene1, Scene2, Scene3, Scene4, Scene5, Scene6, Scene7, Scene8, Scene9, Scene10, Scene11];
+// Photos réelles retenues (voir DECOUPAGE.md et CREDITS_PHOTOS.md)
+const HORIZON_LEVER = 800;
+const S2 = () => <Scene2R photo={PHOTO_S2} visage={VISAGE_S2} />;
+const S3 = () => <Scene3R a={S3_A} b={S3_B} c={S3_C} />;
+const S4 = () => <Scene4R a={S4_A} horizon={HORIZON_S4} />;
+const COMPOSANTS_ANCIENS = [Scene1, Scene2, Scene3, Scene4];
+const COMPOSANTS = [Scene1R, S2, S3, S4, Scene5, Scene6, Scene7, Scene8, Scene9, Scene10, Scene11];
 
 /** Musique baissée (≈ −11,5 dB) sous la voix, remontée dans les respirations. */
 const volumeMusique = (f: number) => {

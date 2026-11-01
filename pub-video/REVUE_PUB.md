@@ -22,3 +22,17 @@ Limites connues :
 - Scènes 6, 8 et 9 (horaires, report) : cartes « CAPTURE ANDROID À FOURNIR ». Ces écrans n'existent que sur Android, et cet environnement n'a pas d'émulateur.
 - Visages : les illustrations de l'app (scènes 2 et 10) montrent un visage. La règle Torah « aucun visage » est à trancher pour une pub.
 - Voix et musique : témoins.
+
+## v2 (01/11) — retours « trop statique », « plan par plan », « pas réelle »
+
+Fichier : `_RENDU_SESSION/MyHitbodedut_pub_v2_1080x1920.mp4`. 90,0 s, −16,6 LUFS. Aucun noir, aucune image figée de plus de 1 s (freezedetect).
+- Scènes 1 à 4, 10 et 11 : photos réelles libres (Wikimedia Commons), 15 plans, un mouvement par plan (voir `DECOUPAGE.md`). Filés entre les plans de rue.
+- Photo confinée à la zone sujet, sur un fond flou de la même photo : le texte et les sous-titres ne recouvrent jamais une personne.
+- Téléphone : pivot 3D et flottement continus. Écran final en poussée lente.
+- 0 crédit Higgsfield dépensé.
+
+À valider :
+- Plans 1 et 2 : des personnes réelles et reconnaissables (voir `CREDITS_PHOTOS.md`). La licence CC couvre la photo, pas le droit à l'image de ces personnes dans une publicité.
+- Plans 4A et 11A : silhouette noire (personnage de l'app) incrustée sur la photo réelle.
+- Plans 4B et 11B : silhouette réelle, en tenue non religieuse, en contre-jour.
+- Les licences CC BY et CC BY-SA demandent l'attribution : mettre les crédits dans la description de la publicité.

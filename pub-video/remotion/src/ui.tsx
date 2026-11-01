@@ -108,8 +108,11 @@ export const Telephone: React.FC<{src: string; largeur?: number; style?: React.C
   src, largeur = LARGEUR_TEL, style, children, ecranStyle, zoom = 1, origine = '50% 50%',
 }) => {
   const h = largeur * (2676 / 1236);
+  const f = useCurrentFrame();
+  // le téléphone vit : pivot 3D lent et flottement (jamais figé)
+  const vie = `perspective(1600px) rotateY(${Math.sin(f / 45) * 8}deg) rotateX(${Math.sin(f / 63) * 3}deg) translateY(${Math.sin(f / 33) * 8}px)`;
   return (
-    <div style={{position: 'relative', width: largeur + 36, height: h + 36, borderRadius: largeur * 0.14, background: 'linear-gradient(145deg,#2b3535,#0b1414 40%,#1d2a2a)',
+    <div style={{position: 'relative', width: largeur + 36, height: h + 36, transform: vie, borderRadius: largeur * 0.14, background: 'linear-gradient(145deg,#2b3535,#0b1414 40%,#1d2a2a)',
       padding: 18, boxShadow: `0 40px 120px rgba(0,0,0,.7), 0 0 0 2px #3b4848, 0 0 80px ${C.turquoise}55`, ...style}}>
       <div style={{width: largeur, height: h, borderRadius: largeur * 0.11, overflow: 'hidden', position: 'relative', background: '#000', ...ecranStyle}}>
         {src ? <Img src={staticFile(src)} style={{width: '100%', height: '100%', display: 'block', transform: `scale(${zoom})`, transformOrigin: origine}} /> : null}
