@@ -2,6 +2,7 @@ import React from 'react';
 import {AbsoluteFill, Audio, Img, Sequence, interpolate, spring, staticFile, useCurrentFrame, useVideoConfig, random} from 'remotion';
 import {C, EASE, SCENES, VO_DELAY, FPS, Z} from './theme';
 import {Scene1R, Scene2R, Scene3R, Scene4R, ShabbatReel, LeverReel} from './scenesReel';
+import {S1Planche, S2Planche, S3Planche, S4Planche, ShabbatPlanche, FinalPlanche, TitreNumero} from './scenesPlanche';
 import {PHOTO_S2, VISAGE_S2, S3_A, S3_B, S3_C, S4_A, HORIZON_S4} from './choix';
 import {BandeTexte, Cadre, Collines, Etalonnage, FlashLumiere, LARGEUR_TEL, Provisoire, Silhouette, SousTitres, Telephone, TexteEcran, ZoneSujet, fontFaces, lerp} from './ui';
 
@@ -145,7 +146,7 @@ const FondApp: React.FC = () => {
 };
 
 const Logo: React.FC<{taille: number; apparition: number}> = ({taille, apparition}) => (
-  <Img src={staticFile('img/logo.png')} style={{width: taille, height: taille, borderRadius: taille * 0.22, boxShadow: `0 0 60px ${C.or}55`,
+  <Img src={staticFile('planche/logo.png')} style={{width: taille, height: taille, borderRadius: taille * 0.22, boxShadow: `0 0 60px ${C.or}55`,
     opacity: apparition, transform: `scale(${0.92 + 0.08 * apparition})`}} />
 );
 
@@ -207,7 +208,8 @@ const Scene6: React.FC = () => {
           D’après Likoutei Moharan II, 25 et le Rambam (Hilkhot Tefila 1, 2) — texte de l’application
         </div>
       </div>
-      <TexteEcran texte={sc(6).ecran!} debut={10} fin={202} />
+      <TitreNumero n={1} texte="Une Hitbodedut guidée" />
+      <TexteEcran texte={sc(6).ecran!} debut={10} fin={202} y={300} taille={50} />
     </AbsoluteFill>
   );
 };
@@ -226,7 +228,8 @@ const Scene7: React.FC = () => {
           <Telephone src="captures/web_seance.png" zoom={lerp(f, 105, 205, 1.6, 1.15)} origine="50% 38%" />
         )}
       </ZoneSujet>
-      <TexteEcran texte={sc(7).ecran!} debut={10} fin={202} />
+      <TitreNumero n={2} texte="Ton objectif quotidien" />
+      <TexteEcran texte={sc(7).ecran!} debut={10} fin={202} y={300} taille={50} />
     </AbsoluteFill>
   );
 };
@@ -252,7 +255,8 @@ const Scene8: React.FC = () => {
             background: c, opacity: efface * 0.9, filter: `blur(${(1 - efface) * 12}px)`, transform: `scale(${0.7 + efface * 0.3})`, boxShadow: '0 10px 30px rgba(0,0,0,.4)'}} />
         );
       })}
-      <TexteEcran texte={sc(8).ecran!} debut={10} fin={232} taille={58} />
+      <TitreNumero n={3} texte="Je suis avec Hachem" />
+      <TexteEcran texte={sc(8).ecran!} debut={10} fin={232} y={300} taille={44} />
     </AbsoluteFill>
   );
 };
@@ -287,7 +291,8 @@ const Scene9: React.FC = () => {
           <div key={k} style={{fontFamily: 'Inter', fontWeight: k === i ? 700 : 500, fontSize: k === i ? 40 : 30, color: k === i ? C.or : 'rgba(255,255,255,.45)'}}>{x.leg}</div>
         ))}
       </div>
-      <TexteEcran texte={sc(9).ecran!} debut={8} fin={202} taille={60} />
+      <TitreNumero n={4} texte="Une application à ton rythme" />
+      <TexteEcran texte={sc(9).ecran!} debut={8} fin={202} y={300} taille={50} />
     </AbsoluteFill>
   );
 };
@@ -300,7 +305,7 @@ const Scene10: React.FC = () => {
   return (
     <AbsoluteFill>
       {table ? (
-        <ShabbatReel />
+        <ShabbatPlanche />
       ) : (
         <AbsoluteFill>
           <FondApp />
@@ -310,7 +315,8 @@ const Scene10: React.FC = () => {
         </AbsoluteFill>
       )}
       <BandeTexte />
-      <TexteEcran texte={sc(10).ecran!} debut={14} fin={202} taille={60} />
+      <TitreNumero n={5} texte="Respect du Shabbat" />
+      <TexteEcran texte={sc(10).ecran!} debut={14} fin={202} y={300} taille={50} />
     </AbsoluteFill>
   );
 };
@@ -327,16 +333,18 @@ const Scene11: React.FC = () => {
   return (
     <AbsoluteFill style={{background: C.noir}}>
       <AbsoluteFill style={{opacity: 1 - versNoir}}>
-        <LeverReel horizon={HORIZON_LEVER} />
+        <FinalPlanche />
       </AbsoluteFill>
       {f >= 185 && (
         <AbsoluteFill style={{background: `radial-gradient(circle at 50% 45%, ${C.petrole} 0%, ${C.noir} 70%)`, opacity: versNoir}}>
-          <div style={{position: 'absolute', top: 520, left: 80, right: 80, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 44, transform: `scale(${lerp(f, 185, 300, 1, 1.06)})`}}>
+          <div style={{position: 'absolute', top: 400, left: 80, right: 80, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 38, transform: `scale(${lerp(f, 185, 300, 1, 1.06)})`}}>
             <Logo taille={260} apparition={carte} />
             <div style={{fontFamily: 'Inter', fontWeight: 700, fontSize: 70, letterSpacing: 6, color: C.blanc, opacity: carte}}>MY HITBODEDUT</div>
             <div style={{fontFamily: 'Inter', fontWeight: 600, fontSize: 32, letterSpacing: 3, color: C.or, opacity: slogan, transform: `translateY(${(1 - slogan) * 20}px)`, textAlign: 'center', lineHeight: 1.5}}>
               YOUR PERSONAL CONVERSATION<br />WITH HASHEM
             </div>
+            <div style={{fontFamily: 'Inter', fontWeight: 700, fontSize: 40, color: C.noir, background: `linear-gradient(180deg, #f3dd9c, ${C.or})`, borderRadius: 50,
+              padding: '16px 46px', boxShadow: `0 0 40px ${C.or}66`, opacity: slogan, transform: `scale(${0.9 + 0.1 * slogan})`}}>Commence aujourd’hui.</div>
             <div style={{fontFamily: 'FrankRuhl, serif', fontSize: 40, color: '#cfe5e2', opacity: sec, transform: `translateY(${(1 - sec) * 20}px)`, textAlign: 'center', lineHeight: 1.4}}>
               MY HITBODEDUT<br />Parle à Hachem. Chaque jour.
             </div>
@@ -353,7 +361,7 @@ const S2 = () => <Scene2R photo={PHOTO_S2} visage={VISAGE_S2} />;
 const S3 = () => <Scene3R a={S3_A} b={S3_B} c={S3_C} />;
 const S4 = () => <Scene4R a={S4_A} horizon={HORIZON_S4} />;
 const COMPOSANTS_ANCIENS = [Scene1, Scene2, Scene3, Scene4];
-const COMPOSANTS = [Scene1R, S2, S3, S4, Scene5, Scene6, Scene7, Scene8, Scene9, Scene10, Scene11];
+const COMPOSANTS = [S1Planche, S2Planche, S3Planche, S4Planche, Scene5, Scene6, Scene7, Scene8, Scene9, Scene10, Scene11];
 
 /** Musique baissée (≈ −11,5 dB) sous la voix, remontée dans les respirations. */
 const volumeMusique = (f: number) => {
