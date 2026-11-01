@@ -15,8 +15,8 @@ export const lerp = (f: number, a: number, b: number, x: number, y: number, easi
   interpolate(f, [a, b], [x, y], {...clamp, easing});
 
 /** Texte écran : apparition par ressort, mot à mot (décalage 4 images), sortie plus rapide. */
-export const TexteEcran: React.FC<{texte: string; debut?: number; fin: number; y?: number; taille?: number; or?: boolean}> = ({
-  texte, debut = 12, fin, y = Z.texteHaut, taille = 64, or = false,
+export const TexteEcran: React.FC<{texte: string; debut?: number; fin: number; y?: number; taille?: number; or?: boolean; sombre?: boolean}> = ({
+  texte, debut = 12, fin, y = Z.texteHaut, taille = 64, or = false, sombre = false,
 }) => {
   const f = useCurrentFrame();
   const {fps} = useVideoConfig();
@@ -24,8 +24,8 @@ export const TexteEcran: React.FC<{texte: string; debut?: number; fin: number; y
   const sortie = lerp(f, fin - 9, fin, 1, 0, EASE.depart);
   return (
     <div style={{position: 'absolute', left: 70, right: 70, top: y, height: Z.texteBas - y, display: 'flex', alignItems: 'center', justifyContent: 'center', textAlign: 'center', opacity: sortie}}>
-      <div style={{fontFamily: 'FrankRuhl, serif', fontSize: taille, lineHeight: 1.18, color: or ? C.or : C.blanc,
-        textShadow: '0 4px 30px rgba(0,0,0,.85), 0 2px 6px rgba(0,0,0,.8), 0 0 2px rgba(0,0,0,.9)', letterSpacing: 0.5}}>
+      <div style={{fontFamily: 'FrankRuhl, serif', fontSize: taille, lineHeight: 1.18, color: sombre ? C.petrole : or ? C.or : C.blanc,
+        textShadow: sombre ? 'none' : '0 4px 30px rgba(0,0,0,.85), 0 2px 6px rgba(0,0,0,.8), 0 0 2px rgba(0,0,0,.9)', letterSpacing: 0.5}}>
         {mots.map((m, i) => {
           const s = spring({frame: f - debut - i * 4, fps, config: {damping: 200}});
           return (
