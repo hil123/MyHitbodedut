@@ -80,3 +80,9 @@ Remplace la Red Library. Enregistrements réels, Radio Aporee, Creative Commons 
 - Mahane Yehuda, Jérusalem — promenade sonore dans le shouk couvert (https://archive.org/details/aporee_27456_31642), extrait 272–286,3 s.
 - Tel-Aviv, rue principale vers midi — murmure, voitures, oiseaux (https://archive.org/details/aporee_31564_36259), extrait 132–146,3 s, à 45 %.
 Extraits choisis pour leur régularité (pas de pic ni de cri), filtre 120 Hz–6 kHz, −26 LUFS, coupe nette à 14,33 s. Aucun crédit obligatoire.
+
+## v16 (01/11) — voix plus douce, transition foule → musique adoucie
+- Voix : edge-tts fr-FR-RemyMultilingualNeural (débit −10 %, hauteur −2 Hz), aigus adoucis (−4 dB au-dessus de 5,5 kHz), −16 LUFS.
+  Toutes les phrases regénérées (outils/voix.py) ; poses, sous-titres et plans du calendrier recalés sur les nouveaux mots (mots_voix.json, clés v16_*).
+- Transition : la foule s'étouffe (passe-bas) et s'éteint de 12,6 à 15,0 s au lieu d'une coupe nette ; « MY HITBODEDUT » à 14,73 s ;
+  « Beyond » entre en fondu de 2,5 s à 15,4 s (le drop reste sur 73,3 s).

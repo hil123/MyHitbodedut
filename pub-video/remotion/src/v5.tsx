@@ -19,26 +19,26 @@ const L = (f: number, a: number, b: number, x: number, y: number, e = IO) => int
 
 /* Voix : mêmes fichiers, nouveau calage. */
 const BLOCS: Record<string, {t: number; txt: string}[]> = {
-  s01: [{t: 0.1, txt: 'Chaque jour, nous sommes occupés.'}, {t: 3.1, txt: 'Le travail,'}, {t: 4.18, txt: 'les responsabilités,'}, {t: 5.71, txt: 'les soucis…'}],
-  s03: [{t: 0.1, txt: 'La Hitbodedut, c’est s’arrêter…'}, {t: 2.44, txt: 'et prendre un moment rien que pour Hachem.'}],
-  s04: [{t: 0.1, txt: 'Lui parler avec tes propres mots.'}, {t: 2.7, txt: 'Lui raconter tes difficultés,'}, {t: 4.71, txt: 'tes rêves,'}, {t: 5.5, txt: 'tes joies…'}, {t: 6.4, txt: 'et tes remerciements.'}],
-  s10c: [{t: 0.1, txt: 'Avec le calendrier juif,'}, {t: 1.94, txt: 'retrouve chaque jour la date hébraïque,'}, {t: 3.99, txt: 'les zmanim et les ajouts de la prière.'}],
-  s11: [{t: 0.1, txt: 'Ne laisse pas passer une journée'}, {t: 1.45, txt: 'sans prendre un moment pour Hachem.'}, {t: 4.04, txt: 'Commence aujourd’hui.'}],
+  s01: [{t: 0.1, txt: 'Chaque jour, nous sommes occupés.'}, {t: 2.75, txt: 'Le travail,'}, {t: 3.89, txt: 'les responsabilités,'}, {t: 5.51, txt: 'les soucis…'}],
+  s03: [{t: 0.1, txt: 'La Hitbodedut, c’est s’arrêter…'}, {t: 2.83, txt: 'et prendre un moment rien que pour Hachem.'}],
+  s04: [{t: 0.1, txt: 'Lui parler avec tes propres mots.'}, {t: 2.47, txt: 'Lui raconter tes difficultés,'}, {t: 4.53, txt: 'tes rêves,'}, {t: 5.51, txt: 'tes joies…'}, {t: 6.5, txt: 'et tes remerciements.'}],
+  s10c: [{t: 0.1, txt: 'Avec le calendrier juif,'}, {t: 1.99, txt: 'retrouve chaque jour la date hébraïque,'}, {t: 4.22, txt: 'les zmanim et les ajouts de la prière.'}],
+  s11: [{t: 0.1, txt: 'Ne laisse pas passer une journée'}, {t: 1.56, txt: 'sans prendre un moment pour Hachem.'}, {t: 3.7, txt: 'Commence aujourd’hui.'}],
 };
 const VOIX = [
-  {f: 's01', at: 12, dur: 7.32, txt: 'Chaque jour, nous sommes occupés. Le travail, les responsabilités, les soucis…'},
-  {f: 's02', at: 300, dur: 3.5, txt: 'Mais prenons-nous vraiment le temps de parler à Hachem ?'},
+  {f: 's01', at: 12, dur: 6.2, txt: 'Chaque jour, nous sommes occupés. Le travail, les responsabilités, les soucis…'},
+  {f: 's02', at: 300, dur: 2.75, txt: 'Mais prenons-nous vraiment le temps de parler à Hachem ?'},
   // v12 : le bruit de la foule coupe net à 430, silence, puis la voix annonce le nom
-  {f: 's05a', at: 442, dur: 1.3, txt: 'MY HITBODEDUT.'},
-  {f: 's05b', at: 500, dur: 2.0, txt: 'Pour t’accompagner dans cette démarche.'},
-  {f: 's03', at: 600, dur: 4.4, txt: 'La Hitbodedut, c’est s’arrêter… et prendre un moment rien que pour Hachem.'},
-  {f: 's04', at: 765, dur: 7.6, txt: 'Lui parler avec tes propres mots. Lui raconter tes difficultés, tes rêves, tes joies… et tes remerciements.'},
-  {f: 's06', at: 1065, dur: 5.2, txt: 'Cinq étapes pour t’aider à structurer ta Hitbodedut, inspirées des enseignements de nos Sages.'},
-  {f: 's07', at: 1265, dur: 4.87, txt: 'Choisis la durée de ton rendez-vous quotidien et avance à ton rythme.'},
-  {f: 's08', at: 1520, dur: 7.66, txt: 'Bloque les distractions. Mets ton téléphone de côté. Ce moment est consacré à Hachem.'},
-  {f: 's09', at: 1785, dur: 4.63, txt: 'Personnalise ton expérience selon tes préférences et ton rythme de vie.'},
-  {f: 's10c', at: 1975, dur: 6.72, txt: 'Avec le calendrier juif, retrouve chaque jour la date hébraïque, les zmanim et les ajouts de la prière.'},
-  {f: 's11', at: 2262, dur: 6.02, txt: 'Ne laisse pas passer une journée sans prendre un moment pour Hachem. Commence aujourd’hui.'},
+  {f: 's05a', at: 442, dur: 1.5, txt: 'MY HITBODEDUT.'},
+  {f: 's05b', at: 500, dur: 2.2, txt: 'Pour t’accompagner dans cette démarche.'},
+  {f: 's03', at: 600, dur: 4.7, txt: 'La Hitbodedut, c’est s’arrêter… et prendre un moment rien que pour Hachem.'},
+  {f: 's04', at: 765, dur: 7.7, txt: 'Lui parler avec tes propres mots. Lui raconter tes difficultés, tes rêves, tes joies… et tes remerciements.'},
+  {f: 's06', at: 1065, dur: 5.5, txt: 'Cinq étapes pour t’aider à structurer ta Hitbodedut, inspirées des enseignements de nos Sages.'},
+  {f: 's07', at: 1265, dur: 4.05, txt: 'Choisis la durée de ton rendez-vous quotidien et avance à ton rythme.'},
+  {f: 's08', at: 1520, dur: 6.3, txt: 'Bloque les distractions. Mets ton téléphone de côté. Ce moment est consacré à Hachem.'},
+  {f: 's09', at: 1785, dur: 4.4, txt: 'Personnalise ton expérience selon tes préférences et ton rythme de vie.'},
+  {f: 's10c', at: 1975, dur: 6.2, txt: 'Avec le calendrier juif, retrouve chaque jour la date hébraïque, les zmanim et les ajouts de la prière.'},
+  {f: 's11', at: 2262, dur: 4.85, txt: 'Ne laisse pas passer une journée sans prendre un moment pour Hachem. Commence aujourd’hui.'},
 ];
 const volumeMusique = (f: number) => {
   let d = 0;
@@ -53,10 +53,10 @@ const volumeMusique = (f: number) => {
 type Pose = {de: number; a: number; src: string; type: 'perso' | 'carte'; mot: string; bulle?: string; bulles?: string[]; teinte: string; dir: 1 | -1; marche?: boolean; retour?: boolean; fixe?: boolean; lumiere?: boolean};
 const POSES: Pose[] = [
   // s01 « Chaque jour, nous sommes occupés. | Le travail, | les responsabilités, | les soucis… »
-  {de: 0, a: 102, src: 'char_walking', type: 'perso', mot: 'occupés', bulle: 'En retard !', teinte: '#e8f1f0', dir: 1, marche: true},
-  {de: 102, a: 134, src: 'char_writing', type: 'perso', mot: 'le travail', bulle: 'Encore 3 dossiers…', teinte: '#eef0f5', dir: -1},
-  {de: 134, a: 180, src: 'scene_airport', type: 'carte', mot: 'les responsabilités', bulle: 'Tout repose sur moi', teinte: '#eef3f6', dir: 1},
-  {de: 180, a: 300, src: 'char_thinking', type: 'perso', mot: 'les soucis', bulle: 'Et demain ?', teinte: '#f1efec', dir: -1},
+  {de: 0, a: 94, src: 'char_walking', type: 'perso', mot: 'occupés', bulle: 'En retard !', teinte: '#e8f1f0', dir: 1, marche: true},
+  {de: 94, a: 129, src: 'char_writing', type: 'perso', mot: 'le travail', bulle: 'Encore 3 dossiers…', teinte: '#eef0f5', dir: -1},
+  {de: 129, a: 177, src: 'scene_airport', type: 'carte', mot: 'les responsabilités', bulle: 'Tout repose sur moi', teinte: '#eef3f6', dir: 1},
+  {de: 177, a: 300, src: 'char_thinking', type: 'perso', mot: 'les soucis', bulle: 'Et demain ?', teinte: '#f1efec', dir: -1},
   // s02 « Mais prenons-nous vraiment le temps de parler à Hachem ? »
   // plan A : il s'arrête, de dos, face à l'horizon ; les bulles de stress s'éteignent une à une
   {de: 300, a: 366, src: 'char_standing_back', type: 'perso', mot: 'prenons-nous le temps', teinte: '#eef3f2', dir: 1, bulles: ['En retard !', 'Encore 3 dossiers…', 'Tout repose sur moi', 'Et demain ?']},
@@ -64,20 +64,20 @@ const POSES: Pose[] = [
   {de: 366, a: 430, src: 'char_standing_back', type: 'perso', mot: 'parler à Hachem', teinte: '#fbf3df', dir: 1, fixe: true, lumiere: true},
   // 430–600 : le téléphone, l'application s'ouvre (s05)
   // s03 « La Hitbodedut, c'est s'arrêter… | et prendre un moment rien que pour Hachem. »
-  {de: 600, a: 672, src: 'char_debout', type: 'perso', mot: 's’arrêter', teinte: '#eaf4f1', dir: -1},
-  {de: 672, a: 765, src: 'scene_nature', type: 'carte', mot: 'un moment pour Hachem', teinte: '#f6efe2', dir: 1},
+  {de: 600, a: 685, src: 'char_debout', type: 'perso', mot: 's’arrêter', teinte: '#eaf4f1', dir: -1},
+  {de: 685, a: 765, src: 'scene_nature', type: 'carte', mot: 'un moment pour Hachem', teinte: '#f6efe2', dir: 1},
   // s04 « Lui parler avec tes propres mots. | Lui raconter tes difficultés, | tes rêves, | tes joies | et tes remerciements. »
-  {de: 765, a: 843, src: 'char_praise', type: 'perso', mot: 'parler', teinte: '#f6efe2', dir: -1},
-  {de: 843, a: 903, src: 'char_praying', type: 'perso', mot: 'tes difficultés', teinte: '#ecf0f4', dir: 1},
-  {de: 903, a: 928, src: 'char_pointing', type: 'perso', mot: 'tes rêves', teinte: '#eef0fa', dir: -1},
-  {de: 928, a: 955, src: 'char_dancing_joy', type: 'perso', mot: 'tes joies', teinte: '#fbf3df', dir: 1},
-  {de: 955, a: 1028, src: 'char_open_arms', type: 'perso', mot: 'tes remerciements', teinte: '#f8eedb', dir: -1},
+  {de: 765, a: 839, src: 'char_praise', type: 'perso', mot: 'parler', teinte: '#f6efe2', dir: -1},
+  {de: 839, a: 901, src: 'char_praying', type: 'perso', mot: 'tes difficultés', teinte: '#ecf0f4', dir: 1},
+  {de: 901, a: 930, src: 'char_pointing', type: 'perso', mot: 'tes rêves', teinte: '#eef0fa', dir: -1},
+  {de: 930, a: 960, src: 'char_dancing_joy', type: 'perso', mot: 'tes joies', teinte: '#fbf3df', dir: 1},
+  {de: 960, a: 1028, src: 'char_open_arms', type: 'perso', mot: 'tes remerciements', teinte: '#f8eedb', dir: -1},
   {de: 1028, a: 1055, src: 'char_offering', type: 'perso', mot: 'avec ton cœur', teinte: '#e8f3ef', dir: 1},
   // 1055–2200 : les fonctions (captures réelles) — 1960–2200 : le calendrier juif
   // s11 « Ne laisse pas passer une journée | sans prendre un moment pour Hachem. | Commence aujourd'hui. »
-  {de: 2200, a: 2302, src: 'char_walking', type: 'perso', mot: 'une journée', teinte: '#e8f1f0', dir: 1, marche: true, retour: true, bulles: ['En retard !', 'Encore 3 dossiers…', 'Tout repose sur moi', 'Et demain ?']},
-  {de: 2302, a: 2380, src: 'scene_nature', type: 'carte', mot: 'un moment pour Hachem', teinte: '#f6efe2', dir: 1},
-  {de: 2380, a: 2462, src: 'char_thumbs_up', type: 'perso', mot: 'commence', teinte: '#e8f3ef', dir: -1},
+  {de: 2200, a: 2309, src: 'char_walking', type: 'perso', mot: 'une journée', teinte: '#e8f1f0', dir: 1, marche: true, retour: true, bulles: ['En retard !', 'Encore 3 dossiers…', 'Tout repose sur moi', 'Et demain ?']},
+  {de: 2309, a: 2373, src: 'scene_nature', type: 'carte', mot: 'un moment pour Hachem', teinte: '#f6efe2', dir: 1},
+  {de: 2373, a: 2462, src: 'char_thumbs_up', type: 'perso', mot: 'commence', teinte: '#e8f3ef', dir: -1},
 ];
 
 const RATIO: Record<string, number> = {char_standing_back: 204 / 640, char_walking: 328 / 640, char_writing: 637 / 640, char_thinking: 544 / 640, char_face: 465 / 640, char_debout: 800 / 1200,
@@ -165,9 +165,9 @@ const PLANS_TEL: PlanTel[] = [
   {de: 1898, a: 1929, src: '', y: 50, z0: 1, z1: 1.15, aFournir: '« Heures du mode »'},
   {de: 1929, a: T.chabbat, src: '', y: 50, z0: 1, z1: 1.15, aFournir: '« Durée du report »'},
   // 5. le calendrier juif (captures réelles, lieu : Jérusalem)
-  {de: T.chabbat, a: 2092, src: 'web_calendrier', y: 33, z0: 1.4, z1: 1.9},             // le mois, dates hébraïques et grégoriennes
-  {de: 2092, a: 2128, src: 'web_zmanim', y: 100, z0: 1.7, z1: 1.85},                   // « les zmanim »
-  {de: 2128, a: T.retour, src: 'web_calendrier', y: 96, z0: 1.7, z1: 2.0},             // la date hébraïque du jour, « dans les prières »
+  {de: T.chabbat, a: 2100, src: 'web_calendrier', y: 33, z0: 1.4, z1: 1.9},             // le mois, dates hébraïques et grégoriennes
+  {de: 2100, a: 2124, src: 'web_zmanim', y: 100, z0: 1.7, z1: 1.85},                   // « les zmanim »
+  {de: 2124, a: T.retour, src: 'web_calendrier', y: 96, z0: 1.7, z1: 2.0},             // la date hébraïque du jour, « dans les prières »
 ];
 const planTel = (f: number) => PLANS_TEL.find((p) => f >= p.de && f < p.a);
 const camTel = (f: number) => {
@@ -204,7 +204,7 @@ const CompteurJour: React.FC<{texte: string; dur: number}> = ({texte, dur}) => {
    « Beyond » de Noam Shpayer (fichier de l'app, accord écrit du 29/10, voir PUBLICATION_PLAY_STORE.md § 3.2),
    calé pour que le « drop » du morceau tombe à 73,3 s (retour du plan d'ouverture). Autres choix : joie_provisoire, musique_deux_temps. */
 const MUSIQUE: string = (getInputProps() as {musique?: string}).musique ?? 'beyond';
-const DEBUT_MUSIQUE = 482;
+const DEBUT_MUSIQUE = 462;
 const volumeAmbiance = (f: number) => {
   let d = 0;
   for (const v of VOIX) d = Math.max(d, interpolate(f, [v.at - 8, v.at, v.at + v.dur * FPS, v.at + v.dur * FPS + 12], [0, 1, 1, 0], clamp));
@@ -307,7 +307,7 @@ export const PubV5: React.FC = () => {
           <SousTitres texte={v.txt} debut={0} duree={v.dur} blocs={BLOCS[v.f]} />
         </Sequence>
       ))}
-      <Sequence durationInFrames={430}><Audio src={staticFile('musique/ambiance_foule.wav')} volume={volumeAmbiance} /></Sequence>
+      <Sequence durationInFrames={456}><Audio src={staticFile('musique/ambiance_foule.wav')} volume={volumeAmbiance} /></Sequence>
       <Sequence from={DEBUT_MUSIQUE}><Audio src={staticFile(`musique/${MUSIQUE}.wav`)} volume={(f) => volumeMusique(f + DEBUT_MUSIQUE)} /></Sequence>
     </AbsoluteFill>
   );
