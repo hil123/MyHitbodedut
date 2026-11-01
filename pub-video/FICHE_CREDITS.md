@@ -27,3 +27,10 @@ Captures réelles de l'app web : `web_trophees_semaine`, `web_trophees_haut`, `w
 
 ## Calendrier (01/11)
 Scène 5 : « Le calendrier juif » remplace « Respect du Shabbat ». Voix `s10c`. Captures réelles de l'app web (lieu : Jérusalem) : `web_calendrier`, `web_zmanim`.
+
+## Musique v10 (01/11) — enregistrement existant, domaine public
+- Œuvre : Johannes Brahms (1833–1897), Symphonie n° 3 en fa majeur, op. 90, III. Poco allegretto. Composition dans le domaine public.
+- Enregistrement : Musopen Symphony (projet Kickstarter Musopen 2012), publié dans le domaine public (Creative Commons Public Domain Mark 1.0).
+- Source : https://archive.org/details/musopen-dvd (licence affichée : http://creativecommons.org/publicdomain/mark/1.0/). Même enregistrement sur Wikimedia Commons, marqué « Public domain » : File:Brahms - Symphony No. 3 in F major, Op. 90 - III. Poco allegretto (Musopen Symphony).flac
+- Montage : 0:00–1:15 du mouvement (thème au violoncelle, puis aux violons), fondu enchaîné vers 5:44–6:02 (accords finaux), fondu de sortie 86–90 s. Aucune crédit obligatoire.
+- Alternative téléchargée : Dvořák, Quatuor « Américain » op. 96, II. Lento (Musopen String Quartet, même licence) : sources_musique/dvorak_americain_lento.mp3.
