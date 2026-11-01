@@ -34,3 +34,24 @@ Scène 5 : « Le calendrier juif » remplace « Respect du Shabbat ». Voix `s10
 - Source : https://archive.org/details/musopen-dvd (licence affichée : http://creativecommons.org/publicdomain/mark/1.0/). Même enregistrement sur Wikimedia Commons, marqué « Public domain » : File:Brahms - Symphony No. 3 in F major, Op. 90 - III. Poco allegretto (Musopen Symphony).flac
 - Montage : 0:00–1:15 du mouvement (thème au violoncelle, puis aux violons), fondu enchaîné vers 5:44–6:02 (accords finaux), fondu de sortie 86–90 s. Aucune crédit obligatoire.
 - Alternative téléchargée : Dvořák, Quatuor « Américain » op. 96, II. Lento (Musopen String Quartet, même licence) : sources_musique/dvorak_americain_lento.mp3.
+
+## Musiques v11 (01/11) — 4 enregistrements existants, domaine public
+Tous issus du DVD Musopen (projet Kickstarter 2012), publiés dans le domaine public : Creative Commons Public Domain Mark 1.0,
+https://archive.org/details/musopen-dvd. Compositeurs morts depuis plus de 70 ans. Aucun crédit obligatoire.
+Montage automatique (outils/monter_musique.py) : début du mouvement jusqu'à un creux de fin de phrase (~70–77 s),
+fondu enchaîné de 1,5 s vers la fin réelle du mouvement, fondu de sortie 86,5–90 s.
+- m_dvorak_americain_lento : Dvořák (1841–1904), Quatuor à cordes n° 12 « Américain », op. 96, II. Lento. Coupe 73 s ; fin 448,5–468 s.
+- m_mendelssohn_quatuor6_adagio : Mendelssohn (1809–1847), Quatuor n° 6 en fa mineur, op. 80, III. Adagio. Coupe 73 s ; fin 465–484 s.
+- m_schubert_d958_adagio : Schubert (1797–1828), Sonate pour piano en ut mineur, D. 958, II. Adagio. Coupe 70 s ; fin 438,5–461 s.
+- m_brahms1_andante : Brahms (1833–1897), Symphonie n° 1, op. 68, II. Andante sostenuto. Coupe 76,5 s ; fin 498–515 s.
+Choix au rendu : --props='{"musique":"m_dvorak_americain_lento"}' (par défaut : Dvořák).
+
+## Musique v11 (01/11) — deux musiques et un déclic (demande de Hillel)
+Script : outils/musique_deux_temps.py. Fichier : remotion/public/musique/musique_deux_temps.wav (choix par défaut du rendu).
+- 0–14,0 s, stress et panique : Mendelssohn (1809–1847), Quatuor à cordes n° 6 en fa mineur, op. 80, I. Allegro vivace assai.
+  Enregistrement Musopen String Quartet, Public Domain Mark 1.0 (https://archive.org/details/musopen-dvd).
+- 14,33 s, déclic sur l'écran MY HITBODEDUT : son synthétisé par le script (souffle montant + carillon), aucun droit.
+- 14,33–90 s, joie intense : Mendelssohn, Symphonie n° 4 « Italienne », op. 90, I. Allegro vivace.
+  Enregistrement Musopen Symphony, Public Domain Mark 1.0 (même source). 0–57,3 s du mouvement, fondu enchaîné d'1 s vers
+  ses 19,4 dernières secondes (accords finaux sur le logo).
+Aucun crédit obligatoire.

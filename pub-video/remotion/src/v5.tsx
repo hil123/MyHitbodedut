@@ -1,5 +1,5 @@
 import React from 'react';
-import {AbsoluteFill, Audio, Img, Sequence, Easing, interpolate, spring, staticFile, useCurrentFrame, useVideoConfig} from 'remotion';
+import {AbsoluteFill, Audio, getInputProps, Img, Sequence, Easing, interpolate, spring, staticFile, useCurrentFrame, useVideoConfig} from 'remotion';
 import {C, Z, FPS} from './theme';
 import {SousTitres, Telephone, TexteEcran, fontFaces} from './ui';
 import {T, EcranOuverture, Titre, ETAPES, AFournir} from './v4';
@@ -197,6 +197,9 @@ const CompteurJour: React.FC<{texte: string; dur: number}> = ({texte, dur}) => {
   );
 };
 
+/* Musique choisie au rendu : --props='{"musique":"m_dvorak_americain_lento"}' (domaine public, voir FICHE_CREDITS.md). */
+const MUSIQUE: string = (getInputProps() as {musique?: string}).musique ?? 'musique_deux_temps';
+
 export const PubV5: React.FC = () => {
   const f = useCurrentFrame();
   const {fps} = useVideoConfig();
@@ -290,7 +293,7 @@ export const PubV5: React.FC = () => {
           <SousTitres texte={v.txt} debut={0} duree={v.dur} blocs={BLOCS[v.f]} />
         </Sequence>
       ))}
-      <Audio src={staticFile('musique/musique_brahms.wav')} volume={volumeMusique} />
+      <Audio src={staticFile(`musique/${MUSIQUE}.wav`)} volume={volumeMusique} />
     </AbsoluteFill>
   );
 };
