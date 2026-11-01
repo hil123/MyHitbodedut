@@ -11,7 +11,7 @@ Chaque plan = un seul mouvement de caméra motivé. Aucun mouvement identique su
 | 1C | 0:05,3–0:08 | Geoula, rue animée | le monde ralentit | poussée qui ralentit (ralenti) | filé |
 | 2A | 0:08–0:12 | homme seul qui marche (Mea Shearim) | situer | recul lent, plan large | flash doré |
 | 2B | 0:12–0:16 | même photo, cadrage serré sur le visage | tension, question | zoom lent sur le visage | coupe dans l'axe |
-| 3A | 0:16–0:19 | Jérusalem au coucher du soleil, vue des collines | quitter la ville | panoramique latéral | flash doré |
+| 3A | 0:16–0:19 | vallée et collines de Jérusalem | quitter la ville | panoramique latéral | flash doré |
 | 3B | 0:19–0:22 | chemin entre les cyprès | marche vers les collines | travelling avant | coupe dans le mouvement |
 | 3C | 0:22–0:25 | collines de Judée, plan large | plan aérien | élévation (montée verticale + recul) | coupe dans le mouvement |
 | 4A | 0:25–0:31 | collines de Judée + silhouette, mains levées | émerveillement | poussée très lente | flash doré |
