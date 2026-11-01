@@ -125,8 +125,10 @@ const PlanPose: React.FC<{p: Pose}> = ({p}) => {
 type PlanTel = {de: number; a: number; src: string; y: number; z0: number; z1: number; aFournir?: string};
 const PLANS_TEL: PlanTel[] = [
   {de: T.etapes, a: T.duree, src: '', y: 50, z0: 1, z1: 1.15, aFournir: '« Hitbodedout guidée »'},
-  {de: T.duree, a: 1420, src: 'web_choix_duree', y: 108, z0: 1.2, z1: 1.85},            // la liste des durées
-  {de: 1420, a: T.avec, src: 'web_seance', y: 52, z0: 2.2, z1: 2.0},                    // « 15 min », Commencer, durées
+  {de: T.duree, a: 1418, src: 'web_choix_duree', y: 108, z0: 1.2, z1: 1.85},            // « Choisis la durée… »
+  // « …et avance à ton rythme » : le système de trophées (captures réelles, historique de démonstration)
+  {de: 1418, a: 1464, src: 'web_trophees_semaine', y: 108, z0: 1.6, z1: 2.0},          // Votre semaine : trophées gagnés cette semaine
+  {de: 1464, a: T.avec, src: 'web_trophees_haut', y: 35, z0: 1.6, z1: 1.9},            // Grade Or, 25 trophées, les plus proches
   {de: T.avec, a: 1630, src: '', y: 50, z0: 1, z1: 1.15, aFournir: '« Je suis avec Hachem » : choix des applications'},
   {de: 1630, a: T.perso, src: 'web_seance', y: 50, z0: 1, z1: 2.2},                     // « posez le téléphone »
   {de: T.perso, a: 1802, src: 'web_langue', y: 108, z0: 1.6, z1: 2.2},                   // Langue : עברית / English / Français

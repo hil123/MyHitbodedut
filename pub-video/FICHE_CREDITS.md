@@ -18,3 +18,6 @@ Plans aujourd'hui PROVISOIRES (dessin vectoriel + illustrations de l'app) : scè
 
 ## Musique (01/11)
 `remotion/public/musique/musique_nigoun.wav` : composition originale par script (`outils/musique_nigoun.py`), dans le mode Ahava Rabba sur ré. Rendue avec FluidSynth et la banque de sons FluidR3_GM (Frank Wen, licence MIT). Aucun droit tiers. Elle remplace la musique témoin synthétique.
+
+## Trophées (01/11)
+Captures réelles de l'app web : `web_trophees_semaine`, `web_trophees_haut`, `web_accueil_serie`. Pour montrer une progression, l'app a été remplie avec un historique de démonstration : 24 journées de 15 à 30 min sur 4 semaines, Chabbat exclus (script `troph2.js`). Les trophées, le grade et la série affichés sont calculés par l'app elle-même à partir de cet historique.
