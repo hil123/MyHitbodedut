@@ -60,6 +60,7 @@ Aucun crédit obligatoire.
 - 0–14,33 s : bruits de rue et brouhaha de foule — Red Library « Crowds Outdoor » (USC Cinema / Sunset Editorial),
   licence CC0 1.0 (https://archive.org/details/Red_Library_Crowds_Outdoor) : R07-52 Busy City Ambience, R08-02 Outdoor Crowd,
   R08-06 Outdoor Voices. La pression monte jusqu'à la coupe nette à 14,33 s. Fichier : musique/ambiance_foule.wav.
+  v14 (« trop agressif ») : Outdoor Voices retiré, filtre 150 Hz–3,8 kHz, niveau −8 dB, baisse plus forte sous la voix.
 - 14,33–14,96 s : silence. 14,73 s : la voix annonce « MY HITBODEDUT. » (s05a), puis 16,7 s « Pour t'accompagner dans cette démarche. » (s05b).
 - 16,07–90 s : « Beyond », Noam Shpayer (נעם שפייר), fichier de l'app (musique/shpayer_beyond.m4a).
   Droits : accord écrit du 29/10 noté dans MyHitbodedut/PUBLICATION_PLAY_STORE.md § 3.2 (« Livré (accord écrit) »).
