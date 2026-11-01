@@ -294,6 +294,9 @@ export const PubV5: React.FC = () => {
               opacity: cta, transform: `scale(${0.9 + 0.1 * cta})`, boxShadow: `0 8px 30px ${C.or}88`}}>Commence aujourd’hui.</div>
             <div style={{fontFamily: 'FrankRuhl, serif', fontSize: 40, color: C.petrole, textAlign: 'center', lineHeight: 1.4, opacity: sec}}>MY HITBODEDUT<br />Parle à Hachem. Chaque jour.</div>
           </div>
+          {/* crédit musical promis à Noam Shpayer (accord du 29/10, preuves/accord_noam_shpayer_whatsapp.png) ; hors du zoom de la carte */}
+          <div style={{position: 'absolute', top: 1640, left: 0, right: 0, textAlign: 'center', fontFamily: 'Inter', fontWeight: 500, fontSize: 28, color: C.petrole,
+            opacity: 0.75 * sec, letterSpacing: 0.5}}>Musique : « Beyond » — Noam Shpayer · <span style={{fontFamily: 'FrankRuhl, serif'}}>נעם שפייר</span></div>
         </AbsoluteFill>
       )}
 

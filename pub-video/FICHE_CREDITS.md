@@ -70,5 +70,6 @@ Aucun crédit obligatoire.
   (« Je n'ai pas de dossier où elles sont rassemblées. Tu peux les télécharger sur le net et les utiliser. »).
   Portée : autorisation d'utiliser, sans restriction écrite ; la demande portait sur l'application, la publicité
   n'y est pas nommée explicitement. Le crédit « נעם שפייר » a été promis dans l'application.
+  Crédit affiché dans la pub (v13) : carte finale, « Musique : « Beyond » — Noam Shpayer · נעם שפייר ».
   Montage : morceau pris à 8,8 s pour que le « drop » (66 s) tombe à 73,3 s, sur le retour du plan d'ouverture ;
   à 83,5 s fondu enchaîné vers la fin du morceau (150 s →), fondu final. Fichier : musique/beyond.wav.
