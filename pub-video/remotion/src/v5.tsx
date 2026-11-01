@@ -2,7 +2,7 @@ import React from 'react';
 import {AbsoluteFill, Audio, Img, Sequence, Easing, interpolate, spring, staticFile, useCurrentFrame, useVideoConfig} from 'remotion';
 import {C, Z, FPS} from './theme';
 import {SousTitres, Telephone, TexteEcran, fontFaces} from './ui';
-import {T, EcranOuverture, Titre, ETAPES, MONTAGE, Ecran} from './v4';
+import {T, EcranOuverture, Titre, ETAPES, AFournir} from './v4';
 
 /*
  * v5 — retour de Hillel (01/11) : « une image par phrase », « les hommes ne suivent pas le texte ».
@@ -118,6 +118,38 @@ const PlanPose: React.FC<{p: Pose}> = ({p}) => {
   );
 };
 
+/*
+ * Plans du téléphone : quelle capture, et quelle bande verticale montrer (y = % de la hauteur du téléphone).
+ * z ≤ 2,2 : l'écran agrandi (402 px × 2,2 = 884 px) tient dans la largeur de l'image, donc aucune ligne n'est coupée.
+ */
+type PlanTel = {de: number; a: number; src: string; y: number; z0: number; z1: number; aFournir?: string};
+const PLANS_TEL: PlanTel[] = [
+  {de: T.etapes, a: T.duree, src: '', y: 50, z0: 1, z1: 1.15, aFournir: '« Hitbodedout guidée »'},
+  {de: T.duree, a: 1420, src: 'web_choix_duree', y: 95, z0: 1.2, z1: 2.2},            // la liste des durées
+  {de: 1420, a: T.avec, src: 'web_seance', y: 52, z0: 2.2, z1: 2.0},                    // « 15 min », Commencer, durées
+  {de: T.avec, a: 1630, src: '', y: 50, z0: 1, z1: 1.15, aFournir: '« Je suis avec Hachem » : choix des applications'},
+  {de: 1630, a: T.perso, src: 'web_seance', y: 50, z0: 1, z1: 2.2},                     // « posez le téléphone »
+  {de: T.perso, a: 1802, src: 'web_langue', y: 95, z0: 1.6, z1: 2.2},                   // Langue : עברית / English / Français
+  {de: 1802, a: 1834, src: 'web_onboarding_6', y: 68, z0: 1.6, z1: 2.0},                // Comment vous appeler ? Tsadik / Tsadeket
+  {de: 1834, a: 1866, src: 'web_couleur_fond', y: 95, z0: 1.6, z1: 2.2},                // Couleur du fond
+  {de: 1866, a: 1898, src: 'web_reglages', y: 48, z0: 1.4, z1: 1.8},                    // Apparence : clair ou sombre
+  {de: 1898, a: 1929, src: '', y: 50, z0: 1, z1: 1.15, aFournir: '« Heures du mode »'},
+  {de: 1929, a: T.chabbat, src: '', y: 50, z0: 1, z1: 1.15, aFournir: '« Durée du report »'},
+  {de: T.chabbat, a: T.retour, src: 'web_bougies', y: 95, z0: 1.4, z1: 2.2},           // Allumage des bougies
+];
+const planTel = (f: number) => PLANS_TEL.find((p) => f >= p.de && f < p.a);
+const camTel = (f: number) => {
+  const p = planTel(f);
+  if (!p) return {z: 1, y: 50};
+  return {z: interpolate(f, [p.de, p.a], [p.z0, p.z1], {...clamp, easing: Easing.inOut(Easing.sin)}), y: p.y};
+};
+const EcranPlein: React.FC<{f: number}> = ({f}) => {
+  const p = planTel(f);
+  if (!p) return null;
+  if (!p.src) return <AFournir titre={p.aFournir!} />;
+  return <Img src={staticFile(`captures/${p.src}.png`)} style={{width: '100%', height: '100%'}} />;
+};
+
 export const PubV5: React.FC = () => {
   const f = useCurrentFrame();
   const {fps} = useVideoConfig();
@@ -140,9 +172,12 @@ export const PubV5: React.FC = () => {
       ))}
 
       {(telA || telB) && (
-        <div style={{position: 'absolute', left: 0, right: 0, top: Z.sujetHaut, height: H, display: 'flex', alignItems: 'center', justifyContent: 'center',
+        <div style={{position: 'absolute', left: 0, right: 0, top: Z.sujetHaut, height: H, display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden',
           transform: `translateY(${(1 - telEntree) * 500}px)`}}>
-          <Telephone src="">{telA ? <EcranOuverture f={f - 430} /> : <Ecran f={f} />}</Telephone>
+          {/* zoom sur le TÉLÉPHONE entier (jamais dans l'écran) : la largeur de l'écran reste toujours visible, aucun texte coupé */}
+          <div style={{transform: `scale(${camTel(f).z})`, transformOrigin: `50% ${camTel(f).y}%`}}>
+            <Telephone src="">{telA ? <EcranOuverture f={f - 430} /> : <EcranPlein f={f} />}</Telephone>
+          </div>
         </div>
       )}
       {f >= T.etapes && f < T.duree && (
@@ -165,12 +200,6 @@ export const PubV5: React.FC = () => {
         return <div key={i} style={{position: 'absolute', left: i % 2 ? 880 : 90, top: Z.sujetHaut + 150 + Math.floor(i / 2) * 220, width: 110, height: 110, borderRadius: 28,
           background: c, opacity: e, transform: `scale(${0.7 + 0.3 * e})`, filter: `blur(${(1 - e) * 10}px)`}} />;
       })}
-      {f >= T.perso && f < T.chabbat && (() => {
-        const per = (T.chabbat - T.perso) / MONTAGE.length;
-        const i = Math.min(MONTAGE.length - 1, Math.floor((f - T.perso) / per));
-        return <div style={{position: 'absolute', top: Z.sujetHaut, height: H, left: 24, width: 300, display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 18}}>
-          {MONTAGE.map((m, k) => <div key={k} style={{fontFamily: 'Inter', fontWeight: k === i ? 700 : 500, fontSize: k === i ? 34 : 26, color: k === i ? C.petrole : '#9fb3b1'}}>{m.leg}</div>)}</div>;
-      })()}
       {f >= T.chabbat && f < T.chabbat + 120 && (
         <div style={{position: 'absolute', left: 0, right: 0, top: Z.sujetHaut, height: H, background: '#fff', overflow: 'hidden'}}>
           <AbsoluteFill style={{background: `radial-gradient(circle at 70% 50%, rgba(255,190,100,${0.35 + 0.08 * Math.sin(f / 3)}) 0, rgba(255,255,255,0) 60%)`}} />
