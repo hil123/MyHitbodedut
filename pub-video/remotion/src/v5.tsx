@@ -48,7 +48,7 @@ const volumeMusique = (f: number) => {
  * Une pose par morceau de phrase. de/a = images ; type 'perso' (détouré) ou 'carte' (scène avec décor).
  * Les bornes suivent la voix (découpage au prorata des caractères, comme les sous-titres).
  */
-type Pose = {de: number; a: number; src: string; type: 'perso' | 'carte'; mot: string; bulle?: string; bulles?: string[]; teinte: string; dir: 1 | -1; marche?: boolean; fixe?: boolean; lumiere?: boolean};
+type Pose = {de: number; a: number; src: string; type: 'perso' | 'carte'; mot: string; bulle?: string; bulles?: string[]; teinte: string; dir: 1 | -1; marche?: boolean; retour?: boolean; fixe?: boolean; lumiere?: boolean};
 const POSES: Pose[] = [
   // s01 « Chaque jour, nous sommes occupés. | Le travail, | les responsabilités, | les soucis… »
   {de: 0, a: 102, src: 'char_walking', type: 'perso', mot: 'occupés', bulle: 'En retard !', teinte: '#e8f1f0', dir: 1, marche: true},
@@ -73,7 +73,7 @@ const POSES: Pose[] = [
   {de: 1028, a: 1055, src: 'char_offering', type: 'perso', mot: 'avec ton cœur', teinte: '#e8f3ef', dir: 1},
   // 1055–2200 : les fonctions (captures réelles) — 1960–2200 : le calendrier juif
   // s11 « Ne laisse pas passer une journée | sans prendre un moment pour Hachem. | Commence aujourd'hui. »
-  {de: 2200, a: 2302, src: 'scene_sleeping', type: 'carte', mot: 'une journée', teinte: '#ebeef6', dir: -1},
+  {de: 2200, a: 2302, src: 'char_walking', type: 'perso', mot: 'une journée', teinte: '#e8f1f0', dir: 1, marche: true, retour: true, bulles: ['En retard !', 'Encore 3 dossiers…', 'Tout repose sur moi', 'Et demain ?']},
   {de: 2302, a: 2380, src: 'scene_nature', type: 'carte', mot: 'un moment pour Hachem', teinte: '#f6efe2', dir: 1},
   {de: 2380, a: 2462, src: 'char_thumbs_up', type: 'perso', mot: 'commence', teinte: '#e8f3ef', dir: -1},
 ];
@@ -94,12 +94,14 @@ const BulleStress: React.FC<{texte: string; f: number; cote: 1 | -1}> = ({texte,
 };
 
 /** Les quatre bulles de l'ouverture, au-dessus de lui (jamais sur lui) ; elles s'éteignent une à une. */
-const BullesQuiSEteignent: React.FC<{textes: string[]; f: number}> = ({textes, f}) => (
+const BullesQuiSEteignent: React.FC<{textes: string[]; f: number; retour?: boolean}> = ({textes, f, retour}) => (
   <>
     {textes.map((t, i) => {
-      const o = L(f, 10 + i * 12, 20 + i * 12, 1, 0);
+      // retour : elles réapparaissent puis éclatent une à une (il ne se laisse plus emporter)
+      const o = retour ? Math.min(spring({frame: f - 4 - i * 6, fps: FPS, config: {damping: 12}}), L(f, 60 + i * 9, 68 + i * 9, 1, 0)) : L(f, 10 + i * 12, 20 + i * 12, 1, 0);
+      const eclat = retour ? L(f, 60 + i * 9, 68 + i * 9, 1, 1.35) : 1;
       return (
-        <div key={i} style={{position: 'absolute', top: i < 2 ? 24 : 120, [i % 2 ? 'right' : 'left']: 50, opacity: o, transform: `scale(${0.85 + 0.15 * o}) translateY(${(1 - o) * -20}px)`,
+        <div key={i} style={{position: 'absolute', top: i < 2 ? 24 : 120, [i % 2 ? 'right' : 'left']: 50, opacity: o, transform: `scale(${(0.85 + 0.15 * o) * eclat}) translateY(${retour ? 0 : (1 - o) * -20}px)`,
           fontFamily: 'Inter', fontWeight: 700, fontSize: 30, color: '#7a1f1f', background: '#fff', border: '3px solid #2a2a2a', borderRadius: 28, padding: '10px 20px',
           boxShadow: '0 6px 16px rgba(0,0,0,.12)', whiteSpace: 'nowrap', filter: `blur(${(1 - o) * 6}px)`}}>{t}</div>
       );
@@ -135,7 +137,7 @@ const PlanPose: React.FC<{p: Pose}> = ({p}) => {
       </div>
       {p.lumiere && <AbsoluteFill style={{background: 'radial-gradient(circle at 50% 30%, rgba(255,236,190,.9) 0, rgba(255,255,255,0) 55%)', opacity: L(f, 0, dur, 0.15, 1)}} />}
       {p.bulle && <BulleStress texte={p.bulle} f={f} cote={p.dir} />}
-      {p.bulles && <BullesQuiSEteignent textes={p.bulles} f={f} />}
+      {p.bulles && <BullesQuiSEteignent textes={p.bulles} f={f} retour={p.retour} />}
     </div>
   );
 };
@@ -176,6 +178,23 @@ const EcranPlein: React.FC<{f: number}> = ({f}) => {
   if (!p) return null;
   if (!p.src) return <AFournir titre={p.aFournir!} />;
   return <Img src={staticFile(`captures/${p.src}.png`)} style={{width: '100%', height: '100%'}} />;
+};
+
+const JOURS = [
+  {de: T5.etapes, a: 1343, texte: 'Jour 1'},      // étapes guidées, puis il choisit sa durée
+  {de: 1343, a: T.avec, texte: 'Jour 6'},          // trophées : la capture dit « sur 6 jours »
+  {de: T.avec, a: T.chabbat, texte: 'Jour 7'},     // « Je suis avec Hachem », personnalisation
+  {de: T.chabbat, a: T.retour, texte: 'Chaque jour'}, // le calendrier
+];
+const CompteurJour: React.FC<{texte: string; dur: number}> = ({texte, dur}) => {
+  const f = useCurrentFrame();
+  const s = spring({frame: f - 6, fps: FPS, config: {damping: 12, mass: 0.6}});
+  const o = Math.min(s, L(f, dur - 8, dur, 1, 0));
+  return (
+    <div style={{position: 'absolute', left: 0, right: 0, top: 310, height: Z.texteBas - 310, display: 'flex', alignItems: 'center', justifyContent: 'center', opacity: o}}>
+      <div style={{fontFamily: 'Inter', fontWeight: 800, fontSize: 52, letterSpacing: 2, color: '#a88233', transform: `scale(${0.7 + 0.3 * s})`}}>{texte}</div>
+    </div>
+  );
 };
 
 export const PubV5: React.FC = () => {
@@ -244,11 +263,12 @@ export const PubV5: React.FC = () => {
       {f >= T.avec && f < T.perso && <Titre n={3} texte="Je suis avec Hachem" f={f - T.avec} />}
       {f >= T.perso && f < T.chabbat && <Titre n={4} texte="Une application à ton rythme" f={f - T.perso} />}
       {f >= T.chabbat && f < T.retour && <Titre n={5} texte="Le calendrier juif" f={f - T.chabbat} />}
-      <Sequence from={T5.etapes} durationInFrames={T5.duree - T5.etapes}><TexteEcran texte="5 étapes pour avancer." debut={10} fin={T5.duree - T5.etapes - 4} y={310} taille={44} sombre /></Sequence>
-      <Sequence from={T5.duree} durationInFrames={T.avec - T5.duree}><TexteEcran texte="Chaque jour, un pas de plus." debut={10} fin={T.avec - T5.duree - 4} y={310} taille={44} sombre /></Sequence>
-      <Sequence from={T.avec} durationInFrames={T.perso - T.avec}><TexteEcran texte="Moins de distractions. Plus de concentration." debut={10} fin={T.perso - T.avec - 4} y={310} taille={38} sombre /></Sequence>
-      <Sequence from={T.perso} durationInFrames={T.chabbat - T.perso}><TexteEcran texte="Ton application. Tes habitudes." debut={10} fin={T.chabbat - T.perso - 4} y={310} taille={44} sombre /></Sequence>
-      <Sequence from={T.chabbat} durationInFrames={T.retour - T.chabbat}><TexteEcran texte="Ton calendrier, jour après jour." debut={10} fin={T.retour - T.chabbat - 4} y={310} taille={44} sombre /></Sequence>
+      {/* v8 : les fonctions racontées comme sa première semaine (compteur doré à la place de la 2e ligne) */}
+      {JOURS.map((j) => (
+        <Sequence key={j.de} from={j.de} durationInFrames={j.a - j.de}><CompteurJour texte={j.texte} dur={j.a - j.de} /></Sequence>
+      ))}
+      {/* v8 : écho de l'ouverture quand le plan revient */}
+      <Sequence from={2206} durationInFrames={170}><TexteEcran texte="Le monde ne s’arrête pas. Toi, si." debut={8} fin={166} taille={50} sombre /></Sequence>
 
       {f >= T.fin && (
         <AbsoluteFill style={{background: '#fff', opacity: L(f, T.fin, T.fin + 14, 0, 1)}}>
