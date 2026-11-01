@@ -125,17 +125,17 @@ const PlanPose: React.FC<{p: Pose}> = ({p}) => {
 type PlanTel = {de: number; a: number; src: string; y: number; z0: number; z1: number; aFournir?: string};
 const PLANS_TEL: PlanTel[] = [
   {de: T.etapes, a: T.duree, src: '', y: 50, z0: 1, z1: 1.15, aFournir: '« Hitbodedout guidée »'},
-  {de: T.duree, a: 1420, src: 'web_choix_duree', y: 95, z0: 1.2, z1: 2.2},            // la liste des durées
+  {de: T.duree, a: 1420, src: 'web_choix_duree', y: 108, z0: 1.2, z1: 1.85},            // la liste des durées
   {de: 1420, a: T.avec, src: 'web_seance', y: 52, z0: 2.2, z1: 2.0},                    // « 15 min », Commencer, durées
   {de: T.avec, a: 1630, src: '', y: 50, z0: 1, z1: 1.15, aFournir: '« Je suis avec Hachem » : choix des applications'},
   {de: 1630, a: T.perso, src: 'web_seance', y: 50, z0: 1, z1: 2.2},                     // « posez le téléphone »
-  {de: T.perso, a: 1802, src: 'web_langue', y: 95, z0: 1.6, z1: 2.2},                   // Langue : עברית / English / Français
+  {de: T.perso, a: 1802, src: 'web_langue', y: 108, z0: 1.6, z1: 2.2},                   // Langue : עברית / English / Français
   {de: 1802, a: 1834, src: 'web_onboarding_6', y: 68, z0: 1.6, z1: 2.0},                // Comment vous appeler ? Tsadik / Tsadeket
-  {de: 1834, a: 1866, src: 'web_couleur_fond', y: 95, z0: 1.6, z1: 2.2},                // Couleur du fond
+  {de: 1834, a: 1866, src: 'web_couleur_fond', y: 108, z0: 1.6, z1: 2.2},                // Couleur du fond
   {de: 1866, a: 1898, src: 'web_reglages', y: 48, z0: 1.4, z1: 1.8},                    // Apparence : clair ou sombre
   {de: 1898, a: 1929, src: '', y: 50, z0: 1, z1: 1.15, aFournir: '« Heures du mode »'},
   {de: 1929, a: T.chabbat, src: '', y: 50, z0: 1, z1: 1.15, aFournir: '« Durée du report »'},
-  {de: T.chabbat, a: T.retour, src: 'web_bougies', y: 95, z0: 1.4, z1: 2.2},           // Allumage des bougies
+  {de: T.chabbat, a: T.retour, src: 'web_bougies', y: 108, z0: 1.4, z1: 2.2},           // Allumage des bougies
 ];
 const planTel = (f: number) => PLANS_TEL.find((p) => f >= p.de && f < p.a);
 const camTel = (f: number) => {
@@ -173,6 +173,8 @@ export const PubV5: React.FC = () => {
 
       {(telA || telB) && (
         <div style={{position: 'absolute', left: 0, right: 0, top: Z.sujetHaut, height: H, display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden',
+          // bords haut et bas fondus : le téléphone agrandi n'est jamais coupé par une ligne dure
+          WebkitMaskImage: camTel(f).z > 1.02 ? 'linear-gradient(180deg, transparent 0, #000 90px, #000 calc(100% - 90px), transparent 100%)' : undefined,
           transform: `translateY(${(1 - telEntree) * 500}px)`}}>
           {/* zoom sur le TÉLÉPHONE entier (jamais dans l'écran) : la largeur de l'écran reste toujours visible, aucun texte coupé */}
           <div style={{transform: `scale(${camTel(f).z})`, transformOrigin: `50% ${camTel(f).y}%`}}>
