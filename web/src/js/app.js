@@ -894,10 +894,32 @@ function chargeLivres() {
   // Après un échec, on attend « Réessayer » : relancer à chaque affichage bouclerait.
   if (livresDemandes || livresEchec) return false;
   livresDemandes = true;
-  fetch('data/livres.json').then((r) => { if (!r.ok) throw new Error(r.status); return r.json(); })
+  // La table seule (02/11) : titres, groupes, nombre de chapitres. Chaque livre a son fichier.
+  fetch('data/livres/table.json').then((r) => { if (!r.ok) throw new Error(r.status); return r.json(); })
     .then((d) => { livres = d; rendre(); })
     .catch(() => { livresDemandes = false; livresEchec = true; rendre(); });
   return false;
+}
+/** Un livre, son texte chargé au premier besoin dans son entrée de la table (02/11). */
+const livresEnCours = new Set();
+function chargeLivre(id) {
+  if (!chargeLivres()) return false;
+  const t = livres.textes.find((x) => x.id === id);
+  if (!t) return true;
+  if (t.sections) return true;
+  if (livresEnCours.has(id) || livresEchec) return false;
+  livresEnCours.add(id);
+  fetch(`data/livres/${id}.json`).then((r) => { if (!r.ok) throw new Error(r.status); return r.json(); })
+    .then((d) => { t.sections = d.sections; livresEnCours.delete(id); rendre(); })
+    .catch(() => { livresEnCours.delete(id); livresEchec = true; rendre(); });
+  return false;
+}
+/** Tous les livres, pour la recherche : chargés un par un, la recherche se refait à chaque arrivée. */
+function chargeTousLesLivres() {
+  if (!chargeLivres()) return false;
+  let tous = true;
+  for (const t of livres.textes) if (!chargeLivre(t.id)) tous = false;
+  return tous;
 }
 
 function chargeSiddur() {
@@ -1233,7 +1255,7 @@ function ecranSiddur() {
   const ilanot = pret && ilanotDuMois(isoLocal(heure)) ? siddur.textes.find((x) => x.id === 'birkat_hailanot') : null;
   // Pourim (13/10) : la Méguila sous Arvit (la nuit qui ouvre Pourim) et sous Cha'harit (SiddurMoment.megila).
   // Les livres (7 Mo) ne se chargent que les jours de Méguila.
-  const esther = megilaDuMoment(moment, isoLocal(heure)) && chargeLivres() ? livres.textes.find((x) => x.id === 'meguilat_esther') : null;
+  const esther = megilaDuMoment(moment, isoLocal(heure)) && chargeLivre('meguilat_esther') ? livres.textes.find((x) => x.id === 'meguilat_esther') : null;
   const puce = h('button', {
     type: 'button', class: 'puce-bandeau', 'aria-haspopup': 'dialog', 'aria-label': `${tr.t('siddur_choose')} : ${nomNusah}`, onclick: choisirNusah,
   }, h('span', {}, nomNusah), icone('replier'));
@@ -1264,7 +1286,8 @@ function ecranSiddur() {
 function ecranPriere() {
   // Un livre de la bibliothèque (« livre:likoutei_etsot », 12/10) se lit comme une prière, sans nusah ni ajouts.
   const livre = priere?.startsWith('livre:') ?? false;
-  if (livre ? !chargeLivres() : !chargeSiddur()) return h('div', { class: 'ecran' }, barre(tr.t(livre ? 'livres_title' : 'siddur_title')), h('div', { class: 'defile' }, livre ? h('div', { class: 'contenu' }, attenteLivres()) : null));
+  const pret = livre ? chargeLivre(priere.slice(6)) : chargeSiddur();
+  if (!pret) return h('div', { class: 'ecran' }, barre(tr.t(livre ? 'livres_title' : 'siddur_title')), h('div', { class: 'defile' }, livre ? h('div', { class: 'contenu' }, attenteLivres()) : null));
   const recueil = livre ? livres : siddur;
   const x = recueil.textes.find((y) => y.id === (livre ? priere.slice(6) : priere));
   // Rouvert directement sur #priere, sans texte choisi : la liste.
@@ -1331,14 +1354,10 @@ function ecranPriere() {
     return [paragraphe(s, i, reduit !== brut ? reduit : undefined), pli, ...du.map((a) => h('p', { class: 'indice-jour' },
       h('span', {}, `${tr.t('siddur_aujourdhui')} : `), h('span', { lang: 'he', dir: 'rtl' }, a.texte))), ...renvois(si, i)];
   };
-  const contenu = h('div', { class: 'contenu lecture siddour' },
-    annotations ? h('p', { class: 'indice note-ajouts' }, tr.t('siddur_jour_ajouts', jourDuTexte.dateHebraique,
-      tr.t(store.inIsrael() ? 'region_israel' : 'region_diaspora'))) : null,
-    ...x.sections.flatMap((s, si) => {
-      const t = plusieurs && s.titre ? h('h2', { class: 'psaume-titre', lang: 'he', dir: 'rtl' }, s.titre) : null;
-      if (t) titres.push({ titre: s.titre, el: t });
+  // Le corps d'une section, sans son titre : construit d'un coup pour une prière, à la demande pour un livre.
+  const corpsDe = (s, si) => {
       const section = idx.sections.get(si);
-      if (section) return [t, ajout(nom(section, section.si), ajoutVrai(section.si, c), s.blocs.map((_, i) => paragraphe(s, i)), section.si), ...renvois(si)];
+      if (section) return [ajout(nom(section, section.si), ajoutVrai(section.si, c), s.blocs.map((_, i) => paragraphe(s, i)), section.si), ...renvois(si)];
       const corps = [];
       for (let i = 0; i < s.blocs.length; i++) {
         const a = idx.blocs.get(`${si}:${i}`);
@@ -1356,12 +1375,29 @@ function ecranPriere() {
         corps.push(ajout(nom(a, a.racine ?? a.si), ajoutVrai(a.racine ?? a.si, c), membres, a.racine ?? a.si));
         corps.push(...seuls(si, i));
       }
-      // Un livre (02/11) : chaque chapitre dans sa propre boîte, que le navigateur ne met en page
-      // qu'en approchant de l'écran (content-visibility). Likoutei Moharan, Sefer HaMidot ou
-      // Likoutei Etsot entiers figeaient l'iPhone plusieurs secondes à l'ouverture, là où
-      // Android ne dessine que les lignes visibles (RecyclerView).
-      if (livre) return [h('section', { class: 'livre-chapitre', style: `contain-intrinsic-size: auto ${hauteurEstimee(s)}px` }, t, ...corps, ...renvois(si))];
-      return [t, ...corps, ...renvois(si)];
+    return [...corps, ...renvois(si)];
+  };
+  const contenu = h('div', { class: 'contenu lecture siddour' },
+    annotations ? h('p', { class: 'indice note-ajouts' }, tr.t('siddur_jour_ajouts', jourDuTexte.dateHebraique,
+      tr.t(store.inIsrael() ? 'region_israel' : 'region_diaspora'))) : null,
+    ...x.sections.flatMap((s, si) => {
+      const t = plusieurs && s.titre ? h('h2', { class: 'psaume-titre', lang: 'he', dir: 'rtl' }, s.titre) : null;
+      if (t) titres.push({ titre: s.titre, el: t });
+      if (!livre) return [t, ...corpsDe(s, si)];
+      // Un livre (02/11) : chaque chapitre dans sa propre boîte, vide tant qu'il n'approche pas de
+      // l'écran, à la hauteur estimée. Le livre entier construit et mis en page d'un coup faisait
+      // tomber Safari sur iPhone (« Un problème récurrent est survenu »), là où Android ne
+      // dessine que les lignes visibles (RecyclerView). content-visibility, quand Safari le
+      // connaît (iOS 18), allège encore les chapitres déjà remplis.
+      const haut = hauteurEstimee(s);
+      const boite = h('section', { class: 'livre-chapitre', 'data-section': si, style: `contain-intrinsic-size: auto ${haut}px; min-height: ${haut}px` }, t);
+      chapitresARemplir.set(boite, () => {
+        if (!chapitresARemplir.has(boite)) return;
+        chapitresARemplir.delete(boite);
+        boite.append(...corpsDe(s, si).filter(Boolean));
+        boite.style.minHeight = '';
+      });
+      return [boite];
     }));
   const bande = titres.length > 1 ? bandeSignets(titres) : null;
   const etiquettes = [titreTexte(x.titre) !== x.titre.he ? titreTexte(x.titre) : null, titreTexte(x.nusah ?? recueil._meta.nusah)].filter(Boolean);
@@ -1379,7 +1415,7 @@ function ecranPriere() {
     choisirDans(tr.t('marques_titre'), l.map((m) => `${m.apercu}…`), -1, (k) => allerAMarque(ecran, l[k]));
   } }, iconeMarque(livre));
   ecran.querySelector('.bandeau-actions')?.append(listeMarques, etoile);
-  if (livre) { const d = ecran.querySelector('.defile'); if (d) { d.classList.add('defile-livre'); ancrerChapitres(d); } }
+  if (livre) { const d = ecran.querySelector('.defile'); if (d) { d.classList.add('defile-livre'); remplirAuDefilement(d); ancrerChapitres(d); } }
   if (marqueAOuvrir?.cle === cleMarque) { const m = marqueAOuvrir; marqueAOuvrir = null; requestAnimationFrame(() => allerAMarque(ecran, m)); return ecran; }
   const defile = ecran.querySelector('.defile');
   if (defile) {
@@ -1390,7 +1426,7 @@ function ecranPriere() {
     if (place > 0 && app.dataset.ecran !== `priere/${onglet}`) {
       requestAnimationFrame(() => {
         const [section, bloc] = (ancre ?? '').split(':').map(Number);
-        if (ancre && ecran.querySelector(`[data-place="${ancre}"]`)) allerAMarque(ecran, { section, bloc }, 0);
+        if (ancre && ecran.querySelector(`.livre-chapitre[data-section="${section}"]`)) allerAMarque(ecran, { section, bloc }, 0);
         else defile.scrollTop = place;
       });
     }
@@ -1432,7 +1468,7 @@ function dansRecueil(recueil, q, livre) {
   for (const t of recueil.textes) {
     if (r.length >= 30) break;
     if (nuRecherche(t.titre.he).includes(q) || nuRecherche(titreTexte(t.titre)).includes(q)) { r.push({ t, extrait: titreTexte(t.titre) !== t.titre.he ? titreTexte(t.titre) : '', livre }); continue; }
-    for (const s of t.sections) {
+    for (const s of t.sections ?? []) {
       const b = s.blocs.find((x) => x.t && nuRecherche(x.t).includes(q));
       if (b) { r.push({ t, extrait: extraitRecherche(b.t, q), livre }); break; }
     }
@@ -1440,6 +1476,7 @@ function dansRecueil(recueil, q, livre) {
   return r;
 }
 function ecranRecherche() {
+  // Les livres ne se chargent plus à l'entrée (02/11) : seulement quand on cherche dedans.
   chargeLivres();
   const q = nuRecherche(texteRecherche.trim());
   const champ = h('input', { type: 'search', class: 'champ-recherche', placeholder: tr.t('recherche_indice'), value: texteRecherche,
@@ -1450,7 +1487,8 @@ function ecranRecherche() {
   if (q.length >= 2) {
     const p = porteeRecherche;
     const sid = (p === 'tout' || p === 'tefilot') && chargeSiddur() ? dansRecueil(siddur, q, false) : [];
-    const liv = (p === 'tout' || p === 'sefarim') && livres ? dansRecueil(livres, q, true) : [];
+    // Chaque livre arrivé relance l'affichage : les résultats se complètent au fil des fichiers.
+    const liv = (p === 'tout' || p === 'sefarim') && livres ? (chargeTousLesLivres(), dansRecueil(livres, q, true)) : [];
     const halakhot = p === 'tout' || p === 'halakhot';
     const yy = halakhot && livreYalkut ? rechercheYalkut(livreYalkut, texteRecherche).slice(0, 30) : [];
     const bih = halakhot && livreHalakha ? rechercheHalakha(livreHalakha, texteRecherche).slice(0, 30) : [];
@@ -1503,8 +1541,30 @@ const apercuMarque = (t, mots = 6) => t.replace(/<[^>]+>/g, ' ').replace(/[־׀]
 /** Le marque-page à rejoindre à l'ouverture du texte (depuis la Bibliothèque). */
 let marqueAOuvrir = null;
 /** Va au paragraphe marqué ; replié aujourd'hui, à sa section (le premier paragraphe qui suit). */
+/** Les chapitres de livre pas encore construits, et de quoi les construire (02/11). */
+const chapitresARemplir = new WeakMap();
+const remplirChapitre = (boite) => chapitresARemplir.get(boite)?.();
+
+/**
+ * Remplit les chapitres d'un livre à l'approche de l'écran (02/11) : 1,5 écran d'avance dans
+ * chaque sens, et les deux premiers d'emblée pour que l'ouverture ne montre pas de vide.
+ */
+function remplirAuDefilement(defile) {
+  const boites = [...defile.querySelectorAll('.livre-chapitre')];
+  boites.slice(0, 2).forEach(remplirChapitre);
+  if (!('IntersectionObserver' in window)) { boites.forEach(remplirChapitre); return; }
+  const io = new IntersectionObserver((entrees) => {
+    if (!defile.isConnected) { io.disconnect(); return; }
+    for (const e of entrees) if (e.isIntersecting) { remplirChapitre(e.target); io.unobserve(e.target); }
+  }, { root: defile, rootMargin: '150% 0px' });
+  for (const b of boites) if (chapitresARemplir.has(b)) io.observe(b);
+}
+
 function allerAMarque(ecran, m, marge = 8) {
   const defile = ecran.querySelector('.defile');
+  // Dans un livre, le chapitre visé n'est peut-être pas encore construit.
+  const boite = ecran.querySelector(`.livre-chapitre[data-section="${m.section}"]`);
+  if (boite) remplirChapitre(boite);
   const cible = ecran.querySelector(`[data-place="${m.section}:${m.bloc}"]`);
   // offsetParent est nul dans un pli fermé (display: none), pas dans un chapitre de livre
   // simplement pas encore mis en page.
@@ -1927,7 +1987,7 @@ function ecranLivres() {
       ...(livresPrets ? livres.groupes.flatMap((g) => [
         enteteGroupe(g.titre.he, titreTexte(g.titre)),
         h('div', { class: 'carte carte-sections' }, livres.textes.filter((x) => x.groupe === g.cle).map((x) =>
-          ligneHebreu(x.titre.he, [titreTexte(x.titre) !== x.titre.he ? titreTexte(x.titre) : null, tr.p('livre_chapitres', x.sections.length)].filter(Boolean).join(' · '),
+          ligneHebreu(x.titre.he, [titreTexte(x.titre) !== x.titre.he ? titreTexte(x.titre) : null, tr.p('livre_chapitres', x.chapitres ?? x.sections?.length ?? 0)].filter(Boolean).join(' · '),
             () => { priere = `livre:${x.id}`; ouvrir('priere'); }))),
       ]) : []))));
 }
