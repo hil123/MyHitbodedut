@@ -24,6 +24,10 @@ final class Journal {
     /** Minutes après minuit, ou -1 : pas de rappel. */
     int rappel = -1;
 
+    /** Comment vous appeler (comme Adresse sur Android) : pas choisi, צדיק ou צדקת. */
+    static final int PAS_CHOISI = 0, TSADIK = 1, TSADEKET = 2;
+    int adresse = PAS_CHOISI;
+
     static int jour(Date d) {
         Calendar c = Calendar.getInstance();
         c.setTime(d);
@@ -91,7 +95,7 @@ final class Journal {
     byte[] versOctets() throws IOException {
         ByteArrayOutputStream o = new ByteArrayOutputStream();
         DataOutputStream d = new DataOutputStream(o);
-        d.writeShort(1);
+        d.writeShort(2);
         d.writeInt(rappel);
         d.writeInt(minutes.size());
         for (Enumeration e = minutes.keys(); e.hasMoreElements();) {
@@ -99,6 +103,7 @@ final class Journal {
             d.writeInt(j.intValue());
             d.writeInt(((Integer) minutes.get(j)).intValue());
         }
+        d.writeByte(adresse); // depuis la version 2
         d.close();
         return o.toByteArray();
     }
@@ -106,11 +111,15 @@ final class Journal {
     static Journal depuisOctets(byte[] b) throws IOException {
         Journal j = new Journal();
         DataInputStream d = new DataInputStream(new ByteArrayInputStream(b));
-        d.readShort();
+        int version = d.readShort();
         j.rappel = d.readInt();
         for (int n = d.readInt(); n > 0; n--) {
             int jour = d.readInt();
             j.minutes.put(new Integer(jour), new Integer(d.readInt()));
+        }
+        if (version >= 2) {
+            int a = d.readByte();
+            if (a == TSADIK || a == TSADEKET) j.adresse = a;
         }
         return j;
     }

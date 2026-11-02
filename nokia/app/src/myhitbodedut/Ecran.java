@@ -83,17 +83,37 @@ abstract class Ecran extends Canvas {
     private static final Hashtable CACHE = new Hashtable();
     private static final Vector ORDRE = new Vector();
 
+    /**
+     * Le personnage au féminin, pour qui a choisi צדקת (comme Personnage.kt) :
+     * chaque pose du hassid devient la plus proche de la planche féminine
+     * (res/p/f_*.png, genere-personnages.mjs). Sans choix, ou צדיק, rien ne change.
+     */
+    private static boolean feminin;
+
+    static void feminin(boolean oui) {
+        if (oui == feminin) return;
+        feminin = oui;
+        CACHE.clear();
+        ORDRE.removeAllElements();
+    }
+
     static Image personnage(String nom) {
         if (nom == null) return null;
-        Image i = (Image) CACHE.get(nom);
+        String cle = feminin ? "f_" + nom : nom;
+        Image i = (Image) CACHE.get(cle);
         if (i != null) return i;
         try {
-            i = Image.createImage("/p/" + nom + ".png");
+            i = Image.createImage("/p/" + cle + ".png");
         } catch (Throwable t) {
-            return null; // pas d'image plutôt que pas d'écran
+            if (!feminin) return null; // pas d'image plutôt que pas d'écran
+            try {
+                i = Image.createImage("/p/" + nom + ".png");
+            } catch (Throwable t2) {
+                return null;
+            }
         }
-        CACHE.put(nom, i);
-        ORDRE.addElement(nom);
+        CACHE.put(cle, i);
+        ORDRE.addElement(cle);
         if (ORDRE.size() > 4) {
             CACHE.remove(ORDRE.elementAt(0));
             ORDRE.removeElementAt(0);

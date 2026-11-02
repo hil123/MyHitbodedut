@@ -13,8 +13,9 @@ Une vraie application, en un seul fichier : `MyHitbodedut.jar` (environ 600 Ko, 
 | Journal | minutes du jour, série, 7 derniers jours en barres, total |
 | Musique | un niggoun d'essai (Niggoun 33), en boucle, qui continue pendant la hitbodedout |
 | Rappels | un rappel quotidien, si le téléphone l'autorise (PushRegistry) ; sinon, l'alarme du téléphone |
+| Comment vous appeler (צדיק / צדקת) | « Vous appeler » : Tsadik, Tsadeket ou pas choisi ; avec Tsadeket, le personnage est une femme et la fin dit « Bravo, Tsadeket ! » |
 
-Les écrans sont dessinés (couleurs de `values/colors.xml`) ; le personnage change avec le moment, comme `Character.kt`. Les illustrations viennent de `drawable-nodpi/char_*.webp`, converties en PNG de 80 px par `app/genere-personnages.mjs` (un téléphone Java ne lit que le PNG) et gardées dans `app/res/p`.
+Les écrans sont dessinés (couleurs de `values/colors.xml`) ; le personnage change avec le moment, comme `Character.kt`. Les illustrations viennent de `drawable-nodpi/char_*.webp`, converties en PNG de 80 px par `app/genere-personnages.mjs` (un téléphone Java ne lit que le PNG) et gardées dans `app/res/p`. Pour qui a choisi Tsadeket, chaque pose devient celle de la planche féminine (`char_f_*.webp`, même table que `Personnage.kt` et `web/src/js/personnage.js`), gardée en `app/res/p/f_*.png` ; sans choix, ou Tsadik, rien ne change.
 
 Absents : l'hébreu (un téléphone à touches n'a pas toujours la police), le Tikoun HaKlali (en hébreu seulement), les autres morceaux, la bibliothèque.
 

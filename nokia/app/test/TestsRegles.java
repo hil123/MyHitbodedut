@@ -49,6 +49,22 @@ public final class TestsRegles {
         // Un Chabbat vide ne casse pas la série : si avant-hier est un samedi, la série va jusqu'au jour 3.
         egal(new Integer(Journal.chabbat(Journal.ilYa(2)) ? 3 : 2), new Integer(r.serie()), "série : aujourd'hui et hier");
 
+        // Comment vous appeler : relu, et un journal de la version 1 (sans ce choix) reste « pas choisi ».
+        egal(new Integer(Journal.PAS_CHOISI), new Integer(r.adresse), "adresse : pas choisi par défaut");
+        j.adresse = Journal.TSADEKET;
+        egal(new Integer(Journal.TSADEKET), new Integer(Journal.depuisOctets(j.versOctets()).adresse), "adresse Tsadeket relue");
+        java.io.ByteArrayOutputStream o1 = new java.io.ByteArrayOutputStream();
+        java.io.DataOutputStream d1 = new java.io.DataOutputStream(o1);
+        d1.writeShort(1);
+        d1.writeInt(7 * 60);
+        d1.writeInt(1);
+        d1.writeInt(Journal.aujourdhui());
+        d1.writeInt(12);
+        d1.close();
+        Journal v1 = Journal.depuisOctets(o1.toByteArray());
+        egal(new Integer(Journal.PAS_CHOISI), new Integer(v1.adresse), "journal version 1 : pas choisi");
+        egal(new Integer(12), new Integer(v1.minutesDu(Journal.aujourdhui())), "journal version 1 : minutes relues");
+
         Journal hier = new Journal();
         hier.ajoute(Journal.ilYa(1), 10);
         hier.ajoute(Journal.ilYa(2), 10);
