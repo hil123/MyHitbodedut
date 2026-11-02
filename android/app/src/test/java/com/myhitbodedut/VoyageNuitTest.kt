@@ -67,4 +67,13 @@ class VoyageNuitTest {
         val maintenant = ZonedDateTime.of(d.atTime(23, 55), paris)
         assertEquals(ZonedDateTime.of(d.plusDays(1).atStartOfDay(), paris), ZmanimVignette.prochainChangement(emptyList(), maintenant))
     }
+
+    @Test fun dateHebraiqueChangeAuTset() {
+        val tset = ZonedDateTime.of(d.atTime(17, 52), paris)
+        assertEquals(d, ZmanimVignette.jourHebreuAffiche(tset.minusMinutes(1), tset))
+        assertEquals(d.plusDays(1), ZmanimVignette.jourHebreuAffiche(tset, tset))
+        assertEquals(d.plusDays(1), ZmanimVignette.jourHebreuAffiche(ZonedDateTime.of(d.atTime(23, 0), paris), tset))
+        // Sans lieu, minuit.
+        assertEquals(d, ZmanimVignette.jourHebreuAffiche(ZonedDateTime.of(d.atTime(23, 0), paris), null))
+    }
 }

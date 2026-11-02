@@ -22,7 +22,8 @@ import java.time.temporal.TemporalAdjusters
  * - petite (2 × 2) : la prière du moment, l'heure où elle se ferme, une jauge ;
  * - moyenne (4 × 2) : la même, le temps qui reste, la série, les trois zmanim à venir ;
  * - grande (4 × 4) : la même et la journée entière, le prochain zman en évidence.
- * La date hébraïque et la fête du jour, ou la paracha de la semaine, en tête.
+ * La date hébraïque et la fête du jour, ou la paracha de la semaine, en tête ; elles changent à la
+ * sortie des étoiles du lieu, comme le jour hébreu (02/11).
  */
 object ZmanimVignette {
 
@@ -53,6 +54,13 @@ object ZmanimVignette {
         else -> horaires["chkia"]
     }
 
+    /**
+     * La date civile dont la vignette montre le jour hébreu : celle du lieu, ou le lendemain une fois
+     * la sortie des étoiles passée — le jour hébreu commence le soir (02/11).
+     */
+    fun jourHebreuAffiche(maintenant: ZonedDateTime, tset: ZonedDateTime?): LocalDate =
+        if (tset != null && !maintenant.isBefore(tset)) maintenant.toLocalDate().plusDays(1) else maintenant.toLocalDate()
+
     /** La part écoulée de la fenêtre, de 0 à 1000 ; 0 sans bornes. */
     fun ecoule(debut: ZonedDateTime?, fin: ZonedDateTime?, maintenant: ZonedDateTime): Int {
         if (debut == null || fin == null || !fin.isAfter(debut)) return 0
@@ -65,7 +73,12 @@ object ZmanimVignette {
         v.setOnClickPendingIntent(R.id.wv_corps, PendingIntent.getActivity(context, 160 + taille.ordinal,
             Intent(context, ZmanimActivity::class.java), PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE))
         val israel = Store.inIsrael(context)
-        val aujourdhui = LocalDate.now()
+        // Le jour hébreu commence à la sortie des étoiles du lieu (02/11), pas à minuit : le vendredi
+        // soir, la vignette dit déjà Chabbat. Sans lieu, pas de tsét connu : minuit.
+        val lieuDate = Store.lieuZmanim(context)
+        val maintenantLieu = ZonedDateTime.now(lieuDate?.fuseau?.let { runCatching { ZoneId.of(it) }.getOrNull() } ?: ZoneId.systemDefault())
+        val tset = lieuDate?.let { l -> Zmanim.jour(l, maintenantLieu.toLocalDate()).firstOrNull { it.cle == "tset" }?.local }
+        val aujourdhui = jourHebreuAffiche(maintenantLieu, tset)
         val jour = CalendrierJuif.jour(aujourdhui, israel)
         v.setTextViewText(R.id.wv_date, jour.dateHebraique)
         // La fête du jour, sinon la paracha de la semaine.
