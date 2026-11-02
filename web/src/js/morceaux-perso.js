@@ -34,13 +34,15 @@ async function transaction(mode, faire) {
   });
 }
 
-/** Tous les morceaux gardés, dans l'ordre où ils ont été ajoutés. Rien si le navigateur refuse. */
-export async function tous() {
+/**
+ * Tous les morceaux gardés, dans l'ordre où ils ont été ajoutés. Rien si le navigateur refuse.
+ * `attente` (ms) : au-delà, on rend une liste vide sans retenir le démarrage ; null attend la base.
+ */
+export async function tous({ attente = 3000 } = {}) {
   if (typeof indexedDB === 'undefined') return [];
-  // Une base qui ne répond pas ne retient pas le démarrage.
-  const delai = new Promise((resolu) => setTimeout(() => resolu([]), 3000));
   const lus = transaction('readonly', (m) => m.getAll()).then((l) => (l ?? []).sort((a, b) => a.ajoute - b.ajoute)).catch(() => []);
-  return Promise.race([lus, delai]);
+  if (attente === null) return lus;
+  return Promise.race([lus, new Promise((resolu) => setTimeout(() => resolu([]), attente))]);
 }
 
 /** Garde `blob` sous `id` ; rejette si l'appareil n'a plus de place. */

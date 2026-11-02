@@ -5138,6 +5138,16 @@ async function demarrer() {
     MorceauxPerso.tous().catch(() => []),
   ]);
   morceaux = [...m, ...p.filter((e) => e?.blob instanceof Blob).map(versMorceau)];
+  // Une base lente au réveil (iPhone, relecture du 02/11) : ses morceaux arrivent après coup,
+  // au lieu de manquer toute la session (morceau choisi remplacé, doublon au prochain ajout).
+  if (!p.length) {
+    MorceauxPerso.tous({ attente: null }).then((tard) => {
+      const nouveaux = tard.filter((e) => e?.blob instanceof Blob && !morceaux.some((x) => x.id === e.id));
+      if (!nouveaux.length) return;
+      morceaux = [...morceaux, ...nouveaux.map(versMorceau)];
+      if (!store.isSessionRunning()) rendre();
+    }).catch(() => {});
+  }
   tikkun = t;
   chizuk = c;
   // Rouvert sur l'écran de séance : son mot d'ouverture.
