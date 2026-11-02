@@ -202,7 +202,7 @@ const EcranPlein: React.FC<{f: number}> = ({f}) => {
   const enchaine = prev && prev.a === p.de;
   if (FX) {
     // v20 : l'écran suivant monte en poussant le précédent (geste d'app), avec un reflet qui balaie la vitre
-    const meme = enchaine && prev.src === p.src;
+    const meme = (enchaine && prev.src === p.src) || COUPES_SECTION.includes(p.de); // aux changements de partie, c'est le téléphone entier qui fait la transition
     const t = enchaine && !meme ? L(f, p.de, p.de + 14, 0, 1, Easing.bezier(0.22, 1, 0.36, 1)) : 1;
     const reflet = enchaine && !meme ? L(f, p.de + 2, p.de + 22, -0.6, 1.6, Easing.inOut(Easing.sin)) : -1;
     return (
@@ -271,6 +271,59 @@ const LOGOS = [
   {n: 'tiktok', bg: '#000000'}, {n: 'snapchat', bg: '#FFFC00'},
 ];
 
+
+/* v21 — une transition DIFFÉRENTE et motivée à chaque changement de partie (au lieu du même fondu partout) */
+const COUPES_SECTION = [T5.duree, T.avec, T.perso, T.chabbat];
+type Tr = {tx: number; ry: number; sc: number; flou: number; flouX: number; lum: number; voile: number};
+const transitionSection = (f: number): Tr => {
+  const r: Tr = {tx: 0, ry: 0, sc: 1, flou: 0, flouX: 0, lum: 1, voile: 0};
+  if (!FX) return r;
+  for (const b of COUPES_SECTION) {
+    if (f < b - 10 || f > b + 14) continue;
+    const avant = f < b;
+    const k = avant ? L(f, b - 10, b, 0, 1, Easing.in(Easing.cubic)) : 1 - L(f, b, b + 14, 0, 1, Easing.out(Easing.cubic));
+    if (b === T5.duree) { // 1 → 2 : on plonge DANS l'écran (zoom traversant)
+      r.sc = avant ? 1 + 0.55 * k : 1 - 0.18 * k; r.flou = k * 10; r.lum = 1 + 0.25 * k;
+    } else if (b === T.avec) { // 2 → 3 : saut d'énergie, whip horizontal avec flou de mouvement directionnel
+      r.tx = avant ? -k * 1150 : k * 1150; r.flouX = k * 70;
+    } else if (b === T.perso) { // 3 → 4 : le téléphone se retourne (carte 3D) sur la personnalisation
+      r.ry = avant ? k * 90 : -k * 90; r.sc = 1 - 0.08 * k;
+    } else { // 4 → 5 : passage par la lumière (calendrier, temps sacré)
+      r.lum = 1 + 0.45 * k; r.voile = k; r.sc = 1 + 0.04 * k;
+    }
+  }
+  return r;
+};
+/** Grain argentique + vignette : texture commune à tout le film (couche du dessus). */
+const Texture: React.FC<{f: number}> = ({f}) => (
+  <AbsoluteFill style={{pointerEvents: 'none'}}>
+    <svg width="100%" height="100%" style={{position: 'absolute', opacity: 0.07, mixBlendMode: 'multiply'}}>
+      <filter id="grain"><feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" seed={f % 37} /><feColorMatrix type="saturate" values="0" /></filter>
+      <rect width="100%" height="100%" filter="url(#grain)" />
+    </svg>
+    <AbsoluteFill style={{background: 'radial-gradient(ellipse at 50% 45%, rgba(0,0,0,0) 55%, rgba(10,30,30,.16) 100%)'}} />
+  </AbsoluteFill>
+);
+/** Fuite de lumière chaude qui traverse l'image (transition 4 → 5). */
+const FuiteLumiere: React.FC<{k: number; f: number}> = ({k, f}) => k <= 0 ? null : (
+  <AbsoluteFill style={{pointerEvents: 'none', mixBlendMode: 'multiply', opacity: k,
+    background: `radial-gradient(ellipse 80% 55% at ${20 + (f - T.chabbat + 10) * 2.6}% 45%, rgba(255,196,110,1) 0, rgba(255,222,170,.7) 40%, rgba(255,255,255,0) 75%)`}} />
+);
+/** Révélation par la lumière (cf. exemple de Hillel) : le téléphone sort de l'ombre, un faisceau le balaie de gauche à droite. */
+const revele = (f: number) => FX ? L(f, 432, 470, 0, 1, Easing.inOut(Easing.cubic)) : 1;
+/** Texte qui se resserre (tracking) en sortant du flou — pour la phrase-écho du retour. */
+const TexteTracking: React.FC<{texte: string; debut: number; fin: number}> = ({texte, debut, fin}) => {
+  const f = useCurrentFrame();
+  const e = L(f, debut, debut + 30, 0, 1, Easing.out(Easing.cubic));
+  const x = L(f, fin - 9, fin, 0, 1, Easing.in(Easing.sin));
+  return (
+    <div style={{position: 'absolute', left: 50, right: 50, top: Z.texteHaut, height: Z.texteBas - Z.texteHaut, display: 'flex', alignItems: 'center', justifyContent: 'center', textAlign: 'center',
+      opacity: e * (1 - x), filter: `blur(${(1 - e) * 12 + x * 6}px)`}}>
+      <div style={{fontFamily: 'FrankRuhl, serif', fontSize: 50, lineHeight: 1.18, color: C.petrole, letterSpacing: `${0.5 + (1 - e) * 14}px`}}>{texte}</div>
+    </div>
+  );
+};
+
 const SECTIONS = [
   {n: 1, texte: 'Une Hitbodedut guidée', de: T5.etapes, a: T5.duree},
   {n: 2, texte: 'Ton objectif quotidien', de: T5.duree, a: T.avec},
@@ -284,7 +337,7 @@ const TitreFX: React.FC<{n: number; texte: string; f: number; dur: number}> = ({
   const x = L(f, dur - 9, dur, 0, 1, Easing.in(Easing.sin)); // sort AVANT l'arrivée du suivant : jamais deux titres superposés
   const balaye = L(f, 8, 30, -30, 130, Easing.inOut(Easing.sin));
   return (
-    <div style={{position: 'absolute', top: Z.texteHaut - 10, left: 0, right: 0, display: 'flex', justifyContent: 'center', opacity: 1 - x, transform: `translateY(${-x * 12}px)`, filter: `blur(${x * 5}px)`}}>
+    <div style={{position: 'absolute', top: Z.texteHaut - 10, left: 0, right: 0, display: 'flex', justifyContent: 'center', opacity: (1 - x) * Math.max(0, Math.min(1, (s - 0.2) * 3)), transform: `translateY(${-x * 12}px)`, filter: `blur(${x * 5}px)`}}>
       <div style={{position: 'relative', fontFamily: 'Inter', fontWeight: 700, fontSize: 34, color: C.blanc, background: C.petrole, borderRadius: 40, padding: '8px 26px', boxShadow: `0 0 0 3px ${C.or}`,
         clipPath: `inset(-6px ${(1 - s) * 50}% -6px ${(1 - s) * 50}% round 40px)`, overflow: 'hidden'}}>
         <span style={{color: C.or}}>{n}.</span> <span style={{opacity: L(f, 4, 14, 0, 1)}}>{texte}</span>
@@ -319,6 +372,8 @@ export const PubV5: React.FC = () => {
   const zCam = camTel(fe).z;
   const fondu = Math.min(18, Math.max(0, (zCam - 1) * 200)); // bords fondus qui apparaissent progressivement avec le zoom
   const icones = f >= T.avec && f < T.perso;
+  const tr = transitionSection(f);
+  const rv = revele(f);
   const avale = LOGOS.reduce((acc, _, i) => acc + Math.sin(Math.PI * L(f, ASPIRE + 15 + i * 9, ASPIRE + 25 + i * 9, 0, 1, (t) => t)) * 0.012, 0);
   const carte = spring({frame: f - T.fin - 10, fps, config: {damping: 200}});
   const cta = spring({frame: f - T.fin - 30, fps, config: {damping: 200}});
@@ -355,12 +410,16 @@ export const PubV5: React.FC = () => {
         <div style={{position: 'absolute', left: 0, right: 0, top: Z.sujetHaut, height: H, display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden',
           // bords haut et bas fondus : le téléphone agrandi n'est jamais coupé par une ligne dure
           WebkitMaskImage: `linear-gradient(180deg, transparent 0, #000 ${fondu * 5}px, #000 calc(100% - ${fondu * 5}px), transparent 100%)`,
-          opacity: telIn * (1 - telOut), transform: `translateY(${(1 - telIn) * 90 - telOut * 40}px) scale(${(0.94 + 0.06 * telIn) * (1 - 0.04 * telOut) * (1 + avale)})`}}>
+          opacity: telIn * (1 - telOut), transform: `perspective(1800px) translateX(${tr.tx}px) rotateY(${tr.ry}deg) translateY(${(1 - telIn) * 90 - telOut * 40}px) scale(${(0.94 + 0.06 * telIn) * (1 - 0.04 * telOut) * (1 + avale) * tr.sc})`,
+          filter: FX ? `${tr.flouX > 0.5 ? `url(#flouX) ` : ''}blur(${tr.flou}px) brightness(${tr.lum * (0.6 + 0.4 * rv)}) saturate(${0.5 + 0.5 * rv})` : undefined}}>
+          {FX && <svg width="0" height="0" style={{position: 'absolute'}}><filter id="flouX" x="-50%" width="200%"><feGaussianBlur stdDeviation={`${tr.flouX} 0`} /></filter></svg>}
           {/* zoom sur le TÉLÉPHONE entier (jamais dans l'écran) : la largeur de l'écran reste toujours visible, aucun texte coupé */}
           <div style={{transform: `scale(${zCam})`, transformOrigin: `50% ${camTel(fe).y}%`}}>
             <Telephone src="">
               {telA && fe < 505 + FONDU && <EcranOuverture f={Math.max(0, fe - 430)} />}
               {/* logo d'ouverture → accueil : fondu, pas de coupe */}
+              {FX && rv < 1 && f >= 430 && <AbsoluteFill style={{zIndex: 5, pointerEvents: 'none',
+                background: `linear-gradient(100deg, rgba(255,240,215,0) ${rv * 140 - 45}%, rgba(255,240,215,.8) ${rv * 140 - 20}%, rgba(255,240,215,0) ${rv * 140 + 5}%)`}} />}
               {!(telA && fe < 505) && <AbsoluteFill style={{opacity: telA ? L(fe, 505, 505 + FONDU, 0, 1, Easing.inOut(Easing.sin)) : 1}}><EcranPlein f={fe} /></AbsoluteFill>}
             </Telephone>
           </div>
@@ -382,6 +441,8 @@ export const PubV5: React.FC = () => {
         </div>
       )}
 
+      {FX && f >= T.chabbat - 10 && f < T.chabbat + 14 && <FuiteLumiere k={tr.voile} f={f} />}
+
       {/* textes écran */}
       <Sequence from={0} durationInFrames={300}><TexteEcran texte="Le monde ne s’arrête jamais…" debut={14} fin={296} sombre /></Sequence>
       <Sequence from={300} durationInFrames={130}><TexteEcran texte="Et toi, prends-tu ce moment ?" debut={6} fin={126} sombre /></Sequence>
@@ -398,7 +459,7 @@ export const PubV5: React.FC = () => {
         <Sequence key={j.de} from={j.de} durationInFrames={j.a - j.de}><CompteurJour texte={j.texte} dur={j.a - j.de} /></Sequence>
       ))}
       {/* v8 : écho de l'ouverture quand le plan revient */}
-      <Sequence from={2206} durationInFrames={170}><TexteEcran texte="Le monde ne s’arrête pas. Toi, si." debut={8} fin={166} taille={50} sombre /></Sequence>
+      <Sequence from={2206} durationInFrames={170}>{FX ? <TexteTracking texte="Le monde ne s’arrête pas. Toi, si." debut={8} fin={166} /> : <TexteEcran texte="Le monde ne s’arrête pas. Toi, si." debut={8} fin={166} taille={50} sombre />}</Sequence>
 
       {f >= T.fin && (
         <AbsoluteFill style={{background: '#fff', opacity: L(f, T.fin, T.fin + 14, 0, 1)}}>
@@ -407,7 +468,8 @@ export const PubV5: React.FC = () => {
               <Img src={staticFile('planche/logo.png')} style={{width: 280, height: 280}} />
               {FX && <AbsoluteFill style={{background: `linear-gradient(115deg, transparent ${L(f, T.fin + 30, T.fin + 60, -60, 140) - 20}%, rgba(255,255,255,.55) ${L(f, T.fin + 30, T.fin + 60, -60, 140)}%, transparent ${L(f, T.fin + 30, T.fin + 60, -60, 140) + 20}%)`}} />}
             </div>
-            <div style={{fontFamily: 'Inter', fontWeight: 700, fontSize: 72, letterSpacing: 6, color: C.petrole, opacity: carte}}>MY HITBODEDUT</div>
+            <div style={{overflow: 'hidden', padding: '0 10px'}}><div style={{fontFamily: 'Inter', fontWeight: 700, fontSize: 72, letterSpacing: 6, color: C.petrole, opacity: FX ? 1 : carte,
+              transform: FX ? `translateY(${(1 - carte) * 100}%)` : undefined, textShadow: FX ? `0 0 ${24 * sec}px rgba(212,175,95,.45)` : undefined}}>MY HITBODEDUT</div></div>
             <div style={{fontFamily: 'Inter', fontWeight: 700, fontSize: 30, letterSpacing: 3, color: C.turquoise, textAlign: 'center', lineHeight: 1.5, opacity: carte}}>YOUR PERSONAL CONVERSATION<br />WITH HASHEM</div>
             <div style={{fontFamily: 'Inter', fontWeight: 700, fontSize: 40, color: C.noir, background: `linear-gradient(180deg,#f3dd9c,${C.or})`, borderRadius: 50, padding: '16px 46px',
               opacity: cta, transform: `scale(${(0.9 + 0.1 * cta) * (FX ? 1 + 0.025 * Math.sin(Math.max(0, f - T.fin - 60) / 9) : 1)})`, boxShadow: `0 8px 30px ${C.or}88`}}>Commence aujourd’hui.</div>
@@ -419,6 +481,7 @@ export const PubV5: React.FC = () => {
         </AbsoluteFill>
       )}
 
+      {FX && <Texture f={f} />}
       {VOIX.map((v) => (
         <Sequence key={v.f} from={v.at} durationInFrames={Math.ceil(v.dur * FPS) + 14}>
           <Audio src={staticFile(`voix/${v.f}.wav`)} />
