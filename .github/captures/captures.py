@@ -796,20 +796,21 @@ def main():
             activite("SiddurLectureActivity", f"--es id {ident}")
             pause(2.0)
             sh("rm -f /sdcard/film.mp4")
-            film = subprocess.Popen(["adb", "shell", "screenrecord", "--time-limit", "20", "/sdcard/film.mp4"])
+            film = subprocess.Popen(["adb", "shell", "screenrecord", "--time-limit", "40", "/sdcard/film.mp4"])
             pause(1.0)
             x = W // 2
-            for i in range(6):  # doucement vers le bas, par petits pas
+            bas, haut = (6, 8) if ident == "acher_yatsar" else (14, 22)
+            for i in range(bas):  # doucement vers le bas, par petits pas
                 sh(f"input swipe {x} {int(H*0.60)} {x} {int(H*0.52)} 900")
                 pause(0.5)
                 if i == 2:
                     capture(f"{nom}-bas", attente=0.3)
-            for i in range(8):  # puis doucement vers le haut, jusqu'en haut
+            for i in range(haut):  # puis doucement vers le haut, jusqu'en haut
                 sh(f"input swipe {x} {int(H*0.52)} {x} {int(H*0.60)} 900")
                 pause(0.5)
             capture(f"{nom}-haut", attente=0.3)
             try:
-                film.wait(timeout=30)
+                film.wait(timeout=50)
             except subprocess.TimeoutExpired:
                 film.kill()
             pause(1.5)
