@@ -24,7 +24,7 @@ const FONDU_PHASE = 16;
 const BLOCS: Record<string, {t: number; txt: string}[]> = {
   // v18 : voix naturelle (ElevenLabs « Paul »), coupes calées sur ses pauses réelles (silencedetect)
   s01: [{t: 0.05, txt: 'Chaque jour, nous sommes occupés.'}, {t: 1.97, txt: 'Le travail,'}, {t: 2.83, txt: 'les responsabilités,'}, {t: 4.2, txt: 'les soucis…'}],
-  s03: [{t: 0.05, txt: 'La Hitbodedut, c’est s’arrêter…'}, {t: 2.57, txt: 'et prendre un moment rien que pour Hachem.'}],
+  s03: [{t: 0.05, txt: 'La Hitbodedut, c’est s’arrêter…'}, {t: 2.49, txt: 'et prendre un moment rien que pour Hachem.'}],
   s04: [{t: 0.05, txt: 'Lui parler avec tes propres mots.'}, {t: 1.99, txt: 'Lui raconter tes difficultés,'}, {t: 3.65, txt: 'tes rêves,'}, {t: 4.46, txt: 'tes joies…'}, {t: 5.49, txt: 'et tes remerciements.'}],
   s10c: [{t: 0.09, txt: 'Avec le calendrier juif,'}, {t: 1.53, txt: 'retrouve chaque jour la date hébraïque,'}, {t: 3.57, txt: 'les zmanim et les ajouts de la prière.'}],
   s11: [{t: 0.06, txt: 'Ne laisse pas passer une journée'}, {t: 1.4, txt: 'sans prendre un moment pour Hachem.'}, ],

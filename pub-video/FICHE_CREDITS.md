@@ -95,3 +95,9 @@ Extraits choisis pour leur régularité (pas de pic ni de cri), filtre 120 Hz–
 - Segment « Je suis avec Hachem » (frames 1510–1770) : logos WhatsApp, YouTube, Facebook, Instagram, TikTok, Snapchat, aspirés sous le téléphone (v20).
 - Source des tracés : simple-icons 13.21.0 (CC0), via cdn.jsdelivr.net — fichiers dans remotion/public/logos/.
 - Ces logos sont des marques déposées de leurs propriétaires ; utilisés uniquement pour illustrer les applis que l'app peut bloquer (usage nominatif), sans affiliation.
+
+## v23 — Accent de « Hitbodedut » adouci (sans nouvelle génération)
+- Retour de Hillel : trop d'accent sur « Hit ». Fichiers retouchés : voix/s05a.wav, s03.wav, s06.wav (originaux dans voix/avant_accent/).
+- s05a : souffle du H −8 dB et raccourci ; voyelle « i » abaissée (206 → ~135 Hz, rubberband, formants préservés) et −3 dB.
+- s03 : « Hi » raccourci (0,26 → 0,20 s), −4 dB, hauteur ×0,9. s06 : « Hit » −3 dB, hauteur ×0,88.
+- Solution définitive possible avec crédits ElevenLabs : régénérer ces 3 phrases.
