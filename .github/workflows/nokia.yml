@@ -1,5 +1,5 @@
 # L'application pour téléphone à touches (Java ME, nokia/) : construite,
-# testée, puis publiée dans son propre dépôt, hil123/Nokia-my-hitbodedut-app,
+# testée, puis publiée dans son propre dépôt, avrahamohayon02102001/Nokia-my-hitbodedut-app,
 # comme le site iPhone l'est dans hil123/myhitbodedut-web. C'est un
 # produit à part : rien n'est ajouté à la release Android.
 name: Nokia (Java ME)
@@ -76,17 +76,20 @@ jobs:
           name: MyHitbodedut-nokia
           path: publie
 
-      - name: Publish to hil123/Nokia-my-hitbodedut-app
+      - name: Publish to avrahamohayon02102001/Nokia-my-hitbodedut-app
         # Seule main publie (une exécution manuelle d'une autre branche publierait du code non fusionné).
         if: github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
         env:
           # Le jeton propre au dépôt Nokia s'il existe ; sinon celui du site,
           # s'il a aussi accès à ce dépôt (jeton classique « repo »).
           TOKEN: ${{ secrets.NOKIA_DEPLOY_TOKEN || secrets.WEB_DEPLOY_TOKEN }}
-          CIBLE: hil123/Nokia-my-hitbodedut-app
+          # Le dépôt a changé de propriétaire (03/11) : hil123/Nokia-my-hitbodedut-app
+          # y redirige, mais le jeton de hil123 n'y a pas le droit d'écrire (403).
+          CIBLE: avrahamohayon02102001/Nokia-my-hitbodedut-app
         run: |
           if [ -z "$TOKEN" ]; then
-            echo "Ni NOKIA_DEPLOY_TOKEN ni WEB_DEPLOY_TOKEN : .jar construit et testé (artefact), non publié."
+            echo "::warning::Ni NOKIA_DEPLOY_TOKEN ni WEB_DEPLOY_TOKEN : .jar construit et testé (artefact), non publié."
+            echo "**Nokia : non publié** — aucun jeton (NOKIA_DEPLOY_TOKEN)." >> "$GITHUB_STEP_SUMMARY"
             exit 0
           fi
           cd publie
@@ -98,6 +101,10 @@ jobs:
           # Un seul commit, remplacé à chaque fois, comme pour le site.
           if git push -q --force "https://x-access-token:${TOKEN}@github.com/${CIBLE}.git" main; then
             echo "Publié : https://github.com/${CIBLE}"
+            echo "**Nokia : publié** $(head -1 version.txt) sur https://github.com/${CIBLE}" >> "$GITHUB_STEP_SUMMARY"
           else
-            echo "::warning::Le jeton n'a pas accès à ${CIBLE} : .jar construit et testé (artefact), non publié. Ajouter le secret NOKIA_DEPLOY_TOKEN."
+            # Visible sur la page du run (résumé) et non plus seulement dans le journal : le
+            # refus passait inaperçu, et le dépôt est resté à 1.0.255 du 11/10 au 03/11.
+            echo "::warning::Le jeton n'a pas accès à ${CIBLE} : .jar construit et testé (artefact), non publié. Ajouter le secret NOKIA_DEPLOY_TOKEN (jeton d'un compte qui peut écrire dans ${CIBLE})."
+            echo "**Nokia : NON publié** — le jeton n'a pas accès à ${CIBLE}. Ajouter le secret NOKIA_DEPLOY_TOKEN." >> "$GITHUB_STEP_SUMMARY"
           fi
