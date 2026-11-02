@@ -262,6 +262,7 @@ const descendre = async (p) => { await p.evaluate(() => { document.querySelector
 for (const [nom, carte, n] of [['reelle', false, 67], ['carte', true, 109]]) {
   await capture(`boussole-ny-${nom}`, { langue: 'fr', ecran: 'boussole', extra: { ...NEW_YORK, boussole_carte: carte }, actions: cap(n) });
   await capture(`boussole-ny-${nom}-choix`, { langue: 'fr', ecran: 'boussole', extra: { ...NEW_YORK, boussole_carte: carte }, actions: async (p) => { await cap(n)(p); await descendre(p); } });
+  await capture(`boussole-ny-${nom}-choix-he`, { langue: 'he', ecran: 'boussole', extra: { ...NEW_YORK, boussole_carte: carte }, actions: async (p) => { await cap(n)(p); await descendre(p); } });
 }
 await capture('bibliotheque-he', { langue: 'he', ecran: 'bibliotheque', actions: bas(0) });
 await capture('reglages-fr-personnalisation', { langue: 'fr', ecran: 'reglages', actions: bas(400) });

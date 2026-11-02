@@ -159,7 +159,7 @@ class BoussoleActivity : AppCompatActivity(), SensorEventListener {
             addView(VueJour.texte(this@BoussoleActivity, getString(R.string.boussole_note_titre), 15f, R.color.ink))
             addView(VueJour.texte(this@BoussoleActivity, getString(R.string.boussole_note), 13f, R.color.muted, haut = 4))
             addView(VueJour.texte(this@BoussoleActivity, HtmlCompat.fromHtml(getString(R.string.boussole_source,
-                "<a href=\"$SOURCE\">${android.text.TextUtils.htmlEncode(getString(R.string.boussole_source_titre))}</a>"), HtmlCompat.FROM_HTML_MODE_LEGACY),
+                "\u2066<a href=\"$SOURCE\">${android.text.TextUtils.htmlEncode(getString(R.string.boussole_source_titre))}</a>\u2069"), HtmlCompat.FROM_HTML_MODE_LEGACY),
                 13f, R.color.brand, haut = 6).apply { movementMethod = LinkMovementMethod.getInstance() })
         })
         contenu.addView(VueJour.texte(this, getString(R.string.zmanim_source_villes), 12f, R.color.muted, haut = 16).apply { setPadding(dp(16), 0, dp(16), 0) })

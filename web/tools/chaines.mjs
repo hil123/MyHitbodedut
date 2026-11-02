@@ -39,8 +39,10 @@ export function valeurAndroid(brute) {
       sortie.push({ c: n === 'n' ? '\n' : n === 't' ? '\t' : n, libre: false });
     } else if (c === '"') {
       entreGuillemets = !entreGuillemets;
-    } else if (/\s/.test(c) && !entreGuillemets) {
-      // Hors guillemets, aapt ramène toute suite d'espaces à une seule.
+    } else if (/[ \t\n\r\f\v]/.test(c) && !entreGuillemets) {
+      // Hors guillemets, aapt ramène toute suite d'espaces à une seule. Les espaces
+      // ASCII seulement : \s prenait aussi l'espace insécable, que le français place
+      // avant « ; : ? ! » et dans les guillemets, et qu'Android garde (03/11).
       if (!(sortie.length && sortie[sortie.length - 1].libre)) sortie.push({ c: ' ', libre: true });
     } else {
       sortie.push({ c, libre: false });

@@ -3151,7 +3151,7 @@ function ecranBoussole() {
     contenu.push(h('div', { class: 'carte carte-texte' },
       h('p', { class: 'nom' }, tr.t('boussole_note_titre')),
       h('p', { class: 'indice' }, tr.t('boussole_note')),
-      h('p', {}, source[0], h('a', { href: SOURCE_BOUSSOLE, target: '_blank', rel: 'noopener' }, tr.t('boussole_source_titre')), source[1] ?? '')));
+      h('p', {}, source[0], h('a', { href: SOURCE_BOUSSOLE, target: '_blank', rel: 'noopener', dir: 'ltr' }, tr.t('boussole_source_titre')), source[1] ?? '')));
   }
   return h('div', { class: 'ecran avec-bandeau' }, bandeau(tr.t('boussole_title'), { puce: lieu ? puce : null, dessin: 'char_standing_back' }),
     h('div', { class: 'defile' }, h('div', { class: 'contenu' }, ...contenu, ...piedZmanim().slice(1))));
