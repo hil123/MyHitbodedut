@@ -1232,7 +1232,7 @@
     <string name="vol_ecart_gps">%1$s min if arrival is 30 min late</string>
     <string name="vol_direct_titre">Live tracking (Internet)</string>
     <string name="vol_direct_explication">Off by default. When on, it sends the app’s relay the flight’s callsign and the aircraft’s estimated position, nothing else; the relay asks OpenSky Network for the real position. Over the oceans, the aircraft is often not seen.</string>
-    <string name="vol_direct_activer">Turn on live tracking</string>
+    <string name="vol_direct_activer">Online services: flight route and live tracking</string>
     <string name="vol_indicatif">Radio callsign (ICAO), for example ELY1</string>
     <string name="vol_indicatif_invalide">Expected callsign: three letters then the number, for example ELY1.</string>
     <string name="vol_direct_bouton">Live position</string>
@@ -1322,4 +1322,7 @@
 
     <!-- Le lien vers la page publique des règles de confidentialité (31/10, SettingsActivity). -->
     <string name="settings_confidentialite">Privacy policy</string>
+
+    <!-- Sous l’interrupteur des services en ligne, dans le formulaire du vol (02/11, VolActivity). -->
+    <string name="vol_en_ligne_aide">Off by default: nothing leaves the phone. When on, the 🔍 sends only the flight number to adsbdb.com to fill in the arrival, and live tracking queries OpenSky Network.</string>
 </resources>

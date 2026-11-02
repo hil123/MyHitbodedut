@@ -352,10 +352,13 @@ l'interface. Contenu, relu dans le code et tenu par `ConfidentialiteTest` :
 - position approximative pour zmanim et boussole, exacte pour le seul GPS en
   vol, utilisées sur l'appareil, jamais envoyées par l'application ;
 - barrière : ce que lisent les deux accès spéciaux, et comment la couper ;
-- vol (édition complète) : à OpenSky, un carré d'environ 10° autour de la
+- vol (édition complète) : un seul interrupteur, « Services en ligne : route
+  du vol et suivi en direct », **désactivé par défaut** (02/11 : adsbdb passe
+  aussi derrière lui ; éteint, la loupe n'apparaît pas et rien ne quitte le
+  téléphone). Allumé : à OpenSky, un carré d'environ 10° autour de la
   position estimée de l'avion, coordonnées arrondies au dixième de degré,
-  option désactivée par défaut ; à adsbdb, le numéro de vol saisi, au toucher
-  de la loupe ; l'adresse IP, vue par ces services comme par tout serveur.
+  au toucher du bouton ; à adsbdb, le numéro de vol saisi, au toucher de la
+  loupe ; l'adresse IP, vue par ces services comme par tout serveur.
 
 **Reste à faire** : l'adresse de contact du développeur — repère
 `TODO_CONTACT` dans la page, à remplacer avant la saisie dans la Play Console.
@@ -365,7 +368,7 @@ l'interface. Contenu, relu dans le code et tenu par `ConfidentialiteTest` :
 | Cas | Réponse |
 | --- | --- |
 | Vol en direct retiré (option A, § 3.1) | « Aucune donnée collectée ni partagée ». Aucune donnée ne quitte l'appareil. |
-| Vol en direct conservé | Déclarer **Position approximative** (zone envoyée à OpenSky) et **Autres identifiants / infos de l'app** pour le numéro de vol (adsbdb), *facultatif pour l'utilisateur*, chiffré en transit (HTTPS). *Déduit — la qualification exacte d'une boîte géographique se confirme dans le formulaire.* |
+| Vol en direct conservé | Déclarer **Position approximative** (zone envoyée à OpenSky) et **Autres identifiants / infos de l'app** pour le numéro de vol (adsbdb), *facultatif pour l'utilisateur* (les deux derrière un interrupteur désactivé par défaut depuis le 02/11), chiffré en transit (HTTPS). *Déduit — la qualification exacte d'une boîte géographique se confirme dans le formulaire.* |
 
 Dans tous les cas : chiffrement en transit = oui (HTTPS seulement) ;
 suppression des données = l'utilisateur les efface en désinstallant ou par

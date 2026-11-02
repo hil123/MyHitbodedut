@@ -1265,7 +1265,7 @@
     <string name="vol_ecart_gps">⁦%1$s⁩ דק׳ אם הנחיתה מתעכבת ב־30 דק׳</string>
     <string name="vol_direct_titre">מעקב בזמן אמת (אינטרנט)</string>
     <string name="vol_direct_explication">כבוי כברירת מחדל. כשהוא פעיל, הוא שולח לשרת הממסר של האפליקציה את אות הקריאה של הטיסה ואת המיקום המשוער של המטוס, ותו לא; הממסר מבקש את המיקום האמיתי מ־OpenSky Network. מעל אוקיינוסים המטוס לעיתים קרובות אינו נראה.</string>
-    <string name="vol_direct_activer">הפעלת מעקב בזמן אמת</string>
+    <string name="vol_direct_activer">שירותים מקוונים: מסלול הטיסה ומעקב בזמן אמת</string>
     <string name="vol_indicatif">אות קריאה (ICAO), לדוגמה ELY1</string>
     <string name="vol_indicatif_invalide">אות קריאה צפוי: שלוש אותיות ואחריהן המספר, לדוגמה ELY1.</string>
     <string name="vol_direct_bouton">מיקום בזמן אמת</string>
@@ -1355,4 +1355,7 @@
 
     <!-- Le lien vers la page publique des règles de confidentialité (31/10, SettingsActivity). -->
     <string name="settings_confidentialite">מדיניות פרטיות</string>
+
+    <!-- Sous l’interrupteur des services en ligne, dans le formulaire du vol (02/11, VolActivity). -->
+    <string name="vol_en_ligne_aide">כבויים כברירת מחדל: שום דבר לא יוצא מהטלפון. כשהם פעילים, הזכוכית המגדלת 🔍 שולחת ל־adsbdb.com את מספר הטיסה בלבד כדי למלא את היעד, והמעקב בזמן אמת פונה ל־OpenSky Network.</string>
 </resources>

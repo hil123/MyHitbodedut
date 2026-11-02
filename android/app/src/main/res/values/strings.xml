@@ -1273,7 +1273,7 @@
     <string name="vol_ecart_gps">%1$s min si l’arrivée a 30 min de retard</string>
     <string name="vol_direct_titre">Suivi en direct (Internet)</string>
     <string name="vol_direct_explication">Désactivé par défaut. Activé, il envoie au relais de l’application l’indicatif du vol et la position estimée de l’avion, rien d’autre ; le relais demande la position réelle à OpenSky Network. Au-dessus des océans, l’avion n’est souvent pas vu.</string>
-    <string name="vol_direct_activer">Activer le suivi en direct</string>
+    <string name="vol_direct_activer">Services en ligne : route du vol et suivi en direct</string>
     <string name="vol_indicatif">Indicatif radio (OACI), par exemple ELY1</string>
     <string name="vol_indicatif_invalide">Indicatif attendu : trois lettres puis le numéro, par exemple ELY1.</string>
     <string name="vol_direct_bouton">Position en direct</string>
@@ -1364,4 +1364,7 @@
 
     <!-- Le lien vers la page publique des règles de confidentialité (31/10, SettingsActivity). -->
     <string name="settings_confidentialite">Règles de confidentialité</string>
+
+    <!-- Sous l’interrupteur des services en ligne, dans le formulaire du vol (02/11, VolActivity). -->
+    <string name="vol_en_ligne_aide">Désactivés par défaut : rien ne quitte le téléphone. Activés, la loupe 🔍 envoie le seul numéro de vol à adsbdb.com pour remplir l’arrivée, et le suivi en direct interroge OpenSky Network.</string>
 </resources>
