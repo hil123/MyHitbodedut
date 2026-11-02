@@ -281,24 +281,37 @@ const LOGOS = [
 /* v21 — une transition DIFFÉRENTE et motivée à chaque changement de partie (au lieu du même fondu partout) */
 const COUPES_SECTION = [T5.duree, T.avec, T.perso, T.chabbat];
 type Tr = {tx: number; ry: number; sc: number; flou: number; flouX: number; lum: number; voile: number};
-const transitionSection = (f: number): Tr => {
-  const r: Tr = {tx: 0, ry: 0, sc: 1, flou: 0, flouX: 0, lum: 1, voile: 0};
-  if (!FX) return r;
+/* v24 : mouvements physiques — ressorts avec léger dépassement à l'atterrissage, flou proportionnel à la VITESSE réelle,
+   éclairage qui suit l'angle du téléphone (ombre quand il se retourne). */
+const ressort = (f: number, b: number, damping: number) => spring({frame: f - b, fps: FPS, config: {damping, mass: 0.7, stiffness: 120}});
+const etatSection = (f: number) => {
+  const r = {tx: 0, ry: 0, sc: 1, lum: 1, voile: 0};
   for (const b of COUPES_SECTION) {
-    if (f < b - 10 || f > b + 14) continue;
+    if (f < b - 10 || f > b + 40) continue;
     const avant = f < b;
-    const k = avant ? L(f, b - 10, b, 0, 1, Easing.in(Easing.cubic)) : 1 - L(f, b, b + 14, 0, 1, Easing.out(Easing.cubic));
-    if (b === T5.duree) { // 1 → 2 : on plonge DANS l'écran (zoom traversant)
-      r.sc = avant ? 1 + 0.55 * k : 1 - 0.18 * k; r.flou = k * 10; r.lum = 1 + 0.25 * k;
-    } else if (b === T.avec) { // 2 → 3 : saut d'énergie, whip horizontal avec flou de mouvement directionnel
-      r.tx = avant ? -k * 1150 : k * 1150; r.flouX = k * 70;
-    } else if (b === T.perso) { // 3 → 4 : le téléphone se retourne (carte 3D) sur la personnalisation
-      r.ry = avant ? k * 90 : -k * 90; r.sc = 1 - 0.08 * k;
-    } else { // 4 → 5 : passage par la lumière (calendrier, temps sacré)
-      r.lum = 1 + 0.45 * k; r.voile = k; r.sc = 1 + 0.04 * k;
+    const k = avant ? L(f, b - 10, b, 0, 1, Easing.in(Easing.cubic)) : 0;
+    if (b === T5.duree) { // 1 → 2 : plongée dans l'écran, le suivant arrive de loin et se pose avec un rebond
+      r.sc = avant ? 1 + 0.55 * k : 0.8 + 0.2 * ressort(f, b, 13); r.lum = avant ? 1 + 0.25 * k : 1;
+    } else if (b === T.avec) { // 2 → 3 : whip ; atterrissage en ressort (dépasse un peu, revient)
+      r.tx = avant ? -k * 1150 : 820 * (1 - ressort(f, b, 12)); // repart juste hors champ : pas d'image vide
+    } else if (b === T.perso) { // 3 → 4 : retournement 3D, se pose avec un léger balancement
+      r.ry = avant ? k * 90 : -90 * (1 - ressort(f, b, 14));
+      r.sc = 1 - 0.08 * Math.abs(Math.sin((r.ry * Math.PI) / 180));
+      r.lum = 0.55 + 0.45 * Math.cos((r.ry * Math.PI) / 180); // la face qui tourne s'assombrit
+    } else if (f < b + 14) { // 4 → 5 : passage par la lumière
+      const kk = avant ? k : 1 - L(f, b, b + 14, 0, 1, Easing.out(Easing.cubic));
+      r.lum = 1 + 0.45 * kk; r.voile = kk; r.sc = 1 + 0.04 * kk;
     }
   }
   return r;
+};
+const transitionSection = (f: number): Tr => {
+  const r: Tr = {tx: 0, ry: 0, sc: 1, flou: 0, flouX: 0, lum: 1, voile: 0};
+  if (!FX) return r;
+  const e = etatSection(f), p = etatSection(f - 1);
+  const vx = Math.abs(e.tx - p.tx), vs = Math.abs(e.sc - p.sc), vr = Math.abs(e.ry - p.ry);
+  return {tx: e.tx, ry: e.ry, sc: e.sc, lum: e.lum, voile: e.voile,
+    flouX: Math.min(80, vx * 0.55), flou: Math.min(12, vs * 60 + vr * 0.12)};
 };
 /** Grain argentique + vignette : texture commune à tout le film (couche du dessus). */
 const Texture: React.FC<{f: number}> = ({f}) => (
@@ -311,10 +324,12 @@ const Texture: React.FC<{f: number}> = ({f}) => (
   </AbsoluteFill>
 );
 /** Fuite de lumière chaude qui traverse l'image (transition 4 → 5). */
-const FuiteLumiere: React.FC<{k: number; f: number}> = ({k, f}) => k <= 0 ? null : (
+const FuiteLumiere: React.FC<{k: number; f: number}> = ({k, f}) => k <= 0 ? null : (<>
+  <div style={{position: 'absolute', left: -200, right: -200, top: Z.sujetHaut + H * 0.45 - 3, height: 6, pointerEvents: 'none', opacity: k,
+    background: `linear-gradient(90deg, transparent, rgba(255,190,110,.9) ${30 + (f - T.chabbat + 10) * 2.6}%, transparent)`, filter: 'blur(2px)', boxShadow: '0 0 30px 8px rgba(255,200,120,.6)'}} />
   <AbsoluteFill style={{pointerEvents: 'none', mixBlendMode: 'multiply', opacity: k,
     background: `radial-gradient(ellipse 80% 55% at ${20 + (f - T.chabbat + 10) * 2.6}% 45%, rgba(255,196,110,1) 0, rgba(255,222,170,.7) 40%, rgba(255,255,255,0) 75%)`}} />
-);
+</>);
 /** Révélation par la lumière (cf. exemple de Hillel) : le téléphone sort de l'ombre, un faisceau le balaie de gauche à droite. */
 const revele = (f: number) => FX ? L(f, 432, 470, 0, 1, Easing.inOut(Easing.cubic)) : 1;
 /** Texte qui se resserre (tracking) en sortant du flou — pour la phrase-écho du retour. */
@@ -336,7 +351,7 @@ const TexteTracking: React.FC<{texte: string; debut: number; fin: number}> = ({t
 const TEMPS_FORTS = [2230, 2248, 2259, 2294, 2354, 2377];
 const punch = (f: number) => !FX ? 1 : 1 + TEMPS_FORTS.reduce((a, b) => a + (f >= b ? 0.03 * Math.exp(-(f - b) / 5) : 0), 0);
 /** Secousse d'atterrissage après le whip (2 → 3). */
-const secousse = (f: number) => !FX || f < T.avec + 12 || f > T.avec + 26 ? 0 : Math.sin((f - T.avec - 12) * 1.9) * 9 * (1 - (f - T.avec - 12) / 14);
+const secousse = (_f: number) => 0; // v24 : remplacée par l'atterrissage en ressort du whip
 /** Confettis dorés sur « Bravo, Tsadik ! ». */
 const CONFETTIS = Array.from({length: 70}, (_, i) => {
   const a = -Math.PI / 2 + ((i * 97) % 100 - 50) / 50 * 1.25;
@@ -349,9 +364,12 @@ const Confettis: React.FC<{f: number; de: number}> = ({f, de}) => {
   return (
     <div style={{position: 'absolute', left: 540, top: Z.sujetHaut + H * 0.45, pointerEvents: 'none'}}>
       {CONFETTIS.map((c, i) => {
-        const x = c.vx * t * 1.0, y = c.vy * t + 0.55 * t * t;
-        return <div key={i} style={{position: 'absolute', left: x, top: y, width: c.w, height: c.h, background: c.c, borderRadius: 2, boxShadow: '0 1px 3px rgba(0,0,0,.2)',
-          transform: `rotate(${c.rot + c.vr * t}deg) rotateX(${t * 14 + i * 20}deg)`, opacity: L(t, 55, 75, 1, 0)}} />;
+        const z = 0.6 + ((i * 41) % 9) / 10; // profondeur : 0,6 (loin) → 1,4 (près)
+        const frein = 1 - Math.exp(-t / 14); // la résistance de l'air freine l'éclat initial
+        const x = c.vx * 14 * frein * z + Math.sin(t / 5 + i) * 10 * frein, y = c.vy * 14 * frein * z + 0.09 * t * t * z;
+        return <div key={i} style={{position: 'absolute', left: x, top: y, width: c.w * z, height: c.h * z, background: c.c, borderRadius: 2, boxShadow: '0 1px 3px rgba(0,0,0,.2)',
+          filter: Math.abs(z - 1) > 0.3 ? `blur(${Math.abs(z - 1) * 3}px)` : undefined,
+          transform: `rotate(${c.rot + c.vr * t}deg) rotateX(${t * 14 + i * 20}deg)`, opacity: L(t, 50, 75, 1, 0)}} />;
       })}
     </div>
   );
@@ -386,6 +404,17 @@ const Eventail: React.FC<{f: number}> = ({f}) => {
   ))}</>);
 };
 const eventailCentre = (f: number) => !FX || f < 2150 ? 1 : 1 - 0.2 * spring({frame: f - 2150, fps: FPS, config: {damping: 16, mass: 0.8}});
+
+/** Carte finale : poussière dorée qui monte lentement (luxe, cf. exemple de Hillel). */
+const POUSSIERE = Array.from({length: 40}, (_, i) => ({x: (i * 73) % 1080, y0: 1500 + ((i * 131) % 500), v: 1.2 + ((i * 17) % 10) / 6, r: 3 + (i % 4) * 2, ph: i}));
+const PoussiereDoree: React.FC<{f: number}> = ({f}) => f < 0 ? null : (
+  <AbsoluteFill style={{pointerEvents: 'none'}}>
+    {POUSSIERE.map((p, i) => (
+      <div key={i} style={{position: 'absolute', left: p.x + Math.sin((f + p.ph * 7) / 22) * 18, top: p.y0 - f * p.v * 2.2, width: p.r, height: p.r, borderRadius: '50%',
+        background: '#e3c27a', boxShadow: `0 0 ${p.r * 3}px rgba(227,194,122,.9)`, opacity: L(f, 0, 20, 0, 0.75) * (0.5 + 0.5 * Math.sin((f + p.ph * 11) / 9))}} />
+    ))}
+  </AbsoluteFill>
+);
 
 const SECTIONS = [
   {n: 1, texte: 'Une Hitbodedut guidée', de: T5.etapes, a: T5.duree},
@@ -464,9 +493,12 @@ export const PubV5: React.FC = () => {
         if (a >= 1) return null;
         const x0 = i % 2 ? 880 : 90, y0 = Z.sujetHaut + 150 + Math.floor(i / 2) * 220;
         const x = x0 + (540 - 55 - x0) * a, y = y0 + (Z.sujetHaut + H / 2 - 55 - y0) * a;
+        const a1 = L(f - 1, ASPIRE + i * 9, ASPIRE + 18 + i * 9, 0, 1, Easing.in(Easing.cubic));
+        const vit = FX ? Math.hypot((540 - 55 - x0) * (a - a1), (Z.sujetHaut + H / 2 - 55 - y0) * (a - a1)) : 0;
         return <div key={l.n} style={{position: 'absolute', left: x, top: y, width: 110, height: 110, borderRadius: 28,
           background: l.bg, boxShadow: '0 8px 24px rgba(0,0,0,0.35)', display: 'flex', alignItems: 'center', justifyContent: 'center',
-          opacity: Math.min(1, pop * 2), transform: `scale(${pop * (1 - 0.45 * a)}) rotate(${(i % 2 ? -1 : 1) * 25 * a}deg)`}}>
+          opacity: Math.min(1, pop * 2), filter: vit > 1 ? `blur(${Math.min(6, vit * 0.08)}px)` : undefined,
+          transform: `scale(${pop * (1 - 0.45 * a)}) rotate(${(i % 2 ? -1 : 1) * 25 * a}deg) scaleX(${1 + Math.min(0.35, vit * 0.004)})`}}>
           <Img src={staticFile(`logos/${l.n}.svg`)} style={{width: 64, height: 64}} />
         </div>;
       })}
@@ -534,6 +566,7 @@ export const PubV5: React.FC = () => {
 
       {f >= FIN5 - 6 && (
         <AbsoluteFill style={{background: '#fff', opacity: L(f, FIN5 - 6, FIN5 + 6, 0, 1)}}>
+          {FX && <PoussiereDoree f={f - FIN5} />}{/* derrière le texte de la carte */}
           <div style={{position: 'absolute', top: 380, left: 70, right: 70, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 36, transform: `scale(${L(f, FIN5, TOTAL5, 1, 1.08, (t) => t)})`}}>
             <div style={{position: 'relative', width: 280, height: 280, borderRadius: 62, overflow: 'hidden', opacity: carte, transform: `scale(${0.9 + 0.1 * carte})`, boxShadow: '0 16px 50px rgba(7,91,91,.25)'}}>
               <Img src={staticFile('planche/logo.png')} style={{width: 280, height: 280}} />
