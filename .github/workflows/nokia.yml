@@ -58,7 +58,7 @@ jobs:
       - name: Build MyHitbodedut.jar
         run: JDK8="$JAVA_HOME_8_X64" JAVA_RECENT="$JAVA_HOME_21_X64/bin/java" bash nokia/app/build.sh
 
-      - name: Test (rules, texts, 19 screens at 240x320)
+      - name: Test (rules, texts, 21 screens at 240x320)
         run: JDK8="$JAVA_HOME_8_X64" bash nokia/app/test.sh
 
       - name: Prepare the published folder
