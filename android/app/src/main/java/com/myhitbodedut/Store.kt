@@ -150,6 +150,10 @@ object Store {
     private const val KEY_MUSIC_USER = "music_user_tracks"
     private const val KEY_TIKKUN_DAY = "tikkun_day"
     private const val KEY_TIKKUN_DONE = "tikkun_done"
+
+    /** Le jour du Tikoun bascule à 4 h, pas à minuit : commencé à 23 h 45, il se finit après minuit (bug du 02/11). */
+    fun jourTikkun(maintenant: java.time.LocalDateTime = java.time.LocalDateTime.now()): String =
+        maintenant.minusHours(4).toLocalDate().format(FORMAT)
     private const val KEY_CHIZUK_BAG = "chizuk_bag_"
     private const val KEY_CHIZUK_LAST = "chizuk_last_"
     private const val KEY_MUSIC_NAMES = "music_names"
@@ -298,6 +302,8 @@ object Store {
         )
         writeDays(context, all)
         clearSnooze(context)
+        // La journée est faite : le rappel « Il est temps… » ne reste pas dans le volet jusqu'au lendemain (02/11).
+        if (minutes > 0) runCatching { androidx.core.app.NotificationManagerCompat.from(context).cancel(Notifications.ID_REMINDER) }
     }
 
     /** La note d'un jour. Sur un jour sans hitbodedout, elle ne le valide pas. */
@@ -829,11 +835,28 @@ object Store {
 
     fun derniereLecture(context: Context): String? = prefs(context).getString("derniere_lecture", null)
 
-    fun positionLecture(context: Context, cle: String): Int? = prefs(context).getInt("position:$cle", -1).takeIf { it > 0 }
-
-    fun setPositionLecture(context: Context, cle: String, position: Int) {
-        prefs(context).edit().putInt("position:$cle", position).putString("derniere_lecture", cle).apply()
+    /**
+     * La place où reprendre un texte. Un livre reprend toujours ; une prière du
+     * siddour seulement juste après une interruption (PRIERE_REPRISE_MS) : le
+     * lendemain, elle recommence au début (bug du 02/11).
+     */
+    fun positionLecture(context: Context, cle: String, maintenant: Long = System.currentTimeMillis()): Int? {
+        val p = prefs(context)
+        val position = p.getInt("position:$cle", -1).takeIf { it > 0 } ?: return null
+        return position.takeIf { repriseValable(cle, p.getLong("position_t:$cle", 0L), maintenant) }
     }
+
+    fun setPositionLecture(context: Context, cle: String, position: Int, maintenant: Long = System.currentTimeMillis()) {
+        prefs(context).edit().putInt("position:$cle", position).putLong("position_t:$cle", maintenant)
+            .putString("derniere_lecture", cle).apply()
+    }
+
+    /** Trois heures : un appel, une pause ; pas la prière du lendemain. */
+    const val PRIERE_REPRISE_MS = 3 * 60 * 60 * 1000L
+
+    /** Une place enregistrée à [quand] vaut-elle encore pour [cle] ? */
+    fun repriseValable(cle: String, quand: Long, maintenant: Long): Boolean =
+        !cle.startsWith("s:") || (quand > 0 && maintenant - quand in 0 until PRIERE_REPRISE_MS)
 
     /** Le journal enrichi (14/10), en JSON : JournalPlus. Dans le fichier du journal, comme les notes. */
     fun journalPlusBrut(context: Context): String? = journalPrefs(context).getString("journal_plus", null)
@@ -1312,7 +1335,7 @@ object Store {
      */
     fun tikkunDone(context: Context): Set<Int> {
         val prefs = prefs(context)
-        if (prefs.getString(KEY_TIKKUN_DAY, "") != today()) return emptySet()
+        if (prefs.getString(KEY_TIKKUN_DAY, "") != jourTikkun()) return emptySet()
         return prefs.getString(KEY_TIKKUN_DONE, "").orEmpty()
             .split(',')
             .mapNotNull { it.trim().toIntOrNull() }
@@ -1323,14 +1346,14 @@ object Store {
         val courant = tikkunDone(context).toMutableSet()
         if (done) courant.add(numero) else courant.remove(numero)
         prefs(context).edit()
-            .putString(KEY_TIKKUN_DAY, today())
+            .putString(KEY_TIKKUN_DAY, jourTikkun())
             .putString(KEY_TIKKUN_DONE, courant.sorted().joinToString(","))
             .apply()
     }
 
     fun resetTikkun(context: Context) {
         prefs(context).edit()
-            .putString(KEY_TIKKUN_DAY, today())
+            .putString(KEY_TIKKUN_DAY, jourTikkun())
             .putString(KEY_TIKKUN_DONE, "")
             .apply()
     }

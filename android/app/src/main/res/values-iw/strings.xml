@@ -626,6 +626,8 @@
     <string name="calendrier_title">לוח שנה</string>
     <string name="calendrier_precedent">החודש הקודם</string>
     <string name="calendrier_suivant">החודש הבא</string>
+    <string name="jour_precedent">היום הקודם</string>
+    <string name="jour_suivant">היום הבא</string>
     <string name="calendrier_aujourdhui">היום</string>
     <string name="calendrier_vue">תצוגת הלוח</string>
     <string name="calendrier_vue_hebreu">עברי</string>
@@ -1300,7 +1302,7 @@
     <string name="boussole_cap_constant">הכיוון על המפה (כיוון קבוע): %1$d° %2$s</string>
     <string name="boussole_distance">מרחק: %1$s ק״מ</string>
     <string name="boussole_legende">התווית „ירושלים” (בשושנה, המחוג הזהוב) עוקבת אחרי הכיוון האמיתי; הסימון הכחול המקווקו מראה את הכיוון על המפה, לידיעה בלבד.</string>
-    <string name="boussole_a_plat">החזיקו את הטלפון שטוח, הרחק מחפצי מתכת ומגנטים.</string>
+    <string name="boussole_a_plat">החזיקו את הטלפון שטוח או זקוף מולכם, הרחק מחפצי מתכת ומגנטים.</string>
     <string name="boussole_calibrer">המצפן אינו מדויק: ציירו באוויר את הספרה 8 עם הטלפון.</string>
     <string name="boussole_sans_capteur">בטלפון זה אין מצפן: הכיוון מוצג ביחס לצפון, למעלה.</string>
     <string name="boussole_note_titre">שתי דרכים לחשב</string>

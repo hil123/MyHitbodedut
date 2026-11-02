@@ -139,7 +139,7 @@ class BoussoleActivity : AppCompatActivity(), SensorEventListener {
             addView(VueJour.texte(this@BoussoleActivity, getString(R.string.boussole_affichage), 15f, R.color.ink))
             addView(VueJour.texte(this@BoussoleActivity, getString(if (Store.boussoleRose(this@BoussoleActivity))
                 R.string.boussole_affichage_rose else R.string.boussole_affichage_hassid), 13f, R.color.muted, haut = 2))
-            foreground = getDrawable(android.R.drawable.list_selector_background)
+            foreground = Apparence.effetToucher(this@BoussoleActivity)
             setOnClickListener { choisirAffichage() }
         })
 
@@ -212,9 +212,7 @@ class BoussoleActivity : AppCompatActivity(), SensorEventListener {
         }
         val remappee = FloatArray(9)
         SensorManager.remapCoordinateSystem(matrice, x, y, remappee)
-        val orientation = FloatArray(3)
-        SensorManager.getOrientation(remappee, orientation)
-        val vrai = DirectionJerusalem.norm(Math.toDegrees(orientation[0].toDouble()) + declinaison)
+        val vrai = DirectionJerusalem.norm(capDevant(remappee) + declinaison)
         lisse = lisser(lisse, vrai)
         if (::boussole.isInitialized && aLieu) boussole.cap(lisse)
     }
@@ -230,6 +228,20 @@ class BoussoleActivity : AppCompatActivity(), SensorEventListener {
     companion object {
         /** L'article qui expose les deux calculs (vérifié le 28/10). */
         const val SOURCE = "https://www.chabad.org/library/article_cdo/aid/3502321/jewish/Why-Do-We-Face-East-When-Praying-Or-Do-We.htm"
+
+        /**
+         * Le cap (degrés, nord magnétique, sens horaire) de la direction où l'on fait
+         * face, pour une matrice de rotation en coordonnées d'écran (ligne par ligne,
+         * Est-Nord-Haut). getOrientation prend le haut de l'écran : téléphone droit,
+         * il pointe le ciel et le cap s'affole (bug du 02/11). On somme donc le haut
+         * de l'écran et le dos du téléphone (−Z) : à plat, le premier donne le cap ;
+         * droit, le second ; entre les deux, ils pointent du même côté.
+         */
+        fun capDevant(r: FloatArray): Double {
+            val est = r[1] - r[2]
+            val nord = r[4] - r[5]
+            return DirectionJerusalem.norm(Math.toDegrees(kotlin.math.atan2(est.toDouble(), nord.toDouble())))
+        }
 
         /** Un filtre doux sur le cercle : un cinquième du chemin à chaque mesure, par le plus court côté. */
         fun lisser(avant: Double?, mesure: Double): Double =

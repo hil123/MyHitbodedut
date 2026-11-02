@@ -35,6 +35,16 @@ const PREFS = 'myhitbodedut';
 const PREFS_JOURNAL = 'myhitbodedut-journal';
 
 /** Un stockage en mémoire, quand le navigateur refuse le sien (navigation privée). */
+/** Trois heures : un appel, une pause ; pas la prière du lendemain (Store.PRIERE_REPRISE_MS). */
+export const PRIERE_REPRISE_MS = 3 * 60 * 60 * 1000;
+
+/** Une place enregistrée à [quand] vaut-elle encore pour [cle] ? Les livres (« l: ») toujours. */
+export function repriseValable(cle, quand, maintenant) {
+  if (!String(cle).startsWith('s:')) return true;
+  const ecart = maintenant - quand;
+  return quand > 0 && ecart >= 0 && ecart < PRIERE_REPRISE_MS;
+}
+
 export function memoire() {
   const m = new Map();
   return {
@@ -60,6 +70,8 @@ export function creeStore(stockage, { maintenant = () => new Date(), fuseau } = 
   };
 
   const today = () => isoLocal(maintenant());
+  // Le jour du Tikoun bascule à 4 h, pas à minuit : commencé à 23 h 45, il se finit après minuit (Store.jourTikkun, 02/11).
+  const jourTikkun = () => isoLocal(new Date(maintenant().getTime() - 4 * 60 * 60 * 1000));
 
   // --- Journées -------------------------------------------------------------
   const days = () => {
@@ -165,9 +177,19 @@ export function creeStore(stockage, { maintenant = () => new Date(), fuseau } = 
       return pose;
     },
     derniereLecture: () => get('derniere_lecture', null),
-    positionLecture: (cle) => Number(get('positions_lecture', {})?.[cle] ?? 0),
-    setPositionLecture(cle, y) {
+    /**
+     * La place où reprendre un texte. Un livre reprend toujours ; une prière du
+     * siddour seulement juste après une interruption : le lendemain, elle
+     * recommence au début (bug du 02/11, Store.positionLecture).
+     */
+    positionLecture(cle, t = maintenant().getTime()) {
+      const y = Number(get('positions_lecture', {})?.[cle] ?? 0);
+      const quand = Number(get('positions_lecture_t', {})?.[cle] ?? 0);
+      return repriseValable(cle, quand, t) ? y : 0;
+    },
+    setPositionLecture(cle, y, t = maintenant().getTime()) {
       set('positions_lecture', { ...(get('positions_lecture', {}) ?? {}), [cle]: y });
+      set('positions_lecture_t', { ...(get('positions_lecture_t', {}) ?? {}), [cle]: t });
       set('derniere_lecture', cle);
     },
     /** L'écran d'ouverture (14/10) : 'aujourdhui', 'textes' ou 'zmanim'. */
@@ -402,7 +424,7 @@ export function creeStore(stockage, { maintenant = () => new Date(), fuseau } = 
     // --- Tikoun HaKlali ----------------------------------------------------------------
     /** Les psaumes dits aujourd'hui ; la liste se vide d'elle-même le lendemain. */
     tikkunDone() {
-      if (get('tikkun_day', '') !== today()) return new Set();
+      if (get('tikkun_day', '') !== jourTikkun()) return new Set();
       return new Set(String(get('tikkun_done', '')).split(',').map((s) => s.trim())
         .filter((s) => /^\d+$/.test(s)).map(Number));
     },
@@ -410,7 +432,7 @@ export function creeStore(stockage, { maintenant = () => new Date(), fuseau } = 
     setTikkunDone(numero, fait) {
       const courant = store.tikkunDone();
       if (fait) courant.add(numero); else courant.delete(numero);
-      set('tikkun_day', today());
+      set('tikkun_day', jourTikkun());
       set('tikkun_done', [...courant].sort((a, b) => a - b).join(','));
     },
 

@@ -158,8 +158,23 @@ class SiddurLectureActivity : AppCompatActivity() {
 
     override fun onPause() {
         super.onPause()
+        pauseA = System.currentTimeMillis()
         val p = (liste.layoutManager as LinearLayoutManager).findFirstVisibleItemPosition()
-        if (p >= 0) Store.setPositionLecture(this, cle(), p)
+        if (p >= 0) Store.setPositionLecture(this, cle(), p, pauseA)
+    }
+
+    /** Quand la lecture a été quittée (onPause), pour onRestart. */
+    private var pauseA = 0L
+
+    /**
+     * Resté ouvert derrière d'autres applications jusqu'au lendemain (bug du 02/11) :
+     * une prière se redessine pour le jour, depuis le début, comme rouverte.
+     */
+    override fun onRestart() {
+        super.onRestart()
+        if (pauseA == 0L || Store.repriseValable(cle(), pauseA, System.currentTimeMillis())) return
+        afficher(garderPlace = false)
+        (liste.layoutManager as LinearLayoutManager).scrollToPositionWithOffset(0, 0)
     }
 
     private var nusahAffiche: LocalizedText? = null

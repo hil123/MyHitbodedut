@@ -60,8 +60,34 @@ export const xHorizon = (e) => Math.max(-150, Math.min(150, e * 2.2));
  */
 export function capMagnetique(e, angleEcran = 0) {
   if (typeof e.webkitCompassHeading === 'number' && Number.isFinite(e.webkitCompassHeading)) return norm(e.webkitCompassHeading + angleEcran);
-  if (e.absolute && typeof e.alpha === 'number' && Number.isFinite(e.alpha)) return norm(360 - e.alpha + angleEcran);
+  if (e.absolute && typeof e.alpha === 'number' && Number.isFinite(e.alpha)) {
+    if (!Number.isFinite(e.beta) || !Number.isFinite(e.gamma)) return norm(360 - e.alpha + angleEcran);
+    return capDevant(e.alpha, e.beta, e.gamma, angleEcran);
+  }
   return null;
+}
+
+/**
+ * Le cap de la direction où l'on fait face (bug du 02/11) : alpha seul est le
+ * cap du haut de l'écran, qui pointe le ciel quand le téléphone est droit, et
+ * le cap s'affole. On somme le haut de l'écran et le dos du téléphone (−Z),
+ * passés dans le repère Est-Nord-Haut (matrice Z·X·Y de la spécification
+ * DeviceOrientation) : à plat, le premier donne le cap ; droit, le second.
+ * Même calcul que BoussoleActivity.capDevant.
+ */
+export function capDevant(alpha, beta, gamma, angleEcran = 0) {
+  const r = Math.PI / 180;
+  const [cA, sA, cB, sB, cG, sG] = [Math.cos(alpha * r), Math.sin(alpha * r), Math.cos(beta * r), Math.sin(beta * r), Math.cos(gamma * r), Math.sin(gamma * r)];
+  // Le haut de l'écran dans le repère du téléphone, selon la rotation de l'affichage.
+  const ux = Math.sin(angleEcran * r);
+  const uy = Math.cos(angleEcran * r);
+  // Les colonnes X, Y, Z de la matrice : composantes Est et Nord.
+  const xE = cA * cG - sA * sB * sG; const xN = cG * sA + cA * sB * sG;
+  const yE = -cB * sA; const yN = cA * cB;
+  const zE = cG * sA * sB + cA * sG; const zN = sA * sG - cA * cG * sB;
+  const est = ux * xE + uy * yE - zE;
+  const nord = ux * xN + uy * yN - zN;
+  return norm(Math.atan2(est, nord) / r);
 }
 
 /** Le cap depuis le nord vrai, au lieu donné. */

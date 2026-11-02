@@ -44,10 +44,13 @@ object JournalPlus {
         Store.setJournalPlusBrut(context, t.toString())
     }
 
-    /** « 🙁 → 🙂 · Gratitude » pour la ligne du journal ; vide s'il n'y a rien. */
+    /**
+     * « 🙁 → 🙂 · Gratitude » pour la ligne du journal ; vide s'il n'y a rien. L'humeur est isolée
+     * de gauche à droite (U+2066…U+2069) : en hébreu, la flèche pointait d'après vers avant (02/11).
+     */
     fun resume(plus: Plus, gratitude: String, travail: String = "", sujets: String = ""): String = listOfNotNull(
         sujets.takeIf { it.isNotBlank() },
-        if (plus.avant > 0 || plus.apres > 0) "${HUMEURS.getOrNull(plus.avant - 1) ?: "·"} → ${HUMEURS.getOrNull(plus.apres - 1) ?: "·"}" else null,
+        if (plus.avant > 0 || plus.apres > 0) "\u2066${HUMEURS.getOrNull(plus.avant - 1) ?: "·"} → ${HUMEURS.getOrNull(plus.apres - 1) ?: "·"}\u2069" else null,
         plus.gratitude.takeIf { it.isNotBlank() }?.let { "$gratitude : $it" },
         plus.travail.takeIf { it.isNotBlank() }?.let { "$travail : $it" },
     ).joinToString("\n")

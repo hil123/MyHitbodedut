@@ -815,7 +815,8 @@ input[type="range"] { width: 100%; accent-color: var(--brand); }
 .jour-hilloula { margin: 0px 0 0; font-size: 14px; line-height: 1.55; }
 .jour-hilloula-reste { display: block; color: var(--muted); font-size: 12px; }
 .lien-bouton { background: none; border: 0; font: inherit; font-weight: 700; cursor: pointer; padding-inline: 0; }
-.champ-recherche { width: 100%; box-sizing: border-box; margin-top: 8px; padding: 8px 12px; border: 1px solid var(--line, #ccd); border-radius: 12px; font: inherit; background: transparent; color: inherit; }
+.champ-recherche { width: 100%; box-sizing: border-box; margin-top: 8px; padding: 8px 12px; border: 1px solid var(--line, #ccd); border-radius: 12px; font: inherit; font-size: 16px; background: transparent; color: inherit; }
+/* 16 px au moins : en dessous, l'iPhone agrandit la page au toucher du champ et ne la rend pas (02/11). */
 /* Hilloulot en plus petit (14/10). */
 .carte-hilloula .hilloula-nom { margin: 0; font-family: var(--police-texte); font-size: calc(18px * var(--echelle-texte, 1)); font-weight: 700; }
 .carte-hilloula .hilloula-traduit { margin: 0px 0 0; color: var(--muted); font-size: 13px; }
@@ -1458,11 +1459,16 @@ body.avec-mini .seance .contenu { padding-bottom: calc(104px + env(safe-area-ins
 .carte-vol .vol-jalon { margin-top: 12px; font-weight: 700; }
 
 /* La boussole de Jérusalem (28/10) : la scène carrée, sur son panneau menthe. */
-.boussole-scene { margin: 16px 16px 0; border-radius: 20px; overflow: hidden; aspect-ratio: 1; max-width: 480px; }
+.boussole-scene { margin: 16px 0 0; border-radius: 20px; overflow: hidden; aspect-ratio: 1; max-width: 480px; }
 .boussole-scene svg { display: block; width: 100%; height: 100%; font-family: var(--f-ui, system-ui, sans-serif); }
-.boussole-activer { margin: 12px 16px 0; width: calc(100% - 32px); }
-.boussole-scene + .indice, .boussole-activer + .indice { margin: 8px 16px 0; }
-.boussole-position { margin: 8px 16px 0; width: calc(100% - 32px); }
-.boussole-position + .indice { margin: 4px 16px 0; }
+.boussole-activer { margin: 12px 0 0; width: 100%; }
+.boussole-scene + .indice, .boussole-activer + .indice { margin: 8px 0 0; }
+.boussole-position { margin: 8px 0 0; width: 100%; }
+.boussole-position + .indice { margin: 4px 0 0; }
 .boussole-position + .indice:empty { display: none; }
 .boussole-principale { color: var(--brand); font-weight: 700; }
+
+/* La feuille des marque-pages (02/11) : le texte en petit, les premiers mots dessous, comme sur Android. */
+.signet-choix { display: flex; flex-direction: column; align-items: stretch; gap: 2px; }
+.signet-choix .nom-marque { display: flex; }
+.signet-choix .apercu { display: block; color: var(--muted); font-size: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }

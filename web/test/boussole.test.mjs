@@ -45,6 +45,27 @@ test("le cap d'un événement d'orientation", () => {
   assert.equal(B.capMagnetique({ alpha: null }), null);
 });
 
+// Bug du 02/11 : téléphone droit, le cap ne doit plus dépendre du haut de l'écran (qui pointe le ciel).
+const proche = (a, b, tol = 1e-6) => assert.ok(Math.abs(B.ecart(a, b)) < tol, `${a} ≠ ${b}`);
+test('capDevant : à plat, le cap du haut de l\'écran (360 − alpha)', () => {
+  for (const a of [0, 30, 90, 200, 359]) proche(B.capDevant(a, 0, 0), 360 - a);
+  proche(B.capDevant(90, 0, 0, 90), 0);
+});
+test('capDevant : droit devant soi, le cap du dos du téléphone', () => {
+  proche(B.capDevant(0, 90, 0), 0);
+  proche(B.capDevant(270, 90, 0), 90);
+  proche(B.capDevant(180, 90, 0), 180);
+  // Incliné à 45° ou presque vertical : même cap, sans saut.
+  for (const b of [30, 45, 60, 80, 89, 89.9, 90]) proche(B.capDevant(270, b, 0), 90);
+  proche(B.capMagnetique({ absolute: true, alpha: 270, beta: 90, gamma: 0 }), 90);
+});
+test('capDevant : droit, en paysage, le dos du téléphone donne toujours le cap', () => {
+  // Paysage (écran tourné de 90°), dressé : X vers le ciel, Y vers l'ouest, Z vers le sud → le dos regarde le nord.
+  proche(B.capDevant(90, 0, -90, 90), 0);
+  // Même pose, tournée de 90° vers la droite : face à l'est.
+  proche(B.capDevant(0, 0, -90, 90), 90);
+});
+
 test('WMM2025 : les 100 valeurs de test de la NOAA, à 0,01° près', () => {
   const lignes = readFileSync(new URL('./vecteurs_wmm2025.txt', import.meta.url), 'utf8').split('\n').filter((l) => l.trim() && !l.startsWith('#'));
   assert.equal(lignes.length, 100);
