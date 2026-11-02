@@ -1,7 +1,7 @@
 import React from 'react';
 import {AbsoluteFill, Audio, getInputProps, Img, Sequence, Easing, interpolate, spring, staticFile, useCurrentFrame, useVideoConfig} from 'remotion';
 import {C, Z, FPS} from './theme';
-import {SousTitres, Telephone, TexteEcran, fontFaces, FX} from './ui';
+import {SousTitres, Telephone, TexteEcran, fontFaces, FX, LARGEUR_TEL} from './ui';
 import {T, EcranOuverture, Titre, ETAPES, AFournir} from './v4';
 
 /*
@@ -180,9 +180,10 @@ const PLANS_TEL: PlanTel[] = [
   {de: 1929, a: T.chabbat, src: 'v2/duree_du_report_basse_def', y: 50, z0: 1, z1: 1.06, basseDef: true},
   {de: T.chabbat, a: 2077, src: 'web_calendrier', y: 33, z0: 1.4, z1: 1.9},             // G le calendrier
   {de: 2077, a: 2150, src: 'v2/zmanim', y: 45, z0: 1.25, z1: 1.55},                     //   « les zmanim et les ajouts de la prière » : date hébraïque + Dans les prières
+  ...(FX ? [{de: 2150, a: T.retour, src: 'v2/siddour', y: 50, z0: 1.0, z1: 1.0}] : [            // v23 : éventail de 3 téléphones
   {de: 2150, a: 2167, src: 'v2/siddour', y: 30, z0: 1.15, z1: 1.2},                    // H montage rapide (musique seule)
   {de: 2167, a: 2184, src: 'v2/bibliotheque', y: 30, z0: 1.15, z1: 1.2},
-  {de: 2184, a: T.retour, src: 'v2/boussole', y: 35, z0: 1.15, z1: 1.2},
+  {de: 2184, a: T.retour, src: 'v2/boussole', y: 35, z0: 1.15, z1: 1.2}]),
   {de: 2360, a: FIN5, src: 'v2/bravo', y: 40, z0: 1.05, z1: 1.3},                      // I « Commence aujourd’hui » : Bravo, Tsadik !
 ];
 const indexTel = (f: number) => PLANS_TEL.findIndex((p) => f >= p.de && f < p.a);
@@ -329,6 +330,63 @@ const TexteTracking: React.FC<{texte: string; debut: number; fin: number}> = ({t
   );
 };
 
+
+/* ---------- v23 : effets « stimulants » ---------- */
+/** Temps forts de « Beyond » (détection d'attaques sur le fichier, frames vidéo) : légers coups de zoom calés sur la musique après le drop. */
+const TEMPS_FORTS = [2230, 2248, 2259, 2294, 2354, 2377];
+const punch = (f: number) => !FX ? 1 : 1 + TEMPS_FORTS.reduce((a, b) => a + (f >= b ? 0.03 * Math.exp(-(f - b) / 5) : 0), 0);
+/** Secousse d'atterrissage après le whip (2 → 3). */
+const secousse = (f: number) => !FX || f < T.avec + 12 || f > T.avec + 26 ? 0 : Math.sin((f - T.avec - 12) * 1.9) * 9 * (1 - (f - T.avec - 12) / 14);
+/** Confettis dorés sur « Bravo, Tsadik ! ». */
+const CONFETTIS = Array.from({length: 70}, (_, i) => {
+  const a = -Math.PI / 2 + ((i * 97) % 100 - 50) / 50 * 1.25;
+  const v = 16 + ((i * 53) % 13);
+  return {vx: Math.cos(a) * v, vy: Math.sin(a) * v, c: ['#d4af5f', '#f3dd9c', '#14968c', '#ffffff', '#e8c372'][i % 5], w: 10 + (i % 4) * 4, h: 6 + (i % 3) * 5, rot: (i * 37) % 360, vr: ((i * 29) % 21) - 10};
+});
+const Confettis: React.FC<{f: number; de: number}> = ({f, de}) => {
+  const t = f - de;
+  if (!FX || t < 0 || t > 75) return null;
+  return (
+    <div style={{position: 'absolute', left: 540, top: Z.sujetHaut + H * 0.45, pointerEvents: 'none'}}>
+      {CONFETTIS.map((c, i) => {
+        const x = c.vx * t * 1.0, y = c.vy * t + 0.55 * t * t;
+        return <div key={i} style={{position: 'absolute', left: x, top: y, width: c.w, height: c.h, background: c.c, borderRadius: 2, boxShadow: '0 1px 3px rgba(0,0,0,.2)',
+          transform: `rotate(${c.rot + c.vr * t}deg) rotateX(${t * 14 + i * 20}deg)`, opacity: L(t, 55, 75, 1, 0)}} />;
+      })}
+    </div>
+  );
+};
+/** Onde qui part du téléphone à chaque appli avalée. */
+const Ondes: React.FC<{f: number}> = ({f}) => !FX ? null : (
+  <>{LOGOS.map((_, i) => {
+    const t = f - (ASPIRE + 17 + i * 9);
+    if (t < 0 || t > 24) return null;
+    const e = L(t, 0, 24, 0, 1, Easing.out(Easing.cubic));
+    return <div key={i} style={{position: 'absolute', left: 540 - 140 - 260 * e, top: Z.sujetHaut + H / 2 - 140 - 260 * e, width: 280 + 520 * e, height: 280 + 520 * e,
+      borderRadius: '50%', border: `${4 * (1 - e) + 1}px solid ${C.turquoise}`, opacity: 0.6 * (1 - e)}} />;
+  })}</>
+);
+/** Rayons de lumière sur la scène de nature (moment avec Hachem). */
+const Rayons: React.FC<{f: number; de: number; a: number}> = ({f, de, a}) => {
+  if (!FX || f < de || f >= a + 10) return null;
+  const o = Math.min(L(f, de, de + 14, 0, 1), L(f, a - 4, a + 10, 1, 0));
+  return <div style={{position: 'absolute', left: 0, right: 0, top: Z.sujetHaut, height: H, pointerEvents: 'none', mixBlendMode: 'soft-light', opacity: 0.9 * o,
+    background: `repeating-conic-gradient(from ${200 + (f - de) * 0.25}deg at 70% 8%, rgba(255,236,190,.95) 0deg 4deg, rgba(255,236,190,0) 4deg 11deg)`,
+    WebkitMaskImage: 'radial-gradient(ellipse 80% 70% at 70% 10%, #000 0, transparent 75%)'}} />;
+};
+/** Éventail de 3 téléphones : Siddour au centre, Bibliothèque et Boussole sortent de derrière. */
+const Eventail: React.FC<{f: number}> = ({f}) => {
+  if (!FX || f < 2150 || f >= T.retour + FONDU) return null;
+  const e = spring({frame: f - 2152, fps: FPS, config: {damping: 16, mass: 0.8}});
+  return (<>{[{src: 'v2/bibliotheque', s: -1}, {src: 'v2/boussole', s: 1}].map((q) => (
+    <div key={q.src} style={{position: 'absolute', left: '50%', top: '50%', width: LARGEUR_TEL + 36, marginLeft: -(LARGEUR_TEL + 36) / 2, marginTop: -((LARGEUR_TEL * 2676) / 1236 + 36) / 2,
+      transform: `perspective(1600px) translateX(${q.s * 310 * e}px) rotateY(${-q.s * 28 * e}deg) scale(${0.72 + 0.0 * e})`, opacity: Math.min(1, e * 1.4), filter: `brightness(${0.85 + 0.15 * e})`}}>
+      <Telephone src=""><Img src={staticFile(`captures/${q.src}.png`)} style={{position: 'absolute', width: '100%', height: '100%', objectFit: 'cover', objectPosition: '50% 0%'}} /></Telephone>
+    </div>
+  ))}</>);
+};
+const eventailCentre = (f: number) => !FX || f < 2150 ? 1 : 1 - 0.2 * spring({frame: f - 2150, fps: FPS, config: {damping: 16, mass: 0.8}});
+
 const SECTIONS = [
   {n: 1, texte: 'Une Hitbodedut guidée', de: T5.etapes, a: T5.duree},
   {n: 2, texte: 'Ton objectif quotidien', de: T5.duree, a: T.avec},
@@ -391,6 +449,7 @@ export const PubV5: React.FC = () => {
       <AbsoluteFill style={{background: 'radial-gradient(ellipse at 50% 40%, #ffffff 40%, #eef3f2 100%)'}} />
       {FX && <FondVivant f={f} />}
 
+      <AbsoluteFill style={{transform: `translateX(${secousse(f)}px) scale(${punch(f)})`}}>
       {POSES.map((p, i) => (
         // fondu enchaîné avec le plan suivant, sauf quand le suivant continue le même cadre (plan fixe)
         <Sequence key={i} from={p.de} durationInFrames={p.a - p.de + (POSES[i + 1]?.fixe ? 0 : POSES[i + 1]?.de === p.a ? FONDU : FONDU_PHASE)}>
@@ -412,6 +471,7 @@ export const PubV5: React.FC = () => {
         </div>;
       })}
 
+      <Ondes f={f} />
       {phase && (
         <div style={{position: 'absolute', left: 0, right: 0, top: Z.sujetHaut, height: H, display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden',
           // bords haut et bas fondus : le téléphone agrandi n'est jamais coupé par une ligne dure
@@ -420,7 +480,8 @@ export const PubV5: React.FC = () => {
           filter: FX ? `${tr.flouX > 0.5 ? `url(#flouX) ` : ''}blur(${tr.flou}px) brightness(${tr.lum * (0.6 + 0.4 * rv)}) saturate(${0.5 + 0.5 * rv})` : undefined}}>
           {FX && <svg width="0" height="0" style={{position: 'absolute'}}><filter id="flouX" x="-50%" width="200%"><feGaussianBlur stdDeviation={`${tr.flouX} 0`} /></filter></svg>}
           {/* zoom sur le TÉLÉPHONE entier (jamais dans l'écran) : la largeur de l'écran reste toujours visible, aucun texte coupé */}
-          <div style={{transform: `scale(${zCam})`, transformOrigin: `50% ${camTel(fe).y}%`}}>
+          <Eventail f={f} />
+          <div style={{transform: `scale(${zCam * eventailCentre(f)})`, transformOrigin: `50% ${camTel(fe).y}%`}}>
             <Telephone src="">
               {telA && fe < 505 + FONDU && <EcranOuverture f={Math.max(0, fe - 430)} />}
               {/* logo d'ouverture → accueil : fondu, pas de coupe */}
@@ -431,6 +492,10 @@ export const PubV5: React.FC = () => {
           </div>
         </div>
       )}
+      <Rayons f={f} de={677} a={765} />
+      <Rayons f={f} de={2309} a={2360} />
+      <Confettis f={f} de={2368} />
+      </AbsoluteFill>
       {f >= T5.etapes && f < T5.duree && (
         <div style={{position: 'absolute', left: 0, right: 0, top: Z.sujetHaut, height: H, opacity: L(f, T5.duree - 8, T5.duree, 1, 0)}}>
           {ETAPES.map((e, i) => {

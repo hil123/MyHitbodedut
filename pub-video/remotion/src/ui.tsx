@@ -1,6 +1,8 @@
 import React from 'react';
 import {AbsoluteFill, Img, interpolate, spring, staticFile, useCurrentFrame, useVideoConfig, random, getInputProps} from 'remotion';
 /** Effets « pro » v20 : --props='{"effets":true}' */
+/** Mots-clés mis en or dans les sous-titres (effets). */
+const MOTS_CLES = /(Hachem|Hitbodédoute|Hitbodedut|chaque jour|tes propres mots|calendrier juif|Commence aujourd’hui)/;
 export const FX = (getInputProps() as {effets?: boolean}).effets === true;
 import {C, EASE, FPS, Z} from './theme';
 
@@ -57,7 +59,9 @@ export const SousTitres: React.FC<{texte: string; debut: number; duree: number; 
         return (
           <div key={i} style={{position: 'absolute', left: 80, right: 80, top: Z.stHaut, height: Z.stBas - Z.stHaut, display: 'flex', alignItems: 'flex-start', justifyContent: 'center',
             opacity: e * (1 - x), transform: `translateY(${(1 - e) * 18 - x * 14}px) scale(${0.97 + 0.03 * e})`, filter: `blur(${(1 - e) * 6 + x * 4}px)`}}>
-            <div style={{fontFamily: 'Inter', fontWeight: 600, fontSize: 40, lineHeight: 1.3, color: C.blanc, textAlign: 'center', background: 'rgba(7,17,17,.62)', padding: '14px 26px', borderRadius: 18, maxWidth: 900}}>{p.b}</div>
+            <div style={{fontFamily: 'Inter', fontWeight: 600, fontSize: 40, lineHeight: 1.3, color: C.blanc, textAlign: 'center', background: 'rgba(7,17,17,.62)', padding: '14px 26px', borderRadius: 18, maxWidth: 900}}>
+              {p.b.split(MOTS_CLES).map((m, j) => j % 2 ? <span key={j} style={{color: '#f3d58c'}}>{m}</span> : m)}
+            </div>
           </div>
         );
       })}</>);
