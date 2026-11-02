@@ -110,3 +110,6 @@ Extraits choisis pour leur régularité (pas de pic ni de cri), filtre 120 Hz–
 - Style inspiré de l'exemple envoyé par Hillel (fond bleu nuit, sujet éclairé, néon). Activé par --props='{"effets":true,"style":"nuit"}'.
 - Captures en mode sombre : produites le 02/11 avec le script officiel du dépôt (web/test/captures.mjs, mode « sombre », langue fr, Chromium 780×1688) sur la version web de l'app construite depuis les ressources Android. Fichiers : remotion/public/captures/sombre/.
 - Les 4 écrans propres à Android (Je suis avec Hachem, choix des applis, heures du mode, durée du report) n'existent pas en version web : ils restent en captures Android (clair).
+
+## v27 — Bips de notification
+- remotion/public/sons/bip1-3.wav et vibre.wav : sons synthétisés le 02/11 avec ffmpeg (sinusoïdes, aucune source externe), libres de droits. Volontairement génériques : aucune imitation d'un son de marque.
