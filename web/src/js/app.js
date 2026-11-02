@@ -12,6 +12,7 @@ import { creeStore, memoire, repriseValable } from './store.js';
 import { ajouteJours, isoLocal } from './calendrier.js';
 import { JERUSALEM_GEONAMES, RAPPELS_TEFILA, dansIsrael, USAGES_LEVANA, aJerusalem, calendrier, jour as jourJuif, jourDeLaPriere, levana, rappelsTefila, usageLevana } from './calendrier-juif.js';
 import { conditionsPour, index as indexAjouts, libelleJour, vrai as ajoutVrai } from './siddur-jour.js';
+import { JournalPlus } from './regles.js';
 import { aerer } from './aeration.js';
 import { distanceKm } from './direction.js';
 import * as Paliers from './paliers.js';
@@ -598,9 +599,15 @@ function compteMonte(el) {
   requestAnimationFrame(pas);
 }
 
-/** « Mon parcours » (ParcoursActivity) : les chiffres et les sujets ; l'humeur reste sur Android, qui a le journal. */
+/** « Mon parcours » (ParcoursActivity) : les chiffres, le mois en barres, les sujets et l'humeur (02/11). */
 function ecranParcours() {
   const b = Parcours.bilan(store.jours());
+  // L'humeur sur les journées du journal seulement, comme Android (jours.keys).
+  const notes = store.journalPlusTout();
+  const humeur = JournalPlus.humeur(store.jours().map((r) => notes[r.date] ?? JournalPlus.lire(null)));
+  const mois = graphiqueDuMois();
+  const totalMois = mois.minutes.reduce((s, m) => s + m, 0);
+  const joursMois = mois.minutes.filter((m) => m > 0).length;
   const serie = store.streak();
   const meilleure = store.meilleureSerie();
   const tuile = (valeur, unite, cle, teinte) => h('div', { class: 'tuile-parcours' },
@@ -618,12 +625,23 @@ function ecranParcours() {
         tuile(String(b.jours), '', 'parcours_jours_faits', '--ring-week'),
         tuile(tr.duree(b.minutes), '', 'parcours_total', '--brand')),
       b.jours ? h('p', { class: 'parcours-moyenne' }, tr.t('parcours_moyenne_ligne', tr.duree(b.moyenne))) : null,
+      // Le mois, en barres, sur le vert du bandeau (ParcoursActivity, 02/11).
+      h('h2', { class: 'section' }, tr.t('parcours_mois')),
+      h('div', { class: 'carte-mois' },
+        h('p', { class: 'carte-mois-total' }, totalMois === 0 ? tr.t('parcours_mois_vide') : tr.p('parcours_mois_total', joursMois, tr.duree(totalMois), joursMois)),
+        mois.graphique),
       h('h2', { class: 'section' }, tr.t('parcours_sujets')),
       h('div', { class: 'carte' }, b.sujets.length
         ? b.sujets.map(([s, n]) => h('div', { class: 'sujet-parcours' },
           h('div', { class: 'sujet-tete' }, h('span', {}, tr.t(`theme_${s}`)), h('span', { class: 'sujet-fois' }, tr.p('parcours_fois', n))),
           h('div', { class: 'sujet-piste' }, h('div', { class: 'sujet-plein', style: `width: ${Math.max(4, Math.round((100 * n) / max))}%` }))))
-        : h('p', { class: 'parcours-vide' }, tr.t('parcours_sujets_vide'))))));
+        : h('p', { class: 'parcours-vide' }, tr.t('parcours_sujets_vide'))),
+      // L'humeur, quand elle a été notée : grande, avant → après (ParcoursActivity, 02/11).
+      humeur ? h('h2', { class: 'section' }, tr.t('parcours_humeur')) : null,
+      humeur ? h('div', { class: 'carte parcours-humeur' },
+        h('p', { class: 'parcours-humeur-emojis', role: 'img', 'aria-label': `${humeur.avant}/5 ${tr.rtl ? '←' : '→'} ${humeur.apres}/5` },
+          `${JournalPlus.HUMEURS[humeur.avant - 1]}  ${tr.rtl ? '←' : '→'}  ${JournalPlus.HUMEURS[humeur.apres - 1]}`),
+        h('p', { class: 'parcours-humeur-legende' }, `${tr.t('parcours_humeur_legende')} · ${tr.p('parcours_humeur_jours', humeur.jours)}`)) : null)));
 }
 
 /** L'accueil selon l'heure (AccueilMoment.kt) : la prière du moment, et Birkat haLevana les soirs où elle se dit. */
@@ -1895,22 +1913,31 @@ function ecranTefilot() {
       }))));
 }
 
+/** Les minutes du mois en barres (JournalPlus.Graphique), pour le journal et « Mon parcours » (02/11). */
+function graphiqueDuMois() {
+  const auj = new Date();
+  const minutes = JournalPlus.minutesDuMois(store.minutesParJour(), auj.getFullYear(), auj.getMonth() + 1);
+  const plus = Math.max(1, ...minutes);
+  const nomMois = new Intl.DateTimeFormat(tr.langue, { month: 'long', year: 'numeric' }).format(auj);
+  const graphique = h('div', { class: 'journal-graphique', role: 'img', 'aria-label': tr.t('journal_graphique', nomMois) },
+    minutes.map((m, k) => h('span', {
+      class: `journal-barre${k + 1 === auj.getDate() ? ' aujourdhui' : ''}${m > 0 ? ' faite' : ''}`,
+      style: `height: ${m > 0 ? Math.max(8, Math.round((m / plus) * 100)) : 4}%`,
+    })));
+  return { minutes, graphique };
+}
+
 /**
  * Le journal (JournalActivity, 02/11) : le résumé, les minutes du mois en barres, puis chaque
- * journée de la plus récente à la plus ancienne, sa durée, ses sujets et sa note. Toucher une
+ * journée de la plus récente à la plus ancienne, sa durée, ses sujets, sa note et le journal enrichi. Toucher une
  * journée rouvre sa note.
  */
 function ecranJournal() {
   const jours = store.jours().sort((a, b) => (a.date < b.date ? 1 : -1));
   const faites = jours.filter((r) => r.faite).length;
-  const auj = new Date();
-  const an = auj.getFullYear();
-  const mois = auj.getMonth();
-  const nbJours = new Date(an, mois + 1, 0).getDate();
-  const parJour = store.minutesParJour();
-  const minutesMois = Array.from({ length: nbJours }, (_, k) => parJour[`${an}-${deuxChiffres(mois + 1)}-${deuxChiffres(k + 1)}`] ?? 0);
-  const plus = Math.max(1, ...minutesMois);
-  const nomMois = new Intl.DateTimeFormat(tr.langue, { month: 'long', year: 'numeric' }).format(auj);
+  const { graphique } = graphiqueDuMois();
+  // Le journal enrichi (JournalActivity, 02/11) : l'humeur, la gratitude et la chose à travailler sous la note.
+  const notes = store.journalPlusTout();
   const formatJour = new Intl.DateTimeFormat(tr.langue, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
   const dateLisible = (iso) => {
     const [y, m, d] = iso.split('-').map(Number);
@@ -1918,17 +1945,14 @@ function ecranJournal() {
     const t = formatJour.format(new Date(y, m - 1, d));
     return t.charAt(0).toLocaleUpperCase(tr.langue) + t.slice(1);
   };
-  const graphique = h('div', { class: 'journal-graphique', role: 'img', 'aria-label': tr.t('journal_graphique', nomMois) },
-    minutesMois.map((m, k) => h('span', {
-      class: `journal-barre${k + 1 === auj.getDate() ? ' aujourdhui' : ''}${m > 0 ? ' faite' : ''}`,
-      style: `height: ${m > 0 ? Math.max(8, Math.round((m / plus) * 100)) : 4}%`,
-    })));
   const contenu = jours.length === 0
     ? h('div', { class: 'carte journal-vide' }, h('p', {}, tr.t('journal_empty')),
       h('button', { class: 'principal', onclick: () => ouvrir('seance') }, tr.t('journal_empty_action')))
     : h('div', { class: 'carte journal-liste' }, jours.map((r) => {
       const sujets = [...new Set(r.themes)].filter((c) => SUJETS.includes(c)).map((c) => tr.t(`theme_${c}`)).join(' · ');
-      const detail = [r.note, sujets ? tr.t('journal_sujets', sujets) : ''].filter(Boolean).join('\n');
+      const enrichi = JournalPlus.resume(notes[r.date] ?? JournalPlus.lire(null), tr.t('journal_gratitude'), tr.t('journal_travail'),
+        sujets ? tr.t('journal_sujets', sujets) : '', tr.rtl ? '←' : '→');
+      const detail = [r.note, enrichi].filter((x) => x.trim()).join('\n');
       return h('button', { type: 'button', class: 'journal-jour', onclick: () => ecrireNote(r.date, rendre) },
         h('span', { class: 'journal-date' }, dateLisible(r.date)),
         h('span', { class: 'journal-duree' }, r.noteSeule ? tr.t('journal_note_only') : r.minutes > 0 ? tr.duree(r.minutes) : tr.t('today_declared')),
@@ -3930,15 +3954,43 @@ function confirmer(titre, message, action, onConfirme) {
   });
 }
 
-/** NoteDialog : une note libre sur la journée, illustration de joie au-dessus. */
+/**
+ * NoteDialog : une note libre sur la journée, illustration de joie au-dessus ; puis le journal
+ * enrichi (NoteDialog.kt, porté le 02/11) : l'humeur avant et après, une gratitude, une chose à travailler.
+ */
 function ecrireNote(date, apres = () => {}) {
   feuille(tr.t('note_title'), (f, fermer) => {
     const champ = h('textarea', { rows: 4, placeholder: tr.t('note_hint'), 'aria-label': tr.t('note_title') });
     champ.value = store.record(date)?.note ?? '';
+    const plus = store.journalPlus(date);
+    // Cinq humeurs ; toucher celle qui est choisie la retire (0 = non notée).
+    const humeurs = (titre, cle) => {
+      const boutons = JournalPlus.HUMEURS.map((e, i) => h('button', {
+        type: 'button', class: 'humeur', 'aria-label': `${i + 1}/5`, 'aria-pressed': String(plus[cle] === i + 1),
+        onclick: () => {
+          plus[cle] = plus[cle] === i + 1 ? 0 : i + 1;
+          boutons.forEach((b, j) => b.setAttribute('aria-pressed', String(plus[cle] === j + 1)));
+        },
+      }, e));
+      return h('div', { class: 'humeurs', role: 'group', 'aria-label': tr.t(titre) },
+        h('p', { class: 'humeurs-titre' }, tr.t(titre)), h('div', { class: 'humeurs-rang' }, boutons));
+    };
+    const ligneTexte = (cle, titre, indice) => {
+      const c = h('input', { type: 'text', class: 'note-ligne', maxlength: JournalPlus.GRATITUDE_MAX, placeholder: tr.t(indice), 'aria-label': tr.t(titre) });
+      c.value = plus[cle];
+      return c;
+    };
+    const gratitude = ligneTexte('gratitude', 'journal_gratitude', 'journal_gratitude_hint');
+    const travail = ligneTexte('travail', 'journal_travail', 'journal_travail_hint');
     f.append(h('img', { class: 'note-art', src: `img/${joie()}.webp`, alt: '' }), champ,
+      humeurs('journal_humeur_avant', 'avant'), humeurs('journal_humeur_apres', 'apres'), gratitude, travail,
       h('div', { class: 'actions' },
         h('button', { onclick: () => { fermer(); apres(); } }, tr.t('action_later')),
-        h('button', { onclick: () => { store.setNote(date, champ.value.trim()); fermer(); apres(); } }, tr.t('action_save'))));
+        h('button', { onclick: () => {
+          store.setNote(date, champ.value.trim());
+          store.setJournalPlus(date, { avant: plus.avant, apres: plus.apres, gratitude: gratitude.value.trim(), travail: travail.value.trim() });
+          fermer(); apres();
+        } }, tr.t('action_save'))));
   });
 }
 
