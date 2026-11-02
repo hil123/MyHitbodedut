@@ -10,6 +10,7 @@
 import { ajouteJours, estJourChome, isoLocal, israelParDefaut, jourSemaine } from './calendrier.js';
 import { SessionRule } from './seance.js';
 import { Anneaux, JaugeSemaine, Plaque } from './regles.js';
+import { JournalPlus } from './regles.js';
 
 export const DEFAULT_START = 6 * 60;
 export const DEFAULT_END = 11 * 60;
@@ -97,6 +98,12 @@ export function creeStore(stockage, { maintenant = () => new Date(), fuseau } = 
     if (r.themes.length > 0) e.themes = r.themes;
     if (r.noteSeule) e.note_seule = true;
     return e;
+  };
+  /** Les entrées du journal enrichi qui ont quelque chose, lues comme JournalPlus.lire. */
+  const journalPlusTout = () => {
+    const t = lit(PREFS_JOURNAL).journal_plus;
+    if (!t || typeof t !== 'object') return {};
+    return Object.fromEntries(Object.entries(t).filter(([d]) => dateValide(d)).map(([d, e]) => [d, JournalPlus.versJson(JournalPlus.lire(e))]).filter(([, e]) => e));
   };
   const writeDays = (map) => {
     const j = lit(PREFS_JOURNAL);
@@ -210,6 +217,18 @@ export function creeStore(stockage, { maintenant = () => new Date(), fuseau } = 
       else if (texte.trim() !== '') d[date] = { date, minutes: 0, note: texte, themes: [], noteSeule: true, faite: false };
       else return;
       writeDays(d);
+    },
+    /** Le journal enrichi (JournalPlus.lire / ecrire, 02/11) : dans le journal, sous « journal_plus », comme Android. */
+    journalPlus: (date) => JournalPlus.lire(lit(PREFS_JOURNAL).journal_plus?.[date]),
+    /** Toutes les entrées notées, date → Plus : le journal se lit une fois pour tout l'écran. */
+    journalPlusTout: () => Object.fromEntries(Object.entries(journalPlusTout()).map(([d, e]) => [d, JournalPlus.lire(e)])),
+    setJournalPlus(date, plus) {
+      const j = lit(PREFS_JOURNAL);
+      const t = j.journal_plus && typeof j.journal_plus === 'object' ? j.journal_plus : {};
+      const e = JournalPlus.versJson(plus);
+      if (e) t[date] = e; else delete t[date];
+      j.journal_plus = t;
+      ecrit(PREFS_JOURNAL, j);
     },
 
     // --- Chabbat, fêtes, pauses ---------------------------------------------
@@ -497,6 +516,8 @@ export function creeStore(stockage, { maintenant = () => new Date(), fuseau } = 
         },
         paused_dates: [...store.pausedDates()],
         blocked_apps: get('blocked_apps', []),
+        // Le journal enrichi (02/11) : une clé de plus, qu'Android ignore à l'import.
+        journal_plus: journalPlusTout(),
       };
       return JSON.stringify(root, null, 2);
     },
@@ -538,6 +559,13 @@ export function creeStore(stockage, { maintenant = () => new Date(), fuseau } = 
         importees++;
       }
       writeDays(merged);
+      // Le journal enrichi (02/11) : un jour déjà noté ici garde ce qu'il a, comme la note.
+      if (root.journal_plus && typeof root.journal_plus === 'object' && !Array.isArray(root.journal_plus)) {
+        for (const [date, e] of Object.entries(root.journal_plus)) {
+          if (!dateValide(date) || date >= demain) continue;
+          if (JournalPlus.vide(store.journalPlus(date))) store.setJournalPlus(date, JournalPlus.lire(e));
+        }
+      }
 
       const s = root.settings && typeof root.settings === 'object' ? root.settings : null;
       if (s) {

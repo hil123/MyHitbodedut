@@ -117,6 +117,11 @@ const ECRANS = [
   { nom: 'calendrier-civil', ecran: 'calendrier', actions: clic('.vue-calendrier button:nth-child(2)') },
   // Les écrans d'Android portés le 02/11.
   { nom: 'journal', ecran: 'journal' },
+  // Le journal enrichi et « Mon parcours » (02/11) : l'humeur, la gratitude, la chose à travailler, le mois.
+  { nom: 'journal-note', ecran: 'journal', actions: clic('.journal-jour'), journal: { '2026-09-28': { minutes: 60, note: 'Une longue note '.repeat(12), themes: ['famille'] } },
+    plus: { '2026-09-28': { avant: 2, apres: 5, gratitude: 'g'.repeat(200), travail: 'Une chose à travailler demain, un peu longue' } } },
+  { nom: 'parcours', ecran: 'parcours', journal: { '2026-09-28': { minutes: 60, note: '', themes: ['famille', 'parnassa'] } },
+    plus: { '2026-09-27': { avant: 1, apres: 4, gratitude: '', travail: '' }, '2026-09-28': { avant: 3, apres: 5, gratitude: 'merci', travail: '' } } },
   { nom: 'conseils', ecran: 'conseils' },
   { nom: 'tefilot', ecran: 'tefilot' },
   { nom: 'livres', ecran: 'livres' },
@@ -140,7 +145,7 @@ async function verifie(langue, mode, [taille, largeur, hauteur], e) {
   // Pas de musique pendant la séance : la mesure porte sur la mise en page.
   // La présentation du premier lancement (16/10) déjà vue : elle couvrirait chaque écran.
   const prefs = JSON.stringify({ onboarded_version: 2, langue_app: langue, apparence_mode: mode, music_enabled: false, ...e.prefs });
-  const journal = JSON.stringify({ days: { ...JOURNAL, ...e.journal } });
+  const journal = JSON.stringify({ days: { ...JOURNAL, ...e.journal }, ...(e.plus ? { journal_plus: e.plus } : {}) });
   await page.addInitScript(({ journal, prefs, maintenant }) => {
     // Sans l'écran d'ouverture (13/10), qui couvrirait la capture trois secondes.
     try { sessionStorage.setItem('ouverture-vue', '1'); } catch { /* rien */ }

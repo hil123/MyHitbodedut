@@ -388,3 +388,55 @@ export const Parcours = {
     return { jours: faits.length, minutes, moyenne: faits.length ? Math.round(minutes / faits.length) : 0, sujets };
   },
 };
+
+/**
+ * Le journal enrichi (JournalPlus.kt, 14/10 et 19/10, porté le 02/11) : l'humeur avant et
+ * après (1 à 5, 0 = non notée), une gratitude et une chose à travailler, gardées à part des
+ * journées sous « journal_plus », date → { avant, apres, gratitude, travail }, comme Android.
+ */
+export const JournalPlus = {
+  /** Les cinq humeurs, de la plus lourde à la plus légère. */
+  HUMEURS: ['😞', '🙁', '😐', '🙂', '😄'],
+  GRATITUDE_MAX: 200,
+  /** JournalPlus.lire : une entrée brute ramenée dans ce que l'écran permet. */
+  lire(brut) {
+    const o = brut && typeof brut === 'object' && !Array.isArray(brut) ? brut : {};
+    // optInt : un nombre, ou un texte qui en est un.
+    const humeur = (v) => { const n = typeof v === 'string' ? Number(v) : v; return Number.isFinite(n) ? Math.min(5, Math.max(0, Math.trunc(n))) : 0; };
+    const texte = (v) => (typeof v === 'string' ? v.slice(0, JournalPlus.GRATITUDE_MAX) : '');
+    return { avant: humeur(o.avant), apres: humeur(o.apres), gratitude: texte(o.gratitude), travail: texte(o.travail) };
+  },
+  /** Plus.vide : rien de noté, l'entrée s'efface. */
+  vide: (p) => p.avant === 0 && p.apres === 0 && p.gratitude.trim() === '' && p.travail.trim() === '',
+  /** JournalPlus.ecrire : l'objet gardé, ou null quand il n'y a rien. */
+  versJson(p) {
+    const q = JournalPlus.lire(p);
+    return JournalPlus.vide(q) ? null : q;
+  },
+  /**
+   * « 🙁 → 🙂 · Gratitude : … » sous la journée ; vide s'il n'y a rien (JournalPlus.resume).
+   * [fleche] : « ← » en hébreu, où l'on lit l'avant à droite (le web seul, 02/11).
+   */
+  resume(p, gratitude, travail = '', sujets = '', fleche = '→') {
+    const e = (n) => JournalPlus.HUMEURS[n - 1] ?? '·';
+    return [
+      sujets.trim() ? sujets : null,
+      p.avant > 0 || p.apres > 0 ? `${e(p.avant)} ${fleche} ${e(p.apres)}` : null,
+      p.gratitude.trim() ? `${gratitude} : ${p.gratitude}` : null,
+      p.travail.trim() ? `${travail} : ${p.travail}` : null,
+    ].filter((x) => x !== null).join('\n');
+  },
+  /** JournalPlus.minutesDuMois : les minutes de chaque jour du mois (0 sans hitbodedout) ; mois de 1 à 12. */
+  minutesDuMois(minutesParJour, an, mois) {
+    const n = new Date(Date.UTC(an, mois, 0)).getUTCDate();
+    const mm = String(mois).padStart(2, '0');
+    return Array.from({ length: n }, (_, k) => minutesParJour[`${an}-${mm}-${String(k + 1).padStart(2, '0')}`] ?? 0);
+  },
+  /** Parcours.humeur : la moyenne avant et après sur les jours notés des deux côtés ; null sinon. */
+  humeur(plus) {
+    const notes = plus.filter((p) => p.avant > 0 && p.apres > 0);
+    if (notes.length === 0) return null;
+    const moyenne = (l) => Math.round(l.reduce((s, x) => s + x, 0) / l.length);
+    return { avant: moyenne(notes.map((p) => p.avant)), apres: moyenne(notes.map((p) => p.apres)), jours: notes.length };
+  },
+};
