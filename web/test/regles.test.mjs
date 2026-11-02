@@ -248,6 +248,8 @@ test('un fichier de sauvegarde Android se relit, et l’export garde le même fo
       music_shuffle: true, music_track: 'niggoun_05', adresse: 'f', apparence_mode: 'sombre', apparence_fond: 'sable', apparence_accent: 'violet',
       // La hitbodedout guidée (02/11) : Android l'exporte, le site aussi.
       guided_hitbodedut: true,
+      // Les clés qu'Android écrit aussi (Store.kt) : toutes les heures de rappel, prénom, décompte.
+      reminder_times: [420, 1260], first_name: 'Hillel', hide_countdown: true,
     },
     paused_dates: ['2026-09-30'],
     blocked_apps: ['com.exemple'],
@@ -267,6 +269,8 @@ test('un fichier de sauvegarde Android se relit, et l’export garde le même fo
   assert.deepEqual(Object.keys(exporte.settings).sort(), Object.keys(android.settings).sort());
   // Ce que l'iPhone ne sait pas régler repart tel qu'il est arrivé.
   assert.deepEqual([exporte.settings.window_start, exporte.settings.reminder_enabled], [360, true]);
+  assert.deepEqual(exporte.settings.reminder_times, [420, 1260]);
+  assert.deepEqual([exporte.settings.first_name, exporte.settings.hide_countdown], ['Hillel', true]);
   assert.deepEqual(exporte.blocked_apps, ['com.exemple']);
   // Une journée sans sujet n'a pas de clé « themes ».
   assert.equal('themes' in exporte.days['2026-09-20'], false);
@@ -692,4 +696,28 @@ test('mon parcours : jours faits, temps, moyenne, sujets fréquents (19/10)', ()
   ]);
   assert.deepEqual(b, { jours: 2, minutes: 30, moyenne: 15, sujets: [['famille', 2], ['parnassa', 1]] });
   assert.equal(Parcours.bilan([]).moyenne, 0);
+});
+
+test('relecture du 02/11 : sauvegarde, dates, notes', () => {
+  // Une sauvegarde faite sur le site seul ne porte pas de réglages Android par défaut : ils
+  // écraseraient, à l'import sur Android, la barrière et les rappels réglés là-bas.
+  const s = store();
+  const e = JSON.parse(s.exportJson()).settings;
+  for (const k of ['window_start', 'window_end', 'snooze_minutes', 'reminder_enabled', 'reminder_minutes', 'reminder_times']) assert.equal(k in e, false, k);
+  // Le fond « contraste » existe des deux côtés.
+  s.importJson(JSON.stringify({ format: 'myhitbodedut', version: 1, days: {}, settings: { apparence_fond: 'contraste' } }));
+  assert.equal(s.fond(), 'contraste');
+  // Une année absurde est refusée (elle figeait la meilleure série).
+  assert.equal(s.importJson(JSON.stringify({ format: 'myhitbodedut', version: 1, days: { '0202-01-01': { minutes: 5 } } })), 0);
+  assert.equal(dateValide('1999-12-31'), false);
+  assert.equal(dateValide('2026-02-29'), false);
+  assert.equal(dateValide('2028-02-29'), true);
+  // Une note vidée sur un jour sans séance ne fait pas disparaître sa gratitude du journal.
+  s.setNote('2026-09-10', 'merci');
+  s.setJournalPlus('2026-09-10', { avant: null, apres: null, gratitude: 'la famille', travail: '' });
+  s.setNote('2026-09-10', '');
+  assert.notEqual(s.record('2026-09-10'), null);
+  s.setJournalPlus('2026-09-10', { avant: null, apres: null, gratitude: '', travail: '' });
+  s.setNote('2026-09-10', '');
+  assert.equal(s.record('2026-09-10') ?? null, null);
 });
