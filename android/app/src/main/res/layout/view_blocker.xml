@@ -78,7 +78,10 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp" />
 
-        <Button
+        <!-- MaterialButton en toutes lettres (02/11) : cette vue est gonflée par un service,
+             sans l'usine d'AppCompat qui change <Button> en bouton Material ; un <Button>
+             restait le bouton gris d'Android, en majuscules. -->
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/blocker_primary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -86,7 +89,7 @@
             android:paddingVertical="12dp"
             android:textSize="16sp" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/blocker_secondary"
             style="@style/Widget.Material3.Button.OutlinedButton"
             android:layout_width="match_parent"
@@ -96,7 +99,7 @@
             android:textColor="?attr/mhMint"
             android:textSize="15sp" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/blocker_snooze"
             style="@style/Widget.Material3.Button.TextButton"
             android:layout_width="match_parent"

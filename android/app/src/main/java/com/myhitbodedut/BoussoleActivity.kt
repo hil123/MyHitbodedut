@@ -138,7 +138,7 @@ class BoussoleActivity : AppCompatActivity(), SensorEventListener {
             addView(VueJour.texte(this@BoussoleActivity, getString(R.string.boussole_affichage), 15f, R.color.ink))
             addView(VueJour.texte(this@BoussoleActivity, getString(if (Store.boussoleRose(this@BoussoleActivity))
                 R.string.boussole_affichage_rose else R.string.boussole_affichage_hassid), 13f, R.color.muted, haut = 2))
-            foreground = getDrawable(android.R.drawable.list_selector_background)
+            foreground = Apparence.effetToucher(this@BoussoleActivity)
             setOnClickListener { choisirAffichage() }
         })
 

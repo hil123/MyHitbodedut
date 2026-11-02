@@ -71,6 +71,8 @@ export function creeStore(stockage, { maintenant = () => new Date(), fuseau } = 
   };
 
   const today = () => isoLocal(maintenant());
+  // Le jour du Tikoun bascule à 4 h, pas à minuit : commencé à 23 h 45, il se finit après minuit (Store.jourTikkun, 02/11).
+  const jourTikkun = () => isoLocal(new Date(maintenant().getTime() - 4 * 60 * 60 * 1000));
 
   // --- Journées -------------------------------------------------------------
   const days = () => {
@@ -453,7 +455,7 @@ export function creeStore(stockage, { maintenant = () => new Date(), fuseau } = 
     // --- Tikoun HaKlali ----------------------------------------------------------------
     /** Les psaumes dits aujourd'hui ; la liste se vide d'elle-même le lendemain. */
     tikkunDone() {
-      if (get('tikkun_day', '') !== today()) return new Set();
+      if (get('tikkun_day', '') !== jourTikkun()) return new Set();
       return new Set(String(get('tikkun_done', '')).split(',').map((s) => s.trim())
         .filter((s) => /^\d+$/.test(s)).map(Number));
     },
@@ -461,7 +463,7 @@ export function creeStore(stockage, { maintenant = () => new Date(), fuseau } = 
     setTikkunDone(numero, fait) {
       const courant = store.tikkunDone();
       if (fait) courant.add(numero); else courant.delete(numero);
-      set('tikkun_day', today());
+      set('tikkun_day', jourTikkun());
       set('tikkun_done', [...courant].sort((a, b) => a - b).join(','));
     },
     /** Store.resetTikkun (« Repartir de zéro », 02/11) : la liste du jour vidée. */

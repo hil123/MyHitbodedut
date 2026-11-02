@@ -637,6 +637,8 @@
     <string name="calendrier_title">לוח שנה</string>
     <string name="calendrier_precedent">החודש הקודם</string>
     <string name="calendrier_suivant">החודש הבא</string>
+    <string name="jour_precedent">היום הקודם</string>
+    <string name="jour_suivant">היום הבא</string>
     <string name="calendrier_aujourdhui">היום</string>
     <string name="calendrier_vue">תצוגת הלוח</string>
     <string name="calendrier_vue_hebreu">עברי</string>

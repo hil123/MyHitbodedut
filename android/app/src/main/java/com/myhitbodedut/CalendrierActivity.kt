@@ -41,6 +41,27 @@ class CalendrierActivity : AppCompatActivity() {
         afficher()
     }
 
+    /** Le jour où l'écran a été quitté (onPause), pour onRestart. */
+    private var quitteLe: LocalDate? = null
+
+    override fun onPause() {
+        super.onPause()
+        quitteLe = LocalDate.now()
+    }
+
+    /**
+     * Laissé ouvert jusqu'au lendemain (bug du 02/11) : l'écran qui montrait le jour
+     * d'alors passe à aujourd'hui ; un autre jour choisi exprès reste affiché.
+     */
+    override fun onRestart() {
+        super.onRestart()
+        val auj = LocalDate.now()
+        val avant = quitteLe ?: return
+        if (avant == auj || choisi != avant) return
+        choisi = auj; mois = YearMonth.from(auj); moisHebreu = null
+        afficher()
+    }
+
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putString(ETAT_JOUR, choisi.toString())

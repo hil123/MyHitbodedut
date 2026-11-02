@@ -174,6 +174,18 @@ android {
         if (!play) res.srcDir("$musique/res")
     }
 
+    /*
+     * Toutes les langues dans chaque installation Play (02/11) : la langue se choisit dans
+     * l'application (fr, en, he). Avec le découpage par langue, un téléphone en français
+     * sous Android 12 ou avant n'aurait pas reçu l'hébreu ni l'anglais, et l'application,
+     * passée en hébreu, serait restée en français (lint AppBundleLocaleChanges).
+     */
+    bundle {
+        language {
+            enableSplit = false
+        }
+    }
+
     lint {
         textReport = true
         textOutput = file("build/reports/lint-results-debug.txt")

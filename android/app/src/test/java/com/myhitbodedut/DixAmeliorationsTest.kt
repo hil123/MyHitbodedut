@@ -65,7 +65,7 @@ class DixAmeliorationsTest {
         )
         val m = JournalPlus.minutesDuMois(jours, YearMonth.of(2026, 10))
         assertEquals(31, m.size); assertEquals(20, m[0]); assertEquals(0, m[2]); assertEquals(45, m[30])
-        assertEquals("🙁 → 🙂\nG : merci", JournalPlus.resume(JournalPlus.Plus(2, 4, "merci"), "G"))
+        assertEquals("\u2066🙁 → 🙂\u2069\nG : merci", JournalPlus.resume(JournalPlus.Plus(2, 4, "merci"), "G"))
         assertEquals("", JournalPlus.resume(JournalPlus.Plus(), "G"))
     }
 }
