@@ -92,8 +92,25 @@ for (const nom of [...onglets.flatMap((n) => [`${n}_off`, `${n}_on`]), 'ic_chevr
 }
 
 // --- Les textes vérifiés, tels quels ---------------------------------------
-for (const nom of ['chizuk.json', 'bibliotheque.json', 'tikkun_haklali.json', 'tehilim.json', 'siddur_edot.json', 'siddur_sefard.json', 'siddur_ashkenaz.json', 'villes.json', 'aeroports.json', 'aeroports_noms.json', 'siddur_annotations.json', 'hilloulot.json', 'hilloulot_bios.json', 'ben_ish_hai.json', 'livres.json', 'yalkut_yosef.json', 'guide_sujets.json']) {
+for (const nom of ['chizuk.json', 'bibliotheque.json', 'tikkun_haklali.json', 'tehilim.json', 'siddur_edot.json', 'siddur_sefard.json', 'siddur_ashkenaz.json', 'villes.json', 'aeroports.json', 'aeroports_noms.json', 'siddur_annotations.json', 'hilloulot.json', 'hilloulot_bios.json', 'ben_ish_hai.json', 'yalkut_yosef.json', 'guide_sujets.json']) {
   cpSync(join(RES, 'raw', nom), join(DIST, 'data', nom));
+}
+
+// --- Les livres, un fichier chacun (02/11) --------------------------------------
+// livres.json pèse 16 Mo : le lire en entier pour ouvrir Likoutei Etsot (400 Ko) faisait
+// tomber Safari sur iPhone. Le site lit la table (titres, groupes, nombre de chapitres), puis
+// le seul livre ouvert. Les textes restent ceux d'Android, octet pour octet dans leur contenu.
+{
+  const livres = JSON.parse(readFileSync(join(RES, 'raw', 'livres.json'), 'utf8'));
+  mkdirSync(join(DIST, 'data', 'livres'), { recursive: true });
+  const table = { _meta: livres._meta, groupes: livres.groupes, textes: [] };
+  for (const t of livres.textes) {
+    if (!/^[a-z0-9_]+$/.test(t.id)) throw new Error(`Identifiant de livre inattendu : ${t.id}`);
+    const { sections, ...entete } = t;
+    table.textes.push({ ...entete, chapitres: sections.length });
+    writeFileSync(join(DIST, 'data', 'livres', `${t.id}.json`), JSON.stringify({ id: t.id, sections }));
+  }
+  writeFileSync(join(DIST, 'data', 'livres', 'table.json'), JSON.stringify(table));
 }
 
 // --- Les illustrations -------------------------------------------------------
