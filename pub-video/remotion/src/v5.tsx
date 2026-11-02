@@ -238,6 +238,13 @@ const volumeAmbiance = (f: number) => {
   return 0.9 - d * 0.6;
 };
 
+// Applis bloquées (marques citées à titre illustratif)
+const LOGOS = [
+  {n: 'whatsapp', bg: '#25D366'}, {n: 'youtube', bg: '#FF0000'},
+  {n: 'facebook', bg: '#0866FF'}, {n: 'instagram', bg: 'linear-gradient(45deg, #F58529, #DD2A7B 50%, #8134AF 75%, #515BD4)'},
+  {n: 'tiktok', bg: '#000000'}, {n: 'snapchat', bg: '#FFFC00'},
+];
+
 export const PubV5: React.FC = () => {
   const f = useCurrentFrame();
   const {fps} = useVideoConfig();
@@ -298,10 +305,19 @@ export const PubV5: React.FC = () => {
           })}
         </div>
       )}
-      {icones && ['#e85d75', '#4f8cf7', '#f2b233', '#37c27a', '#9b6cf0', '#f07a3c'].map((c, i) => {
+      {icones && LOGOS.map((l, i) => {
         const e = L(f, 1640 + i * 8, 1670 + i * 8, 1, 0);
-        return <div key={i} style={{position: 'absolute', left: i % 2 ? 880 : 90, top: Z.sujetHaut + 150 + Math.floor(i / 2) * 220, width: 110, height: 110, borderRadius: 28,
-          background: c, opacity: e, transform: `scale(${0.7 + 0.3 * e})`, filter: `blur(${(1 - e) * 10}px)`}} />;
+        const barre = L(f, 1528 + i * 7, 1540 + i * 7, 0, 1, Easing.out(Easing.cubic));
+        return <div key={l.n} style={{position: 'absolute', left: i % 2 ? 880 : 90, top: Z.sujetHaut + 150 + Math.floor(i / 2) * 220, width: 110, height: 110, borderRadius: 28,
+          background: l.bg, boxShadow: '0 8px 24px rgba(0,0,0,0.35)', display: 'flex', alignItems: 'center', justifyContent: 'center',
+          opacity: e, transform: `scale(${0.7 + 0.3 * e})`, filter: `blur(${(1 - e) * 10}px)`}}>
+          <Img src={staticFile(`logos/${l.n}.svg`)} style={{width: 64, height: 64}} />
+          <div style={{position: 'absolute', inset: 0, borderRadius: 28, background: `rgba(0,0,0,${0.12 * barre})`}} />
+          <div style={{position: 'absolute', left: -10, top: 51.5, width: 130, height: 7, transform: 'rotate(-45deg)', transformOrigin: 'center'}}>
+            <div style={{width: '100%', height: '100%', borderRadius: 5, background: '#E53935',
+              boxShadow: '0 0 0 3px #ffffff, 0 4px 10px rgba(0,0,0,0.4)', transform: `scaleX(${barre})`, transformOrigin: 'left center'}} />
+          </div>
+        </div>;
       })}
 
       {/* textes écran */}

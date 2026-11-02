@@ -90,3 +90,8 @@ Extraits choisis pour leur régularité (pas de pic ni de cri), filtre 120 Hz–
 ## v18 (02/11)
 - Voix off : ElevenLabs, voix « Paul – Calm, Confident Narrator » (bibliothèque ElevenLabs), modèle eleven_v4, générée sur le compte de Hillel (usage commercial selon l'abonnement ElevenLabs du compte). Sources : voix_eleven/*.mp3.
 - Captures d'écran : fournies par Hillel le 02/11 (remotion/public/captures/v2). Les 4 fichiers *_basse_def sont découpés dans la vue d'ensemble, à remplacer par les originaux.
+
+## v19 — Logos des applis bloquées
+- Segment « Je suis avec Hachem » (frames 1510–1770) : logos WhatsApp, YouTube, Facebook, Instagram, TikTok, Snapchat.
+- Source des tracés : simple-icons 13.21.0 (CC0), via cdn.jsdelivr.net — fichiers dans remotion/public/logos/.
+- Ces logos sont des marques déposées de leurs propriétaires ; utilisés uniquement pour illustrer les applis que l'app peut bloquer (usage nominatif), sans affiliation.
