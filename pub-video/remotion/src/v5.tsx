@@ -721,10 +721,10 @@ export const PubV5: React.FC = () => {
         </Sequence>
       ))}
       <Sequence durationInFrames={456}><Audio src={staticFile('musique/ambiance_foule.wav')} volume={volumeAmbiance} /></Sequence>
-      {/* v27 : bips de notification (sons synthétisés pour la pub, libres de droits) + vibration, un par notification ; rien après l'arrêt net */}
+      {/* v27 : un son par appli (synthétisé, libre de droits, évoque le style sans imiter le son de la marque) + vibration ; rien après l'arrêt net */}
       {ACCROCHE === 'A' && ARRIVEES.map((t, i) => (
         <Sequence key={`bip${i}`} from={Math.max(0, t)} durationInFrames={14}>
-          <Audio src={staticFile(`sons/bip${(i % 3) + 1}.wav`)} volume={0.3 + 0.12 * (i / ARRIVEES.length)} />
+          <Audio src={staticFile(`sons/${NOTIFS[i].app || (NOTIFS[i].lettre === '@' ? 'mail' : 'agenda')}.wav`)} volume={0.3 + 0.12 * (i / ARRIVEES.length)} />
           <Audio src={staticFile('sons/vibre.wav')} volume={0.28} />
         </Sequence>
       ))}

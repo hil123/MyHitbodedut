@@ -112,4 +112,4 @@ Extraits choisis pour leur régularité (pas de pic ni de cri), filtre 120 Hz–
 - Les 4 écrans propres à Android (Je suis avec Hachem, choix des applis, heures du mode, durée du report) n'existent pas en version web : ils restent en captures Android (clair).
 
 ## v27 — Bips de notification
-- remotion/public/sons/bip1-3.wav et vibre.wav : sons synthétisés le 02/11 avec ffmpeg (sinusoïdes, aucune source externe), libres de droits. Volontairement génériques : aucune imitation d'un son de marque.
+- remotion/public/sons/*.wav : un son par appli (whatsapp, mail, agenda, youtube, instagram, tiktok, facebook, snapchat) + vibre.wav, synthétisés le 02/11 avec ffmpeg (sinusoïdes et bruit filtré, aucune source externe), libres de droits. Ils évoquent le style de chaque appli SANS imiter les sons déposés des marques.
