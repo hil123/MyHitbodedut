@@ -25,6 +25,7 @@ import { ajouts as ajoutsDuJour, dateHilloula, debutMoisHebreu, hilloulotPour, l
 import { ALLUMAGES, heure as heureZman, jour as zmanimDuJour } from './zmanim.js';
 import * as Vol from './vol.js';
 import * as Boussole from './boussole.js';
+import * as Tikkun from './tikkun.js';
 import { RELAIS_VOL } from './relais.js';
 import { chemin as cheminPersonnage } from './personnage.js';
 
@@ -730,12 +731,9 @@ function ligne({ nom, etat, onclick, aVenir = false, fin = null, class: classe =
 
 function etatTikkun() {
   if (!tikkun) return '';
-  const dits = store.tikkunDone().size;
-  const total = tikkun.psaumes.length;
-  const versets = tikkun.psaumes.reduce((n, p) => n + p.versets.length, 0);
-  if (dits === 0) return tr.t('tikkun_progress_none', total, versets);
-  if (dits === total) return tr.t('tikkun_progress_all');
-  return tr.t('tikkun_progress', dits, total);
+  // TikkunActivity.render (02/11) : tikkun.js.
+  const { cle, args } = Tikkun.progres(tikkun, store.tikkunDone());
+  return tr.t(cle, ...args);
 }
 
 function etatMusique() {
@@ -897,6 +895,8 @@ function chargeSiddur() {
 let reglagesOuverts = false;
 let choixNusahOuvert = false;
 const ECRANS_LUS = ['lecture', 'priere', 'tikkun', 'source'];
+// Les lectures du Tikoun (02/11) : le trait, un psaume, une partie.
+ECRANS_LUS.push('tikkun-trait', 'tikkun-psaume', 'tikkun-partie');
 
 /** Les chaînes nouvelles, tant qu'Android ne les a pas encore : le français. */
 const CHAINES_LECTURE = {
@@ -1745,11 +1745,120 @@ function bandeSignets(titres) {
   };
 }
 
+// --- Le Tikoun HaKlali (TikkunActivity, PsalmActivity, LiturgyActivity, 02/11) : tikkun.js ---
+// La liste suit l'ordre réel du Tikoun : ce qui se dit avant, les dix psaumes, ce qui se
+// dit après. « Tout lire d'un trait » est l'action ; pour reprendre à un psaume précis, on
+// le touche dans la liste. Le psaume et la partie ouverts vivent dans l'historique : le
+// retour et un rechargement les retrouvent.
+const ECRANS_TIKKUN = ['tikkun-trait', 'tikkun-psaume', 'tikkun-partie'];
+
+function ouvrirTikkun(ecran, etat) {
+  history.pushState({ interne: true, ...etat }, '', `#${ecran}`);
+  rendre();
+}
+
+/** TikkunActivity : le titre, la progression du jour, le trait, la remise à zéro, la liste. */
+function ecranTikkun() {
+  if (!tikkun) return h('div', { class: 'ecran' }, barre(tr.t('tikkun_title')), h('div', { class: 'defile' }));
+  const dits = store.tikkunDone();
+  const rangee = (l) => {
+    // Une partie liturgique n'a pas de rang : elle ne se compte pas dans les dix, et ne se marque pas comme dite.
+    if (l.bloc) {
+      const d = Tikkun.detailBloc(l.bloc, tr.langue);
+      return ligneTikkun(null, l.bloc.titre.he, d.traduction ?? tr.t('tikkun_paragraphs', d.paragraphes), false,
+        () => ouvrirTikkun('tikkun-partie', { tikkunPartie: l.bloc.cle }));
+    }
+    return ligneTikkun(l.rang, tr.t('tikkun_psalm_he', Reference.lettres(l.psaume.numero)), tr.t('tikkun_verses', l.psaume.versets.length),
+      dits.has(l.psaume.numero), () => ouvrirTikkun('tikkun-psaume', { tikkunPsaume: l.psaume.numero }));
+  };
+  // Pas d'image dans une prière (13/10).
+  return h('div', { class: 'ecran avec-bandeau' },
+    bandeau(tr.t('tikkun_title'), { puce: h('p', { class: 'bandeau-sous-titre' }, etatTikkun()) }),
+    h('div', { class: 'defile' }, h('div', { class: 'contenu tikkun-liste' },
+      // Le Tikoun se dit d'un trait : c'est l'action, pas une variante.
+      h('button', { class: 'principal tikkun-trait', onclick: () => ouvrir('tikkun-trait') }, tr.t('tikkun_flow_open')),
+      dits.size ? h('button', { class: 'texte-bouton', onclick: () => { store.resetTikkun(); rendreEtViser('.tikkun-trait'); } }, tr.t('tikkun_reset')) : null,
+      h('div', { class: 'carte' }, Tikkun.lignes(tikkun).map(rangee)))));
+}
+
+/** item_psalm : le rang en pastille (vide pour une partie), le titre hébreu, le détail, « dit ». */
+function ligneTikkun(rang, hebreu, detail, dit, onclick) {
+  return h('button', { class: 'ligne ligne-he ligne-tikkun', onclick },
+    h('span', { class: `tikkun-rang${rang ? '' : ' sans-rang'}`, 'aria-hidden': 'true' }, rang ? String(rang) : ''),
+    h('span', { class: 'corps' },
+      h('span', { class: 'nom-he', lang: 'he', dir: 'rtl' }, hebreu),
+      h('span', { class: 'etat' }, detail)),
+    dit ? h('span', { class: 'tikkun-dit' }, tr.t('tikkun_said')) : null,
+    h('span', { class: 'chevron', 'aria-hidden': 'true' }));
+}
+
+/** Le bandeau de PsalmActivity et LiturgyActivity : le titre en hébreu, une ligne dessous. */
+function bandeauTikkun(titreHe, sous) {
+  return h('header', { class: 'bandeau bandeau-priere' },
+    h('div', { class: 'bandeau-haut' }, h('button', { class: 'retour', 'aria-label': tr.t('action_back'), onclick: retour })),
+    h('div', { class: 'bandeau-corps' },
+      h('h1', { lang: 'he', dir: 'rtl', class: 'titre-priere' }, titreHe),
+      sous ? h('p', { class: 'bandeau-sous-titre' }, sous) : null));
+}
+
+/**
+ * PsalmActivity : un psaume, verset par verset ; « Marquer comme dit » se défait (on peut
+ * s'être trompé de ligne) ; « Tehilim suivant » remplace l'écran, absent après le dixième.
+ */
+function ecranTikkunPsaume() {
+  const psaume = tikkun && Tikkun.parNumero(tikkun, history.state?.tikkunPsaume);
+  // Rouvert sans psaume choisi : la liste.
+  if (!psaume) return ecranTikkun();
+  const rang = Tikkun.rang(tikkun, psaume.numero);
+  const blocs = [];
+  for (const v of psaume.versets) {
+    blocs.push(h('p', { class: 'verset' }, h('span', { class: 'num', 'aria-hidden': 'true' }, `${v.n} `), v.he));
+    // L'indication d'arrêt suit le verset qu'elle concerne : elle n'est pas du texte, elle dit comment le lire.
+    if (v.arret) blocs.push(h('p', { class: 'arret' }, v.arret.note));
+  }
+  const dit = store.tikkunDone().has(psaume.numero);
+  const suivant = Tikkun.suivant(tikkun, psaume.numero);
+  const aller = () => {
+    history.replaceState({ ...history.state, tikkunPsaume: suivant.numero }, '', location.hash);
+    // Un nouvel écran, comme le startActivity + finish d'Android : en haut du psaume.
+    delete app.dataset.ecran;
+    rendre();
+  };
+  return ecranLu(tr.t('tikkun_title'), h('div', { class: 'contenu lecture tikkun' },
+    h('div', { class: 'psaume', lang: 'he', dir: 'rtl' }, blocs)), {
+    entete: bandeauTikkun(tr.t('tikkun_psalm_he', Reference.lettres(psaume.numero)),
+      tr.t('tikkun_position', rang, tikkun.psaumes.length, psaume.versets.length)),
+    pied: h('div', { class: 'lecture-nav' },
+      h('button', { class: 'principal tikkun-marque', 'aria-pressed': String(dit),
+        onclick: () => { store.setTikkunDone(psaume.numero, !dit); rendreEtViser('.tikkun-marque'); } },
+      tr.t(dit ? 'tikkun_unmark' : 'tikkun_mark')),
+      suivant ? h('button', { class: 'secondaire', onclick: aller }, tr.t('tikkun_next')) : null),
+  });
+}
+
+/**
+ * LiturgyActivity : une partie qui n'est pas un psaume (ce qui se dit avant, la clôture, la
+ * kavana, la prière de Rabbi Natan), sans les boutons de progression : elle ne se compte pas.
+ */
+function ecranTikkunPartie() {
+  const b = tikkun && Tikkun.bloc(tikkun, history.state?.tikkunPartie);
+  if (!b) return ecranTikkun();
+  // La formule de la kavana est centrée : c'est un tableau de lettres, pas une phrase.
+  const contenu = [
+    b.formule ? h('p', { class: 'verset formule' }, b.formule) : null,
+    ...b.paragraphes.map((p) => h('p', { class: 'verset paragraphe' }, p)),
+  ];
+  return ecranLu(b.titre.he, h('div', { class: 'contenu lecture tikkun' },
+    h('div', { class: 'psaume', lang: 'he', dir: 'rtl' }, contenu)), {
+    entete: bandeauTikkun(b.titre.he, Tikkun.sousTitreBloc(b, tr.langue)),
+  });
+}
+
 // --- Le Tikoun lu d'un seul trait (TikkunFlowActivity.kt) -------------------------
 // « להמשיך מזה לזה ברצף אחד, ללא הפסק » : l'ouverture, les dix psaumes à la
 // suite, la clôture ; rien à toucher entre les psaumes. La kavana et la
 // prière de Rabbi Natan ne font pas partie du trait.
-function ecranTikkun() {
+function ecranTikkunTrait() {
   if (!tikkun) return h('div', { class: 'ecran' }, barre(tr.t('tikkun_title')), h('div', { class: 'defile' }));
   const titre = (texte) => h('h2', { class: 'psaume-titre' }, texte);
   const paragraphe = (texte) => h('p', { class: 'verset paragraphe' }, texte);
@@ -2735,6 +2844,8 @@ function ecranZmanim() {
 let capBoussole = null;
 let boussoleEcoute = false;
 let boussoleRecu = false;
+/** « Boussole peu précise » (BoussoleActivity.onAccuracyChanged, 02/11) : caché tant que rien n'est dit. */
+let boussoleACalibrer = false;
 /** L'iPhone a dit oui : à la prochaine ouverture, on écoute sans redemander le toucher. */
 let boussolePermise = false;
 const SOURCE_BOUSSOLE = 'https://www.chabad.org/library/article_cdo/aid/3502321/jewish/Why-Do-We-Face-East-When-Praying-Or-Do-We.htm';
@@ -2830,6 +2941,13 @@ function surOrientation(e) {
   if (ecranCourant() !== 'boussole') return;
   const lieu = store.lieu();
   const magnetique = Boussole.capMagnetique(e, screen.orientation?.angle ?? window.orientation ?? 0);
+  // La précision, là où le navigateur la donne (iPhone) ; inconnue, rien ne change (boussole.js, aCalibrer).
+  const calibrer = Boussole.aCalibrer(e);
+  if (calibrer != null && calibrer !== boussoleACalibrer) {
+    boussoleACalibrer = calibrer;
+    const avis = app.querySelector('.boussole-calibrer');
+    if (avis) avis.hidden = !calibrer;
+  }
   if (!lieu || magnetique == null) return;
   const avant = capBoussole;
   capBoussole = Boussole.lisser(capBoussole, Boussole.capVrai(magnetique, lieu));
@@ -2846,6 +2964,7 @@ function surOrientation(e) {
 function arreteBoussole() {
   if (!boussoleEcoute) return;
   boussoleEcoute = false;
+  boussoleACalibrer = false;
   window.removeEventListener('deviceorientationabsolute', surOrientation);
   window.removeEventListener('deviceorientation', surOrientation);
 }
@@ -2885,6 +3004,7 @@ function ecranBoussole() {
     const scene = h('div', { class: 'boussole-scene' });
     scene.innerHTML = dessinBoussole(gc, rh, capBoussole);
     contenu.push(scene);
+    contenu.push(h('p', { class: 'boussole-calibrer', role: 'status', hidden: !boussoleACalibrer }, tr.t('boussole_calibrer')));
     if (autorisationBoussole() && !boussoleEcoute) {
       contenu.push(h('button', { class: 'principal boussole-activer', onclick: async () => {
         try { if (await DeviceOrientationEvent.requestPermission() === 'granted') { boussolePermise = true; ecouterBoussole(); rendre(); } } catch { /* refusé : la rose fixe reste */ }
@@ -4611,6 +4731,7 @@ function arreteDanse() {
 // Chaque écran secondaire est une entrée d'historique : le bouton retour
 // et le geste de retour ramènent à l'accueil, sur l'onglet quitté.
 function ecranCourant() {
+  if (ECRANS_TIKKUN.includes(location.hash.slice(1))) return location.hash.slice(1);
   const e = location.hash.slice(1);
   return ['musique', 'reglages', 'seance', 'bravo', 'tehilim', 'lecture', 'siddur', 'priere', 'tikkun', 'bibliotheque', 'livres', 'source', 'zmanim', 'vol', 'boussole', 'calendrier', 'paliers', 'hilloulot', 'halakha', 'recherche', 'hizouk', 'parcours', 'journal', 'conseils', 'tefilot'].includes(e) ? e : 'accueil';
 }
@@ -4692,6 +4813,9 @@ function rendre() {
   else if (ecran === 'siddur') app.append(ecranSiddur());
   else if (ecran === 'priere') app.append(ecranPriere());
   else if (ecran === 'tikkun') app.append(ecranTikkun());
+  else if (ecran === 'tikkun-trait') app.append(ecranTikkunTrait());
+  else if (ecran === 'tikkun-psaume') app.append(ecranTikkunPsaume());
+  else if (ecran === 'tikkun-partie') app.append(ecranTikkunPartie());
   else if (ecran === 'bibliotheque') app.append(ecranBibliotheque());
   else if (ecran === 'livres') app.append(ecranLivres());
   else if (ecran === 'source') app.append(ecranSource());
