@@ -720,6 +720,63 @@ def main():
         capture("22m-reglages-avec-hachem", ok=ok)
     etape("22 nouveautes du 19/10", s22)
 
+    # Le 02/11 : « Je suis avec Hachem » (le blocage), ses heures et la duree du report,
+    # puis l'ecran lui-meme : en apercu, puis pour de vrai sur une application choisie.
+    def s23():
+        presentes = [l.split(":", 1)[1].strip() for l in sh("pm list packages").splitlines() if ":" in l]
+        voulues = [a for a in ("com.android.chrome", "com.google.android.youtube", "com.google.android.apps.messaging",
+                               "com.google.android.gm", "com.google.android.apps.photos", "com.google.android.apps.maps",
+                               "com.android.messaging", "com.android.camera2", "com.android.contacts", "com.android.calendar")
+                   if a in presentes][:3] or ["com.android.settings"]
+        log("  applications bloquees :", voulues)
+        regler({"enabled": ("boolean", "true"), "window_start": ("int", 360), "window_end": ("int", 660),
+                "snooze_minutes": ("int", 15), "langue_app": ("string", "fr"), "apparence_accent": ("string", "vert")})
+        xml = re.sub(r'\s*<set name="blocked_apps">.*?</set>|\s*<set name="blocked_apps"\s*/>', "", lire_prefs(), flags=re.S)
+        ensemble = '    <set name="blocked_apps">' + "".join(f"<string>{a}</string>" for a in voulues) + "</set>"
+        ecrire_prefs(xml.replace("</map>", ensemble + "\n</map>"))
+        for op in ("SYSTEM_ALERT_WINDOW", "GET_USAGE_STATS"):
+            sh(f"appops set {PKG} {op} allow")
+        langue("fr")
+        lancer()
+        ok = toucher(rid="nav_settings", attente=2.0)
+        ok = ok and trouver(rid="apps_summary", defilements=12) is not None
+        defiler(True)
+        ok = ok and trouver(text="Je suis avec Hachem") is not None
+        capture("23a-je-suis-avec-hachem-reglages", ok=ok)
+        ok2 = toucher(rid="window_start", attente=2.0)
+        capture("23b-heures-du-mode", ok=ok2)
+        retour()
+        ok3 = toucher(rid="snooze_length", attente=2.0)
+        capture("23c-duree-du-report", ok=ok3)
+        retour()
+        ok4 = trouver(rid="preview_gate") is not None
+        if not ok4:
+            for _ in range(3):
+                defiler(False)
+                if trouver(rid="preview_gate") is not None:
+                    ok4 = True
+                    break
+        capture("23d-etat-du-mode", ok=ok4)
+        ok4 = ok4 and toucher(rid="preview_gate", attente=3.0) and trouver(rid="blocker_title") is not None
+        capture("23e-ecran-je-suis-avec-hachem-apercu", ok=ok4)
+        retour()
+        arreter()
+        # Pour de vrai : la fenetre couvre l'heure de l'emulateur, et une application choisie s'ouvre.
+        maintenant = sh("date +%H:%M").strip()
+        m = re.match(r"(\d+):(\d+)", maintenant)
+        if m:
+            minutes = int(m.group(1)) * 60 + int(m.group(2))
+            regler({"window_start": ("int", max(0, minutes - 30)), "window_end": ("int", min(1439, minutes + 120))})
+            lancer()
+            sh(f"monkey -p {voulues[0]} -c android.intent.category.LAUNCHER 1")
+            pause(6.0)
+            ok5 = trouver(rid="blocker_title") is not None
+            capture("23f-ecran-je-suis-avec-hachem", ok=ok5, attente=0.5)
+            sh("input keyevent KEYCODE_HOME")
+            arreter()
+            regler({"window_start": ("int", 360), "window_end": ("int", 660)})
+    etape("23 je suis avec Hachem", s23)
+
     log("\ncaptures :", sorted(os.listdir(OUT)))
 
 
