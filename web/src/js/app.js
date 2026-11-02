@@ -89,11 +89,13 @@ function s(tag, attrs = {}) {
 // --- Les sujets (Theme.kt), dans l'ordre de la liste Android ----------------------
 const SUJETS = ['emotions', 'gratitude', 'decisions', 'famille', 'zivoug', 'parnassa', 'avoda', 'difficultes', 'croissance', 'autre'];
 
-// --- Le jour du lieu (bug D du 02/11) ------------------------------------------
-// Une règle pour tous les écrans : ce qui suit les zmanim (zmanim, siddour, rappels de
-// tefila, Levana, Tehilim du jour, halakha, hilloulot, calendrier) prend la date et
-// l'heure de la ville choisie, dans son fuseau ; la pratique personnelle (journal,
-// série, séances, Tikoun, paliers) garde le jour du téléphone (store.today()).
+// --- Le jour affiché et le moment du lieu (02/11) ------------------------------
+// Un seul « aujourd'hui » à l'écran : celui du téléphone, pour le journal, la série, le
+// calendrier, les zmanim, la halakha, les hilloulot, les Tehilim et les rappels de tefila
+// — sinon, avec une ville dans un autre fuseau, calendrier et journal montraient deux jours
+// différents autour de minuit. Seul le moment de la prière suit l'heure de la ville choisie
+// (prière du moment, sortie des étoiles, 'Hanouka, Méguila, bannière, Levana, salutation) :
+// c'est là qu'on prie.
 const jourLieu = (t = new Date()) => isoDans(t, store.lieu()?.fuseau);
 const heureLieu = (t = new Date()) => heureDans(t, store.lieu()?.fuseau);
 
@@ -682,7 +684,7 @@ function ecranParcours() {
  * quelques jours avant, avec sa source (Choul'han Aroukh).
  */
 function rappelsDeTefila() {
-  const aujourdhui = jourLieu();
+  const aujourdhui = store.today();
   const israel = store.inIsrael();
   const muk = mukafChoma();
   const edot = store.siddurNusah() === 'edot';
@@ -784,8 +786,8 @@ function chargeTehilim() {
 
 /** Le jour du mois hébraïque et la longueur du mois (29 ou 30), par le calendrier du navigateur. */
 function jourHebreu(date = new Date()) {
-  // Le jour du lieu (02/11) : midi UTC de sa date civile, lu en UTC.
-  const midi = new Date(`${jourLieu(date)}T12:00:00Z`);
+  // Le jour affiché (02/11) : midi UTC de la date du téléphone, lu en UTC.
+  const midi = new Date(`${isoLocal(date)}T12:00:00Z`);
   const jour = (d) => Number(new Intl.DateTimeFormat('en-u-ca-hebrew', { day: 'numeric', timeZone: 'UTC' }).format(d));
   const j = jour(midi);
   const demain = new Date(midi.getTime() + 86400000);
@@ -816,7 +818,7 @@ function lire(p) {
 
 function ecranTehilim() {
   const { jour, portion } = portionDuMois();
-  const auj = new Date(`${jourLieu()}T12:00:00Z`);
+  const auj = new Date(`${isoLocal(new Date())}T12:00:00Z`);
   const semaine = CycleTehilim.deLaSemaine(auj.getUTCDay());
   const nomJour = new Intl.DateTimeFormat(tr.langue, { weekday: 'long', timeZone: 'UTC' }).format(auj);
   const pret = chargeTehilim();
@@ -2752,7 +2754,7 @@ function ecranHalakha() {
   const avecYalkut = source !== 'ben_ish_hai';
   const avecBih = source !== 'yalkut';
   const livre = (avecBih ? livreDuJour() : livreHalakha) ?? { annees: {} };
-  const iso = jourHalakha ?? jourLieu();
+  const iso = jourHalakha ?? isoLocal(new Date());
   const yalkut = yalkutDuJour() ?? { periodes: {} };
   const fiche = (titre, texte) => h('div', { class: 'carte carte-hilloula' },
     h('p', { class: 'halakha-source', lang: 'he', dir: 'rtl' }, titre),
@@ -2830,7 +2832,7 @@ let rechercheHilloulot = '';
 function ecranHilloulot() {
   chargeBiosHilloulot();
   const table = tableHilloulot() ?? {};
-  const iso = jourHilloulot ?? jourLieu();
+  const iso = jourHilloulot ?? isoLocal(new Date());
   const carte = (x, date) => h('div', { class: 'carte carte-hilloula' },
     h('p', { class: 'hilloula-nom', lang: 'he', dir: 'rtl' }, x.he),
     nomTraduitHilloula(x) ? h('p', { class: 'hilloula-traduit' }, nomTraduitHilloula(x)) : null,
@@ -2910,7 +2912,7 @@ function ecranZmanim() {
   chargeVilles();
   rafraichirPosition();
   const lieu = store.lieu();
-  const iso = jourLieu();
+  const iso = isoLocal(new Date());
   const puce = h('button', {
     type: 'button', class: 'puce-bandeau', 'aria-haspopup': 'dialog', onclick: choisirLieu,
     'aria-label': `${tr.t('reglage_lieu')} : ${lieu ? lieu.nom : tr.t('reglage_lieu_aucun')}`,
@@ -3911,7 +3913,7 @@ function bilanDeLaSemaine() {
 }
 
 function ecranCalendrier() {
-  const aujourdhui = jourLieu();
+  const aujourdhui = isoLocal(new Date());
   const choisi = jourCalendrier ?? aujourdhui;
   const civil = store.calendrierCivil();
   const israel = store.inIsrael();
@@ -5102,10 +5104,9 @@ async function demarrer() {
   let cacheA = 0;
   let jourCache = null;
   document.addEventListener('visibilitychange', () => {
-    if (document.hidden) { cacheA = Date.now(); jourCache = jourLieu(); return; }
-    // Un autre jour (bug du 02/11) : halakha, hilloulot et calendrier, ouverts hier, reviennent à aujourd'hui
-    // — le jour du lieu, celui que ces écrans montrent.
-    if (jourCache && jourCache !== jourLieu()) {
+    if (document.hidden) { cacheA = Date.now(); jourCache = store.today(); return; }
+    // Un autre jour (bug du 02/11) : halakha, hilloulot et calendrier, ouverts hier, reviennent à aujourd'hui.
+    if (jourCache && jourCache !== store.today()) {
       jourHalakha = null; jourHilloulot = null; jourCalendrier = null; moisCalendrier = null; moisHebreuCalendrier = null;
       delete app.dataset.ecran;
     }
