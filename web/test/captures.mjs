@@ -254,6 +254,15 @@ await capture('boussole-fr-aligne', { langue: 'fr', ecran: 'boussole', mode: 'so
 await capture('boussole-he', { langue: 'he', ecran: 'boussole', extra: JERUSALEM, actions: cap(150) });
 await capture('boussole-fr-rose', { langue: 'fr', ecran: 'boussole', extra: { ...PARIS, boussole_rose: true }, actions: cap(80) });
 await capture('boussole-fr-rose-aligne', { langue: 'fr', ecran: 'boussole', extra: { ...PARIS, boussole_rose: true }, actions: cap(112) });
+// La direction suivie au choix (03/11) : depuis New York, le grand cercle (~54°) ou la carte de
+// Mercator (~96°) ; le hassid face à celle qu'on a choisie (le capteur donne le nord magnétique :
+// +13°, la déclinaison de New York vers l'ouest), puis la page descendue jusqu'au choix.
+const NEW_YORK = { lieu_zmanim: { nom: 'New York', latitude: 40.7128, longitude: -74.006, altitude: 10, fuseau: 'America/New_York', ville: 5128581 }, in_israel: false };
+const descendre = async (p) => { await p.evaluate(() => { document.querySelector('.defile').scrollTop = 99999; }); await p.waitForTimeout(300); };
+for (const [nom, carte, n] of [['reelle', false, 67], ['carte', true, 109]]) {
+  await capture(`boussole-ny-${nom}`, { langue: 'fr', ecran: 'boussole', extra: { ...NEW_YORK, boussole_carte: carte }, actions: cap(n) });
+  await capture(`boussole-ny-${nom}-choix`, { langue: 'fr', ecran: 'boussole', extra: { ...NEW_YORK, boussole_carte: carte }, actions: async (p) => { await cap(n)(p); await descendre(p); } });
+}
 await capture('bibliotheque-he', { langue: 'he', ecran: 'bibliotheque', actions: bas(0) });
 await capture('reglages-fr-personnalisation', { langue: 'fr', ecran: 'reglages', actions: bas(400) });
 await capture('reglages-he', { langue: 'he', ecran: 'reglages', mode: 'sombre', actions: bas(400) });
