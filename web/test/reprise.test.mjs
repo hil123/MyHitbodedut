@@ -36,3 +36,16 @@ test('livre : reprise même des jours plus tard', () => {
   s.setPositionLecture('l:likoutei_etsot', 800, T0);
   assert.equal(s.positionLecture('l:likoutei_etsot', T0 + 10 * 24 * H), 800);
 });
+
+test('Tikoun : commencé à 23 h 45, toujours là à 0 h 05 ; vidé le lendemain matin', () => {
+  let t = new Date('2026-11-01T23:45:00');
+  const s = creeStore(memoire(), { maintenant: () => t });
+  s.setTikkunDone(16, true);
+  s.setTikkunDone(32, true);
+  t = new Date('2026-11-02T00:05:00');
+  assert.deepEqual([...s.tikkunDone()].sort((a, b) => a - b), [16, 32]);
+  s.setTikkunDone(41, true);
+  assert.equal(s.tikkunDone().size, 3);
+  t = new Date('2026-11-02T09:00:00');
+  assert.equal(s.tikkunDone().size, 0);
+});

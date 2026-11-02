@@ -1,6 +1,7 @@
 package com.myhitbodedut
 
 import android.app.Notification
+import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.Service
 import android.app.usage.UsageEvents
@@ -75,6 +76,7 @@ class GateService : Service() {
 
     private fun evaluate() {
         if (previewing) return
+        rafraichirNotification()
 
         val running = Store.isSessionRunning(this)
         val armed = GateStatus.isArmed(this) || (running && GateStatus.shouldRunService(this))
@@ -199,15 +201,37 @@ class GateService : Service() {
 
     // --- Notification permanente -------------------------------------------
 
+    /** L'état affiché dans la notification permanente, pour la redessiner quand il change. */
+    private var etatNotifie: GateState? = null
+
+    /**
+     * La notification suit l'état (bug du 02/11) : « Fait pour aujourd'hui » la veille
+     * restait affiché le lendemain matin, mode armé, jusqu'au prochain démarrage du service.
+     */
+    private fun rafraichirNotification() {
+        val state = GateStatus.evaluate(this)
+        if (state == etatNotifie) return
+        runCatching { getSystemService(NotificationManager::class.java).notify(Notifications.ID_GATE, notification(state)) }
+    }
+
     private fun startInForeground() {
+        val notification = notification(GateStatus.evaluate(this))
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            startForeground(Notifications.ID_GATE, notification, ServiceInfo.FOREGROUND_SERVICE_TYPE_SPECIAL_USE)
+        } else {
+            startForeground(Notifications.ID_GATE, notification)
+        }
+    }
+
+    private fun notification(state: GateState): Notification {
+        etatNotifie = state
         val open = PendingIntent.getActivity(
             this,
             0,
             Intent(this, MainActivity::class.java),
             PendingIntent.FLAG_IMMUTABLE
         )
-        val state = GateStatus.evaluate(this)
-        val notification: Notification = Notification.Builder(this, Notifications.CHANNEL_GATE)
+        return Notification.Builder(this, Notifications.CHANNEL_GATE)
             .setContentTitle(getString(GateStatus.titleOf(state)))
             .setContentText(GateStatus.detailOf(this, state))
             .setStyle(Notification.BigTextStyle().bigText(GateStatus.detailOf(this, state)))
@@ -215,12 +239,6 @@ class GateService : Service() {
             .setContentIntent(open)
             .setOngoing(true)
             .build()
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-            startForeground(Notifications.ID_GATE, notification, ServiceInfo.FOREGROUND_SERVICE_TYPE_SPECIAL_USE)
-        } else {
-            startForeground(Notifications.ID_GATE, notification)
-        }
     }
 
     companion object {

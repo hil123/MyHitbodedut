@@ -54,4 +54,12 @@ class RepriseBoussoleTest {
         assertTrue(Store.repriseValable("l:likoutei_etsot", t0, t0 + 10 * 24 * 3_600_000L))
         assertTrue(Store.repriseValable("l:likoutei_etsot", 0L, t0))
     }
+
+    @Test fun tikounBasculeAQuatreHeures() {
+        val t = java.time.LocalDateTime.of(2026, 11, 1, 23, 45)
+        assertEquals("2026-11-01", Store.jourTikkun(t))
+        assertEquals("2026-11-01", Store.jourTikkun(t.plusMinutes(20)))
+        assertEquals("2026-11-01", Store.jourTikkun(java.time.LocalDateTime.of(2026, 11, 2, 3, 59)))
+        assertEquals("2026-11-02", Store.jourTikkun(java.time.LocalDateTime.of(2026, 11, 2, 9, 0)))
+    }
 }

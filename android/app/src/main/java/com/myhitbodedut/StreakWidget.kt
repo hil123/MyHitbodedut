@@ -63,6 +63,8 @@ class StreakWidget : AppWidgetProvider() {
     ) {
         val traduit = LangueApp.envelopper(context)
         appWidgetIds.forEach { draw(traduit, manager, it) }
+        // L'alarme de minuit déclenche onUpdate : on reprogramme la suivante, sinon elle ne sert qu'une nuit (02/11).
+        if (appWidgetIds.isNotEmpty()) programmerMinuit(context, appWidgetIds)
     }
 
     /**
