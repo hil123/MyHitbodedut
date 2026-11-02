@@ -1158,6 +1158,11 @@ button.corps { min-height: 44px; }
 .interrupteur::before { content: ""; position: absolute; inset: -8px -4px; }
 /* Texte à 200 % (zoom du navigateur, audit du 16/10) : quatre onglets tiennent encore. */
 .onglet { min-width: 0; }
+/* Cinq onglets (02/11) sur un petit téléphone (320 px) : 64 px chacun, et « Bibliothèque »,
+   « Aujourd’hui » ne tenaient plus en 12 px. Le libellé rapetisse avec l'écran, sans être coupé. */
+@media (max-width: 380px) {
+  .onglet { font-size: max(10px, min(12px, 3.2vw)); letter-spacing: -0.2px; }
+}
 @media (max-width: 240px) {
   .onglet .icone { width: 100%; max-width: 56px; }
   .onglet { font-size: 10px; overflow-wrap: anywhere; }
