@@ -482,6 +482,8 @@ export function creeStore(stockage, { maintenant = () => new Date(), fuseau } = 
           daily_goal_minutes: get('daily_goal_minutes', 0),
           pause_shabbat: store.shabbatMode(),
           in_israel: store.inIsrael(),
+          // La hitbodedout guidée (02/11), sous la clé d'Android.
+          guided_hitbodedut: store.guidedHitbodedut(),
           reminder_enabled: get('reminder_on', false),
           reminder_minutes: get('reminder_minutes', DEFAULT_REMINDER),
           music_enabled: store.musicEnabled(),
@@ -548,6 +550,7 @@ export function creeStore(stockage, { maintenant = () => new Date(), fuseau } = 
         entier('window_start'); entier('window_end'); entier('snooze_minutes', null, 1, 240);
         entier('target_minutes', null, 1, 240); entier('daily_goal_minutes', null, 0, 240);
         bool('pause_shabbat'); bool('in_israel');
+        bool('guided_hitbodedut');
         bool('reminder_enabled', 'reminder_on'); entier('reminder_minutes');
         bool('music_enabled'); entier('music_volume', null, 0, 100); bool('music_shuffle');
         texteNonVide('music_track');

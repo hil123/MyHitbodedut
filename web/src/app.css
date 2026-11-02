@@ -416,6 +416,34 @@ input[type="range"] { width: 100%; accent-color: var(--brand); }
 .chizuk.compacte .chizuk-he { --corps-max: 17; height: 96px; }
 .chizuk.compacte .chizuk-trad { --corps-max: 14; height: 72px; }
 
+/* --- La hitbodedout guidée (view_hitbodedut.xml, 02/11) ------------------------------
+   La carte de ’hizouk, en plus petit : un repère, pas un programme. Elle reste visible
+   dans la pratique calme, comme sur Android (avec le minuteur et « Terminer »). */
+.guide {
+  order: 2; margin-top: 16px; padding: 12px 16px; text-align: start; color: var(--ink);
+  background: var(--card); border: 1px solid var(--line); border-radius: 20px;
+}
+.guide-tete { display: flex; align-items: center; gap: 12px; }
+.guide-art { flex: none; width: 54px; height: 64px; border-radius: 12px; background: var(--stage-soft); padding: 4px; }
+.guide-art img { width: 100%; height: 100%; object-fit: contain; display: block; }
+.guide-entete { flex: 1; min-width: 0; }
+.guide-pas { display: inline-block; padding: 4px 8px; border-radius: 999px; background: var(--mint); color: var(--on-plate); font-size: 11px; }
+.guide-he { margin: 4px 0 0; font-family: var(--police-texte); font-size: 17px; font-weight: 700; color: var(--ink); text-align: start; }
+.guide-titre { margin: 12px 0 0; color: var(--brand); font-size: 15px; font-weight: 700; }
+.guide-invite { margin: 4px 0 0; color: var(--muted); font-size: 14px; line-height: 1.45; }
+.guide-sujet { margin: 6px 0 0; color: var(--ink); font-size: 15px; line-height: 1.45; }
+/* La source, posée à droite en toute langue (layoutDirection="rtl" d'Android). */
+.guide-source { margin: 8px 0 0; color: var(--muted); font-size: 11px; text-align: right; }
+.guide-boutons { display: flex; justify-content: space-between; gap: 12px; margin-top: 4px; }
+.guide-boutons button {
+  min-height: 44px; padding: 8px 4px; border: 0; background: none; color: var(--brand);
+  font: inherit; font-size: 14px; cursor: pointer; border-radius: 999px;
+}
+.guide-boutons .guide-suivant { font-weight: 700; }
+.guide-boutons .guide-cache { visibility: hidden; }
+/* La ligne de version, au pied des réglages (app_version). */
+.version-app { margin: 16px 0 0; text-align: center; color: var(--muted); font-size: 12px; }
+
 /* --- Bravo (activity_celebration.xml) ----------------------------------------------- */
 .bravo .contenu { display: flex; flex-direction: column; align-items: stretch; min-height: 100%; text-align: center; padding-top: calc(22px + env(safe-area-inset-top)); }
 .bravo .defile { padding-top: 0; }
