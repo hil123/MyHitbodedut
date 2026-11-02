@@ -69,6 +69,10 @@ object VueJour {
 
     private fun locale(langue: String): Locale = Locale.forLanguageTag(langue)
 
+    /** La date civile en toutes lettres, dans la langue de l'application : « lundi 2 novembre 2026 ». */
+    fun dateCivile(c: Context, date: LocalDate): String =
+        date.format(DateTimeFormatter.ofPattern("EEEE d MMMM yyyy", locale(ChizukCard.language(c))))
+
     /** L'usage de Birkat haLevana : celui choisi, sinon celui du noussa'h (14/10). */
     fun usageLevana(c: Context): Levana.Usage = Store.levanaUsage(c) ?: Levana.Usage.duNusah(Store.siddurNusah(c).cle)
 
@@ -149,7 +153,7 @@ object VueJour {
             PoliceHebraique.appliquer(this)
             setTypeface(typeface, Typeface.BOLD)
         })
-        val civil = date.format(DateTimeFormatter.ofPattern("EEEE d MMMM yyyy", locale(langue)))
+        val civil = dateCivile(c, date)
         carte.addView(texte(c, civil, 14f, R.color.muted, haut = 2))
         val marques = j.fetes.mapNotNull { Libelles.res("fete_$it")?.let(c::getString) } +
             listOfNotNull(
@@ -252,7 +256,7 @@ object VueJour {
         setPadding(0, dp(c, 4), 0, dp(c, 4))
         minHeight = dp(c, 48)
         gravity = android.view.Gravity.CENTER_VERTICAL or android.view.Gravity.START
-        foreground = c.getDrawable(android.R.drawable.list_selector_background)
+        foreground = Apparence.effetToucher(c)
         setOnClickListener(action)
     }
 
@@ -272,7 +276,7 @@ object VueJour {
             carte.addView(texte(c, c.getString(R.string.zmanim_sans_lieu), 15f, R.color.ink))
             carte.addView(texte(c, c.getString(R.string.zmanim_choisir_lieu), 16f, R.color.brand, gras = true, haut = 12).apply {
                 setPadding(0, dp(c, 8), 0, dp(c, 8))
-                foreground = c.getDrawable(android.R.drawable.list_selector_background)
+                foreground = Apparence.effetToucher(c)
                 setOnClickListener { choisirLieu() }
             })
             return carte

@@ -613,6 +613,8 @@
     <string name="calendrier_title">Calendar</string>
     <string name="calendrier_precedent">Previous month</string>
     <string name="calendrier_suivant">Next month</string>
+    <string name="jour_precedent">Previous day</string>
+    <string name="jour_suivant">Next day</string>
     <string name="calendrier_aujourdhui">Today</string>
     <string name="calendrier_vue">Calendar view</string>
     <string name="calendrier_vue_hebreu">Hebrew</string>

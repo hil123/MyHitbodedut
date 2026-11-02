@@ -2250,7 +2250,7 @@ function ecranHalakha() {
     corps = [
       h('div', { class: 'mois-tete' },
         h('button', { class: 'icone-bouton mois-precedent', dir: 'ltr', 'aria-label': tr.t('calendrier_precedent'), onclick: () => decale(-1) }, tr.rtl ? '›' : '‹'),
-        h('div', { class: 'mois-titres' }, h('p', { class: 'mois-principal mois-hebreu', lang: 'he', dir: 'rtl' }, j.dateHebraique), h('p', { class: 'mois-second' }, iso)),
+        h('div', { class: 'mois-titres' }, h('p', { class: 'mois-principal mois-hebreu', lang: 'he', dir: 'rtl' }, j.dateHebraique), h('p', { class: 'mois-second' }, dateCivile(iso))),
         h('button', { class: 'icone-bouton mois-suivant', dir: 'ltr', 'aria-label': tr.t('calendrier_suivant'), onclick: () => decale(1) }, tr.rtl ? '‹' : '›')),
       ...(yy.length ? [fiche(titreCarte(yy), texteCarte(yy))] : []),
       ...(liste.length ? [h('h3', { class: 'jour-sous-titre' }, tr.t('halakha_ben_ish_hai')), ...liste.map(carte)] : []),
@@ -2344,7 +2344,7 @@ function ecranHilloulot() {
     corps = [
       h('div', { class: 'mois-tete' },
         h('button', { class: 'icone-bouton mois-precedent', dir: 'ltr', 'aria-label': tr.t('calendrier_precedent'), onclick: () => decale(-1) }, tr.rtl ? '›' : '‹'),
-        h('div', { class: 'mois-titres' }, h('p', { class: 'mois-principal mois-hebreu', lang: 'he', dir: 'rtl' }, j.dateHebraique), h('p', { class: 'mois-second' }, iso)),
+        h('div', { class: 'mois-titres' }, h('p', { class: 'mois-principal mois-hebreu', lang: 'he', dir: 'rtl' }, j.dateHebraique), h('p', { class: 'mois-second' }, dateCivile(iso))),
         h('button', { class: 'icone-bouton mois-suivant', dir: 'ltr', 'aria-label': tr.t('calendrier_suivant'), onclick: () => decale(1) }, tr.rtl ? '‹' : '›')),
       ...(liste.length ? liste.map((x) => carte(x, null)) : [h('p', { class: 'message' }, tr.t('hilloulot_aucune'))]),
       lienExterne(tr.t('hilloula_lien'), lienHyomi(iso)),
@@ -2397,7 +2397,7 @@ function ecranZmanim() {
       h('div', { class: 'boutons-jour' },
         h('button', { class: 'secondaire', onclick: () => { jourHalakha = iso; rechercheHalakhaTexte = ''; ouvrir('halakha'); } }, tr.t('zmanim_bouton_halakha')),
         h('button', { class: 'secondaire', onclick: () => { jourHilloulot = iso; rechercheHilloulot = ''; ouvrir('hilloulot'); } }, tr.t('zmanim_bouton_hilloulot')),
-        h('button', { class: 'secondaire', onclick: () => { jourCalendrier = iso; moisCalendrier = null; ouvrir('calendrier'); } }, tr.t('zmanim_calendrier')),
+        h('button', { class: 'secondaire', onclick: () => { jourCalendrier = iso; moisCalendrier = null; moisHebreuCalendrier = null; ouvrir('calendrier'); } }, tr.t('zmanim_calendrier')),
         // Le vol et la boussole rejoignent les boutons : les horaires du jour passent avant.
         // L'icône est un élément à part : elle reste au début du bouton, à droite en hébreu.
         h('button', { class: 'secondaire bouton-large', onclick: () => ouvrir('vol') }, h('span', { 'aria-hidden': 'true' }, '✈'), h('span', {}, tr.t('zmanim_bouton_vol'))),
@@ -2526,6 +2526,9 @@ function surOrientation(e) {
 function arreteBoussole() {
   if (!boussoleEcoute) return;
   boussoleEcoute = false;
+  // Le cap d'avant ne vaut plus à la prochaine ouverture : ni dessiné comme mesuré, ni point de départ du lissage.
+  capBoussole = null;
+  boussoleRecu = false;
   window.removeEventListener('deviceorientationabsolute', surOrientation);
   window.removeEventListener('deviceorientation', surOrientation);
 }
@@ -3095,6 +3098,8 @@ const moinsAnime = () => !!window.matchMedia?.('(prefers-reduced-motion: reduce)
 function datesTrophees() {
   return Trophees.datesGain(store.minutesParJour(), store.joursAvecNote(), (d) => store.isExempt(d));
 }
+/** La date civile en toutes lettres, avec le jour (VueJour.dateCivile) : « mardi 29 septembre 2026 ». */
+const dateCivile = (iso) => new Intl.DateTimeFormat(tr.langue, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' }).format(new Date(`${iso}T12:00:00Z`));
 const dateLongue = (iso) => new Intl.DateTimeFormat(tr.langue, { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' }).format(new Date(`${iso}T12:00:00Z`));
 
 /** Un texte en plusieurs paragraphes (VueJour.paragraphes, 19/10) : un bloc par paragraphe, un écart entre eux. */
@@ -3534,7 +3539,7 @@ function presentation() {
         onclick: () => { choisir(v); dessiner(); } }, libelle(v))));
     voile.setAttribute('aria-label', tr.t(e.titre));
     voile.replaceChildren(h('div', { class: 'presentation-page' },
-      h('span', { class: 'presentation-etape', dir: 'ltr' }, tr.t('onboarding_step', i + 1, PRESENTATION.length)),
+      h('span', { class: 'presentation-etape' }, tr.t('onboarding_step', i + 1, PRESENTATION.length)),
       h('div', { class: 'presentation-scene' }, h('img', { src: `img/${e.image}.webp`, alt: '' })),
       h('h1', { class: 'presentation-titre' }, tr.t(e.titre)),
       h('p', { class: 'presentation-corps' }, tr.t(e.corps)),
@@ -3824,6 +3829,9 @@ function cloreSeance({ avantTerme }) {
   const sujet = store.sessionTheme();
   const { minutes, date } = store.endSession({ avantTerme });
   const inscrite = minutes > 0 || !avantTerme;
+  // Une séance non inscrite n'a pas de jour : sa note va à aujourd'hui, pas au jour
+  // d'une séance d'avant (bug du 02/11).
+  dateNote = null;
   if (inscrite) {
     store.addSession(minutes, { theme: sujet, date });
     store.setPendingCelebration(minutes);
@@ -4253,8 +4261,16 @@ async function demarrer() {
   // Revenir à l'application redessine l'écran : un autre jour, une séance
   // arrivée à son terme, le décompte qui a continué pendant le sommeil.
   let cacheA = 0;
+  let jourCache = null;
   document.addEventListener('visibilitychange', () => {
-    if (document.hidden) { cacheA = Date.now(); return; }
+    if (document.hidden) { cacheA = Date.now(); jourCache = store.today(); return; }
+    // Un autre jour (bug du 02/11) : halakha, hilloulot et calendrier, ouverts hier, reviennent à aujourd'hui.
+    if (jourCache && jourCache !== store.today()) {
+      jourHalakha = null; jourHilloulot = null; jourCalendrier = null; moisCalendrier = null; moisHebreuCalendrier = null;
+      delete app.dataset.ecran;
+    }
+    // Après un voyage, la position du téléphone (si elle est le lieu choisi) se reprend sans bruit.
+    rafraichirPosition();
     // Une prière restée ouverte jusqu'au lendemain (bug du 02/11) : redessinée depuis le début,
     // comme rouverte ; un livre garde sa place.
     if (ecranCourant() === 'priere' && priere && !priere.startsWith('livre:') && cacheA

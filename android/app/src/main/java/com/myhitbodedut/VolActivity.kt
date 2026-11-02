@@ -177,7 +177,7 @@ class VolActivity : AppCompatActivity() {
                 addView(android.widget.ImageButton(this@VolActivity).apply {
                     setImageResource(R.drawable.ic_loupe)
                     imageTintList = android.content.res.ColorStateList.valueOf(Apparence.couleur(this@VolActivity, R.color.brand))
-                    background = getDrawable(android.R.drawable.list_selector_background)
+                    background = Apparence.effetToucher(this@VolActivity)
                     contentDescription = getString(R.string.vol_route_bouton)
                     isEnabled = !routeEnCours
                     alpha = if (routeEnCours) 0.4f else 1f
@@ -246,7 +246,7 @@ class VolActivity : AppCompatActivity() {
     private fun champ(etiquette: String, valeur: String, action: () -> Unit) = LinearLayout(this).apply {
         orientation = LinearLayout.VERTICAL
         setPadding(0, dp(10), 0, dp(10))
-        foreground = getDrawable(android.R.drawable.list_selector_background)
+        foreground = Apparence.effetToucher(this@VolActivity)
         setOnClickListener { action() }
         addView(VueJour.texte(this@VolActivity, etiquette, 12f, R.color.muted))
         addView(VueJour.texte(this@VolActivity, valeur, 16f, R.color.brand, gras = true, haut = 2))

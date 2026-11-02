@@ -80,7 +80,7 @@ class ZmanimActivity : AppCompatActivity() {
             if (Store.mukafChoma(this@ZmanimActivity) && Store.allumage(this@ZmanimActivity) != ALLUMAGE_JERUSALEM) {
                 addView(VueJour.texte(this@ZmanimActivity, getString(R.string.reglage_allumage_proposition), 13f, R.color.brand, haut = 2))
             }
-            foreground = getDrawable(android.R.drawable.list_selector_background)
+            foreground = Apparence.effetToucher(this@ZmanimActivity)
             setOnClickListener { choisirAllumage() }
         })
         // Ta'hanoun en fin de Tichri : au choix en Sfard seulement.
@@ -89,7 +89,7 @@ class ZmanimActivity : AppCompatActivity() {
                 addView(VueJour.texte(this@ZmanimActivity, getString(R.string.reglage_tahanoun_tichri), 15f, R.color.ink))
                 addView(VueJour.texte(this@ZmanimActivity, getString(if (Store.sansTahanounFinTichri(this@ZmanimActivity))
                     R.string.reglage_tahanoun_tichri_sans else R.string.reglage_tahanoun_tichri_dit), 13f, R.color.muted, haut = 2))
-                foreground = getDrawable(android.R.drawable.list_selector_background)
+                foreground = Apparence.effetToucher(this@ZmanimActivity)
                 setOnClickListener { choisirTahanounTichri() }
             })
         }

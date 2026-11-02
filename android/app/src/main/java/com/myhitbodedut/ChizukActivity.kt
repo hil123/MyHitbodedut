@@ -86,7 +86,7 @@ class ChizukActivity : AppCompatActivity() {
                 textSize = 15f
                 setTextColor(Apparence.couleur(this@ChizukActivity, R.color.ink))
                 setPadding(dp(4), dp(12), dp(4), dp(12))
-                foreground = getDrawable(android.R.drawable.list_selector_background)
+                foreground = Apparence.effetToucher(this@ChizukActivity)
                 Effets.presse(this)
                 setOnClickListener {
                     courant = item
