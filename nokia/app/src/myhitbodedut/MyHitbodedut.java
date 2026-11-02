@@ -57,6 +57,8 @@ public final class MyHitbodedut extends MIDlet implements CommandListener, Minut
     private Form reglage;
     private DateField heure;
     private ChoiceGroup actif;
+    private Form appel;
+    private ChoiceGroup adresse;
     private Minuteur minuteur;
     private Musique musique;
     private int dureeChoisie;
@@ -68,6 +70,7 @@ public final class MyHitbodedut extends MIDlet implements CommandListener, Minut
         if (display != null) return; // retour d'une pause : l'écran reste où il était
         display = Display.getDisplay(this);
         journal = Journal.lit();
+        Ecran.feminin(journal.adresse == Journal.TSADEKET);
         try {
             textes = Textes.charge();
         } catch (Exception e) {
@@ -106,7 +109,7 @@ public final class MyHitbodedut extends MIDlet implements CommandListener, Minut
 
     // --- Accueil -------------------------------------------------------------------
     private void construitAccueil() {
-        accueil = new Menu("MyHitbodedut", new String[] {"Hitbodedout", "Musique", "'Hizouk", "Journal", "Rappel"}, this);
+        accueil = new Menu("MyHitbodedut", new String[] {"Hitbodedout", "Musique", "'Hizouk", "Journal", "Rappel", "Vous appeler"}, this);
         accueil.haut = new Menu.Haut() {
             public int dessine(Graphics g, int y, int w) {
                 return enteteAccueil(g, y, w);
@@ -125,6 +128,7 @@ public final class MyHitbodedut extends MIDlet implements CommandListener, Minut
             n + " textes, moment par moment",
             "Série et 7 derniers jours",
             journal.rappel >= 0 ? "Chaque jour à " + Regles.heure(journal.rappel) : "Pas de rappel",
+            ADRESSES[journal.adresse],
         };
     }
 
@@ -254,7 +258,7 @@ public final class MyHitbodedut extends MIDlet implements CommandListener, Minut
         if (complete) sonne();
         int m = textes.moment("cloture");
         int t = m < 0 ? -1 : textes.tire(m);
-        String bilan = minutes > 0 ? "Bravo ! " + Regles.duree(minutes) + " de hitbodedout." : "Moins d'une minute : rien n'est noté.";
+        String bilan = minutes > 0 ? BRAVO[journal.adresse] + " " + Regles.duree(minutes) + " de hitbodedout." : "Moins d'une minute : rien n'est noté.";
         fin = new Lecture(textes.mot("session_done_title"), minutes > 0 ? Ecran.duJour(Ecran.JOIE, 3) : "walking", bilan,
             t < 0 ? null : textes.textes[m][t], t < 0 ? null : textes.refs[m][t]);
         fin.action = new Lecture.Action() {
@@ -414,6 +418,33 @@ public final class MyHitbodedut extends MIDlet implements CommandListener, Minut
     }
 
 
+    // --- Comment vous appeler ---------------------------------------------------------------
+    /** Dans l'ordre de Journal.PAS_CHOISI, TSADIK, TSADEKET (strings.xml : adresse_*, celebration_*). */
+    static final String[] ADRESSES = {"Pas choisi", "Tsadik", "Tsadeket"};
+    static final String[] BRAVO = {"Bravo !", "Bravo, Tsadik !", "Bravo, Tsadeket !"};
+
+    private void montreAppel() {
+        appel = new Form("Vous appeler");
+        adresse = new ChoiceGroup("Comment vous appeler ?", ChoiceGroup.EXCLUSIVE);
+        adresse.append(ADRESSES[Journal.TSADIK], null);
+        adresse.append(ADRESSES[Journal.TSADEKET], null);
+        adresse.append(ADRESSES[Journal.PAS_CHOISI], null);
+        adresse.setSelectedIndex(journal.adresse == Journal.TSADIK ? 0 : journal.adresse == Journal.TSADEKET ? 1 : 2, true);
+        appel.append(adresse);
+        appel.append("À la fin de chaque hitbodedout, l'application vous félicite. Avec Tsadeket, le personnage est une femme.");
+        ecoute(appel, new Command[] {enregistrer, retour});
+        display.setCurrent(appel);
+    }
+
+    private void enregistreAppel() {
+        int i = adresse.getSelectedIndex();
+        journal.adresse = i == 0 ? Journal.TSADIK : i == 1 ? Journal.TSADEKET : Journal.PAS_CHOISI;
+        journal.ecrit();
+        Ecran.feminin(journal.adresse == Journal.TSADEKET);
+        // Les écrans gardés en mémoire redessinent leur personnage à la prochaine ouverture.
+        montreAccueil();
+    }
+
     // --- Choix dans les menus et commandes ----------------------------------------------------
     public void choisi(Menu m, int i) {
         if (m == accueil) {
@@ -421,7 +452,8 @@ public final class MyHitbodedut extends MIDlet implements CommandListener, Minut
             else if (i == 1) montreMusique();
             else if (i == 2) montreMoments();
             else if (i == 3) montreJournal();
-            else montreRappel();
+            else if (i == 4) montreRappel();
+            else montreAppel();
         } else if (m == durees) {
             if (i < DUREES.length) prepare(DUREES[i]);
             else demandeAuChoix();
@@ -464,6 +496,8 @@ public final class MyHitbodedut extends MIDlet implements CommandListener, Minut
             musique.bascule();
         } else if (d == reglage && c == enregistrer) {
             enregistreRappel();
+        } else if (d == appel && c == enregistrer) {
+            enregistreAppel();
         } else {
             montreAccueil();
         }
