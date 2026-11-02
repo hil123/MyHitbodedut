@@ -1309,7 +1309,7 @@
     <string name="boussole_cap_constant">Direction sur la carte (cap constant) : %1$d° %2$s</string>
     <string name="boussole_distance">Distance : %1$s km</string>
     <string name="boussole_legende">L’étiquette ירושלים (sur la rose, l’aiguille d’or) suit la direction réelle ; le pointillé bleu montre la direction sur la carte, pour information.</string>
-    <string name="boussole_a_plat">Tenez le téléphone à plat, loin des objets métalliques et des aimants.</string>
+    <string name="boussole_a_plat">Tenez le téléphone à plat ou droit devant vous, loin des objets métalliques et des aimants.</string>
     <string name="boussole_calibrer">Boussole peu précise : dessinez un 8 dans l’air avec le téléphone.</string>
     <string name="boussole_sans_capteur">Ce téléphone n’a pas de boussole : la direction est donnée par rapport au nord, en haut.</string>
     <string name="boussole_note_titre">Deux façons de calculer</string>

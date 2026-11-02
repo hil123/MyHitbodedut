@@ -8,7 +8,7 @@ import { Anneaux, CycleTehilim, DureeSeance, JaugeSemaine, LibraryRules, Plaque,
 import { ART_DU_MOMENT, ChizukBag, ChizukRules } from './chizuk.js';
 import { AMBIANCES, arreter as arreteAmbiance, jouer as joueAmbiance } from './ambiance.js';
 import { DanseMesure } from './seance.js';
-import { creeStore, memoire } from './store.js';
+import { creeStore, memoire, repriseValable } from './store.js';
 import { isoLocal } from './calendrier.js';
 import { JERUSALEM_GEONAMES, RAPPELS_TEFILA, dansIsrael, USAGES_LEVANA, aJerusalem, calendrier, jour as jourJuif, jourDeLaPriere, levana, rappelsTefila, usageLevana } from './calendrier-juif.js';
 import { conditionsPour, index as indexAjouts, libelleJour, vrai as ajoutVrai } from './siddur-jour.js';
@@ -4252,8 +4252,13 @@ async function demarrer() {
   if (store.onboardedVersion() < PRESENTATION_VERSION) presentation();
   // Revenir à l'application redessine l'écran : un autre jour, une séance
   // arrivée à son terme, le décompte qui a continué pendant le sommeil.
+  let cacheA = 0;
   document.addEventListener('visibilitychange', () => {
-    if (document.hidden) return;
+    if (document.hidden) { cacheA = Date.now(); return; }
+    // Une prière restée ouverte jusqu'au lendemain (bug du 02/11) : redessinée depuis le début,
+    // comme rouverte ; un livre garde sa place.
+    if (ecranCourant() === 'priere' && priere && !priere.startsWith('livre:') && cacheA
+      && !repriseValable(`s:${priere}`, cacheA, Date.now())) delete app.dataset.ecran;
     accueilAnime = false;
     facePlaque = 'hassid';
     if (store.isSessionRunning()) gardeEcranAllume();
