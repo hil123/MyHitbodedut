@@ -22,6 +22,7 @@ class ConfidentialiteTest {
 
     @Test
     fun `la page existe en trois langues`() {
+        assertFalse("le repère du contact est resté", html.contains("TODO_CONTACT"))
         assertTrue("web/src/confidentialite.html manque", page.isFile)
         listOf("fr", "en", "he").forEach { assertTrue("section $it", html.contains("<section id=\"$it\"")) }
         assertTrue(html.contains("<section id=\"he\" lang=\"he\" dir=\"rtl\">"))
@@ -53,7 +54,8 @@ class ConfidentialiteTest {
         faits.forEach { (langue, mots) ->
             val texte = section(langue)
             mots.forEach { assertTrue("$langue : « $it » manque", texte.contains(it)) }
-            assertTrue("$langue : le contact", texte.contains("TODO_CONTACT") || texte.contains("mailto:"))
+            assertTrue("$langue : le contact", texte.contains("<a href=\"mailto:myhitbodedut@gmail.com\">"))
+            assertTrue("$langue : l'éditeur", texte.contains("MyHitbodedut Team"))
         }
     }
 
