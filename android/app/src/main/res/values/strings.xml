@@ -513,6 +513,8 @@
     <string name="livres_chargement_web">Chargement des livres…</string>
     <string name="livres_echec_web">Les livres n’ont pas pu être chargés. Vérifiez la connexion, puis réessayez.</string>
     <string name="livres_reessayer_web">Réessayer</string>
+    <!-- Pour la version web (02/11) : la ligne de version des réglages, avec l’empreinte de la construction (version.txt) au lieu du numéro Android. -->
+    <string name="app_version_web">Version web %1$s</string>
     <string name="adresse_tsadik">Tsadik</string>
     <string name="adresse_tsadeket">Tsadeket</string>
     <string name="adresse_none">Pas choisi</string>

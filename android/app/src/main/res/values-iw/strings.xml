@@ -453,6 +453,8 @@
     <string name="livres_chargement_web">טוען את הספרים…</string>
     <string name="livres_echec_web">לא ניתן היה לטעון את הספרים. בדקו את החיבור ונסו שוב.</string>
     <string name="livres_reessayer_web">לנסות שוב</string>
+    <!-- Pour la version web (02/11) : la ligne de version des réglages, avec l’empreinte de la construction (version.txt) au lieu du numéro Android. -->
+    <string name="app_version_web">גרסת האתר %1$s</string>
     <string name="adresse_tsadik">צדיק</string>
     <string name="adresse_tsadeket">צדקת</string>
     <string name="adresse_none">לא נבחר</string>

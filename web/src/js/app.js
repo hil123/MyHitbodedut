@@ -25,6 +25,8 @@ import * as Vol from './vol.js';
 import * as Boussole from './boussole.js';
 import { RELAIS_VOL } from './relais.js';
 import { chemin as cheminPersonnage } from './personnage.js';
+// La hitbodedout guidée (02/11, Hitbodedut.kt, GuideSujets.kt).
+import { Hitbodedut, MOUVEMENTS, invitationSujet } from './hitbodedut.js';
 
 // --- Stockage ---------------------------------------------------------------
 function stockageDuNavigateur() {
@@ -3720,7 +3722,29 @@ function ecranReglages() {
         h('button', { class: 'bouton-danger', onclick: () => confirmer(tr.t('reset_confirm_title'), tr.t('reset_confirm_text'), tr.t('reset_confirm_yes'), () => {
           store.reinitialiser();
           location.replace(location.pathname);
-        }) }, tr.t('reset_action'))))));
+        }) }, tr.t('reset_action'))),
+      ligneVersion())));
+}
+
+// La ligne de version (02/11, SettingsActivity.app_version) : l'empreinte de la construction,
+// celle de la coquille installée hors connexion (sw.js, « coquille-<version> »), sinon
+// version.txt. Rien ne la montre tant qu'elle n'est pas lue.
+let versionSite = null;
+let versionDemandee = false;
+function ligneVersion() {
+  if (!versionDemandee) {
+    versionDemandee = true;
+    (async () => {
+      try {
+        const installee = (await globalThis.caches?.keys() ?? []).find((n) => n.startsWith('coquille-'));
+        if (installee) return installee.slice('coquille-'.length);
+      } catch { /* pas de cache : version.txt */ }
+      const r = await fetch('version.txt', { cache: 'no-store' });
+      return r.ok ? (await r.text()).trim() : null;
+    })().then((v) => { if (/^[0-9a-f]{6,}$/.test(v ?? '')) { versionSite = v; if (ecranCourant() === 'reglages') rendre(); } })
+      .catch(() => { versionDemandee = false; });
+  }
+  return versionSite ? h('p', { class: 'version-app' }, tr.t('app_version_web', versionSite)) : null;
 }
 
 /** Un interrupteur de réglage, avec son indice sous le nom. */
@@ -3757,6 +3781,8 @@ function carteMaPratique() {
       onclick: () => choisirDuree((m) => { store.setDailyGoal(m); rendre(); }, tr.t('settings_daily_goal')) }),
     h('p', { class: 'indice' }, tr.t('settings_daily_goal_hint')),
     ligneInterrupteur(tr.t('settings_hide_countdown'), null, store.hideCountdown(), (v) => store.setHideCountdown(v)),
+    // La hitbodedout guidée (02/11, SettingsActivity.guided_switch) : éteinte par défaut.
+    ligneInterrupteur(tr.t('settings_hitbodedut'), tr.t('settings_hitbodedut_hint'), store.guidedHitbodedut(), (v) => store.setGuidedHitbodedut(v)),
     ligneInterrupteur(tr.t('settings_shabbat'), tr.t('settings_shabbat_hint'), store.shabbatMode(), (v) => store.setShabbatMode(v)),
     ligneInterrupteur(tr.t('settings_exempt_today'), tr.t('settings_exempt_today_hint'), store.pausedDates().has(store.today()), () => store.togglePausedDate(store.today())));
 }
@@ -4279,6 +4305,67 @@ lecteur.addEventListener('timeupdate', () => {
   }
 });
 
+// --- La hitbodedout guidée (HitbodedutCard.kt, SessionActivity.renderGuide, 02/11) --------------
+// Un temps à la fois, quand le réglage le demande (éteint par défaut). Le pas courant appartient
+// à la séance et repart à zéro avec elle : un guide qui reprendrait là où l'on s'était arrêté la
+// veille rappellerait une dette. Il est lié au début de la séance, et gardé pour l'onglet
+// (sessionStorage) comme Android le garde à la recréation de l'écran (ETAT_GUIDE).
+const CLE_GUIDE = 'guide-seance';
+function pasGuide() {
+  try {
+    const g = JSON.parse(sessionStorage.getItem(CLE_GUIDE) ?? 'null');
+    return g && g.debut === store.sessionStartedAt() && Number.isInteger(g.pas) ? g.pas : 0;
+  } catch { return 0; }
+}
+function allerAuPas(pas, viser) {
+  try { sessionStorage.setItem(CLE_GUIDE, JSON.stringify({ debut: store.sessionStartedAt(), pas })); } catch { /* rien */ }
+  rendre();
+  // Le bouton touché garde le focus ; aux bornes il disparaît, l'autre le reprend.
+  (app.querySelector(`.guide-${viser}:not(.guide-cache)`) ?? app.querySelector('.guide-boutons button:not(.guide-cache)'))?.focus({ preventScroll: true });
+}
+
+// L'invitation selon le sujet (GuideSujets.kt, res/raw/guide_sujets.json) : chargée à la
+// première carte qui en a besoin. Sans elle, la carte garde l'invitation générale du temps.
+let guideSujets = null;
+let guideSujetsDemandes = false;
+function chargeGuideSujets() {
+  if (guideSujets) return true;
+  if (!guideSujetsDemandes) {
+    guideSujetsDemandes = true;
+    fetch('data/guide_sujets.json').then((r) => r.json()).then((d) => { guideSujets = d.sujets; rendre(); })
+      .catch(() => { guideSujetsDemandes = false; });
+  }
+  return false;
+}
+
+function carteGuide() {
+  if (!store.guidedHitbodedut()) return null;
+  const pas = Math.min(Math.max(pasGuide(), 0), Hitbodedut.DERNIER);
+  const m = Hitbodedut.mouvement(pas);
+  const sujet = store.sessionTheme();
+  // Le temps, dit pour le sujet choisi (proposition 2, 19/10) ; sans sujet, rien de plus.
+  const pourLeSujet = sujet && chargeGuideSujets() ? invitationSujet(guideSujets, sujet, m.cle, tr.langue) : null;
+  const premier = Hitbodedut.estPremier(pas);
+  const dernier = Hitbodedut.estDernier(pas);
+  return h('section', { class: 'guide' },
+    h('div', { class: 'guide-tete' },
+      h('div', { class: 'guide-art' }, h('img', { src: `img/${m.illustration}.webp`, alt: '' })),
+      h('div', { class: 'guide-entete' },
+        h('span', { class: 'guide-pas' }, tr.t('hitbodedut_step', pas + 1, MOUVEMENTS.length)),
+        // L'hébreu, de droite à gauche en toute langue, comme sur la carte de ’hizouk.
+        h('p', { class: 'guide-he', lang: 'he', dir: 'rtl' }, m.he))),
+    h('h2', { class: 'guide-titre' }, tr.t(m.titre)),
+    h('p', { class: 'guide-invite' }, tr.t(m.invite)),
+    pourLeSujet ? h('p', { class: 'guide-sujet' }, pourLeSujet) : null,
+    h('p', { class: 'guide-source', dir: 'auto' }, Reference.localise(m.source, tr.langue)),
+    // Aux bornes, le bouton s'efface sans céder sa place (View.INVISIBLE).
+    h('div', { class: 'guide-boutons' },
+      h('button', { type: 'button', class: `guide-precedent${premier ? ' guide-cache' : ''}`, 'aria-hidden': premier ? 'true' : null, tabindex: premier ? '-1' : null,
+        onclick: () => allerAuPas(Hitbodedut.precedent(pas), 'precedent') }, tr.t('hitbodedut_previous')),
+      h('button', { type: 'button', class: `guide-suivant${dernier ? ' guide-cache' : ''}`, 'aria-hidden': dernier ? 'true' : null, tabindex: dernier ? '-1' : null,
+        onclick: () => allerAuPas(Hitbodedut.suivant(pas), 'suivant') }, tr.t('hitbodedut_next'))));
+}
+
 /**
  * « Je ne sais pas quoi dire » (QuestionsBlocage.kt, propositions 3 et 15,
  * 19/10) : une question à la fois, d'après « מה אומרים? » du guide du propriétaire.
@@ -4310,6 +4397,8 @@ function ecranSeance() {
     h('p', { class: 'legende' }, enCours ? c.legende : fait ? tr.t('session_idle_done', tr.duree(store.record()?.minutes ?? 0)) : tr.t('session_idle_caption')),
     morceau ? h('p', { class: 'legende petite' }, tr.t('session_music_line', titreMorceau(morceau))) : null,
     carteChizuk(chizukSeance),
+    // La hitbodedout guidée (02/11) : sous le ’hizouk, avant « je n'arrive pas à parler », comme Android.
+    enCours ? carteGuide() : null,
     enCours && aBlocage ? h('button', { class: 'texte-clair blocage', onclick: () => { tireChizuk('blocage'); if (questionSeance < 0) questionSeance = 0; rendre(); } }, tr.t('chizuk_stuck')) : null,
     enCours && questionSeance >= 0 ? h('div', { class: `question-seance${questionChange && !moinsDeMouvement() ? ' fondu-neuf' : ''}` },
       h('p', { class: 'question-rang' }, tr.t('question_rang', questionSeance + 1, QUESTIONS_BLOCAGE.length)),

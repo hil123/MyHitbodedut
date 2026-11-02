@@ -82,6 +82,9 @@ const ECRANS = [
   { nom: 'reglages', ecran: 'reglages' },
   { nom: 'seance', ecran: 'seance', bouton: '.seance .principal', petitAussi: true },
   { nom: 'seance-en-cours', ecran: 'seance', actions: clic('.duree'), bouton: '.seance .principal', petitAussi: true },
+  // La hitbodedout guidée (02/11), avec l'invitation du sujet.
+  { nom: 'seance-guidee', ecran: 'seance', actions: clic('.duree'), bouton: '.seance .principal', petitAussi: true,
+    prefs: { guided_hitbodedut: true, session_theme: 'famille' } },
   { nom: 'bravo', ecran: 'seance', actions: finDeSeance, bouton: '.bravo .principal' },
   { nom: 'tehilim', ecran: 'tehilim' },
   { nom: 'tehilim-lecture', ecran: 'tehilim', actions: clic('.carte .ligne') },

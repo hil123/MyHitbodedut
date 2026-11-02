@@ -246,6 +246,8 @@ test('un fichier de sauvegarde Android se relit, et l’export garde le même fo
       window_start: 360, window_end: 660, snooze_minutes: 15, target_minutes: 30, daily_goal_minutes: 0, pause_shabbat: true,
       in_israel: true, reminder_enabled: true, reminder_minutes: 420, music_enabled: false, music_volume: 40,
       music_track: 'niggoun_05', adresse: 'f', apparence_mode: 'sombre', apparence_fond: 'sable', apparence_accent: 'violet',
+      // La hitbodedout guidée (02/11) : Android l'exporte, le site aussi.
+      guided_hitbodedut: true,
     },
     paused_dates: ['2026-09-30'],
     blocked_apps: ['com.exemple'],
@@ -257,6 +259,7 @@ test('un fichier de sauvegarde Android se relit, et l’export garde le même fo
   assert.equal(s.adresse(), 'f');
   assert.equal(s.fond(), 'sable');
   assert.equal(s.isExempt('2026-09-30'), true);
+  assert.equal(s.guidedHitbodedut(), true);
 
   const exporte = JSON.parse(s.exportJson());
   assert.equal(exporte.format, 'myhitbodedut');
