@@ -1,5 +1,7 @@
 import React from 'react';
-import {AbsoluteFill, Img, interpolate, spring, staticFile, useCurrentFrame, useVideoConfig, random} from 'remotion';
+import {AbsoluteFill, Img, interpolate, spring, staticFile, useCurrentFrame, useVideoConfig, random, getInputProps} from 'remotion';
+/** Effets « pro » v20 : --props='{"effets":true}' */
+export const FX = (getInputProps() as {effets?: boolean}).effets === true;
 import {C, EASE, FPS, Z} from './theme';
 
 export const fontFaces = `
@@ -29,7 +31,7 @@ export const TexteEcran: React.FC<{texte: string; debut?: number; fin: number; y
         {mots.map((m, i) => {
           const s = spring({frame: f - debut - i * 4, fps, config: {damping: 200}});
           return (
-            <span key={i} style={{display: 'inline-block', opacity: s, transform: `translateY(${(1 - s) * 30}px) scale(${0.96 + 0.04 * s})`, marginRight: '0.26em'}}>
+            <span key={i} style={{display: 'inline-block', opacity: s, transform: `translateY(${(1 - s) * 30}px) scale(${0.96 + 0.04 * s})`, marginRight: '0.26em', filter: FX ? `blur(${(1 - s) * 10}px)` : undefined}}>
               {m}
             </span>
           );
@@ -45,6 +47,21 @@ export const SousTitres: React.FC<{texte: string; debut: number; duree: number; 
   if (blocsCales) {
     // blocs calés sur l'horodatage réel des mots de la voix (secondes)
     const pl = blocsCales.map((b, i) => ({b: b.txt, a: debut + b.t * FPS, z: debut + (i + 1 < blocsCales.length ? blocsCales[i + 1].t : duree) * FPS}));
+    if (FX) {
+      // fondu croisé glissé entre blocs : le bloc sortant monte et s'efface pendant que le suivant arrive
+      return (<>{pl.map((p, i) => {
+        const fin = p.z + (i === pl.length - 1 ? 12 : 0);
+        if (f < p.a - 1 || f > fin + 6) return null;
+        const e = spring({frame: f - p.a, fps: FPS, config: {damping: 200}, durationInFrames: 9});
+        const x = i === pl.length - 1 ? lerp(f, fin - 4, fin, 0, 1) : lerp(f, fin, fin + 6, 0, 1);
+        return (
+          <div key={i} style={{position: 'absolute', left: 80, right: 80, top: Z.stHaut, height: Z.stBas - Z.stHaut, display: 'flex', alignItems: 'flex-start', justifyContent: 'center',
+            opacity: e * (1 - x), transform: `translateY(${(1 - e) * 18 - x * 14}px) scale(${0.97 + 0.03 * e})`, filter: `blur(${(1 - e) * 6 + x * 4}px)`}}>
+            <div style={{fontFamily: 'Inter', fontWeight: 600, fontSize: 40, lineHeight: 1.3, color: C.blanc, textAlign: 'center', background: 'rgba(7,17,17,.62)', padding: '14px 26px', borderRadius: 18, maxWidth: 900}}>{p.b}</div>
+          </div>
+        );
+      })}</>);
+    }
     const c = pl.find((p, i) => f >= p.a && f < p.z + (i === pl.length - 1 ? 12 : 0));
     if (!c) return null;
     const o = Math.min(lerp(f, c.a, c.a + 4, 0, 1), lerp(f, c.z + 8, c.z + 12, 1, 0));

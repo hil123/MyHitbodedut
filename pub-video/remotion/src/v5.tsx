@@ -1,7 +1,7 @@
 import React from 'react';
 import {AbsoluteFill, Audio, getInputProps, Img, Sequence, Easing, interpolate, spring, staticFile, useCurrentFrame, useVideoConfig} from 'remotion';
 import {C, Z, FPS} from './theme';
-import {SousTitres, Telephone, TexteEcran, fontFaces} from './ui';
+import {SousTitres, Telephone, TexteEcran, fontFaces, FX} from './ui';
 import {T, EcranOuverture, Titre, ETAPES, AFournir} from './v4';
 
 /*
@@ -199,7 +199,21 @@ const EcranPlein: React.FC<{f: number}> = ({f}) => {
   const i = indexTel(f);
   if (i < 0) return null;
   const p = PLANS_TEL[i], prev = PLANS_TEL[i - 1];
-  const t = prev && prev.a === p.de ? L(f, p.de, p.de + FONDU, 0, 1, Easing.inOut(Easing.sin)) : 1;
+  const enchaine = prev && prev.a === p.de;
+  if (FX) {
+    // v20 : l'écran suivant monte en poussant le précédent (geste d'app), avec un reflet qui balaie la vitre
+    const meme = enchaine && prev.src === p.src;
+    const t = enchaine && !meme ? L(f, p.de, p.de + 14, 0, 1, Easing.bezier(0.22, 1, 0.36, 1)) : 1;
+    const reflet = enchaine && !meme ? L(f, p.de + 2, p.de + 22, -0.6, 1.6, Easing.inOut(Easing.sin)) : -1;
+    return (
+      <AbsoluteFill style={{overflow: 'hidden'}}>
+        {t < 1 && <AbsoluteFill style={{transform: `translateY(${-t * 18}%) scale(${1 - 0.06 * t})`, opacity: 1 - 0.6 * t, filter: `blur(${t * 3}px)`}}><Capture p={prev} /></AbsoluteFill>}
+        <AbsoluteFill style={{transform: `translateY(${(1 - t) * 100}%)`, boxShadow: t < 1 ? '0 -20px 40px rgba(0,0,0,.35)' : undefined}}><Capture p={p} /></AbsoluteFill>
+        {reflet > -0.6 && reflet < 1.6 && <AbsoluteFill style={{background: `linear-gradient(115deg, transparent ${(reflet - 0.25) * 100}%, rgba(255,255,255,.28) ${reflet * 100}%, transparent ${(reflet + 0.25) * 100}%)`}} />}
+      </AbsoluteFill>
+    );
+  }
+  const t = enchaine ? L(f, p.de, p.de + FONDU, 0, 1, Easing.inOut(Easing.sin)) : 1;
   return (
     <AbsoluteFill>
       {t < 1 && <Capture p={prev} />}
@@ -219,6 +233,17 @@ const CompteurJour: React.FC<{texte: string; dur: number}> = ({texte, dur}) => {
   const f = useCurrentFrame();
   const s = spring({frame: f - 6, fps: FPS, config: {damping: 12, mass: 0.6}});
   const o = Math.min(s, L(f, dur - 8, dur, 1, 0));
+  if (FX) {
+    const e = spring({frame: f - 2, fps: FPS, config: {damping: 15, mass: 0.7}});
+    const x = L(f, dur - 8, dur, 0, 1, Easing.in(Easing.cubic));
+    return (
+      <div style={{position: 'absolute', left: 0, right: 0, top: 310, height: Z.texteBas - 310, display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden',
+        WebkitMaskImage: 'linear-gradient(180deg, transparent, #000 25%, #000 75%, transparent)'}}>
+        <div style={{fontFamily: 'Inter', fontWeight: 800, fontSize: texte.length > 14 ? 38 : 52, letterSpacing: 2, color: '#a88233', whiteSpace: 'nowrap',
+          transform: `translateY(${(1 - e) * 70 - x * 70}px)`, opacity: Math.min(1, e * 1.5) * (1 - x), filter: `blur(${(1 - Math.min(1, e)) * 6 + x * 6}px)`}}>{texte}</div>
+      </div>
+    );
+  }
   return (
     <div style={{position: 'absolute', left: 0, right: 0, top: 310, height: Z.texteBas - 310, display: 'flex', alignItems: 'center', justifyContent: 'center', opacity: o}}>
       <div style={{fontFamily: 'Inter', fontWeight: 800, fontSize: texte.length > 14 ? 38 : 52, letterSpacing: 2, color: '#a88233', whiteSpace: 'nowrap', transform: `scale(${0.7 + 0.3 * s})`}}>{texte}</div>
@@ -245,6 +270,40 @@ const LOGOS = [
   {n: 'tiktok', bg: '#000000'}, {n: 'snapchat', bg: '#FFFC00'},
 ];
 
+const SECTIONS = [
+  {n: 1, texte: 'Une Hitbodedut guidée', de: T5.etapes, a: T5.duree},
+  {n: 2, texte: 'Ton objectif quotidien', de: T5.duree, a: T.avec},
+  {n: 3, texte: 'Je suis avec Hachem', de: T.avec, a: T.perso},
+  {n: 4, texte: 'Une application à ton rythme', de: T.perso, a: T.chabbat},
+  {n: 5, texte: 'Le calendrier juif', de: T.chabbat, a: T.retour},
+];
+/** v20 : titre de section qui s'ouvre depuis le centre, reflet doré, et s'efface en douceur sous le suivant. */
+const TitreFX: React.FC<{n: number; texte: string; f: number; dur: number}> = ({n, texte, f, dur}) => {
+  const s = spring({frame: f - 2, fps: FPS, config: {damping: 200}, durationInFrames: 16});
+  const x = L(f, dur - 9, dur, 0, 1, Easing.in(Easing.sin)); // sort AVANT l'arrivée du suivant : jamais deux titres superposés
+  const balaye = L(f, 8, 30, -30, 130, Easing.inOut(Easing.sin));
+  return (
+    <div style={{position: 'absolute', top: Z.texteHaut - 10, left: 0, right: 0, display: 'flex', justifyContent: 'center', opacity: 1 - x, transform: `translateY(${-x * 12}px)`, filter: `blur(${x * 5}px)`}}>
+      <div style={{position: 'relative', fontFamily: 'Inter', fontWeight: 700, fontSize: 34, color: C.blanc, background: C.petrole, borderRadius: 40, padding: '8px 26px', boxShadow: `0 0 0 3px ${C.or}`,
+        clipPath: `inset(-6px ${(1 - s) * 50}% -6px ${(1 - s) * 50}% round 40px)`, overflow: 'hidden'}}>
+        <span style={{color: C.or}}>{n}.</span> <span style={{opacity: L(f, 4, 14, 0, 1)}}>{texte}</span>
+        <div style={{position: 'absolute', inset: 0, background: `linear-gradient(110deg, transparent ${balaye - 15}%, rgba(242,210,140,.55) ${balaye}%, transparent ${balaye + 15}%)`}} />
+      </div>
+    </div>
+  );
+};
+/** v20 : fond vivant — lumière chaude qui dérive lentement et quelques halos flous (profondeur, jamais devant le sujet). */
+const HALOS = Array.from({length: 9}, (_, i) => ({x: (i * 137) % 100, y: (i * 61 + 13) % 100, r: 60 + ((i * 47) % 90), v: 0.4 + ((i * 29) % 10) / 12}));
+const FondVivant: React.FC<{f: number}> = ({f}) => (
+  <AbsoluteFill>
+    <AbsoluteFill style={{background: `radial-gradient(circle at ${50 + Math.sin(f / 140) * 22}% ${35 + Math.cos(f / 170) * 12}%, rgba(255,226,170,.35) 0, rgba(255,255,255,0) 45%)`}} />
+    {HALOS.map((h, i) => (
+      <div key={i} style={{position: 'absolute', left: `${h.x}%`, top: `${(h.y - (f * h.v) / 30 + 200) % 110 - 5}%`, width: h.r, height: h.r, borderRadius: '50%',
+        background: i % 2 ? 'rgba(20,150,140,.10)' : 'rgba(212,175,95,.13)', filter: 'blur(14px)'}} />
+    ))}
+  </AbsoluteFill>
+);
+
 export const PubV5: React.FC = () => {
   const f = useCurrentFrame();
   const {fps} = useVideoConfig();
@@ -267,6 +326,7 @@ export const PubV5: React.FC = () => {
     <AbsoluteFill style={{background: '#fff'}}>
       <style>{fontFaces}</style>
       <AbsoluteFill style={{background: 'radial-gradient(ellipse at 50% 40%, #ffffff 40%, #eef3f2 100%)'}} />
+      {FX && <FondVivant f={f} />}
 
       {POSES.map((p, i) => (
         // fondu enchaîné avec le plan suivant, sauf quand le suivant continue le même cadre (plan fixe)
@@ -308,9 +368,11 @@ export const PubV5: React.FC = () => {
       {icones && LOGOS.map((l, i) => {
         const e = L(f, 1640 + i * 8, 1670 + i * 8, 1, 0);
         const barre = L(f, 1528 + i * 7, 1540 + i * 7, 0, 1, Easing.out(Easing.cubic));
+        const pop = FX ? spring({frame: f - T.avec - 4 - i * 3, fps, config: {damping: 11, mass: 0.6}}) : 1;
+        const refus = FX ? Math.sin((f - 1540 - i * 7) * 1.9) * 7 * L(f, 1540 + i * 7, 1552 + i * 7, 1, 0) * (f >= 1540 + i * 7 ? 1 : 0) : 0;
         return <div key={l.n} style={{position: 'absolute', left: i % 2 ? 880 : 90, top: Z.sujetHaut + 150 + Math.floor(i / 2) * 220, width: 110, height: 110, borderRadius: 28,
           background: l.bg, boxShadow: '0 8px 24px rgba(0,0,0,0.35)', display: 'flex', alignItems: 'center', justifyContent: 'center',
-          opacity: e, transform: `scale(${0.7 + 0.3 * e})`, filter: `blur(${(1 - e) * 10}px)`}}>
+          opacity: e * Math.min(1, pop * 2), transform: `scale(${(0.7 + 0.3 * e) * pop}) rotate(${refus}deg)`, filter: `blur(${(1 - e) * 10}px)`}}>
           <Img src={staticFile(`logos/${l.n}.svg`)} style={{width: 64, height: 64}} />
           <div style={{position: 'absolute', inset: 0, borderRadius: 28, background: `rgba(0,0,0,${0.12 * barre})`}} />
           <div style={{position: 'absolute', left: -10, top: 51.5, width: 130, height: 7, transform: 'rotate(-45deg)', transformOrigin: 'center'}}>
@@ -328,11 +390,9 @@ export const PubV5: React.FC = () => {
           fontFamily: 'Inter', fontWeight: 700, fontSize: 66, letterSpacing: 6, color: C.petrole, opacity: spring({frame: f - 442, fps, config: {damping: 200}})}}>MY HITBODEDUT</div>
       )}
       <Sequence from={962} durationInFrames={93}><TexteEcran texte="Parle-Lui avec ton cœur." debut={4} fin={89} sombre /></Sequence>
-      {f >= T5.etapes && f < T5.duree && <Titre n={1} texte="Une Hitbodedut guidée" f={f - T5.etapes} />}
-      {f >= T5.duree && f < T.avec && <Titre n={2} texte="Ton objectif quotidien" f={f - T5.duree} />}
-      {f >= T.avec && f < T.perso && <Titre n={3} texte="Je suis avec Hachem" f={f - T.avec} />}
-      {f >= T.perso && f < T.chabbat && <Titre n={4} texte="Une application à ton rythme" f={f - T.perso} />}
-      {f >= T.chabbat && f < T.retour && <Titre n={5} texte="Le calendrier juif" f={f - T.chabbat} />}
+      {SECTIONS.map((q) => FX
+        ? (f >= q.de && f < q.a && <TitreFX key={q.n} n={q.n} texte={q.texte} f={f - q.de} dur={q.a - q.de} />)
+        : (f >= q.de && f < q.a && <Titre key={q.n} n={q.n} texte={q.texte} f={f - q.de} />))}
       {/* v8 : les fonctions racontées comme sa première semaine (compteur doré à la place de la 2e ligne) */}
       {JOURS.map((j) => (
         <Sequence key={j.de} from={j.de} durationInFrames={j.a - j.de}><CompteurJour texte={j.texte} dur={j.a - j.de} /></Sequence>
@@ -343,11 +403,14 @@ export const PubV5: React.FC = () => {
       {f >= T.fin && (
         <AbsoluteFill style={{background: '#fff', opacity: L(f, T.fin, T.fin + 14, 0, 1)}}>
           <div style={{position: 'absolute', top: 380, left: 70, right: 70, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 36, transform: `scale(${L(f, T.fin, T.total, 1, 1.12, (t) => t)})`}}>
-            <Img src={staticFile('planche/logo.png')} style={{width: 280, height: 280, borderRadius: 62, opacity: carte, transform: `scale(${0.9 + 0.1 * carte})`, boxShadow: '0 16px 50px rgba(7,91,91,.25)'}} />
+            <div style={{position: 'relative', width: 280, height: 280, borderRadius: 62, overflow: 'hidden', opacity: carte, transform: `scale(${0.9 + 0.1 * carte})`, boxShadow: '0 16px 50px rgba(7,91,91,.25)'}}>
+              <Img src={staticFile('planche/logo.png')} style={{width: 280, height: 280}} />
+              {FX && <AbsoluteFill style={{background: `linear-gradient(115deg, transparent ${L(f, T.fin + 30, T.fin + 60, -60, 140) - 20}%, rgba(255,255,255,.55) ${L(f, T.fin + 30, T.fin + 60, -60, 140)}%, transparent ${L(f, T.fin + 30, T.fin + 60, -60, 140) + 20}%)`}} />}
+            </div>
             <div style={{fontFamily: 'Inter', fontWeight: 700, fontSize: 72, letterSpacing: 6, color: C.petrole, opacity: carte}}>MY HITBODEDUT</div>
             <div style={{fontFamily: 'Inter', fontWeight: 700, fontSize: 30, letterSpacing: 3, color: C.turquoise, textAlign: 'center', lineHeight: 1.5, opacity: carte}}>YOUR PERSONAL CONVERSATION<br />WITH HASHEM</div>
             <div style={{fontFamily: 'Inter', fontWeight: 700, fontSize: 40, color: C.noir, background: `linear-gradient(180deg,#f3dd9c,${C.or})`, borderRadius: 50, padding: '16px 46px',
-              opacity: cta, transform: `scale(${0.9 + 0.1 * cta})`, boxShadow: `0 8px 30px ${C.or}88`}}>Commence aujourd’hui.</div>
+              opacity: cta, transform: `scale(${(0.9 + 0.1 * cta) * (FX ? 1 + 0.025 * Math.sin(Math.max(0, f - T.fin - 60) / 9) : 1)})`, boxShadow: `0 8px 30px ${C.or}88`}}>Commence aujourd’hui.</div>
             <div style={{fontFamily: 'FrankRuhl, serif', fontSize: 40, color: C.petrole, textAlign: 'center', lineHeight: 1.4, opacity: sec}}>MY HITBODEDUT<br />Parle à Hachem. Chaque jour.</div>
           </div>
           {/* crédit musical promis à Noam Shpayer (accord du 29/10, preuves/accord_noam_shpayer_whatsapp.png) ; hors du zoom de la carte */}
