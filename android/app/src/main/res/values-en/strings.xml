@@ -439,6 +439,10 @@
     <!-- Pour la version web (16/10) : pas de rappels, et un navigateur plutôt qu’un téléphone sans Internet. -->
     <string name="onboarding_days_body_web">The streak counts your days in a row, and the week shows at a glance. After each hitbodedut, a note can go into your journal.</string>
     <string name="onboarding_private_body_web">What you write stays in this browser, on this device: nothing is sent anywhere, except a flight’s callsign and an approximate position if you turn on live tracking.</string>
+    <!-- Pour la version web (02/11) : les livres (16 Mo) se téléchargent à la première ouverture. -->
+    <string name="livres_chargement_web">Loading the books…</string>
+    <string name="livres_echec_web">The books could not be loaded. Check your connection, then try again.</string>
+    <string name="livres_reessayer_web">Try again</string>
     <string name="adresse_tsadik">Tsadik</string>
     <string name="adresse_tsadeket">Tsadeket</string>
     <string name="adresse_none">Not chosen</string>

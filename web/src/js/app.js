@@ -9,7 +9,7 @@ import { ART_DU_MOMENT, ChizukBag, ChizukRules } from './chizuk.js';
 import { AMBIANCES, arreter as arreteAmbiance, jouer as joueAmbiance } from './ambiance.js';
 import { DanseMesure } from './seance.js';
 import { creeStore, memoire, repriseValable } from './store.js';
-import { isoLocal } from './calendrier.js';
+import { ajouteJours, isoLocal } from './calendrier.js';
 import { JERUSALEM_GEONAMES, RAPPELS_TEFILA, dansIsrael, USAGES_LEVANA, aJerusalem, calendrier, jour as jourJuif, jourDeLaPriere, levana, rappelsTefila, usageLevana } from './calendrier-juif.js';
 import { conditionsPour, index as indexAjouts, libelleJour, vrai as ajoutVrai } from './siddur-jour.js';
 import { aerer } from './aeration.js';
@@ -64,7 +64,10 @@ function h(tag, attrs = {}, ...enfants) {
 // Varela ne l'ont pas et l'empruntent à la première. Masqué à l'affichage par U+034F, invisible
 // et de même longueur, comme PoliceHebraique.ABSENTS ; seule Frank Ruhl le dessine à part.
 const SANS_METEG = new Set(['serif', 'rachi', 'david', 'miriam', 'arrondie']);
-const meteg = (t) => (SANS_METEG.has(store.lecturePolice()) ? t.replace(/\u05BD/g, '\u034F') : t);
+// La police lue une fois par affichage (02/11) : meteg passe sur chaque morceau de texte, et
+// relire les réglages à chaque fois coûtait des milliers de lectures pour un livre entier.
+let policeAffichee = null;
+const meteg = (t) => (SANS_METEG.has(policeAffichee ??= store.lecturePolice()) ? t.replace(/\u05BD/g, '\u034F') : t);
 // Le personnage au féminin pour qui a choisi צדקת (personnage.js) : chaque
 // image passe par ici, celles de h() comme celles écrites en SVG.
 const perso = (src) => cheminPersonnage(src, store.adresse());
@@ -551,6 +554,10 @@ function panneauAujourdhui() {
     })),
 
     fait ? h('button', { class: 'texte-bouton', onclick: () => ecrireNote(store.today(), rendre) }, tr.t('action_write_note')) : null,
+    // « Je l'ai faite sans le téléphone » (MainActivity.today_offline, 02/11) : tant qu'aujourd'hui
+    // ou hier reste à inscrire, et hors séance en cours.
+    (!fait || hierOuvert()) && !store.isSessionRunning()
+      ? h('button', { class: 'texte-bouton', onclick: declarerHorsTelephone }, tr.t('action_done_offline')) : null,
     // L'accueil selon l'heure (14/10) : la prière du moment, Birkat haLevana les soirs de la fenêtre.
     ...momentAccueil(),
     // Les trophées et les paliers, en bas de la page (11/10).
@@ -833,11 +840,23 @@ const NUSAH = [['edot', 'siddur_nusah_edot'], ['sefard', 'siddur_nusah_sefard'],
 /** Les livres entiers de la bibliothèque (data/livres.json, au format du siddour), chargés au premier besoin. */
 let livres = null;
 let livresDemandes = false;
+let livresEchec = false;
+/** Pendant le premier téléchargement des livres (16 Mo), ou après son échec (02/11) : jamais un écran vide. */
+function attenteLivres() {
+  if (livresEchec) {
+    return h('div', { class: 'carte attente-livres' }, h('p', {}, tr.t('livres_echec_web')),
+      h('button', { type: 'button', class: 'secondaire', onclick: () => { livresEchec = false; chargeLivres(); rendre(); } }, tr.t('livres_reessayer_web')));
+  }
+  return h('div', { class: 'carte attente-livres', role: 'status' }, h('span', { class: 'attente-rond', 'aria-hidden': 'true' }), h('p', {}, tr.t('livres_chargement_web')));
+}
 function chargeLivres() {
   if (livres) return true;
-  if (livresDemandes) return false;
+  // Après un échec, on attend « Réessayer » : relancer à chaque affichage bouclerait.
+  if (livresDemandes || livresEchec) return false;
   livresDemandes = true;
-  fetch('data/livres.json').then((r) => r.json()).then((d) => { livres = d; rendre(); }).catch(() => { livresDemandes = false; });
+  fetch('data/livres.json').then((r) => { if (!r.ok) throw new Error(r.status); return r.json(); })
+    .then((d) => { livres = d; rendre(); })
+    .catch(() => { livresDemandes = false; livresEchec = true; rendre(); });
   return false;
 }
 
@@ -1109,7 +1128,7 @@ function choisirPolice() {
       const courant = cle === store.lecturePolice();
       return h('button', {
         type: 'button', class: 'choix choix-radio choix-police', role: 'radio', 'aria-checked': String(courant),
-        onclick: () => { fermer(); if (!courant) { store.setLecturePolice(cle); appliquerPolice(); rendreEtViser('.lecture-police'); } },
+        onclick: () => { fermer(); if (!courant) { store.setLecturePolice(cle); policeAffichee = null; appliquerPolice(); rendreEtViser('.lecture-police'); } },
       }, h('span', { class: 'radio', 'aria-hidden': 'true' }),
       h('span', { class: 'choix-police-corps' },
         h('span', { class: 'choix-police-nom' }, tr.t(`police_${cle}`)),
@@ -1203,7 +1222,7 @@ function ecranSiddur() {
 function ecranPriere() {
   // Un livre de la bibliothèque (« livre:likoutei_etsot », 12/10) se lit comme une prière, sans nusah ni ajouts.
   const livre = priere?.startsWith('livre:') ?? false;
-  if (livre ? !chargeLivres() : !chargeSiddur()) return h('div', { class: 'ecran' }, barre(tr.t(livre ? 'livres_title' : 'siddur_title')), h('div', { class: 'defile' }));
+  if (livre ? !chargeLivres() : !chargeSiddur()) return h('div', { class: 'ecran' }, barre(tr.t(livre ? 'livres_title' : 'siddur_title')), h('div', { class: 'defile' }, livre ? h('div', { class: 'contenu' }, attenteLivres()) : null));
   const recueil = livre ? livres : siddur;
   const x = recueil.textes.find((y) => y.id === (livre ? priere.slice(6) : priere));
   // Rouvert directement sur #priere, sans texte choisi : la liste.
@@ -1225,10 +1244,13 @@ function ecranPriere() {
   // Marque-pages (15/10, SiddurLectureActivity) : un appui long sur un paragraphe le marque ou le démarque.
   const cleMarque = `${livre ? 'l' : 's'}:${x.id}`;
   const nusahMarque = livre ? '' : store.siddurNusah();
-  const marquee = (si, i) => store.marques().some((m) => m.cle === cleMarque && m.nusah === nusahMarque && m.section === si && m.bloc === i);
+  // Lus une fois pour tout le texte (02/11) : un livre a des milliers de paragraphes.
+  const marquesDuTexte = new Set(store.marques().filter((m) => m.cle === cleMarque && m.nusah === nusahMarque).map((m) => `${m.section}:${m.bloc}`));
+  const marquee = (si, i) => marquesDuTexte.has(`${si}:${i}`);
+  const rangSection = new Map(x.sections.map((s, k) => [s, k]));
   const paragraphe = (s, i, texte) => {
     const b = s.blocs[i];
-    const si = x.sections.indexOf(s);
+    const si = rangSection.get(s);
     const p = h('p', { class: `${b.c !== undefined ? 'consigne' : 'priere'}${marquee(si, i) ? ' marque-page' : ''}${livre ? ' marque-etude' : ''}`, lang: 'he', dir: 'rtl', 'data-place': `${si}:${i}` }, riche(b.c !== undefined ? (texte ?? b.c) : aerer(texte ?? b.t)));
     if (p.firstChild?.nodeName === 'B') p.firstChild.classList.add('premier-mot');
     let minuteur = null;
@@ -1292,6 +1314,11 @@ function ecranPriere() {
         corps.push(ajout(nom(a, a.racine ?? a.si), ajoutVrai(a.racine ?? a.si, c), membres, a.racine ?? a.si));
         corps.push(...seuls(si, i));
       }
+      // Un livre (02/11) : chaque chapitre dans sa propre boîte, que le navigateur ne met en page
+      // qu'en approchant de l'écran (content-visibility). Likoutei Moharan, Sefer HaMidot ou
+      // Likoutei Etsot entiers figeaient l'iPhone plusieurs secondes à l'ouverture, là où
+      // Android ne dessine que les lignes visibles (RecyclerView).
+      if (livre) return [h('section', { class: 'livre-chapitre', style: `contain-intrinsic-size: auto ${hauteurEstimee(s)}px` }, t, ...corps, ...renvois(si))];
       return [t, ...corps, ...renvois(si)];
     }));
   const bande = titres.length > 1 ? bandeSignets(titres) : null;
@@ -1310,13 +1337,38 @@ function ecranPriere() {
     choisirDans(tr.t('marques_titre'), l.map((m) => `${m.apercu}…`), -1, (k) => allerAMarque(ecran, l[k]));
   } }, iconeMarque(livre));
   ecran.querySelector('.bandeau-actions')?.append(listeMarques, etoile);
+  if (livre) { const d = ecran.querySelector('.defile'); if (d) { d.classList.add('defile-livre'); ancrerChapitres(d); } }
   if (marqueAOuvrir?.cle === cleMarque) { const m = marqueAOuvrir; marqueAOuvrir = null; requestAnimationFrame(() => allerAMarque(ecran, m)); return ecran; }
   const defile = ecran.querySelector('.defile');
   if (defile) {
     const place = store.positionLecture(cle);
-    if (place > 0 && app.dataset.ecran !== `priere/${onglet}`) requestAnimationFrame(() => { defile.scrollTop = place; });
+    // Un livre reprend au paragraphe (02/11) : ses chapitres hors écran n'ont qu'une hauteur
+    // estimée, un nombre de pixels n'y retomberait pas juste.
+    const ancre = livre && place > 0 ? store.ancreLecture(cle) : null;
+    if (place > 0 && app.dataset.ecran !== `priere/${onglet}`) {
+      requestAnimationFrame(() => {
+        const [section, bloc] = (ancre ?? '').split(':').map(Number);
+        if (ancre && ecran.querySelector(`[data-place="${ancre}"]`)) allerAMarque(ecran, { section, bloc }, 0);
+        else defile.scrollTop = place;
+      });
+    }
     let minuteur = null;
-    defile.addEventListener('scroll', () => { clearTimeout(minuteur); minuteur = setTimeout(() => store.setPositionLecture(cle, Math.round(defile.scrollTop)), 400); }, { passive: true });
+    // Le premier paragraphe visible ; un titre ou une marge en haut : on descend un peu.
+    const premierVu = () => {
+      const r = defile.getBoundingClientRect();
+      for (let y = r.top + 24; y < Math.min(r.bottom, r.top + 400); y += 24) {
+        const el = document.elementFromPoint(r.left + r.width / 2, y)?.closest('[data-place]');
+        if (el) return el.dataset.place;
+      }
+      return null;
+    };
+    defile.addEventListener('scroll', () => {
+      clearTimeout(minuteur);
+      minuteur = setTimeout(() => {
+        store.setPositionLecture(cle, Math.round(defile.scrollTop));
+        if (livre) store.setAncreLecture(cle, premierVu());
+      }, 400);
+    }, { passive: true });
   }
   return ecran;
 }
@@ -1409,12 +1461,83 @@ const apercuMarque = (t, mots = 6) => t.replace(/<[^>]+>/g, ' ').replace(/[־׀]
 /** Le marque-page à rejoindre à l'ouverture du texte (depuis la Bibliothèque). */
 let marqueAOuvrir = null;
 /** Va au paragraphe marqué ; replié aujourd'hui, à sa section (le premier paragraphe qui suit). */
-function allerAMarque(ecran, m) {
+function allerAMarque(ecran, m, marge = 8) {
   const defile = ecran.querySelector('.defile');
   const cible = ecran.querySelector(`[data-place="${m.section}:${m.bloc}"]`);
+  // offsetParent est nul dans un pli fermé (display: none), pas dans un chapitre de livre
+  // simplement pas encore mis en page.
   const visible = cible && cible.offsetParent !== null ? cible
     : [...ecran.querySelectorAll('[data-place]')].find((p) => p.offsetParent !== null && Number(p.dataset.place.split(':')[0]) >= m.section);
-  if (visible && defile) defile.scrollTop += visible.getBoundingClientRect().top - defile.getBoundingClientRect().top - 8;
+  if (!visible || !defile) return;
+  viserJusquaStable(defile, () => defile.scrollTop + visible.getBoundingClientRect().top - defile.getBoundingClientRect().top - marge);
+}
+
+/**
+ * Défile jusqu'à [cible()], puis recommence image après image tant qu'elle bouge (02/11) :
+ * les chapitres de livre mis en page en arrivant remplacent leur hauteur estimée par la vraie.
+ */
+const visees = new WeakMap();
+function viserJusquaStable(defile, cible) {
+  // Un doigt qui reprend la main arrête la visée : on ne lutte pas contre lui.
+  const jeton = {};
+  visees.set(defile, jeton);
+  if (!defile.dataset.vise) {
+    defile.dataset.vise = '1';
+    for (const geste of ['touchstart', 'wheel', 'keydown']) defile.addEventListener(geste, () => visees.delete(defile), { passive: true });
+  }
+  // La mise en page d'un chapitre arrivé à l'écran se fait après les rappels de l'image :
+  // on attend quelques images immobiles avant de s'arrêter.
+  const pas = (reste, stables) => {
+    if (visees.get(defile) !== jeton) return;
+    const y = Math.round(cible());
+    const immobile = Math.abs(defile.scrollTop - y) < 1;
+    if (!immobile) defile.scrollTop = y;
+    const suite = immobile ? stables + 1 : 0;
+    if (reste > 0 && suite < 6) requestAnimationFrame(() => pas(reste - 1, suite));
+  };
+  pas(40, 0);
+}
+
+/**
+ * L'ancrage du défilement (02/11) : un chapitre de livre commencé au-dessus de l'écran, mis en
+ * page en y revenant, prend sa vraie hauteur à la place de l'estimée. Sans compensation, le
+ * texte lu sauterait ; Safari ne la fait pas de lui-même (overflow-anchor), on la fait ici.
+ */
+function ancrerChapitres(defile) {
+  if (!('ResizeObserver' in window)) return;
+  const hauteurs = new WeakMap();
+  const ro = new ResizeObserver((entrees) => {
+    if (!defile.isConnected) { ro.disconnect(); return; }
+    const haut = defile.getBoundingClientRect().top;
+    let delta = 0;
+    for (const e of entrees) {
+      const hauteur = e.borderBoxSize?.[0]?.blockSize ?? e.target.offsetHeight;
+      const avant = hauteurs.get(e.target);
+      hauteurs.set(e.target, hauteur);
+      // Commencé au-dessus de l'écran : tout ce qui suit, dont le texte lu, en serait déplacé.
+      if (avant !== undefined && e.target.getBoundingClientRect().top < haut) delta += hauteur - avant;
+    }
+    if (delta) defile.scrollTop += delta;
+  });
+  for (const c of defile.querySelectorAll('.livre-chapitre')) ro.observe(c);
+}
+
+/**
+ * La hauteur probable d'un chapitre de livre, avant sa mise en page (02/11) : assez juste pour
+ * que la barre de défilement et les sauts de chapitre ne trompent pas. Calibré sur Chromium,
+ * 390 px de large, Frank Ruhl à 19 px ; l'échelle de lecture s'y applique.
+ */
+function hauteurEstimee(section) {
+  const echelle = Number(store.lectureEchelle()) || 1;
+  const largeur = Math.max(240, Math.min(window.innerWidth, 600) - 40);
+  const parLigne = Math.max(12, largeur / (8.6 * echelle));
+  const ligne = 19 * echelle * 1.75;
+  let h = 60 * echelle;
+  for (const b of section.blocs) {
+    const lettres = (b.t ?? b.c ?? '').replace(/<[^>]+>/g, '').replace(/[\u0591-\u05C7]/g, '').length;
+    h += Math.ceil(lettres / parLigne) * (b.c !== undefined ? ligne * 0.65 : ligne) + 30 * echelle;
+  }
+  return Math.round(h);
 }
 
 /** Le nom d'une hilloula dans la langue de l'interface, FR → EN (audit 1.390) ; null en hébreu ou sans traduction. */
@@ -1559,10 +1682,15 @@ function bandeSignets(titres) {
   let choisi = null;
   let actif = -1;
   // Position d'un titre dans le texte qui défile, quel que soit le défilement.
-  const position = (el) => el.getBoundingClientRect().top - defile.getBoundingClientRect().top + defile.scrollTop;
+  // Dans un livre, on mesure la boîte du chapitre, pas son titre : mesurer ce qui est dedans
+  // forcerait la mise en page du chapitre entier, et donc du livre à chaque défilement (02/11).
+  const position = (el) => (el.closest('.livre-chapitre') ?? el).getBoundingClientRect().top - defile.getBoundingClientRect().top + defile.scrollTop;
   const signets = titres.map(({ titre, el }, i) => h('button', {
     type: 'button', class: 'signet', lang: 'he',
-    onclick: () => { choisi = i; defile.scrollTop = position(el) - 6; marque(i); },
+    onclick: () => {
+      choisi = i; marque(i);
+      viserJusquaStable(defile, () => position(el) - 6);
+    },
   }, titre));
   const nav = h('nav', { class: 'signets', dir: 'rtl', 'aria-label': tr.t('siddur_signets') }, signets);
 
@@ -1643,6 +1771,7 @@ function ecranLivres() {
     bandeau(tr.t('livres_title'), { puce: h('p', { class: 'bandeau-sous-titre' }, tr.t('livres_hint')), dessin: 'char_torah' }),
     h('div', { class: 'defile' }, h('div', { class: 'contenu liste-siddour' },
       // Les marque-pages des livres (28/10), en tête : la même feuille, sans le siddour.
+      livresPrets ? null : attenteLivres(),
       ...(livresPrets ? [ligneSignets('l')].filter(Boolean).map((l) => h('div', { class: 'carte' }, l)) : []),
       ...(livresPrets ? livres.groupes.flatMap((g) => [
         enteteGroupe(g.titre.he, titreTexte(g.titre)),
@@ -1724,6 +1853,93 @@ function ecranSource() {
     e.url ? h('a', { class: 'principal lien-sefaria', href: e.url, target: '_blank', rel: 'noopener noreferrer' }, tr.t('library_open_sefaria')) : null));
 }
 
+// --- Conseils, Tefilot, Journal (02/11) : les écrans d'Android qui manquaient au site ----------
+
+/** Les dix repères (Tips.kt, TipsActivity) : un numéro, un titre, un texte, une illustration. */
+const CONSEILS = ['char_walking', 'char_thinking', 'char_open_arms', 'char_standing_back', 'char_tehilim',
+  'char_writing', 'char_praise', 'char_praying', 'char_standing_back', 'char_open_arms'];
+function ecranConseils() {
+  return h('div', { class: 'ecran avec-bandeau' },
+    bandeau(tr.t('tips_title'), { puce: h('p', { class: 'bandeau-sous-titre' }, tr.t('tips_hint')), dessin: 'char_walking' }),
+    h('div', { class: 'defile' }, h('div', { class: 'contenu conseils' },
+      CONSEILS.map((dessin, k) => h('article', { class: 'carte conseil' },
+        h('div', { class: 'conseil-tete' },
+          h('span', { class: 'conseil-numero', 'aria-hidden': 'true' }, String(k + 1)),
+          h('h2', { class: 'conseil-titre' }, tr.t(`tip_${k + 1}_title`))),
+        plateau(dessin, 'conseil-dessin'),
+        h('p', { class: 'conseil-texte' }, tr.t(`tip_${k + 1}_body`)))))));
+}
+
+/**
+ * Tefilot (TefilotActivity, Tefilot.kt) : les dix sujets dans l'ordre demandé, et sous chacun
+ * ses prières de Likoutei Tefilot, lues dans la sous-section « tefilot-lt » de la bibliothèque.
+ * Un sujet sans prière n'a pas de ligne ; une leçon qui parle d'autre chose est signalée.
+ */
+const SUJETS_TEFILA = ['hitbodedut', 'simcha', 'uman', 'kdusha', 'zera', 'parnassa', 'brit', 'geula', 'zivug', 'refua'];
+function ecranTefilot() {
+  const pret = chargeBibliotheque();
+  const prieres = pret ? (bibliotheque.sections ?? []).flatMap((sec) => sec.sous_sections ?? [])
+    .find((ss) => ss.id === 'tefilot-lt')?.entrees.filter((e) => e.type === 'source') ?? [] : [];
+  return h('div', { class: 'ecran avec-bandeau' },
+    bandeau(tr.t('tefilot_title'), { puce: h('p', { class: 'bandeau-sous-titre' }, tr.t('tefilot_hint')), dessin: 'char_praying' }),
+    h('div', { class: 'defile' }, h('div', { class: 'contenu liste-siddour' },
+      SUJETS_TEFILA.flatMap((sujet) => {
+        const l = prieres.filter((e) => e.sujet === sujet);
+        if (!l.length) return [];
+        return [
+          enteteGroupe(tr.t(`tefila_${sujet}`), tr.t('tefilot_count', l.length)),
+          h('div', { class: 'carte carte-sections' }, l.map((e) => ligneHebreu(e.titre_he,
+            [Reference.localise(e.ref, tr.langue), e.lecon_sur_le_sujet === 'non' ? tr.t('tefilot_warning') : null].filter(Boolean).join(' · '),
+            () => { entreeBiblio = e.id; ouvrir('source'); }))),
+        ];
+      }))));
+}
+
+/**
+ * Le journal (JournalActivity, 02/11) : le résumé, les minutes du mois en barres, puis chaque
+ * journée de la plus récente à la plus ancienne, sa durée, ses sujets et sa note. Toucher une
+ * journée rouvre sa note.
+ */
+function ecranJournal() {
+  const jours = store.jours().sort((a, b) => (a.date < b.date ? 1 : -1));
+  const faites = jours.filter((r) => r.faite).length;
+  const auj = new Date();
+  const an = auj.getFullYear();
+  const mois = auj.getMonth();
+  const nbJours = new Date(an, mois + 1, 0).getDate();
+  const parJour = store.minutesParJour();
+  const minutesMois = Array.from({ length: nbJours }, (_, k) => parJour[`${an}-${deuxChiffres(mois + 1)}-${deuxChiffres(k + 1)}`] ?? 0);
+  const plus = Math.max(1, ...minutesMois);
+  const nomMois = new Intl.DateTimeFormat(tr.langue, { month: 'long', year: 'numeric' }).format(auj);
+  const formatJour = new Intl.DateTimeFormat(tr.langue, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+  const dateLisible = (iso) => {
+    const [y, m, d] = iso.split('-').map(Number);
+    if (!y || !m || !d) return iso;
+    const t = formatJour.format(new Date(y, m - 1, d));
+    return t.charAt(0).toLocaleUpperCase(tr.langue) + t.slice(1);
+  };
+  const graphique = h('div', { class: 'journal-graphique', role: 'img', 'aria-label': tr.t('journal_graphique', nomMois) },
+    minutesMois.map((m, k) => h('span', {
+      class: `journal-barre${k + 1 === auj.getDate() ? ' aujourdhui' : ''}${m > 0 ? ' faite' : ''}`,
+      style: `height: ${m > 0 ? Math.max(8, Math.round((m / plus) * 100)) : 4}%`,
+    })));
+  const contenu = jours.length === 0
+    ? h('div', { class: 'carte journal-vide' }, h('p', {}, tr.t('journal_empty')),
+      h('button', { class: 'principal', onclick: () => ouvrir('seance') }, tr.t('journal_empty_action')))
+    : h('div', { class: 'carte journal-liste' }, jours.map((r) => {
+      const sujets = [...new Set(r.themes)].filter((c) => SUJETS.includes(c)).map((c) => tr.t(`theme_${c}`)).join(' · ');
+      const detail = [r.note, sujets ? tr.t('journal_sujets', sujets) : ''].filter(Boolean).join('\n');
+      return h('button', { type: 'button', class: 'journal-jour', onclick: () => ecrireNote(r.date, rendre) },
+        h('span', { class: 'journal-date' }, dateLisible(r.date)),
+        h('span', { class: 'journal-duree' }, r.noteSeule ? tr.t('journal_note_only') : r.minutes > 0 ? tr.duree(r.minutes) : tr.t('today_declared')),
+        detail ? h('span', { class: 'journal-note' }, detail) : null);
+    }));
+  return h('div', { class: 'ecran avec-bandeau' },
+    bandeau(tr.t('journal_title'), { puce: h('div', {},
+      h('p', { class: 'bandeau-sous-titre' }, tr.p('journal_summary', faites, faites, tr.duree(store.totalMinutes()))), graphique), dessin: 'char_writing' }),
+    h('div', { class: 'defile' }, h('div', { class: 'contenu' }, contenu)));
+}
+
 function panneauTextes() {
   return h('div', { class: 'contenu' },
     h('h1', { class: 'titre-ecran' }, tr.t('nav_texts')),
@@ -1737,12 +1953,12 @@ function panneauTextes() {
       // Le Tikoun, lu d'un trait (04/10).
       ligne({ nom: tr.t('tikkun_title'), etat: etatTikkun(), onclick: () => ouvrir('tikkun') }),
       // Les textes arrivent à l'étape 4.
-      ligne({ nom: tr.t('tefilot_title'), etat: tr.t('tefilot_hint'), aVenir: true }),
+      ligne({ nom: tr.t('tefilot_title'), etat: tr.t('tefilot_hint'), onclick: () => ouvrir('tefilot') }),
       // Les livres entiers (13/10), puis les sources de la hitbodedout.
       ligne({ nom: tr.t('livres_title'), etat: tr.t('livres_hint'), onclick: () => ouvrir('livres') }),
       ligne({ nom: tr.t('library_title'), etat: tr.t('library_hint'), onclick: () => ouvrir('bibliotheque') }),
       ligne({ nom: tr.t('chizuk_demande_title'), etat: tr.t('chizuk_demande_hint'), onclick: () => { hizouk = null; ouvrir('hizouk'); } }),
-      ligne({ nom: tr.t('tips_title'), etat: tr.t('tips_hint'), aVenir: true })),
+      ligne({ nom: tr.t('tips_title'), etat: tr.t('tips_hint'), onclick: () => ouvrir('conseils') })),
     h('h2', { class: 'section' }, tr.t('section_around')),
     h('div', { class: 'carte' },
       ligne({ nom: tr.t('music_title'), etat: etatMusique(), onclick: () => ouvrir('musique') }),
@@ -1750,10 +1966,9 @@ function panneauTextes() {
 }
 
 function onglets() {
-  // Le journal n'existe pas encore sur le web : son onglet est masqué
-  // plutôt que montré grisé (finition du 04/10).
+  // Les cinq onglets d'Android (02/11) : le journal, longtemps masqué, a maintenant son écran.
   const items = [
-    ['aujourdhui', 'nav_today'], ['textes', 'nav_texts'], ['zmanim', 'nav_zmanim'], ['reglages', 'settings_title'],
+    ['aujourdhui', 'nav_today'], ['textes', 'nav_texts'], ['zmanim', 'nav_zmanim'], ['journal', 'nav_journal'], ['reglages', 'settings_title'],
   ];
   return h('nav', { class: 'onglets' }, items.map(([cle, nom]) => h('button', {
     class: 'onglet',
@@ -1761,7 +1976,7 @@ function onglets() {
     'aria-current': cle === onglet ? 'page' : null,
     onclick: () => {
       // Journal et Réglages ouvrent leur écran ; l'onglet actif ne bouge pas (MainActivity.wireTabs).
-      if (cle === 'reglages' || cle === 'zmanim') ouvrir(cle);
+      if (cle === 'reglages' || cle === 'zmanim' || cle === 'journal') ouvrir(cle);
       else { onglet = cle; rendre(); }
     },
   }, h('span', { class: 'icone', 'aria-hidden': 'true' }), tr.t(nom))));
@@ -3449,11 +3664,16 @@ function ecranReglages() {
             }),
         }),
         ligne({ nom: tr.t('reglage_lieu'), etat: store.lieu()?.nom ?? tr.t('reglage_lieu_aucun'), onclick: choisirLieu }),
+        // La région (02/11, SettingsActivity.region_button) : déduite du lieu, et corrigeable à la main.
+        ligne({ nom: tr.t('settings_region'), etat: tr.t(store.inIsrael() ? 'region_israel' : 'region_diaspora'),
+          onclick: () => choisirDans(tr.t('settings_region'), [tr.t('region_israel'), tr.t('region_diaspora')], store.inIsrael() ? 0 : 1,
+            (j) => { store.setInIsrael(j === 0); rendre(); }) }),
         // À Jérusalem, l'usage des 40 minutes est proposé, jamais imposé.
         ligne({ nom: tr.t('reglage_allumage'), onclick: choisirAllumage,
           etat: [libelleAllumage(store.allumage()), mukafChoma() && store.allumage() !== 40 ? tr.t('reglage_allumage_proposition') : null].filter(Boolean).join(' · ') }),
         store.siddurNusah() === 'sefard' ? ligne({ nom: tr.t('reglage_tahanoun_tichri'), onclick: choisirTahanounTichri,
           etat: tr.t(store.sansTahanounFinTichri() ? 'reglage_tahanoun_tichri_sans' : 'reglage_tahanoun_tichri_dit') }) : null),
+      carteMaPratique(),
       // Personnalisation (14/10) : les couleurs d'Android (palettes.css), la police, l'écran d'ouverture.
       h('div', { class: 'carte' },
         h('h3', {}, tr.t('section_appearance')),
@@ -3491,6 +3711,7 @@ function ecranReglages() {
         ligne({ nom: tr.t('halakha_source_titre'), etat: tr.t(SOURCES_HALAKHA.find(([c]) => c === store.sourceHalakha())[1]),
           onclick: () => choisirDans(tr.t('halakha_source_titre'), SOURCES_HALAKHA.map(([, n]) => tr.t(n)), SOURCES_HALAKHA.findIndex(([c]) => c === store.sourceHalakha()),
             (j) => { store.setSourceHalakha(SOURCES_HALAKHA[j][0]); rendre(); }) })),
+      carteMesDonnees(),
       h('div', { class: 'carte' }, ligne({ nom: tr.t('settings_onboarding'), onclick: presentation })),
       // Réinitialiser l'application (12/10) : en dernier, avec une confirmation.
       h('div', { class: 'carte carte-reinit' },
@@ -3500,6 +3721,93 @@ function ecranReglages() {
           store.reinitialiser();
           location.replace(location.pathname);
         }) }, tr.t('reset_action'))))));
+}
+
+/** Un interrupteur de réglage, avec son indice sous le nom. */
+function ligneInterrupteur(nom, indice, coche, onChange) {
+  return h('label', { class: 'ligne' },
+    h('span', { class: 'corps' }, h('div', { class: 'nom' }, nom), indice ? h('div', { class: 'etat' }, indice) : null),
+    h('input', { type: 'checkbox', role: 'switch', class: 'interrupteur', checked: coche, 'aria-label': nom,
+      onchange: (e) => { onChange(e.target.checked); rendre(); } }));
+}
+
+/**
+ * « Ma pratique » (02/11) : les réglages d'Android qui existaient déjà dans le stockage du site
+ * sans rien pour les changer — prénom, adresse, objectif du jour, décompte, Chabbat, pause.
+ */
+function carteMaPratique() {
+  const adresses = ['m', 'f', null];
+  const nomAdresse = (a) => tr.t(a === 'm' ? 'adresse_tsadik' : a === 'f' ? 'adresse_tsadeket' : 'adresse_none');
+  return h('div', { class: 'carte' },
+    h('h3', {}, tr.t('section_practice')),
+    ligne({ nom: tr.t('settings_name'), etat: store.firstName() || tr.t('settings_name_empty'), onclick: () => {
+      feuille(tr.t('settings_name'), (f, fermer) => {
+        const champ = h('input', { type: 'text', value: store.firstName(), maxlength: 40, autocomplete: 'given-name', 'aria-label': tr.t('settings_name') });
+        const valider = () => { store.setFirstName(champ.value); fermer(); rendre(); };
+        champ.addEventListener('keydown', (e) => { if (e.key === 'Enter') valider(); });
+        f.append(champ, h('p', { class: 'indice' }, tr.t('settings_name_hint')),
+          h('div', { class: 'actions' }, h('button', { onclick: fermer }, tr.t('action_back')), h('button', { onclick: valider }, tr.t('action_save'))));
+        setTimeout(() => champ.select(), 0);
+      });
+    } }),
+    ligne({ nom: tr.t('settings_adresse'), etat: nomAdresse(store.adresse()),
+      onclick: () => choisirDans(tr.t('settings_adresse'), adresses.map(nomAdresse), adresses.indexOf(store.adresse() ?? null),
+        (j) => { store.setAdresse(adresses[j]); appliqueApparence(); rendre(); }) }),
+    ligne({ nom: tr.t('settings_daily_goal'), etat: tr.duree(store.dailyGoal()),
+      onclick: () => choisirDuree((m) => { store.setDailyGoal(m); rendre(); }, tr.t('settings_daily_goal')) }),
+    h('p', { class: 'indice' }, tr.t('settings_daily_goal_hint')),
+    ligneInterrupteur(tr.t('settings_hide_countdown'), null, store.hideCountdown(), (v) => store.setHideCountdown(v)),
+    ligneInterrupteur(tr.t('settings_shabbat'), tr.t('settings_shabbat_hint'), store.shabbatMode(), (v) => store.setShabbatMode(v)),
+    ligneInterrupteur(tr.t('settings_exempt_today'), tr.t('settings_exempt_today_hint'), store.pausedDates().has(store.today()), () => store.togglePausedDate(store.today())));
+}
+
+/**
+ * « Mes données » (02/11) : la sauvegarde, au même format qu'Android (Store.exportJson). Un
+ * fichier exporté du site s'importe sur le téléphone, et l'inverse.
+ */
+function carteMesDonnees() {
+  const exporter = async () => {
+    const nom = `myhitbodedut-${store.today()}.json`;
+    // Installé sur l'écran d'accueil de l'iPhone, un téléchargement n'a nulle part où aller :
+    // la feuille de partage propose « Enregistrer dans Fichiers ».
+    if (navigator.standalone && navigator.canShare) {
+      const fichier = new File([store.exportJson()], nom, { type: 'application/json' });
+      if (navigator.canShare({ files: [fichier] })) {
+        try { await navigator.share({ files: [fichier] }); signale(tr.t('export_ok')); } catch (e) { if (e?.name !== 'AbortError') signale(tr.t('export_failed')); }
+        return;
+      }
+    }
+    try {
+      const blob = new Blob([store.exportJson()], { type: 'application/json' });
+      const a = h('a', { href: URL.createObjectURL(blob), download: nom });
+      document.body.append(a);
+      a.click();
+      a.remove();
+      setTimeout(() => URL.revokeObjectURL(a.href), 10000);
+      signale(tr.t('export_ok'));
+    } catch { signale(tr.t('export_failed')); }
+  };
+  const champ = h('input', { type: 'file', accept: 'application/json,text/plain,.json', hidden: true, onchange: async (e) => {
+    const fichier = e.target.files?.[0];
+    e.target.value = '';
+    if (!fichier) return;
+    // Au plus 2 Mo, comme Android : une vraie sauvegarde pèse quelques dizaines de Ko.
+    if (fichier.size > 2 * 1024 * 1024) { signale(tr.t('import_failed')); return; }
+    let texte;
+    try { texte = await fichier.text(); } catch { signale(tr.t('import_failed')); return; }
+    const n = store.importJson(texte);
+    if (n === null || n === undefined) { signale(tr.t('import_invalid')); return; }
+    appliqueApparence();
+    rendre();
+    signale(tr.p('import_ok', n));
+  } });
+  return h('div', { class: 'carte' },
+    h('h3', {}, tr.t('section_data')),
+    h('p', { class: 'indice' }, tr.t('section_data_hint')),
+    h('div', { class: 'actions-donnees' },
+      h('button', { type: 'button', class: 'secondaire', onclick: exporter }, tr.t('action_export')),
+      h('button', { type: 'button', class: 'secondaire', onclick: () => champ.click() }, tr.t('action_import'))),
+    champ);
 }
 
 // --- La présentation du premier lancement (Onboarding.kt, 16/10) --------------------------
@@ -3557,6 +3865,28 @@ function presentation() {
  * téléphone s'inscrit après coup, sur n'importe quel jour jusqu'à aujourd'hui, même un jour déjà
  * fait (les minutes s'ajoutent). montrer : l'action « montrer la durée sur la bande ».
  */
+/** Hier n'est ni fait ni exempté : on peut encore l'inscrire (MainActivity.hierOuvert). */
+function hierOuvert() {
+  const hier = ajouteJours(store.today(), -1);
+  return !store.isDone(hier) && !store.isExempt(hier);
+}
+
+/** Une hitbodedout faite loin du téléphone, comme le conseil n° 4 y invite (MainActivity.declarerHorsTelephone). */
+function declarerHorsTelephone() {
+  // Les deux dates sont figées au geste : la feuille peut rester ouverte à cheval sur minuit.
+  const aujourdhui = store.today();
+  const hier = ajouteJours(aujourdhui, -1);
+  const inscrire = (date) => choisirDuree((m) => {
+    store.addSession(m, { date });
+    if (date === aujourdhui) store.setPendingCelebration(m);
+    rendre();
+  }, tr.t('offline_how_long'));
+  const ouvertAujourdhui = !store.isDone(aujourdhui);
+  if (ouvertAujourdhui && hierOuvert()) {
+    choisirDans(tr.t('offline_which_day'), [tr.t('offline_today'), tr.t('offline_yesterday')], -1, (i) => inscrire(i === 0 ? aujourdhui : hier));
+  } else inscrire(hierOuvert() ? hier : aujourdhui);
+}
+
 function ajoutTemps(iso, montrer = null) {
   if (iso > store.today()) return;
   const r = store.record(iso);
@@ -4129,7 +4459,7 @@ function arreteDanse() {
 // et le geste de retour ramènent à l'accueil, sur l'onglet quitté.
 function ecranCourant() {
   const e = location.hash.slice(1);
-  return ['musique', 'reglages', 'seance', 'bravo', 'tehilim', 'lecture', 'siddur', 'priere', 'tikkun', 'bibliotheque', 'livres', 'source', 'zmanim', 'vol', 'boussole', 'calendrier', 'paliers', 'hilloulot', 'halakha', 'recherche', 'hizouk', 'parcours'].includes(e) ? e : 'accueil';
+  return ['musique', 'reglages', 'seance', 'bravo', 'tehilim', 'lecture', 'siddur', 'priere', 'tikkun', 'bibliotheque', 'livres', 'source', 'zmanim', 'vol', 'boussole', 'calendrier', 'paliers', 'hilloulot', 'halakha', 'recherche', 'hizouk', 'parcours', 'journal', 'conseils', 'tefilot'].includes(e) ? e : 'accueil';
 }
 function ouvrir(ecran) {
   // L'entrée sur l'écran de séance tire le mot d'ouverture (SessionActivity.onCreate).
@@ -4163,6 +4493,7 @@ function ouvrirRenvoi(depuis, cible) {
 }
 
 function rendre() {
+  policeAffichee = null;
   appliquerPolice();
   // Une séance arrivée à son terme pendant que le téléphone dormait.
   if (store.isSessionOver()) cloreSeance({ avantTerme: false });
@@ -4199,6 +4530,9 @@ function rendre() {
   else if (ecran === 'seance') app.append(ecranSeance());
   else if (ecran === 'hizouk') app.append(ecranHizouk());
   else if (ecran === 'parcours') app.append(ecranParcours());
+  else if (ecran === 'journal') app.append(ecranJournal());
+  else if (ecran === 'conseils') app.append(ecranConseils());
+  else if (ecran === 'tefilot') app.append(ecranTefilot());
   else if (ecran === 'bravo') app.append(ecranBravo());
   else if (ecran === 'tehilim') app.append(ecranTehilim());
   else if (ecran === 'lecture') app.append(ecranLecture());

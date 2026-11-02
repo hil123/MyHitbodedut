@@ -185,6 +185,12 @@ export function creeStore(stockage, { maintenant = () => new Date(), fuseau } = 
       const quand = Number(get('positions_lecture_t', {})?.[cle] ?? 0);
       return repriseValable(cle, quand, t) ? y : 0;
     },
+    /** Le paragraphe où reprendre un livre (« section:bloc », 02/11), ou null. */
+    ancreLecture: (cle) => get('ancres_lecture', {})?.[cle] ?? null,
+    setAncreLecture: (cle, place) => {
+      if (!place) return;
+      set('ancres_lecture', { ...(get('ancres_lecture', {}) ?? {}), [cle]: place });
+    },
     setPositionLecture(cle, y, t = maintenant().getTime()) {
       set('positions_lecture', { ...(get('positions_lecture', {}) ?? {}), [cle]: y });
       set('positions_lecture_t', { ...(get('positions_lecture_t', {}) ?? {}), [cle]: t });
@@ -255,6 +261,12 @@ export function creeStore(stockage, { maintenant = () => new Date(), fuseau } = 
     calendrierCivil: () => get('calendrier_civil', false) === true,
     setCalendrierCivil: (v) => set('calendrier_civil', v),
     pausedDates: () => new Set(get('paused_dates', [])),
+    /** Pause aujourd'hui (Store.togglePausedDate, réglages du 02/11) : mise ou retirée. */
+    togglePausedDate(date) {
+      const dates = store.pausedDates();
+      if (!dates.delete(date)) dates.add(date);
+      set('paused_dates', [...dates]);
+    },
     isExempt(date) {
       if (store.pausedDates().has(date)) return true;
       return store.shabbatMode() && estJourChome(date, store.inIsrael());

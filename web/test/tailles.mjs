@@ -95,6 +95,12 @@ const ECRANS = [
   { nom: 'zmanim', ecran: 'zmanim' },
   { nom: 'calendrier', ecran: 'calendrier' },
   { nom: 'calendrier-civil', ecran: 'calendrier', actions: clic('.vue-calendrier button:nth-child(2)') },
+  // Les écrans d'Android portés le 02/11.
+  { nom: 'journal', ecran: 'journal' },
+  { nom: 'conseils', ecran: 'conseils' },
+  { nom: 'tefilot', ecran: 'tefilot' },
+  { nom: 'livres', ecran: 'livres' },
+  { nom: 'livre-midot', ecran: 'livres', actions: clic('.carte-sections .ligne:nth-child(3)') },
 ];
 
 let verifies = 0;

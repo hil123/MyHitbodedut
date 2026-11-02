@@ -440,6 +440,11 @@ input[type="range"] { width: 100%; accent-color: var(--brand); }
 .case-psaume:active { filter: brightness(0.94); }
 .lecture .psaume-titre { margin: 24px 0 4px; color: var(--brand); font-size: calc(20px * var(--echelle, 1)); font-weight: 700; text-align: start; }
 .lecture .psaume-titre:first-of-type { margin-top: 8px; }
+/* Un chapitre de livre n'est mis en page qu'en approchant de l'écran (02/11). */
+.lecture .livre-chapitre { content-visibility: auto; }
+/* L'ancrage est fait à la main (ancrerChapitres), pareil partout : pas en double avec Chromium. */
+.defile.defile-livre { overflow-anchor: none; }
+.lecture .livre-chapitre + .livre-chapitre .psaume-titre:first-of-type { margin-top: 24px; }
 .lecture .verset { margin: 0 0 18px; color: var(--ink); font-size: calc(19px * var(--echelle, 1)); line-height: 1.75; text-align: start; }
 .lecture .verset .num { color: var(--muted); font-size: 0.7em; }
 .lecture-nav { display: flex; gap: 12px; padding: 8px 16px calc(12px + env(safe-area-inset-bottom)); background: var(--paper); }
@@ -1466,3 +1471,37 @@ body.avec-mini .seance .contenu { padding-bottom: calc(104px + env(safe-area-ins
 .boussole-position + .indice { margin: 4px 16px 0; }
 .boussole-position + .indice:empty { display: none; }
 .boussole-principale { color: var(--brand); font-weight: 700; }
+
+/* L'attente des livres (02/11) : un rond qui tourne, ou le message d'échec et « Réessayer ». */
+.attente-livres { display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 24px 16px; text-align: center; color: var(--muted); }
+.attente-livres p { margin: 0; }
+.attente-rond { width: 28px; height: 28px; border-radius: 50%; border: 3px solid color-mix(in srgb, var(--brand) 25%, transparent); border-top-color: var(--brand); animation: attente-tour 0.9s linear infinite; }
+@keyframes attente-tour { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .attente-rond { animation-duration: 2.4s; } }
+
+/* Mes données (02/11) : Exporter et Importer côte à côte. */
+.actions-donnees { display: flex; gap: 12px; margin-top: 8px; }
+.actions-donnees button { flex: 1; margin: 0; }
+
+/* Conseils (02/11, item_tip) : numéro rond, titre, illustration, texte. */
+.conseils .conseil { display: flex; flex-direction: column; gap: 12px; }
+.conseil-tete { display: flex; align-items: center; gap: 12px; }
+.conseil-numero { flex: none; width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center; background: var(--brand); color: var(--on-brand); font-size: 15px; font-weight: 700; }
+.conseil-titre { margin: 0; font-size: 17px; line-height: 1.35; color: var(--ink); }
+.conseil-dessin { align-self: center; width: 100%; max-width: 280px; }
+.conseil-dessin img { display: block; width: 100%; height: 180px; object-fit: contain; }
+.conseil-texte { margin: 0; font-size: 15px; line-height: 1.6; color: var(--ink); }
+
+/* Journal (02/11, JournalActivity) : les minutes du mois, puis une ligne par journée. */
+.journal-graphique { display: flex; align-items: flex-end; gap: 2px; height: 56px; margin-top: 12px; }
+.journal-barre { flex: 1; min-width: 0; border-radius: 2px; background: color-mix(in srgb, currentColor 22%, transparent); }
+.journal-barre.faite { background: currentColor; opacity: 0.9; }
+.journal-barre.aujourdhui { outline: 1.5px solid currentColor; outline-offset: 1px; }
+.journal-liste { padding: 0; }
+.journal-jour { display: grid; grid-template-columns: 1fr auto; gap: 4px 12px; width: 100%; padding: 14px 16px; border: 0; border-bottom: 1px solid var(--line); background: none; color: inherit; text-align: start; cursor: pointer; font: inherit; }
+.journal-jour:last-child { border-bottom: 0; }
+.journal-date { font-weight: 600; color: var(--ink); }
+.journal-duree { color: var(--muted); font-size: 14px; white-space: nowrap; }
+.journal-note { grid-column: 1 / -1; color: var(--muted); font-size: 14px; line-height: 1.5; white-space: pre-line; overflow-wrap: anywhere; }
+.journal-vide { display: flex; flex-direction: column; gap: 16px; text-align: center; }
+.journal-vide p { margin: 0; color: var(--muted); }

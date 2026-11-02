@@ -2,6 +2,15 @@
 
 État au 28/09/2026, commit `5fcc114` de la branche `claude/version-web`.
 
+> **Mise à jour du 02/11/2026.** Les ⏳ ci-dessous sont dépassés : présentation, Tikoun,
+> bibliothèque et livres étaient déjà en ligne ; s'y ajoutent maintenant l'onglet **Journal**
+> (résumé, minutes du mois, notes modifiables), **Conseils pour la hitbodedout**, **Tfilot**
+> (dix sujets, vingt-et-une prières), et dans les réglages : prénom, « Comment vous appeler »,
+> région, objectif quotidien, masquer le décompte, Chabbat et Yom Tov, pause aujourd'hui,
+> **export et import de la sauvegarde** (même fichier qu'Android). À l'accueil : « Je l'ai faite
+> sans le téléphone ». Restent propres à Android : rappels et notifications, barrière du matin,
+> vignettes, humeur et gratitude dans la note, hitbodedout guidée, ajout de sa propre musique.
+
 Les libellés entre guillemets sont ceux que l'application affiche. Ils sont lus dans les fichiers `strings.xml` d'Android (fr, en, he) et n'ont pas été retraduits. Le texte qui les relie est une rédaction, pas une traduction vérifiée : en hébreu, il reste à faire relire.
 
 - ✅ : construit et testé (tests Node, WebKit, Chromium, Safari sur Mac).

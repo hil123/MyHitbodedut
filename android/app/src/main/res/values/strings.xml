@@ -509,6 +509,10 @@
     <!-- Pour la version web (16/10) : pas de rappels, et un navigateur plutôt qu’un téléphone sans Internet. -->
     <string name="onboarding_days_body_web">La série compte les jours de pratique d’affilée, et la semaine se lit d’un coup d’œil. Après chaque hitbodedout, une note peut rejoindre votre journal.</string>
     <string name="onboarding_private_body_web">Ce que vous écrivez reste dans ce navigateur, sur cet appareil : rien n’est envoyé nulle part, sauf l’indicatif d’un vol et une position approchée si vous activez le suivi en direct.</string>
+    <!-- Pour la version web (02/11) : les livres (16 Mo) se téléchargent à la première ouverture. -->
+    <string name="livres_chargement_web">Chargement des livres…</string>
+    <string name="livres_echec_web">Les livres n’ont pas pu être chargés. Vérifiez la connexion, puis réessayez.</string>
+    <string name="livres_reessayer_web">Réessayer</string>
     <string name="adresse_tsadik">Tsadik</string>
     <string name="adresse_tsadeket">Tsadeket</string>
     <string name="adresse_none">Pas choisi</string>
