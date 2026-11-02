@@ -255,6 +255,18 @@ input[type="range"] { width: 100%; accent-color: var(--brand); }
   border-radius: 999px; padding: 4px 12px; font-size: 13px; font-weight: 600; cursor: pointer;
 }
 .ecouter[aria-pressed="true"] { background: var(--brand); color: var(--on-brand); border-color: var(--brand); }
+/* Le crayon (item_track.xml) : renommer, ou retirer un morceau ajouté. */
+.renommer {
+  flex: none; display: grid; place-items: center; width: 44px; height: 44px; margin-inline-end: -8px;
+  border: 0; border-radius: 50%; background: none; color: var(--muted); cursor: pointer;
+}
+.renommer svg { width: 20px; height: 20px; }
+.ajouter-morceau { width: 100%; margin-top: 12px; }
+.feuille input[type="text"] {
+  width: 100%; font: inherit; font-size: 18px; padding: 12px; border-radius: 12px;
+  border: 1px solid var(--line); background: var(--paper); color: var(--ink);
+}
+.feuille .actions .neutre { margin-inline-end: auto; }
 
 /* --- Onglets ------------------------------------------------------------------------- */
 .onglets {
@@ -1300,6 +1312,10 @@ body.avec-mini .seance .contenu { padding-bottom: calc(104px + env(safe-area-ins
 .mini-commandes { display: flex; align-items: center; justify-content: center; gap: 24px; margin-top: 4px; }
 .mini-commandes .mini-lecture { width: 64px; height: 64px; background: #fff; color: #121a17; }
 .mini-commandes .mini-lecture svg { width: 32px; height: 32px; }
+/* L'aléatoire et son pendant (02/11) : cinq boutons, serrés sur le plus petit téléphone. */
+.mini-commandes { gap: 0; justify-content: space-between; max-width: 352px; margin-inline: auto; }
+.mini-aleatoire { opacity: 0.45; }
+.mini-aleatoire[aria-pressed="true"] { opacity: 1; color: var(--mint); }
 .seance .contenu { padding-bottom: 104px; }
 .puces-recherche { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
 /* Paragraphes d'un texte long (19/10) : un écart entre eux, pas entre les lignes. */

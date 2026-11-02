@@ -506,6 +506,10 @@
     <string name="onboarding_rappel">Me le rappeler chaque jour</string>
     <string name="onboarding_rappel_heure">à %1$s</string>
     <string name="onboarding_rappel_heure_desc">Heure du rappel : %1$s</string>
+    <!-- Pour la version web (02/11) : les morceaux ajoutés sont gardés dans le navigateur, qui peut manquer de place. -->
+    <string name="music_add_quota_web">Plus assez de place dans ce navigateur pour garder ce morceau.</string>
+    <string name="music_remove_confirm_web">Retirer « %1$s » ?</string>
+    <string name="music_remove_message_web">Le morceau est effacé de ce navigateur ; le fichier d’origine reste sur l’appareil.</string>
     <!-- Pour la version web (16/10) : pas de rappels, et un navigateur plutôt qu’un téléphone sans Internet. -->
     <string name="onboarding_days_body_web">La série compte les jours de pratique d’affilée, et la semaine se lit d’un coup d’œil. Après chaque hitbodedout, une note peut rejoindre votre journal.</string>
     <string name="onboarding_private_body_web">Ce que vous écrivez reste dans ce navigateur, sur cet appareil : rien n’est envoyé nulle part, sauf l’indicatif d’un vol et une position approchée si vous activez le suivi en direct.</string>

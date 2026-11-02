@@ -7,6 +7,8 @@ import { chargeTraduction, formate, langueInitiale, LANGUES } from './i18n.js';
 import { Anneaux, CycleTehilim, DureeSeance, JaugeSemaine, LibraryRules, Plaque, Reference, Salutation, SiddurMoment, SignetsSiddur, SourceDuJour, Parcours } from './regles.js';
 import { ART_DU_MOMENT, ChizukBag, ChizukRules } from './chizuk.js';
 import { AMBIANCES, arreter as arreteAmbiance, jouer as joueAmbiance } from './ambiance.js';
+import { MelangeMusique, estQuota, nomDonne, renomme, titreDeFichier } from './musique.js';
+import * as MorceauxPerso from './morceaux-perso.js';
 import { DanseMesure } from './seance.js';
 import { creeStore, memoire, repriseValable } from './store.js';
 import { ajouteJours, isoLocal } from './calendrier.js';
@@ -218,8 +220,26 @@ const volumeReglable = !surIOS && (() => {
   return a.volume === 0.5;
 })();
 
-const titreMorceau = (m) => tr.t(m.titre);
+// Le nom donné (MusicLibrary.nameOf), sinon le titre livré, ou celui du fichier ajouté.
+const titreMorceau = (m) => nomDonne(store.musicNames(), m.id) ?? (m.perso ? m.titre || tr.t('music_unnamed') : tr.t(m.titre));
 const morceauChoisi = () => morceaux.find((m) => m.id === store.musicTrackId()) ?? morceaux[0] ?? null;
+
+// La lecture aléatoire de la séance (SessionService.jouerAuHasard, 28/09) : le morceau qui
+// joue vraiment (Store.musicNow), le sac du tirage, et les morceaux joués pour « précédent ».
+const melange = new MelangeMusique();
+let morceauJoue = null;
+let lectureAuHasard = false;
+let joues = [];
+/** En lecture aléatoire, le morceau qui joue, pas le morceau choisi (SessionActivity.renderMusicLine). */
+const morceauEnCours = () => (store.musicShuffle() ? morceaux.find((m) => m.id === morceauJoue) : null) ?? morceauChoisi();
+/** « Musique : Aléatoire » tant que le premier tirage n'a pas eu lieu. */
+const titreEnCours = (m) => (store.musicShuffle() && !morceauJoue ? tr.t('music_shuffle_short') : titreMorceau(m));
+lecteur.addEventListener('ended', () => {
+  if (lectureAuHasard && store.isSessionRunning() && store.musicEnabled()) jouerAuHasard();
+});
+
+/** Un morceau ajouté, tel que la bibliothèque le montre : lu depuis une adresse blob:. */
+const versMorceau = (e) => ({ id: e.id, titre: e.titre, perso: true, fichier: URL.createObjectURL(e.blob), source: e.source });
 
 /**
  * Un message bref en bas de l'écran (le Toast d'Android), qui ne bloque
@@ -266,6 +286,7 @@ function ecouter(m) {
   if (enEcoute === m.id) { lecteur.pause(); enEcoute = null; rendre(); return; }
   lecteur.src = m.fichier;
   lecteur.loop = false;
+  lectureAuHasard = false;
   if (volumeReglable) lecteur.volume = store.musicVolume() / 100;
   enEcoute = m.id;
   metadonnees(m);
@@ -529,7 +550,7 @@ function panneauAujourdhui() {
         store.setTargetMinutes(m); rendre();
       })),
       pastille(tr.t('start_theme'), sujet ? tr.t(`theme_${sujet}`) : tr.t('session_theme_none_short'), choisirSujet),
-      pastille(tr.t('start_music'), morceau ? titreMorceau(morceau) : tr.t('start_music_off'), () => ouvrir('musique'))),
+      pastille(tr.t('start_music'), morceau ? (store.musicShuffle() ? tr.t('music_shuffle_short') : titreMorceau(morceau)) : tr.t('start_music_off'), () => ouvrir('musique'))),
 
     h('div', { class: 'semaine' }, semaine.map((j) => {
       const repos = j.shabbat && j.exempt;
@@ -721,6 +742,7 @@ function etatMusique() {
   const m = morceauChoisi();
   if (!store.musicEnabled()) return tr.t('music_off_summary');
   if (!m) return tr.t('music_none_summary');
+  if (store.musicShuffle()) return volumeReglable ? tr.t('music_shuffle_summary', store.musicVolume()) : tr.t('music_shuffle');
   return volumeReglable ? tr.t('music_on_summary', titreMorceau(m), store.musicVolume()) : titreMorceau(m);
 }
 
@@ -2021,6 +2043,7 @@ function barre(titre) {
 let apercuAmbiance = null;
 function ecranMusique() {
   const choisi = morceauChoisi();
+  const aleatoire = store.musicShuffle();
   const interrupteur = h('input', {
     type: 'checkbox', role: 'switch', class: 'interrupteur', checked: store.musicEnabled(),
     'aria-label': tr.t('music_enable'),
@@ -2039,6 +2062,8 @@ function ecranMusique() {
               type: 'range', min: 0, max: 100, value: store.musicVolume(), 'aria-label': tr.t('music_volume'),
               oninput: (e) => { store.setMusicVolume(Number(e.target.value)); lecteur.volume = store.musicVolume() / 100; },
             }))) : null,
+        // La lecture aléatoire (MusicActivity, music_shuffle, 28/09).
+        ligneInterrupteur(tr.t('music_shuffle'), tr.t('music_shuffle_hint'), aleatoire, (v) => { store.setMusicShuffle(v); musiqueChangee(); }),
         // Les ambiances (19/10) : calculées, sous la musique ; cinq secondes d'aperçu hors séance.
         h('button', {
           class: 'ligne', onclick: () => choisirDans(tr.t('ambiance_title'), AMBIANCES.map((a) => tr.t(`ambiance_${a}`)),
@@ -2052,14 +2077,94 @@ function ecranMusique() {
           h('div', { class: 'etat' }, tr.t(`ambiance_${store.ambiance()}`))),
         h('span', { class: 'chevron', 'aria-hidden': 'true' }))),
       h('h2', { class: 'section' }, tr.t('music_library')),
-      h('div', { class: 'carte' }, morceaux.map((m) => h('div', { class: `ligne morceau${m === choisi ? ' choisi' : ''}` },
-        h('button', {
-          class: 'corps', onclick: () => { store.setMusicTrackId(m.id); rendre(); },
-          'aria-pressed': String(m === choisi),
-        }, h('div', { class: 'nom' }, titreMorceau(m)), h('div', { class: 'etat' }, tr.t('music_origin_bundled'))),
-        h('button', {
-          class: 'ecouter', 'aria-pressed': String(enEcoute === m.id), onclick: () => ecouter(m),
-        }, tr.t('music_preview'))))))));
+      h('p', { class: 'indice' }, tr.t('music_library_hint')),
+      h('div', { class: 'carte' }, morceaux.map((m) => {
+        // En lecture aléatoire, aucun morceau n'est « le » morceau de la séance.
+        const coche = !aleatoire && m === choisi;
+        return h('div', { class: `ligne morceau${coche ? ' choisi' : ''}` },
+          h('button', {
+            // Choisir un morceau, c'est quitter la lecture aléatoire.
+            class: 'corps', onclick: () => { store.setMusicTrackId(m.id); store.setMusicShuffle(false); musiqueChangee(); rendre(); },
+            'aria-pressed': String(coche),
+          }, h('div', { class: 'nom' }, titreMorceau(m)), h('div', { class: 'etat' }, tr.t(m.perso ? 'music_origin_device' : 'music_origin_bundled'))),
+          h('button', { class: 'renommer', 'aria-label': tr.t('music_rename'), onclick: () => renommerMorceau(m) }, iconeCrayon()),
+          h('button', {
+            class: 'ecouter', 'aria-pressed': String(enEcoute === m.id), onclick: () => ecouter(m),
+          }, tr.t('music_preview')));
+      })),
+      h('button', { class: 'secondaire ajouter-morceau', onclick: choisirFichierAudio }, tr.t('music_add')))));
+}
+
+function iconeCrayon() {
+  const svg = s('svg', { viewBox: '0 0 24 24', 'aria-hidden': 'true' });
+  svg.append(s('path', { fill: 'currentColor', d: 'M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z' }));
+  return svg;
+}
+
+// --- Les morceaux ajoutés (MusicActivity.addTrack, askRename ; 02/11) -------------------------
+/** OpenDocument(audio/*) : un fichier de l'appareil, copié dans le navigateur. */
+function choisirFichierAudio() {
+  const champ = h('input', { type: 'file', accept: 'audio/*', hidden: true });
+  champ.addEventListener('change', () => { const f = champ.files?.[0]; champ.remove(); if (f) ajouteMorceau(f); });
+  document.body.append(champ);
+  champ.click();
+}
+
+async function ajouteMorceau(fichier) {
+  // Le même fichier, choisi deux fois, n'entre qu'une fois (MusicLibrary.addUserTrack).
+  const source = `${fichier.name}|${fichier.size}|${fichier.lastModified}`;
+  const deja = morceaux.find((m) => m.perso && m.source === source);
+  if (deja) { store.setMusicTrackId(deja.id); rendre(); return; }
+  const id = `perso:${globalThis.crypto?.randomUUID?.() ?? `${Date.now().toString(36)}${Math.random().toString(36).slice(2)}`}`;
+  const entree = { id, titre: titreDeFichier(fichier.name), source };
+  try {
+    // Une copie lue en entier : le fichier choisi ne sera plus accessible au prochain démarrage.
+    entree.blob = new Blob([await fichier.arrayBuffer()], { type: fichier.type || 'audio/mpeg' });
+    await MorceauxPerso.ajoute(entree);
+  } catch (e) {
+    signale(tr.t(estQuota(e) ? 'music_add_quota_web' : 'music_add_failed'));
+    return;
+  }
+  // Que le navigateur ne l'efface pas de lui-même quand la place manque.
+  navigator.storage?.persist?.().catch(() => {});
+  morceaux.push(versMorceau(entree));
+  store.setMusicTrackId(id);
+  rendre();
+}
+
+/** MusicActivity.askRename : le nom, puis « Retirer » pour un morceau ajouté, « Titre d'origine » pour un morceau livré renommé. */
+function renommerMorceau(m) {
+  const donne = nomDonne(store.musicNames(), m.id);
+  const origine = m.perso ? m.titre || tr.t('music_unnamed') : tr.t(m.titre);
+  feuille(tr.t('music_rename'), (f, fermer) => {
+    const champ = h('input', { type: 'text', dir: 'auto', value: donne ?? '', placeholder: origine, 'aria-label': tr.t('music_rename'), maxlength: 120 });
+    const nommer = (titre) => { store.setMusicNames(renomme(store.musicNames(), m.id, titre)); fermer(); rendre(); majMini(); };
+    champ.addEventListener('keydown', (e) => { if (e.key === 'Enter') nommer(champ.value); });
+    const neutre = m.perso
+      ? h('button', { class: 'neutre', onclick: () => { fermer(); confirmerRetrait(m); } }, tr.t('music_remove'))
+      : donne ? h('button', { class: 'neutre', onclick: () => nommer('') }, tr.t('music_rename_reset')) : null;
+    f.append(champ, h('div', { class: 'actions' }, neutre,
+      h('button', { onclick: fermer }, tr.t('action_back')),
+      h('button', { onclick: () => nommer(champ.value) }, tr.t('action_save'))));
+    setTimeout(() => champ.select(), 0);
+  });
+}
+
+/** Un morceau livré ne se retire pas ; un morceau ajouté, après confirmation. */
+function confirmerRetrait(m) {
+  if (!m.perso) return;
+  confirmer(tr.t('music_remove_confirm_web', titreMorceau(m)), tr.t('music_remove_message_web'), tr.t('music_remove'), async () => {
+    try { await MorceauxPerso.retire(m.id); } catch { signale(tr.t('music_play_failed')); return; }
+    const jouait = lecteur.src === m.fichier && !lecteur.paused;
+    if (lecteur.src === m.fichier) { lecteur.pause(); lecteur.removeAttribute('src'); lecteur.load(); enEcoute = null; }
+    morceaux = morceaux.filter((x) => x !== m);
+    URL.revokeObjectURL(m.fichier);
+    if (store.musicTrackId() === m.id) store.setMusicTrackId(null);
+    store.setMusicNames(renomme(store.musicNames(), m.id, ''));
+    // Retiré pendant qu'il jouait en séance : la musique continue avec un autre.
+    if (jouait && store.isSessionRunning()) demarreMusique();
+    rendre();
+  });
 }
 
 // --- Zmanim et calendrier (ZmanimActivity, CalendrierActivity, 10/10) ----------------
@@ -4007,19 +4112,53 @@ function demarreMusique() {
   // L'ambiance (19/10) suit son réglage, que la musique soit là ou non.
   joueAmbiance(store.ambiance(), store.musicVolume());
   if (!store.musicEnabled()) return;
+  if (store.musicShuffle()) { jouerAuHasard(); return; }
   const m = morceauChoisi();
   if (!m) return;
+  lance(m, { boucle: true }).catch(echecLecture);
+}
+
+/** MusicPlayer.start : en boucle pour le morceau choisi, une fois en lecture aléatoire. */
+function lance(m, { boucle }) {
   enEcoute = null;
+  lectureAuHasard = !boucle;
+  morceauJoue = m.id;
+  if (joues.at(-1) !== m.id) joues.push(m.id);
+  if (joues.length > 50) joues.shift();
   lecteur.src = m.fichier;
-  lecteur.loop = true;
+  lecteur.loop = boucle;
   if (volumeReglable) lecteur.volume = store.musicVolume() / 100;
   metadonnees(m);
-  lecteur.play().catch(echecLecture);
+  return lecteur.play();
+}
+
+/**
+ * Lecture aléatoire : un morceau, puis à sa fin le suivant tiré du même sac, jusqu'à la fin
+ * de la séance. Un morceau illisible est sauté plutôt que de laisser la séance muette.
+ */
+function jouerAuHasard(essais = 3) {
+  const id = melange.suivant(morceaux.map((m) => m.id));
+  const m = morceaux.find((x) => x.id === id);
+  if (!m) return;
+  lance(m, { boucle: false }).catch((e) => {
+    if (e?.name === 'AbortError') return;
+    if (essais > 1) jouerAuHasard(essais - 1); else echecLecture(e);
+  });
+  majMini();
+}
+
+/** SessionService ACTION_MUSIC : passer à l'aléatoire, ou en revenir, pendant la séance relance la musique. */
+function musiqueChangee() {
+  if (!store.isSessionRunning() || !store.musicEnabled()) return;
+  if (lectureAuHasard !== store.musicShuffle()) demarreMusique();
 }
 
 /** Fondu court à la fin (MusicPlayer.stop) ; sur iPhone, où le volume ne se règle pas, l'arrêt est net. */
 function arreteMusique() {
   arreteAmbiance();
+  morceauJoue = null;
+  lectureAuHasard = false;
+  joues = [];
   if (lecteur.paused) return;
   if (!volumeReglable) { lecteur.pause(); return; }
   const depart = lecteur.volume;
@@ -4040,6 +4179,7 @@ const ICONES_LECTEUR = {
   lecture: 'M8 5v14l11-7z', pause: 'M6 19h4V5H6v14zm8-14v14h4V5h-4z',
   precedent: 'M6 6h2v12H6zm3.5 6 8.5 6V6z', suivant: 'M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z',
   replier: 'M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z',
+  aleatoire: 'M10.59 9.17 5.41 4 4 5.41l5.17 5.17 1.42-1.41zM14.5 4l2.04 2.04L4 18.59 5.41 20 17.96 7.46 20 9.5V4h-5.5zm.33 9.41-1.41 1.41 3.13 3.13L14.5 20H20v-5.5l-2.04 2.04-3.13-3.13z',
 };
 function iconeLecteur(nom) {
   const svg = s('svg', { viewBox: '0 0 24 24', 'aria-hidden': 'true' });
@@ -4054,6 +4194,15 @@ const minSec = (t) => { const x = Math.max(0, Math.floor(t || 0)); return `${Mat
 
 function morceauSuivant(sens) {
   if (!morceaux.length) return;
+  // En lecture aléatoire : « suivant » tire, « précédent » revient au morceau d'avant (SessionService.changer).
+  if (store.musicShuffle()) {
+    store.setMusicEnabled(true);
+    if (sens < 0 && joues.length >= 2) joues.pop();
+    const avant = sens < 0 ? morceaux.find((m) => m.id === joues.at(-1)) : null;
+    if (avant) lance(avant, { boucle: false }).catch(echecLecture); else jouerAuHasard();
+    majMini();
+    return;
+  }
   const ici = Math.max(0, morceaux.findIndex((m) => m.id === morceauChoisi()?.id));
   const m = morceaux[(ici + sens + morceaux.length) % morceaux.length];
   store.setMusicEnabled(true);
@@ -4088,12 +4237,15 @@ function construireMini() {
       barre,
       h('div', { class: 'mini-temps' }, h('span', { class: 'mini-ecoule' }), h('span', { class: 'mini-total' })),
       h('div', { class: 'mini-commandes' },
+        // La lecture aléatoire, et son pendant vide pour que la lecture reste au centre (MiniLecteur.kt).
+        bouton('aleatoire', 'lecteur_aleatoire', () => { store.setMusicShuffle(!store.musicShuffle()); musiqueChangee(); majMini(); }, 'mini-aleatoire'),
         bouton('precedent', 'lecteur_precedent', () => {
           if (lecteur.currentTime > 3) { lecteur.currentTime = 0; return; }
           morceauSuivant(-1);
         }),
         lecture,
-        bouton('suivant', 'lecteur_suivant', () => morceauSuivant(1)))));
+        bouton('suivant', 'lecteur_suivant', () => morceauSuivant(1)),
+        h('span', { class: 'mini-bouton', 'aria-hidden': 'true' }))));
   document.body.append(mini);
   for (const ev of ['timeupdate', 'play', 'pause', 'loadedmetadata', 'ended']) lecteur.addEventListener(ev, majMini);
 }
@@ -4106,10 +4258,11 @@ function majMini() {
   if (!mini) construireMini();
   mini.hidden = false;
   mini.classList.toggle('deplie', miniDeplie);
-  const m = store.musicEnabled() ? morceauChoisi() : null;
+  const m = store.musicEnabled() ? morceauEnCours() : null;
   const joue = !lecteur.paused && !lecteur.ended;
   mini.classList.toggle('joue', joue);
   mini.querySelector('.mini-titre').textContent = m ? titreMorceau(m) : tr.t('music_off_short');
+  mini.querySelector('.mini-aleatoire').setAttribute('aria-pressed', String(store.musicShuffle()));
   const image = m?.image ?? perso('img/char_guitar.webp');
   for (const img of mini.querySelectorAll('.mini-disque img')) {
     if (img.getAttribute('src') !== image) img.src = image;
@@ -4308,7 +4461,7 @@ function ecranSeance() {
       : h('div', { class: 'decompte' }, tr.duree(store.targetMinutes())),
     // Fait, le grand chiffre reste la durée de la prochaine : la légende dit ce qui a été fait (13/10).
     h('p', { class: 'legende' }, enCours ? c.legende : fait ? tr.t('session_idle_done', tr.duree(store.record()?.minutes ?? 0)) : tr.t('session_idle_caption')),
-    morceau ? h('p', { class: 'legende petite' }, tr.t('session_music_line', titreMorceau(morceau))) : null,
+    morceau ? h('p', { class: 'legende petite' }, tr.t('session_music_line', titreEnCours(morceauEnCours()))) : null,
     carteChizuk(chizukSeance),
     enCours && aBlocage ? h('button', { class: 'texte-clair blocage', onclick: () => { tireChizuk('blocage'); if (questionSeance < 0) questionSeance = 0; rendre(); } }, tr.t('chizuk_stuck')) : null,
     enCours && questionSeance >= 0 ? h('div', { class: `question-seance${questionChange && !moinsDeMouvement() ? ' fondu-neuf' : ''}` },
@@ -4570,12 +4723,14 @@ function rendre() {
 async function demarrer() {
   tr = await chargeTraduction(langueInitiale(store.langueApp(), navigator.languages));
   appliqueApparence();
-  const [m, t, c] = await Promise.all([
+  const [m, t, c, p] = await Promise.all([
     fetch('data/musique.json').then((r) => r.json()),
     fetch('data/tikkun_haklali.json').then((r) => r.json()),
     fetch('data/chizuk.json').then((r) => r.json()),
+    // Les morceaux ajoutés (02/11), après les morceaux livrés (MusicLibrary.all).
+    MorceauxPerso.tous().catch(() => []),
   ]);
-  morceaux = m;
+  morceaux = [...m, ...p.filter((e) => e?.blob instanceof Blob).map(versMorceau)];
   tikkun = t;
   chizuk = c;
   // Rouvert sur l'écran de séance : son mot d'ouverture.

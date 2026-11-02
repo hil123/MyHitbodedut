@@ -453,6 +453,11 @@ export function creeStore(stockage, { maintenant = () => new Date(), fuseau } = 
     setMusicTrackId: (id) => set('music_track', id),
     musicVolume: () => get('music_volume', DEFAULT_VOLUME),
     setMusicVolume: (v) => set('music_volume', Math.max(0, Math.min(100, Math.round(v)))),
+    // La lecture aléatoire (Store.musicShuffle, 28/09) et les noms donnés aux morceaux (Store.musicNames).
+    musicShuffle: () => get('music_shuffle', false) === true,
+    setMusicShuffle: (v) => set('music_shuffle', !!v),
+    musicNames: () => { const n = get('music_names', {}); return n && typeof n === 'object' && !Array.isArray(n) ? n : {}; },
+    setMusicNames: (n) => set('music_names', n),
 
     // --- Sauvegarde (Store.exportJson / importJson) ------------------------------------
     exportJson() {
@@ -476,6 +481,7 @@ export function creeStore(stockage, { maintenant = () => new Date(), fuseau } = 
           reminder_minutes: get('reminder_minutes', DEFAULT_REMINDER),
           music_enabled: store.musicEnabled(),
           music_volume: store.musicVolume(),
+          music_shuffle: store.musicShuffle(),
           music_track: store.musicTrackId() ?? '',
           adresse: store.adresse() ?? '',
           apparence_mode: store.modeApparence(),
@@ -538,7 +544,7 @@ export function creeStore(stockage, { maintenant = () => new Date(), fuseau } = 
         entier('target_minutes', null, 1, 240); entier('daily_goal_minutes', null, 0, 240);
         bool('pause_shabbat'); bool('in_israel');
         bool('reminder_enabled', 'reminder_on'); entier('reminder_minutes');
-        bool('music_enabled'); entier('music_volume', null, 0, 100);
+        bool('music_enabled'); entier('music_volume', null, 0, 100); bool('music_shuffle');
         texteNonVide('music_track');
         if (s.adresse === 'm' || s.adresse === 'f') set('adresse', s.adresse);
         if (['auto', 'clair', 'sombre'].includes(s.apparence_mode)) set('apparence_mode', s.apparence_mode);

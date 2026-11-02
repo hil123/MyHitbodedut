@@ -446,6 +446,10 @@
     <string name="onboarding_rappel">להזכיר לי כל יום</string>
     <string name="onboarding_rappel_heure">ב־%1$s</string>
     <string name="onboarding_rappel_heure_desc">שעת התזכורת: %1$s</string>
+    <!-- Pour la version web (02/11) : les morceaux ajoutés sont gardés dans le navigateur, qui peut manquer de place. -->
+    <string name="music_add_quota_web">אין מספיק מקום בדפדפן הזה כדי לשמור את הניגון.</string>
+    <string name="music_remove_confirm_web">להסיר את ״%1$s״?</string>
+    <string name="music_remove_message_web">הניגון יימחק מהדפדפן הזה; הקובץ המקורי נשאר במכשיר.</string>
     <!-- Pour la version web (16/10) : pas de rappels, et un navigateur plutôt qu’un téléphone sans Internet. -->
     <string name="onboarding_days_body_web">הרצף סופר את הימים ברציפות, והשבוע כולו נראה במבט אחד. אחרי כל התבודדות אפשר להשאיר הערה ביומן.</string>
     <string name="onboarding_private_body_web">מה שתכתבו נשאר בדפדפן הזה, במכשיר הזה: שום דבר לא נשלח לשום מקום, מלבד אות הקריאה של טיסה ומיקום משוער אם תפעילו מעקב בזמן אמת.</string>

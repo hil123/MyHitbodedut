@@ -245,7 +245,7 @@ test('un fichier de sauvegarde Android se relit, et l’export garde le même fo
     settings: {
       window_start: 360, window_end: 660, snooze_minutes: 15, target_minutes: 30, daily_goal_minutes: 0, pause_shabbat: true,
       in_israel: true, reminder_enabled: true, reminder_minutes: 420, music_enabled: false, music_volume: 40,
-      music_track: 'niggoun_05', adresse: 'f', apparence_mode: 'sombre', apparence_fond: 'sable', apparence_accent: 'violet',
+      music_shuffle: true, music_track: 'niggoun_05', adresse: 'f', apparence_mode: 'sombre', apparence_fond: 'sable', apparence_accent: 'violet',
     },
     paused_dates: ['2026-09-30'],
     blocked_apps: ['com.exemple'],
