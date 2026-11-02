@@ -35,6 +35,10 @@ export const FIN5 = 2430;
 const ACCROCHE = ((getInputProps() as {accroche?: string}).accroche ?? (FX ? 'A' : 'origine')) as 'A' | 'origine';
 const DEBUT_S01 = ACCROCHE === 'A' ? 6 : 45; // la voix démarre avant 0,5 s
 export const TOTAL5 = 2610;
+/** v27c : plan du personnage pensif raccourci — on retire les images [COUPE_DE, COUPE_DE + COUPE) du film (aucune voix dans cet intervalle). */
+const COUPE_DE = 255;
+const COUPE = ACCROCHE === 'A' ? 45 : 0;
+export const DUREE5 = TOTAL5 - COUPE;
 const VOIX: {f: string; at: number; dur: number; txt: string; trim?: number; coupe?: number}[] = [
   {f: 's01', at: DEBUT_S01, dur: 4.95, txt: 'Chaque jour, nous sommes occupés. Le travail, les responsabilités, les soucis…'},
   {f: 's02', at: 300, dur: 3.0, txt: 'Mais prenons-nous vraiment le temps de parler à Hachem ?'},
@@ -93,7 +97,7 @@ const POSES_ORIGINE: Pose[] = [
 ];
 // accroche A : les 4 poses d'ouverture sont remplacées par la tempête de notifications ; le personnage pensif revient à 6,7 s
 const POSES: Pose[] = ACCROCHE === 'A'
-  ? [{de: 200, a: 300, src: 'char_thinking', type: 'perso', mot: 'le monde ne s’arrête jamais', teinte: '#f1efec', dir: -1}, ...POSES_ORIGINE.filter((p) => p.de >= 300)]
+  ? [{de: 200, a: COUPE_DE, src: 'char_thinking', type: 'perso', mot: 'le monde ne s’arrête jamais', teinte: '#f1efec', dir: -1}, ...POSES_ORIGINE.filter((p) => p.de >= 300)]
   : POSES_ORIGINE;
 
 const RATIO: Record<string, number> = {char_standing_back: 204 / 640, char_walking: 328 / 640, char_writing: 637 / 640, char_thinking: 544 / 640, char_face: 465 / 640, char_debout: 800 / 1200,
@@ -575,7 +579,7 @@ const FondVivant: React.FC<{f: number}> = ({f}) => (
   </AbsoluteFill>
 );
 
-export const PubV5: React.FC = () => {
+const Film5: React.FC = () => {
   const f = useCurrentFrame();
   const {fps} = useVideoConfig();
   // v17 : le téléphone entre et sort en fondu enchaîné avec les poses (chevauchement FONDU_PHASE), sans flash
@@ -676,7 +680,7 @@ export const PubV5: React.FC = () => {
 
       {/* textes écran */}
       {ACCROCHE === 'A' && f < 210 && <Tempete f={f} />}
-      <Sequence from={ACCROCHE === 'A' ? 196 : 0} durationInFrames={ACCROCHE === 'A' ? 104 : 300}><TexteEcran texte="Le monde ne s’arrête jamais…" debut={ACCROCHE === 'A' ? 4 : 14} fin={ACCROCHE === 'A' ? 100 : 296} sombre={!NUIT} /></Sequence>
+      <Sequence from={ACCROCHE === 'A' ? 196 : 0} durationInFrames={ACCROCHE === 'A' ? COUPE_DE - 196 : 300}><TexteEcran texte="Le monde ne s’arrête jamais…" debut={ACCROCHE === 'A' ? 4 : 14} fin={ACCROCHE === 'A' ? COUPE_DE - 196 - 2 : 296} sombre={!NUIT} /></Sequence>
       <Sequence from={300} durationInFrames={130}><TexteEcran texte="Et toi, prends-tu ce moment ?" debut={6} fin={126} sombre={!NUIT} /></Sequence>
       {f >= 442 && f < 600 && (
         <div style={{position: 'absolute', top: Z.texteHaut, height: Z.texteBas - Z.texteHaut, left: 0, right: 0, display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -738,3 +742,11 @@ export const PubV5: React.FC = () => {
     </AbsoluteFill>
   );
 };
+
+/** Le film monté : avant COUPE_DE tel quel ; ensuite il reprend à COUPE_DE + COUPE (le plan suivant), sans toucher au reste du calage (voix, musique, effets). */
+export const PubV5: React.FC = () => COUPE === 0 ? <Film5 /> : (
+  <>
+    <Sequence durationInFrames={COUPE_DE}><Film5 /></Sequence>
+    <Sequence from={COUPE_DE}><Sequence from={-(COUPE_DE + COUPE)}><Film5 /></Sequence></Sequence>
+  </>
+);
