@@ -281,6 +281,9 @@ input[type="range"] { width: 100%; accent-color: var(--brand); }
 .onglet .icone {
   width: 56px; height: 30px; border-radius: 12px; display: grid; place-items: center;
 }
+/* Cinq onglets depuis le journal (02/11) : sur le plus petit téléphone (320 px), « Aujourd’hui »
+   en gras ne tenait plus dans ses 64 px. */
+@media (max-width: 374px) { .onglet { font-size: 10.5px; letter-spacing: -0.01em; } }
 .onglet .icone::before {
   content: ""; width: 24px; height: 24px; background: currentColor;
   -webkit-mask: var(--icone) center / contain no-repeat; mask: var(--icone) center / contain no-repeat;
