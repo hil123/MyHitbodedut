@@ -31,9 +31,12 @@ const BLOCS: Record<string, {t: number; txt: string}[]> = {
 };
 /** v22 : fin resserrée — carte à 81 s, film de 87 s qui se termine avec la musique. */
 export const FIN5 = 2430;
+/** v27 : accroche « tempête de notifications » (0–10 s). --props accroche:'origine' pour l'ancienne. */
+const ACCROCHE = ((getInputProps() as {accroche?: string}).accroche ?? (FX ? 'A' : 'origine')) as 'A' | 'origine';
+const DEBUT_S01 = ACCROCHE === 'A' ? 6 : 45; // la voix démarre avant 0,5 s
 export const TOTAL5 = 2610;
 const VOIX: {f: string; at: number; dur: number; txt: string; trim?: number; coupe?: number}[] = [
-  {f: 's01', at: 45, dur: 4.95, txt: 'Chaque jour, nous sommes occupés. Le travail, les responsabilités, les soucis…'},
+  {f: 's01', at: DEBUT_S01, dur: 4.95, txt: 'Chaque jour, nous sommes occupés. Le travail, les responsabilités, les soucis…'},
   {f: 's02', at: 300, dur: 3.0, txt: 'Mais prenons-nous vraiment le temps de parler à Hachem ?'},
   // v12 : le bruit de la foule coupe net à 430, silence, puis la voix annonce le nom
   {f: 's05a', at: 442, dur: 1.65, txt: 'MY HITBODEDUT.'},
@@ -60,7 +63,7 @@ const volumeMusique = (f: number) => {
  * Les bornes suivent la voix (découpage au prorata des caractères, comme les sous-titres).
  */
 type Pose = {de: number; a: number; src: string; type: 'perso' | 'carte'; mot: string; bulle?: string; bulles?: string[]; teinte: string; dir: 1 | -1; marche?: boolean; retour?: boolean; fixe?: boolean; lumiere?: boolean};
-const POSES: Pose[] = [
+const POSES_ORIGINE: Pose[] = [
   // s01 « Chaque jour, nous sommes occupés. | Le travail, | les responsabilités, | les soucis… »
   {de: 0, a: 104, src: 'char_walking', type: 'perso', mot: 'occupés', bulle: 'En retard !', teinte: '#e8f1f0', dir: 1, marche: true},
   {de: 104, a: 130, src: 'char_writing', type: 'perso', mot: 'le travail', bulle: 'Encore 3 dossiers…', teinte: '#eef0f5', dir: -1},
@@ -88,6 +91,10 @@ const POSES: Pose[] = [
   {de: 2309, a: 2360, src: 'scene_nature', type: 'carte', mot: 'un moment pour Hachem', teinte: '#f6efe2', dir: 1},
   // 2360–FIN5 (2430) : l’écran « Bravo, Tsadik ! » dans le téléphone, puis la carte finale
 ];
+// accroche A : les 4 poses d'ouverture sont remplacées par la tempête de notifications ; le personnage pensif revient à 6,7 s
+const POSES: Pose[] = ACCROCHE === 'A'
+  ? [{de: 200, a: 300, src: 'char_thinking', type: 'perso', mot: 'le monde ne s’arrête jamais', teinte: '#f1efec', dir: -1}, ...POSES_ORIGINE.filter((p) => p.de >= 300)]
+  : POSES_ORIGINE;
 
 const RATIO: Record<string, number> = {char_standing_back: 204 / 640, char_walking: 328 / 640, char_writing: 637 / 640, char_thinking: 544 / 640, char_face: 465 / 640, char_debout: 800 / 1200,
   char_praise: 396 / 640, char_praying: 370 / 640, char_pointing: 383 / 640, char_dancing_joy: 517 / 900, char_open_arms: 626 / 900, char_offering: 353 / 640,
@@ -430,6 +437,104 @@ const PoussiereDoree: React.FC<{f: number}> = ({f}) => f < 0 ? null : (
   </AbsoluteFill>
 );
 
+
+/* ---------- v27 : accroche « tempête de notifications » ---------- */
+type Notif = {app: string; fond: string; lettre?: string; titre: string; txt: string};
+const NOTIFS: Notif[] = [
+  {app: 'whatsapp', fond: '#25D366', titre: 'Maman', txt: 'Tu rappelles quand ?'},
+  {app: '', fond: '#2f7cf6', lettre: '@', titre: 'Bureau', txt: 'Réunion avancée à 9 h'},
+  {app: 'youtube', fond: '#FF0000', titre: 'YouTube', txt: 'Nouvelle vidéo pour toi'},
+  {app: '', fond: '#f2543d', lettre: '31', titre: 'Agenda', txt: 'Encore 3 dossiers à rendre'},
+  {app: 'whatsapp', fond: '#25D366', titre: 'Groupe famille', txt: '47 nouveaux messages'},
+  {app: 'instagram', fond: 'linear-gradient(45deg,#F58529,#DD2A7B,#8134AF)', titre: 'Instagram', txt: 'Nouvelle story'},
+  {app: '', fond: '#2f7cf6', lettre: '@', titre: 'Banque', txt: 'Échéance demain'},
+  {app: 'tiktok', fond: '#000', titre: 'TikTok', txt: 'Tendances du jour'},
+  {app: 'whatsapp', fond: '#25D366', titre: 'David', txt: 'Tu es en retard ?'},
+  {app: 'facebook', fond: '#0866FF', titre: 'Facebook', txt: '12 notifications'},
+  {app: '', fond: '#f2543d', lettre: '31', titre: 'Rappel', txt: 'Rendez-vous à 18 h'},
+  {app: 'snapchat', fond: '#FFFC00', titre: 'Snapchat', txt: 'Nouveau snap'},
+  {app: '', fond: '#2f7cf6', lettre: '@', titre: 'Bureau', txt: 'URGENT : à valider'},
+  {app: 'whatsapp', fond: '#25D366', titre: 'Groupe travail', txt: 'Tu as vu ?'},
+];
+// arrivées de plus en plus rapprochées (la pression monte), la dernière juste avant « les soucis »
+const ARRIVEES = NOTIFS.map((_, i) => Math.round(-14 + 142 * Math.pow(i / (NOTIFS.length - 1), 0.72))); // 1re image déjà animée : deux notifications sont en train d'arriver
+const STOP = 158; // fin de « les soucis… » : tout s'arrête net
+const MOTS = [{de: -10, a: 40, t: 'CHAQUE JOUR.'}, {de: 40, a: 64, t: 'OCCUPÉS.'}, {de: 65, a: 90, t: 'TRAVAIL.'}, {de: 91, a: 131, t: 'RESPONSABILITÉS.'}, {de: 132, a: 170, t: 'SOUCIS…'}];
+const Tempete: React.FC<{f: number}> = ({f}) => {
+  const g = Math.min(f, STOP); // l'instant se fige à STOP
+  const balaye = L(f, STOP + 4, STOP + 18, 0, 1, Easing.in(Easing.cubic)); // « tout effacer »
+  const eteint = L(f, STOP + 14, STOP + 26, 0, 1);
+  const sortie = L(f, 182, 206, 0, 1, Easing.in(Easing.cubic));
+  // vibration à chaque arrivée
+  const vib = ARRIVEES.reduce((a, t) => a + (g >= t && g < t + 7 ? Math.sin((g - t) * 3.1) * (1 - (g - t) / 7) : 0), 0);
+  const pousse = 0.9 + 0.1 * L(g, 0, STOP, 0, 1, Easing.inOut(Easing.sin)); // reste dans la zone du sujet : ne touche ni le texte ni les sous-titres
+  const tension = L(g, 60, STOP, 0, 1);
+  const largeur = LARGEUR_TEL;
+  return (
+    <AbsoluteFill>
+      {/* projecteur sur le téléphone */}
+      <AbsoluteFill style={{background: `radial-gradient(ellipse 50% 38% at 50% 50%, rgba(${Math.round(90 + 120 * tension)},${Math.round(150 - 60 * tension)},${Math.round(220 - 120 * tension)},.32) 0, rgba(0,0,0,0) 70%)`, opacity: 1 - eteint * 0.7}} />
+      <div style={{position: 'absolute', left: 0, right: 0, top: Z.sujetHaut, height: H, display: 'flex', alignItems: 'center', justifyContent: 'center',
+        transform: `translateY(${sortie * 700}px) scale(${pousse}) rotate(${vib * 1.4}deg) translateX(${vib * 5}px)`, opacity: 1 - sortie}}>
+        <Telephone src="">
+          <AbsoluteFill style={{background: 'linear-gradient(180deg,#14304a 0%,#0a1726 60%,#060d16 100%)'}}>
+            <div style={{position: 'absolute', top: 70, left: 0, right: 0, textAlign: 'center', color: '#e8eef5', fontFamily: 'Inter', fontWeight: 600, fontSize: 92, letterSpacing: -2}}>08:57</div>
+            <div style={{position: 'absolute', top: 178, left: 0, right: 0, textAlign: 'center', color: '#b9c7d6', fontFamily: 'Inter', fontWeight: 500, fontSize: 22}}>mardi</div>
+            {NOTIFS.map((n, i) => {
+              const t = ARRIVEES[i];
+              if (g < t) return null;
+              const rang = ARRIVEES.filter((u) => u <= g && u > t).length; // combien sont arrivées après celle-ci
+              if (rang > 6) return null;
+              const e = spring({frame: g - t, fps: FPS, config: {damping: 14, mass: 0.6}});
+              const y = 228 + rang * 76 - (1 - e) * 60;
+              const fuite = Math.max(0, balaye * 900 - (6 - rang) * 40);
+              return (
+                <div key={i} style={{position: 'absolute', left: 14, right: 14, top: y - fuite, height: 68, borderRadius: 18, background: 'rgba(235,242,250,.16)',
+                  border: '1px solid rgba(255,255,255,.12)', display: 'flex', alignItems: 'center', gap: 10, padding: '0 12px', opacity: e * (1 - rang / 8) * (1 - balaye * 0.6),
+                  transform: `scale(${0.9 + 0.1 * e})`, filter: balaye > 0 ? `blur(${balaye * 6}px)` : undefined}}>
+                  <div style={{width: 40, height: 40, borderRadius: 10, background: n.fond, display: 'flex', alignItems: 'center', justifyContent: 'center', flex: 'none',
+                    color: '#fff', fontFamily: 'Inter', fontWeight: 800, fontSize: 18}}>
+                    {n.app ? <Img src={staticFile(`logos/${n.app}.svg`)} style={{width: 24, height: 24}} /> : n.lettre}
+                  </div>
+                  <div style={{minWidth: 0, fontFamily: 'Inter', color: '#f1f5fa', lineHeight: 1.2}}>
+                    <div style={{fontWeight: 700, fontSize: 17}}>{n.titre}</div>
+                    <div style={{fontWeight: 500, fontSize: 16, opacity: 0.85, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis'}}>{n.txt}</div>
+                  </div>
+                </div>
+              );
+            })}
+            <AbsoluteFill style={{background: '#000', opacity: eteint}} />
+          </AbsoluteFill>
+        </Telephone>
+      </div>
+      {/* les mots de la voix frappent en grand, un à la fois (zone texte du haut) */}
+      {MOTS.map((m) => {
+        if (f < m.de || f >= m.a) return null;
+        const e = spring({frame: f - m.de, fps: FPS, config: {damping: 13, mass: 0.5}});
+        const x = L(f, m.a - 5, m.a, 0, 1, Easing.in(Easing.cubic));
+        return (
+          <div key={m.t} style={{position: 'absolute', top: Z.texteHaut, height: Z.texteBas - Z.texteHaut, left: 30, right: 30, display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+            <div style={{fontFamily: 'Inter', fontWeight: 800, fontSize: m.t.length > 10 ? 72 : 104, letterSpacing: 2, color: m.t.startsWith('SOUCIS') ? '#e3c27a' : '#f2f6fa',
+              opacity: Math.min(1, e * 1.5) * (1 - x), transform: `scale(${1.35 - 0.35 * e + 0.06 * x}) translateY(${-x * 20}px)`, filter: `blur(${(1 - Math.min(1, e)) * 8 + x * 8}px)`,
+              textShadow: '0 0 30px rgba(120,170,255,.35)'}}>{m.t}</div>
+          </div>
+        );
+      })}
+    </AbsoluteFill>
+  );
+};
+/** Signature de marque dès 0,5 s (sous les sous-titres, hors du sujet). */
+const Signature: React.FC<{f: number}> = ({f}) => {
+  if (ACCROCHE !== 'A' || f > 430) return null;
+  const o = Math.min(L(f, 12, 24, 0, 1), L(f, 410, 430, 1, 0));
+  return (
+    <div style={{position: 'absolute', top: 1420, left: 0, right: 0, display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 12, opacity: 0.85 * o}}>
+      <Img src={staticFile('planche/logo.png')} style={{width: 44, height: 44, borderRadius: 11}} />
+      <div style={{fontFamily: 'Inter', fontWeight: 700, fontSize: 26, letterSpacing: 4, color: NUIT ? '#e3c27a' : C.petrole}}>MY HITBODEDUT</div>
+    </div>
+  );
+};
+
 const SECTIONS = [
   {n: 1, texte: 'Une Hitbodedut guidée', de: T5.etapes, a: T5.duree},
   {n: 2, texte: 'Ton objectif quotidien', de: T5.duree, a: T.avec},
@@ -564,7 +669,8 @@ export const PubV5: React.FC = () => {
       {FX && f >= T.chabbat - 10 && f < T.chabbat + 14 && <FuiteLumiere k={tr.voile} f={f} />}
 
       {/* textes écran */}
-      <Sequence from={0} durationInFrames={300}><TexteEcran texte="Le monde ne s’arrête jamais…" debut={14} fin={296} sombre={!NUIT} /></Sequence>
+      {ACCROCHE === 'A' && f < 210 && <Tempete f={f} />}
+      <Sequence from={ACCROCHE === 'A' ? 196 : 0} durationInFrames={ACCROCHE === 'A' ? 104 : 300}><TexteEcran texte="Le monde ne s’arrête jamais…" debut={ACCROCHE === 'A' ? 4 : 14} fin={ACCROCHE === 'A' ? 100 : 296} sombre={!NUIT} /></Sequence>
       <Sequence from={300} durationInFrames={130}><TexteEcran texte="Et toi, prends-tu ce moment ?" debut={6} fin={126} sombre={!NUIT} /></Sequence>
       {f >= 442 && f < 600 && (
         <div style={{position: 'absolute', top: Z.texteHaut, height: Z.texteBas - Z.texteHaut, left: 0, right: 0, display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -604,6 +710,7 @@ export const PubV5: React.FC = () => {
         </AbsoluteFill>
       )}
 
+      <Signature f={f} />
       {FX && <Texture f={f} />}
       {/* nuit : בס״ד discret en haut, comme sur l'exemple */}
       {NUIT && <div style={{position: 'absolute', top: 34, left: 0, right: 0, textAlign: 'center', fontFamily: 'FrankRuhl, serif', fontSize: 26, color: '#c9d6e3', opacity: 0.55}}>בס״ד</div>}
