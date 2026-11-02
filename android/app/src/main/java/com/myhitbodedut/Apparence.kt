@@ -113,6 +113,16 @@ object Apparence {
      * de l'application : l'écran de blocage est posé par un service, qui n'a
      * ni le thème de l'app, ni le mode sombre réglé par AppCompat.
      */
+    /**
+     * L'effet au toucher de Material (ondulation aux couleurs du thème), à la place de
+     * list_selector_background, le surlignage carré d'Android 2 (02/11).
+     */
+    fun effetToucher(c: Context): android.graphics.drawable.Drawable? {
+        val tv = android.util.TypedValue()
+        c.theme.resolveAttribute(android.R.attr.selectableItemBackground, tv, true)
+        return androidx.core.content.ContextCompat.getDrawable(c, tv.resourceId)
+    }
+
     fun contexte(base: Context): Context {
         val mode = Store.modeApparence(base)
         val configure = if (mode == Mode.AUTO) base else {

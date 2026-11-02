@@ -108,7 +108,7 @@ object RepriseFavoris {
         orientation = LinearLayout.VERTICAL
         setPadding(0, dp(c, 10), 0, dp(c, 10))
         minimumHeight = dp(c, 48)
-        foreground = c.getDrawable(android.R.drawable.list_selector_background)
+        foreground = Apparence.effetToucher(c)
         setOnClickListener { action() }
         addView(TextView(c).apply {
             text = titre(c, m.cle)
@@ -155,7 +155,7 @@ object RepriseFavoris {
             if (discret) { maxLines = 1; ellipsize = android.text.TextUtils.TruncateAt.END }
             setPadding(0, dp(c, 4), 0, dp(c, 4))
             PoliceHebraique.appliquer(this)
-            foreground = c.getDrawable(android.R.drawable.list_selector_background)
+            foreground = Apparence.effetToucher(c)
             setOnClickListener { action() }
             icone?.let { id ->
                 c.getDrawable(id)?.mutate()?.apply { setTint(Apparence.couleur(c, if (discret) R.color.muted else R.color.brand)); setBounds(0, 0, dp(c, if (discret) 14 else 18), dp(c, if (discret) 14 else 18)) }

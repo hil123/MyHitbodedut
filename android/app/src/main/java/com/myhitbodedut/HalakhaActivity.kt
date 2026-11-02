@@ -133,16 +133,16 @@ class HalakhaActivity : AppCompatActivity() {
             layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
                 .apply { topMargin = (14 * resources.displayMetrics.density).toInt() }
             val rtl = resources.configuration.layoutDirection == View.LAYOUT_DIRECTION_RTL
-            addView(fleche(if (rtl) "›" else "‹") { jour = jour.minusDays(1); afficher() })
+            addView(fleche(if (rtl) "›" else "‹", R.string.jour_precedent) { jour = jour.minusDays(1); afficher() })
             addView(LinearLayout(context).apply {
                 orientation = LinearLayout.VERTICAL
                 layoutParams = LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f)
                 addView(VueJour.texte(context, j.dateHebraique, 20f, R.color.brand, gras = true).apply {
                     gravity = Gravity.CENTER; PoliceHebraique.appliquer(this)
                 })
-                addView(VueJour.texte(context, jour.toString(), 13f, R.color.muted).apply { gravity = Gravity.CENTER })
+                addView(VueJour.texte(context, VueJour.dateCivile(context, jour), 13f, R.color.muted).apply { gravity = Gravity.CENTER })
             })
-            addView(fleche(if (rtl) "‹" else "›") { jour = jour.plusDays(1); afficher() })
+            addView(fleche(if (rtl) "‹" else "›", R.string.jour_suivant) { jour = jour.plusDays(1); afficher() })
         })
         // Le Yalkut Yosef d'abord (13/10), deux halakhot courtes ; puis le Ben Ish 'Haï de la semaine ; selon le livre choisi.
         val yy = if (source.yalkut) YalkutYosef.pour(YalkutYosef.livre(this), jour, israel) else emptyList()
@@ -174,7 +174,8 @@ class HalakhaActivity : AppCompatActivity() {
         })
     }
 
-    private fun fleche(signe: String, action: () -> Unit) = VueJour.texte(this, signe, 26f, R.color.brand).apply {
+    private fun fleche(signe: String, description: Int, action: () -> Unit) = VueJour.texte(this, signe, 26f, R.color.brand).apply {
+        contentDescription = getString(description)
         textDirection = View.TEXT_DIRECTION_LTR
         gravity = Gravity.CENTER
         val d = (48 * resources.displayMetrics.density).toInt()

@@ -654,6 +654,8 @@
     <string name="calendrier_title">Calendrier</string>
     <string name="calendrier_precedent">Mois précédent</string>
     <string name="calendrier_suivant">Mois suivant</string>
+    <string name="jour_precedent">Jour précédent</string>
+    <string name="jour_suivant">Jour suivant</string>
     <string name="calendrier_aujourdhui">Aujourd’hui</string>
     <string name="calendrier_vue">Vue du calendrier</string>
     <string name="calendrier_vue_hebreu">Hébraïque</string>

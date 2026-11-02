@@ -111,7 +111,7 @@ class ParcoursActivity : AppCompatActivity() {
             contenu.addView(carte().apply {
                 gravity = Gravity.CENTER_HORIZONTAL
                 addView(TextView(this@ParcoursActivity).apply {
-                    text = "${JournalPlus.HUMEURS[humeur.first - 1]}  →  ${JournalPlus.HUMEURS[humeur.second - 1]}"
+                    text = "\u2066${JournalPlus.HUMEURS[humeur.first - 1]}  →  ${JournalPlus.HUMEURS[humeur.second - 1]}\u2069"
                     textSize = 36f
                     gravity = Gravity.CENTER
                 })

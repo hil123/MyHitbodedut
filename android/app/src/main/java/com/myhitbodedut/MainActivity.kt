@@ -846,7 +846,7 @@ class MainActivity : AppCompatActivity() {
             // téléphone ; un jour fait peut aussi montrer sa durée sur la bande (14/10).
             if (AjoutTemps.possible(day.date)) {
                 cell.isClickable = true
-                cell.foreground = getDrawable(android.R.drawable.list_selector_background)
+                cell.foreground = Apparence.effetToucher(this@MainActivity)
                 cell.setOnClickListener {
                     AjoutTemps.ouvrir(this, day.date, montrer = {
                         if (!joursMontres.remove(day.date)) joursMontres.add(day.date)

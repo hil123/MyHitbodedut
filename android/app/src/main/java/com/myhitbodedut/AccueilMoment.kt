@@ -46,7 +46,7 @@ object AccueilMoment {
         setBackgroundResource(R.drawable.bg_card)
         layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply { topMargin = dp(c, 12) }
         setPadding(dp(c, 12), dp(c, 8), dp(c, 12), dp(c, 8))
-        foreground = c.getDrawable(android.R.drawable.list_selector_background)
+        foreground = Apparence.effetToucher(c)
         Effets.presse(this)
         setOnClickListener { ouvrir() }
         addView(PersonnageImageView(c).apply {

@@ -2250,7 +2250,7 @@ function ecranHalakha() {
     corps = [
       h('div', { class: 'mois-tete' },
         h('button', { class: 'icone-bouton mois-precedent', dir: 'ltr', 'aria-label': tr.t('calendrier_precedent'), onclick: () => decale(-1) }, tr.rtl ? '›' : '‹'),
-        h('div', { class: 'mois-titres' }, h('p', { class: 'mois-principal mois-hebreu', lang: 'he', dir: 'rtl' }, j.dateHebraique), h('p', { class: 'mois-second' }, iso)),
+        h('div', { class: 'mois-titres' }, h('p', { class: 'mois-principal mois-hebreu', lang: 'he', dir: 'rtl' }, j.dateHebraique), h('p', { class: 'mois-second' }, dateCivile(iso))),
         h('button', { class: 'icone-bouton mois-suivant', dir: 'ltr', 'aria-label': tr.t('calendrier_suivant'), onclick: () => decale(1) }, tr.rtl ? '‹' : '›')),
       ...(yy.length ? [fiche(titreCarte(yy), texteCarte(yy))] : []),
       ...(liste.length ? [h('h3', { class: 'jour-sous-titre' }, tr.t('halakha_ben_ish_hai')), ...liste.map(carte)] : []),
@@ -2344,7 +2344,7 @@ function ecranHilloulot() {
     corps = [
       h('div', { class: 'mois-tete' },
         h('button', { class: 'icone-bouton mois-precedent', dir: 'ltr', 'aria-label': tr.t('calendrier_precedent'), onclick: () => decale(-1) }, tr.rtl ? '›' : '‹'),
-        h('div', { class: 'mois-titres' }, h('p', { class: 'mois-principal mois-hebreu', lang: 'he', dir: 'rtl' }, j.dateHebraique), h('p', { class: 'mois-second' }, iso)),
+        h('div', { class: 'mois-titres' }, h('p', { class: 'mois-principal mois-hebreu', lang: 'he', dir: 'rtl' }, j.dateHebraique), h('p', { class: 'mois-second' }, dateCivile(iso))),
         h('button', { class: 'icone-bouton mois-suivant', dir: 'ltr', 'aria-label': tr.t('calendrier_suivant'), onclick: () => decale(1) }, tr.rtl ? '‹' : '›')),
       ...(liste.length ? liste.map((x) => carte(x, null)) : [h('p', { class: 'message' }, tr.t('hilloulot_aucune'))]),
       lienExterne(tr.t('hilloula_lien'), lienHyomi(iso)),
@@ -3098,6 +3098,8 @@ const moinsAnime = () => !!window.matchMedia?.('(prefers-reduced-motion: reduce)
 function datesTrophees() {
   return Trophees.datesGain(store.minutesParJour(), store.joursAvecNote(), (d) => store.isExempt(d));
 }
+/** La date civile en toutes lettres, avec le jour (VueJour.dateCivile) : « mardi 29 septembre 2026 ». */
+const dateCivile = (iso) => new Intl.DateTimeFormat(tr.langue, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' }).format(new Date(`${iso}T12:00:00Z`));
 const dateLongue = (iso) => new Intl.DateTimeFormat(tr.langue, { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' }).format(new Date(`${iso}T12:00:00Z`));
 
 /** Un texte en plusieurs paragraphes (VueJour.paragraphes, 19/10) : un bloc par paragraphe, un écart entre eux. */
@@ -3537,7 +3539,7 @@ function presentation() {
         onclick: () => { choisir(v); dessiner(); } }, libelle(v))));
     voile.setAttribute('aria-label', tr.t(e.titre));
     voile.replaceChildren(h('div', { class: 'presentation-page' },
-      h('span', { class: 'presentation-etape', dir: 'ltr' }, tr.t('onboarding_step', i + 1, PRESENTATION.length)),
+      h('span', { class: 'presentation-etape' }, tr.t('onboarding_step', i + 1, PRESENTATION.length)),
       h('div', { class: 'presentation-scene' }, h('img', { src: `img/${e.image}.webp`, alt: '' })),
       h('h1', { class: 'presentation-titre' }, tr.t(e.titre)),
       h('p', { class: 'presentation-corps' }, tr.t(e.corps)),
