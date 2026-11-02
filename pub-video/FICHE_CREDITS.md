@@ -105,3 +105,8 @@ Extraits choisis pour leur régularité (pas de pic ni de cri), filtre 120 Hz–
 ## v25 — « My Hitbodedut » reconstruit, coupure de « Commence » corrigée
 - Une seule prise existait pour « My Hitbodédoute » (vérifié dans le flow ElevenLabs, sans dépense). s05a.wav = « My » de la prise d'origine + le mot « Hitbodédoute » repris de s06 (« …ta Hitbodédoute », accent jugé bon par Hillel). Même voix, même niveau (−17,2 LUFS).
 - s11 : la 1re partie s'arrêtait 0,4 s trop tard et laissait entendre le début de « Commence ». Audio coupé à 3,07 s.
+
+## v26 — Style « nuit » + application en mode sombre
+- Style inspiré de l'exemple envoyé par Hillel (fond bleu nuit, sujet éclairé, néon). Activé par --props='{"effets":true,"style":"nuit"}'.
+- Captures en mode sombre : produites le 02/11 avec le script officiel du dépôt (web/test/captures.mjs, mode « sombre », langue fr, Chromium 780×1688) sur la version web de l'app construite depuis les ressources Android. Fichiers : remotion/public/captures/sombre/.
+- Les 4 écrans propres à Android (Je suis avec Hachem, choix des applis, heures du mode, durée du report) n'existent pas en version web : ils restent en captures Android (clair).

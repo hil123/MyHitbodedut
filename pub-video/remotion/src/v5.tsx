@@ -206,8 +206,15 @@ const camTel = (f: number) => {
   const t = L(f, p.de, p.de + RACCORD_CAM, 0, 1, Easing.inOut(Easing.sin));
   return {z: prev.z1 + (z - prev.z1) * t, y: prev.y + (p.y - prev.y) * t};
 };
+/** Style nuit : l'application elle-même en mode sombre (captures réelles de la version web, 02/11). Les 4 écrans propres à Android restent tels quels. */
+const SOMBRE: Record<string, string> = {
+  'v2/parler_simplement': 'sombre/seance_question', 'v2/mots_questions': 'sombre/seance_question', 'v2/duree_15': 'sombre/duree_15',
+  'v2/accueil_anneaux': 'sombre/accueil_anneaux', 'v2/zmanim': 'sombre/zmanim', 'v2/siddour': 'sombre/siddour', 'v2/bibliotheque': 'sombre/bibliotheque',
+  'v2/boussole': 'sombre/boussole', 'v2/bravo': 'sombre/bravo', web_calendrier: 'sombre/calendrier', web_reglages: 'sombre/reglages',
+};
+const cap = (src: string) => (NUIT && SOMBRE[src]) || src;
 const Capture: React.FC<{p: PlanTel}> = ({p}) =>
-  p.src ? <Img src={staticFile(`captures/${p.src}.png`)} style={{position: 'absolute', width: '100%', height: '100%', objectFit: 'cover', objectPosition: '50% 0%'}} /> : <AFournir titre={p.aFournir!} />;
+  p.src ? <Img src={staticFile(`captures/${cap(p.src)}.png`)} style={{position: 'absolute', width: '100%', height: '100%', objectFit: 'cover', objectPosition: '50% 0%'}} /> : <AFournir titre={p.aFournir!} />;
 const EcranPlein: React.FC<{f: number}> = ({f}) => {
   const i = indexTel(f);
   if (i < 0) return null;
@@ -406,7 +413,7 @@ const Eventail: React.FC<{f: number}> = ({f}) => {
   return (<>{[{src: 'v2/bibliotheque', s: -1}, {src: 'v2/boussole', s: 1}].map((q) => (
     <div key={q.src} style={{position: 'absolute', left: '50%', top: '50%', width: LARGEUR_TEL + 36, marginLeft: -(LARGEUR_TEL + 36) / 2, marginTop: -((LARGEUR_TEL * 2676) / 1236 + 36) / 2,
       transform: `perspective(1600px) translateX(${q.s * 310 * e}px) rotateY(${-q.s * 28 * e}deg) scale(${0.72 + 0.0 * e})`, opacity: Math.min(1, e * 1.4), filter: `brightness(${0.85 + 0.15 * e})`}}>
-      <Telephone src=""><Img src={staticFile(`captures/${q.src}.png`)} style={{position: 'absolute', width: '100%', height: '100%', objectFit: 'cover', objectPosition: '50% 0%'}} /></Telephone>
+      <Telephone src=""><Img src={staticFile(`captures/${cap(q.src)}.png`)} style={{position: 'absolute', width: '100%', height: '100%', objectFit: 'cover', objectPosition: '50% 0%'}} /></Telephone>
     </div>
   ))}</>);
 };
