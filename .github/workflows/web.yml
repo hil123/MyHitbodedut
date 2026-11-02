@@ -25,11 +25,13 @@ permissions:
   # Écriture : pour la branche des captures seulement.
   contents: write
 
-# Une nouvelle poussée annule le run encore en cours de la même branche : seul le dernier
-# commit compte, et il passe sans attendre (16/10).
+# Un run en cours va à son terme ; une poussée arrivée pendant ce temps attend, et seule la
+# dernière en attente passe ensuite (02/11). Annuler le run en cours, comme avant, empêchait
+# toute mise en ligne quand plusieurs commits arrivaient à moins de 30 min l'un de l'autre :
+# rien n'avait été déployé de la journée.
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}-${{ github.event_name }}
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   web:
