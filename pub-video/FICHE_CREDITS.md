@@ -113,3 +113,7 @@ Extraits choisis pour leur régularité (pas de pic ni de cri), filtre 120 Hz–
 
 ## v27 — Bips de notification
 - remotion/public/sons/*.wav : un son par appli (whatsapp, mail, agenda, youtube, instagram, tiktok, facebook, snapchat) + vibre.wav, synthétisés le 02/11 avec ffmpeg (sinusoïdes et bruit filtré, aucune source externe), libres de droits. Ils évoquent le style de chaque appli SANS imiter les sons déposés des marques.
+
+## v27e
+- mail.wav et whatsapp.wav refaits en sons purement tonaux (sinus, aucun bruit blanc) : plus de « souffle ». Anciennes versions : remotion/public/sons/avant_v27e/.
+- Bruit de foule coupé pendant la tempête de notifications (revient après l’arrêt net).

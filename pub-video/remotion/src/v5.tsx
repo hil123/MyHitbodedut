@@ -291,7 +291,7 @@ const DEBUT_MUSIQUE = 462;
 const volumeAmbiance = (f: number) => {
   let d = 0;
   for (const v of VOIX) d = Math.max(d, interpolate(f, [v.at - 8, v.at, v.at + v.dur * FPS, v.at + v.dur * FPS + 12], [0, 1, 1, 0], clamp));
-  const tempete = ACCROCHE === 'A' ? interpolate(f, [0, 150, 175], [0.45, 0.45, 1], clamp) : 1;
+  const tempete = ACCROCHE === 'A' ? interpolate(f, [0, 158, 200], [0, 0, 1], clamp) : 1;
   return (0.9 - d * 0.6) * tempete;
 };
 
