@@ -24,8 +24,9 @@ import java.util.Locale
  * lieu des zmanim. Le cap vient du capteur d'orientation (nord magnétique),
  * corrigé de la déclinaison du lieu (GeomagneticField) pour le nord vrai, comme
  * les deux directions. Sans capteur, la rose orientée au nord. Rien ne passe par
- * le réseau. « Position exacte » demande la localisation précise (ChoixLieu) ; à
- * l'ouverture, la position du téléphone se reprend sans bruit si elle est déjà permise.
+ * le réseau. « Actualiser ma position » demande la localisation approximative (ChoixLieu,
+ * 31/10 : elle suffit pour la direction) ; à l'ouverture, la position du téléphone se
+ * reprend sans bruit si elle est déjà permise.
  */
 class BoussoleActivity : AppCompatActivity(), SensorEventListener {
 
@@ -107,8 +108,8 @@ class BoussoleActivity : AppCompatActivity(), SensorEventListener {
         contenu.addView(VueJour.texte(this, getString(if (avecCapteur) R.string.boussole_a_plat else R.string.boussole_sans_capteur),
             13f, R.color.muted, haut = 8).apply { setPadding(dp(16), 0, dp(16), 0) })
         contenu.addView(MaterialButton(this, null, com.google.android.material.R.attr.materialButtonOutlinedStyle).apply {
-            text = getString(R.string.boussole_position_exacte)
-            setOnClickListener { choixLieu.positionExacte() }
+            text = getString(R.string.boussole_actualiser_position)
+            setOnClickListener { choixLieu.maPosition() }
             layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
                 .apply { setMargins(dp(16), dp(8), dp(16), 0) }
         })
@@ -166,7 +167,7 @@ class BoussoleActivity : AppCompatActivity(), SensorEventListener {
         addView(VueJour.texte(this@BoussoleActivity, getString(R.string.boussole_carte_sous), 14f, R.color.muted, haut = 4).apply { gravity = android.view.Gravity.CENTER })
         addView(MaterialButton(this@BoussoleActivity).apply {
             text = getString(R.string.boussole_vide_position)
-            setOnClickListener { choixLieu.positionExacte() }
+            setOnClickListener { choixLieu.maPosition() }
             layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply { topMargin = dp(16) }
         })
         addView(MaterialButton(this@BoussoleActivity, null, com.google.android.material.R.attr.borderlessButtonStyle).apply {

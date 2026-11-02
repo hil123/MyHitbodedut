@@ -3102,9 +3102,9 @@ function ecranBoussole() {
     // Avant le toucher, rien n'est encore dit du capteur ; ensuite, sans mesure, la rose fixe reste.
     const attente = autorisationBoussole() && !boussoleEcoute;
     contenu.push(h('p', { class: 'indice' }, tr.t(attente || boussoleRecu ? 'boussole_a_plat' : 'boussole_sans_capteur')));
-    // « Position exacte » (28/10) : la localisation précise, le message de l'attente dessous.
+    // « Actualiser ma position » (31/10, ex-« Position exacte ») : le message de l'attente dessous.
     const etat = h('p', { class: 'indice', 'aria-live': 'polite' });
-    contenu.push(h('button', { class: 'secondaire boussole-position', onclick: () => localiserPosition({ etat }) }, tr.t('boussole_position_exacte')), etat);
+    contenu.push(h('button', { class: 'secondaire boussole-position', onclick: () => localiserPosition({ etat }) }, tr.t('boussole_actualiser_position')), etat);
     const points = tr.tab('boussole_points');
     const km = new Intl.NumberFormat(tr.langue).format(Math.round(Boussole.distanceKm(lieu.latitude, lieu.longitude)));
     contenu.push(h('div', { class: 'carte carte-texte' },
@@ -3225,6 +3225,8 @@ const ecartVol = (ms) => tr.t(calculVol && calculVol.fiabilite !== 'route_prevue
  */
 let routeVol = { attente: false, texte: '' };
 async function chercherRouteVol(v) {
+  // Services en ligne désactivés (02/11) : pas de loupe, et la garde tient même si elle réapparaissait.
+  if (!store.suiviDirect()) return;
   if (!Vol.normaliserNumero(v.numero || '')) { routeVol = { attente: false, texte: tr.t('vol_route_invalide') }; return rendre(); }
   routeVol = { attente: true, texte: '' };
   rendre();
@@ -3281,12 +3283,19 @@ async function demanderDirect(indicatif) {
   rendre();
 }
 
-/** Le suivi en direct : un interrupteur désactivé par défaut, qui dit ce qui part ; l'indicatif ; le bouton. */
+/**
+ * L'interrupteur des services en ligne (02/11, VolActivity.ajouterInterrupteurEnLigne) : un seul,
+ * désactivé par défaut, pour la route d'un numéro (adsbdb) et le suivi en direct (OpenSky).
+ */
+let formulaireVolOuvert = true;
+const interrupteurEnLigne = () => h('label', { class: 'ligne' }, h('span', { class: 'corps' }, h('div', { class: 'nom' }, tr.t('vol_direct_activer'))),
+  h('input', { type: 'checkbox', role: 'switch', class: 'interrupteur', checked: store.suiviDirect(), onchange: (e) => { store.setSuiviDirect(e.target.checked); rendre(); } }));
+
+/** Le suivi en direct : l'interrupteur des services en ligne, qui dit ce qui part ; l'indicatif ; le bouton. */
 function suiviDirect() {
   const actif = store.suiviDirect();
-  const bloc = [
-    h('label', { class: 'ligne' }, h('span', { class: 'corps' }, h('div', { class: 'nom' }, tr.t('vol_direct_activer'))),
-      h('input', { type: 'checkbox', role: 'switch', class: 'interrupteur', checked: actif, onchange: (e) => { store.setSuiviDirect(e.target.checked); rendre(); } }))];
+  // Formulaire ouvert, l'interrupteur y est déjà : pas de second exemplaire ici.
+  const bloc = formulaireVolOuvert ? [] : [interrupteurEnLigne()];
   if (!actif) return bloc;
   if (!RELAIS_VOL) return [...bloc, h('p', { class: 'indice' }, tr.t('vol_direct_inactif'))];
   const champ = h('input', { type: 'text', class: 'champ-recherche champ-vol', maxlength: 9, autocapitalize: 'characters', placeholder: tr.t('vol_indicatif'), value: store.volIndicatif() || null });
@@ -3474,10 +3483,14 @@ function ecranVol() {
     onclick: () => { v.numero = champNumero.value.trim(); chercherRouteVol(v); } });
   loupe.innerHTML = routeVol.attente ? '<span class="loupe-attente" aria-hidden="true"></span>'
     : '<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M15.5 15.5 21 21" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>';
+  // Services en ligne désactivés (02/11) : pas de loupe, l'interrupteur et ce qui partirait.
+  const enLigne = store.suiviDirect();
   const formulaire = h('div', { class: 'carte' },
     h('label', { class: 'ligne' }, h('span', { class: 'corps' }, h('div', { class: 'etat' }, tr.t('vol_numero')),
-      h('span', { class: 'champ-et-loupe' }, champNumero, loupe))),
-    h('p', { class: 'indice', 'aria-live': 'polite' }, routeVol.texte || tr.t('vol_route_aide')),
+      enLigne ? h('span', { class: 'champ-et-loupe' }, champNumero, loupe) : champNumero)),
+    enLigne ? h('p', { class: 'indice', 'aria-live': 'polite' }, routeVol.texte || tr.t('vol_route_aide')) : null,
+    interrupteurEnLigne(),
+    enLigne ? null : h('p', { class: 'indice' }, tr.t('vol_en_ligne_aide')),
     ligne(tr.t('vol_depart'), nomA(v.depart), () => pret && choisirAeroport((a) => { v.depart = a.iata; rendre(); })),
     ligne(tr.t('vol_arrivee'), nomA(v.arrivee), () => pret && choisirAeroport((a) => { v.arrivee = a.iata; rendre(); })),
     v.depart ? heure('decollage', tr.t('vol_decollage', villeA(v.depart))) : null,
@@ -3491,6 +3504,7 @@ function ecranVol() {
       h('button', { class: 'lien-bouton', onclick: () => { modifierVol = true; rendre(); } }, tr.t('vol_modifier'))),
     // Chaque heure isolée, la flèche dans le sens de lecture (← en hébreu).
     h('p', { class: 'vol-resume-heures' }, `\u2068${heureAeroport(planGarde.depart, planGarde.decollage)}\u2069 ${tr.rtl ? '←' : '→'} \u2068${heureAeroport(planGarde.arrivee, planGarde.atterrissage)}\u2069`)) : null;
+  formulaireVolOuvert = !resume;
   const puce = h('span', { class: 'puce-bandeau' }, garde ? libelleVol(garde) : tr.t('vol_carte_sous'));
   return h('div', { class: 'ecran avec-bandeau' }, bandeau(tr.t('vol_title'), { puce, dessin: 'scene_airport' }),
     h('div', { class: 'defile' }, h('div', { class: 'contenu' },

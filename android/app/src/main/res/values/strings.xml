@@ -103,7 +103,6 @@
     <string name="permission_usage_why">Pour savoir quelle application vient de s’ouvrir. Rien n’est enregistré ni envoyé.</string>
     <string name="permission_granted">Accordée</string>
     <string name="permission_missing">Manquante</string>
-    <string name="preview_needs_overlay">Accordez d’abord l’affichage par-dessus les autres applications.</string>
 
     <!-- Applications -->
     <string name="apps_title">Applications à bloquer</string>
@@ -1274,7 +1273,7 @@
     <string name="vol_ecart_gps">%1$s min si l’arrivée a 30 min de retard</string>
     <string name="vol_direct_titre">Suivi en direct (Internet)</string>
     <string name="vol_direct_explication">Désactivé par défaut. Activé, il envoie au relais de l’application l’indicatif du vol et la position estimée de l’avion, rien d’autre ; le relais demande la position réelle à OpenSky Network. Au-dessus des océans, l’avion n’est souvent pas vu.</string>
-    <string name="vol_direct_activer">Activer le suivi en direct</string>
+    <string name="vol_direct_activer">Services en ligne : route du vol et suivi en direct</string>
     <string name="vol_indicatif">Indicatif radio (OACI), par exemple ELY1</string>
     <string name="vol_indicatif_invalide">Indicatif attendu : trois lettres puis le numéro, par exemple ELY1.</string>
     <string name="vol_direct_bouton">Position en direct</string>
@@ -1336,8 +1335,8 @@
     <string name="boussole_affichage">Affichage de la boussole</string>
     <string name="boussole_affichage_hassid">Le hassid se tourne (par défaut)</string>
     <string name="boussole_affichage_rose">Rose des vents</string>
-    <!-- Relance la localisation précise (ChoixLieu.positionExacte). -->
-    <string name="boussole_position_exacte">Position exacte</string>
+    <!-- Reprend la position, approximative (ChoixLieu.maPosition, 31/10). -->
+    <string name="boussole_actualiser_position">Actualiser ma position</string>
     <string-array name="boussole_cardinaux">
         <item>N</item>
         <item>E</item>
@@ -1354,4 +1353,18 @@
         <item>O</item>
         <item>NO</item>
     </string-array>
+
+    <!-- La divulgation avant les deux accès spéciaux de la barrière (31/10, Divulgation). -->
+    <string name="divulgation_overlay_titre">Affichage par-dessus les autres applications</string>
+    <string name="divulgation_overlay_texte">Ce qui est utilisé : l’affichage d’un écran par-dessus les autres applications.\n\nPourquoi : pour la barrière du matin, le mode « Je suis avec Hachem », que vous avez choisi. Quand vous ouvrez l’une des applications que vous avez sélectionnées, pendant la plage horaire que vous avez fixée, l’écran « Je suis avec Hachem » s’affiche devant elle, jusqu’à ce que la pratique du jour soit faite.\n\nRien n’est envoyé ni partagé : tout reste sur ce téléphone.\n\nPour couper la barrière à tout moment : Réglages, interrupteur « Je suis avec Hachem ». Vous pouvez aussi retirer cet accès dans les réglages d’Android.</string>
+    <string name="divulgation_usage_titre">Accès aux données d’utilisation</string>
+    <string name="divulgation_usage_texte">Ce qui est lu : quelle application est affichée au premier plan. Seule la dernière ouverte est retenue, en mémoire ; aucun historique n’est gardé.\n\nPourquoi : pour la barrière du matin, le mode « Je suis avec Hachem », que vous avez choisi. Pendant la plage horaire que vous avez fixée, et tant que la pratique du jour n’est pas faite, l’application vérifie si celle qui vient de s’ouvrir fait partie de celles que vous avez sélectionnées.\n\nRien n’est enregistré, envoyé ni partagé : tout reste sur ce téléphone.\n\nPour couper la barrière à tout moment : Réglages, interrupteur « Je suis avec Hachem ». Vous pouvez aussi retirer cet accès dans les réglages d’Android.</string>
+    <string name="divulgation_continuer">Continuer</string>
+    <string name="divulgation_pas_maintenant">Pas maintenant</string>
+
+    <!-- Le lien vers la page publique des règles de confidentialité (31/10, SettingsActivity). -->
+    <string name="settings_confidentialite">Règles de confidentialité</string>
+
+    <!-- Sous l’interrupteur des services en ligne, dans le formulaire du vol (02/11, VolActivity). -->
+    <string name="vol_en_ligne_aide">Désactivés par défaut : rien ne quitte le téléphone. Activés, la loupe 🔍 envoie le seul numéro de vol à adsbdb.com pour remplir l’arrivée, et le suivi en direct interroge OpenSky Network.</string>
 </resources>

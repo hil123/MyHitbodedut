@@ -520,6 +520,15 @@
                     android:layout_weight="1"
                     android:text="@string/action_import" />
             </LinearLayout>
+
+            <!-- Les règles de confidentialité (31/10, Google Play) : la page publique, dans le navigateur. -->
+            <Button
+                android:id="@+id/privacy_policy"
+                style="@style/Widget.Material3.Button.TextButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/settings_confidentialite" />
         </LinearLayout>
 
         <!-- Réinitialiser l'application (12/10) : en dernier, à l'écart, avec une confirmation. -->

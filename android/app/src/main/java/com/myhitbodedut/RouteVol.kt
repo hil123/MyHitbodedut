@@ -7,7 +7,8 @@ import java.net.URL
 import java.net.URLEncoder
 
 /**
- * La route d'un numéro de vol (28/10), édition complète seulement, au toucher : le numéro
+ * La route d'un numéro de vol (28/10), édition complète seulement, au toucher de la loupe, qui
+ * n'apparaît qu'une fois les services en ligne activés (02/11, même interrupteur que SuiviVol) : le numéro
  * (« LY81 » ou « ELY81 ») part vers api.adsbdb.com, gratuit, sans compte ni clé ; rien d'autre.
  * La réponse donne la compagnie, l'indicatif OACI (pour le suivi en direct) et les escales
  * connues. Pas les heures : aucune source gratuite ne les donne, elles restent à saisir.

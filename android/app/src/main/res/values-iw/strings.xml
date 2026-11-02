@@ -95,7 +95,6 @@
     <string name="permission_usage_why">כדי לדעת איזו אפליקציה נפתחה זה עתה. שום דבר אינו נשמר ואינו נשלח.</string>
     <string name="permission_granted">אושרה</string>
     <string name="permission_missing">חסרה</string>
-    <string name="preview_needs_overlay">קודם אשרו הצגה מעל אפליקציות אחרות.</string>
 
     <string name="apps_title">אפליקציות לחסימה</string>
     <string name="apps_loading">האפליקציות נטענות…</string>
@@ -1266,7 +1265,7 @@
     <string name="vol_ecart_gps">⁦%1$s⁩ דק׳ אם הנחיתה מתעכבת ב־30 דק׳</string>
     <string name="vol_direct_titre">מעקב בזמן אמת (אינטרנט)</string>
     <string name="vol_direct_explication">כבוי כברירת מחדל. כשהוא פעיל, הוא שולח לשרת הממסר של האפליקציה את אות הקריאה של הטיסה ואת המיקום המשוער של המטוס, ותו לא; הממסר מבקש את המיקום האמיתי מ־OpenSky Network. מעל אוקיינוסים המטוס לעיתים קרובות אינו נראה.</string>
-    <string name="vol_direct_activer">הפעלת מעקב בזמן אמת</string>
+    <string name="vol_direct_activer">שירותים מקוונים: מסלול הטיסה ומעקב בזמן אמת</string>
     <string name="vol_indicatif">אות קריאה (ICAO), לדוגמה ELY1</string>
     <string name="vol_indicatif_invalide">אות קריאה צפוי: שלוש אותיות ואחריהן המספר, לדוגמה ELY1.</string>
     <string name="vol_direct_bouton">מיקום בזמן אמת</string>
@@ -1327,8 +1326,8 @@
     <string name="boussole_affichage">תצוגת המצפן</string>
     <string name="boussole_affichage_hassid">החסיד מסתובב (ברירת מחדל)</string>
     <string name="boussole_affichage_rose">שושנת רוחות</string>
-    <!-- Relance la localisation précise (ChoixLieu.positionExacte). -->
-    <string name="boussole_position_exacte">מיקום מדויק</string>
+    <!-- Reprend la position, approximative (ChoixLieu.maPosition, 31/10). -->
+    <string name="boussole_actualiser_position">עדכון המיקום שלי</string>
     <string-array name="boussole_cardinaux">
         <item>צ</item>
         <item>מז</item>
@@ -1345,4 +1344,18 @@
         <item>מערב</item>
         <item>צפון־מערב</item>
     </string-array>
+
+    <!-- La divulgation avant les deux accès spéciaux de la barrière (31/10, Divulgation). -->
+    <string name="divulgation_overlay_titre">הצגה מעל אפליקציות אחרות</string>
+    <string name="divulgation_overlay_texte">במה משתמשים: הצגת מסך מעל אפליקציות אחרות.\n\nלמה: בשביל מחסום הבוקר, מצב „אני עם השם”, שבחרתם. כשתפתחו אחת מהאפליקציות שבחרתם, בשעות שקבעתם, מסך „אני עם השם” יופיע לפניה, עד שההתבודדות של היום תיעשה.\n\nשום דבר לא נשלח ולא משותף: הכול נשאר בטלפון הזה.\n\nכדי לכבות את המחסום בכל רגע: הגדרות, המתג „אני עם השם”. אפשר גם לבטל את הגישה הזו בהגדרות של Android.</string>
+    <string name="divulgation_usage_titre">גישה לנתוני שימוש</string>
+    <string name="divulgation_usage_texte">מה נקרא: איזו אפליקציה מוצגת בחזית. רק האחרונה שנפתחה נשמרת, בזיכרון; שום היסטוריה לא נשמרת.\n\nלמה: בשביל מחסום הבוקר, מצב „אני עם השם”, שבחרתם. בשעות שקבעתם, וכל עוד ההתבודדות של היום לא נעשתה, האפליקציה בודקת אם זו שנפתחה עכשיו היא אחת מאלה שבחרתם.\n\nשום דבר לא נרשם, לא נשלח ולא משותף: הכול נשאר בטלפון הזה.\n\nכדי לכבות את המחסום בכל רגע: הגדרות, המתג „אני עם השם”. אפשר גם לבטל את הגישה הזו בהגדרות של Android.</string>
+    <string name="divulgation_continuer">המשך</string>
+    <string name="divulgation_pas_maintenant">לא עכשיו</string>
+
+    <!-- Le lien vers la page publique des règles de confidentialité (31/10, SettingsActivity). -->
+    <string name="settings_confidentialite">מדיניות פרטיות</string>
+
+    <!-- Sous l’interrupteur des services en ligne, dans le formulaire du vol (02/11, VolActivity). -->
+    <string name="vol_en_ligne_aide">כבויים כברירת מחדל: שום דבר לא יוצא מהטלפון. כשהם פעילים, הזכוכית המגדלת 🔍 שולחת ל־adsbdb.com את מספר הטיסה בלבד כדי למלא את היעד, והמעקב בזמן אמת פונה ל־OpenSky Network.</string>
 </resources>

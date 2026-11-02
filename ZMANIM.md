@@ -455,9 +455,11 @@ tourne »), widget 2 × 2 `BoussoleWidget`. Vers Har haBayit, 31,7781° N,
   avec le téléphone : la rose graduée venue de `main` à la fusion du 28/10
   (graduations aux 5°, degrés aux 30°, zone d'or de ±4°, aiguille d'or vers
   Jérusalem, anneau d'or face à elle), avec le pointillé bleu de la carte.
-- **Position exacte.** Le bouton relance la localisation précise
-  (`ChoixLieu.positionExacte`, web `localiserPosition`) ; à l'ouverture, la
-  position du téléphone se reprend sans bruit si elle est déjà permise.
+- **Actualiser ma position** (ex-« Position exacte », 31/10). Le bouton relance
+  la localisation, approximative seulement depuis le 31/10 (`ChoixLieu.maPosition`,
+  web `localiserPosition`) : Google Play réserve la position exacte aux usages
+  qui l'exigent, ici le seul GPS en vol ; à l'ouverture, la position du
+  téléphone se reprend sans bruit si elle est déjà permise.
   La boussole parallèle de `main` (`DirectionTefila`, même calcul) est
   remplacée par celle-ci ; `web/src/js/direction.js` reste pour `distanceKm`.
 - **Nord vrai.** Le capteur d'orientation donne le nord magnétique ; la

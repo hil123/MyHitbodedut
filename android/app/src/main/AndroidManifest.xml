@@ -11,11 +11,12 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <!-- Tient le processeur éveillé jusqu'au terme d'une séance minutée (SessionService). -->
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <!-- Les zmanim (10/10) : la position approximative, seulement si on choisit
-         « Ma position » plutôt qu'une ville, et demandée à ce moment-là. -->
+    <!-- Les zmanim et la boussole (10/10, 31/10) : la position approximative seulement, si on
+         choisit « Ma position » plutôt qu'une ville, et demandée à ce moment-là (ChoixLieu). -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <!-- La position exacte (28/10) : zmanim et boussole (« Position exacte »), et le GPS des zmanim
-         en vol, demandé seulement au toucher de « position réelle » ; il marche en mode avion. -->
+    <!-- La position exacte (31/10) : pour le seul GPS des zmanim en vol (VolActivity), demandée
+         au toucher de « position réelle » ; il marche en mode avion, sans réseau, et c'est la
+         position de l'avion qui recale la route : l'approximative ne suffit pas. -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <!--

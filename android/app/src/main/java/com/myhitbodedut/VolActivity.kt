@@ -124,7 +124,8 @@ class VolActivity : AppCompatActivity() {
     private fun afficherFormulaire() {
         contenu.removeAllViews()
         val garde = Store.vol(this, aeroports)
-        contenu.addView(if (garde != null && !modifier) carteResume(garde) else carteFormulaire())
+        formulaireOuvert = garde == null || modifier
+        contenu.addView(if (!formulaireOuvert) carteResume(garde!!) else carteFormulaire())
         contenu.addView(LinearLayout(this).apply {
             id = R.id.vol_resultats
             orientation = LinearLayout.VERTICAL
@@ -169,8 +170,9 @@ class VolActivity : AppCompatActivity() {
                 override fun afterTextChanged(s: Editable?) { numero = s?.toString()?.trim().orEmpty() }
             })
         }
-        if (BuildConfig.SUIVI_VOL) {
+        if (BuildConfig.SUIVI_VOL && Store.suiviDirect(this@VolActivity)) {
             // La loupe au bout du champ cherche la route du numéro (RouteVol) ; une ligne dit ce qui part.
+            // Seulement si les services en ligne sont activés (02/11) : désactivés par défaut, comme le suivi.
             champNumero.setPaddingRelative(champNumero.paddingStart, champNumero.paddingTop, dp(52), champNumero.paddingBottom)
             addView(android.widget.FrameLayout(this@VolActivity).apply {
                 addView(champNumero, android.widget.FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
@@ -187,6 +189,9 @@ class VolActivity : AppCompatActivity() {
             addView(VueJour.texte(this@VolActivity, routeTexte ?: getString(if (routeEnCours) R.string.vol_route_attente else R.string.vol_route_aide),
                 12f, R.color.muted, haut = 2).apply { accessibilityLiveRegion = View.ACCESSIBILITY_LIVE_REGION_POLITE })
         } else addView(champNumero)
+        // L'interrupteur des services en ligne (02/11), toujours dans le formulaire : éteint, pas de
+        // loupe, et une ligne dit ce qui partirait ; tant qu'il l'est, rien ne quitte le téléphone.
+        if (BuildConfig.SUIVI_VOL) ajouterInterrupteurEnLigne(this, formulaire = true)
         addView(champ(getString(R.string.vol_depart), depart?.let(::nomAeroport) ?: getString(R.string.vol_choisir_aeroport)) {
             choisirAeroport { depart = it; afficherFormulaire() }
         })
@@ -563,11 +568,8 @@ class VolActivity : AppCompatActivity() {
      */
     private fun ajouterSuiviDirect(carte: LinearLayout) {
         val actif = Store.suiviDirect(this)
-        carte.addView(com.google.android.material.materialswitch.MaterialSwitch(this).apply {
-            text = getString(R.string.vol_direct_activer)
-            isChecked = actif
-            setOnCheckedChangeListener { _, v -> Store.setSuiviDirect(this@VolActivity, v); afficherResultats() }
-        })
+        // Formulaire ouvert, l'interrupteur y est déjà : pas de second exemplaire ici.
+        if (!formulaireOuvert) ajouterInterrupteurEnLigne(carte, formulaire = false)
         if (!actif) return
         val champ = EditText(this).apply {
             hint = getString(R.string.vol_indicatif)
@@ -589,6 +591,24 @@ class VolActivity : AppCompatActivity() {
         carte.addView(VueJour.texte(this, getString(R.string.vol_source_opensky), 11f, R.color.muted, haut = 2))
     }
 
+    /**
+     * L'interrupteur des services en ligne (02/11) : un seul, désactivé par défaut, pour la route
+     * d'un numéro (adsbdb) et le suivi en direct (OpenSky). Il figure dans le formulaire et sous
+     * les résultats ; le basculer redessine les deux, pour que la loupe suive.
+     */
+    private fun ajouterInterrupteurEnLigne(carte: LinearLayout, formulaire: Boolean) {
+        val actif = Store.suiviDirect(this)
+        carte.addView(com.google.android.material.materialswitch.MaterialSwitch(this).apply {
+            text = getString(R.string.vol_direct_activer)
+            isChecked = actif
+            setOnCheckedChangeListener { _, v -> Store.setSuiviDirect(this@VolActivity, v); afficherFormulaire() }
+        })
+        if (formulaire && !actif) carte.addView(VueJour.texte(this, getString(R.string.vol_en_ligne_aide), 12f, R.color.muted, haut = 2))
+    }
+
+    /** Le formulaire est affiché (et non son résumé) : il porte alors l'interrupteur des services en ligne. */
+    private var formulaireOuvert = true
+
     private var directEnCours = false
 
     private var routeEnCours = false
@@ -599,6 +619,8 @@ class VolActivity : AppCompatActivity() {
      * (et le départ s'il est vide) et l'indicatif du suivi en direct ; les heures restent à saisir.
      */
     private fun chercherRoute() {
+        // La loupe n'existe que services en ligne activés ; la garde tient même si elle réapparaissait.
+        if (!BuildConfig.SUIVI_VOL || !Store.suiviDirect(this)) return
         if (RouteVol.normaliser(numero) == null) {
             routeTexte = getString(R.string.vol_route_invalide)
             return afficherFormulaire()

@@ -327,30 +327,48 @@ Tout est obligatoire avant le premier envoi en test fermé.
 
 ### 6.1 Règles de confidentialité
 
-URL publique obligatoire. **À rédiger et héberger** (GitHub Pages du dépôt
-web, par exemple). Contenu minimal, fidèle au code :
+**Rédigées le 31/10** : `web/src/confidentialite.html`, en français, anglais et
+hébreu (ancres `#fr`, `#en`, `#he`). `web/build.mjs` copie `web/src` en entier
+dans le site (vérifié : la page sort identique dans `web/dist`, et le service
+worker la garde hors connexion). URL à saisir dans la Play Console, une fois
+la branche fusionnée sur `main` et le site remis en ligne par `web.yml` :
 
-- aucune donnée personnelle collectée par le développeur, pas de compte, pas
-  d'analytique, pas de publicité ;
-- journal, séances, réglages : stockés sur l'appareil seulement ; le journal
-  est exclu de la sauvegarde automatique Android ;
-- localisation : demandée seulement si l'utilisateur choisit « Ma position »
-  ou « Position exacte », utilisée sur l'appareil pour les zmanim et la
-  boussole, jamais transmise ;
-- autorisations spéciales (overlay, données d'utilisation) : servent
-  uniquement à la barrière configurée par l'utilisateur ; aucune liste
-  d'applications ni historique d'usage ne quitte l'appareil ;
-- si le suivi de vol est conservé : ce qui part chez OpenSky (zone
-  géographique approchée) et chez adsbdb (numéro de vol), quand, et seulement
-  si l'utilisateur active la fonction ;
-- contact du développeur, date de mise à jour.
+**https://hil123.github.io/myhitbodedut-web/confidentialite.html**
+
+Lien dans l'application : Réglages → carte « Mes données » → « Règles de
+confidentialité » (trois langues), qui ouvre la page à la langue de
+l'interface. Contenu, relu dans le code et tenu par `ConfidentialiteTest` :
+
+- ni compte, ni publicité, ni analyse d'audience, ni rapport d'erreur ; aucun
+  serveur du développeur ;
+- stockage local en `SharedPreferences`, deux fichiers : réglages
+  (`myhitbodedut.xml`, dont le lieu des zmanim, les détails d'un vol, la liste
+  des apps de la barrière) et journal (`myhitbodedut-journal.xml` : séances,
+  notes, prénom) ;
+- sauvegarde dans le nuage d'Android : réglages seuls, **journal, notes et
+  prénom exclus** ; transfert d'appareil : réglages **et** journal
+  (`backup_rules.xml`, `data_extraction_rules.xml`) ;
+- export JSON à l'initiative de l'utilisateur (sans la position) ;
+- position approximative pour zmanim et boussole, exacte pour le seul GPS en
+  vol, utilisées sur l'appareil, jamais envoyées par l'application ;
+- barrière : ce que lisent les deux accès spéciaux, et comment la couper ;
+- vol (édition complète) : un seul interrupteur, « Services en ligne : route
+  du vol et suivi en direct », **désactivé par défaut** (02/11 : adsbdb passe
+  aussi derrière lui ; éteint, la loupe n'apparaît pas et rien ne quitte le
+  téléphone). Allumé : à OpenSky, un carré d'environ 10° autour de la
+  position estimée de l'avion, coordonnées arrondies au dixième de degré,
+  au toucher du bouton ; à adsbdb, le numéro de vol saisi, au toucher de la
+  loupe ; l'adresse IP, vue par ces services comme par tout serveur.
+
+**Reste à faire** : l'adresse de contact du développeur — repère
+`TODO_CONTACT` dans la page, à remplacer avant la saisie dans la Play Console.
 
 ### 6.2 Sécurité des données
 
 | Cas | Réponse |
 | --- | --- |
 | Vol en direct retiré (option A, § 3.1) | « Aucune donnée collectée ni partagée ». Aucune donnée ne quitte l'appareil. |
-| Vol en direct conservé | Déclarer **Position approximative** (zone envoyée à OpenSky) et **Autres identifiants / infos de l'app** pour le numéro de vol (adsbdb), *facultatif pour l'utilisateur*, chiffré en transit (HTTPS). *Déduit — la qualification exacte d'une boîte géographique se confirme dans le formulaire.* |
+| Vol en direct conservé | Déclarer **Position approximative** (zone envoyée à OpenSky) et **Autres identifiants / infos de l'app** pour le numéro de vol (adsbdb), *facultatif pour l'utilisateur* (les deux derrière un interrupteur désactivé par défaut depuis le 02/11), chiffré en transit (HTTPS). *Déduit — la qualification exacte d'une boîte géographique se confirme dans le formulaire.* |
 
 Dans tous les cas : chiffrement en transit = oui (HTTPS seulement) ;
 suppression des données = l'utilisateur les efface en désinstallant ou par
@@ -403,7 +421,8 @@ YouTube non répertoriée, moins de 2 minutes. *Format supposé.*
 | --- | --- | --- |
 | `SYSTEM_ALERT_WINDOW` | pas de formulaire, examinée en revue | Écran de garde volontaire, configuré par l'utilisateur |
 | `PACKAGE_USAGE_STATS` | pas de formulaire, examinée en revue (politique « stalkerware ») | Ne surveille que **l'utilisateur lui-même**, à sa demande ; rien n'est transmis ; icône et notification permanentes, jamais cachée |
-| `ACCESS_FINE_LOCATION`, `ACCESS_COARSE_LOCATION` | pas de déclaration (premier plan seulement) | Demandées au toucher de « Ma position » ; ville de la liste sans autorisation |
+| `ACCESS_COARSE_LOCATION` | pas de déclaration (premier plan seulement) | Zmanim et boussole : demandée seule au toucher de « Ma position » ; ville de la liste sans autorisation. **Fait le 31/10** (`ChoixLieu`) — vérifié par `PositionApprocheeTest` |
+| `ACCESS_FINE_LOCATION` | pas de déclaration (premier plan seulement) ; la position exacte doit se justifier quand l'approximative suffirait | **Seulement** le GPS des zmanim en vol (`VolActivity`), au toucher de « Position réelle (GPS) » : sans réseau en avion, c'est la position de l'avion qui recale la route. Ni les zmanim au sol ni la boussole ne la demandent depuis le 31/10 |
 | `ACCESS_NOTIFICATION_POLICY` | aucune | « Ne pas déranger » pendant la séance, accordé dans Android |
 | `POST_NOTIFICATIONS`, `RECEIVE_BOOT_COMPLETED`, `WAKE_LOCK` | aucune | Rappels, reprise après redémarrage, séance minutée |
 | `QUERY_ALL_PACKAGES` | **non demandée** — `<queries>` limité aux apps lançables | Évite le formulaire le plus restrictif — vérifié |
@@ -416,10 +435,23 @@ déclaration, note aux examinateurs, écran d'accueil de l'app) : **une barrièr
 que l'utilisateur installe sur son propre téléphone, contre ses propres
 habitudes, qu'il peut couper à tout instant.**
 
-Recommandé en plus : un écran d'**explication préalable** (« divulgation bien
-visible ») avant d'envoyer l'utilisateur dans les réglages Android pour
-chacune des deux autorisations spéciales. L'écran principal liste déjà les
-autorisations ; vérifier que le texte dit ce qui est fait de la donnée.
+**Divulgation bien visible — faite le 31/10** (`Divulgation.kt`) : avant
+d'ouvrir les réglages Android de chacune des deux autorisations spéciales,
+une fenêtre propre à chacune dit quelle donnée est utilisée (l'application
+au premier plan ; l'affichage par-dessus les autres), pourquoi (la barrière
+du matin choisie par l'utilisateur), que rien n'est envoyé ni partagé, et
+comment couper la barrière (Réglages → interrupteur « Je suis avec Hachem »).
+« Continuer » ouvre les réglages, « Pas maintenant » ferme. C'est le seul
+chemin vers ces deux écrans : la ligne d'autorisation des réglages et
+l'aperçu de l'écran de garde y passent ; `DivulgationTest` échoue si un appel
+la contourne. L'accueil et l'onboarding n'ouvrent aucun de ces deux écrans
+(vérifié). *Référence : politique « Données utilisateur », section
+divulgation bien visible.*
+
+Limite connue de la position approximative : à moins d'une cinquantaine de
+kilomètres de Har haBayit, 3 km d'écart peuvent dépasser la tolérance de la
+boussole (±4°) ; au-delà de 200 km, l'écart reste sous 1°, et les zmanim
+bougent de moins d'une minute (`PositionApprocheeTest`).
 
 ---
 
@@ -496,8 +528,14 @@ local) :
       Shabbat, après redémarrage, après retrait d'autorisation en cours
 - [ ] Séance de 60 min écran éteint, musique jusqu'au bout, fondu final
 - [ ] Rappels, alerte Chabbat, Birkat haLevana : déclenchés en veille profonde
-- [ ] Zmanim : ville de la liste sans autorisation ; « Ma position » ; mode
-      avion
+- [ ] Zmanim : ville de la liste sans autorisation ; « Ma position » avec la
+      seule position approximative (Android 12+ : choisir « Approximative ») ;
+      mode avion ; GPS en vol (position exacte)
+- [ ] Divulgation : les deux fenêtres s'affichent avant les réglages Android
+      (ligne d'autorisation et aperçu de l'écran de garde) ; « Pas
+      maintenant » n'ouvre rien
+- [ ] Réglages → « Règles de confidentialité » ouvre la page publique dans
+      les trois langues
 - [ ] Les 6 widgets posés et mis à jour
 - [ ] Export / import JSON entre l'édition GitHub et l'édition Play
 - [ ] Trois langues dans l'app, droite-à-gauche en hébreu
@@ -516,7 +554,7 @@ local) :
 | 1 | Décisions § 3 : vol en direct, écrits des ayants droit, 7 licences inconnues | propriétaire | — |
 | 2 | Compte développeur, paiement, vérifications | 1–3 jours | — |
 | 3 | `targetSdk 36`, flux `play.yml`, musique de la version Play — **fait le 29/10** ; clé d'envoi et secrets — propriétaire | 1 jour | 1 |
-| 4 | Règles de confidentialité en ligne | 1 jour | 1 |
+| 4 | Règles de confidentialité en ligne — **rédigées le 31/10** ; en ligne après fusion sur `main` ; contact à fournir (`TODO_CONTACT`) | 1 jour | 1 |
 | 5 | Contenu de l'application (§ 6), fiche (§ 7), vidéos | 2–3 jours | 3, 4 |
 | 6 | Piste de test interne, recette § 8 | 3–5 jours | 3 |
 | 7 | **Test fermé : 12 testeurs, 14 jours sans interruption** | **14 jours minimum** | 5, 6 |

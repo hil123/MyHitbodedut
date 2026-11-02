@@ -62,10 +62,12 @@ export function litChaines(xml) {
   const chaines = {};
   const pluriels = {};
   const tableaux = {};
-  for (const m of sansCommentaires.matchAll(/<string\b([^>]*)>([\s\S]*?)<\/string>/g)) {
+  // (?!-) : « <string\b » prenait aussi « <string-array » ; sans effet tant qu'aucune
+  // <string> ne suivait le dernier tableau du fichier (31/10).
+  for (const m of sansCommentaires.matchAll(/<string\b(?!-)([^>]*)>([\s\S]*?)<\/string>/g)) {
     chaines[attribut(m[1], 'name')] = valeurAndroid(m[2]);
   }
-  for (const m of sansCommentaires.matchAll(/<string\b([^>]*)\/>/g)) {
+  for (const m of sansCommentaires.matchAll(/<string\b(?!-)([^>]*)\/>/g)) {
     chaines[attribut(m[1], 'name')] = '';
   }
   for (const m of sansCommentaires.matchAll(/<plurals\b([^>]*)>([\s\S]*?)<\/plurals>/g)) {
