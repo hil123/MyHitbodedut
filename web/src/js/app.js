@@ -11,7 +11,7 @@ import { MelangeMusique, estQuota, nomDonne, renomme, titreDeFichier } from './m
 import * as MorceauxPerso from './morceaux-perso.js';
 import { DanseMesure } from './seance.js';
 import { creeStore, memoire, repriseValable } from './store.js';
-import { ajouteJours, isoLocal } from './calendrier.js';
+import { ajouteJours, heureDans, isoDans, isoLocal } from './calendrier.js';
 import { JERUSALEM_GEONAMES, RAPPELS_TEFILA, dansIsrael, USAGES_LEVANA, aJerusalem, calendrier, jour as jourJuif, jourDeLaPriere, levana, rappelsTefila, usageLevana } from './calendrier-juif.js';
 import { conditionsPour, index as indexAjouts, libelleJour, vrai as ajoutVrai } from './siddur-jour.js';
 import { JournalPlus } from './regles.js';
@@ -88,6 +88,16 @@ function s(tag, attrs = {}) {
 
 // --- Les sujets (Theme.kt), dans l'ordre de la liste Android ----------------------
 const SUJETS = ['emotions', 'gratitude', 'decisions', 'famille', 'zivoug', 'parnassa', 'avoda', 'difficultes', 'croissance', 'autre'];
+
+// --- Le jour affiché et le moment du lieu (02/11) ------------------------------
+// Un seul « aujourd'hui » à l'écran : celui du téléphone, pour le journal, la série, le
+// calendrier, les zmanim, la halakha, les hilloulot, les Tehilim et les rappels de tefila
+// — sinon, avec une ville dans un autre fuseau, calendrier et journal montraient deux jours
+// différents autour de minuit. Seul le moment de la prière suit l'heure de la ville choisie
+// (prière du moment, sortie des étoiles, 'Hanouka, Méguila, bannière, Levana, salutation) :
+// c'est là qu'on prie.
+const jourLieu = (t = new Date()) => isoDans(t, store.lieu()?.fuseau);
+const heureLieu = (t = new Date()) => heureDans(t, store.lieu()?.fuseau);
 
 // --- Le hassid (Character.kt) : stable sur une journée, change le lendemain -------
 const JOIE = ['char_dancing_joy', 'char_dancing', 'char_guitar', 'char_thumbs_up', 'char_open_arms'];
@@ -712,11 +722,11 @@ function momentAccueil() {
   const moment = store.lieu() ? momentDuSiddour(store.lieu(), heure) : SiddurMoment.suggestion(heure.getHours(), heure.getMinutes());
   const cartes = [...rappels];
   const t = moment ? siddur.textes.find((x) => x.id === moment) : null;
-  if (t) cartes.push(carteMaintenant(t, undefined, undefined, tr.t(Salutation.mot(heure.getHours()))));
+  if (t) cartes.push(carteMaintenant(t, undefined, undefined, tr.t(Salutation.mot(heureLieu(heure).heures))));
   const zone = store.lieu()?.fuseau ?? Intl.DateTimeFormat().resolvedOptions().timeZone;
-  const l = levana(isoLocal(heure), zone, { usage: usageLevanaCourant() });
+  const l = levana(jourLieu(heure), zone, { usage: usageLevanaCourant() });
   const lv = siddur.textes.find((x) => x.id === 'birkat_halevana');
-  if (lv && typeof l.etat === 'string' && heure.getHours() >= 14) {
+  if (lv && typeof l.etat === 'string' && heureLieu(heure).heures >= 14) {
     cartes.push(h('button', { class: 'maintenant', onclick: () => { priere = lv.id; ouvrir('priere'); } },
       plateau('char_praise', 'plateau-maintenant'),
       h('span', { class: 'maintenant-corps' },
@@ -776,10 +786,11 @@ function chargeTehilim() {
 
 /** Le jour du mois hébraïque et la longueur du mois (29 ou 30), par le calendrier du navigateur. */
 function jourHebreu(date = new Date()) {
-  const jour = (d) => Number(new Intl.DateTimeFormat('en-u-ca-hebrew', { day: 'numeric' }).format(d));
-  const j = jour(date);
-  const demain = new Date(date);
-  demain.setDate(date.getDate() + 1);
+  // Le jour affiché (02/11) : midi UTC de la date du téléphone, lu en UTC.
+  const midi = new Date(`${isoLocal(date)}T12:00:00Z`);
+  const jour = (d) => Number(new Intl.DateTimeFormat('en-u-ca-hebrew', { day: 'numeric', timeZone: 'UTC' }).format(d));
+  const j = jour(midi);
+  const demain = new Date(midi.getTime() + 86400000);
   return { jour: j, longueur: j === 29 && jour(demain) === 1 ? 29 : 30 };
 }
 
@@ -807,9 +818,9 @@ function lire(p) {
 
 function ecranTehilim() {
   const { jour, portion } = portionDuMois();
-  const auj = new Date();
-  const semaine = CycleTehilim.deLaSemaine(auj.getDay());
-  const nomJour = new Intl.DateTimeFormat(tr.langue, { weekday: 'long' }).format(auj);
+  const auj = new Date(`${isoLocal(new Date())}T12:00:00Z`);
+  const semaine = CycleTehilim.deLaSemaine(auj.getUTCDay());
+  const nomJour = new Intl.DateTimeFormat(tr.langue, { weekday: 'long', timeZone: 'UTC' }).format(auj);
   const pret = chargeTehilim();
   const versets = pret ? tehilim.reduce((n, ch) => n + ch.length, 0) : null;
   return h('div', { class: 'ecran' }, barre(tr.t('tehilim_title')),
@@ -1279,13 +1290,14 @@ function ecranSiddur() {
   const moment = store.lieu() ? momentDuSiddour(store.lieu(), heure) : SiddurMoment.suggestion(heure.getHours(), heure.getMinutes());
   const suggere = pret && moment ? siddur.textes.find((x) => x.id === moment) : null;
   // 'Hanouka (13/10) : le Hallel du jour, avec la scène de 'Hanouka, sous la prière du matin.
-  const hallelHanouka = pret && moment === 'chaharit' && jourJuif(isoLocal(heure), store.inIsrael()).fetes.includes('hanouka')
+  const isoHeure = jourLieu(heure);
+  const hallelHanouka = pret && moment === 'chaharit' && jourJuif(isoHeure, store.inIsrael()).fetes.includes('hanouka')
     ? siddur.textes.find((x) => x.id === 'hallel') : null;
   // Birkat haIlanot (14/10), le mois où on la dit (SiddurMoment.ilanot).
-  const ilanot = pret && ilanotDuMois(isoLocal(heure)) ? siddur.textes.find((x) => x.id === 'birkat_hailanot') : null;
+  const ilanot = pret && ilanotDuMois(isoHeure) ? siddur.textes.find((x) => x.id === 'birkat_hailanot') : null;
   // Pourim (13/10) : la Méguila sous Arvit (la nuit qui ouvre Pourim) et sous Cha'harit (SiddurMoment.megila).
   // Les livres (7 Mo) ne se chargent que les jours de Méguila.
-  const esther = megilaDuMoment(moment, isoLocal(heure)) && chargeLivre('meguilat_esther') ? livres.textes.find((x) => x.id === 'meguilat_esther') : null;
+  const esther = megilaDuMoment(moment, isoHeure) && chargeLivre('meguilat_esther') ? livres.textes.find((x) => x.id === 'meguilat_esther') : null;
   const puce = h('button', {
     type: 'button', class: 'puce-bandeau', 'aria-haspopup': 'dialog', 'aria-label': `${tr.t('siddur_choose')} : ${nomNusah}`, onclick: choisirNusah,
   }, h('span', {}, nomNusah), icone('replier'));
@@ -1331,8 +1343,9 @@ function ecranPriere() {
   const maintenant = new Date();
   // Après la sortie des étoiles du lieu, les autres textes relèvent aussi de demain (28/10).
   const lieuSortie = store.lieu();
-  const tset = lieuSortie ? zmanimDuJour(lieuSortie, isoLocal(maintenant)).find((z) => z.cle === 'tset')?.instant : null;
-  const jourDuTexte = jourJuif(jourDeLaPriere(x.id, isoLocal(maintenant), maintenant.getHours(), !!tset && maintenant >= tset), store.inIsrael(), mukafChoma());
+  const isoMaintenant = jourLieu(maintenant);
+  const tset = lieuSortie ? zmanimDuJour(lieuSortie, isoMaintenant).find((z) => z.cle === 'tset')?.instant : null;
+  const jourDuTexte = jourJuif(jourDeLaPriere(x.id, isoMaintenant, heureLieu(maintenant).heures, !!tset && maintenant >= tset), store.inIsrael(), mukafChoma());
   const nusah = store.siddurNusah();
   const c = conditionsPour(nusah, store.inIsrael(), jourDuTexte.conditions, store.sansTahanounFinTichri(), hemisphereSud());
   const nom = (a, condition) => tr.t(libelleJour(a.libelle, condition, nusah, c));
@@ -2308,7 +2321,7 @@ function bandeauPriere(titreHe, etiquettes, horaire) {
 function horairePriere(id) {
   const lieu = store.lieu();
   if (!lieu || !['chaharit', 'minha', 'arvit'].includes(id)) return null;
-  const iso = new Intl.DateTimeFormat('en-CA', { timeZone: lieu.fuseau, year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date());
+  const iso = jourLieu();
   const z = Object.fromEntries(zmanimDuJour(lieu, iso).map((x) => [x.cle, x.instant]));
   const hh = (c) => (z[c] ? heureZman(z[c], lieu.fuseau) : null);
   if (id === 'chaharit') return hh('szt_gra') && tr.t('banniere_chaharit', hh('szt_gra'));
@@ -2985,8 +2998,8 @@ const piedZmanim = () => [h('p', { class: 'indice sources' }, tr.t('zmanim_a_val
 function ecranZmanim() {
   chargeVilles();
   rafraichirPosition();
-  const iso = isoLocal(new Date());
   const lieu = store.lieu();
+  const iso = isoLocal(new Date());
   const puce = h('button', {
     type: 'button', class: 'puce-bandeau', 'aria-haspopup': 'dialog', onclick: choisirLieu,
     'aria-label': `${tr.t('reglage_lieu')} : ${lieu ? lieu.nom : tr.t('reglage_lieu_aucun')}`,
@@ -3024,11 +3037,18 @@ let boussolePermise = false;
 const SOURCE_BOUSSOLE = 'https://www.chabad.org/library/article_cdo/aid/3502321/jewish/Why-Do-We-Face-East-When-Praying-Or-Do-We.htm';
 const COULEURS_BOUSSOLE = { ciel: '#DFF5E8', sol: '#CBEBD8', horizon: '#9CC9B0', encre: '#173C32', marque: '#16775A', or: '#B8780F', bleu: '#2E7DB3' };
 
+/** Celle que suit le hassid, puis l'autre : le grand cercle d'abord, ou la carte de Mercator si on l'a choisie (03/11). */
+function directionsBoussole(lieu) {
+  const gc = Boussole.grandCercle(lieu.latitude, lieu.longitude);
+  const rh = Boussole.carte(lieu.latitude, lieu.longitude);
+  return store.boussoleCarte() ? [rh, gc] : [gc, rh];
+}
+
 function carteBoussole() {
   const lieu = store.lieu();
   return h('div', { class: 'carte' }, h('button', { class: 'ligne', onclick: () => ouvrir('boussole') },
     h('span', { class: 'corps' }, h('div', { class: 'nom' }, tr.t('boussole_title')),
-      h('div', { class: 'etat' }, lieu ? tr.t('boussole_par_rapport_nord', Boussole.degres(Boussole.grandCercle(lieu.latitude, lieu.longitude))) : tr.t('boussole_carte_sous'))),
+      h('div', { class: 'etat' }, lieu ? tr.t('boussole_par_rapport_nord', Boussole.degres(directionsBoussole(lieu)[0])) : tr.t('boussole_carte_sous'))),
     h('span', { class: 'chevron', 'aria-hidden': 'true' })));
 }
 
@@ -3126,8 +3146,8 @@ function surOrientation(e) {
   capBoussole = Boussole.lisser(capBoussole, Boussole.capVrai(magnetique, lieu));
   const scene = app.querySelector('.boussole-scene');
   if (!scene) return;
-  const gc = Boussole.grandCercle(lieu.latitude, lieu.longitude);
-  scene.innerHTML = dessinBoussole(gc, Boussole.carte(lieu.latitude, lieu.longitude), capBoussole);
+  const [gc, autre] = directionsBoussole(lieu);
+  scene.innerHTML = dessinBoussole(gc, autre, capBoussole);
   // Face à Jérusalem : une petite vibration, là où le navigateur le permet (pas sur iPhone).
   if (avant != null && !Boussole.face(Boussole.ecart(gc, avant)) && Boussole.face(Boussole.ecart(gc, capBoussole))) navigator.vibrate?.(30);
   if (!boussoleRecu) { boussoleRecu = true; rendre(); }
@@ -3175,10 +3195,12 @@ function ecranBoussole() {
       h('button', { class: 'principal', onclick: () => localiserPosition({ etat }) }, tr.t('boussole_vide_position')),
       h('button', { class: 'lien-discret', onclick: choisirLieu }, tr.t('boussole_vide_ville')), etat));
   } else {
+    const selonCarte = store.boussoleCarte();
+    const [suivie, autre] = directionsBoussole(lieu);
     const gc = Boussole.grandCercle(lieu.latitude, lieu.longitude);
     const rh = Boussole.carte(lieu.latitude, lieu.longitude);
     const scene = h('div', { class: 'boussole-scene' });
-    scene.innerHTML = dessinBoussole(gc, rh, capBoussole);
+    scene.innerHTML = dessinBoussole(suivie, autre, capBoussole);
     contenu.push(scene);
     contenu.push(h('p', { class: 'boussole-calibrer', role: 'status', hidden: !boussoleACalibrer }, tr.t('boussole_calibrer')));
     if (autorisationBoussole() && !boussoleEcoute) {
@@ -3195,10 +3217,19 @@ function ecranBoussole() {
     const points = tr.tab('boussole_points');
     const km = new Intl.NumberFormat(tr.langue).format(Math.round(Boussole.distanceKm(lieu.latitude, lieu.longitude)));
     contenu.push(h('div', { class: 'carte carte-texte' },
-      h('p', { class: 'boussole-principale' }, tr.t('boussole_grand_cercle', Boussole.degres(gc), points[Boussole.point(gc)])),
-      h('p', {}, tr.t('boussole_cap_constant', Boussole.degres(rh), points[Boussole.point(rh)])),
+      // Celle que suit le hassid en premier, mise en avant ; l'autre dessous.
+      ...(() => {
+        const reelle = tr.t('boussole_grand_cercle', Boussole.degres(gc), points[Boussole.point(gc)]);
+        const surCarte = tr.t('boussole_cap_constant', Boussole.degres(rh), points[Boussole.point(rh)]);
+        const [premiere, seconde] = selonCarte ? [surCarte, reelle] : [reelle, surCarte];
+        return [h('p', { class: 'boussole-principale' }, premiere), h('p', {}, seconde)];
+      })(),
       h('p', { class: 'indice' }, tr.t('boussole_distance', km)),
-      h('p', { class: 'indice' }, tr.t('boussole_legende'))));
+      h('p', { class: 'indice' }, tr.t(selonCarte ? 'boussole_legende_carte' : 'boussole_legende'))));
+    contenu.push(h('div', { class: 'carte' }, h('button', { class: 'ligne', 'aria-haspopup': 'dialog', onclick: choisirMethodeBoussole },
+      h('span', { class: 'corps' }, h('div', { class: 'nom' }, tr.t('boussole_methode')),
+        h('div', { class: 'etat' }, tr.t(selonCarte ? 'boussole_methode_carte' : 'boussole_methode_reelle'))),
+      h('span', { class: 'chevron', 'aria-hidden': 'true' }))));
     contenu.push(h('div', { class: 'carte' }, h('button', { class: 'ligne', 'aria-haspopup': 'dialog', onclick: choisirAffichageBoussole },
       h('span', { class: 'corps' }, h('div', { class: 'nom' }, tr.t('boussole_affichage')),
         h('div', { class: 'etat' }, tr.t(store.boussoleRose() ? 'boussole_affichage_rose' : 'boussole_affichage_hassid'))),
@@ -3207,10 +3238,23 @@ function ecranBoussole() {
     contenu.push(h('div', { class: 'carte carte-texte' },
       h('p', { class: 'nom' }, tr.t('boussole_note_titre')),
       h('p', { class: 'indice' }, tr.t('boussole_note')),
-      h('p', {}, source[0], h('a', { href: SOURCE_BOUSSOLE, target: '_blank', rel: 'noopener' }, tr.t('boussole_source_titre')), source[1] ?? '')));
+      h('p', {}, source[0], h('a', { href: SOURCE_BOUSSOLE, target: '_blank', rel: 'noopener', dir: 'ltr' }, tr.t('boussole_source_titre')), source[1] ?? '')));
   }
   return h('div', { class: 'ecran avec-bandeau' }, bandeau(tr.t('boussole_title'), { puce: lieu ? puce : null, dessin: 'char_standing_back' }),
     h('div', { class: 'defile' }, h('div', { class: 'contenu' }, ...contenu, ...piedZmanim().slice(1))));
+}
+
+function choisirMethodeBoussole() {
+  feuille(tr.t('boussole_methode'), (f, fermer) => {
+    f.append(h('div', { role: 'radiogroup', 'aria-label': tr.t('boussole_methode') }, [false, true].map((carte) => {
+      const courant = store.boussoleCarte() === carte;
+      return h('button', {
+        type: 'button', class: 'choix choix-radio', role: 'radio', 'aria-checked': String(courant),
+        onclick: () => { fermer(); if (!courant) { store.setBoussoleCarte(carte); rendre(); } },
+      }, h('span', { class: 'radio', 'aria-hidden': 'true' }), tr.t(carte ? 'boussole_methode_carte' : 'boussole_methode_reelle'));
+    })));
+  });
+  document.querySelector('.feuille [aria-checked="true"]')?.focus();
 }
 
 function choisirAffichageBoussole() {

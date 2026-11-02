@@ -25,11 +25,46 @@ object BandeauDefilant {
         val defile = premierDefilant(racine) ?: return
         bandeau.setTag(R.id.bandeau_defilant, true)
         var cache = false
+        // Le défilement réel d'une liste, au pixel près, additionné à chaque pas (03/11) : celui
+        // qu'Android estime (computeVerticalScrollOffset) se trompe quand les lignes n'ont pas la
+        // même hauteur, et la banderole partait trop tôt puis revenait en boucle.
+        var cumul = 0
+        (defile as? androidx.recyclerview.widget.RecyclerView)?.addOnScrollListener(object : androidx.recyclerview.widget.RecyclerView.OnScrollListener() {
+            override fun onScrolled(rv: androidx.recyclerview.widget.RecyclerView, dx: Int, dy: Int) {
+                cumul = if (rv.canScrollVertically(-1)) (cumul + dy).coerceAtLeast(0) else 0
+            }
+        })
+        fun decalage(): Int = when (defile) {
+            is ScrollView -> defile.scrollY
+            is androidx.recyclerview.widget.RecyclerView -> cumul
+            else -> if (defile.canScrollVertically(-1)) Int.MAX_VALUE else 0
+        }
         defile.viewTreeObserver.addOnScrollChangedListener {
             val descendu = defile.canScrollVertically(-1)
-            if (descendu && !cache && reste(defile) > bandeau.height) {
+            val h = bandeau.height
+            // Effacée seulement après un vrai défilement (plus que sa hauteur et une marge) : en
+            // descendant doucement, le premier pixel ne la fait plus partir (03/11).
+            if (descendu && !cache && decalage() > h + marge(defile) && reste(defile) > h + marge(defile)) {
                 cache = true
-                bandeau.animate().alpha(0f).setDuration(DUREE_MS).withEndAction { if (cache) bandeau.visibility = View.GONE }
+                bandeau.animate().alpha(0f).setDuration(DUREE_MS).withEndAction {
+                    if (!cache) return@withEndAction
+                    // La place qu'elle libère remonterait tout le texte d'un coup : juste avant
+                    // l'image suivante, on mesure de combien le texte est monté et on le redescend
+                    // d'autant — rien ne bouge à l'écran (03/11 ; décalé d'une image, il sautait).
+                    val avant = IntArray(2).also { defile.getLocationOnScreen(it) }[1]
+                    bandeau.visibility = View.GONE
+                    val vue = defile.viewTreeObserver
+                    vue.addOnPreDrawListener(object : android.view.ViewTreeObserver.OnPreDrawListener {
+                        override fun onPreDraw(): Boolean {
+                            if (defile.viewTreeObserver.isAlive) defile.viewTreeObserver.removeOnPreDrawListener(this)
+                            val monte = avant - IntArray(2).also { defile.getLocationOnScreen(it) }[1]
+                            val mesurable = defile is ScrollView || defile is androidx.recyclerview.widget.RecyclerView
+                            if (!mesurable || monte <= 0 || decalage() <= monte) return true
+                            defile.scrollBy(0, -monte)
+                            return false // cette image est redessinée, texte en place
+                        }
+                    })
+                }
             } else if (!descendu && cache) {
                 cache = false
                 bandeau.visibility = View.VISIBLE
@@ -39,14 +74,19 @@ object BandeauDefilant {
     }
 
     /**
-     * Ce qui reste à faire défiler : la banderole ne s'efface que si la page la
-     * dépasse, sinon la place qu'elle libère ramènerait la page en haut, et elle
-     * reviendrait aussitôt.
+     * Ce que la page peut défiler en tout : la banderole ne s'efface que si la page la
+     * dépasse nettement, sinon la place qu'elle libère ramènerait la page en haut, et elle
+     * reviendrait aussitôt. Les listes (siddour, Tehilim, livres) comptaient pour infinies :
+     * un texte court comme Acher Yatsar faisait clignoter la banderole sans fin (03/11).
      */
     private fun reste(v: View): Int = when (v) {
-        is ScrollView -> (v.getChildAt(0)?.height ?: 0) - v.height
+        is ScrollView -> (v.getChildAt(0)?.height ?: 0) + v.paddingTop + v.paddingBottom - v.height
+        is androidx.recyclerview.widget.RecyclerView -> v.computeVerticalScrollRange() - v.computeVerticalScrollExtent()
         else -> Int.MAX_VALUE
     }
+
+    /** Un peu de jeu en plus : la hauteur d'une liste se devine à quelques pixels près. */
+    private fun marge(v: View): Int = (48 * v.resources.displayMetrics.density).toInt()
 
     private fun premierDefilant(v: View): View? {
         if (v is ScrollView || v is AbsListView || v.javaClass.name.endsWith("RecyclerView") ||

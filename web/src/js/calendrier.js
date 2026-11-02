@@ -57,6 +57,33 @@ export function isoLocal(date) {
   return `${date.getFullYear()}-${p(date.getMonth() + 1)}-${p(date.getDate())}`;
 }
 
+/**
+ * Le jour civil de l'instant [date] dans le [fuseau] (02/11) : celui de la ville
+ * des zmanim, pour les écrans du lieu (zmanim, siddour, halakha, hilloulot,
+ * calendrier) ; sans fuseau, ou fuseau inconnu, celui du téléphone.
+ */
+export function isoDans(date, fuseau) {
+  return partiesDans(date, fuseau).iso;
+}
+
+/** L'heure et la minute de l'instant [date] dans le [fuseau] ; sans fuseau, celles du téléphone. */
+export function heureDans(date, fuseau) {
+  const { heures, minutes } = partiesDans(date, fuseau);
+  return { heures, minutes };
+}
+
+function partiesDans(date, fuseau) {
+  if (fuseau) {
+    try {
+      const p = Object.fromEntries(new Intl.DateTimeFormat('en-US', {
+        timeZone: fuseau, hourCycle: 'h23', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit',
+      }).formatToParts(date).map((x) => [x.type, x.value]));
+      return { iso: `${p.year}-${p.month}-${p.day}`, heures: Number(p.hour), minutes: Number(p.minute) };
+    } catch { /* fuseau inconnu : celui du téléphone */ }
+  }
+  return { iso: isoLocal(date), heures: date.getHours(), minutes: date.getMinutes() };
+}
+
 export function ajouteJours(iso, n) {
   const [a, m, j] = iso.split('-').map(Number);
   const d = new Date(Date.UTC(a, m - 1, j + n, 12));

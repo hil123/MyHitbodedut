@@ -427,6 +427,11 @@
                 android:resource="@xml/partage_paths" />
         </provider>
 
+        <!-- Le prochain changement des vignettes des zmanim (02/11). -->
+        <receiver
+            android:name=".ZmanimTic"
+            android:exported="false" />
+
         <!-- Les zmanim sur l'écran d'accueil (14/10). -->
         <receiver
             android:name=".ZmanimWidget"

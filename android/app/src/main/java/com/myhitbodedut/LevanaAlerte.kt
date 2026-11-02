@@ -56,7 +56,7 @@ object LevanaAlerte {
 
     /** L'heure du rappel un soir donné : la sortie des étoiles au lieu choisi, sinon 20 h. */
     fun heure(context: Context, zone: ZoneId): (LocalDate) -> ZonedDateTime = { d ->
-        Store.lieuZmanim(context)?.let { lieu -> Zmanim.jour(lieu, d).firstOrNull { it.cle == "tset" }?.local?.withZoneSameInstant(zone) }
+        Store.lieuAlertes(context)?.let { lieu -> Zmanim.jour(lieu, d).firstOrNull { it.cle == "tset" }?.local?.withZoneSameInstant(zone) }
             ?: d.atTime(20, 0).atZone(zone)
     }
 
@@ -65,7 +65,7 @@ object LevanaAlerte {
         val pending = intent(context)
         alarmes.cancel(pending)
         if (!Store.levanaRappel(context)) return
-        val zone = Store.lieuZmanim(context)?.fuseau?.let { runCatching { ZoneId.of(it) }.getOrNull() } ?: ZoneId.systemDefault()
+        val zone = Store.lieuAlertes(context)?.fuseau?.let { runCatching { ZoneId.of(it) }.getOrNull() } ?: ZoneId.systemDefault()
         val (quand, soir) = prochain(ZonedDateTime.now(zone), VueJour.usageLevana(context), heure(context, zone)) ?: return
         Store.setLevanaRappelSoir(context, soir.name)
         runCatching { alarmes.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, quand.toInstant().toEpochMilli(), pending) }

@@ -117,7 +117,8 @@ class BoussoleActivity : AppCompatActivity(), SensorEventListener {
 
         declinaison = GeomagneticField(lieu.latitude.toFloat(), lieu.longitude.toFloat(), lieu.altitude.toFloat(),
             System.currentTimeMillis()).declination
-        val (principale, autre) = DirectionJerusalem.directions(lieu.latitude, lieu.longitude)
+        val selonCarte = Store.boussoleCarte(this)
+        val (principale, autre) = DirectionJerusalem.directions(lieu.latitude, lieu.longitude, selonCarte)
         boussole.directions(principale, autre)
         boussole.cap(lisse)
 
@@ -127,12 +128,23 @@ class BoussoleActivity : AppCompatActivity(), SensorEventListener {
         val km = NumberFormat.getIntegerInstance(Locale.forLanguageTag(ChizukCard.language(this)))
             .format(Math.round(DirectionJerusalem.distanceKm(lieu.latitude, lieu.longitude)))
         contenu.addView(VueJour.carte(this).apply {
-            addView(VueJour.texte(this@BoussoleActivity, getString(R.string.boussole_grand_cercle, DirectionJerusalem.degres(gc),
-                points[DirectionJerusalem.point(gc)]), 15f, R.color.brand, gras = true))
-            addView(VueJour.texte(this@BoussoleActivity, getString(R.string.boussole_cap_constant, DirectionJerusalem.degres(rh),
-                points[DirectionJerusalem.point(rh)]), 15f, R.color.ink, haut = 6))
+            // Celle que suit le hassid en premier, en vert et en gras ; l'autre dessous.
+            val reelle = getString(R.string.boussole_grand_cercle, DirectionJerusalem.degres(gc), points[DirectionJerusalem.point(gc)])
+            val surCarte = getString(R.string.boussole_cap_constant, DirectionJerusalem.degres(rh), points[DirectionJerusalem.point(rh)])
+            val (premiere, seconde) = if (selonCarte) surCarte to reelle else reelle to surCarte
+            addView(VueJour.texte(this@BoussoleActivity, premiere, 15f, R.color.brand, gras = true))
+            addView(VueJour.texte(this@BoussoleActivity, seconde, 15f, R.color.ink, haut = 6))
             addView(VueJour.texte(this@BoussoleActivity, getString(R.string.boussole_distance, km), 13f, R.color.muted, haut = 6))
-            addView(VueJour.texte(this@BoussoleActivity, getString(R.string.boussole_legende), 13f, R.color.muted, haut = 6))
+            addView(VueJour.texte(this@BoussoleActivity, getString(if (selonCarte) R.string.boussole_legende_carte else R.string.boussole_legende),
+                13f, R.color.muted, haut = 6))
+        })
+
+        contenu.addView(VueJour.carte(this).apply {
+            addView(VueJour.texte(this@BoussoleActivity, getString(R.string.boussole_methode), 15f, R.color.ink))
+            addView(VueJour.texte(this@BoussoleActivity, getString(if (selonCarte) R.string.boussole_methode_carte
+                else R.string.boussole_methode_reelle), 13f, R.color.muted, haut = 2))
+            foreground = Apparence.effetToucher(this@BoussoleActivity)
+            setOnClickListener { choisirMethode() }
         })
 
         contenu.addView(VueJour.carte(this).apply {
@@ -147,7 +159,7 @@ class BoussoleActivity : AppCompatActivity(), SensorEventListener {
             addView(VueJour.texte(this@BoussoleActivity, getString(R.string.boussole_note_titre), 15f, R.color.ink))
             addView(VueJour.texte(this@BoussoleActivity, getString(R.string.boussole_note), 13f, R.color.muted, haut = 4))
             addView(VueJour.texte(this@BoussoleActivity, HtmlCompat.fromHtml(getString(R.string.boussole_source,
-                "<a href=\"$SOURCE\">${android.text.TextUtils.htmlEncode(getString(R.string.boussole_source_titre))}</a>"), HtmlCompat.FROM_HTML_MODE_LEGACY),
+                "\u2066<a href=\"$SOURCE\">${android.text.TextUtils.htmlEncode(getString(R.string.boussole_source_titre))}</a>\u2069"), HtmlCompat.FROM_HTML_MODE_LEGACY),
                 13f, R.color.brand, haut = 6).apply { movementMethod = LinkMovementMethod.getInstance() })
         })
         contenu.addView(VueJour.texte(this, getString(R.string.zmanim_source_villes), 12f, R.color.muted, haut = 16).apply { setPadding(dp(16), 0, dp(16), 0) })
@@ -178,6 +190,20 @@ class BoussoleActivity : AppCompatActivity(), SensorEventListener {
     }
 
     /** Le hassid (design C, par défaut) ou la rose des vents. */
+    /** Grand cercle ou carte de Mercator (03/11) : la boussole et sa vignette suivent le choix. */
+    private fun choisirMethode() {
+        MaterialAlertDialogBuilder(this)
+            .setTitle(R.string.boussole_methode)
+            .setSingleChoiceItems(arrayOf(getString(R.string.boussole_methode_reelle), getString(R.string.boussole_methode_carte)),
+                if (Store.boussoleCarte(this)) 1 else 0) { d, i ->
+                Store.setBoussoleCarte(this, i == 1)
+                d.dismiss()
+                afficher()
+                BoussoleWidget.refresh(this)
+            }
+            .show()
+    }
+
     private fun choisirAffichage() {
         MaterialAlertDialogBuilder(this)
             .setTitle(R.string.boussole_affichage)

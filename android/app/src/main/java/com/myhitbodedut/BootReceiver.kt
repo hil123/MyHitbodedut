@@ -23,6 +23,9 @@ class BootReceiver : BroadcastReceiver() {
         // Une séance en cours quand le téléphone s'est éteint : échue, elle
         // est inscrite pour sa durée ; sinon elle reprend si Android le permet.
         SessionService.reconcilier(context)
+        // En voyage, la position du téléphone de l'endroit quitté (02/11) : reprise si Android
+        // en connaît une récente, sinon les alertes attendent l'ouverture de l'application.
+        if (intent.action == Intent.ACTION_TIMEZONE_CHANGED) ChoixLieu.reprendreEnFond(context)
         Reminder.reschedule(context)
         ChabbatAlerte.programmer(context)
         LevanaAlerte.programmer(context)
