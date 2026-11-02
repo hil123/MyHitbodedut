@@ -173,6 +173,8 @@ test('les chaînes Android se lisent comme aapt les lit', () => {
   assert.equal(valeurAndroid('Vendredi &amp; samedi'), 'Vendredi & samedi');
   assert.equal(valeurAndroid('"  deux  espaces "'), '  deux  espaces ');
   assert.equal(valeurAndroid('ligne\\nsuivante'), 'ligne\nsuivante');
+  // L'espace insécable reste, comme sous Android (03/11) : « réelle\u00a0; » ne se coupe pas.
+  assert.equal(valeurAndroid('réelle\u00a0; Equal\u00a0Earth'), 'réelle\u00a0; Equal\u00a0Earth');
 });
 
 test('chaque langue a toutes les chaînes et tous les pluriels du français', () => {

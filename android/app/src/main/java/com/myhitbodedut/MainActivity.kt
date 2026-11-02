@@ -25,6 +25,13 @@ class MainActivity : AppCompatActivity() {
     /** Le texte de relance a déjà été tiré pour la rupture en cours. */
     private var relanceTiree = false
 
+    /** La position du téléphone reprise au retour sur l'accueil, après un voyage (02/11). */
+    private val choixLieu = ChoixLieu(this) {
+        refresh()
+        applyServiceState()
+        ZmanimWidget.refresh(this)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -139,6 +146,7 @@ class MainActivity : AppCompatActivity() {
         // La vignette d'accueil suit ce que l'écran vient de montrer.
         StreakWidget.refresh(this)
         ZmanimWidget.refresh(this)
+        choixLieu.rafraichirSiBesoin()
     }
 
     /**

@@ -103,6 +103,8 @@ object Store {
     private const val KEY_LIEU_ALT = "lieu_altitude"
     private const val KEY_LIEU_FUSEAU = "lieu_fuseau"
     private const val KEY_LIEU_VILLE = "lieu_ville"
+    private const val KEY_LIEU_T = "lieu_t"
+    private const val KEY_FAIT_A = "seance_faite_a"
     private const val KEY_VOL_NUMERO = "vol_numero"
     private const val KEY_VOL_DEPART = "vol_depart"
     private const val KEY_VOL_ARRIVEE = "vol_arrivee"
@@ -118,6 +120,7 @@ object Store {
     private const val KEY_VOL_RAPPEL_VU = "vol_rappel_vu"
     private const val KEY_SUIVI_DIRECT = "vol_suivi_direct"
     private const val KEY_BOUSSOLE_ROSE = "boussole_rose"
+    private const val KEY_BOUSSOLE_CARTE = "boussole_carte"
     private const val KEY_ALLUMAGE = "allumage_minutes"
     private const val KEY_PAUSED_DATES = "paused_dates"
     private const val KEY_REMINDER_ON = "reminder_on"
@@ -301,6 +304,14 @@ object Store {
             noteSeule = false
         )
         writeDays(context, all)
+        // L'instant que la séance couvre, pour la fenêtre de nuit (fenetreFaite) : maintenant pour
+        // aujourd'hui ; un jour passé (séance commencée avant minuit, ajout après coup) au plus tard
+        // à sa dernière minute, pour ne pas couvrir le soir qui vient.
+        val maintenant = System.currentTimeMillis()
+        val credit = if (date == today()) maintenant else minOf(maintenant,
+            parse(date).atTime(23, 59, 59).atZone(java.time.ZoneId.systemDefault()).toInstant().toEpochMilli())
+        val p = prefs(context)
+        if (credit > p.getLong(KEY_FAIT_A, 0L)) p.edit().putLong(KEY_FAIT_A, credit).apply()
         clearSnooze(context)
         // La journée est faite : le rappel « Il est temps… » ne reste pas dans le volet jusqu'au lendemain (02/11).
         if (minutes > 0) runCatching { androidx.core.app.NotificationManagerCompat.from(context).cancel(Notifications.ID_REMINDER) }
@@ -324,6 +335,38 @@ object Store {
         val all = days(context).toMutableMap()
         all.remove(today())
         writeDays(context, all)
+        prefs(context).edit().remove(KEY_FAIT_A).apply()
+    }
+
+    /**
+     * La fenêtre de « Je suis avec Hachem » est-elle déjà honorée (02/11) ? Une fenêtre qui
+     * passe minuit (21:00–02:00) appartient au soir où elle commence : à 0 h 30, c'est encore
+     * la nuit de la veille, et la séance de 21 h 30 la couvre. Avant, la barrière regardait le
+     * seul jour civil et se réarmait à minuit, séance faite. Compte une séance close après la
+     * fin de la fenêtre précédente (le même jour à [end]) : celle de 0 h 30 sert la nuit d'avant,
+     * pas le soir qui suit ; celle de 10 h sert le soir. Sans heure connue (journal d'avant
+     * cette version), le jour de la fenêtre fait foi. Fenêtre dans la journée : inchangé.
+     */
+    fun fenetreFaite(
+        start: Int,
+        end: Int,
+        maintenant: java.time.LocalDateTime,
+        faitA: java.time.LocalDateTime?,
+        faitLe: (LocalDate) -> Boolean,
+    ): Boolean {
+        if (start <= end) return faitLe(maintenant.toLocalDate())
+        val minutes = maintenant.hour * 60 + maintenant.minute
+        val jour = if (minutes < end) maintenant.toLocalDate().minusDays(1) else maintenant.toLocalDate()
+        if (faitA == null) return faitLe(jour)
+        return !faitA.isBefore(jour.atTime(end / 60, end % 60))
+    }
+
+    fun fenetreFaite(context: Context): Boolean {
+        val t = prefs(context).getLong(KEY_FAIT_A, 0L)
+        val faitA = if (t > 0) java.time.LocalDateTime.ofInstant(java.time.Instant.ofEpochMilli(t), java.time.ZoneId.systemDefault()) else null
+        return fenetreFaite(windowStart(context), windowEnd(context), java.time.LocalDateTime.now(), faitA) {
+            isDone(context, it.format(FORMAT))
+        }
     }
 
     fun totalMinutes(context: Context): Int = days(context).values.sumOf { it.minutes }
@@ -373,6 +416,28 @@ object Store {
             p.getString(KEY_LIEU_ALT, null)?.toDoubleOrNull() ?: 0.0, fuseau)
     }
 
+    /** Quand le lieu a été enregistré (millisecondes), 0 s'il date d'avant le 02/11. */
+    fun lieuDepuis(context: Context): Long = prefs(context).getLong(KEY_LIEU_T, 0L)
+
+    /**
+     * La position du téléphone prise dans un autre fuseau que celui du téléphone aujourd'hui
+     * (02/11) : on a voyagé depuis, et ses horaires sont ceux de l'endroit quitté. Une ville
+     * choisie n'est jamais périmée : elle est voulue, ailleurs ou non.
+     */
+    fun lieuPerime(context: Context, fuseauTelephone: String = java.util.TimeZone.getDefault().id): Boolean {
+        val lieu = lieuZmanim(context) ?: return false
+        return lieuVille(context) == -1L && lieu.fuseau != fuseauTelephone
+    }
+
+    /**
+     * Le lieu des alertes programmées (Chabbat, Levana) : celui des zmanim, sauf une position
+     * périmée par un voyage — mieux vaut pas d'alerte, ou celle de 20 h, qu'un « Chabbat dans
+     * 3 h » à l'heure de l'endroit quitté (six heures trop tôt à New York en venant de Paris).
+     * La position est reprise au changement de fuseau quand Android la donne, sinon à
+     * l'ouverture suivante de l'application, et les alertes reprogrammées.
+     */
+    fun lieuAlertes(context: Context): Zmanim.Lieu? = if (lieuPerime(context)) null else lieuZmanim(context)
+
     /** La ville choisie dans la liste (identifiant GeoNames), ou -1 pour la position du téléphone. */
     fun lieuVille(context: Context): Long = prefs(context).getLong(KEY_LIEU_VILLE, -1L)
 
@@ -399,6 +464,7 @@ object Store {
             .putString(KEY_LIEU_ALT, lieu.altitude.toString())
             .putString(KEY_LIEU_FUSEAU, lieu.fuseau)
             .putLong(KEY_LIEU_VILLE, ville?.id ?: -1L)
+            .putLong(KEY_LIEU_T, System.currentTimeMillis())
             .apply()
         setInIsrael(context, ville?.enIsrael ?: Holidays.defaultInIsrael(lieu.fuseau))
     }
@@ -491,6 +557,16 @@ object Store {
 
     fun setBoussoleRose(context: Context, rose: Boolean) {
         prefs(context).edit().putBoolean(KEY_BOUSSOLE_ROSE, rose).apply()
+    }
+
+    /**
+     * La direction que suit la boussole (03/11) : la direction réelle, par le grand cercle (par
+     * défaut, décision du 28/10), ou celle de la carte de Mercator (cap constant), au choix.
+     */
+    fun boussoleCarte(context: Context): Boolean = prefs(context).getBoolean(KEY_BOUSSOLE_CARTE, false)
+
+    fun setBoussoleCarte(context: Context, carte: Boolean) {
+        prefs(context).edit().putBoolean(KEY_BOUSSOLE_CARTE, carte).apply()
     }
 
     fun suiviDirect(context: Context): Boolean = prefs(context).getBoolean(KEY_SUIVI_DIRECT, false)
