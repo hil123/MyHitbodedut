@@ -32,7 +32,7 @@ const BLOCS: Record<string, {t: number; txt: string}[]> = {
 /** v22 : fin resserrée — carte à 81 s, film de 87 s qui se termine avec la musique. */
 export const FIN5 = 2430;
 export const TOTAL5 = 2610;
-const VOIX: {f: string; at: number; dur: number; txt: string; trim?: number}[] = [
+const VOIX: {f: string; at: number; dur: number; txt: string; trim?: number; coupe?: number}[] = [
   {f: 's01', at: 45, dur: 4.95, txt: 'Chaque jour, nous sommes occupés. Le travail, les responsabilités, les soucis…'},
   {f: 's02', at: 300, dur: 3.0, txt: 'Mais prenons-nous vraiment le temps de parler à Hachem ?'},
   // v12 : le bruit de la foule coupe net à 430, silence, puis la voix annonce le nom
@@ -45,7 +45,7 @@ const VOIX: {f: string; at: number; dur: number; txt: string; trim?: number}[] =
   {f: 's08', at: 1520, dur: 4.7, txt: 'Bloque les distractions. Mets ton téléphone de côté. Ce moment est consacré à Hachem.'},
   {f: 's09', at: 1785, dur: 3.8, txt: 'Personnalise ton expérience selon tes préférences et ton rythme de vie.'},
   {f: 's10c', at: 1975, dur: 5.5, txt: 'Avec le calendrier juif, retrouve chaque jour la date hébraïque, les zmanim et les ajouts de la prière.'},
-  {f: 's11', at: 2262, dur: 2.95, txt: 'Ne laisse pas passer une journée sans prendre un moment pour Hachem.'},
+  {f: 's11', at: 2262, dur: 2.95, txt: 'Ne laisse pas passer une journée sans prendre un moment pour Hachem.', coupe: 92}, // l'audio s'arrête à 3,07 s, avant « Commence » (3,26 s)
   // v22 : « Commence aujourd'hui » (même fichier, coupé à 3,15 s) est dit SUR le bouton de la carte finale, sans sous-titre (le bouton l'écrit déjà)
   {f: 's11', at: 2450, dur: 0.95, txt: '', trim: 95},
 ];
@@ -588,7 +588,7 @@ export const PubV5: React.FC = () => {
       {FX && <Texture f={f} />}
       {VOIX.map((v) => (
         <Sequence key={v.at} from={v.at} durationInFrames={Math.ceil(v.dur * FPS) + (v.trim !== undefined ? 8 : 14)}>
-          <Audio src={staticFile(`voix/${v.f}.wav`)} trimBefore={v.trim} />
+          <Sequence durationInFrames={v.coupe ?? Infinity}><Audio src={staticFile(`voix/${v.f}.wav`)} trimBefore={v.trim} /></Sequence>
           {v.txt && <SousTitres texte={v.txt} debut={0} duree={v.dur} blocs={BLOCS[v.f]} />}
         </Sequence>
       ))}

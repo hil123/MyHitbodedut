@@ -101,3 +101,7 @@ Extraits choisis pour leur régularité (pas de pic ni de cri), filtre 120 Hz–
 - s05a : souffle du H −8 dB et raccourci ; voyelle « i » abaissée (206 → ~135 Hz, rubberband, formants préservés) et −3 dB.
 - s03 : « Hi » raccourci (0,26 → 0,20 s), −4 dB, hauteur ×0,9. s06 : « Hit » −3 dB, hauteur ×0,88.
 - Solution définitive possible avec crédits ElevenLabs : régénérer ces 3 phrases.
+
+## v25 — « My Hitbodedut » reconstruit, coupure de « Commence » corrigée
+- Une seule prise existait pour « My Hitbodédoute » (vérifié dans le flow ElevenLabs, sans dépense). s05a.wav = « My » de la prise d'origine + le mot « Hitbodédoute » repris de s06 (« …ta Hitbodédoute », accent jugé bon par Hillel). Même voix, même niveau (−17,2 LUFS).
+- s11 : la 1re partie s'arrêtait 0,4 s trop tard et laissait entendre le début de « Commence ». Audio coupé à 3,07 s.
