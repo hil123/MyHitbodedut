@@ -10,6 +10,7 @@
 import { ajouteJours, estJourChome, isoLocal, israelParDefaut, jourSemaine } from './calendrier.js';
 import { SessionRule } from './seance.js';
 import { Anneaux, JaugeSemaine, Plaque } from './regles.js';
+import { JournalPlus } from './regles.js';
 
 export const DEFAULT_START = 6 * 60;
 export const DEFAULT_END = 11 * 60;
@@ -100,6 +101,12 @@ export function creeStore(stockage, { maintenant = () => new Date(), fuseau } = 
     if (r.noteSeule) e.note_seule = true;
     return e;
   };
+  /** Les entrées du journal enrichi qui ont quelque chose, lues comme JournalPlus.lire. */
+  const journalPlusTout = () => {
+    const t = lit(PREFS_JOURNAL).journal_plus;
+    if (!t || typeof t !== 'object') return {};
+    return Object.fromEntries(Object.entries(t).filter(([d]) => dateValide(d)).map(([d, e]) => [d, JournalPlus.versJson(JournalPlus.lire(e))]).filter(([, e]) => e));
+  };
   const writeDays = (map) => {
     const j = lit(PREFS_JOURNAL);
     j.days = Object.fromEntries(Object.values(map).map((r) => [r.date, toJson(r)]));
@@ -187,6 +194,12 @@ export function creeStore(stockage, { maintenant = () => new Date(), fuseau } = 
       const quand = Number(get('positions_lecture_t', {})?.[cle] ?? 0);
       return repriseValable(cle, quand, t) ? y : 0;
     },
+    /** Le paragraphe où reprendre un livre (« section:bloc », 02/11), ou null. */
+    ancreLecture: (cle) => get('ancres_lecture', {})?.[cle] ?? null,
+    setAncreLecture: (cle, place) => {
+      if (!place) return;
+      set('ancres_lecture', { ...(get('ancres_lecture', {}) ?? {}), [cle]: place });
+    },
     setPositionLecture(cle, y, t = maintenant().getTime()) {
       set('positions_lecture', { ...(get('positions_lecture', {}) ?? {}), [cle]: y });
       set('positions_lecture_t', { ...(get('positions_lecture_t', {}) ?? {}), [cle]: t });
@@ -206,6 +219,18 @@ export function creeStore(stockage, { maintenant = () => new Date(), fuseau } = 
       else if (texte.trim() !== '') d[date] = { date, minutes: 0, note: texte, themes: [], noteSeule: true, faite: false };
       else return;
       writeDays(d);
+    },
+    /** Le journal enrichi (JournalPlus.lire / ecrire, 02/11) : dans le journal, sous « journal_plus », comme Android. */
+    journalPlus: (date) => JournalPlus.lire(lit(PREFS_JOURNAL).journal_plus?.[date]),
+    /** Toutes les entrées notées, date → Plus : le journal se lit une fois pour tout l'écran. */
+    journalPlusTout: () => Object.fromEntries(Object.entries(journalPlusTout()).map(([d, e]) => [d, JournalPlus.lire(e)])),
+    setJournalPlus(date, plus) {
+      const j = lit(PREFS_JOURNAL);
+      const t = j.journal_plus && typeof j.journal_plus === 'object' ? j.journal_plus : {};
+      const e = JournalPlus.versJson(plus);
+      if (e) t[date] = e; else delete t[date];
+      j.journal_plus = t;
+      ecrit(PREFS_JOURNAL, j);
     },
 
     // --- Chabbat, fêtes, pauses ---------------------------------------------
@@ -257,6 +282,12 @@ export function creeStore(stockage, { maintenant = () => new Date(), fuseau } = 
     calendrierCivil: () => get('calendrier_civil', false) === true,
     setCalendrierCivil: (v) => set('calendrier_civil', v),
     pausedDates: () => new Set(get('paused_dates', [])),
+    /** Pause aujourd'hui (Store.togglePausedDate, réglages du 02/11) : mise ou retirée. */
+    togglePausedDate(date) {
+      const dates = store.pausedDates();
+      if (!dates.delete(date)) dates.add(date);
+      set('paused_dates', [...dates]);
+    },
     isExempt(date) {
       if (store.pausedDates().has(date)) return true;
       return store.shabbatMode() && estJourChome(date, store.inIsrael());
@@ -435,6 +466,11 @@ export function creeStore(stockage, { maintenant = () => new Date(), fuseau } = 
       set('tikkun_day', jourTikkun());
       set('tikkun_done', [...courant].sort((a, b) => a - b).join(','));
     },
+    /** Store.resetTikkun (« Repartir de zéro », 02/11) : la liste du jour vidée. */
+    resetTikkun() {
+      set('tikkun_day', jourTikkun());
+      set('tikkun_done', '');
+    },
 
     // --- Musique ------------------------------------------------------------------
     musicEnabled: () => get('music_enabled', true),
@@ -443,6 +479,11 @@ export function creeStore(stockage, { maintenant = () => new Date(), fuseau } = 
     setMusicTrackId: (id) => set('music_track', id),
     musicVolume: () => get('music_volume', DEFAULT_VOLUME),
     setMusicVolume: (v) => set('music_volume', Math.max(0, Math.min(100, Math.round(v)))),
+    // La lecture aléatoire (Store.musicShuffle, 28/09) et les noms donnés aux morceaux (Store.musicNames).
+    musicShuffle: () => get('music_shuffle', false) === true,
+    setMusicShuffle: (v) => set('music_shuffle', !!v),
+    musicNames: () => { const n = get('music_names', {}); return n && typeof n === 'object' && !Array.isArray(n) ? n : {}; },
+    setMusicNames: (n) => set('music_names', n),
 
     // --- Sauvegarde (Store.exportJson / importJson) ------------------------------------
     exportJson() {
@@ -462,10 +503,13 @@ export function creeStore(stockage, { maintenant = () => new Date(), fuseau } = 
           daily_goal_minutes: get('daily_goal_minutes', 0),
           pause_shabbat: store.shabbatMode(),
           in_israel: store.inIsrael(),
+          // La hitbodedout guidée (02/11), sous la clé d'Android.
+          guided_hitbodedut: store.guidedHitbodedut(),
           reminder_enabled: get('reminder_on', false),
           reminder_minutes: get('reminder_minutes', DEFAULT_REMINDER),
           music_enabled: store.musicEnabled(),
           music_volume: store.musicVolume(),
+          music_shuffle: store.musicShuffle(),
           music_track: store.musicTrackId() ?? '',
           adresse: store.adresse() ?? '',
           apparence_mode: store.modeApparence(),
@@ -474,6 +518,8 @@ export function creeStore(stockage, { maintenant = () => new Date(), fuseau } = 
         },
         paused_dates: [...store.pausedDates()],
         blocked_apps: get('blocked_apps', []),
+        // Le journal enrichi (02/11) : une clé de plus, qu'Android ignore à l'import.
+        journal_plus: journalPlusTout(),
       };
       return JSON.stringify(root, null, 2);
     },
@@ -515,6 +561,13 @@ export function creeStore(stockage, { maintenant = () => new Date(), fuseau } = 
         importees++;
       }
       writeDays(merged);
+      // Le journal enrichi (02/11) : un jour déjà noté ici garde ce qu'il a, comme la note.
+      if (root.journal_plus && typeof root.journal_plus === 'object' && !Array.isArray(root.journal_plus)) {
+        for (const [date, e] of Object.entries(root.journal_plus)) {
+          if (!dateValide(date) || date >= demain) continue;
+          if (JournalPlus.vide(store.journalPlus(date))) store.setJournalPlus(date, JournalPlus.lire(e));
+        }
+      }
 
       const s = root.settings && typeof root.settings === 'object' ? root.settings : null;
       if (s) {
@@ -527,8 +580,9 @@ export function creeStore(stockage, { maintenant = () => new Date(), fuseau } = 
         entier('window_start'); entier('window_end'); entier('snooze_minutes', null, 1, 240);
         entier('target_minutes', null, 1, 240); entier('daily_goal_minutes', null, 0, 240);
         bool('pause_shabbat'); bool('in_israel');
+        bool('guided_hitbodedut');
         bool('reminder_enabled', 'reminder_on'); entier('reminder_minutes');
-        bool('music_enabled'); entier('music_volume', null, 0, 100);
+        bool('music_enabled'); entier('music_volume', null, 0, 100); bool('music_shuffle');
         texteNonVide('music_track');
         if (s.adresse === 'm' || s.adresse === 'f') set('adresse', s.adresse);
         if (['auto', 'clair', 'sombre'].includes(s.apparence_mode)) set('apparence_mode', s.apparence_mode);

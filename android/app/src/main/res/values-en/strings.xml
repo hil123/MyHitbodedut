@@ -435,9 +435,19 @@
     <string name="onboarding_rappel">Remind me every day</string>
     <string name="onboarding_rappel_heure">at %1$s</string>
     <string name="onboarding_rappel_heure_desc">Reminder time: %1$s</string>
+    <!-- Pour la version web (02/11) : les morceaux ajoutés sont gardés dans le navigateur, qui peut manquer de place. -->
+    <string name="music_add_quota_web">Not enough space left in this browser to keep this track.</string>
+    <string name="music_remove_confirm_web">Remove “%1$s”?</string>
+    <string name="music_remove_message_web">The track is erased from this browser; the original file stays on the device.</string>
     <!-- Pour la version web (16/10) : pas de rappels, et un navigateur plutôt qu’un téléphone sans Internet. -->
     <string name="onboarding_days_body_web">The streak counts your days in a row, and the week shows at a glance. After each hitbodedut, a note can go into your journal.</string>
     <string name="onboarding_private_body_web">What you write stays in this browser, on this device: nothing is sent anywhere, except a flight’s callsign and an approximate position if you turn on live tracking.</string>
+    <!-- Pour la version web (02/11) : les livres (16 Mo) se téléchargent à la première ouverture. -->
+    <string name="livres_chargement_web">Loading the books…</string>
+    <string name="livres_echec_web">The books could not be loaded. Check your connection, then try again.</string>
+    <string name="livres_reessayer_web">Try again</string>
+    <!-- Pour la version web (02/11) : la ligne de version des réglages, avec l’empreinte de la construction (version.txt) au lieu du numéro Android. -->
+    <string name="app_version_web">Web version %1$s</string>
     <string name="adresse_tsadik">Tsadik</string>
     <string name="adresse_tsadeket">Tsadeket</string>
     <string name="adresse_none">Not chosen</string>

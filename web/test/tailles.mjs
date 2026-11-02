@@ -82,6 +82,9 @@ const ECRANS = [
   { nom: 'reglages', ecran: 'reglages' },
   { nom: 'seance', ecran: 'seance', bouton: '.seance .principal', petitAussi: true },
   { nom: 'seance-en-cours', ecran: 'seance', actions: clic('.duree'), bouton: '.seance .principal', petitAussi: true },
+  // La hitbodedout guidée (02/11), avec l'invitation du sujet.
+  { nom: 'seance-guidee', ecran: 'seance', actions: clic('.duree'), bouton: '.seance .principal', petitAussi: true,
+    prefs: { guided_hitbodedut: true, session_theme: 'famille' } },
   { nom: 'bravo', ecran: 'seance', actions: finDeSeance, bouton: '.bravo .principal' },
   { nom: 'tehilim', ecran: 'tehilim' },
   { nom: 'tehilim-lecture', ecran: 'tehilim', actions: clic('.carte .ligne') },
@@ -90,11 +93,39 @@ const ECRANS = [
   { nom: 'siddur-nusah', ecran: 'siddur', actions: clic('.puce-bandeau') },
   { nom: 'priere', ecran: 'siddur', actions: clic('.carte-sections .ligne') },
   { nom: 'tikkun', ecran: 'tikkun' },
+  // Le Tikoun comme sur Android (02/11) : le trait, un psaume, une partie, la liste en partie dite.
+  { nom: 'tikkun-trait', ecran: 'tikkun', actions: clic('.tikkun-trait') },
+  { nom: 'tikkun-psaume', ecran: 'tikkun', actions: clic('.ligne-tikkun:nth-child(9)') },
+  { nom: 'tikkun-psaume-dit', ecran: 'tikkun', actions: async (p) => { await clic('.ligne-tikkun:nth-child(2)')(p); await clic('.tikkun-marque')(p); await clic('.retour')(p); } },
+  { nom: 'tikkun-partie', ecran: 'tikkun', actions: clic('.ligne-tikkun:nth-child(13)') },
+  { nom: 'boussole', ecran: 'boussole', prefs: { lieu_zmanim: { nom: 'Paris', latitude: 48.8566, longitude: 2.3522, altitude: 35, fuseau: 'Europe/Paris', ville: 2988507 } } },
+  { nom: 'boussole-calibrer', ecran: 'boussole', prefs: { lieu_zmanim: { nom: 'Paris', latitude: 48.8566, longitude: 2.3522, altitude: 35, fuseau: 'Europe/Paris', ville: 2988507 } },
+    actions: async (p) => {
+      await p.waitForSelector('.boussole-scene svg');
+      if (await p.$('.boussole-activer')) {
+        await p.evaluate(() => { DeviceOrientationEvent.requestPermission = async () => 'granted'; });
+        await p.click('.boussole-activer');
+        await p.waitForSelector('.boussole-activer', { state: 'detached' });
+      }
+      await p.evaluate(() => { for (const t of ['deviceorientationabsolute', 'deviceorientation']) window.dispatchEvent(Object.assign(new Event(t), { webkitCompassHeading: 80, webkitCompassAccuracy: -1 })); });
+      await p.waitForSelector('.boussole-calibrer:not([hidden])');
+    } },
   { nom: 'bibliotheque', ecran: 'bibliotheque' },
   { nom: 'source', ecran: 'bibliotheque', actions: clic('.carte-sections .ligne') },
   { nom: 'zmanim', ecran: 'zmanim' },
   { nom: 'calendrier', ecran: 'calendrier' },
   { nom: 'calendrier-civil', ecran: 'calendrier', actions: clic('.vue-calendrier button:nth-child(2)') },
+  // Les écrans d'Android portés le 02/11.
+  { nom: 'journal', ecran: 'journal' },
+  // Le journal enrichi et « Mon parcours » (02/11) : l'humeur, la gratitude, la chose à travailler, le mois.
+  { nom: 'journal-note', ecran: 'journal', actions: clic('.journal-jour'), journal: { '2026-09-28': { minutes: 60, note: 'Une longue note '.repeat(12), themes: ['famille'] } },
+    plus: { '2026-09-28': { avant: 2, apres: 5, gratitude: 'g'.repeat(200), travail: 'Une chose à travailler demain, un peu longue' } } },
+  { nom: 'parcours', ecran: 'parcours', journal: { '2026-09-28': { minutes: 60, note: '', themes: ['famille', 'parnassa'] } },
+    plus: { '2026-09-27': { avant: 1, apres: 4, gratitude: '', travail: '' }, '2026-09-28': { avant: 3, apres: 5, gratitude: 'merci', travail: '' } } },
+  { nom: 'conseils', ecran: 'conseils' },
+  { nom: 'tefilot', ecran: 'tefilot' },
+  { nom: 'livres', ecran: 'livres' },
+  { nom: 'livre-midot', ecran: 'livres', actions: clic('.carte-sections .ligne:nth-child(3)') },
 ];
 
 let verifies = 0;
@@ -114,7 +145,7 @@ async function verifie(langue, mode, [taille, largeur, hauteur], e) {
   // Pas de musique pendant la séance : la mesure porte sur la mise en page.
   // La présentation du premier lancement (16/10) déjà vue : elle couvrirait chaque écran.
   const prefs = JSON.stringify({ onboarded_version: 2, langue_app: langue, apparence_mode: mode, music_enabled: false, ...e.prefs });
-  const journal = JSON.stringify({ days: { ...JOURNAL, ...e.journal } });
+  const journal = JSON.stringify({ days: { ...JOURNAL, ...e.journal }, ...(e.plus ? { journal_plus: e.plus } : {}) });
   await page.addInitScript(({ journal, prefs, maintenant }) => {
     // Sans l'écran d'ouverture (13/10), qui couvrirait la capture trois secondes.
     try { sessionStorage.setItem('ouverture-vue', '1'); } catch { /* rien */ }
