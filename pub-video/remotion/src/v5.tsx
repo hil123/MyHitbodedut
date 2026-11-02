@@ -287,7 +287,8 @@ const DEBUT_MUSIQUE = 462;
 const volumeAmbiance = (f: number) => {
   let d = 0;
   for (const v of VOIX) d = Math.max(d, interpolate(f, [v.at - 8, v.at, v.at + v.dur * FPS, v.at + v.dur * FPS + 12], [0, 1, 1, 0], clamp));
-  return 0.9 - d * 0.6;
+  const tempete = ACCROCHE === 'A' ? interpolate(f, [0, 150, 175], [0.45, 0.45, 1], clamp) : 1;
+  return (0.9 - d * 0.6) * tempete;
 };
 
 // Applis bloquées (marques citées à titre illustratif)
@@ -457,7 +458,12 @@ const NOTIFS: Notif[] = [
   {app: 'whatsapp', fond: '#25D366', titre: 'Groupe travail', txt: 'Tu as vu ?'},
 ];
 // arrivées de plus en plus rapprochées (la pression monte), la dernière juste avant « les soucis »
-const ARRIVEES = NOTIFS.map((_, i) => Math.round(-14 + 142 * Math.pow(i / (NOTIFS.length - 1), 0.72))); // 1re image déjà animée : deux notifications sont en train d'arriver
+// v27b : arrivées calées sur la voix (s01 à 6) : rafales dans les respirations, rien sur les syllabes accentuées.
+// -14 = déjà à l'écran (muette) ; 2 avant « Chaque » ; 24 après « jour » ; 44 avant « occupés » ; 55-60-64 dans la pause ;
+// 89 avant « les responsabilités » ; 98 / 113 entre les mots ; 125-128-131 rafale avant « les soucis » ; 141 entre « sou-» et « -cis ».
+const ARRIVEES = [-14, 2, 24, 44, 55, 60, 64, 89, 98, 113, 125, 128, 131, 141];
+// volume plus fort dans les respirations, plus discret sous la voix
+const SOUS_VOIX = new Set([24, 44, 98, 113, 141]);
 const STOP = 158; // fin de « les soucis… » : tout s'arrête net
 const MOTS = [{de: -10, a: 40, t: 'CHAQUE JOUR.'}, {de: 40, a: 64, t: 'OCCUPÉS.'}, {de: 65, a: 90, t: 'TRAVAIL.'}, {de: 91, a: 131, t: 'RESPONSABILITÉS.'}, {de: 132, a: 170, t: 'SOUCIS…'}];
 const Tempete: React.FC<{f: number}> = ({f}) => {
@@ -722,10 +728,10 @@ export const PubV5: React.FC = () => {
       ))}
       <Sequence durationInFrames={456}><Audio src={staticFile('musique/ambiance_foule.wav')} volume={volumeAmbiance} /></Sequence>
       {/* v27 : un son par appli (synthétisé, libre de droits, évoque le style sans imiter le son de la marque) + vibration ; rien après l'arrêt net */}
-      {ACCROCHE === 'A' && ARRIVEES.map((t, i) => (
-        <Sequence key={`bip${i}`} from={Math.max(0, t)} durationInFrames={14}>
-          <Audio src={staticFile(`sons/${NOTIFS[i].app || (NOTIFS[i].lettre === '@' ? 'mail' : 'agenda')}.wav`)} volume={0.3 + 0.12 * (i / ARRIVEES.length)} />
-          <Audio src={staticFile('sons/vibre.wav')} volume={0.28} />
+      {ACCROCHE === 'A' && ARRIVEES.map((t, i) => t < 0 ? null : (
+        <Sequence key={`bip${i}`} from={t + 1} durationInFrames={26}>{/* +1 : le son tombe quand la carte apparaît ; 26 images = son entier (agenda 0,6 s) */}
+          <Audio src={staticFile(`sons/${NOTIFS[i].app || (NOTIFS[i].lettre === '@' ? 'mail' : 'agenda')}.wav`)} volume={SOUS_VOIX.has(t) ? 0.24 : 0.4} />
+          <Audio src={staticFile('sons/vibre.wav')} volume={SOUS_VOIX.has(t) ? 0.12 : 0.22} />
         </Sequence>
       ))}
       <Sequence from={DEBUT_MUSIQUE}><Audio src={staticFile(`musique/${MUSIQUE}.wav`)} volume={(f) => volumeMusique(f + DEBUT_MUSIQUE)} /></Sequence>
