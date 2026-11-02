@@ -264,6 +264,7 @@ const volumeAmbiance = (f: number) => {
 };
 
 // Applis bloquées (marques citées à titre illustratif)
+const ASPIRE = 1550; // début de l'aspiration des logos (voix : « Bloque les distractions »)
 const LOGOS = [
   {n: 'whatsapp', bg: '#25D366'}, {n: 'youtube', bg: '#FF0000'},
   {n: 'facebook', bg: '#0866FF'}, {n: 'instagram', bg: 'linear-gradient(45deg, #F58529, #DD2A7B 50%, #8134AF 75%, #515BD4)'},
@@ -318,6 +319,7 @@ export const PubV5: React.FC = () => {
   const zCam = camTel(fe).z;
   const fondu = Math.min(18, Math.max(0, (zCam - 1) * 200)); // bords fondus qui apparaissent progressivement avec le zoom
   const icones = f >= T.avec && f < T.perso;
+  const avale = LOGOS.reduce((acc, _, i) => acc + Math.sin(Math.PI * L(f, ASPIRE + 15 + i * 9, ASPIRE + 25 + i * 9, 0, 1, (t) => t)) * 0.012, 0);
   const carte = spring({frame: f - T.fin - 10, fps, config: {damping: 200}});
   const cta = spring({frame: f - T.fin - 30, fps, config: {damping: 200}});
   const sec = spring({frame: f - T.fin - 48, fps, config: {damping: 200}});
@@ -335,11 +337,25 @@ export const PubV5: React.FC = () => {
         </Sequence>
       ))}
 
+      {/* v20 (demande de Hillel) : les applis ne sont plus barrées, elles sont aspirées SOUS le téléphone, l'une après l'autre */}
+      {icones && LOGOS.map((l, i) => {
+        const pop = spring({frame: f - T.avec - 4 - i * 3, fps, config: {damping: 11, mass: 0.6}});
+        const a = L(f, ASPIRE + i * 9, ASPIRE + 18 + i * 9, 0, 1, Easing.in(Easing.cubic));
+        if (a >= 1) return null;
+        const x0 = i % 2 ? 880 : 90, y0 = Z.sujetHaut + 150 + Math.floor(i / 2) * 220;
+        const x = x0 + (540 - 55 - x0) * a, y = y0 + (Z.sujetHaut + H / 2 - 55 - y0) * a;
+        return <div key={l.n} style={{position: 'absolute', left: x, top: y, width: 110, height: 110, borderRadius: 28,
+          background: l.bg, boxShadow: '0 8px 24px rgba(0,0,0,0.35)', display: 'flex', alignItems: 'center', justifyContent: 'center',
+          opacity: Math.min(1, pop * 2), transform: `scale(${pop * (1 - 0.45 * a)}) rotate(${(i % 2 ? -1 : 1) * 25 * a}deg)`}}>
+          <Img src={staticFile(`logos/${l.n}.svg`)} style={{width: 64, height: 64}} />
+        </div>;
+      })}
+
       {phase && (
         <div style={{position: 'absolute', left: 0, right: 0, top: Z.sujetHaut, height: H, display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden',
           // bords haut et bas fondus : le téléphone agrandi n'est jamais coupé par une ligne dure
           WebkitMaskImage: `linear-gradient(180deg, transparent 0, #000 ${fondu * 5}px, #000 calc(100% - ${fondu * 5}px), transparent 100%)`,
-          opacity: telIn * (1 - telOut), transform: `translateY(${(1 - telIn) * 90 - telOut * 40}px) scale(${(0.94 + 0.06 * telIn) * (1 - 0.04 * telOut)})`}}>
+          opacity: telIn * (1 - telOut), transform: `translateY(${(1 - telIn) * 90 - telOut * 40}px) scale(${(0.94 + 0.06 * telIn) * (1 - 0.04 * telOut) * (1 + avale)})`}}>
           {/* zoom sur le TÉLÉPHONE entier (jamais dans l'écran) : la largeur de l'écran reste toujours visible, aucun texte coupé */}
           <div style={{transform: `scale(${zCam})`, transformOrigin: `50% ${camTel(fe).y}%`}}>
             <Telephone src="">
@@ -365,22 +381,6 @@ export const PubV5: React.FC = () => {
           })}
         </div>
       )}
-      {icones && LOGOS.map((l, i) => {
-        const e = L(f, 1640 + i * 8, 1670 + i * 8, 1, 0);
-        const barre = L(f, 1528 + i * 7, 1540 + i * 7, 0, 1, Easing.out(Easing.cubic));
-        const pop = FX ? spring({frame: f - T.avec - 4 - i * 3, fps, config: {damping: 11, mass: 0.6}}) : 1;
-        const refus = FX ? Math.sin((f - 1540 - i * 7) * 1.9) * 7 * L(f, 1540 + i * 7, 1552 + i * 7, 1, 0) * (f >= 1540 + i * 7 ? 1 : 0) : 0;
-        return <div key={l.n} style={{position: 'absolute', left: i % 2 ? 880 : 90, top: Z.sujetHaut + 150 + Math.floor(i / 2) * 220, width: 110, height: 110, borderRadius: 28,
-          background: l.bg, boxShadow: '0 8px 24px rgba(0,0,0,0.35)', display: 'flex', alignItems: 'center', justifyContent: 'center',
-          opacity: e * Math.min(1, pop * 2), transform: `scale(${(0.7 + 0.3 * e) * pop}) rotate(${refus}deg)`, filter: `blur(${(1 - e) * 10}px)`}}>
-          <Img src={staticFile(`logos/${l.n}.svg`)} style={{width: 64, height: 64}} />
-          <div style={{position: 'absolute', inset: 0, borderRadius: 28, background: `rgba(0,0,0,${0.12 * barre})`}} />
-          <div style={{position: 'absolute', left: -10, top: 51.5, width: 130, height: 7, transform: 'rotate(-45deg)', transformOrigin: 'center'}}>
-            <div style={{width: '100%', height: '100%', borderRadius: 5, background: '#E53935',
-              boxShadow: '0 0 0 3px #ffffff, 0 4px 10px rgba(0,0,0,0.4)', transform: `scaleX(${barre})`, transformOrigin: 'left center'}} />
-          </div>
-        </div>;
-      })}
 
       {/* textes écran */}
       <Sequence from={0} durationInFrames={300}><TexteEcran texte="Le monde ne s’arrête jamais…" debut={14} fin={296} sombre /></Sequence>

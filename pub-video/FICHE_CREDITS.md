@@ -92,6 +92,6 @@ Extraits choisis pour leur régularité (pas de pic ni de cri), filtre 120 Hz–
 - Captures d'écran : fournies par Hillel le 02/11 (remotion/public/captures/v2). Les 4 fichiers *_basse_def sont découpés dans la vue d'ensemble, à remplacer par les originaux.
 
 ## v19 — Logos des applis bloquées
-- Segment « Je suis avec Hachem » (frames 1510–1770) : logos WhatsApp, YouTube, Facebook, Instagram, TikTok, Snapchat.
+- Segment « Je suis avec Hachem » (frames 1510–1770) : logos WhatsApp, YouTube, Facebook, Instagram, TikTok, Snapchat, aspirés sous le téléphone (v20).
 - Source des tracés : simple-icons 13.21.0 (CC0), via cdn.jsdelivr.net — fichiers dans remotion/public/logos/.
 - Ces logos sont des marques déposées de leurs propriétaires ; utilisés uniquement pour illustrer les applis que l'app peut bloquer (usage nominatif), sans affiliation.
