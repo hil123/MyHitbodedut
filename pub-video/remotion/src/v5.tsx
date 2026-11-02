@@ -445,29 +445,29 @@ const PoussiereDoree: React.FC<{f: number}> = ({f}) => f < 0 ? null : (
 
 /* ---------- v27 : accroche « tempête de notifications » ---------- */
 type Notif = {app: string; fond: string; lettre?: string; titre: string; txt: string};
+// v27d : chaque notification tombe SUR un mot de la voix (s01 à l'image 6, attaques mesurées image par image) et l'illustre.
 const NOTIFS: Notif[] = [
-  {app: 'whatsapp', fond: '#25D366', titre: 'Maman', txt: 'Tu rappelles quand ?'},
-  {app: '', fond: '#2f7cf6', lettre: '@', titre: 'Bureau', txt: 'Réunion avancée à 9 h'},
-  {app: 'youtube', fond: '#FF0000', titre: 'YouTube', txt: 'Nouvelle vidéo pour toi'},
-  {app: '', fond: '#f2543d', lettre: '31', titre: 'Agenda', txt: 'Encore 3 dossiers à rendre'},
-  {app: 'whatsapp', fond: '#25D366', titre: 'Groupe famille', txt: '47 nouveaux messages'},
-  {app: 'instagram', fond: 'linear-gradient(45deg,#F58529,#DD2A7B,#8134AF)', titre: 'Instagram', txt: 'Nouvelle story'},
-  {app: '', fond: '#2f7cf6', lettre: '@', titre: 'Banque', txt: 'Échéance demain'},
-  {app: 'tiktok', fond: '#000', titre: 'TikTok', txt: 'Tendances du jour'},
-  {app: 'whatsapp', fond: '#25D366', titre: 'David', txt: 'Tu es en retard ?'},
-  {app: 'facebook', fond: '#0866FF', titre: 'Facebook', txt: '12 notifications'},
-  {app: '', fond: '#f2543d', lettre: '31', titre: 'Rappel', txt: 'Rendez-vous à 18 h'},
-  {app: 'snapchat', fond: '#FFFC00', titre: 'Snapchat', txt: 'Nouveau snap'},
-  {app: '', fond: '#2f7cf6', lettre: '@', titre: 'Bureau', txt: 'URGENT : à valider'},
-  {app: 'whatsapp', fond: '#25D366', titre: 'Groupe travail', txt: 'Tu as vu ?'},
+  {app: 'facebook', fond: '#0866FF', titre: 'Facebook', txt: '12 notifications'},                       // déjà là (muette)
+  {app: '', fond: '#f2543d', lettre: '31', titre: 'Agenda', txt: 'Aujourd’hui : 9 rendez-vous'},       // « CHAQUE »
+  {app: 'youtube', fond: '#FF0000', titre: 'YouTube', txt: 'Nouvelle vidéo pour toi'},                 // « JOUR »
+  {app: 'whatsapp', fond: '#25D366', titre: 'Groupe famille', txt: '47 nouveaux messages'},            // « nous sommes »
+  {app: 'whatsapp', fond: '#25D366', titre: 'David', txt: 'Tu es en retard ?'},                        // « OC-cupés »
+  {app: 'instagram', fond: 'linear-gradient(45deg,#F58529,#DD2A7B,#8134AF)', titre: 'Instagram', txt: 'Nouvelle story'}, // « -PÉS »
+  {app: '', fond: '#2f7cf6', lettre: '@', titre: 'Bureau', txt: 'Réunion avancée à 9 h'},             // « le TRAVAIL »
+  {app: 'whatsapp', fond: '#25D366', titre: 'Groupe travail', txt: 'Le client attend'},                // fin de « travail »
+  {app: '', fond: '#2f7cf6', lettre: '@', titre: 'Banque', txt: 'Échéance demain'},                   // « RES-ponsabilités »
+  {app: '', fond: '#f2543d', lettre: '31', titre: 'Rappel', txt: 'Encore 3 dossiers à rendre'},        // « -SA- »
+  {app: '', fond: '#2f7cf6', lettre: '@', titre: 'École', txt: 'Réunion parents vendredi'},           // « -LI- »
+  {app: '', fond: '#2f7cf6', lettre: '@', titre: 'Bureau', txt: 'URGENT : à valider'},                // « -TÉS »
+  {app: 'whatsapp', fond: '#25D366', titre: 'Maman', txt: 'Tu rappelles quand ?'},                     // « les SOU-cis »
+  {app: '', fond: '#2f7cf6', lettre: '@', titre: 'Banque', txt: 'Compte à découvert'},                // « -CIS »
 ];
 // arrivées de plus en plus rapprochées (la pression monte), la dernière juste avant « les soucis »
-// v27b : arrivées calées sur la voix (s01 à 6) : rafales dans les respirations, rien sur les syllabes accentuées.
-// -14 = déjà à l'écran (muette) ; 2 avant « Chaque » ; 24 après « jour » ; 44 avant « occupés » ; 55-60-64 dans la pause ;
-// 89 avant « les responsabilités » ; 98 / 113 entre les mots ; 125-128-131 rafale avant « les soucis » ; 141 entre « sou-» et « -cis ».
-const ARRIVEES = [-14, 2, 24, 44, 55, 60, 64, 89, 98, 113, 125, 128, 131, 141];
-// volume plus fort dans les respirations, plus discret sous la voix
-const SOUS_VOIX = new Set([24, 44, 98, 113, 141]);
+// attaques des syllabes de s01 (énergie par image, voix posée à 6) : Chaque 8 · jour 17 · nous sommes 29 · oc- 35 · -pés 45 ·
+// travail 71 / 80 · res- 95 · -sa- 104 · -li- 111 · -tés 116 · sou- 139 · -cis 146
+const SYLLABES = [-12, 8, 17, 29, 35, 45, 71, 80, 95, 104, 111, 116, 139, 146];
+// la carte part 2 images avant la syllabe : son + pic du mouvement + syllabe tombent sur la même image (mesuré sur le rendu)
+const ARRIVEES = SYLLABES.map((x) => x - 2);
 const STOP = 158; // fin de « les soucis… » : tout s'arrête net
 const MOTS = [{de: -10, a: 40, t: 'CHAQUE JOUR.'}, {de: 40, a: 64, t: 'OCCUPÉS.'}, {de: 65, a: 90, t: 'TRAVAIL.'}, {de: 91, a: 131, t: 'RESPONSABILITÉS.'}, {de: 132, a: 170, t: 'SOUCIS…'}];
 const Tempete: React.FC<{f: number}> = ({f}) => {
@@ -495,8 +495,10 @@ const Tempete: React.FC<{f: number}> = ({f}) => {
               if (g < t) return null;
               const rang = ARRIVEES.filter((u) => u <= g && u > t).length; // combien sont arrivées après celle-ci
               if (rang > 6) return null;
-              const e = spring({frame: g - t, fps: FPS, config: {damping: 14, mass: 0.6}});
-              const y = 228 + rang * 76 - (1 - e) * 60;
+              const e = spring({frame: g - t, fps: FPS, config: {damping: 15, mass: 0.35, stiffness: 340}}); // arrivée sèche : le mouvement tombe sur le son
+              // la pile descend en même temps que la nouvelle carte arrive (plus de saut d'un coup)
+              const glisse = ARRIVEES.reduce((acc, u) => acc + (u > t && u <= g ? spring({frame: g - u, fps: FPS, config: {damping: 18, mass: 0.35, stiffness: 340}}) : 0), 0);
+              const y = 228 + glisse * 76 - (1 - e) * 60;
               const fuite = Math.max(0, balaye * 900 - (6 - rang) * 40);
               return (
                 <div key={i} style={{position: 'absolute', left: 14, right: 14, top: y - fuite, height: 68, borderRadius: 18, background: 'rgba(235,242,250,.16)',
@@ -733,9 +735,9 @@ const Film5: React.FC = () => {
       <Sequence durationInFrames={456}><Audio src={staticFile('musique/ambiance_foule.wav')} volume={volumeAmbiance} /></Sequence>
       {/* v27 : un son par appli (synthétisé, libre de droits, évoque le style sans imiter le son de la marque) + vibration ; rien après l'arrêt net */}
       {ACCROCHE === 'A' && ARRIVEES.map((t, i) => t < 0 ? null : (
-        <Sequence key={`bip${i}`} from={t + 1} durationInFrames={26}>{/* +1 : le son tombe quand la carte apparaît ; 26 images = son entier (agenda 0,6 s) */}
-          <Audio src={staticFile(`sons/${NOTIFS[i].app || (NOTIFS[i].lettre === '@' ? 'mail' : 'agenda')}.wav`)} volume={SOUS_VOIX.has(t) ? 0.24 : 0.4} />
-          <Audio src={staticFile('sons/vibre.wav')} volume={SOUS_VOIX.has(t) ? 0.12 : 0.22} />
+        <Sequence key={`bip${i}`} from={t + 2} durationInFrames={26}>{/* même image que l'arrivée de la carte et que la syllabe */}
+          <Audio src={staticFile(`sons/${NOTIFS[i].app || (NOTIFS[i].lettre === '@' ? 'mail' : 'agenda')}.wav`)} volume={0.32} />
+          <Audio src={staticFile('sons/vibre.wav')} volume={0.16} />
         </Sequence>
       ))}
       <Sequence from={DEBUT_MUSIQUE}><Audio src={staticFile(`musique/${MUSIQUE}.wav`)} volume={(f) => volumeMusique(f + DEBUT_MUSIQUE)} /></Sequence>
