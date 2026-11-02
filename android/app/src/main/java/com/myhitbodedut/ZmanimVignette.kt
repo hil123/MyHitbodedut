@@ -133,25 +133,82 @@ object ZmanimVignette {
         return v
     }
 
-    /** Toutes les vignettes posées, des trois tailles. */
+    /** Toutes les vignettes posées, des trois tailles ; puis le prochain changement programmé. */
     fun rafraichir(context: Context) {
         val manager = AppWidgetManager.getInstance(context)
         val c = LangueApp.envelopper(context)
+        var posees = 0
         for ((classe, taille) in listOf(ZmanimPetitWidget::class.java to Taille.PETITE, ZmanimWidget::class.java to Taille.MOYENNE,
             ZmanimGrandWidget::class.java to Taille.GRANDE)) {
-            manager.getAppWidgetIds(ComponentName(context, classe)).forEach { manager.updateAppWidget(it, vues(c, taille)) }
+            val ids = manager.getAppWidgetIds(ComponentName(context, classe))
+            posees += ids.size
+            ids.forEach { manager.updateAppWidget(it, vues(c, taille)) }
         }
+        programmer(context, posees > 0)
     }
+
+    /** Au plus tard, la vignette se redessine toutes les dix minutes : le temps qui reste et la jauge. */
+    private const val PAS_MAX_MINUTES = 10L
+
+    /**
+     * Le prochain instant où la vignette change (02/11) : un zman d'aujourd'hui ou de demain — la
+     * fin de Cha'harit, la chki'a, minuit de la nuit… —, minuit (la date en tête), et au plus tard
+     * dans dix minutes. Avant, seule la mise à jour d'Android toutes les demi-heures la redessinait :
+     * « Cha'harit jusqu'à 9:12 » restait affiché à 9:40.
+     */
+    fun prochainChangement(
+        horaires: Collection<ZonedDateTime?>,
+        maintenant: ZonedDateTime,
+        minuitTelephone: ZonedDateTime? = null,
+    ): ZonedDateTime {
+        val minuitLieu = maintenant.toLocalDate().plusDays(1).atStartOfDay(maintenant.zone)
+        return (horaires.filterNotNull() + listOfNotNull(minuitLieu, minuitTelephone, maintenant.plusMinutes(PAS_MAX_MINUTES)))
+            .filter { it.isAfter(maintenant) }
+            .minByOrNull { it.toInstant() }!!
+    }
+
+    private fun tic(context: Context): PendingIntent = PendingIntent.getBroadcast(
+        context, 165, Intent(context, ZmanimTic::class.java),
+        PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
+    )
+
+    /**
+     * Une alarme non réveillante : écran éteint, rien ne se passe ; au rallumage, la vignette est
+     * redessinée aussitôt. Sans l'autorisation des alarmes exactes, qu'on ne demande pas pour une
+     * vignette, Android 14 ne promet l'alarme qu'à dix minutes près : c'est le retard maximal.
+     */
+    private fun programmer(context: Context, posees: Boolean) {
+        val alarmes = context.getSystemService(Context.ALARM_SERVICE) as? android.app.AlarmManager ?: return
+        val pending = tic(context)
+        alarmes.cancel(pending)
+        if (!posees) return
+        val lieu = Store.lieuZmanim(context)
+        val zone = lieu?.fuseau?.let { runCatching { ZoneId.of(it) }.getOrNull() } ?: ZoneId.systemDefault()
+        val maintenant = ZonedDateTime.now(zone)
+        val horaires = lieu?.let { l ->
+            (Zmanim.jour(l, maintenant.toLocalDate()) + Zmanim.jour(l, maintenant.toLocalDate().plusDays(1))).map { it.local }
+        }.orEmpty()
+        val minuitTelephone = LocalDate.now().plusDays(1).atStartOfDay(ZoneId.systemDefault())
+        val quand = prochainChangement(horaires, maintenant, minuitTelephone)
+        runCatching { alarmes.setWindow(android.app.AlarmManager.RTC, quand.toInstant().toEpochMilli(), 60_000L, pending) }
+    }
+}
+
+/** Le prochain changement des vignettes des zmanim est arrivé (ZmanimVignette.programmer). */
+class ZmanimTic : android.content.BroadcastReceiver() {
+    override fun onReceive(context: Context, intent: Intent) = ZmanimWidget.refresh(context)
 }
 
 class ZmanimPetitWidget : AppWidgetProvider() {
     override fun onUpdate(context: Context, manager: AppWidgetManager, ids: IntArray) {
-        ids.forEach { manager.updateAppWidget(it, ZmanimVignette.vues(LangueApp.envelopper(context), ZmanimVignette.Taille.PETITE)) }
+        // Toutes les tailles, et le prochain changement reprogrammé (02/11).
+        ZmanimVignette.rafraichir(context)
     }
 }
 
 class ZmanimGrandWidget : AppWidgetProvider() {
     override fun onUpdate(context: Context, manager: AppWidgetManager, ids: IntArray) {
-        ids.forEach { manager.updateAppWidget(it, ZmanimVignette.vues(LangueApp.envelopper(context), ZmanimVignette.Taille.GRANDE)) }
+        // Toutes les tailles, et le prochain changement reprogrammé (02/11).
+        ZmanimVignette.rafraichir(context)
     }
 }

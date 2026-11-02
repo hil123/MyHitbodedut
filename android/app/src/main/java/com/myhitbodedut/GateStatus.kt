@@ -26,7 +26,7 @@ object GateStatus {
         !Permissions.allGranted(context) -> GateState.MISSING_PERMISSIONS
         !Store.isEnabled(context) -> GateState.DISABLED
         Store.blockedApps(context).isEmpty() -> GateState.NO_APPS_SELECTED
-        Store.isDone(context) -> GateState.ALREADY_DONE
+        Store.fenetreFaite(context) -> GateState.ALREADY_DONE
         Store.isExempt(context, LocalDate.now()) -> GateState.EXEMPT_DAY
         Store.isSnoozed(context) -> GateState.SNOOZED
         !Store.inWindow(context) -> GateState.OUTSIDE_WINDOW

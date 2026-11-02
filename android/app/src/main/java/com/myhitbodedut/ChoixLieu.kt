@@ -2,6 +2,7 @@ package com.myhitbodedut
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationListener
@@ -88,6 +89,16 @@ class ChoixLieu(private val activite: AppCompatActivity, private val apres: () -
     }
 
     /**
+     * Au retour sur l'accueil (02/11) : la position n'est reprise que si elle est périmée par un
+     * changement de fuseau (Store.lieuPerime) ou vieille de plus de six heures — un voyage sans
+     * passer par Zmanim ni la boussole laissait les horaires et les alertes à l'endroit quitté.
+     */
+    fun rafraichirSiBesoin() {
+        val age = System.currentTimeMillis() - Store.lieuDepuis(activite)
+        if (Store.lieuPerime(activite) || age !in 0 until SIX_HEURES) rafraichir()
+    }
+
+    /**
      * La position (16/10, « la position ne marche pas très bien ») : une position connue de
      * moins d'une heure sert telle quelle ; sinon tous les fournisseurs permis et allumés
      * (réseau, GPS, passif) sont interrogés ensemble, le premier qui répond l'emporte, et au
@@ -169,26 +180,16 @@ class ChoixLieu(private val activite: AppCompatActivity, private val apres: () -
 
     /** Pas de position fraîche : la dernière connue, et on le dit. */
     private fun ancienne(position: Location) {
+        // Après un voyage, une position d'avant le départ ne remplace pas la périmée : elle lui
+        // donnerait le nouveau fuseau, et on ne la verrait plus périmée (02/11).
+        if (silencieux && Store.lieuPerime(activite) && System.currentTimeMillis() - position.time > FOND_MAX_MS) return
         if (!silencieux) Toast.makeText(activite, activite.getString(R.string.zmanim_position_ancienne), Toast.LENGTH_LONG).show()
         enregistrer(position)
     }
 
     private fun enregistrer(position: Location) {
         if (activite.isFinishing || activite.isDestroyed) return
-        // La ville la plus proche ne fait que nommer la position et donner l'altitude. Le fuseau
-        // reste celui du téléphone (celui d'une ville voisine fausserait les zmanim près d'une
-        // frontière), et Israël ou diaspora se lit sur le territoire, pas sur la ville (16/10).
-        val proche = Villes.plusProche(Data.villes(activite), position.latitude, position.longitude)
-        val langue = ChizukCard.language(activite)
-        val nom = proche?.let { activite.getString(R.string.zmanim_position_pres, it.nom.forLanguage(langue)) }
-            ?: activite.getString(R.string.zmanim_position)
-        // L'altitude au-dessus du niveau de la mer quand le téléphone la donne (Android 14+) ; sinon
-        // celle de la ville la plus proche. L'altitude GPS brute (ellipsoïde) n'est pas celle des cartes.
-        val altitude = if (Build.VERSION.SDK_INT >= 34 && position.hasMslAltitude()) position.mslAltitudeMeters.coerceAtLeast(0.0)
-        else proche?.altitude ?: 0.0
-        val lieu = Zmanim.Lieu(nom, position.latitude, position.longitude, altitude, TimeZone.getDefault().id)
-        Store.setLieuZmanim(activite, lieu, null)
-        Store.setInIsrael(activite, TerritoireIsrael.contient(position.latitude, position.longitude))
+        enregistrerPosition(activite, position)
         apres()
     }
 
@@ -197,11 +198,55 @@ class ChoixLieu(private val activite: AppCompatActivity, private val apres: () -
         Toast.makeText(activite, activite.getString(R.string.zmanim_position_refusee), Toast.LENGTH_LONG).show()
     }
 
-    private companion object {
-        const val DEUX_MINUTES = 120_000L
-        const val PRECIS_M = 100f
+    companion object {
+        private const val DEUX_MINUTES = 120_000L
+        private const val SIX_HEURES = 6 * 3_600_000L
+        /** En arrière-plan, au changement de fuseau : une position connue d'au plus deux heures. */
+        private const val FOND_MAX_MS = 2 * 3_600_000L
+
+        private fun localisationPermise(context: Context) = listOf(Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION)
+            .any { ContextCompat.checkSelfPermission(context, it) == PackageManager.PERMISSION_GRANTED }
+
+        /**
+         * La ville la plus proche ne fait que nommer la position et donner l'altitude. Le fuseau
+         * reste celui du téléphone (celui d'une ville voisine fausserait les zmanim près d'une
+         * frontière), et Israël ou diaspora se lit sur le territoire, pas sur la ville (16/10).
+         */
+        fun enregistrerPosition(context: Context, position: Location) {
+            val proche = Villes.plusProche(Data.villes(context), position.latitude, position.longitude)
+            val langue = ChizukCard.language(context)
+            val nom = proche?.let { context.getString(R.string.zmanim_position_pres, it.nom.forLanguage(langue)) }
+                ?: context.getString(R.string.zmanim_position)
+            // L'altitude au-dessus du niveau de la mer quand le téléphone la donne (Android 14+) ; sinon
+            // celle de la ville la plus proche. L'altitude GPS brute (ellipsoïde) n'est pas celle des cartes.
+            val altitude = if (Build.VERSION.SDK_INT >= 34 && position.hasMslAltitude()) position.mslAltitudeMeters.coerceAtLeast(0.0)
+            else proche?.altitude ?: 0.0
+            val lieu = Zmanim.Lieu(nom, position.latitude, position.longitude, altitude, TimeZone.getDefault().id)
+            Store.setLieuZmanim(context, lieu, null)
+            Store.setInIsrael(context, TerritoireIsrael.contient(position.latitude, position.longitude))
+        }
+
+        /**
+         * Au changement de fuseau (BootReceiver, 02/11), sans écran : la dernière position connue
+         * du téléphone, si elle a moins de deux heures, remplace la position périmée. Rien n'est
+         * demandé au GPS : Android ne la donne pas en arrière-plan sans autorisation spéciale, que
+         * l'application ne demande pas. Sans elle, la position attend l'ouverture suivante.
+         */
+        @SuppressLint("MissingPermission") // vérifiée par localisationPermise
+        fun reprendreEnFond(context: Context): Boolean {
+            if (!Store.lieuPerime(context) || !localisationPermise(context)) return false
+            val lm = context.getSystemService(LocationManager::class.java) ?: return false
+            val connue = lm.allProviders.mapNotNull { runCatching { lm.getLastKnownLocation(it) }.getOrNull() }
+                .maxByOrNull { it.time } ?: return false
+            if (System.currentTimeMillis() - connue.time !in 0 until FOND_MAX_MS) return false
+            enregistrerPosition(context, connue)
+            return true
+        }
+
+
+        private const val PRECIS_M = 100f
         /** La position approximative d'Android : de l'ordre de 2 à 3 km ; au-delà de 5 km, on attend mieux. */
-        const val APPROCHE_M = 5_000f
-        const val DELAI_MS = 25_000L
+        private const val APPROCHE_M = 5_000f
+        private const val DELAI_MS = 25_000L
     }
 }
