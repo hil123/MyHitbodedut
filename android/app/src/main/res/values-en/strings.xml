@@ -1268,7 +1268,7 @@
     <string name="boussole_cap_constant">Direction on the map (constant heading): %1$d° %2$s</string>
     <string name="boussole_distance">Distance: %1$s km</string>
     <string name="boussole_legende">The ירושלים label (on the rose, the gold needle) follows the real direction; the dashed blue mark shows the direction on the map, for information.</string>
-    <string name="boussole_a_plat">Hold the phone flat, away from metal objects and magnets.</string>
+    <string name="boussole_a_plat">Hold the phone flat or upright in front of you, away from metal objects and magnets.</string>
     <string name="boussole_calibrer">Compass not accurate: draw a figure 8 in the air with the phone.</string>
     <string name="boussole_sans_capteur">This phone has no compass: the direction is given relative to north, at the top.</string>
     <string name="boussole_note_titre">Two ways to calculate</string>

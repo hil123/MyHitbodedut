@@ -829,11 +829,28 @@ object Store {
 
     fun derniereLecture(context: Context): String? = prefs(context).getString("derniere_lecture", null)
 
-    fun positionLecture(context: Context, cle: String): Int? = prefs(context).getInt("position:$cle", -1).takeIf { it > 0 }
-
-    fun setPositionLecture(context: Context, cle: String, position: Int) {
-        prefs(context).edit().putInt("position:$cle", position).putString("derniere_lecture", cle).apply()
+    /**
+     * La place où reprendre un texte. Un livre reprend toujours ; une prière du
+     * siddour seulement juste après une interruption (PRIERE_REPRISE_MS) : le
+     * lendemain, elle recommence au début (bug du 02/11).
+     */
+    fun positionLecture(context: Context, cle: String, maintenant: Long = System.currentTimeMillis()): Int? {
+        val p = prefs(context)
+        val position = p.getInt("position:$cle", -1).takeIf { it > 0 } ?: return null
+        return position.takeIf { repriseValable(cle, p.getLong("position_t:$cle", 0L), maintenant) }
     }
+
+    fun setPositionLecture(context: Context, cle: String, position: Int, maintenant: Long = System.currentTimeMillis()) {
+        prefs(context).edit().putInt("position:$cle", position).putLong("position_t:$cle", maintenant)
+            .putString("derniere_lecture", cle).apply()
+    }
+
+    /** Trois heures : un appel, une pause ; pas la prière du lendemain. */
+    const val PRIERE_REPRISE_MS = 3 * 60 * 60 * 1000L
+
+    /** Une place enregistrée à [quand] vaut-elle encore pour [cle] ? */
+    fun repriseValable(cle: String, quand: Long, maintenant: Long): Boolean =
+        !cle.startsWith("s:") || (quand > 0 && maintenant - quand in 0 until PRIERE_REPRISE_MS)
 
     /** Le journal enrichi (14/10), en JSON : JournalPlus. Dans le fichier du journal, comme les notes. */
     fun journalPlusBrut(context: Context): String? = journalPrefs(context).getString("journal_plus", null)
