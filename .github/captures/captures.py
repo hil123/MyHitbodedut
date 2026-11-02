@@ -780,11 +780,23 @@ def main():
     # 24 (03/11) : la banderole d'un texte court (Acher Yatsar) et d'un long (Cha'harit),
     # en faisant defiler doucement : filmee, pour voir qu'elle ne clignote plus.
     def s24():
+        # Comme le telephone de la video du 03/11 : 480x854, densite 240.
+        sh("wm size 480x854"); sh("wm density 240"); pause(3.0)
+        global W, H
+        W0, H0 = W, H
+        W, H = 480, 854
+        try:
+            s24_textes()
+        finally:
+            sh("wm size reset"); sh("wm density reset"); pause(3.0)
+            W, H = W0, H0
+
+    def s24_textes():
         for nom, ident in (("24a-acher-yatsar", "acher_yatsar"), ("24b-chaharit", "chaharit")):
             activite("SiddurLectureActivity", f"--es id {ident}")
             pause(2.0)
             sh("rm -f /sdcard/film.mp4")
-            film = subprocess.Popen(["adb", "shell", "screenrecord", "--time-limit", "20", "--size", "540x1200", "/sdcard/film.mp4"])
+            film = subprocess.Popen(["adb", "shell", "screenrecord", "--time-limit", "20", "/sdcard/film.mp4"])
             pause(1.0)
             x = W // 2
             for i in range(6):  # doucement vers le bas, par petits pas

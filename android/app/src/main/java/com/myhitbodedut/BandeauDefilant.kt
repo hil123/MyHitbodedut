@@ -34,12 +34,22 @@ object BandeauDefilant {
                 cache = true
                 bandeau.animate().alpha(0f).setDuration(DUREE_MS).withEndAction {
                     if (!cache) return@withEndAction
-                    // La place qu'elle libère remonterait tout le texte d'un coup : on le
-                    // redescend d'autant, rien ne bouge à l'écran.
-                    val hauteur = bandeau.height
+                    // La place qu'elle libère remonterait tout le texte d'un coup : juste avant
+                    // l'image suivante, on mesure de combien le texte est monté et on le redescend
+                    // d'autant — rien ne bouge à l'écran (03/11 ; décalé d'une image, il sautait).
+                    val avant = IntArray(2).also { defile.getLocationOnScreen(it) }[1]
                     bandeau.visibility = View.GONE
-                    val mesurable = defile is ScrollView || defile is androidx.recyclerview.widget.RecyclerView
-                    if (mesurable && decalage(defile) > hauteur) defile.scrollBy(0, -hauteur)
+                    val vue = defile.viewTreeObserver
+                    vue.addOnPreDrawListener(object : android.view.ViewTreeObserver.OnPreDrawListener {
+                        override fun onPreDraw(): Boolean {
+                            if (defile.viewTreeObserver.isAlive) defile.viewTreeObserver.removeOnPreDrawListener(this)
+                            val monte = avant - IntArray(2).also { defile.getLocationOnScreen(it) }[1]
+                            val mesurable = defile is ScrollView || defile is androidx.recyclerview.widget.RecyclerView
+                            if (!mesurable || monte <= 0 || decalage(defile) <= monte) return true
+                            defile.scrollBy(0, -monte)
+                            return false // cette image est redessinée, texte en place
+                        }
+                    })
                 }
             } else if (!descendu && cache) {
                 cache = false
