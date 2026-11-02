@@ -16,29 +16,33 @@ const H = Z.sujetBas - Z.sujetHaut;
 /* v7 : pause raccourcie avant les fonctions ; le temps gagné va aux trophées (T.avec et la suite inchangés). */
 const T5 = {...T, etapes: T.etapes - 75, duree: T.duree - 75};
 const L = (f: number, a: number, b: number, x: number, y: number, e = IO) => interpolate(f, [a, b], [x, y], {...clamp, easing: e});
+/* v17 : raccords fluides. Fondu enchaîné entre poses (FONDU images de chevauchement), entre captures et entre phases ; plus de flash blanc. */
+const FONDU = 10;
+const FONDU_PHASE = 16;
 
 /* Voix : mêmes fichiers, nouveau calage. */
 const BLOCS: Record<string, {t: number; txt: string}[]> = {
-  s01: [{t: 0.1, txt: 'Chaque jour, nous sommes occupés.'}, {t: 2.75, txt: 'Le travail,'}, {t: 3.89, txt: 'les responsabilités,'}, {t: 5.51, txt: 'les soucis…'}],
-  s03: [{t: 0.1, txt: 'La Hitbodedut, c’est s’arrêter…'}, {t: 2.83, txt: 'et prendre un moment rien que pour Hachem.'}],
-  s04: [{t: 0.1, txt: 'Lui parler avec tes propres mots.'}, {t: 2.47, txt: 'Lui raconter tes difficultés,'}, {t: 4.53, txt: 'tes rêves,'}, {t: 5.51, txt: 'tes joies…'}, {t: 6.5, txt: 'et tes remerciements.'}],
-  s10c: [{t: 0.1, txt: 'Avec le calendrier juif,'}, {t: 1.99, txt: 'retrouve chaque jour la date hébraïque,'}, {t: 4.22, txt: 'les zmanim et les ajouts de la prière.'}],
-  s11: [{t: 0.1, txt: 'Ne laisse pas passer une journée'}, {t: 1.56, txt: 'sans prendre un moment pour Hachem.'}, {t: 3.7, txt: 'Commence aujourd’hui.'}],
+  // v18 : voix naturelle (ElevenLabs « Paul »), coupes calées sur ses pauses réelles (silencedetect)
+  s01: [{t: 0.05, txt: 'Chaque jour, nous sommes occupés.'}, {t: 1.97, txt: 'Le travail,'}, {t: 2.83, txt: 'les responsabilités,'}, {t: 4.2, txt: 'les soucis…'}],
+  s03: [{t: 0.05, txt: 'La Hitbodedut, c’est s’arrêter…'}, {t: 2.57, txt: 'et prendre un moment rien que pour Hachem.'}],
+  s04: [{t: 0.05, txt: 'Lui parler avec tes propres mots.'}, {t: 1.99, txt: 'Lui raconter tes difficultés,'}, {t: 3.65, txt: 'tes rêves,'}, {t: 4.46, txt: 'tes joies…'}, {t: 5.49, txt: 'et tes remerciements.'}],
+  s10c: [{t: 0.09, txt: 'Avec le calendrier juif,'}, {t: 1.53, txt: 'retrouve chaque jour la date hébraïque,'}, {t: 3.57, txt: 'les zmanim et les ajouts de la prière.'}],
+  s11: [{t: 0.06, txt: 'Ne laisse pas passer une journée'}, {t: 1.4, txt: 'sans prendre un moment pour Hachem.'}, {t: 3.27, txt: 'Commence aujourd’hui.'}],
 };
 const VOIX = [
-  {f: 's01', at: 12, dur: 6.2, txt: 'Chaque jour, nous sommes occupés. Le travail, les responsabilités, les soucis…'},
-  {f: 's02', at: 300, dur: 2.75, txt: 'Mais prenons-nous vraiment le temps de parler à Hachem ?'},
+  {f: 's01', at: 45, dur: 4.95, txt: 'Chaque jour, nous sommes occupés. Le travail, les responsabilités, les soucis…'},
+  {f: 's02', at: 300, dur: 3.0, txt: 'Mais prenons-nous vraiment le temps de parler à Hachem ?'},
   // v12 : le bruit de la foule coupe net à 430, silence, puis la voix annonce le nom
-  {f: 's05a', at: 442, dur: 1.5, txt: 'MY HITBODEDUT.'},
-  {f: 's05b', at: 500, dur: 2.2, txt: 'Pour t’accompagner dans cette démarche.'},
-  {f: 's03', at: 600, dur: 4.7, txt: 'La Hitbodedut, c’est s’arrêter… et prendre un moment rien que pour Hachem.'},
-  {f: 's04', at: 765, dur: 7.7, txt: 'Lui parler avec tes propres mots. Lui raconter tes difficultés, tes rêves, tes joies… et tes remerciements.'},
-  {f: 's06', at: 1065, dur: 5.5, txt: 'Cinq étapes pour t’aider à structurer ta Hitbodedut, inspirées des enseignements de nos Sages.'},
-  {f: 's07', at: 1265, dur: 4.05, txt: 'Choisis la durée de ton rendez-vous quotidien et avance à ton rythme.'},
-  {f: 's08', at: 1520, dur: 6.3, txt: 'Bloque les distractions. Mets ton téléphone de côté. Ce moment est consacré à Hachem.'},
-  {f: 's09', at: 1785, dur: 4.4, txt: 'Personnalise ton expérience selon tes préférences et ton rythme de vie.'},
-  {f: 's10c', at: 1975, dur: 6.2, txt: 'Avec le calendrier juif, retrouve chaque jour la date hébraïque, les zmanim et les ajouts de la prière.'},
-  {f: 's11', at: 2262, dur: 4.85, txt: 'Ne laisse pas passer une journée sans prendre un moment pour Hachem. Commence aujourd’hui.'},
+  {f: 's05a', at: 442, dur: 1.65, txt: 'MY HITBODEDUT.'},
+  {f: 's05b', at: 500, dur: 1.8, txt: 'Pour t’accompagner dans cette démarche.'},
+  {f: 's03', at: 600, dur: 4.5, txt: 'La Hitbodedut, c’est s’arrêter… et prendre un moment rien que pour Hachem.'},
+  {f: 's04', at: 765, dur: 6.45, txt: 'Lui parler avec tes propres mots. Lui raconter tes difficultés, tes rêves, tes joies… et tes remerciements.'},
+  {f: 's06', at: 1065, dur: 4.75, txt: 'Cinq étapes pour t’aider à structurer ta Hitbodedut, inspirées des enseignements de nos Sages.'},
+  {f: 's07', at: 1265, dur: 3.55, txt: 'Choisis la durée de ton rendez-vous quotidien et avance à ton rythme.'},
+  {f: 's08', at: 1520, dur: 4.7, txt: 'Bloque les distractions. Mets ton téléphone de côté. Ce moment est consacré à Hachem.'},
+  {f: 's09', at: 1785, dur: 3.8, txt: 'Personnalise ton expérience selon tes préférences et ton rythme de vie.'},
+  {f: 's10c', at: 1975, dur: 5.5, txt: 'Avec le calendrier juif, retrouve chaque jour la date hébraïque, les zmanim et les ajouts de la prière.'},
+  {f: 's11', at: 2262, dur: 4.0, txt: 'Ne laisse pas passer une journée sans prendre un moment pour Hachem. Commence aujourd’hui.'},
 ];
 const volumeMusique = (f: number) => {
   let d = 0;
@@ -53,10 +57,10 @@ const volumeMusique = (f: number) => {
 type Pose = {de: number; a: number; src: string; type: 'perso' | 'carte'; mot: string; bulle?: string; bulles?: string[]; teinte: string; dir: 1 | -1; marche?: boolean; retour?: boolean; fixe?: boolean; lumiere?: boolean};
 const POSES: Pose[] = [
   // s01 « Chaque jour, nous sommes occupés. | Le travail, | les responsabilités, | les soucis… »
-  {de: 0, a: 94, src: 'char_walking', type: 'perso', mot: 'occupés', bulle: 'En retard !', teinte: '#e8f1f0', dir: 1, marche: true},
-  {de: 94, a: 129, src: 'char_writing', type: 'perso', mot: 'le travail', bulle: 'Encore 3 dossiers…', teinte: '#eef0f5', dir: -1},
-  {de: 129, a: 177, src: 'scene_airport', type: 'carte', mot: 'les responsabilités', bulle: 'Tout repose sur moi', teinte: '#eef3f6', dir: 1},
-  {de: 177, a: 300, src: 'char_thinking', type: 'perso', mot: 'les soucis', bulle: 'Et demain ?', teinte: '#f1efec', dir: -1},
+  {de: 0, a: 104, src: 'char_walking', type: 'perso', mot: 'occupés', bulle: 'En retard !', teinte: '#e8f1f0', dir: 1, marche: true},
+  {de: 104, a: 130, src: 'char_writing', type: 'perso', mot: 'le travail', bulle: 'Encore 3 dossiers…', teinte: '#eef0f5', dir: -1},
+  {de: 130, a: 171, src: 'scene_airport', type: 'carte', mot: 'les responsabilités', bulle: 'Tout repose sur moi', teinte: '#eef3f6', dir: 1},
+  {de: 171, a: 300, src: 'char_thinking', type: 'perso', mot: 'les soucis', bulle: 'Et demain ?', teinte: '#f1efec', dir: -1},
   // s02 « Mais prenons-nous vraiment le temps de parler à Hachem ? »
   // plan A : il s'arrête, de dos, face à l'horizon ; les bulles de stress s'éteignent une à une
   {de: 300, a: 366, src: 'char_standing_back', type: 'perso', mot: 'prenons-nous le temps', teinte: '#eef3f2', dir: 1, bulles: ['En retard !', 'Encore 3 dossiers…', 'Tout repose sur moi', 'Et demain ?']},
@@ -64,20 +68,20 @@ const POSES: Pose[] = [
   {de: 366, a: 430, src: 'char_standing_back', type: 'perso', mot: 'parler à Hachem', teinte: '#fbf3df', dir: 1, fixe: true, lumiere: true},
   // 430–600 : le téléphone, l'application s'ouvre (s05)
   // s03 « La Hitbodedut, c'est s'arrêter… | et prendre un moment rien que pour Hachem. »
-  {de: 600, a: 685, src: 'char_debout', type: 'perso', mot: 's’arrêter', teinte: '#eaf4f1', dir: -1},
-  {de: 685, a: 765, src: 'scene_nature', type: 'carte', mot: 'un moment pour Hachem', teinte: '#f6efe2', dir: 1},
+  {de: 600, a: 677, src: 'char_debout', type: 'perso', mot: 's’arrêter', teinte: '#eaf4f1', dir: -1},
+  {de: 677, a: 765, src: 'scene_nature', type: 'carte', mot: 'un moment pour Hachem', teinte: '#f6efe2', dir: 1},
   // s04 « Lui parler avec tes propres mots. | Lui raconter tes difficultés, | tes rêves, | tes joies | et tes remerciements. »
-  {de: 765, a: 839, src: 'char_praise', type: 'perso', mot: 'parler', teinte: '#f6efe2', dir: -1},
-  {de: 839, a: 901, src: 'char_praying', type: 'perso', mot: 'tes difficultés', teinte: '#ecf0f4', dir: 1},
-  {de: 901, a: 930, src: 'char_pointing', type: 'perso', mot: 'tes rêves', teinte: '#eef0fa', dir: -1},
-  {de: 930, a: 960, src: 'char_dancing_joy', type: 'perso', mot: 'tes joies', teinte: '#fbf3df', dir: 1},
-  {de: 960, a: 1028, src: 'char_open_arms', type: 'perso', mot: 'tes remerciements', teinte: '#f8eedb', dir: -1},
+  {de: 765, a: 825, src: 'char_praise', type: 'perso', mot: 'parler', teinte: '#f6efe2', dir: -1},
+  {de: 825, a: 875, src: 'char_praying', type: 'perso', mot: 'tes difficultés', teinte: '#ecf0f4', dir: 1},
+  {de: 875, a: 899, src: 'char_pointing', type: 'perso', mot: 'tes rêves', teinte: '#eef0fa', dir: -1},
+  {de: 899, a: 930, src: 'char_dancing_joy', type: 'perso', mot: 'tes joies', teinte: '#fbf3df', dir: 1},
+  {de: 930, a: 1028, src: 'char_open_arms', type: 'perso', mot: 'tes remerciements', teinte: '#f8eedb', dir: -1},
   {de: 1028, a: 1055, src: 'char_offering', type: 'perso', mot: 'avec ton cœur', teinte: '#e8f3ef', dir: 1},
   // 1055–2200 : les fonctions (captures réelles) — 1960–2200 : le calendrier juif
   // s11 « Ne laisse pas passer une journée | sans prendre un moment pour Hachem. | Commence aujourd'hui. »
   {de: 2200, a: 2309, src: 'char_walking', type: 'perso', mot: 'une journée', teinte: '#e8f1f0', dir: 1, marche: true, retour: true, bulles: ['En retard !', 'Encore 3 dossiers…', 'Tout repose sur moi', 'Et demain ?']},
-  {de: 2309, a: 2373, src: 'scene_nature', type: 'carte', mot: 'un moment pour Hachem', teinte: '#f6efe2', dir: 1},
-  {de: 2373, a: 2462, src: 'char_thumbs_up', type: 'perso', mot: 'commence', teinte: '#e8f3ef', dir: -1},
+  {de: 2309, a: 2360, src: 'scene_nature', type: 'carte', mot: 'un moment pour Hachem', teinte: '#f6efe2', dir: 1},
+  // 2360–2460 : « Commence aujourd’hui » → l’écran « Bravo, Tsadik ! » dans le téléphone
 ];
 
 const RATIO: Record<string, number> = {char_standing_back: 204 / 640, char_walking: 328 / 640, char_writing: 637 / 640, char_thinking: 544 / 640, char_face: 465 / 640, char_debout: 800 / 1200,
@@ -112,24 +116,26 @@ const BullesQuiSEteignent: React.FC<{textes: string[]; f: number; retour?: boole
 );
 
 /** Un plan « pose » : entrée glissée, poussée lente, sortie rapide ; tout reste dans la zone sujet. */
-const PlanPose: React.FC<{p: Pose}> = ({p}) => {
+const PlanPose: React.FC<{p: Pose; enchaine: number}> = ({p, enchaine}) => {
   const f = useCurrentFrame(); // local à la séquence
   const dur = p.a - p.de;
-  const entree = p.fixe ? 1 : spring({frame: f, fps: FPS, config: {damping: 18, mass: 0.7}});
-  const sortie = p.bulles ? 0 : L(f, dur - 5, dur, 0, 1, Easing.in(Easing.cubic));
-  const pousse = p.fixe ? L(f, 0, dur, 1.06, 1.22, (t) => t) : L(f, 0, dur, 1, 1.06, (t) => t);
-  const dx = (1 - entree) * 220 * p.dir - sortie * 260 * p.dir;
-  const marche = p.marche ? L(f, 0, dur, -200, 200, (t) => t) : 0;
+  // entrée : fondu + glissé court depuis la droite ; sortie : fondu pendant que le plan suivant entre (même sens, le regard suit)
+  const entree = p.fixe ? 1 : spring({frame: f, fps: FPS, config: {damping: 26, mass: 0.8}});
+  const apparition = p.fixe ? 1 : L(f, 3, FONDU + 2, 0, 1, Easing.out(Easing.cubic)); // entre quand le plan précédent est presque parti : pas de double exposition
+  const sortie = enchaine ? L(f, dur - 2, dur + Math.round(enchaine * 0.6), 0, 1, Easing.in(Easing.sin)) : 0;
+  const pousse = p.fixe ? L(f, 0, dur, 1.06, 1.22, Easing.inOut(Easing.sin)) : L(f, 0, dur + enchaine, 1, 1.06, Easing.inOut(Easing.sin));
+  const dx = (1 - entree) * 90 - sortie * 90;
+  const marche = p.marche ? L(f, 0, dur + enchaine, -200, 200 + (200 * enchaine) / dur, (t) => t) : 0;
   const rebond = p.marche ? Math.abs(Math.sin(f / 4)) * -10 : p.fixe || p.bulles ? 0 : Math.sin(f / 20) * 4;
   const r = RATIO[p.src];
   // avec une bulle : le sujet tient sous la bulle (haut ≥ 220 px dans la zone), jamais dessous ni dessus
-  const hMax = p.bulle || p.bulles ? 600 : p.type === 'perso' ? 760 : H - 80;
+  const hMax = p.bulle || p.bulles || p.fixe ? 600 : p.type === 'perso' ? 760 : H - 80;
   let hauteur = hMax, largeur = hauteur * r;
   if (largeur > 900) { largeur = 900; hauteur = largeur / r; }
   if (p.type === 'carte' && largeur > 680) { largeur = 680; hauteur = largeur / r; }
   const decal = 0;
   return (
-    <div style={{position: 'absolute', left: 0, right: 0, top: Z.sujetHaut, height: H, overflow: 'hidden', opacity: 1 - sortie * 0.6}}>
+    <div style={{position: 'absolute', left: 0, right: 0, top: Z.sujetHaut, height: H, overflow: 'hidden', opacity: apparition * (1 - sortie)}}>
       <AbsoluteFill style={{background: `radial-gradient(circle at 50% 55%, ${p.teinte} 0, rgba(255,255,255,0) 62%)`}} />
       <div style={{position: 'absolute', left: 540 - largeur / 2 + dx + marche + decal, bottom: p.type === 'perso' || p.bulle || p.bulles ? 14 : (H - hauteur) / 2, width: largeur, height: hauteur,
         transform: `translateY(${rebond}px) scale(${pousse})`, transformOrigin: '50% 100%'}}>
@@ -138,7 +144,8 @@ const PlanPose: React.FC<{p: Pose}> = ({p}) => {
           ...(p.type === 'carte' ? {borderRadius: 28, border: '10px solid #fff', boxShadow: '0 18px 50px rgba(7,40,40,.22)'} : {})}} />
       </div>
       {p.lumiere && <AbsoluteFill style={{background: 'radial-gradient(circle at 50% 30%, rgba(255,236,190,.9) 0, rgba(255,255,255,0) 55%)', opacity: L(f, 0, dur, 0.15, 1)}} />}
-      {p.bulle && <BulleStress texte={p.bulle} f={f} cote={p.dir} />}
+      {/* la bulle s'efface avant le fondu : deux textes ne se superposent jamais */}
+      {p.bulle && <div style={{opacity: L(f, dur - 6, dur, 1, 0)}}><BulleStress texte={p.bulle} f={f} cote={p.dir} /></div>}
       {p.bulles && <BullesQuiSEteignent textes={p.bulles} f={f} retour={p.retour} />}
     </div>
   );
@@ -148,45 +155,65 @@ const PlanPose: React.FC<{p: Pose}> = ({p}) => {
  * Plans du téléphone : quelle capture, et quelle bande verticale montrer (y = % de la hauteur du téléphone).
  * z ≤ 2,2 : l'écran agrandi (402 px × 2,2 = 884 px) tient dans la largeur de l'image, donc aucune ligne n'est coupée.
  */
-type PlanTel = {de: number; a: number; src: string; y: number; z0: number; z1: number; aFournir?: string};
+type PlanTel = {de: number; a: number; src: string; y: number; z0: number; z1: number; aFournir?: string; basseDef?: boolean};
 const PLANS_TEL: PlanTel[] = [
-  {de: 505, a: 600, src: 'web_accueil', y: 28, z0: 1, z1: 1.55},                      // « …découvre MY HITBODEDUT » : l'accueil réel
-  {de: T5.etapes, a: T5.duree, src: '', y: 50, z0: 1, z1: 1.15, aFournir: '« Hitbodedout guidée »'},
-  {de: T5.duree, a: 1343, src: 'web_choix_duree', y: 108, z0: 1.2, z1: 1.85},            // « Choisis la durée… »
-  // « …et avance à ton rythme » : le système de trophées (captures réelles, historique de démonstration)
-  {de: 1343, a: 1428, src: 'web_trophees_semaine', y: 108, z0: 1.5, z1: 2.0},          // Votre semaine : trophées gagnés cette semaine
-  {de: 1428, a: T.avec, src: 'web_trophees_haut', y: 35, z0: 1.5, z1: 1.95},            // Grade Or, 25 trophées, les plus proches
-  {de: T.avec, a: 1630, src: '', y: 50, z0: 1, z1: 1.15, aFournir: '« Je suis avec Hachem » : choix des applications'},
-  {de: 1630, a: T.perso, src: 'web_seance', y: 50, z0: 1, z1: 2.2},                     // « posez le téléphone »
-  {de: T.perso, a: 1802, src: 'web_langue', y: 108, z0: 1.6, z1: 2.2},                   // Langue : עברית / English / Français
-  {de: 1802, a: 1834, src: 'web_onboarding_6', y: 68, z0: 1.6, z1: 2.0},                // Comment vous appeler ? Tsadik / Tsadeket
-  {de: 1834, a: 1866, src: 'web_couleur_fond', y: 108, z0: 1.6, z1: 2.2},                // Couleur du fond
-  {de: 1866, a: 1898, src: 'web_reglages', y: 48, z0: 1.4, z1: 1.8},                    // Apparence : clair ou sombre
-  {de: 1898, a: 1929, src: '', y: 50, z0: 1, z1: 1.15, aFournir: '« Heures du mode »'},
-  {de: 1929, a: T.chabbat, src: '', y: 50, z0: 1, z1: 1.15, aFournir: '« Durée du report »'},
-  // 5. le calendrier juif (captures réelles, lieu : Jérusalem)
-  {de: T.chabbat, a: 2100, src: 'web_calendrier', y: 33, z0: 1.4, z1: 1.9},             // le mois, dates hébraïques et grégoriennes
-  {de: 2100, a: 2124, src: 'web_zmanim', y: 100, z0: 1.7, z1: 1.85},                   // « les zmanim »
-  {de: 2124, a: T.retour, src: 'web_calendrier', y: 96, z0: 1.7, z1: 2.0},             // la date hébraïque du jour, « dans les prières »
+  // v18 : captures réelles fournies par Hillel le 02/11 (captures/v2), plus aucune carte « à fournir »
+  {de: 505, a: 600, src: 'v2/parler_simplement', y: 35, z0: 1, z1: 1.4},             // A « Pour t’accompagner » : 1er écran de l’app
+  {de: T5.etapes, a: T5.duree, src: 'v2/mots_questions', y: 30, z0: 1, z1: 1.04},   // B « Cinq étapes… » : questions guidées
+  {de: T5.duree, a: 1262, src: 'v2/duree_15', y: 38, z0: 1.25, z1: 1.55},              // C « Choisis la durée… » : 15 min
+  {de: 1262, a: 1343, src: 'v2/duree_15', y: 76, z0: 1.55, z1: 1.8},                   //   les boutons 5 min → 1 h 30
+  {de: 1343, a: 1428, src: 'v2/accueil_anneaux', y: 40, z0: 1.3, z1: 1.6},             // D « …avance à ton rythme » : anneaux, prochain trophée
+  {de: 1428, a: T.avec, src: 'web_trophees_haut', y: 35, z0: 1.5, z1: 1.95},           //   grade Or, 25 trophées
+  {de: T.avec, a: 1575, src: 'v2/je_suis_avec_hachem_basse_def', y: 40, z0: 1, z1: 1.08, basseDef: true}, // E « Bloque les distractions »
+  {de: 1575, a: 1630, src: 'v2/choisir_bloquer_basse_def', y: 60, z0: 1, z1: 1.08, basseDef: true},       //   choix des applications
+  {de: 1630, a: T.perso, src: 'v2/duree_15', y: 48, z0: 1.2, z1: 1.9},                 //   « posez le téléphone »
+  {de: T.perso, a: 1802, src: 'web_langue', y: 108, z0: 1.6, z1: 2.2},                  // F « Personnalise… »
+  {de: 1802, a: 1834, src: 'web_onboarding_6', y: 68, z0: 1.6, z1: 2.0},
+  {de: 1834, a: 1866, src: 'web_couleur_fond', y: 108, z0: 1.6, z1: 2.2},
+  {de: 1866, a: 1898, src: 'web_reglages', y: 48, z0: 1.4, z1: 1.8},
+  {de: 1898, a: 1929, src: 'v2/heures_du_mode_basse_def', y: 60, z0: 1, z1: 1.06, basseDef: true},
+  {de: 1929, a: T.chabbat, src: 'v2/duree_du_report_basse_def', y: 50, z0: 1, z1: 1.06, basseDef: true},
+  {de: T.chabbat, a: 2077, src: 'web_calendrier', y: 33, z0: 1.4, z1: 1.9},             // G le calendrier
+  {de: 2077, a: 2150, src: 'v2/zmanim', y: 45, z0: 1.25, z1: 1.55},                     //   « les zmanim et les ajouts de la prière » : date hébraïque + Dans les prières
+  {de: 2150, a: 2167, src: 'v2/siddour', y: 30, z0: 1.15, z1: 1.2},                    // H montage rapide (musique seule)
+  {de: 2167, a: 2184, src: 'v2/bibliotheque', y: 30, z0: 1.15, z1: 1.2},
+  {de: 2184, a: T.retour, src: 'v2/boussole', y: 35, z0: 1.15, z1: 1.2},
+  {de: 2360, a: 2460, src: 'v2/bravo', y: 40, z0: 1.05, z1: 1.3},                      // I « Commence aujourd’hui » : Bravo, Tsadik !
 ];
-const planTel = (f: number) => PLANS_TEL.find((p) => f >= p.de && f < p.a);
+const indexTel = (f: number) => PLANS_TEL.findIndex((p) => f >= p.de && f < p.a);
+const zPlan = (p: PlanTel, f: number) => interpolate(f, [p.de, p.a], [p.z0, p.z1], {...clamp, easing: Easing.inOut(Easing.sin)});
+/* caméra continue : au changement de capture, elle glisse depuis le cadre précédent au lieu de sauter */
+const RACCORD_CAM = 14;
 const camTel = (f: number) => {
-  const p = planTel(f);
-  if (!p) return {z: 1, y: 50};
-  return {z: interpolate(f, [p.de, p.a], [p.z0, p.z1], {...clamp, easing: Easing.inOut(Easing.sin)}), y: p.y};
+  const i = indexTel(f);
+  if (i < 0) return {z: 1, y: 50};
+  const p = PLANS_TEL[i], prev = PLANS_TEL[i - 1];
+  const z = zPlan(p, f);
+  if (!prev || prev.a !== p.de || f >= p.de + RACCORD_CAM) return {z, y: p.y};
+  const t = L(f, p.de, p.de + RACCORD_CAM, 0, 1, Easing.inOut(Easing.sin));
+  return {z: prev.z1 + (z - prev.z1) * t, y: prev.y + (p.y - prev.y) * t};
 };
+const Capture: React.FC<{p: PlanTel}> = ({p}) =>
+  p.src ? <Img src={staticFile(`captures/${p.src}.png`)} style={{position: 'absolute', width: '100%', height: '100%', objectFit: 'cover', objectPosition: '50% 0%'}} /> : <AFournir titre={p.aFournir!} />;
 const EcranPlein: React.FC<{f: number}> = ({f}) => {
-  const p = planTel(f);
-  if (!p) return null;
-  if (!p.src) return <AFournir titre={p.aFournir!} />;
-  return <Img src={staticFile(`captures/${p.src}.png`)} style={{width: '100%', height: '100%'}} />;
+  const i = indexTel(f);
+  if (i < 0) return null;
+  const p = PLANS_TEL[i], prev = PLANS_TEL[i - 1];
+  const t = prev && prev.a === p.de ? L(f, p.de, p.de + FONDU, 0, 1, Easing.inOut(Easing.sin)) : 1;
+  return (
+    <AbsoluteFill>
+      {t < 1 && <Capture p={prev} />}
+      <AbsoluteFill style={{opacity: t}}><Capture p={p} /></AbsoluteFill>
+    </AbsoluteFill>
+  );
 };
 
 const JOURS = [
   {de: T5.etapes, a: 1343, texte: 'Jour 1'},      // étapes guidées, puis il choisit sa durée
   {de: 1343, a: T.avec, texte: 'Jour 6'},          // trophées : la capture dit « sur 6 jours »
   {de: T.avec, a: T.chabbat, texte: 'Jour 7'},     // « Je suis avec Hachem », personnalisation
-  {de: T.chabbat, a: T.retour, texte: 'Chaque jour'}, // le calendrier
+  {de: T.chabbat, a: 2150, texte: 'Chaque jour'}, // le calendrier
+  {de: 2150, a: T.retour, texte: 'Siddour · Bibliothèque · Boussole'}, // montage rapide
 ];
 const CompteurJour: React.FC<{texte: string; dur: number}> = ({texte, dur}) => {
   const f = useCurrentFrame();
@@ -194,7 +221,7 @@ const CompteurJour: React.FC<{texte: string; dur: number}> = ({texte, dur}) => {
   const o = Math.min(s, L(f, dur - 8, dur, 1, 0));
   return (
     <div style={{position: 'absolute', left: 0, right: 0, top: 310, height: Z.texteBas - 310, display: 'flex', alignItems: 'center', justifyContent: 'center', opacity: o}}>
-      <div style={{fontFamily: 'Inter', fontWeight: 800, fontSize: 52, letterSpacing: 2, color: '#a88233', transform: `scale(${0.7 + 0.3 * s})`}}>{texte}</div>
+      <div style={{fontFamily: 'Inter', fontWeight: 800, fontSize: texte.length > 14 ? 38 : 52, letterSpacing: 2, color: '#a88233', whiteSpace: 'nowrap', transform: `scale(${0.7 + 0.3 * s})`}}>{texte}</div>
     </div>
   );
 };
@@ -214,14 +241,20 @@ const volumeAmbiance = (f: number) => {
 export const PubV5: React.FC = () => {
   const f = useCurrentFrame();
   const {fps} = useVideoConfig();
-  const telA = f >= 430 && f < 600; // ouverture de l'application
-  const telB = f >= T5.etapes && f < T.retour; // fonctions
-  const telEntree = spring({frame: f - (telA ? 430 : T5.etapes), fps, config: {damping: 18}});
+  // v17 : le téléphone entre et sort en fondu enchaîné avec les poses (chevauchement FONDU_PHASE), sans flash
+  const PHASES_TEL = [{de: 430, a: 600}, {de: T5.etapes, a: T.retour}, {de: 2360, a: 2460}];
+  const phase = PHASES_TEL.find((q) => f >= q.de && f < q.a + FONDU);
+  const telA = phase?.de === 430;
+  const telB = phase?.de === T5.etapes;
+  const fe = phase ? Math.max(phase.de, Math.min(f, phase.a - 1)) : f; // l'écran se fige sur sa dernière image pendant la sortie
+  const telIn = phase ? L(f, phase.de + 4, phase.de + 18, 0, 1, Easing.out(Easing.cubic)) : 0;
+  const telOut = phase ? L(f, phase.a - 2, phase.a + 6, 0, 1, Easing.in(Easing.sin)) : 0;
+  const zCam = camTel(fe).z;
+  const fondu = Math.min(18, Math.max(0, (zCam - 1) * 200)); // bords fondus qui apparaissent progressivement avec le zoom
   const icones = f >= T.avec && f < T.perso;
   const carte = spring({frame: f - T.fin - 10, fps, config: {damping: 200}});
   const cta = spring({frame: f - T.fin - 30, fps, config: {damping: 200}});
   const sec = spring({frame: f - T.fin - 48, fps, config: {damping: 200}});
-  const flash = Math.max(...[430, 600, T5.etapes, T.retour].map((c) => interpolate(f, [c - 8, c, c + 10], [0, 0.9, 0], clamp)));
 
   return (
     <AbsoluteFill style={{background: '#fff'}}>
@@ -229,27 +262,34 @@ export const PubV5: React.FC = () => {
       <AbsoluteFill style={{background: 'radial-gradient(ellipse at 50% 40%, #ffffff 40%, #eef3f2 100%)'}} />
 
       {POSES.map((p, i) => (
-        <Sequence key={i} from={p.de} durationInFrames={p.a - p.de}><PlanPose p={p} /></Sequence>
+        // fondu enchaîné avec le plan suivant, sauf quand le suivant continue le même cadre (plan fixe)
+        <Sequence key={i} from={p.de} durationInFrames={p.a - p.de + (POSES[i + 1]?.fixe ? 0 : POSES[i + 1]?.de === p.a ? FONDU : FONDU_PHASE)}>
+          <PlanPose p={p} enchaine={POSES[i + 1]?.fixe ? 0 : POSES[i + 1]?.de === p.a ? FONDU : FONDU_PHASE} />
+        </Sequence>
       ))}
 
-      {(telA || telB) && (
+      {phase && (
         <div style={{position: 'absolute', left: 0, right: 0, top: Z.sujetHaut, height: H, display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden',
           // bords haut et bas fondus : le téléphone agrandi n'est jamais coupé par une ligne dure
-          WebkitMaskImage: camTel(f).z > 1.02 ? 'linear-gradient(180deg, transparent 0, #000 90px, #000 calc(100% - 90px), transparent 100%)' : undefined,
-          transform: `translateY(${(1 - telEntree) * 500}px)`}}>
+          WebkitMaskImage: `linear-gradient(180deg, transparent 0, #000 ${fondu * 5}px, #000 calc(100% - ${fondu * 5}px), transparent 100%)`,
+          opacity: telIn * (1 - telOut), transform: `translateY(${(1 - telIn) * 90 - telOut * 40}px) scale(${(0.94 + 0.06 * telIn) * (1 - 0.04 * telOut)})`}}>
           {/* zoom sur le TÉLÉPHONE entier (jamais dans l'écran) : la largeur de l'écran reste toujours visible, aucun texte coupé */}
-          <div style={{transform: `scale(${camTel(f).z})`, transformOrigin: `50% ${camTel(f).y}%`}}>
-            <Telephone src="">{telA && f < 505 ? <EcranOuverture f={f - 430} /> : <EcranPlein f={f} />}</Telephone>
+          <div style={{transform: `scale(${zCam})`, transformOrigin: `50% ${camTel(fe).y}%`}}>
+            <Telephone src="">
+              {telA && fe < 505 + FONDU && <EcranOuverture f={Math.max(0, fe - 430)} />}
+              {/* logo d'ouverture → accueil : fondu, pas de coupe */}
+              {!(telA && fe < 505) && <AbsoluteFill style={{opacity: telA ? L(fe, 505, 505 + FONDU, 0, 1, Easing.inOut(Easing.sin)) : 1}}><EcranPlein f={fe} /></AbsoluteFill>}
+            </Telephone>
           </div>
         </div>
       )}
       {f >= T5.etapes && f < T5.duree && (
-        <div style={{position: 'absolute', left: 0, right: 0, top: Z.sujetHaut, height: H}}>
+        <div style={{position: 'absolute', left: 0, right: 0, top: Z.sujetHaut, height: H, opacity: L(f, T5.duree - 8, T5.duree, 1, 0)}}>
           {ETAPES.map((e, i) => {
             const s = spring({frame: f - T5.etapes - 20 - i * 16, fps, config: {damping: 200}});
             const g = i % 2 === 0;
             return (
-              <div key={i} style={{position: 'absolute', top: 70 + i * 145, [g ? 'left' : 'right']: 24, width: 300, opacity: s, transform: `translateX(${(1 - s) * (g ? -40 : 40)}px)`,
+              <div key={i} style={{position: 'absolute', top: 70 + i * 145, [g ? 'left' : 'right']: 18, width: 262, opacity: s, transform: `translateX(${(1 - s) * (g ? -40 : 40)}px)`,
                 background: '#fff', border: `2px solid ${C.turquoise}`, borderRadius: 18, padding: '10px 14px', fontFamily: 'Inter', fontWeight: 600, fontSize: 23, color: C.noir,
                 boxShadow: '0 6px 16px rgba(7,91,91,.12)', display: 'flex', gap: 10, alignItems: 'center'}}>
                 <span style={{minWidth: 34, height: 34, borderRadius: 17, background: C.or, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700}}>{i + 1}</span>{e}
@@ -300,7 +340,6 @@ export const PubV5: React.FC = () => {
         </AbsoluteFill>
       )}
 
-      {flash > 0 && <AbsoluteFill style={{background: '#fff', opacity: flash}} />}
       {VOIX.map((v) => (
         <Sequence key={v.f} from={v.at} durationInFrames={Math.ceil(v.dur * FPS) + 14}>
           <Audio src={staticFile(`voix/${v.f}.wav`)} />

@@ -86,3 +86,7 @@ Extraits choisis pour leur régularité (pas de pic ni de cri), filtre 120 Hz–
   Toutes les phrases regénérées (outils/voix.py) ; poses, sous-titres et plans du calendrier recalés sur les nouveaux mots (mots_voix.json, clés v16_*).
 - Transition : la foule s'étouffe (passe-bas) et s'éteint de 12,6 à 15,0 s au lieu d'une coupe nette ; « MY HITBODEDUT » à 14,73 s ;
   « Beyond » entre en fondu de 2,5 s à 15,4 s (le drop reste sur 73,3 s).
+
+## v18 (02/11)
+- Voix off : ElevenLabs, voix « Paul – Calm, Confident Narrator » (bibliothèque ElevenLabs), modèle eleven_v4, générée sur le compte de Hillel (usage commercial selon l'abonnement ElevenLabs du compte). Sources : voix_eleven/*.mp3.
+- Captures d'écran : fournies par Hillel le 02/11 (remotion/public/captures/v2). Les 4 fichiers *_basse_def sont découpés dans la vue d'ensemble, à remplacer par les originaux.
