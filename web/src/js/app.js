@@ -1638,24 +1638,76 @@ function viserJusquaStable(defile, cible) {
  * L'ancrage du défilement (02/11) : un chapitre de livre commencé au-dessus de l'écran, mis en
  * page en y revenant, prend sa vraie hauteur à la place de l'estimée. Sans compensation, le
  * texte lu sauterait ; Safari ne la fait pas de lui-même (overflow-anchor), on la fait ici.
+ *
+ * Pendant un geste (doigt posé, ou élan qui continue), écrire scrollTop arrête net l'élan sur
+ * iPhone. Un chapitre qui raccourcit garde donc sa hauteur par une marge en tête (son texte
+ * reste collé au suivant, rien ne bouge) ; la marge s'en va au repos, compensée alors. Seul
+ * un chapitre qui grandit au-delà de sa marge oblige encore à écrire scrollTop : l'estimation
+ * est prise un peu large pour que ce soit rare.
  */
 function ancrerChapitres(defile) {
   if (!('ResizeObserver' in window)) return;
   const hauteurs = new WeakMap();
+  const marges = new Set();
+  let doigt = false;
+  let dernierDefilement = 0;
+  let minuteur = null;
+  const enGeste = () => doigt || performance.now() - dernierDefilement < 200;
+  const marge = (c) => parseFloat(c.style.paddingTop) || 0;
+  // Au repos : chaque marge hors de la vue disparaît (au-dessus, l'observateur compense ;
+  // en dessous, rien de visible ne bouge). Une marge sous les yeux attend qu'on s'en éloigne.
+  const auRepos = () => {
+    if (!defile.isConnected) { marges.clear(); return; }
+    if (enGeste()) { attendre(); return; }
+    const r = defile.getBoundingClientRect();
+    let delta = 0;
+    for (const c of [...marges]) {
+      const b = c.getBoundingClientRect();
+      if (b.top >= r.top && b.top <= r.bottom) continue;
+      // Compensée ici : l'observateur ne voit pas toujours une marge changer (ancien Safari).
+      const m = marge(c);
+      if (b.top < r.top) delta -= m;
+      if (hauteurs.has(c)) hauteurs.set(c, hauteurs.get(c) - m);
+      c.style.paddingTop = '';
+      marges.delete(c);
+    }
+    if (delta) defile.scrollTop += delta;
+  };
+  const attendre = () => { clearTimeout(minuteur); if (marges.size) minuteur = setTimeout(auRepos, 250); };
+  defile.addEventListener('touchstart', () => { doigt = true; }, { passive: true });
+  for (const fin of ['touchend', 'touchcancel']) defile.addEventListener(fin, () => { doigt = false; dernierDefilement = performance.now(); attendre(); }, { passive: true });
+  defile.addEventListener('scroll', () => { dernierDefilement = performance.now(); attendre(); }, { passive: true });
   const ro = new ResizeObserver((entrees) => {
     if (!defile.isConnected) { ro.disconnect(); return; }
     const haut = defile.getBoundingClientRect().top;
+    const geste = enGeste();
     let delta = 0;
     for (const e of entrees) {
-      const hauteur = e.borderBoxSize?.[0]?.blockSize ?? e.target.offsetHeight;
-      const avant = hauteurs.get(e.target);
-      hauteurs.set(e.target, hauteur);
+      const c = e.target;
+      const hauteur = e.borderBoxSize?.[0]?.blockSize ?? c.offsetHeight;
+      const avant = hauteurs.get(c);
+      hauteurs.set(c, hauteur);
       // Commencé au-dessus de l'écran : tout ce qui suit, dont le texte lu, en serait déplacé.
-      if (avant !== undefined && e.target.getBoundingClientRect().top < haut) delta += hauteur - avant;
+      if (avant === undefined || c.getBoundingClientRect().top >= haut) continue;
+      let d = hauteur - avant;
+      if (geste && d < 0) {
+        c.style.paddingTop = `${marge(c) - d}px`;
+        hauteurs.set(c, avant);
+        marges.add(c);
+        d = 0;
+      } else if (geste && d > 0 && marge(c) > 0) {
+        const pris = Math.min(marge(c), d);
+        c.style.paddingTop = marge(c) - pris > 0.5 ? `${marge(c) - pris}px` : '';
+        if (!c.style.paddingTop) marges.delete(c);
+        hauteurs.set(c, hauteur - pris);
+        d -= pris;
+      }
+      delta += d;
     }
-    if (delta) defile.scrollTop += delta;
+    if (Math.abs(delta) >= 0.5) defile.scrollTop += delta;
+    attendre();
   });
-  for (const c of defile.querySelectorAll('.livre-chapitre')) ro.observe(c);
+  for (const c of defile.querySelectorAll('.livre-chapitre')) ro.observe(c, { box: 'border-box' });
 }
 
 /**
@@ -1673,7 +1725,8 @@ function hauteurEstimee(section) {
     const lettres = (b.t ?? b.c ?? '').replace(/<[^>]+>/g, '').replace(/[\u0591-\u05C7]/g, '').length;
     h += Math.ceil(lettres / parLigne) * (b.c !== undefined ? ligne * 0.65 : ligne) + 30 * echelle;
   }
-  return Math.round(h);
+  // Un peu large (02/11) : un chapitre qui raccourcit en arrivant ne force pas l'élan (ancrerChapitres).
+  return Math.round(h * 1.1);
 }
 
 /** Le nom d'une hilloula dans la langue de l'interface, FR → EN (audit 1.390) ; null en hébreu ou sans traduction. */

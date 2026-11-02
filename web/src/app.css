@@ -484,7 +484,9 @@ input[type="range"] { width: 100%; accent-color: var(--brand); }
 .lecture .psaume-titre { margin: 24px 0 4px; color: var(--brand); font-size: calc(20px * var(--echelle, 1)); font-weight: 700; text-align: start; }
 .lecture .psaume-titre:first-of-type { margin-top: 8px; }
 /* Un chapitre de livre n'est mis en page qu'en approchant de l'écran (02/11). */
-.lecture .livre-chapitre { content-visibility: auto; }
+/* Un bloc fermé (02/11) : la marge mise en tête pendant un geste (ancrerChapitres) ne change pas
+   la fusion des marges du premier titre ; sinon le texte sautait de 24 px. */
+.lecture .livre-chapitre { content-visibility: auto; display: flow-root; }
 /* L'ancrage est fait à la main (ancrerChapitres), pareil partout : pas en double avec Chromium. */
 .defile.defile-livre { overflow-anchor: none; }
 .lecture .livre-chapitre + .livre-chapitre .psaume-titre:first-of-type { margin-top: 24px; }
