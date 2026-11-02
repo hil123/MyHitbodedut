@@ -25,12 +25,26 @@ object BandeauDefilant {
         val defile = premierDefilant(racine) ?: return
         bandeau.setTag(R.id.bandeau_defilant, true)
         var cache = false
+        // Le défilement réel d'une liste, au pixel près, additionné à chaque pas (03/11) : celui
+        // qu'Android estime (computeVerticalScrollOffset) se trompe quand les lignes n'ont pas la
+        // même hauteur, et la banderole partait trop tôt puis revenait en boucle.
+        var cumul = 0
+        (defile as? androidx.recyclerview.widget.RecyclerView)?.addOnScrollListener(object : androidx.recyclerview.widget.RecyclerView.OnScrollListener() {
+            override fun onScrolled(rv: androidx.recyclerview.widget.RecyclerView, dx: Int, dy: Int) {
+                cumul = if (rv.canScrollVertically(-1)) (cumul + dy).coerceAtLeast(0) else 0
+            }
+        })
+        fun decalage(): Int = when (defile) {
+            is ScrollView -> defile.scrollY
+            is androidx.recyclerview.widget.RecyclerView -> cumul
+            else -> if (defile.canScrollVertically(-1)) Int.MAX_VALUE else 0
+        }
         defile.viewTreeObserver.addOnScrollChangedListener {
             val descendu = defile.canScrollVertically(-1)
             val h = bandeau.height
             // Effacée seulement après un vrai défilement (plus que sa hauteur et une marge) : en
             // descendant doucement, le premier pixel ne la fait plus partir (03/11).
-            if (descendu && !cache && decalage(defile) > h + marge(defile) && reste(defile) > h + marge(defile)) {
+            if (descendu && !cache && decalage() > h + marge(defile) && reste(defile) > h + marge(defile)) {
                 cache = true
                 bandeau.animate().alpha(0f).setDuration(DUREE_MS).withEndAction {
                     if (!cache) return@withEndAction
@@ -45,7 +59,7 @@ object BandeauDefilant {
                             if (defile.viewTreeObserver.isAlive) defile.viewTreeObserver.removeOnPreDrawListener(this)
                             val monte = avant - IntArray(2).also { defile.getLocationOnScreen(it) }[1]
                             val mesurable = defile is ScrollView || defile is androidx.recyclerview.widget.RecyclerView
-                            if (!mesurable || monte <= 0 || decalage(defile) <= monte) return true
+                            if (!mesurable || monte <= 0 || decalage() <= monte) return true
                             defile.scrollBy(0, -monte)
                             return false // cette image est redessinée, texte en place
                         }
@@ -57,13 +71,6 @@ object BandeauDefilant {
                 bandeau.animate().alpha(1f).setDuration(DUREE_MS)
             }
         }
-    }
-
-    /** Ce qui est déjà défilé ; 0 si on ne sait pas le lire (la banderole reste alors en place). */
-    private fun decalage(v: View): Int = when (v) {
-        is ScrollView -> v.scrollY
-        is androidx.recyclerview.widget.RecyclerView -> v.computeVerticalScrollOffset()
-        else -> if (v.canScrollVertically(-1)) Int.MAX_VALUE else 0
     }
 
     /**
