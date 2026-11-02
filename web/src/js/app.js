@@ -881,11 +881,15 @@ const NUSAH = [['edot', 'siddur_nusah_edot'], ['sefard', 'siddur_nusah_sefard'],
 let livres = null;
 let livresDemandes = false;
 let livresEchec = false;
+/** Les livres dont le fichier n'est pas venu (02/11) : id → instant de l'échec. Un livre en panne
+ * ne bloque plus les autres ; il se redemande de lui-même après 30 s, ou tout de suite par « Réessayer ». */
+const livresEchoues = new Map();
+const livreEnPanne = (id) => Date.now() - (livresEchoues.get(id) ?? -Infinity) < 30000;
 /** Pendant le premier téléchargement des livres (16 Mo), ou après son échec (02/11) : jamais un écran vide. */
-function attenteLivres() {
-  if (livresEchec) {
+function attenteLivres(id = null) {
+  if (livresEchec || (id && livreEnPanne(id))) {
     return h('div', { class: 'carte attente-livres' }, h('p', {}, tr.t('livres_echec_web')),
-      h('button', { type: 'button', class: 'secondaire', onclick: () => { livresEchec = false; chargeLivres(); rendre(); } }, tr.t('livres_reessayer_web')));
+      h('button', { type: 'button', class: 'secondaire', onclick: () => { livresEchec = false; livresEchoues.clear(); chargeLivres(); rendre(); } }, tr.t('livres_reessayer_web')));
   }
   return h('div', { class: 'carte attente-livres', role: 'status' }, h('span', { class: 'attente-rond', 'aria-hidden': 'true' }), h('p', {}, tr.t('livres_chargement_web')));
 }
@@ -902,24 +906,50 @@ function chargeLivres() {
 }
 /** Un livre, son texte chargé au premier besoin dans son entrée de la table (02/11). */
 const livresEnCours = new Set();
-function chargeLivre(id) {
+function chargeLivre(id, { silencieux = false, apres = null } = {}) {
   if (!chargeLivres()) return false;
   const t = livres.textes.find((x) => x.id === id);
   if (!t) return true;
   if (t.sections) return true;
-  if (livresEnCours.has(id) || livresEchec) return false;
+  if (livresEnCours.has(id) || livreEnPanne(id)) return false;
   livresEnCours.add(id);
   fetch(`data/livres/${id}.json`).then((r) => { if (!r.ok) throw new Error(r.status); return r.json(); })
-    .then((d) => { t.sections = d.sections; livresEnCours.delete(id); rendre(); })
-    .catch(() => { livresEnCours.delete(id); livresEchec = true; rendre(); });
+    .then((d) => { t.sections = d.sections; livresEchoues.delete(id); livresEnCours.delete(id); if (!silencieux) rendre(); })
+    .catch(() => { livresEnCours.delete(id); livresEchoues.set(id, Date.now()); if (!silencieux) rendre(); })
+    .finally(() => apres?.());
   return false;
 }
-/** Tous les livres, pour la recherche : chargés un par un, la recherche se refait à chaque arrivée. */
+/**
+ * Tous les livres, pour la recherche (02/11) : un fichier après l'autre, sans redessiner à chaque
+ * arrivée (le champ perdait le doigt et les résultats bougeaient), puis un seul nouvel affichage.
+ * Ceux que la recherche a fait venir sont rendus à la mémoire quand on la quitte (16 Mo en tout).
+ */
+const livresDeRecherche = new Set();
+let rechercheLivresEnCours = false;
 function chargeTousLesLivres() {
   if (!chargeLivres()) return false;
-  let tous = true;
-  for (const t of livres.textes) if (!chargeLivre(t.id)) tous = false;
-  return tous;
+  const manquants = livres.textes.filter((t) => !t.sections && !livreEnPanne(t.id));
+  if (!manquants.length) return true;
+  if (rechercheLivresEnCours) return false;
+  rechercheLivresEnCours = true;
+  const suivant = () => {
+    // Quittée en chemin : on s'arrête là, la suite reviendra avec la prochaine recherche.
+    const t = ecranCourant() === 'recherche' ? livres.textes.find((x) => !x.sections && !livreEnPanne(x.id) && !livresEnCours.has(x.id)) : null;
+    if (!t) { rechercheLivresEnCours = false; if (ecranCourant() === 'recherche') rendre(); return; }
+    livresDeRecherche.add(t.id);
+    chargeLivre(t.id, { silencieux: true, apres: suivant });
+  };
+  suivant();
+  return false;
+}
+function rendreLivresDeRecherche() {
+  const ouvert = priere?.startsWith('livre:') ? priere.slice(6) : null;
+  for (const id of livresDeRecherche) {
+    if (id === ouvert || id === 'meguilat_esther') continue;
+    const t = livres?.textes.find((x) => x.id === id);
+    if (t) delete t.sections;
+    livresDeRecherche.delete(id);
+  }
 }
 
 function chargeSiddur() {
@@ -1287,7 +1317,7 @@ function ecranPriere() {
   // Un livre de la bibliothèque (« livre:likoutei_etsot », 12/10) se lit comme une prière, sans nusah ni ajouts.
   const livre = priere?.startsWith('livre:') ?? false;
   const pret = livre ? chargeLivre(priere.slice(6)) : chargeSiddur();
-  if (!pret) return h('div', { class: 'ecran' }, barre(tr.t(livre ? 'livres_title' : 'siddur_title')), h('div', { class: 'defile' }, livre ? h('div', { class: 'contenu' }, attenteLivres()) : null));
+  if (!pret) return h('div', { class: 'ecran', 'data-attente': '' }, barre(tr.t(livre ? 'livres_title' : 'siddur_title')), h('div', { class: 'defile' }, livre ? h('div', { class: 'contenu' }, attenteLivres(priere.slice(6))) : null));
   const recueil = livre ? livres : siddur;
   const x = recueil.textes.find((y) => y.id === (livre ? priere.slice(6) : priere));
   // Rouvert directement sur #priere, sans texte choisi : la liste.
@@ -1416,14 +1446,18 @@ function ecranPriere() {
   } }, iconeMarque(livre));
   ecran.querySelector('.bandeau-actions')?.append(listeMarques, etoile);
   if (livre) { const d = ecran.querySelector('.defile'); if (d) { d.classList.add('defile-livre'); remplirAuDefilement(d); ancrerChapitres(d); } }
-  if (marqueAOuvrir?.cle === cleMarque) { const m = marqueAOuvrir; marqueAOuvrir = null; requestAnimationFrame(() => allerAMarque(ecran, m)); return ecran; }
+  if (marqueAOuvrir?.cle === cleMarque) { const m = { ...marqueAOuvrir, priere }; marqueAOuvrir = null; requestAnimationFrame(() => {
+    // Redessiné entre-temps (un livre arrivé, « Aa ») : on vise l'écran qui l'a remplacé, s'il est encore ce texte.
+    const e = ecran.isConnected ? ecran : (app.dataset.ecran?.startsWith('priere/') && priere === m.priere) ? app.querySelector('.ecran') : null;
+    if (e) allerAMarque(e, m);
+  }); return ecran; }
   const defile = ecran.querySelector('.defile');
   if (defile) {
     const place = store.positionLecture(cle);
     // Un livre reprend au paragraphe (02/11) : ses chapitres hors écran n'ont qu'une hauteur
     // estimée, un nombre de pixels n'y retomberait pas juste.
     const ancre = livre && place > 0 ? store.ancreLecture(cle) : null;
-    if (place > 0 && app.dataset.ecran !== `priere/${onglet}`) {
+    if (place > 0 && !rendreSurPlace) {
       requestAnimationFrame(() => {
         const [section, bloc] = (ancre ?? '').split(':').map(Number);
         if (ancre && ecran.querySelector(`.livre-chapitre[data-section="${section}"]`)) allerAMarque(ecran, { section, bloc }, 0);
@@ -4088,6 +4122,8 @@ function ligneInterrupteur(nom, indice, coche, onChange) {
  * sans rien pour les changer — prénom, adresse, objectif du jour, décompte, Chabbat, pause.
  */
 function carteMaPratique() {
+  // Le jour que l'interrupteur montre : laissé ouvert après minuit, il agit sur ce même jour (02/11).
+  const jourAffiche = store.today();
   const adresses = ['m', 'f', null];
   const nomAdresse = (a) => tr.t(a === 'm' ? 'adresse_tsadik' : a === 'f' ? 'adresse_tsadeket' : 'adresse_none');
   return h('div', { class: 'carte' },
@@ -4112,7 +4148,7 @@ function carteMaPratique() {
     // La hitbodedout guidée (02/11, SettingsActivity.guided_switch) : éteinte par défaut.
     ligneInterrupteur(tr.t('settings_hitbodedut'), tr.t('settings_hitbodedut_hint'), store.guidedHitbodedut(), (v) => store.setGuidedHitbodedut(v)),
     ligneInterrupteur(tr.t('settings_shabbat'), tr.t('settings_shabbat_hint'), store.shabbatMode(), (v) => store.setShabbatMode(v)),
-    ligneInterrupteur(tr.t('settings_exempt_today'), tr.t('settings_exempt_today_hint'), store.pausedDates().has(store.today()), () => store.togglePausedDate(store.today())));
+    ligneInterrupteur(tr.t('settings_exempt_today'), tr.t('settings_exempt_today_hint'), store.pausedDates().has(jourAffiche), () => store.togglePausedDate(jourAffiche)));
 }
 
 /**
@@ -4317,8 +4353,8 @@ function ecrireNote(date, apres = () => {}) {
       h('div', { class: 'actions' },
         h('button', { onclick: () => { fermer(); apres(); } }, tr.t('action_later')),
         h('button', { onclick: () => {
-          store.setNote(date, champ.value.trim());
           store.setJournalPlus(date, { avant: plus.avant, apres: plus.apres, gratitude: gratitude.value.trim(), travail: travail.value.trim() });
+          store.setNote(date, champ.value.trim());
           fermer(); apres();
         } }, tr.t('action_save'))));
   });
@@ -4989,6 +5025,17 @@ function ouvrirRenvoi(depuis, cible) {
   if (defile) defile.scrollTop = 0;
 }
 
+/** Vrai pendant un rendu qui redessine l'écran déjà ouvert (pas une ouverture). */
+let rendreSurPlace = false;
+/** Le paragraphe en haut d'un livre ouvert, et sa distance au haut de l'écran. */
+function paragrapheDuHaut(defile) {
+  const r = defile.getBoundingClientRect();
+  for (let y = r.top + 4; y < Math.min(r.bottom, r.top + 400); y += 16) {
+    const el = document.elementFromPoint(r.left + r.width / 2, y)?.closest('[data-place]');
+    if (el) { const [section, bloc] = el.dataset.place.split(':').map(Number); return { section, bloc, marge: el.getBoundingClientRect().top - r.top }; }
+  }
+  return null;
+}
 function rendre() {
   policeAffichee = null;
   appliquerPolice();
@@ -5012,7 +5059,15 @@ function rendre() {
   if (ecran !== 'bravo') arreteDanse();
   if (ecran !== 'boussole') arreteBoussole();
   queueMicrotask(majMini);
-  const memeEcran = app.dataset.ecran === `${ecran}/${onglet}`;
+  const memeEcran = app.dataset.ecran === `${ecran}/${onglet}` && !app.querySelector('.ecran[data-attente]');
+  rendreSurPlace = memeEcran;
+  if (ecran !== 'recherche' && ecran !== 'priere') rendreLivresDeRecherche();
+  // Un livre redessiné sur place (« Aa », 02/11) : ses chapitres reviennent vides, à la hauteur
+  // estimée ; on retrouve le paragraphe du haut plutôt que le nombre de pixels.
+  const defileAvant = app.querySelector('.defile.defile-livre');
+  const hautLivre = memeEcran && defileAvant ? paragrapheDuHaut(defileAvant) : null;
+  const champ = document.activeElement?.classList?.contains('champ-recherche') ? document.activeElement : null;
+  const selection = champ ? [champ.selectionStart, champ.selectionEnd] : null;
   app.replaceChildren();
   if (ecran === 'musique') app.append(ecranMusique());
   else if (ecran === 'reglages') app.append(ecranReglages());
@@ -5048,7 +5103,12 @@ function rendre() {
       onglets()));
   }
   app.dataset.ecran = `${ecran}/${onglet}`;
-  if (memeEcran) app.querySelector('.defile').scrollTop = avant;
+  if (memeEcran && hautLivre && app.querySelector('.defile.defile-livre')) {
+    const ecranLivre = app.querySelector('.ecran');
+    app.querySelector('.defile').scrollTop = avant;
+    requestAnimationFrame(() => allerAMarque(ecranLivre, hautLivre, hautLivre.marge));
+  } else if (memeEcran) app.querySelector('.defile').scrollTop = avant;
+  if (selection) { const c = app.querySelector('.champ-recherche'); if (c) { c.focus({ preventScroll: true }); try { c.setSelectionRange(...selection); } catch { /* type search */ } } }
   // Les effets (19/10) : un écran qu'on ouvre entre, ses cartes l'une après l'autre ;
   // un écran redessiné sur place (chaque seconde pendant la séance) ne rejoue rien.
   else effetsEntree(ecran);
@@ -5112,6 +5172,16 @@ async function demarrer() {
 
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('sw.js').catch(() => {});
+  // Une nouvelle version a pris la main (02/11) : la page encore ouverte tourne sur l'ancien code,
+  // qui demanderait des fichiers que la nouvelle a retirés. On recharge au prochain retour sur
+  // l'application (jamais sous les yeux, jamais pendant une séance) ; l'écran ouvert est gardé
+  // dans l'historique, la place dans le livre aussi.
+  const avaitUnTravailleur = !!navigator.serviceWorker.controller;
+  let nouvelleVersion = false;
+  navigator.serviceWorker.addEventListener('controllerchange', () => { if (avaitUnTravailleur) nouvelleVersion = true; });
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden && nouvelleVersion && !store.isSessionRunning()) location.reload();
+  });
 }
 demarrer();
 

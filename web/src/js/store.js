@@ -26,6 +26,9 @@ export const PLAFOND_OUVERTE = 240;
 export function dateValide(cle) {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(cle)) return false;
   const [a, m, j] = cle.split('-').map(Number);
+  // Ni avant 2000 ni après 2100 (relecture du 02/11) : une sauvegarde retouchée avec « 0202 »
+  // faisait remonter le calcul de la meilleure série sur dix-huit siècles, à chaque affichage.
+  if (a < 2000 || a > 2100) return false;
   const d = new Date(Date.UTC(a, m - 1, j));
   return d.getUTCFullYear() === a && d.getUTCMonth() === m - 1 && d.getUTCDate() === j;
 }
@@ -72,7 +75,8 @@ export function creeStore(stockage, { maintenant = () => new Date(), fuseau } = 
 
   const today = () => isoLocal(maintenant());
   // Le jour du Tikoun bascule à 4 h, pas à minuit : commencé à 23 h 45, il se finit après minuit (Store.jourTikkun, 02/11).
-  const jourTikkun = () => isoLocal(new Date(maintenant().getTime() - 4 * 60 * 60 * 1000));
+  // Quatre heures d'horloge, comme LocalDateTime.minusHours : la nuit du changement d'heure ne décale rien.
+  const jourTikkun = () => { const n = maintenant(); return isoLocal(new Date(n.getFullYear(), n.getMonth(), n.getDate(), n.getHours() - 4, n.getMinutes())); };
 
   // --- Journées -------------------------------------------------------------
   const days = () => {
@@ -214,7 +218,8 @@ export function creeStore(stockage, { maintenant = () => new Date(), fuseau } = 
       const d = days();
       const existant = d[date];
       const texte = note.slice(0, NOTE_MAX);
-      if (existant?.noteSeule && texte.trim() === '') delete d[date];
+      // Un jour sans séance dont la note est vidée disparaît, sauf s'il garde humeur ou gratitude.
+      if (existant?.noteSeule && texte.trim() === '' && JournalPlus.vide(store.journalPlus(date))) delete d[date];
       else if (existant) d[date] = { ...existant, note: texte };
       else if (texte.trim() !== '') d[date] = { date, minutes: 0, note: texte, themes: [], noteSeule: true, faite: false };
       else return;
@@ -496,17 +501,14 @@ export function creeStore(stockage, { maintenant = () => new Date(), fuseau } = 
           // Les réglages de la barrière et des rappels n'existent pas ici. Ils
           // sont gardés tels que l'import les a apportés, pour qu'un aller-
           // retour par l'iPhone ne les remette pas à zéro sur Android.
-          window_start: get('window_start', DEFAULT_START),
-          window_end: get('window_end', DEFAULT_END),
-          snooze_minutes: get('snooze_minutes', DEFAULT_SNOOZE),
           target_minutes: store.targetMinutes(),
           daily_goal_minutes: get('daily_goal_minutes', 0),
           pause_shabbat: store.shabbatMode(),
           in_israel: store.inIsrael(),
           // La hitbodedout guidée (02/11), sous la clé d'Android.
           guided_hitbodedut: store.guidedHitbodedut(),
-          reminder_enabled: get('reminder_on', false),
-          reminder_minutes: get('reminder_minutes', DEFAULT_REMINDER),
+          first_name: store.firstName(),
+          hide_countdown: store.hideCountdown(),
           music_enabled: store.musicEnabled(),
           music_volume: store.musicVolume(),
           music_shuffle: store.musicShuffle(),
@@ -515,6 +517,11 @@ export function creeStore(stockage, { maintenant = () => new Date(), fuseau } = 
           apparence_mode: store.modeApparence(),
           apparence_fond: store.fond(),
           apparence_accent: store.accent(),
+          // Barrière et rappels (Android seul) : écrits seulement s'ils sont venus d'un import, sinon
+          // des valeurs par défaut écraseraient sur Android ce que l'utilisateur y a réglé (02/11).
+          ...Object.fromEntries([['window_start', 'window_start'], ['window_end', 'window_end'], ['snooze_minutes', 'snooze_minutes'],
+            ['reminder_enabled', 'reminder_on'], ['reminder_minutes', 'reminder_minutes'], ['reminder_times', 'reminder_times']]
+            .filter(([, pref]) => get(pref) !== undefined).map(([cle, pref]) => [cle, get(pref)])),
         },
         paused_dates: [...store.pausedDates()],
         blocked_apps: get('blocked_apps', []),
@@ -582,11 +589,17 @@ export function creeStore(stockage, { maintenant = () => new Date(), fuseau } = 
         bool('pause_shabbat'); bool('in_israel');
         bool('guided_hitbodedut');
         bool('reminder_enabled', 'reminder_on'); entier('reminder_minutes');
+        if (Array.isArray(s.reminder_times)) {
+          const h = s.reminder_times.filter((m) => Number.isInteger(m) && m >= 0 && m < 24 * 60);
+          if (h.length) set('reminder_times', [...new Set(h)].slice(0, 12));
+        }
+        if (typeof s.first_name === 'string') store.setFirstName(s.first_name.slice(0, 40));
+        bool('hide_countdown');
         bool('music_enabled'); entier('music_volume', null, 0, 100); bool('music_shuffle');
         texteNonVide('music_track');
         if (s.adresse === 'm' || s.adresse === 'f') set('adresse', s.adresse);
         if (['auto', 'clair', 'sombre'].includes(s.apparence_mode)) set('apparence_mode', s.apparence_mode);
-        if (['vert', 'blanc', 'sable', 'bleu', 'rose'].includes(s.apparence_fond)) set('apparence_fond', s.apparence_fond);
+        if (['vert', 'blanc', 'sable', 'bleu', 'rose', 'contraste'].includes(s.apparence_fond)) set('apparence_fond', s.apparence_fond);
         if (['vert', 'bleu', 'violet', 'bordeaux', 'ambre', 'turquoise'].includes(s.apparence_accent)) set('apparence_accent', s.apparence_accent);
       }
       if (Array.isArray(root.paused_dates)) {
