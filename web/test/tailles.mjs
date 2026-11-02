@@ -90,6 +90,23 @@ const ECRANS = [
   { nom: 'siddur-nusah', ecran: 'siddur', actions: clic('.puce-bandeau') },
   { nom: 'priere', ecran: 'siddur', actions: clic('.carte-sections .ligne') },
   { nom: 'tikkun', ecran: 'tikkun' },
+  // Le Tikoun comme sur Android (02/11) : le trait, un psaume, une partie, la liste en partie dite.
+  { nom: 'tikkun-trait', ecran: 'tikkun', actions: clic('.tikkun-trait') },
+  { nom: 'tikkun-psaume', ecran: 'tikkun', actions: clic('.ligne-tikkun:nth-child(9)') },
+  { nom: 'tikkun-psaume-dit', ecran: 'tikkun', actions: async (p) => { await clic('.ligne-tikkun:nth-child(2)')(p); await clic('.tikkun-marque')(p); await clic('.retour')(p); } },
+  { nom: 'tikkun-partie', ecran: 'tikkun', actions: clic('.ligne-tikkun:nth-child(13)') },
+  { nom: 'boussole', ecran: 'boussole', prefs: { lieu_zmanim: { nom: 'Paris', latitude: 48.8566, longitude: 2.3522, altitude: 35, fuseau: 'Europe/Paris', ville: 2988507 } } },
+  { nom: 'boussole-calibrer', ecran: 'boussole', prefs: { lieu_zmanim: { nom: 'Paris', latitude: 48.8566, longitude: 2.3522, altitude: 35, fuseau: 'Europe/Paris', ville: 2988507 } },
+    actions: async (p) => {
+      await p.waitForSelector('.boussole-scene svg');
+      if (await p.$('.boussole-activer')) {
+        await p.evaluate(() => { DeviceOrientationEvent.requestPermission = async () => 'granted'; });
+        await p.click('.boussole-activer');
+        await p.waitForSelector('.boussole-activer', { state: 'detached' });
+      }
+      await p.evaluate(() => { for (const t of ['deviceorientationabsolute', 'deviceorientation']) window.dispatchEvent(Object.assign(new Event(t), { webkitCompassHeading: 80, webkitCompassAccuracy: -1 })); });
+      await p.waitForSelector('.boussole-calibrer:not([hidden])');
+    } },
   { nom: 'bibliotheque', ecran: 'bibliotheque' },
   { nom: 'source', ecran: 'bibliotheque', actions: clic('.carte-sections .ligne') },
   { nom: 'zmanim', ecran: 'zmanim' },

@@ -445,6 +445,11 @@ export function creeStore(stockage, { maintenant = () => new Date(), fuseau } = 
       set('tikkun_day', today());
       set('tikkun_done', [...courant].sort((a, b) => a - b).join(','));
     },
+    /** Store.resetTikkun (« Repartir de zéro », 02/11) : la liste du jour vidée. */
+    resetTikkun() {
+      set('tikkun_day', today());
+      set('tikkun_done', '');
+    },
 
     // --- Musique ------------------------------------------------------------------
     musicEnabled: () => get('music_enabled', true),

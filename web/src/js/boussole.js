@@ -92,3 +92,23 @@ export function capDevant(alpha, beta, gamma, angleEcran = 0) {
 
 /** Le cap depuis le nord vrai, au lieu donné. */
 export const capVrai = (magnetique, lieu, date = new Date()) => norm(magnetique + declinaison(lieu.latitude, lieu.longitude, date));
+
+/**
+ * Faut-il dire de calibrer la boussole (BoussoleActivity.onAccuracyChanged, 02/11) ?
+ * Android montre « boussole_calibrer » quand la précision du capteur magnétique tombe à
+ * SENSOR_STATUS_ACCURACY_LOW ou plus bas (UNRELIABLE), et le cache sinon ; tant que rien
+ * n'est rapporté, l'avertissement reste caché (GONE).
+ *
+ * Dans un navigateur, seul l'iPhone dit la précision : webkitCompassAccuracy, l'écart
+ * possible en degrés, négatif quand le cap n'est pas fiable (CLHeading.headingAccuracy).
+ * Le négatif répond à UNRELIABLE ; au-delà de SEUIL_IMPRECIS, c'est LOW (HIGH et MEDIUM
+ * couvrant jusqu'à 15° et 30°, le découpage usuel des trois niveaux). Chrome et les
+ * autres ne donnent aucune précision : on rend null, « inconnu », et l'avertissement
+ * reste caché, comme sur Android tant que le capteur ne s'est pas prononcé.
+ */
+export const SEUIL_IMPRECIS = 30;
+export function aCalibrer(e) {
+  const a = e?.webkitCompassAccuracy;
+  if (typeof a !== 'number' || !Number.isFinite(a)) return null;
+  return a < 0 || a > SEUIL_IMPRECIS;
+}
