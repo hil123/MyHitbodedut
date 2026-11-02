@@ -268,6 +268,9 @@ export function creeStore(stockage, { maintenant = () => new Date(), fuseau } = 
     /** La boussole en rose des vents plutôt que le hassid (design C, par défaut ; 28/10). */
     boussoleRose: () => get('boussole_rose', false) === true,
     setBoussoleRose: (v) => set('boussole_rose', !!v),
+    // La direction suivie (03/11) : le grand cercle (par défaut) ou la carte de Mercator.
+    boussoleCarte: () => get('boussole_carte', false) === true,
+    setBoussoleCarte: (v) => set('boussole_carte', !!v),
     suiviDirect: () => get('vol_suivi_direct', false) === true,
     setSuiviDirect: (v) => set('vol_suivi_direct', !!v),
     volIndicatif: () => get('vol_indicatif', ''),

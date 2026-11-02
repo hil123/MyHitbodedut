@@ -120,6 +120,7 @@ object Store {
     private const val KEY_VOL_RAPPEL_VU = "vol_rappel_vu"
     private const val KEY_SUIVI_DIRECT = "vol_suivi_direct"
     private const val KEY_BOUSSOLE_ROSE = "boussole_rose"
+    private const val KEY_BOUSSOLE_CARTE = "boussole_carte"
     private const val KEY_ALLUMAGE = "allumage_minutes"
     private const val KEY_PAUSED_DATES = "paused_dates"
     private const val KEY_REMINDER_ON = "reminder_on"
@@ -556,6 +557,16 @@ object Store {
 
     fun setBoussoleRose(context: Context, rose: Boolean) {
         prefs(context).edit().putBoolean(KEY_BOUSSOLE_ROSE, rose).apply()
+    }
+
+    /**
+     * La direction que suit la boussole (03/11) : la direction réelle, par le grand cercle (par
+     * défaut, décision du 28/10), ou celle de la carte de Mercator (cap constant), au choix.
+     */
+    fun boussoleCarte(context: Context): Boolean = prefs(context).getBoolean(KEY_BOUSSOLE_CARTE, false)
+
+    fun setBoussoleCarte(context: Context, carte: Boolean) {
+        prefs(context).edit().putBoolean(KEY_BOUSSOLE_CARTE, carte).apply()
     }
 
     fun suiviDirect(context: Context): Boolean = prefs(context).getBoolean(KEY_SUIVI_DIRECT, false)

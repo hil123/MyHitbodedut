@@ -76,4 +76,13 @@ class VoyageNuitTest {
         // Sans lieu, minuit.
         assertEquals(d, ZmanimVignette.jourHebreuAffiche(ZonedDateTime.of(d.atTime(23, 0), paris), null))
     }
+
+    @Test fun boussoleSelonLaCarteAuChoix() {
+        // New York : environ 54° par le grand cercle, 95° sur la carte de Mercator.
+        val (gc, rh) = DirectionJerusalem.directions(40.7128, -74.0060)
+        val (suivie, autre) = DirectionJerusalem.directions(40.7128, -74.0060, selonCarte = true)
+        assertEquals(rh, suivie, 0.0)
+        assertEquals(gc, autre, 0.0)
+        assertTrue(gc in 50.0..58.0 && rh in 92.0..98.0)
+    }
 }

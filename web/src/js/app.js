@@ -2950,11 +2950,18 @@ let boussolePermise = false;
 const SOURCE_BOUSSOLE = 'https://www.chabad.org/library/article_cdo/aid/3502321/jewish/Why-Do-We-Face-East-When-Praying-Or-Do-We.htm';
 const COULEURS_BOUSSOLE = { ciel: '#DFF5E8', sol: '#CBEBD8', horizon: '#9CC9B0', encre: '#173C32', marque: '#16775A', or: '#B8780F', bleu: '#2E7DB3' };
 
+/** Celle que suit le hassid, puis l'autre : le grand cercle d'abord, ou la carte de Mercator si on l'a choisie (03/11). */
+function directionsBoussole(lieu) {
+  const gc = Boussole.grandCercle(lieu.latitude, lieu.longitude);
+  const rh = Boussole.carte(lieu.latitude, lieu.longitude);
+  return store.boussoleCarte() ? [rh, gc] : [gc, rh];
+}
+
 function carteBoussole() {
   const lieu = store.lieu();
   return h('div', { class: 'carte' }, h('button', { class: 'ligne', onclick: () => ouvrir('boussole') },
     h('span', { class: 'corps' }, h('div', { class: 'nom' }, tr.t('boussole_title')),
-      h('div', { class: 'etat' }, lieu ? tr.t('boussole_par_rapport_nord', Boussole.degres(Boussole.grandCercle(lieu.latitude, lieu.longitude))) : tr.t('boussole_carte_sous'))),
+      h('div', { class: 'etat' }, lieu ? tr.t('boussole_par_rapport_nord', Boussole.degres(directionsBoussole(lieu)[0])) : tr.t('boussole_carte_sous'))),
     h('span', { class: 'chevron', 'aria-hidden': 'true' })));
 }
 
@@ -3052,8 +3059,8 @@ function surOrientation(e) {
   capBoussole = Boussole.lisser(capBoussole, Boussole.capVrai(magnetique, lieu));
   const scene = app.querySelector('.boussole-scene');
   if (!scene) return;
-  const gc = Boussole.grandCercle(lieu.latitude, lieu.longitude);
-  scene.innerHTML = dessinBoussole(gc, Boussole.carte(lieu.latitude, lieu.longitude), capBoussole);
+  const [gc, autre] = directionsBoussole(lieu);
+  scene.innerHTML = dessinBoussole(gc, autre, capBoussole);
   // Face à Jérusalem : une petite vibration, là où le navigateur le permet (pas sur iPhone).
   if (avant != null && !Boussole.face(Boussole.ecart(gc, avant)) && Boussole.face(Boussole.ecart(gc, capBoussole))) navigator.vibrate?.(30);
   if (!boussoleRecu) { boussoleRecu = true; rendre(); }
@@ -3101,10 +3108,12 @@ function ecranBoussole() {
       h('button', { class: 'principal', onclick: () => localiserPosition({ etat }) }, tr.t('boussole_vide_position')),
       h('button', { class: 'lien-discret', onclick: choisirLieu }, tr.t('boussole_vide_ville')), etat));
   } else {
+    const selonCarte = store.boussoleCarte();
+    const [suivie, autre] = directionsBoussole(lieu);
     const gc = Boussole.grandCercle(lieu.latitude, lieu.longitude);
     const rh = Boussole.carte(lieu.latitude, lieu.longitude);
     const scene = h('div', { class: 'boussole-scene' });
-    scene.innerHTML = dessinBoussole(gc, rh, capBoussole);
+    scene.innerHTML = dessinBoussole(suivie, autre, capBoussole);
     contenu.push(scene);
     contenu.push(h('p', { class: 'boussole-calibrer', role: 'status', hidden: !boussoleACalibrer }, tr.t('boussole_calibrer')));
     if (autorisationBoussole() && !boussoleEcoute) {
@@ -3121,10 +3130,19 @@ function ecranBoussole() {
     const points = tr.tab('boussole_points');
     const km = new Intl.NumberFormat(tr.langue).format(Math.round(Boussole.distanceKm(lieu.latitude, lieu.longitude)));
     contenu.push(h('div', { class: 'carte carte-texte' },
-      h('p', { class: 'boussole-principale' }, tr.t('boussole_grand_cercle', Boussole.degres(gc), points[Boussole.point(gc)])),
-      h('p', {}, tr.t('boussole_cap_constant', Boussole.degres(rh), points[Boussole.point(rh)])),
+      // Celle que suit le hassid en premier, mise en avant ; l'autre dessous.
+      ...(() => {
+        const reelle = tr.t('boussole_grand_cercle', Boussole.degres(gc), points[Boussole.point(gc)]);
+        const surCarte = tr.t('boussole_cap_constant', Boussole.degres(rh), points[Boussole.point(rh)]);
+        const [premiere, seconde] = selonCarte ? [surCarte, reelle] : [reelle, surCarte];
+        return [h('p', { class: 'boussole-principale' }, premiere), h('p', {}, seconde)];
+      })(),
       h('p', { class: 'indice' }, tr.t('boussole_distance', km)),
-      h('p', { class: 'indice' }, tr.t('boussole_legende'))));
+      h('p', { class: 'indice' }, tr.t(selonCarte ? 'boussole_legende_carte' : 'boussole_legende'))));
+    contenu.push(h('div', { class: 'carte' }, h('button', { class: 'ligne', 'aria-haspopup': 'dialog', onclick: choisirMethodeBoussole },
+      h('span', { class: 'corps' }, h('div', { class: 'nom' }, tr.t('boussole_methode')),
+        h('div', { class: 'etat' }, tr.t(selonCarte ? 'boussole_methode_carte' : 'boussole_methode_reelle'))),
+      h('span', { class: 'chevron', 'aria-hidden': 'true' }))));
     contenu.push(h('div', { class: 'carte' }, h('button', { class: 'ligne', 'aria-haspopup': 'dialog', onclick: choisirAffichageBoussole },
       h('span', { class: 'corps' }, h('div', { class: 'nom' }, tr.t('boussole_affichage')),
         h('div', { class: 'etat' }, tr.t(store.boussoleRose() ? 'boussole_affichage_rose' : 'boussole_affichage_hassid'))),
@@ -3137,6 +3155,19 @@ function ecranBoussole() {
   }
   return h('div', { class: 'ecran avec-bandeau' }, bandeau(tr.t('boussole_title'), { puce: lieu ? puce : null, dessin: 'char_standing_back' }),
     h('div', { class: 'defile' }, h('div', { class: 'contenu' }, ...contenu, ...piedZmanim().slice(1))));
+}
+
+function choisirMethodeBoussole() {
+  feuille(tr.t('boussole_methode'), (f, fermer) => {
+    f.append(h('div', { role: 'radiogroup', 'aria-label': tr.t('boussole_methode') }, [false, true].map((carte) => {
+      const courant = store.boussoleCarte() === carte;
+      return h('button', {
+        type: 'button', class: 'choix choix-radio', role: 'radio', 'aria-checked': String(courant),
+        onclick: () => { fermer(); if (!courant) { store.setBoussoleCarte(carte); rendre(); } },
+      }, h('span', { class: 'radio', 'aria-hidden': 'true' }), tr.t(carte ? 'boussole_methode_carte' : 'boussole_methode_reelle'));
+    })));
+  });
+  document.querySelector('.feuille [aria-checked="true"]')?.focus();
 }
 
 function choisirAffichageBoussole() {

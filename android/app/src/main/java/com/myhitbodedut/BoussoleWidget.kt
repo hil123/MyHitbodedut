@@ -32,7 +32,7 @@ class BoussoleWidget : AppWidgetProvider() {
         fun image(context: Context): Bitmap {
             val b = Bitmap.createBitmap(COTE, COTE, Bitmap.Config.ARGB_8888)
             val lieu = Store.lieuZmanim(context)
-            val principale = lieu?.let { DirectionJerusalem.directions(it.latitude, it.longitude).first }
+            val principale = lieu?.let { DirectionJerusalem.directions(it.latitude, it.longitude, Store.boussoleCarte(context)).first }
             val hassid = runCatching { BitmapFactory.decodeResource(context.resources, Personnage.pour(context, R.drawable.char_standing_back)) }.getOrNull()
             BoussoleDessin.rose(Canvas(b), COTE, COTE, principale, principale?.let { "${DirectionJerusalem.degres(it)}°" } ?: "",
                 context.getString(R.string.boussole_nord), hassid)
@@ -43,7 +43,7 @@ class BoussoleWidget : AppWidgetProvider() {
             val v = RemoteViews(context.packageName, R.layout.widget_boussole)
             v.setImageViewBitmap(R.id.wb_image, image(context))
             val lieu = Store.lieuZmanim(context)
-            val principale = lieu?.let { DirectionJerusalem.directions(it.latitude, it.longitude).first }
+            val principale = lieu?.let { DirectionJerusalem.directions(it.latitude, it.longitude, Store.boussoleCarte(context)).first }
             v.setContentDescription(R.id.wb_image, if (principale == null) context.getString(R.string.zmanim_choisir_lieu)
                 else context.getString(R.string.boussole_widget_lecture, lieu.nom, DirectionJerusalem.degres(principale)))
             v.setOnClickPendingIntent(R.id.wb_image, PendingIntent.getActivity(context, 170,
