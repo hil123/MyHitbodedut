@@ -777,6 +777,37 @@ def main():
             regler({"window_start": ("int", 360), "window_end": ("int", 660)})
     etape("23 je suis avec Hachem", s23)
 
+    # 24 (03/11) : la banderole d'un texte court (Acher Yatsar) et d'un long (Cha'harit),
+    # en faisant defiler doucement : filmee, pour voir qu'elle ne clignote plus.
+    def s24():
+        for nom, ident in (("24a-acher-yatsar", "acher_yatsar"), ("24b-chaharit", "chaharit")):
+            activite("SiddurLectureActivity", f"--es id {ident}")
+            pause(2.0)
+            sh("rm -f /sdcard/film.mp4")
+            film = subprocess.Popen(["adb", "shell", "screenrecord", "--time-limit", "20", "--size", "540x1200", "/sdcard/film.mp4"])
+            pause(1.0)
+            x = W // 2
+            for i in range(6):  # doucement vers le bas, par petits pas
+                sh(f"input swipe {x} {int(H*0.60)} {x} {int(H*0.52)} 900")
+                pause(0.5)
+                if i == 2:
+                    capture(f"{nom}-bas", attente=0.3)
+            for i in range(8):  # puis doucement vers le haut, jusqu'en haut
+                sh(f"input swipe {x} {int(H*0.52)} {x} {int(H*0.60)} 900")
+                pause(0.5)
+            capture(f"{nom}-haut", attente=0.3)
+            try:
+                film.wait(timeout=30)
+            except subprocess.TimeoutExpired:
+                film.kill()
+            pause(1.5)
+            video = adb("exec-out", "cat", "/sdcard/film.mp4", binary=True)
+            with open(os.path.join(OUT, nom + ".mp4"), "wb") as f:
+                f.write(video)
+            log(f"  film {nom}.mp4 ({len(video)} octets)")
+            sh("input keyevent KEYCODE_BACK")
+    etape("24 banderole en defilant doucement", s24)
+
     log("\ncaptures :", sorted(os.listdir(OUT)))
 
 
