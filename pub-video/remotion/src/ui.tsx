@@ -3,6 +3,8 @@ import {AbsoluteFill, Img, interpolate, spring, staticFile, useCurrentFrame, use
 /** Effets « pro » v20 : --props='{"effets":true}' */
 /** Mots-clés mis en or dans les sous-titres (effets). */
 const MOTS_CLES = /(Hachem|Hitbodédoute|Hitbodedut|chaque jour|tes propres mots|calendrier juif|Commence aujourd’hui)/;
+/** Style « nuit » inspiré de l'exemple de Hillel (montre sur fond bleu nuit) : --props='{"style":"nuit"}' */
+export const NUIT = (getInputProps() as {style?: string}).style === 'nuit';
 export const FX = (getInputProps() as {effets?: boolean}).effets === true;
 import {C, EASE, FPS, Z} from './theme';
 

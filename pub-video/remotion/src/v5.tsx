@@ -1,7 +1,7 @@
 import React from 'react';
 import {AbsoluteFill, Audio, getInputProps, Img, Sequence, Easing, interpolate, spring, staticFile, useCurrentFrame, useVideoConfig} from 'remotion';
 import {C, Z, FPS} from './theme';
-import {SousTitres, Telephone, TexteEcran, fontFaces, FX, LARGEUR_TEL} from './ui';
+import {SousTitres, Telephone, TexteEcran, fontFaces, FX, NUIT, LARGEUR_TEL} from './ui';
 import {T, EcranOuverture, Titre, ETAPES, AFournir} from './v4';
 
 /*
@@ -141,12 +141,19 @@ const PlanPose: React.FC<{p: Pose; enchaine: number}> = ({p, enchaine}) => {
   const decal = 0;
   return (
     <div style={{position: 'absolute', left: 0, right: 0, top: Z.sujetHaut, height: H, overflow: 'hidden', opacity: apparition * (1 - sortie)}}>
-      <AbsoluteFill style={{background: `radial-gradient(circle at 50% 55%, ${p.teinte} 0, rgba(255,255,255,0) 62%)`}} />
+      <AbsoluteFill style={{background: NUIT ? 'radial-gradient(ellipse 48% 42% at 50% 55%, rgba(90,150,220,.30) 0, rgba(40,80,140,.10) 45%, rgba(0,0,0,0) 70%)'
+        : `radial-gradient(circle at 50% 55%, ${p.teinte} 0, rgba(255,255,255,0) 62%)`}} />
       <div style={{position: 'absolute', left: 540 - largeur / 2 + dx + marche + decal, bottom: p.type === 'perso' || p.bulle || p.bulles ? 14 : (H - hauteur) / 2, width: largeur, height: hauteur,
         transform: `translateY(${rebond}px) scale(${pousse})`, transformOrigin: '50% 100%'}}>
         {p.type === 'perso' && <div style={{position: 'absolute', left: '15%', right: '15%', bottom: -8, height: 20, borderRadius: '50%', background: 'rgba(0,0,0,.10)', filter: 'blur(6px)'}} />}
         <Img src={staticFile(`img/${p.src}.webp`)} style={{width: '100%', height: '100%', position: 'relative',
-          ...(p.type === 'carte' ? {borderRadius: 28, border: '10px solid #fff', boxShadow: '0 18px 50px rgba(7,40,40,.22)'} : {})}} />
+          // nuit : lumière latérale (une moitié dans l'ombre) + liseré bleu, comme la montre de l'exemple
+          ...(NUIT && p.type === 'perso' ? {filter: 'drop-shadow(0 0 1px rgba(150,200,255,.9)) drop-shadow(0 0 18px rgba(70,140,230,.45))'} : {}),
+          ...(p.type === 'carte' ? (NUIT ? {borderRadius: 24, border: '2px solid rgba(160,200,255,.35)', boxShadow: '0 0 60px rgba(60,130,220,.35), 0 30px 80px rgba(0,0,0,.6)'}
+            : {borderRadius: 28, border: '10px solid #fff', boxShadow: '0 18px 50px rgba(7,40,40,.22)'}) : {})}} />
+        {NUIT && <div style={{position: 'absolute', inset: 0, borderRadius: p.type === 'carte' ? 24 : 0, pointerEvents: 'none',
+          background: 'linear-gradient(100deg, rgba(3,8,15,.55) 0%, rgba(3,8,15,.15) 40%, rgba(0,0,0,0) 60%)',
+          ...(p.type === 'perso' ? {WebkitMaskImage: `url(${staticFile(`img/${p.src}.webp`)})`, WebkitMaskSize: '100% 100%'} : {})}} />}
       </div>
       {p.lumiere && <AbsoluteFill style={{background: 'radial-gradient(circle at 50% 30%, rgba(255,236,190,.9) 0, rgba(255,255,255,0) 55%)', opacity: L(f, 0, dur, 0.15, 1)}} />}
       {/* la bulle s'efface avant le fondu : deux textes ne se superposent jamais */}
@@ -316,7 +323,7 @@ const transitionSection = (f: number): Tr => {
 /** Grain argentique + vignette : texture commune à tout le film (couche du dessus). */
 const Texture: React.FC<{f: number}> = ({f}) => (
   <AbsoluteFill style={{pointerEvents: 'none'}}>
-    <svg width="100%" height="100%" style={{position: 'absolute', opacity: 0.07, mixBlendMode: 'multiply'}}>
+    <svg width="100%" height="100%" style={{position: 'absolute', opacity: NUIT ? 0.06 : 0.07, mixBlendMode: NUIT ? 'screen' : 'multiply'}}>
       <filter id="grain"><feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" seed={f % 37} /><feColorMatrix type="saturate" values="0" /></filter>
       <rect width="100%" height="100%" filter="url(#grain)" />
     </svg>
@@ -327,7 +334,7 @@ const Texture: React.FC<{f: number}> = ({f}) => (
 const FuiteLumiere: React.FC<{k: number; f: number}> = ({k, f}) => k <= 0 ? null : (<>
   <div style={{position: 'absolute', left: -200, right: -200, top: Z.sujetHaut + H * 0.45 - 3, height: 6, pointerEvents: 'none', opacity: k,
     background: `linear-gradient(90deg, transparent, rgba(255,190,110,.9) ${30 + (f - T.chabbat + 10) * 2.6}%, transparent)`, filter: 'blur(2px)', boxShadow: '0 0 30px 8px rgba(255,200,120,.6)'}} />
-  <AbsoluteFill style={{pointerEvents: 'none', mixBlendMode: 'multiply', opacity: k,
+  <AbsoluteFill style={{pointerEvents: 'none', mixBlendMode: NUIT ? 'screen' : 'multiply', opacity: NUIT ? 0.7 * k : k,
     background: `radial-gradient(ellipse 80% 55% at ${20 + (f - T.chabbat + 10) * 2.6}% 45%, rgba(255,196,110,1) 0, rgba(255,222,170,.7) 40%, rgba(255,255,255,0) 75%)`}} />
 </>);
 /** Révélation par la lumière (cf. exemple de Hillel) : le téléphone sort de l'ombre, un faisceau le balaie de gauche à droite. */
@@ -340,7 +347,7 @@ const TexteTracking: React.FC<{texte: string; debut: number; fin: number}> = ({t
   return (
     <div style={{position: 'absolute', left: 50, right: 50, top: Z.texteHaut, height: Z.texteBas - Z.texteHaut, display: 'flex', alignItems: 'center', justifyContent: 'center', textAlign: 'center',
       opacity: e * (1 - x), filter: `blur(${(1 - e) * 12 + x * 6}px)`}}>
-      <div style={{fontFamily: 'FrankRuhl, serif', fontSize: 50, lineHeight: 1.18, color: C.petrole, letterSpacing: `${0.5 + (1 - e) * 14}px`}}>{texte}</div>
+      <div style={{fontFamily: 'FrankRuhl, serif', fontSize: 50, lineHeight: 1.18, color: NUIT ? '#eef3f8' : C.petrole, textShadow: NUIT ? '0 0 24px rgba(120,180,255,.35)' : undefined, letterSpacing: `${0.5 + (1 - e) * 14}px`}}>{texte}</div>
     </div>
   );
 };
@@ -388,7 +395,7 @@ const Ondes: React.FC<{f: number}> = ({f}) => !FX ? null : (
 const Rayons: React.FC<{f: number; de: number; a: number}> = ({f, de, a}) => {
   if (!FX || f < de || f >= a + 10) return null;
   const o = Math.min(L(f, de, de + 14, 0, 1), L(f, a - 4, a + 10, 1, 0));
-  return <div style={{position: 'absolute', left: 0, right: 0, top: Z.sujetHaut, height: H, pointerEvents: 'none', mixBlendMode: 'soft-light', opacity: 0.9 * o,
+  return <div style={{position: 'absolute', left: 0, right: 0, top: Z.sujetHaut, height: H, pointerEvents: 'none', mixBlendMode: NUIT ? 'screen' : 'soft-light', opacity: (NUIT ? 0.35 : 0.9) * o,
     background: `repeating-conic-gradient(from ${200 + (f - de) * 0.25}deg at 70% 8%, rgba(255,236,190,.95) 0deg 4deg, rgba(255,236,190,0) 4deg 11deg)`,
     WebkitMaskImage: 'radial-gradient(ellipse 80% 70% at 70% 10%, #000 0, transparent 75%)'}} />;
 };
@@ -473,9 +480,12 @@ export const PubV5: React.FC = () => {
   const sec = spring({frame: f - FIN5 - 40, fps, config: {damping: 200}});
 
   return (
-    <AbsoluteFill style={{background: '#fff'}}>
+    <AbsoluteFill style={{background: NUIT ? '#040a12' : '#fff'}}>
       <style>{fontFaces}</style>
-      <AbsoluteFill style={{background: 'radial-gradient(ellipse at 50% 40%, #ffffff 40%, #eef3f2 100%)'}} />
+      <AbsoluteFill style={{background: NUIT
+        ? 'radial-gradient(ellipse 90% 60% at 50% 45%, #10263b 0%, #07121f 55%, #03070d 100%), linear-gradient(180deg, transparent 70%, rgba(40,90,160,.25) 100%)'
+        : 'radial-gradient(ellipse at 50% 40%, #ffffff 40%, #eef3f2 100%)'}} />
+      {NUIT && <AbsoluteFill style={{background: 'linear-gradient(180deg, rgba(0,0,0,0) 72%, rgba(30,80,150,.28) 100%)'}} />}
       {FX && <FondVivant f={f} />}
 
       <AbsoluteFill style={{transform: `translateX(${secousse(f)}px) scale(${punch(f)})`}}>
@@ -535,7 +545,7 @@ export const PubV5: React.FC = () => {
             const g = i % 2 === 0;
             return (
               <div key={i} style={{position: 'absolute', top: 70 + i * 145, [g ? 'left' : 'right']: 18, width: 262, opacity: s, transform: `translateX(${(1 - s) * (g ? -40 : 40)}px)`,
-                background: '#fff', border: `2px solid ${C.turquoise}`, borderRadius: 18, padding: '10px 14px', fontFamily: 'Inter', fontWeight: 600, fontSize: 23, color: C.noir,
+                background: NUIT ? 'rgba(20,40,60,.72)' : '#fff', border: `2px solid ${NUIT ? 'rgba(120,180,255,.45)' : C.turquoise}`, borderRadius: 18, padding: '10px 14px', fontFamily: 'Inter', fontWeight: 600, fontSize: 23, color: NUIT ? '#eef3f8' : C.noir,
                 boxShadow: '0 6px 16px rgba(7,91,91,.12)', display: 'flex', gap: 10, alignItems: 'center'}}>
                 <span style={{minWidth: 34, height: 34, borderRadius: 17, background: C.or, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700}}>{i + 1}</span>{e}
               </div>
@@ -547,13 +557,13 @@ export const PubV5: React.FC = () => {
       {FX && f >= T.chabbat - 10 && f < T.chabbat + 14 && <FuiteLumiere k={tr.voile} f={f} />}
 
       {/* textes écran */}
-      <Sequence from={0} durationInFrames={300}><TexteEcran texte="Le monde ne s’arrête jamais…" debut={14} fin={296} sombre /></Sequence>
-      <Sequence from={300} durationInFrames={130}><TexteEcran texte="Et toi, prends-tu ce moment ?" debut={6} fin={126} sombre /></Sequence>
+      <Sequence from={0} durationInFrames={300}><TexteEcran texte="Le monde ne s’arrête jamais…" debut={14} fin={296} sombre={!NUIT} /></Sequence>
+      <Sequence from={300} durationInFrames={130}><TexteEcran texte="Et toi, prends-tu ce moment ?" debut={6} fin={126} sombre={!NUIT} /></Sequence>
       {f >= 442 && f < 600 && (
         <div style={{position: 'absolute', top: Z.texteHaut, height: Z.texteBas - Z.texteHaut, left: 0, right: 0, display: 'flex', alignItems: 'center', justifyContent: 'center',
-          fontFamily: 'Inter', fontWeight: 700, fontSize: 66, letterSpacing: 6, color: C.petrole, opacity: spring({frame: f - 442, fps, config: {damping: 200}})}}>MY HITBODEDUT</div>
+          fontFamily: 'Inter', fontWeight: 700, fontSize: 66, letterSpacing: 6, color: NUIT ? '#e3c27a' : C.petrole, textShadow: NUIT ? '0 0 30px rgba(227,194,122,.35)' : undefined, opacity: spring({frame: f - 442, fps, config: {damping: 200}})}}>MY HITBODEDUT</div>
       )}
-      <Sequence from={962} durationInFrames={93}><TexteEcran texte="Parle-Lui avec ton cœur." debut={4} fin={89} sombre /></Sequence>
+      <Sequence from={962} durationInFrames={93}><TexteEcran texte="Parle-Lui avec ton cœur." debut={4} fin={89} sombre={!NUIT} /></Sequence>
       {SECTIONS.map((q) => FX
         ? (f >= q.de && f < q.a && <TitreFX key={q.n} n={q.n} texte={q.texte} f={f - q.de} dur={q.a - q.de} />)
         : (f >= q.de && f < q.a && <Titre key={q.n} n={q.n} texte={q.texte} f={f - q.de} />))}
@@ -565,27 +575,31 @@ export const PubV5: React.FC = () => {
       <Sequence from={2206} durationInFrames={170}>{FX ? <TexteTracking texte="Le monde ne s’arrête pas. Toi, si." debut={8} fin={166} /> : <TexteEcran texte="Le monde ne s’arrête pas. Toi, si." debut={8} fin={166} taille={50} sombre />}</Sequence>
 
       {f >= FIN5 - 6 && (
-        <AbsoluteFill style={{background: '#fff', opacity: L(f, FIN5 - 6, FIN5 + 6, 0, 1)}}>
+        <AbsoluteFill style={{background: NUIT ? 'radial-gradient(ellipse 80% 55% at 50% 38%, #10263b 0%, #050c16 70%), #040a12' : '#fff', opacity: L(f, FIN5 - 6, FIN5 + 6, 0, 1)}}>
           {FX && <PoussiereDoree f={f - FIN5} />}{/* derrière le texte de la carte */}
           <div style={{position: 'absolute', top: 380, left: 70, right: 70, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 36, transform: `scale(${L(f, FIN5, TOTAL5, 1, 1.08, (t) => t)})`}}>
             <div style={{position: 'relative', width: 280, height: 280, borderRadius: 62, overflow: 'hidden', opacity: carte, transform: `scale(${0.9 + 0.1 * carte})`, boxShadow: '0 16px 50px rgba(7,91,91,.25)'}}>
               <Img src={staticFile('planche/logo.png')} style={{width: 280, height: 280}} />
               {FX && <AbsoluteFill style={{background: `linear-gradient(115deg, transparent ${L(f, FIN5 + 22, FIN5 + 52, -60, 140) - 20}%, rgba(255,255,255,.55) ${L(f, FIN5 + 22, FIN5 + 52, -60, 140)}%, transparent ${L(f, FIN5 + 22, FIN5 + 52, -60, 140) + 20}%)`}} />}
             </div>
-            <div style={{overflow: 'hidden', padding: '0 10px'}}><div style={{fontFamily: 'Inter', fontWeight: 700, fontSize: 72, letterSpacing: 6, color: C.petrole, opacity: FX ? 1 : carte,
+            <div style={{overflow: 'hidden', padding: '0 10px'}}><div style={{fontFamily: 'Inter', fontWeight: 700, fontSize: 72, letterSpacing: 6, color: NUIT ? '#e3c27a' : C.petrole, opacity: FX ? 1 : carte,
               transform: FX ? `translateY(${(1 - carte) * 100}%)` : undefined, textShadow: FX ? `0 0 ${24 * sec}px rgba(212,175,95,.45)` : undefined}}>MY HITBODEDUT</div></div>
-            <div style={{fontFamily: 'Inter', fontWeight: 700, fontSize: 30, letterSpacing: 3, color: C.turquoise, textAlign: 'center', lineHeight: 1.5, opacity: carte}}>YOUR PERSONAL CONVERSATION<br />WITH HASHEM</div>
-            <div style={{fontFamily: 'Inter', fontWeight: 700, fontSize: 40, color: C.noir, background: `linear-gradient(180deg,#f3dd9c,${C.or})`, borderRadius: 50, padding: '16px 46px',
+            <div style={{fontFamily: 'Inter', fontWeight: 700, fontSize: 30, letterSpacing: 3, color: NUIT ? '#9fb8cf' : C.turquoise, textAlign: 'center', lineHeight: 1.5, opacity: carte}}>YOUR PERSONAL CONVERSATION<br />WITH HASHEM</div>
+            <div style={NUIT ? {fontFamily: 'Inter', fontWeight: 700, fontStyle: 'italic', fontSize: 54, color: '#dceeff', padding: '10px 20px', opacity: cta,
+              textShadow: `0 0 6px #9fd0ff, 0 0 ${18 + 6 * Math.sin(f / 7)}px #3d8bff, 0 0 42px #2a6fe0`, transform: `scale(${0.9 + 0.1 * cta})`}
+              : {fontFamily: 'Inter', fontWeight: 700, fontSize: 40, color: C.noir, background: `linear-gradient(180deg,#f3dd9c,${C.or})`, borderRadius: 50, padding: '16px 46px',
               opacity: cta, transform: `scale(${(0.9 + 0.1 * cta) * (FX ? 1 + 0.025 * Math.sin(Math.max(0, f - FIN5 - 50) / 9) : 1)})`, boxShadow: `0 8px 30px ${C.or}88`}}>Commence aujourd’hui.</div>
-            <div style={{fontFamily: 'FrankRuhl, serif', fontSize: 40, color: C.petrole, textAlign: 'center', lineHeight: 1.4, opacity: sec}}>MY HITBODEDUT<br />Parle à Hachem. Chaque jour.</div>
+            <div style={{fontFamily: 'FrankRuhl, serif', fontSize: 40, color: NUIT ? '#c9d6e3' : C.petrole, textAlign: 'center', lineHeight: 1.4, opacity: sec}}>MY HITBODEDUT<br />Parle à Hachem. Chaque jour.</div>
           </div>
           {/* crédit musical promis à Noam Shpayer (accord du 29/10, preuves/accord_noam_shpayer_whatsapp.png) ; hors du zoom de la carte */}
-          <div style={{position: 'absolute', top: 1640, left: 0, right: 0, textAlign: 'center', fontFamily: 'Inter', fontWeight: 500, fontSize: 28, color: C.petrole,
+          <div style={{position: 'absolute', top: 1640, left: 0, right: 0, textAlign: 'center', fontFamily: 'Inter', fontWeight: 500, fontSize: 28, color: NUIT ? '#9fb8cf' : C.petrole,
             opacity: 0.75 * sec, letterSpacing: 0.5}}>Musique : « Beyond » — Noam Shpayer · <span style={{fontFamily: 'FrankRuhl, serif'}}>נעם שפייר</span></div>
         </AbsoluteFill>
       )}
 
       {FX && <Texture f={f} />}
+      {/* nuit : בס״ד discret en haut, comme sur l'exemple */}
+      {NUIT && <div style={{position: 'absolute', top: 34, left: 0, right: 0, textAlign: 'center', fontFamily: 'FrankRuhl, serif', fontSize: 26, color: '#c9d6e3', opacity: 0.55}}>בס״ד</div>}
       {VOIX.map((v) => (
         <Sequence key={v.at} from={v.at} durationInFrames={Math.ceil(v.dur * FPS) + (v.trim !== undefined ? 8 : 14)}>
           <Sequence durationInFrames={v.coupe ?? Infinity}><Audio src={staticFile(`voix/${v.f}.wav`)} trimBefore={v.trim} /></Sequence>
