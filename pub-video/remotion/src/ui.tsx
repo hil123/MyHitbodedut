@@ -51,9 +51,9 @@ export const SousTitres: React.FC<{texte: string; debut: number; duree: number; 
       // fondu croisé glissé entre blocs : le bloc sortant monte et s'efface pendant que le suivant arrive
       return (<>{pl.map((p, i) => {
         const fin = p.z + (i === pl.length - 1 ? 12 : 0);
-        if (f < p.a - 1 || f > fin + 6) return null;
-        const e = spring({frame: f - p.a, fps: FPS, config: {damping: 200}, durationInFrames: 9});
-        const x = i === pl.length - 1 ? lerp(f, fin - 4, fin, 0, 1) : lerp(f, fin, fin + 6, 0, 1);
+        if (f < p.a || f > fin) return null;
+        const e = spring({frame: f - p.a - 1, fps: FPS, config: {damping: 200}, durationInFrames: 9});
+        const x = lerp(f, fin - 5, fin, 0, 1); // sort AVANT l'arrivée du bloc suivant : jamais deux sous-titres superposés
         return (
           <div key={i} style={{position: 'absolute', left: 80, right: 80, top: Z.stHaut, height: Z.stBas - Z.stHaut, display: 'flex', alignItems: 'flex-start', justifyContent: 'center',
             opacity: e * (1 - x), transform: `translateY(${(1 - e) * 18 - x * 14}px) scale(${0.97 + 0.03 * e})`, filter: `blur(${(1 - e) * 6 + x * 4}px)`}}>

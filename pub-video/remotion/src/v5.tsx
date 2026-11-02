@@ -27,9 +27,12 @@ const BLOCS: Record<string, {t: number; txt: string}[]> = {
   s03: [{t: 0.05, txt: 'La Hitbodedut, c’est s’arrêter…'}, {t: 2.57, txt: 'et prendre un moment rien que pour Hachem.'}],
   s04: [{t: 0.05, txt: 'Lui parler avec tes propres mots.'}, {t: 1.99, txt: 'Lui raconter tes difficultés,'}, {t: 3.65, txt: 'tes rêves,'}, {t: 4.46, txt: 'tes joies…'}, {t: 5.49, txt: 'et tes remerciements.'}],
   s10c: [{t: 0.09, txt: 'Avec le calendrier juif,'}, {t: 1.53, txt: 'retrouve chaque jour la date hébraïque,'}, {t: 3.57, txt: 'les zmanim et les ajouts de la prière.'}],
-  s11: [{t: 0.06, txt: 'Ne laisse pas passer une journée'}, {t: 1.4, txt: 'sans prendre un moment pour Hachem.'}, {t: 3.27, txt: 'Commence aujourd’hui.'}],
+  s11: [{t: 0.06, txt: 'Ne laisse pas passer une journée'}, {t: 1.4, txt: 'sans prendre un moment pour Hachem.'}, ],
 };
-const VOIX = [
+/** v22 : fin resserrée — carte à 81 s, film de 87 s qui se termine avec la musique. */
+export const FIN5 = 2430;
+export const TOTAL5 = 2610;
+const VOIX: {f: string; at: number; dur: number; txt: string; trim?: number}[] = [
   {f: 's01', at: 45, dur: 4.95, txt: 'Chaque jour, nous sommes occupés. Le travail, les responsabilités, les soucis…'},
   {f: 's02', at: 300, dur: 3.0, txt: 'Mais prenons-nous vraiment le temps de parler à Hachem ?'},
   // v12 : le bruit de la foule coupe net à 430, silence, puis la voix annonce le nom
@@ -42,12 +45,14 @@ const VOIX = [
   {f: 's08', at: 1520, dur: 4.7, txt: 'Bloque les distractions. Mets ton téléphone de côté. Ce moment est consacré à Hachem.'},
   {f: 's09', at: 1785, dur: 3.8, txt: 'Personnalise ton expérience selon tes préférences et ton rythme de vie.'},
   {f: 's10c', at: 1975, dur: 5.5, txt: 'Avec le calendrier juif, retrouve chaque jour la date hébraïque, les zmanim et les ajouts de la prière.'},
-  {f: 's11', at: 2262, dur: 4.0, txt: 'Ne laisse pas passer une journée sans prendre un moment pour Hachem. Commence aujourd’hui.'},
+  {f: 's11', at: 2262, dur: 2.95, txt: 'Ne laisse pas passer une journée sans prendre un moment pour Hachem.'},
+  // v22 : « Commence aujourd'hui » (même fichier, coupé à 3,15 s) est dit SUR le bouton de la carte finale, sans sous-titre (le bouton l'écrit déjà)
+  {f: 's11', at: 2450, dur: 0.95, txt: '', trim: 95},
 ];
 const volumeMusique = (f: number) => {
   let d = 0;
   for (const v of VOIX) d = Math.max(d, interpolate(f, [v.at - 8, v.at, v.at + v.dur * FPS, v.at + v.dur * FPS + 12], [0, 1, 1, 0], clamp));
-  return 0.9 - d * 0.66;
+  return (0.9 - d * 0.66) * interpolate(f, [TOTAL5 - 50, TOTAL5], [1, 0], clamp);
 };
 
 /*
@@ -81,7 +86,7 @@ const POSES: Pose[] = [
   // s11 « Ne laisse pas passer une journée | sans prendre un moment pour Hachem. | Commence aujourd'hui. »
   {de: 2200, a: 2309, src: 'char_walking', type: 'perso', mot: 'une journée', teinte: '#e8f1f0', dir: 1, marche: true, retour: true, bulles: ['En retard !', 'Encore 3 dossiers…', 'Tout repose sur moi', 'Et demain ?']},
   {de: 2309, a: 2360, src: 'scene_nature', type: 'carte', mot: 'un moment pour Hachem', teinte: '#f6efe2', dir: 1},
-  // 2360–2460 : « Commence aujourd’hui » → l’écran « Bravo, Tsadik ! » dans le téléphone
+  // 2360–FIN5 (2430) : l’écran « Bravo, Tsadik ! » dans le téléphone, puis la carte finale
 ];
 
 const RATIO: Record<string, number> = {char_standing_back: 204 / 640, char_walking: 328 / 640, char_writing: 637 / 640, char_thinking: 544 / 640, char_face: 465 / 640, char_debout: 800 / 1200,
@@ -178,7 +183,7 @@ const PLANS_TEL: PlanTel[] = [
   {de: 2150, a: 2167, src: 'v2/siddour', y: 30, z0: 1.15, z1: 1.2},                    // H montage rapide (musique seule)
   {de: 2167, a: 2184, src: 'v2/bibliotheque', y: 30, z0: 1.15, z1: 1.2},
   {de: 2184, a: T.retour, src: 'v2/boussole', y: 35, z0: 1.15, z1: 1.2},
-  {de: 2360, a: 2460, src: 'v2/bravo', y: 40, z0: 1.05, z1: 1.3},                      // I « Commence aujourd’hui » : Bravo, Tsadik !
+  {de: 2360, a: FIN5, src: 'v2/bravo', y: 40, z0: 1.05, z1: 1.3},                      // I « Commence aujourd’hui » : Bravo, Tsadik !
 ];
 const indexTel = (f: number) => PLANS_TEL.findIndex((p) => f >= p.de && f < p.a);
 const zPlan = (p: PlanTel, f: number) => interpolate(f, [p.de, p.a], [p.z0, p.z1], {...clamp, easing: Easing.inOut(Easing.sin)});
@@ -362,7 +367,7 @@ export const PubV5: React.FC = () => {
   const f = useCurrentFrame();
   const {fps} = useVideoConfig();
   // v17 : le téléphone entre et sort en fondu enchaîné avec les poses (chevauchement FONDU_PHASE), sans flash
-  const PHASES_TEL = [{de: 430, a: 600}, {de: T5.etapes, a: T.retour}, {de: 2360, a: 2460}];
+  const PHASES_TEL = [{de: 430, a: 600}, {de: T5.etapes, a: T.retour}, {de: 2360, a: FIN5}];
   const phase = PHASES_TEL.find((q) => f >= q.de && f < q.a + FONDU);
   const telA = phase?.de === 430;
   const telB = phase?.de === T5.etapes;
@@ -375,9 +380,10 @@ export const PubV5: React.FC = () => {
   const tr = transitionSection(f);
   const rv = revele(f);
   const avale = LOGOS.reduce((acc, _, i) => acc + Math.sin(Math.PI * L(f, ASPIRE + 15 + i * 9, ASPIRE + 25 + i * 9, 0, 1, (t) => t)) * 0.012, 0);
-  const carte = spring({frame: f - T.fin - 10, fps, config: {damping: 200}});
-  const cta = spring({frame: f - T.fin - 30, fps, config: {damping: 200}});
-  const sec = spring({frame: f - T.fin - 48, fps, config: {damping: 200}});
+  // v22 : la carte se construit pendant que le téléphone part (aucun écran vide), le bouton arrive sur « Commence aujourd'hui »
+  const carte = spring({frame: f - FIN5 - 4, fps, config: {damping: 200}});
+  const cta = spring({frame: f - FIN5 - 18, fps, config: {damping: 200}});
+  const sec = spring({frame: f - FIN5 - 40, fps, config: {damping: 200}});
 
   return (
     <AbsoluteFill style={{background: '#fff'}}>
@@ -461,18 +467,18 @@ export const PubV5: React.FC = () => {
       {/* v8 : écho de l'ouverture quand le plan revient */}
       <Sequence from={2206} durationInFrames={170}>{FX ? <TexteTracking texte="Le monde ne s’arrête pas. Toi, si." debut={8} fin={166} /> : <TexteEcran texte="Le monde ne s’arrête pas. Toi, si." debut={8} fin={166} taille={50} sombre />}</Sequence>
 
-      {f >= T.fin && (
-        <AbsoluteFill style={{background: '#fff', opacity: L(f, T.fin, T.fin + 14, 0, 1)}}>
-          <div style={{position: 'absolute', top: 380, left: 70, right: 70, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 36, transform: `scale(${L(f, T.fin, T.total, 1, 1.12, (t) => t)})`}}>
+      {f >= FIN5 - 6 && (
+        <AbsoluteFill style={{background: '#fff', opacity: L(f, FIN5 - 6, FIN5 + 6, 0, 1)}}>
+          <div style={{position: 'absolute', top: 380, left: 70, right: 70, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 36, transform: `scale(${L(f, FIN5, TOTAL5, 1, 1.08, (t) => t)})`}}>
             <div style={{position: 'relative', width: 280, height: 280, borderRadius: 62, overflow: 'hidden', opacity: carte, transform: `scale(${0.9 + 0.1 * carte})`, boxShadow: '0 16px 50px rgba(7,91,91,.25)'}}>
               <Img src={staticFile('planche/logo.png')} style={{width: 280, height: 280}} />
-              {FX && <AbsoluteFill style={{background: `linear-gradient(115deg, transparent ${L(f, T.fin + 30, T.fin + 60, -60, 140) - 20}%, rgba(255,255,255,.55) ${L(f, T.fin + 30, T.fin + 60, -60, 140)}%, transparent ${L(f, T.fin + 30, T.fin + 60, -60, 140) + 20}%)`}} />}
+              {FX && <AbsoluteFill style={{background: `linear-gradient(115deg, transparent ${L(f, FIN5 + 22, FIN5 + 52, -60, 140) - 20}%, rgba(255,255,255,.55) ${L(f, FIN5 + 22, FIN5 + 52, -60, 140)}%, transparent ${L(f, FIN5 + 22, FIN5 + 52, -60, 140) + 20}%)`}} />}
             </div>
             <div style={{overflow: 'hidden', padding: '0 10px'}}><div style={{fontFamily: 'Inter', fontWeight: 700, fontSize: 72, letterSpacing: 6, color: C.petrole, opacity: FX ? 1 : carte,
               transform: FX ? `translateY(${(1 - carte) * 100}%)` : undefined, textShadow: FX ? `0 0 ${24 * sec}px rgba(212,175,95,.45)` : undefined}}>MY HITBODEDUT</div></div>
             <div style={{fontFamily: 'Inter', fontWeight: 700, fontSize: 30, letterSpacing: 3, color: C.turquoise, textAlign: 'center', lineHeight: 1.5, opacity: carte}}>YOUR PERSONAL CONVERSATION<br />WITH HASHEM</div>
             <div style={{fontFamily: 'Inter', fontWeight: 700, fontSize: 40, color: C.noir, background: `linear-gradient(180deg,#f3dd9c,${C.or})`, borderRadius: 50, padding: '16px 46px',
-              opacity: cta, transform: `scale(${(0.9 + 0.1 * cta) * (FX ? 1 + 0.025 * Math.sin(Math.max(0, f - T.fin - 60) / 9) : 1)})`, boxShadow: `0 8px 30px ${C.or}88`}}>Commence aujourd’hui.</div>
+              opacity: cta, transform: `scale(${(0.9 + 0.1 * cta) * (FX ? 1 + 0.025 * Math.sin(Math.max(0, f - FIN5 - 50) / 9) : 1)})`, boxShadow: `0 8px 30px ${C.or}88`}}>Commence aujourd’hui.</div>
             <div style={{fontFamily: 'FrankRuhl, serif', fontSize: 40, color: C.petrole, textAlign: 'center', lineHeight: 1.4, opacity: sec}}>MY HITBODEDUT<br />Parle à Hachem. Chaque jour.</div>
           </div>
           {/* crédit musical promis à Noam Shpayer (accord du 29/10, preuves/accord_noam_shpayer_whatsapp.png) ; hors du zoom de la carte */}
@@ -483,9 +489,9 @@ export const PubV5: React.FC = () => {
 
       {FX && <Texture f={f} />}
       {VOIX.map((v) => (
-        <Sequence key={v.f} from={v.at} durationInFrames={Math.ceil(v.dur * FPS) + 14}>
-          <Audio src={staticFile(`voix/${v.f}.wav`)} />
-          <SousTitres texte={v.txt} debut={0} duree={v.dur} blocs={BLOCS[v.f]} />
+        <Sequence key={v.at} from={v.at} durationInFrames={Math.ceil(v.dur * FPS) + (v.trim !== undefined ? 8 : 14)}>
+          <Audio src={staticFile(`voix/${v.f}.wav`)} trimBefore={v.trim} />
+          {v.txt && <SousTitres texte={v.txt} debut={0} duree={v.dur} blocs={BLOCS[v.f]} />}
         </Sequence>
       ))}
       <Sequence durationInFrames={456}><Audio src={staticFile('musique/ambiance_foule.wav')} volume={volumeAmbiance} /></Sequence>
