@@ -360,8 +360,12 @@ l'interface. Contenu, relu dans le code et tenu par `ConfidentialiteTest` :
   au toucher du bouton ; à adsbdb, le numéro de vol saisi, au toucher de la
   loupe ; l'adresse IP, vue par ces services comme par tout serveur.
 
-**Reste à faire** : l'adresse de contact du développeur — repère
-`TODO_CONTACT` dans la page, à remplacer avant la saisie dans la Play Console.
+**Contact (02/11)** : éditeur « MyHitbodedut Team », adresse
+**myhitbodedut@gmail.com**, dans la page (trois langues). La même adresse
+est à saisir comme e-mail de contact de la fiche (Play Console → Grow →
+Store presence → Store settings), où elle est publique ; le nom de
+développeur affiché sur Play doit être « MyHitbodedut Team », celui que la
+page nomme.
 
 ### 6.2 Sécurité des données
 
@@ -554,7 +558,7 @@ local) :
 | 1 | Décisions § 3 : vol en direct, écrits des ayants droit, 7 licences inconnues | propriétaire | — |
 | 2 | Compte développeur, paiement, vérifications | 1–3 jours | — |
 | 3 | `targetSdk 36`, flux `play.yml`, musique de la version Play — **fait le 29/10** ; clé d'envoi et secrets — propriétaire | 1 jour | 1 |
-| 4 | Règles de confidentialité en ligne — **rédigées le 31/10** ; en ligne après fusion sur `main` ; contact à fournir (`TODO_CONTACT`) | 1 jour | 1 |
+| 4 | Règles de confidentialité en ligne — **rédigées le 31/10** ; en ligne après fusion sur `main` ; contact : myhitbodedut@gmail.com (02/11) | 1 jour | 1 |
 | 5 | Contenu de l'application (§ 6), fiche (§ 7), vidéos | 2–3 jours | 3, 4 |
 | 6 | Piste de test interne, recette § 8 | 3–5 jours | 3 |
 | 7 | **Test fermé : 12 testeurs, 14 jours sans interruption** | **14 jours minimum** | 5, 6 |
