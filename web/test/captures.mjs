@@ -132,7 +132,9 @@ async function capture(nom, { langue, mode = 'clair', fond = 'vert', accent = 'v
       const style = getComputedStyle(e);
       const texte = [...e.childNodes].some((n) => n.nodeType === 3 && n.textContent.trim());
       if (r.right > l + 1 || r.left < -1) fautes.push(`sort de l'écran : <${e.tagName.toLowerCase()} class="${e.className}"> ${Math.round(r.left)}–${Math.round(r.right)}`);
-      else if (texte && style.overflowX !== 'auto' && style.overflowX !== 'scroll' && e.scrollWidth > e.clientWidth + 1 && style.textOverflow !== 'ellipsis')
+      // Un texte SVG n'a pas de boîte CSS : WebKit lui donne clientWidth = 0, il serait toujours
+      // « rogné » ; sa place, c'est le viewBox qui la donne (boussole, 03/11).
+      else if (texte && !(e instanceof SVGElement) && style.overflowX !== 'auto' && style.overflowX !== 'scroll' && e.scrollWidth > e.clientWidth + 1 && style.textOverflow !== 'ellipsis')
         fautes.push(`texte rogné : <${e.tagName.toLowerCase()} class="${e.className}"> « ${e.textContent.trim().slice(0, 30)} »`);
     }
     return [...new Set(fautes)].slice(0, 8);
