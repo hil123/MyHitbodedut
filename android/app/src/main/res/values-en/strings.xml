@@ -716,6 +716,9 @@
     <string name="ajout_motsae_chabbat_yt">Motzaei Shabbat and Yom Tov</string>
     <string name="ajout_cheva_berakhot">Sheva Berakhot (wedding meal)</string>
     <string name="ajout_zimun">Zimun (three or more who ate together)</string>
+    <string name="ajout_facultatif">Custom, not required</string>
+    <string name="ajout_facultatif_avant">Psalms before Birkat HaMazon (custom, not required)</string>
+    <string name="ajout_facultatif_apres">HaRachaman and closing (custom, not required)</string>
     <string name="ajout_embolismique">Leap year (וּלְכַפָּרַת פֶּשַׁע)</string>
     <string name="ajout_beit_avel">House of mourning</string>
     <string name="siddur_seul">Praying alone</string>

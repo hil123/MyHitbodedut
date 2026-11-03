@@ -362,7 +362,7 @@ class SiddurLectureActivity : AppCompatActivity() {
     private fun nom(libelle: String): String = Libelles.res(libelle)?.let { getString(it) } ?: libelle
 
     /** Les ajouts qui ne sont jamais « du jour » : on dit « toucher pour lire », pas « pas aujourd'hui ». */
-    private val jamaisDuJour = setOf(CalendrierJuif.C.MINYAN, CalendrierJuif.C.BEIT_AVEL, CalendrierJuif.C.OUBLI, CalendrierJuif.C.CHEVA_BERAKHOT, CalendrierJuif.C.ZIMUN)
+    private val jamaisDuJour = setOf(CalendrierJuif.C.MINYAN, CalendrierJuif.C.BEIT_AVEL, CalendrierJuif.C.OUBLI, CalendrierJuif.C.CHEVA_BERAKHOT, CalendrierJuif.C.ZIMUN, CalendrierJuif.C.FACULTATIF)
 
     /** Le chevron d'un repli, tourné d'un quart de tour quand l'ajout est ouvert ; [haut] : vers le haut. */
     private fun chevron(couleur: Int, ouvert: Boolean, haut: Boolean = false): android.graphics.drawable.RotateDrawable {

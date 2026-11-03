@@ -236,6 +236,9 @@ const ouvrirTexte = (titre, y) => async (p) => {
 await capture('priere-aeree-he', { langue: 'he', ecran: 'siddur', actions: ouvrirTexte('תפלת שחרית', 1400) });
 await capture('birkat-cheva-he', { langue: 'he', ecran: 'siddur', actions: ouvrirTexte('ברכת המזון', -1) });
 await capture('birkat-zimun-fr', { langue: 'fr', ecran: 'siddur', actions: ouvrirTexte('ברכת המזון', 560) });
+// Le 03/11 : ce qui n'est pas obligatoire, replié (psaumes d'avant, הרחמן et fin).
+await capture('birkat-facultatif-he', { langue: 'he', ecran: 'siddur', actions: ouvrirTexte('ברכת המזון', 0) });
+await capture('birkat-facultatif-fin-he', { langue: 'he', ecran: 'siddur', actions: ouvrirTexte('ברכת המזון', -1) });
 // Le 29/10 : Méèn chaloch, les ajouts de fêtes repliés (le 29/09 est 'Hol hamoed Soukkot :
 // Soukkot du jour, le reste replié) ; le meteg masqué dans la police par défaut (עָלֶֽיהָ).
 for (const nusah of ['edot', 'sefard', 'ashkenaz']) {

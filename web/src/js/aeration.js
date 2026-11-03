@@ -8,6 +8,10 @@
 //   en cours a au moins MORCEAU lettres et qu'il en reste au moins RESTE après.
 // - Le premier mot est mis en gras s'il ne l'est pas déjà (le renderer l'agrandit) ; un
 //   paragraphe qui commence par une balise <small> ou une parenthèse n'est pas touché.
+// - Un psaume ou un passage biblique n'est jamais coupé (03/11, « pourquoi tu divises les
+//   mizmorim en deux ») : la coupe tombait au milieu de למנצח בנגינות. On le reconnaît à ses
+//   té'amim (au moins un signe de cantillation, U+0591 à U+05AF, pour deux mots) ou à
+//   l'ouverture d'un psaume (מזמור, למנצח, לדוד, שיר, תהלה לדוד, הללויה, הללו).
 
 export const LONG = 500;
 export const MORCEAU = 250;
@@ -21,9 +25,19 @@ export function premierMot(html) {
   return m ? `<b>${m[1]}</b>${html.slice(m[1].length)}` : html;
 }
 
+const TEAMIM = /[\u0591-\u05AF]/g;
+const OUVERTURE = /^(מזמור|למנצח|לדוד|שיר|תהלה לדוד|הללויה|הללו)[ :]/;
+
+export function psaume(html) {
+  const texte = html.replace(/<[^>]+>/g, '');
+  const mots = texte.split(/\s+/).filter(Boolean).length || 1;
+  if ((texte.match(TEAMIM) || []).length / mots >= 0.5) return true;
+  return OUVERTURE.test(texte.replace(/[\u0591-\u05C7]/g, '').replace(/־/g, ' ').trim());
+}
+
 export function couper(html) {
   const total = visible(html);
-  if (total <= LONG) return html;
+  if (total <= LONG || psaume(html)) return html;
   let sortie = '';
   let balise = false;
   let petit = 0;

@@ -600,6 +600,8 @@ def annoter(texte_id, sections, nusah):
             bi += 1
         if office or texte_id in ("arvit", "moussaf_rosh_hodech"):
             minyan(txt, cons, pris, prend)
+    if texte_id == "birkat_hamazon":
+        facultatif(sections, sortie, note)
     # La passe « minyan » ajoute ses blocs après les autres : grouper veut l'ordre du texte.
     sortie.sort(key=lambda e: (e["s"], e.get("b", -1)))
     grouper(sortie)
@@ -795,6 +797,50 @@ CONSIGNES_COURTES = [
     # Le Hallel : les passages sautés les jours de Hallel partiel.
     (r"(בימים שאין גומרים את ההלל (מדלגים|אין אומרים)|בראש חודש מדלגים זה|בר״ח ובחוה״מ פסח .*מדלגין זה):?", "hallel_complet"),
 ]
+
+
+def facultatif(sections, sortie, note):
+    """
+    Birkat haMazon (03/11, « replie tout ce qui n'est pas obligatoire ») : n'est
+    déplié que ce qui fait le devoir. Les quatre bénédictions, de « הזן » à « אל
+    יחסרנו » (Berakhot 48b ; Choul'han Aroukh OC 187-189), avec leurs ajouts du jour,
+    que les règles plus haut replient déjà selon le jour, ainsi que le zimoun et les
+    consignes, dont celle des mayim a'haronim (OC 181).
+    Le reste est d'usage, replié, dépliable, sous « facultatif », qui n'est jamais du
+    jour :
+      - avant : les psaumes d'avant le Birkat (למנצח, אברכה, על נהרות בבל, שיר המעלות)
+        et « הנני מוכן » ;
+      - après : de la première ligne « הרחמן » jusqu'aux Chéva bérakhot ou aux règles
+        d'oubli, exclues. Cela comprend les הרחמן des fêtes, la bénédiction de l'hôte,
+        « מגדיל », « עושה שלום » et « יראו ».
+    Les annotations du jour qui portaient sur ces blocs (Chabbat, semaine, fêtes) en
+    deviennent les variantes. Le groupe est imposé (« force ») : les fêtes ne le coupent pas.
+    """
+    for si, sec in enumerate(sections):
+        blocs = sec["blocs"]
+        n = len(blocs)
+        txt = [nu(b.get("t") or b.get("c")).replace("''", "״") for b in blocs]
+        cons = ["c" in b for b in blocs]
+        deja = {e["b"]: e for e in sortie if e["sorte"] == "bloc" and e["s"] == si}
+        # Avant : jusqu'au zimoun, ou à la première bénédiction quand le zimoun manque.
+        debut = next((j for j in range(n) if deja.get(j, {}).get("si") == "zimun"
+                      or (not cons[j] and commence(txt[j], "ברוך אתה"))), n)
+        avant = [j for j in range(debut) if not (cons[j] and "מים אחרונים" in txt[j])]
+        # Après : la première « הרחמן » qui suit la première bénédiction.
+        premier = next((j for j in range(debut, n) if not cons[j] and commence(txt[j], "ברוך אתה")), n)
+        harahaman = next((j for j in range(premier, n) if not cons[j] and commence(txt[j], "הרחמן")), n)
+        fin = next((j for j in range(harahaman, n) if deja.get(j, {}).get("si") in ("cheva_berakhot", "oubli")), n)
+        apres = list(range(harahaman, fin))
+        # La consigne juste avant la première « הרחמן » (« בשבת », « אורח אומר ») va avec elle.
+        while apres and apres[0] - 1 > premier and cons[apres[0] - 1] and apres[0] - 1 not in avant:
+            apres.insert(0, apres[0] - 1)
+        for liste, libelle in ((avant, "ajout_facultatif_avant"), (apres, "ajout_facultatif_apres")):
+            for j in liste:
+                ancien = deja.get(j)
+                if ancien is not None:
+                    sortie.remove(ancien)
+                cond = ancien["si"] if ancien is not None else "facultatif"
+                note("bloc", si, j, cond, {"force": "facultatif", "libelle": libelle})
 
 
 def grouper(annotations):

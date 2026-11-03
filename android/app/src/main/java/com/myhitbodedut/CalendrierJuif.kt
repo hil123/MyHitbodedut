@@ -111,6 +111,9 @@ object CalendrierJuif {
         /** Le zimoun de Birkat haMazon, à trois convives ou plus (29/10) : jamais du jour, replié. */
         const val ZIMUN = "zimun"
 
+        /** Ce qui n'est pas obligatoire dans Birkat haMazon (03/11) : psaumes d'avant, הרחמן et fin. Jamais du jour, replié. */
+        const val FACULTATIF = "facultatif"
+
         /** Roch 'Hodech d'une année embolismique ; avant Nissan (« וּלְכַפָּרַת פָּשַׁע », 28/10). */
         const val EMBOLISMIQUE = "embolismique"
         const val EMBOLISMIQUE_AVANT_NISSAN = "embolismique_avant_nissan"
@@ -120,7 +123,7 @@ object CalendrierJuif {
         val DERIVEES = listOf(AVINOU_MALKENOU, KRIAT_HATORAH) + JOURS_SEMAINE +
             listOf(TSOM_GUEDALIA_TEVET, LENDEMAIN_KIPPOUR, ESTHER_POURIM, CHIVA_ASSAR_TAMOUZ, BASCULE_PLUIE, EREV_KIPPOUR_VENDREDI,
                 LAMNATSEAH, LEDAVID, TECHOUVA_HOCHAANA, YOM_TOV, MOED, CHABBAT_ROCH_HODECH, YOM_TOV_CHABBAT, ROCH_HACHANA_CHABBAT,
-                MOTSAE_CHABBAT_YT, BEIT_AVEL, OUBLI, MINYAN, CHEVA_BERAKHOT, ZIMUN, EMBOLISMIQUE, EMBOLISMIQUE_AVANT_NISSAN)
+                MOTSAE_CHABBAT_YT, BEIT_AVEL, OUBLI, MINYAN, CHEVA_BERAKHOT, ZIMUN, FACULTATIF, EMBOLISMIQUE, EMBOLISMIQUE_AVANT_NISSAN)
     }
 
     /**

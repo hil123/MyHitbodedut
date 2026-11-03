@@ -12,6 +12,10 @@ package com.myhitbodedut
  *   cours a au moins [MORCEAU] lettres et qu'il en reste au moins [RESTE] après.
  * - Le premier mot est mis en gras s'il ne l'est pas déjà (l'écran l'agrandit) ; un
  *   paragraphe qui commence par <small> ou une parenthèse n'est pas touché.
+ * - Un psaume ou un passage biblique n'est jamais coupé (03/11, « pourquoi tu divises les
+ *   mizmorim en deux ») : la coupe tombait au milieu de למנצח בנגינות. On le reconnaît à ses
+ *   té'amim (au moins un signe de cantillation, U+0591 à U+05AF, pour deux mots) ou à
+ *   l'ouverture d'un psaume (מזמור, למנצח, לדוד, שיר, תהלה לדוד, הללויה, הללו).
  */
 object Aeration {
     const val LONG = 500
@@ -19,6 +23,16 @@ object Aeration {
     const val RESTE = 150
 
     private val BALISE = Regex("<[^>]+>")
+    private val TEAMIM = Regex("[\\u0591-\\u05AF]")
+    private val SIGNES = Regex("[\\u0591-\\u05C7]")
+    private val OUVERTURE = Regex("^(מזמור|למנצח|לדוד|שיר|תהלה לדוד|הללויה|הללו)[ :]")
+
+    fun psaume(html: String): Boolean {
+        val texte = html.replace(BALISE, "")
+        val mots = texte.split(Regex("\\s+")).count { it.isNotEmpty() }.coerceAtLeast(1)
+        if (TEAMIM.findAll(texte).count().toDouble() / mots >= 0.5) return true
+        return OUVERTURE.containsMatchIn(texte.replace(SIGNES, "").replace('־', ' ').trim())
+    }
     private val MOT = Regex("^([\\u0590-\\u05FF\\uFB1D-\\uFB4F\"'״׳-]+)(?=[\\s,:;.]|$)")
 
     fun premierMot(html: String): String {
@@ -30,7 +44,7 @@ object Aeration {
 
     fun couper(html: String): String {
         val total = html.replace(BALISE, "").length
-        if (total <= LONG) return html
+        if (total <= LONG || psaume(html)) return html
         val sortie = StringBuilder(html.length + 64)
         var balise = false
         var petit = 0
