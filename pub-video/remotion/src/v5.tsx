@@ -526,9 +526,9 @@ const Tempete: React.FC<{f: number}> = ({f}) => {
         const x = L(f, m.a - 5, m.a, 0, 1, Easing.in(Easing.cubic));
         return (
           <div key={m.t} style={{position: 'absolute', top: Z.texteHaut, height: Z.texteBas - Z.texteHaut, left: 30, right: 30, display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
-            <div style={{fontFamily: 'Inter', fontWeight: 800, fontSize: m.t.length > 10 ? 72 : 104, letterSpacing: 2, color: m.t.startsWith('SOUCIS') ? '#e3c27a' : '#f2f6fa',
+            <div style={{fontFamily: 'Inter', fontWeight: 800, fontSize: m.t.length > 10 ? 72 : 104, letterSpacing: 2, color: m.t.startsWith('SOUCIS') ? (NUIT ? '#e3c27a' : '#b07d1f') : (NUIT ? '#f2f6fa' : C.petrole), // jour : texte foncé (sinon blanc sur blanc)
               opacity: Math.min(1, e * 1.5) * (1 - x), transform: `scale(${1.35 - 0.35 * e + 0.06 * x}) translateY(${-x * 20}px)`, filter: `blur(${(1 - Math.min(1, e)) * 8 + x * 8}px)`,
-              textShadow: '0 0 30px rgba(120,170,255,.35)'}}>{m.t}</div>
+              textShadow: NUIT ? '0 0 30px rgba(120,170,255,.35)' : '0 2px 14px rgba(7,91,91,.12)'}}>{m.t}</div>
           </div>
         );
       })}

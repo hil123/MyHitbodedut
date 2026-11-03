@@ -117,3 +117,8 @@ Extraits choisis pour leur régularité (pas de pic ni de cri), filtre 120 Hz–
 ## v27e
 - mail.wav et whatsapp.wav refaits en sons purement tonaux (sinus, aucun bruit blanc) : plus de « souffle ». Anciennes versions : remotion/public/sons/avant_v27e/.
 - Bruit de foule coupé pendant la tempête de notifications (revient après l’arrêt net).
+
+## v27 — trois versions
+- jour : --props {"effets":true} ; nuit : {"effets":true,"style":"nuit"}.
+- mix : mix_nuit_jour.sh 13.2 0.9 — nuit jusqu’à l’ouverture de l’appli, puis le jour s’étend en cercle depuis le téléphone (audio de la version nuit, identique).
+- jour : mots de l’ouverture en pétrole/or foncé (ils étaient blancs sur blanc).
