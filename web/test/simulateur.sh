@@ -39,6 +39,7 @@ capture() {
 capture "$URL" accueil 20
 capture "$URL#musique" musique
 capture "$URL#reglages" reglages
+capture "$URL#boussole" boussole
 
 # Le même téléphone passé en hébreu : l'application doit suivre, de droite à gauche.
 xcrun simctl terminate "$UDID" com.apple.mobilesafari || true
