@@ -821,6 +821,26 @@ def main():
             sh("input keyevent KEYCODE_BACK")
     etape("24 banderole en defilant doucement", s24)
 
+    def s25():
+        # Signalé le 03/11 (captures du téléphone) : de nuit, en hébreu, pour צדקת, les boutons
+        # Material de l'accueil en rose et « Commencer » gris ; l'avatar de l'anneau détouré de blanc.
+        for nom, fond, accent in (("25a-nuit-bleu-turquoise", "bleu", "turquoise"), ("25b-nuit-vert", "vert", "vert")):
+            regler({"apparence_mode": ("string", "sombre"), "apparence_fond": ("string", fond),
+                    "apparence_accent": ("string", accent), "adresse": ("string", "f")})
+            langue("he")
+            lancer(attente=5)
+            capture(nom + "-haut")
+            for i in range(2):
+                defiler(True)
+            capture(nom + "-milieu")
+            for i in range(3):
+                defiler(True)
+            capture(nom + "-bas")
+        regler({"apparence_mode": ("string", "auto"), "apparence_fond": ("string", "vert"),
+                "apparence_accent": ("string", "vert"), "adresse": ("string", "m")})
+        langue("fr")
+    etape("25 nuit, hébreu, צדקת", s25)
+
     log("\ncaptures :", sorted(os.listdir(OUT)))
 
 

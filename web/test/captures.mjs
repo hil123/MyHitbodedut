@@ -132,7 +132,13 @@ async function capture(nom, { langue, mode = 'clair', fond = 'vert', accent = 'v
       const style = getComputedStyle(e);
       const texte = [...e.childNodes].some((n) => n.nodeType === 3 && n.textContent.trim());
       if (r.right > l + 1 || r.left < -1) fautes.push(`sort de l'écran : <${e.tagName.toLowerCase()} class="${e.className}"> ${Math.round(r.left)}–${Math.round(r.right)}`);
-      else if (texte && style.overflowX !== 'auto' && style.overflowX !== 'scroll' && e.scrollWidth > e.clientWidth + 1 && style.textOverflow !== 'ellipsis')
+      // Un texte SVG n'a pas de boîte CSS (WebKit lui donne clientWidth = 0) : il doit tenir dans
+      // son dessin, faute de quoi le cadre le coupe (boussole, 03/11).
+      else if (e instanceof SVGTextElement) {
+        const cadre = e.ownerSVGElement?.getBoundingClientRect();
+        if (cadre && (r.left < cadre.left - 1 || r.right > cadre.right + 1 || r.top < cadre.top - 1 || r.bottom > cadre.bottom + 1))
+          fautes.push(`texte SVG hors du dessin : « ${e.textContent.trim().slice(0, 30)} » ${Math.round(r.left)}–${Math.round(r.right)} dans ${Math.round(cadre.left)}–${Math.round(cadre.right)}`);
+      } else if (texte && !(e instanceof SVGElement) && style.overflowX !== 'auto' && style.overflowX !== 'scroll' && e.scrollWidth > e.clientWidth + 1 && style.textOverflow !== 'ellipsis')
         fautes.push(`texte rogné : <${e.tagName.toLowerCase()} class="${e.className}"> « ${e.textContent.trim().slice(0, 30)} »`);
     }
     return [...new Set(fautes)].slice(0, 8);
@@ -245,7 +251,14 @@ const cap = (nord) => async (p) => {
     await p.click('.boussole-activer');
     await p.waitForSelector('.boussole-activer', { state: 'detached' });
   }
-  await p.evaluate((n) => { for (let i = 0; i < 40; i++) window.dispatchEvent(Object.assign(new Event('deviceorientationabsolute'), { alpha: (360 - n) % 360, absolute: true })); }, nord);
+  // Chromium : deviceorientationabsolute ; WebKit (iPhone) : deviceorientation et webkitCompassHeading.
+  // Sans le second, WebKit restait en mode sans boussole, et la rose n'y était jamais vue (03/11).
+  await p.evaluate((n) => {
+    for (let i = 0; i < 40; i++) {
+      window.dispatchEvent(Object.assign(new Event('deviceorientationabsolute'), { alpha: (360 - n) % 360, absolute: true }));
+      window.dispatchEvent(Object.assign(new Event('deviceorientation'), { webkitCompassHeading: n, webkitCompassAccuracy: 10 }));
+    }
+  }, nord);
   await p.waitForTimeout(700);
 };
 const PARIS = { lieu_zmanim: { nom: 'Paris', latitude: 48.8566, longitude: 2.3522, altitude: 35, fuseau: 'Europe/Paris', ville: 2988507 }, in_israel: false };

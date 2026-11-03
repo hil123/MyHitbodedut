@@ -51,7 +51,10 @@ button { font: inherit; color: inherit; }
 /* --- Écran et défilement ------------------------------------------------- */
 .ecran { flex: 1; display: flex; flex-direction: column; min-height: 0; }
 .defile {
-  flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch;
+  /* overflow-x : en hébreu, sous Safari, la zone débordait de quelques pixels en largeur
+     (barre horizontale sur Mac, page qui glisse de côté sur iPhone) — vu le 03/11. Seule la
+     page défile en hauteur ; les rangées qui défilent de côté le font chacune chez elle. */
+  flex: 1; overflow-y: auto; overflow-x: hidden; -webkit-overflow-scrolling: touch;
   padding-top: env(safe-area-inset-top);
 }
 .contenu {
@@ -1411,7 +1414,9 @@ body.avec-mini .seance .contenu { padding-bottom: calc(104px + env(safe-area-ins
   border: 1px solid color-mix(in srgb, var(--mint) 40%, transparent); font-size: 15px;
 }
 .simplement { display: flex; justify-content: center; flex-wrap: wrap; }
-.simplement .texte-clair { flex: 1 1 0; min-width: 0; }
+/* Leur largeur naturelle (03/11) : à parts égales, « Une question » ne tenait pas à 320 px ;
+   trop étroit pour les quatre, ils passent sur deux lignes. */
+.simplement .texte-clair { flex: 1 1 auto; width: auto; padding-inline: 10px; }
 
 /* Design du 19/10 : boutons du bas côte à côte, « Mon parcours » en tuiles et en barres */
 .boutons-bas { display: flex; gap: 8px; }

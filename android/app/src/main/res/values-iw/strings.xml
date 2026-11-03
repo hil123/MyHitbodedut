@@ -668,7 +668,7 @@
     <string name="zman_chatsot_layla">חצות הלילה</string>
     <string name="zman_allumage">הדלקת נרות</string>
     <string name="zman_sortie">צאת שבת או חג</string>
-    <string name="zman_methode_degres">השמש %1$s° מתחת לאופק</string>
+    <string name="zman_methode_degres">השמש ⁦%1$s°⁩ מתחת לאופק</string>
     <string name="zman_methode_niveau_mer">בגובה פני הים</string>
     <string name="zman_methode_mga_72">היום מ־%1$s דקות לפני הנץ עד %1$s דקות אחרי השקיעה</string>
     <string name="zman_methode_gra">שעות זמניות מהנץ עד השקיעה</string>
@@ -676,7 +676,7 @@
     <string name="zman_methode_minutes">%1$s דקות אחרי השקיעה</string>
     <string name="zman_methode_milieu_chatsot">אמצע בין חצות היום לחצות של מחר</string>
     <string name="zman_methode_avant_chkia">%1$s דקות לפני השקיעה</string>
-    <string name="zman_methode_apres_tset">לא לפני צאת היום הקודם (8.5°)</string>
+    <string name="zman_methode_apres_tset">לא לפני צאת היום הקודם (⁦8.5°⁩)</string>
     <string name="ajout_yaale_veyavo">יעלה ויבוא</string>
     <string name="ajout_al_hanissim">על הניסים</string>
     <string name="ajout_machiv_harouah">משיב הרוח</string>
@@ -1239,19 +1239,19 @@
     <string name="vol_ecart">⁦%1$s⁩ דק׳ אם ההמראה מתעכבת ב־30 דק׳</string>
     <string name="vol_fiabilite_titre">אמינות</string>
     <string name="vol_fiabilite">הערכה לפי המסלול המתוכנן (מעגל גדול, מהירות קבועה בין השעות שהוזנו), ולא לפי מיקומו האמיתי של המטוס. זמני הנקודה שמתחת למטוס, בגובה פני הים, מחושבים במכשיר, ללא רשת.</string>
-    <string name="vol_reserve_haute_latitude">המסלול עובר מעבר לקו הרוחב 60°: השיטות במעלות ובדקות נותנות שם שעות שונות מאוד, וחלק מהזמנים חסרים.</string>
+    <string name="vol_reserve_haute_latitude">המסלול עובר מעבר לקו הרוחב ⁦60°⁩: השיטות במעלות ובדקות נותנות שם שעות שונות מאוד, וחלק מהזמנים חסרים.</string>
     <string name="vol_reserve_absent">חלק מהזמנים אינם חלים בחלק מהמסלול (שמש חצות או לילה קוטבי).</string>
     <string name="vol_reserve_erreur">החישוב נכשל בנקודה במסלול.</string>
     <string name="vol_reserve_a_rebours">המטוס טס מערבה מהר יותר מהשמש: זמן מסוים חל יותר מפעם אחת.</string>
-    <string name="vol_ligne_date">קו התאריך (קו האורך 180°) נחצה בסביבות %1$s: התאריך המקומי עובר מ־%2$s ל־%3$s.</string>
+    <string name="vol_ligne_date">קו התאריך (קו האורך ⁦180°⁩) נחצה בסביבות %1$s: התאריך המקומי עובר מ־%2$s ל־%3$s.</string>
     <string name="vol_fermer">סגירה</string>
     <string name="vol_jalons_titre">שבת, חגים וספירת העומר במהלך הטיסה</string>
     <string name="vol_chabbat">שבת</string>
     <string name="vol_jalon_entree">כניסת %1$s: שקיעה %2$s</string>
     <string name="vol_jalon_allumage">הדלקת נרות, %1$s דק׳ לפני השקיעה: %2$s</string>
-    <string name="vol_jalon_sortie">צאת %1$s: צאת הכוכבים (8.5°) %2$s</string>
-    <string name="vol_jalon_enchainement">%1$s מתחיל בצאת הכוכבים (8.5°): %2$s</string>
-    <string name="vol_jalon_omer">ספירת העומר, יום %1$s, מצאת הכוכבים (8.5°): %2$s</string>
+    <string name="vol_jalon_sortie">צאת %1$s: צאת הכוכבים (⁦8.5°⁩) %2$s</string>
+    <string name="vol_jalon_enchainement">%1$s מתחיל בצאת הכוכבים (⁦8.5°⁩): %2$s</string>
+    <string name="vol_jalon_omer">ספירת העומר, יום %1$s, מצאת הכוכבים (⁦8.5°⁩): %2$s</string>
     <string name="vol_jalons_note">היום האזרחי של הנקודה שמתחת למטוס; %1$s, לפי הגדרת האפליקציה.</string>
     <string name="vol_jalons_israel">לוח ארץ ישראל</string>
     <string name="vol_jalons_diaspora">לוח חוץ לארץ</string>
@@ -1297,19 +1297,19 @@
     <string name="vol_rappel_fin_texte">סוף הזמן: %1$s.</string>
     <string name="vol_rappel_omer_titre">ספירת העומר</string>
     <string name="vol_rappel_omer_texte">צאת הכוכבים מתחת למטוס: הלילה סופרים יום %1$s לעומר.</string>
-    <string name="vol_direct_explication_opensky">כבוי כברירת מחדל. כשהוא פעיל, הוא מבקש מ־OpenSky Network, בחינם וללא חשבון, את המטוסים שנראים בריבוע של 10° סביב המיקום המשוער; אות הקריאה נשאר בטלפון, שמחפש בו את הטיסה. מעל אוקיינוסים המטוס לעיתים קרובות אינו נראה.</string>
+    <string name="vol_direct_explication_opensky">כבוי כברירת מחדל. כשהוא פעיל, הוא מבקש מ־OpenSky Network, בחינם וללא חשבון, את המטוסים שנראים בריבוע של ⁦10°⁩ סביב המיקום המשוער; אות הקריאה נשאר בטלפון, שמחפש בו את הטיסה. מעל אוקיינוסים המטוס לעיתים קרובות אינו נראה.</string>
     <string name="vol_source_aeroports">שדות תעופה: OurAirports (נחלת הכלל); אזורי זמן: timezone-boundary-builder ‏(ODbL, © תורמי OpenStreetMap); שמות בעברית ובצרפתית: Wikidata (CC0)</string>
 
     <!-- La boussole de Jérusalem (28/10, design C). -->
     <string name="boussole_title">לכיוון ירושלים</string>
     <string name="boussole_carte_sous">בחרו מקום: החסיד מסתובב לעבר ירושלים.</string>
     <string name="boussole_face">מול ירושלים</string>
-    <string name="boussole_droite">הסתובבו ימינה %1$d°</string>
-    <string name="boussole_gauche">הסתובבו שמאלה %1$d°</string>
-    <string name="boussole_par_rapport_nord">%1$d° מהצפון</string>
+    <string name="boussole_droite">הסתובבו ימינה ⁦%1$d°⁩</string>
+    <string name="boussole_gauche">הסתובבו שמאלה ⁦%1$d°⁩</string>
+    <string name="boussole_par_rapport_nord">⁦%1$d°⁩ מהצפון</string>
     <string name="boussole_nord">צ</string>
-    <string name="boussole_grand_cercle">הכיוון האמיתי (מעגל גדול): %1$d° %2$s</string>
-    <string name="boussole_cap_constant">הכיוון על המפה (כיוון קבוע): %1$d° %2$s</string>
+    <string name="boussole_grand_cercle">הכיוון האמיתי (מעגל גדול): ⁦%1$d°⁩ %2$s</string>
+    <string name="boussole_cap_constant">הכיוון על המפה (כיוון קבוע): ⁦%1$d°⁩ %2$s</string>
     <string name="boussole_distance">מרחק: %1$s ק״מ</string>
     <string name="boussole_legende">התווית „ירושלים” (בשושנה, המחוג הזהוב) עוקבת אחרי הכיוון האמיתי; הסימון הכחול המקווקו מראה את הכיוון על המפה, לידיעה בלבד.</string>
     <string name="boussole_a_plat">החזיקו את הטלפון שטוח או זקוף מולכם, הרחק מחפצי מתכת ומגנטים.</string>
@@ -1319,7 +1319,7 @@
     <string name="boussole_note">את כיוון ירושלים אפשר לחשב בשתי דרכים. לפי המעגל הגדול, הכיוון האמיתי על פני כדור הארץ: שולחן ערוך הרב (אורח חיים צד, ב), המור וקציעה לרבי יעקב עמדן (קנ) ועוד סוברים שזו הדרך העדיפה; מניו יורק, כ־⁦54°⁩. לפי הקו הישר על מפת מרקטור (כיוון קבוע), כפי שנראה למשל מדברי הלבוש (אורח חיים צד): מניו יורק, כ־⁦96°⁩. מפת ⁦Equal Earth⁩, שהאו״ם ממליץ עליה מאז ספטמבר 2026, נועדה להשוות את שטחי היבשות; היא אינה מראה כיוון. החסיד עוקב אחרי הכיוון שבחרתם ב„הכיוון שהמצפן עוקב אחריו” (כברירת מחדל, הכיוון האמיתי); הכיוון השני מוצג לידיעה בלבד. החישוב נעשה במכשיר, לעבר הר הבית (⁦31.7781°⁩ צפון, ⁦35.2354°⁩ מזרח), בתיקון הסטייה המגנטית של המקום.</string>
     <string name="boussole_widget_label">כיוון ירושלים</string>
     <string name="boussole_widget_description">החסיד וכיוון ירושלים ממקום הזמנים, ביחס לצפון. נגיעה פותחת את המצפן.</string>
-    <string name="boussole_widget_lecture">ירושלים מ%1$s: %2$d° מהצפון</string>
+    <string name="boussole_widget_lecture">ירושלים מ%1$s: ⁦%2$d°⁩ מהצפון</string>
     <string name="boussole_source">מקור: %1$s</string>
     <!-- Le web seulement : l’iPhone demande l’autorisation après un toucher. -->
     <string name="boussole_activer">הפעלת המצפן</string>

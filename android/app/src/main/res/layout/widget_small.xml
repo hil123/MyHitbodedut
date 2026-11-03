@@ -42,7 +42,7 @@
             android:src="@drawable/widget_apercu_anneaux" />
 
         <!-- La pastille : la flamme et le compte, sur un voile sombre. -->
-        <FrameLayout
+        <RelativeLayout
             android:id="@+id/widget_badge"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -51,14 +51,19 @@
 
             <ImageView
                 android:id="@+id/widget_badge_fond"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/widget_badge_contenu"
+                android:layout_alignEnd="@+id/widget_badge_contenu"
+                android:layout_alignStart="@+id/widget_badge_contenu"
+                android:layout_alignTop="@+id/widget_badge_contenu"
                 android:contentDescription="@null"
                 android:importantForAccessibility="no"
                 android:scaleType="fitXY"
                 android:src="@drawable/bg_widget_voile" />
 
             <LinearLayout
+                android:id="@+id/widget_badge_contenu"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
@@ -100,6 +105,6 @@
                     android:textStyle="bold"
                     android:visibility="gone" />
             </LinearLayout>
-        </FrameLayout>
+        </RelativeLayout>
     </FrameLayout>
 </FrameLayout>

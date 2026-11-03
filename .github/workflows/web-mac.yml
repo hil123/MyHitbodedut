@@ -7,6 +7,11 @@ name: Web (Safari sur Mac et iPhone simulé)
 
 on:
   workflow_dispatch:
+    inputs:
+      site:
+        description: "Adresse du site à tester (vide : le site construit depuis cette branche)"
+        required: false
+        default: ''
   push:
     branches: [claude/version-web]
     paths:
@@ -38,17 +43,19 @@ jobs:
           sudo safaridriver --enable
           safaridriver -p 4444 &
           sleep 3
-          node web/test/safari.mjs web/captures
+          SITE='${{ inputs.site }}' node web/test/safari.mjs web/captures
 
       # Des captures à regarder, pas un contrôle : un simulateur lent à
       # démarrer ne doit pas faire échouer le flux.
       - name: Safari on a simulated iPhone
         if: always()
         continue-on-error: true
+        env:
+          SITE: ${{ inputs.site }}
         run: |
           node web/tools/serveur.mjs 8080 &
           sleep 2
-          bash web/test/simulateur.sh "http://127.0.0.1:8080/" web/captures
+          bash web/test/simulateur.sh "${SITE:-http://127.0.0.1:8080/}" web/captures
 
       # Le quota d'artefacts du compte est plein (voir android.yml) : les
       # captures partent sur une branche à part, remplacée à chaque fois.

@@ -82,7 +82,7 @@
                             android:textColor="@color/mint"
                             android:textSize="12sp" />
 
-                        <FrameLayout
+                        <RelativeLayout
                             android:id="@+id/widget_badge"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -90,14 +90,19 @@
 
                             <ImageView
                                 android:id="@+id/widget_badge_fond"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignBottom="@+id/widget_badge_contenu"
+                                android:layout_alignEnd="@+id/widget_badge_contenu"
+                                android:layout_alignStart="@+id/widget_badge_contenu"
+                                android:layout_alignTop="@+id/widget_badge_contenu"
                                 android:contentDescription="@null"
                                 android:importantForAccessibility="no"
                                 android:scaleType="fitXY"
                                 android:src="@drawable/bg_widget_voile" />
 
                             <LinearLayout
+                                android:id="@+id/widget_badge_contenu"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:gravity="center_vertical"
@@ -126,7 +131,7 @@
                                     android:textSize="12sp"
                                     android:textStyle="bold" />
                             </LinearLayout>
-                        </FrameLayout>
+                        </RelativeLayout>
                     </LinearLayout>
 
                     <!-- Les minutes du jour sur l'objectif, en grands chiffres. -->
@@ -163,16 +168,22 @@
                         android:textColor="@color/mint"
                         android:textSize="12sp" />
 
-                    <!-- Le bouton : une pastille claire, teinte par le code à la palette choisie. -->
-                    <FrameLayout
+                    <!-- Le bouton : une pastille claire, teinte par le code à la palette choisie. Calée sur les
+                         bords du texte (03/11) : en match_parent dans un FrameLayout, la vignette la
+                         mesurait à 1 px, et « Commencer » restait vert sur le fond vert. -->
+                    <RelativeLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp">
 
                         <ImageView
                             android:id="@+id/widget_start_fond"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignBottom="@+id/widget_start"
+                            android:layout_alignEnd="@+id/widget_start"
+                            android:layout_alignStart="@+id/widget_start"
+                            android:layout_alignTop="@+id/widget_start"
                             android:contentDescription="@null"
                             android:importantForAccessibility="no"
                             android:scaleType="fitXY"
@@ -193,7 +204,7 @@
                             android:textColor="@color/on_plate"
                             android:textSize="13sp"
                             android:textStyle="bold" />
-                    </FrameLayout>
+                    </RelativeLayout>
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>

@@ -19,8 +19,9 @@ const SORTIE = process.argv[2] || join(ICI, '..', 'captures');
 mkdirSync(SORTIE, { recursive: true });
 const WD = process.env.WEBDRIVER || 'http://127.0.0.1:4444';
 
-const serveur = await demarreServeur();
-const base = `http://127.0.0.1:${serveur.address().port}/`;
+// SITE=https://… (03/11) : le site en ligne plutôt que la copie construite ici.
+const serveur = process.env.SITE ? null : await demarreServeur();
+const base = process.env.SITE ? process.env.SITE.replace(/\/?$/, '/') : `http://127.0.0.1:${serveur.address().port}/`;
 const erreurs = [];
 const rapport = [];
 
@@ -54,6 +55,9 @@ try {
     ['accueil-he', { langue_app: 'he', first_name: 'אברהם' }, ''],
     ['accueil-en-sombre', { langue_app: 'en', apparence_mode: 'sombre' }, ''],
     ['musique-he', { langue_app: 'he' }, '#musique'],
+    // La boussole depuis New York, réglée sur la carte de Mercator (03/11) : direction et note.
+    ['boussole-fr-carte', { langue_app: 'fr', boussole_carte: true, lieu_zmanim: { nom: 'New York', latitude: 40.7128, longitude: -74.006, altitude: 10, fuseau: 'America/New_York', ville: 5128581 } }, '#boussole'],
+    ['boussole-he', { langue_app: 'he', lieu_zmanim: { nom: 'New York', latitude: 40.7128, longitude: -74.006, altitude: 10, fuseau: 'America/New_York', ville: 5128581 } }, '#boussole'],
   ];
   for (const [nom, prefs, ecran] of cas) {
     await wd('POST', `${S}/url`, { url: `${base}version.txt` });
@@ -129,7 +133,7 @@ try {
   if (!(son.duree > 0)) erreurs.push(`musique : le morceau ne se charge pas ${JSON.stringify(son)}`);
 } finally {
   await wd('DELETE', S).catch(() => {});
-  serveur.close();
+  serveur?.close();
 }
 
 console.log(rapport.join('\n'));

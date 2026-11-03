@@ -15,3 +15,9 @@
 # l'APK pour pouvoir la retraduire.
 -keepattributes SourceFile,LineNumberTable
 -renamesourcefileattribute SourceFile
+
+# Nommé seulement par le thème (viewInflaterClass, values/themes.xml) : R8 ne voit aucune
+# référence et le supprimait de la version publiée (03/11). AppCompat retombait alors sur
+# son inflater de base, sans le dire : boutons qui ne sont plus des MaterialButton (texte
+# rose, « Commencer » gris, sans contour), et plus de personnage au féminin pour צדקת.
+-keep class com.myhitbodedut.PersonnageViewInflater { public <init>(); }
