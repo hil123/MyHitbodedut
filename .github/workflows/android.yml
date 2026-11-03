@@ -18,6 +18,10 @@ on:
         description: "Avec captures : seulement ces etapes, par leur numero (ex. « 17,22 ») ; vide : toutes"
         type: string
         default: ""
+      minifie:
+        description: "Avec captures : l'edition minifiee comme la version publiee (R8), au lieu de debug"
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -173,13 +177,14 @@ jobs:
         working-directory: android
         env:
           VERSION_CODE: ${{ github.run_number }}
-        run: ./gradlew --no-daemon :app:assembleFullDebug
+        run: ./gradlew --no-daemon ${{ inputs.minifie && ':app:assembleFullVerifR8' || ':app:assembleFullDebug' }}
 
       - name: Capture the screens
         uses: reactivecircus/android-emulator-runner@v2
         env:
           CAPTURES_TAILLES_SEULES: ${{ inputs.tailles_seules && '1' || '0' }}
           CAPTURES_ETAPES: ${{ inputs.etapes }}
+          CAPTURES_VARIANTE: ${{ inputs.minifie && 'verifR8' || 'debug' }}
         with:
           api-level: 34
           target: google_apis

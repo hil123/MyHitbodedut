@@ -8,7 +8,7 @@ cd "$(dirname "$0")/../.."
 mkdir -p out
 export CAPTURES_OUT="$PWD/out"
 
-APK=$(ls android/app/build/outputs/apk/full/debug/*.apk 2>/dev/null | head -1)
+APK=$(ls android/app/build/outputs/apk/full/${CAPTURES_VARIANTE:-debug}/*.apk 2>/dev/null | head -1)
 echo "APK : ${APK:-introuvable}"
 adb wait-for-device
 adb shell getprop ro.build.version.sdk
