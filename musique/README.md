@@ -1,5 +1,12 @@
 # Morceaux non embarqués dans l'APK
 
+> **03/11 — à la demande du propriétaire, la musique se limite au Yanuka, à
+> Noam Shpayer et à Yanir Kilinsky (Ianir).** Retirés de l'application, du
+> site et de ce dossier : les trente `niggoun_NN` sans titre, *המלך בשדה*,
+> les sept morceaux d'Ishay Ribo et les trois sans-titre d'ici. Tout reste
+> dans l'historique git. Les paragraphes datés qui suivent racontent les
+> états précédents.
+
 Ces fichiers sont **versionnés dans le dépôt mais absents de l'application**.
 Ils ne sont pas dans `android/app/src/main/res/raw/`, donc ils n'entrent pas
 dans l'APK et n'en augmentent pas le poids.
@@ -59,13 +66,6 @@ prochain échange, quand les autres auront un nom.
 
 | fichier | poids |
 |---|---|
-| `ribo_ata_zocher` | 5,6 Mo |
-| `ribo_halev_sheli` | 5,6 Mo |
-| `ribo_nafshi` | 6,1 Mo |
-| `ribo_ochila` | 5,3 Mo |
-| `ribo_sans_titre` | 4,6 Mo |
-| `ribo_seder_haavoda` | 8,1 Mo |
-| `ribo_zusha` | 4,4 Mo |
 | `yanuka_a_part_of_me` | 4,0 Mo |
 | `yanuka_anticipation` | 1,4 Mo |
 | `yanuka_harping_his_praise` | 7,1 Mo |
@@ -75,15 +75,14 @@ prochain échange, quand les autres auront un nom.
 | `yanuka_the_king_will_return` | 2,7 Mo |
 | `yanuka_the_truth_will_rise` | 2,4 Mo |
 | `yanuka_yearning` | 5,6 Mo |
-| `niggoun_08`, `niggoun_09`, `niggoun_16` *(3 sans titre)* | 27,4 Mo |
 
-**19 morceaux, 102,7 Mo.** L'APK est à 8,0 Mo d'audio sur 3 morceaux.
+**9 morceaux, 35,5 Mo.** L'APK est à 27,2 Mo d'audio sur 10 morceaux.
 
 > Cet inventaire est régénéré depuis les fichiers, pas tenu à la main.
 
 ## Titres
 
-Ceux qui portent un nom l'ont gardé. Les trois `niggoun_NN` n'en ont aucun :
+Ceux qui portent un nom l'ont gardé. Les 0 `niggoun_NN` n'en ont aucun :
 leurs noms de fichiers étaient entièrement en hébreu et le transfert les a
 remplacés par des underscores, et les tags ID3 sont vides. D'où la
 numérotation — on ne devine pas un titre. Les vrais noms sont les bienvenus.

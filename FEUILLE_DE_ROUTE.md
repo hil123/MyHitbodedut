@@ -244,6 +244,7 @@ qu'elles ne portent pas sur les mêmes ayants droit :
 | les envois suivants, sous la même déclaration | Shneor Lerer (Chabad Melodies), *Tzama with orchestra* | rangés dans `musique/`, hors APK |
 | retrait du 01/11, à la demande du propriétaire | Shneor Lerer, Shmuel, *Tzama*, *Ani Maamin*, *Anim Zemirot*, Yosef Karduner, pianos Breslev | seize fichiers supprimés de `musique/` (jamais dans l'APK ni le site) |
 | accord écrit de Noam Shpayer (WhatsApp : « tu peux les télécharger sur le net et les utiliser »), crédit « נעם שפייר » promis | Noam Shpayer (dont deux titres avec אור) | huit morceaux ajoutés le 03/11, versions Play, GitHub et web |
+| décision du propriétaire, 03/11 : « enlever les autres à part Yanuka, Shpayer et Ianir » | tout le reste | retirés de l'APK, du site et de `musique/` : 30 `niggoun_NN`, המלך בשדה, 7 Ribo, 3 sans-titre. Restent 10 morceaux livrés (Yanuka 1, Shpayer 9) et 9 du Yanuka dans `musique/` |
 
 La seconde a été demandée avant d'ajouter quoi que ce soit : ces cinq-là sont
 des enregistrements commerciaux d'artistes sous label, hors du périmètre de la

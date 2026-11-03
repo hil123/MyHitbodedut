@@ -199,9 +199,9 @@ droits ; l'autorisation d'Ishay Ribo et de MBD n'a pas été demandée. D'où, *
 | Morceau livré | Version Play | Version GitHub |
 | --- | --- | --- |
 | `yanuka_nigoun_3` — ניגון — הינוקא (3) | **Livré** (accord du Yanuka, à conserver par écrit) | Livré |
-| `niggoun_01` … `niggoun_33` (30 fichiers) | **Retirés** tant que la provenance n'est pas établie | Livrés |
-| `hamelech_basade` — המלך בשדה | **Livré** — déclaré libre de droits par le propriétaire (29/10) ; voir la réserve ci-dessous | Livré |
-| `ribo_sans_titre` — Ishay Ribo | **Retiré** — autorisation non demandée (29/10), comme pour MBD | Livré |
+| `niggoun_01` … `niggoun_33` (30 fichiers) | **Retirés** | **Retirés** (03/11, à la demande du propriétaire) |
+| `hamelech_basade` — המלך בשדה | **Retiré** (03/11, à la demande du propriétaire) | **Retiré** |
+| `ribo_*` — Ishay Ribo | **Retiré** | **Retiré**, fichiers supprimés de `musique/` (03/11) |
 | `shpayer_beyond` — Beyond — נעם שפייר | **Livré** (accord écrit, 29/10) | Livré |
 | `shpayer_*` — 8 morceaux de נעם שפייר (Sincerity, Awakening, Inward, Even, Fire Kamanche, Tunnel's End ; Eshet Chail et Arba Bavot avec אור) | **Livré** (même accord écrit ; ajoutés le 03/11) | Livré |
 | La musique de **יניר קילינסקי** (à recevoir) | **À livrer** — accord écrit reçu par le propriétaire (29/10) pour télécharger et utiliser toutes leurs musiques | À livrer, ainsi que dans la version web |

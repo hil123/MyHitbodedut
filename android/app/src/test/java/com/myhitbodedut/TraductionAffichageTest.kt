@@ -97,8 +97,6 @@ class TraductionAffichageTest {
         listOf("values", "values-en", "values-iw").forEach { d ->
             assertFalse("$d : « titre à préciser »", lire("src/main/res/$d/strings.xml").contains("titre à préciser"))
         }
-        val en = lire("src/main/res/values-en/strings.xml")
-        assertTrue(en.contains("""<string name="track_niggoun_01">Niggun 01</string>"""))
     }
 
     @Test

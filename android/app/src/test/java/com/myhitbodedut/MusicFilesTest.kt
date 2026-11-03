@@ -195,7 +195,6 @@ class MusicFilesTest {
     @Test
     fun `la version Play ne livre que les morceaux autorises`() {
         val autorises = listOf(
-            "hamelech_basade",
             "shpayer_arba_bavot", "shpayer_awakening", "shpayer_beyond", "shpayer_eshet_chail",
             "shpayer_even", "shpayer_fire_kamanche", "shpayer_inward", "shpayer_sincerity",
             "shpayer_tunnels_end",
