@@ -1430,10 +1430,10 @@ function ecranPriere() {
       // Un livre (02/11) : chaque chapitre dans sa propre boîte, vide tant qu'il n'approche pas de
       // l'écran, à la hauteur estimée. Le livre entier construit et mis en page d'un coup faisait
       // tomber Safari sur iPhone (« Un problème récurrent est survenu »), là où Android ne
-      // dessine que les lignes visibles (RecyclerView). content-visibility, quand Safari le
-      // connaît (iOS 18), allège encore les chapitres déjà remplis.
+      // dessine que les lignes visibles (RecyclerView). Sans content-visibility (03/11) : WebKit
+      // mettait en page ces chapitres de lui-même, en retard, et le texte sautait pendant l'élan.
       const haut = hauteurEstimee(s);
-      const boite = h('section', { class: 'livre-chapitre', 'data-section': si, style: `contain-intrinsic-size: auto ${haut}px; min-height: ${haut}px` }, t);
+      const boite = h('section', { class: 'livre-chapitre', 'data-section': si, 'data-base': Math.round(haut / calibrage / 1.1), style: `min-height: ${haut}px` }, t);
       chapitresARemplir.set(boite, () => {
         if (!chapitresARemplir.has(boite)) return;
         chapitresARemplir.delete(boite);
@@ -1602,7 +1602,12 @@ function remplirAuDefilement(defile) {
   if (!('IntersectionObserver' in window)) { boites.forEach(remplirChapitre); return; }
   const io = new IntersectionObserver((entrees) => {
     if (!defile.isConnected) { io.disconnect(); return; }
-    for (const e of entrees) if (e.isIntersecting) { remplirChapitre(e.target); io.unobserve(e.target); }
+    for (const e of entrees) {
+      if (!e.isIntersecting) continue;
+      io.unobserve(e.target);
+      const ancre = remplissages.get(defile);
+      if (ancre) ancre(e.target, () => remplirChapitre(e.target)); else remplirChapitre(e.target);
+    }
   }, { root: defile, rootMargin: '150% 0px' });
   for (const b of boites) if (chapitresARemplir.has(b)) io.observe(b);
 }
@@ -1677,10 +1682,8 @@ function ancrerChapitres(defile) {
     for (const c of [...marges]) {
       const b = c.getBoundingClientRect();
       if (b.top >= r.top && b.top <= r.bottom) continue;
-      // Compensée ici : l'observateur ne voit pas toujours une marge changer (ancien Safari).
-      const m = marge(c);
-      if (b.top < r.top) delta -= m;
-      if (hauteurs.has(c)) hauteurs.set(c, hauteurs.get(c) - m);
+      // Compensée ici : l'observateur ne regarde que le contenu, pas la marge.
+      if (b.top < r.top) delta -= marge(c);
       c.style.paddingTop = '';
       marges.delete(c);
     }
@@ -1690,44 +1693,76 @@ function ancrerChapitres(defile) {
   defile.addEventListener('touchstart', () => { doigt = true; }, { passive: true });
   for (const fin of ['touchend', 'touchcancel']) defile.addEventListener(fin, () => { doigt = false; dernierDefilement = performance.now(); attendre(); }, { passive: true });
   defile.addEventListener('scroll', () => { dernierDefilement = performance.now(); attendre(); }, { passive: true });
+  /** Ce qu'un chapitre a changé de hauteur de contenu, rattrapé ; rend ce qu'il reste à défiler. */
+  const ajuster = (c, hauteur, haut, geste) => {
+    const avant = hauteurs.get(c);
+    hauteurs.set(c, hauteur);
+    // Commencé au-dessus de l'écran : tout ce qui suit, dont le texte lu, en serait déplacé.
+    if (avant === undefined || c.getBoundingClientRect().top >= haut) return 0;
+    let d = hauteur - avant;
+    if (geste && d < 0) {
+      c.style.paddingTop = `${marge(c) - d}px`;
+      marges.add(c);
+      d = 0;
+    } else if (geste && d > 0 && marge(c) > 0) {
+      const pris = Math.min(marge(c), d);
+      c.style.paddingTop = marge(c) - pris > 0.5 ? `${marge(c) - pris}px` : '';
+      if (!c.style.paddingTop) marges.delete(c);
+      d -= pris;
+    }
+    return d;
+  };
   const ro = new ResizeObserver((entrees) => {
     if (!defile.isConnected) { ro.disconnect(); return; }
     const haut = defile.getBoundingClientRect().top;
     const geste = enGeste();
     let delta = 0;
-    for (const e of entrees) {
-      const c = e.target;
-      const hauteur = e.borderBoxSize?.[0]?.blockSize ?? c.offsetHeight;
-      const avant = hauteurs.get(c);
-      hauteurs.set(c, hauteur);
-      // Commencé au-dessus de l'écran : tout ce qui suit, dont le texte lu, en serait déplacé.
-      if (avant === undefined || c.getBoundingClientRect().top >= haut) continue;
-      let d = hauteur - avant;
-      if (geste && d < 0) {
-        c.style.paddingTop = `${marge(c) - d}px`;
-        hauteurs.set(c, avant);
-        marges.add(c);
-        d = 0;
-      } else if (geste && d > 0 && marge(c) > 0) {
-        const pris = Math.min(marge(c), d);
-        c.style.paddingTop = marge(c) - pris > 0.5 ? `${marge(c) - pris}px` : '';
-        if (!c.style.paddingTop) marges.delete(c);
-        hauteurs.set(c, hauteur - pris);
-        d -= pris;
-      }
-      delta += d;
-    }
+    // La hauteur du contenu seul (contentRect, connu de tous les Safari qui ont l'observateur) :
+    // la marge mise ou retirée ici ne relance pas l'observateur (« ResizeObserver loop » dans WebKit).
+    for (const e of entrees) delta += ajuster(e.target, e.contentRect.height, haut, geste);
     if (Math.abs(delta) >= 0.5) defile.scrollTop += delta;
     attendre();
   });
-  for (const c of defile.querySelectorAll('.livre-chapitre')) ro.observe(c, { box: 'border-box' });
+  for (const c of defile.querySelectorAll('.livre-chapitre')) ro.observe(c);
+  // Un chapitre rempli au défilement est rattrapé sur-le-champ, avant d'être dessiné : WebKit
+  // dessine le nouveau texte une image avant de prévenir l'observateur, et le texte lu sautait
+  // le temps de cette image (mesuré dans WebKit le 03/11).
+  remplissages.set(defile, (c, remplir) => {
+    const contenu = () => c.getBoundingClientRect().height - marge(c);
+    if (!hauteurs.has(c)) hauteurs.set(c, contenu());
+    remplir();
+    const vraie = contenu();
+    apprendreHauteur(Number(c.dataset.base), vraie);
+    const d = ajuster(c, vraie, defile.getBoundingClientRect().top, enGeste());
+    if (Math.abs(d) >= 0.5) defile.scrollTop += d;
+    attendre();
+  });
 }
+/** Par zone de lecture : le remplissage d'un chapitre avec son ancrage immédiat (ancrerChapitres). */
+const remplissages = new WeakMap();
 
 /**
  * La hauteur probable d'un chapitre de livre, avant sa mise en page (02/11) : assez juste pour
  * que la barre de défilement et les sauts de chapitre ne trompent pas. Calibré sur Chromium,
  * 390 px de large, Frank Ruhl à 19 px ; l'échelle de lecture s'y applique.
  */
+/**
+ * Ce que l'appareil fait vraiment de l'estimation (03/11) : les polices de Safari ne sont pas
+ * celles de Chromium. Chaque chapitre construit en donne le rapport ; la moyenne, gardée sur
+ * l'appareil, corrige les estimations suivantes. Un chapitre plus long que prévu oblige à
+ * écrire scrollTop pendant l'élan ; plus court, il ne coûte rien (ancrerChapitres).
+ */
+const CLE_CALIBRAGE = 'myhitbodedut-calibrage-livres';
+let calibrage = (() => { try { const v = Number(localStorage.getItem(CLE_CALIBRAGE)); return v >= 0.6 && v <= 1.8 ? v : 1; } catch { return 1; } })();
+let calibrageAEcrire = null;
+function apprendreHauteur(brute, vraie) {
+  // L'estimation brute du chapitre (sans calibrage), prise à sa création.
+  if (!(brute > 200) || !(vraie > 0)) return;
+  const rapport = Math.min(1.8, Math.max(0.6, vraie / brute));
+  calibrage = Math.min(1.8, Math.max(0.6, calibrage * 0.8 + rapport * 0.2));
+  clearTimeout(calibrageAEcrire);
+  calibrageAEcrire = setTimeout(() => { try { localStorage.setItem(CLE_CALIBRAGE, calibrage.toFixed(3)); } catch { /* stockage refusé */ } }, 2000);
+}
 function hauteurEstimee(section) {
   const echelle = Number(store.lectureEchelle()) || 1;
   const largeur = Math.max(240, Math.min(window.innerWidth, 600) - 40);
@@ -1739,7 +1774,7 @@ function hauteurEstimee(section) {
     h += Math.ceil(lettres / parLigne) * (b.c !== undefined ? ligne * 0.65 : ligne) + 30 * echelle;
   }
   // Un peu large (02/11) : un chapitre qui raccourcit en arrivant ne force pas l'élan (ancrerChapitres).
-  return Math.round(h * 1.1);
+  return Math.round(h * calibrage * 1.1);
 }
 
 /** Le nom d'une hilloula dans la langue de l'interface, FR → EN (audit 1.390) ; null en hébreu ou sans traduction. */

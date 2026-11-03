@@ -486,10 +486,12 @@ input[type="range"] { width: 100%; accent-color: var(--brand); }
 .case-psaume:active { filter: brightness(0.94); }
 .lecture .psaume-titre { margin: 24px 0 4px; color: var(--brand); font-size: calc(20px * var(--echelle, 1)); font-weight: 700; text-align: start; }
 .lecture .psaume-titre:first-of-type { margin-top: 8px; }
-/* Un chapitre de livre n'est mis en page qu'en approchant de l'écran (02/11). */
-/* Un bloc fermé (02/11) : la marge mise en tête pendant un geste (ancrerChapitres) ne change pas
-   la fusion des marges du premier titre ; sinon le texte sautait de 24 px. */
-.lecture .livre-chapitre { content-visibility: auto; display: flow-root; }
+/* Un chapitre de livre n'est construit qu'en approchant de l'écran (02/11, remplirAuDefilement).
+   Un bloc fermé : la marge mise en tête pendant un geste (ancrerChapitres) ne change pas la
+   fusion des marges du premier titre ; sinon le texte sautait de 24 px.
+   Sans content-visibility (03/11) : WebKit mettait en page ces chapitres plus tard, de lui-même,
+   et le texte sautait pendant l'élan ; les construire à l'approche suffit à tenir la mémoire. */
+.lecture .livre-chapitre { display: flow-root; }
 /* L'ancrage est fait à la main (ancrerChapitres), pareil partout : pas en double avec Chromium. */
 .defile.defile-livre { overflow-anchor: none; }
 .lecture .livre-chapitre + .livre-chapitre .psaume-titre:first-of-type { margin-top: 24px; }
