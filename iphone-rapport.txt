@@ -1,0 +1,7 @@
+Appareil : iPhone 16e (iOS-26-2)
+Capture : iphone-accueil.png (http://127.0.0.1:8080/)
+Capture : iphone-musique.png (http://127.0.0.1:8080/#musique)
+Capture : iphone-reglages.png (http://127.0.0.1:8080/#reglages)
+Capture : iphone-boussole.png (http://127.0.0.1:8080/#boussole)
+Capture : iphone-accueil-he.png (http://127.0.0.1:8080/#)
+iPad : iPad Air 11-inch
