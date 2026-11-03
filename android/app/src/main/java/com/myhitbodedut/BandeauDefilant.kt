@@ -46,32 +46,92 @@ object BandeauDefilant {
             // descendant doucement, le premier pixel ne la fait plus partir (03/11).
             if (descendu && !cache && decalage() > h + marge(defile) && reste(defile) > h + marge(defile)) {
                 cache = true
-                bandeau.animate().alpha(0f).setDuration(DUREE_MS).withEndAction {
-                    if (!cache) return@withEndAction
-                    // La place qu'elle libère remonterait tout le texte d'un coup : juste avant
-                    // l'image suivante, on mesure de combien le texte est monté et on le redescend
-                    // d'autant — rien ne bouge à l'écran (03/11 ; décalé d'une image, il sautait).
-                    val avant = IntArray(2).also { defile.getLocationOnScreen(it) }[1]
-                    bandeau.visibility = View.GONE
-                    val vue = defile.viewTreeObserver
-                    vue.addOnPreDrawListener(object : android.view.ViewTreeObserver.OnPreDrawListener {
-                        override fun onPreDraw(): Boolean {
-                            if (defile.viewTreeObserver.isAlive) defile.viewTreeObserver.removeOnPreDrawListener(this)
-                            val monte = avant - IntArray(2).also { defile.getLocationOnScreen(it) }[1]
-                            val mesurable = defile is ScrollView || defile is androidx.recyclerview.widget.RecyclerView
-                            if (!mesurable || monte <= 0 || decalage() <= monte) return true
-                            defile.scrollBy(0, -monte)
-                            return false // cette image est redessinée, texte en place
-                        }
-                    })
-                }
+                replier(bandeau, defile, ::decalage) { cache }
             } else if (!descendu && cache) {
                 cache = false
-                bandeau.visibility = View.VISIBLE
-                bandeau.animate().alpha(1f).setDuration(DUREE_MS)
+                deplier(bandeau)
             }
         }
     }
+
+    private val mesurable = { v: View -> v is ScrollView || v is androidx.recyclerview.widget.RecyclerView }
+
+    /**
+     * La banderole se replie (03/11) : sa hauteur fond en [DUREE_MS] pendant qu'elle s'efface, et
+     * à chaque image, juste avant le dessin, le texte est redescendu d'autant qu'il est monté —
+     * il ne bouge pas, seule la bande sous la banderole (les signets) glisse vers le haut. Avant,
+     * elle disparaissait d'un coup et cette bande sautait de toute sa hauteur.
+     */
+    private fun replier(bandeau: View, defile: View, decalage: () -> Int, toujoursCache: () -> Boolean) {
+        val hauteur = bandeau.height
+        if (hauteur <= 0) { bandeau.visibility = View.GONE; return }
+        var y = ecranY(defile)
+        val compenser = object : android.view.ViewTreeObserver.OnPreDrawListener {
+            override fun onPreDraw(): Boolean {
+                val maintenant = ecranY(defile)
+                val monte = y - maintenant
+                y = maintenant
+                if (monte > 0 && mesurable(defile) && decalage() > monte) defile.scrollBy(0, -monte)
+                return true
+            }
+        }
+        defile.viewTreeObserver.addOnPreDrawListener(compenser)
+        val lp = bandeau.layoutParams
+        android.animation.ValueAnimator.ofInt(hauteur, 0).apply {
+            duration = DUREE_MS
+            interpolator = android.view.animation.DecelerateInterpolator()
+            addUpdateListener {
+                if (!toujoursCache()) { cancel(); return@addUpdateListener }
+                lp.height = it.animatedValue as Int
+                bandeau.alpha = (it.animatedValue as Int).toFloat() / hauteur
+                bandeau.layoutParams = lp
+            }
+            addListener(object : android.animation.AnimatorListenerAdapter() {
+                override fun onAnimationEnd(animation: android.animation.Animator) {
+                    // Une dernière image compensée, puis on rend la hauteur naturelle à la vue cachée.
+                    defile.post {
+                        if (defile.viewTreeObserver.isAlive) defile.viewTreeObserver.removeOnPreDrawListener(compenser)
+                    }
+                    lp.height = ViewGroup.LayoutParams.WRAP_CONTENT
+                    bandeau.layoutParams = lp
+                    if (toujoursCache()) bandeau.visibility = View.GONE
+                }
+            })
+            start()
+        }
+    }
+
+    /** En haut de la page : elle revient en se dépliant, et la page descend avec elle, sans saut. */
+    private fun deplier(bandeau: View) {
+        bandeau.animate().cancel()
+        val parent = bandeau.parent as? View
+        val largeur = (parent?.width ?: 0) - (parent?.paddingLeft ?: 0) - (parent?.paddingRight ?: 0)
+        bandeau.measure(View.MeasureSpec.makeMeasureSpec(largeur.coerceAtLeast(0), View.MeasureSpec.EXACTLY),
+            View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED))
+        val hauteur = bandeau.measuredHeight
+        val lp = bandeau.layoutParams
+        bandeau.visibility = View.VISIBLE
+        if (hauteur <= 0 || largeur <= 0) { lp.height = ViewGroup.LayoutParams.WRAP_CONTENT; bandeau.layoutParams = lp; bandeau.alpha = 1f; return }
+        android.animation.ValueAnimator.ofInt(0, hauteur).apply {
+            duration = DUREE_MS
+            interpolator = android.view.animation.DecelerateInterpolator()
+            addUpdateListener {
+                lp.height = it.animatedValue as Int
+                bandeau.alpha = (it.animatedValue as Int).toFloat() / hauteur
+                bandeau.layoutParams = lp
+            }
+            addListener(object : android.animation.AnimatorListenerAdapter() {
+                override fun onAnimationEnd(animation: android.animation.Animator) {
+                    lp.height = ViewGroup.LayoutParams.WRAP_CONTENT
+                    bandeau.layoutParams = lp
+                    bandeau.alpha = 1f
+                }
+            })
+            start()
+        }
+    }
+
+    private fun ecranY(v: View): Int = IntArray(2).also { v.getLocationOnScreen(it) }[1]
 
     /**
      * Ce que la page peut défiler en tout : la banderole ne s'efface que si la page la
