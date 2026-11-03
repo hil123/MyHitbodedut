@@ -300,7 +300,30 @@
     <string name="track_niggoun_32">Niggoun 32</string>
     <string name="track_niggoun_33">Niggoun 33</string>
     <string name="track_yanuka_nigoun_3" translatable="false">ניגון — הינוקא (3)</string>
-    <string name="track_shpayer_beyond" translatable="false">Beyond — נעם שפייר</string>
+    <string name="track_shpayer_beyond" translatable="false">Beyond — Noam Shpayer</string>
+    <string name="track_shpayer_eshet_hayil" translatable="false">Eshet \'Hayil — Or &amp; Noam Shpayer</string>
+    <string name="track_shpayer_arba_bavot" translatable="false">Arba Bavot — Or &amp; Noam Shpayer</string>
+    <string name="track_shpayer_afilou" translatable="false">Afilou (Even) — Noam Shpayer</string>
+    <string name="track_shpayer_kenout" translatable="false">Kenout (Sincerity) — Noam Shpayer</string>
+    <string name="track_shpayer_esh_kamanche" translatable="false">Fire (kamanche) — Noam Shpayer</string>
+    <string name="track_shpayer_hithadshout" translatable="false">Hit\'hadchout (Awakening) — Noam Shpayer</string>
+    <string name="track_shpayer_pnima" translatable="false">Pnima (Inward) — Noam Shpayer</string>
+    <string name="track_shpayer_tunnels_end" translatable="false">Tunnel\'s End — Noam Shpayer</string>
+    <string name="track_shpayer_ki_hine_kahomer" translatable="false">Niggoun « Ki hiné ka\'homer » — Noam Shpayer</string>
+    <string name="track_ianir_mirage" translatable="false">Mirage (Into the Moment) — Ianir</string>
+    <string name="track_ianir_al_harega" translatable="false">Al haRega (Into the Moment) — Ianir</string>
+    <string name="track_ianir_hello" translatable="false">Hello (Into the Moment) — Ianir</string>
+    <string name="track_ianir_baal_shem_tov" translatable="false">Niggoun du Baal Chem Tov — Ianir</string>
+    <string name="track_ianir_zemer_bishvahin" translatable="false">Zemer bichva\'hin (titre incertain) — Ianir</string>
+    <string name="track_ianir_berditchev" translatable="false">Niggoun de Berditchev — Ianir</string>
+    <string name="track_ianir_kol_bayaar" translatable="false">Kol baYa\'ar (Niggoun du Saba de Chpola) — Ianir</string>
+    <string name="track_ianir_yohanan_hasandlar" translatable="false">Niggoun de Rabbi Yo\'hanan HaSandlar — Ianir</string>
+    <string name="track_ianir_haleluhu" translatable="false">Haleluhu — Ianir</string>
+    <string name="track_ianir_houppa" translatable="false">Niggoun de \'Houppa — Ianir</string>
+    <string name="track_ianir_eden_el_salvador" translatable="false">Eden / El Salvador — Ianir</string>
+    <string name="track_ianir_hakol_milfanekha" translatable="false">HaKol milfanekha — Ianir</string>
+    <string name="track_ianir_kabbalat_chabbat" translatable="false">Niggoun de Kabbalat Chabbat (live) — Ianir</string>
+    <string name="track_ianir_bessarabie" translatable="false">Niggoun de Bessarabie — Ianir</string>
 
     <!-- En reserve : ces morceaux sont dans musique/, hors de l'APK.
          Leurs titres restent ici pour ne pas etre perdus au retour. -->
