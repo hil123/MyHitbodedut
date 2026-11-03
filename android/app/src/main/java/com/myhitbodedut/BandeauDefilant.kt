@@ -29,9 +29,6 @@ object BandeauDefilant {
         // qu'Android estime (computeVerticalScrollOffset) se trompe quand les lignes n'ont pas la
         // même hauteur, et la banderole partait trop tôt puis revenait en boucle.
         var cumul = 0
-        // Marge du bas de la liste avant qu'on y ajoute la place de la banderole (null : rien d'ajouté).
-        var basOrigine: Int? = null
-        var coupeOrigine = true
         (defile as? androidx.recyclerview.widget.RecyclerView)?.addOnScrollListener(object : androidx.recyclerview.widget.RecyclerView.OnScrollListener() {
             override fun onScrolled(rv: androidx.recyclerview.widget.RecyclerView, dx: Int, dy: Int) {
                 cumul = if (rv.canScrollVertically(-1)) (cumul + dy).coerceAtLeast(0) else 0
@@ -42,6 +39,33 @@ object BandeauDefilant {
             is androidx.recyclerview.widget.RecyclerView -> cumul
             else -> if (defile.canScrollVertically(-1)) Int.MAX_VALUE else 0
         }
+        // Ce qui est sous la banderole : la bande des signets, son trait, le cadre du texte.
+        fun dessous(): List<View> = (bandeau.parent as? ViewGroup)?.let { p ->
+            (p.indexOfChild(bandeau) + 1 until p.childCount).map { p.getChildAt(it) }
+                .filter { it.visibility == View.VISIBLE }
+        }.orEmpty()
+        /**
+         * Change la place de la banderole sans saut ni défilement (03/11) : juste avant l'image
+         * suivante, ce qui est dessous est remis là où il était, puis glisse à sa nouvelle place.
+         * Le défilement du texte n'est jamais touché : les compensations qui le redescendaient
+         * l'amenaient parfois tout en haut, et la banderole revenait (étape 24, Cha'harit).
+         */
+        fun basculer(visible: Boolean) {
+            val vues = dessous()
+            // Là où on la voit, glissement en cours compris.
+            val avant = vues.firstOrNull()?.let { ecranY(it) } ?: return
+            bandeau.visibility = if (visible) View.VISIBLE else View.GONE
+            val vto = bandeau.viewTreeObserver
+            vto.addOnPreDrawListener(object : android.view.ViewTreeObserver.OnPreDrawListener {
+                override fun onPreDraw(): Boolean {
+                    if (bandeau.viewTreeObserver.isAlive) bandeau.viewTreeObserver.removeOnPreDrawListener(this)
+                    val premiere = vues.first()
+                    val ecart = avant - (ecranY(premiere) - premiere.translationY.toInt())
+                    if (ecart != 0) glisser(vues, ecart)
+                    return true
+                }
+            })
+        }
         defile.viewTreeObserver.addOnScrollChangedListener {
             val descendu = defile.canScrollVertically(-1)
             val h = bandeau.height
@@ -50,76 +74,12 @@ object BandeauDefilant {
             if (descendu && !cache && decalage() > h + marge(defile) && reste(defile) > h + marge(defile)) {
                 cache = true
                 bandeau.animate().alpha(0f).setDuration(DUREE_MS).withEndAction {
-                    if (!cache) return@withEndAction
-                    // La place qu'elle libère remonterait tout le texte d'un coup : juste avant
-                    // l'image suivante, on mesure de combien le texte est monté et on le redescend
-                    // d'autant — rien ne bouge à l'écran (03/11 ; décalé d'une image, il sautait).
-                    val avant = IntArray(2).also { defile.getLocationOnScreen(it) }[1]
-                    // Ce qui est sous la banderole sans contenir le texte (la bande des signets, son
-                    // trait) : il remonte de toute sa hauteur ; on le fait glisser au lieu de sauter.
-                    val dessous = (bandeau.parent as? ViewGroup)?.let { p ->
-                        (p.indexOfChild(bandeau) + 1 until p.childCount).map { p.getChildAt(it) }
-                            .filter { it.visibility == View.VISIBLE && !contient(it, defile) }
-                    }.orEmpty()
-                    // La liste reçoit en bas la place libérée (03/11) : sans elle, quand il reste moins
-                    // qu'une banderole de texte sous l'écran (sections repliées, que la longueur estimée
-                    // ne voit pas), Android recalait la liste vers le haut, elle retombait en haut de
-                    // page et la banderole revenait (vidéo de l'étape 24, Cha'harit, cinq fois).
-                    if (defile is androidx.recyclerview.widget.RecyclerView && basOrigine == null) {
-                        basOrigine = defile.paddingBottom
-                        coupeOrigine = defile.clipToPadding
-                        defile.clipToPadding = false // le texte passe dans cette marge, pas de bande vide
-                        defile.setPadding(defile.paddingLeft, defile.paddingTop, defile.paddingRight, defile.paddingBottom + bandeau.height)
-                    }
-                    bandeau.visibility = View.GONE
-                    // Une liste se recale parfois d'elle-même sur la place libérée, parfois non, et pas
-                    // toujours à la même image : la compensation unique la redescendait alors de trop,
-                    // jusqu'en haut, et la banderole revenait (étape 24, Cha'harit, 03/11). On retient la
-                    // ligne du haut et son ordonnée à l'écran ; pendant quelques images, on l'y remet,
-                    // défilement du doigt compris : seul l'écart venu de la mise en page est corrigé.
-                    val rv = defile as? androidx.recyclerview.widget.RecyclerView
-                    val repere = rv?.getChildAt(0)
-                    val position = repere?.let { rv.getChildAdapterPosition(it) } ?: androidx.recyclerview.widget.RecyclerView.NO_POSITION
-                    val yAvant = repere?.let { ecranY(it) } ?: 0
-                    val cumulAvant = cumul
-                    var propre = 0 // ce que nous avons défilé nous-mêmes
-                    val fin = android.os.SystemClock.uptimeMillis() + 400
-                    var glisse = false
-                    val vue = defile.viewTreeObserver
-                    vue.addOnPreDrawListener(object : android.view.ViewTreeObserver.OnPreDrawListener {
-                        override fun onPreDraw(): Boolean {
-                            val monte = avant - ecranY(defile)
-                            if (!glisse && monte > 0) { glisse = true; glisser(dessous, monte) }
-                            if (rv == null || position == androidx.recyclerview.widget.RecyclerView.NO_POSITION) {
-                                // Une ScrollView ne se recale pas d'elle-même : une seule compensation.
-                                if (defile.viewTreeObserver.isAlive) defile.viewTreeObserver.removeOnPreDrawListener(this)
-                                if (defile !is ScrollView || monte <= 0 || defile.scrollY <= monte) return true
-                                defile.scrollBy(0, -monte)
-                                return false
-                            }
-                            if (android.os.SystemClock.uptimeMillis() > fin || !defile.viewTreeObserver.isAlive) {
-                                defile.viewTreeObserver.takeIf { it.isAlive }?.removeOnPreDrawListener(this)
-                                return true
-                            }
-                            val ligne = rv.layoutManager?.findViewByPosition(position) ?: return true
-                            val attendu = yAvant - (cumul - cumulAvant - propre)
-                            // Pas jusqu'en haut : la banderole reviendrait par notre faute.
-                            val ecart = (ecranY(ligne) - attendu).coerceAtLeast(-(cumul - 1).coerceAtLeast(0))
-                            if (ecart == 0) return true
-                            propre += ecart
-                            rv.scrollBy(0, ecart)
-                            return false // cette image est redessinée, texte en place
-                        }
-                    })
+                    if (cache) basculer(false)
                 }
             } else if (!descendu && cache) {
                 cache = false
-                basOrigine?.let {
-                    defile.setPadding(defile.paddingLeft, defile.paddingTop, defile.paddingRight, it)
-                    (defile as ViewGroup).clipToPadding = coupeOrigine
-                }
-                basOrigine = null
-                bandeau.visibility = View.VISIBLE
+                bandeau.animate().cancel()
+                if (bandeau.visibility != View.VISIBLE) basculer(true)
                 bandeau.animate().alpha(1f).setDuration(DUREE_MS)
             }
         }
@@ -127,16 +87,9 @@ object BandeauDefilant {
 
     private fun ecranY(v: View): Int = IntArray(2).also { v.getLocationOnScreen(it) }[1]
 
-    /** [v] est-elle [cible] ou l'un de ses parents ? */
-    private fun contient(v: View, cible: View): Boolean {
-        var c: View? = cible
-        while (c != null) { if (c === v) return true; c = c.parent as? View }
-        return false
-    }
-
     /**
-     * La bande sous la banderole (03/11) : remontée d'un coup de [hauteur] quand celle-ci passe à
-     * GONE, elle repart d'où elle était et glisse à sa place, au-dessus du texte qui, lui, ne bouge pas.
+     * Ce qui est sous la banderole (03/11) : déplacé d'un coup de [hauteur] quand celle-ci change de
+     * place, il repart d'où il était et glisse à sa nouvelle place.
      */
     private fun glisser(vues: List<View>, hauteur: Int) {
         vues.forEach { v ->
