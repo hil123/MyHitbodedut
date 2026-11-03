@@ -66,7 +66,16 @@ object BandeauDefilant {
                 }
             })
         }
-        defile.viewTreeObserver.addOnScrollChangedListener {
+        // Le doigt sur l'écran (03/11) : la banderole ne change jamais de place pendant qu'il glisse.
+        // Une liste suit le doigt par rapport à sa propre place ; si elle monte d'une banderole sous
+        // un doigt immobile, elle croit qu'il est descendu d'autant et redescend le texte : c'était
+        // le saut, et la boucle qui ramenait la banderole (étape 24, Cha'harit). On attend qu'il se
+        // lève : pendant l'élan qui suit ou au repos, rien ne suit plus le doigt.
+        var doigt = false
+        var differee = false // le fondu a fini sous le doigt : la place change quand il se lève
+        fun evaluer() {
+            if (doigt) return
+            if (differee) { differee = false; if (cache && bandeau.visibility == View.VISIBLE) basculer(false) }
             val descendu = defile.canScrollVertically(-1)
             val h = bandeau.height
             // Effacée seulement après un vrai défilement (plus que sa hauteur et une marge) : en
@@ -74,15 +83,29 @@ object BandeauDefilant {
             if (descendu && !cache && decalage() > h + marge(defile) && reste(defile) > h + marge(defile)) {
                 cache = true
                 bandeau.animate().alpha(0f).setDuration(DUREE_MS).withEndAction {
-                    if (cache) basculer(false)
+                    if (cache) { if (doigt) differee = true else basculer(false) }
                 }
             } else if (!descendu && cache) {
                 cache = false
+                differee = false
                 bandeau.animate().cancel()
                 if (bandeau.visibility != View.VISIBLE) basculer(true)
                 bandeau.animate().alpha(1f).setDuration(DUREE_MS)
             }
         }
+        val fenetre = activity.window
+        val suivant = fenetre.callback
+        if (suivant != null) fenetre.callback = object : android.view.Window.Callback by suivant {
+            override fun dispatchTouchEvent(e: android.view.MotionEvent): Boolean {
+                val leve = e.actionMasked == android.view.MotionEvent.ACTION_UP || e.actionMasked == android.view.MotionEvent.ACTION_CANCEL
+                doigt = !leve
+                val rendu = suivant.dispatchTouchEvent(e)
+                // Après l'événement : l'élan est lancé, la liste ne suit plus le doigt.
+                if (leve) defile.post { evaluer() }
+                return rendu
+            }
+        }
+        defile.viewTreeObserver.addOnScrollChangedListener { evaluer() }
     }
 
     private fun ecranY(v: View): Int = IntArray(2).also { v.getLocationOnScreen(it) }[1]
