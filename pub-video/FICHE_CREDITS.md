@@ -122,3 +122,7 @@ Extraits choisis pour leur régularité (pas de pic ni de cri), filtre 120 Hz–
 - jour : --props {"effets":true} ; nuit : {"effets":true,"style":"nuit"}.
 - mix : mix_nuit_jour.sh 13.2 0.9 — nuit jusqu’à l’ouverture de l’appli, puis le jour s’étend en cercle depuis le téléphone (audio de la version nuit, identique).
 - jour : mots de l’ouverture en pétrole/or foncé (ils étaient blancs sur blanc).
+
+## v27g
+- Les 8 sons de notification refaits : UNE seule attaque chacun (plus de petites mélodies à 2-3 notes qui débordaient sur les syllabes suivantes) et tous accordés en ré majeur pentatonique (ré, mi, fa#, la, si) ; vibration sur ré grave. Sinus purs, aucun bruit. Anciennes versions : remotion/public/sons/avant_v27g/.
+- Contrôle du calage : --props sonsSeuls:true (voix, foule et musique coupées) ; attaques mesurées 8, 17, 29, 35, 45, 71, 80, 95, 104, 111, 116, 139, 146 = syllabes de la voix.

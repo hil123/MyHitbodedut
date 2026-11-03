@@ -39,6 +39,8 @@ export const TOTAL5 = 2610;
 const COUPE_DE = 235; // v27f : fin de tempête resserrée de 20 images (0,67 s)
 const COUPE = ACCROCHE === 'A' ? 65 : 0;
 export const DUREE5 = TOTAL5 - COUPE;
+/** contrôle : --props sonsSeuls:true coupe voix, foule et musique pour mesurer le calage des sons de notification. */
+const SONS_SEULS = !!(getInputProps() as {sonsSeuls?: boolean}).sonsSeuls;
 const VOIX: {f: string; at: number; dur: number; txt: string; trim?: number; coupe?: number}[] = [
   {f: 's01', at: DEBUT_S01, dur: 4.95, txt: 'Chaque jour, nous sommes occupés. Le travail, les responsabilités, les soucis…'},
   {f: 's02', at: 300, dur: 3.0, txt: 'Mais prenons-nous vraiment le temps de parler à Hachem ?'},
@@ -728,11 +730,11 @@ const Film5: React.FC = () => {
       {NUIT && <div style={{position: 'absolute', top: 34, left: 0, right: 0, textAlign: 'center', fontFamily: 'FrankRuhl, serif', fontSize: 26, color: '#c9d6e3', opacity: 0.55}}>בס״ד</div>}
       {VOIX.map((v) => (
         <Sequence key={v.at} from={v.at} durationInFrames={Math.ceil(v.dur * FPS) + (v.trim !== undefined ? 8 : 14)}>
-          <Sequence durationInFrames={v.coupe ?? Infinity}><Audio src={staticFile(`voix/${v.f}.wav`)} trimBefore={v.trim} /></Sequence>
+          <Sequence durationInFrames={v.coupe ?? Infinity}><Audio src={staticFile(`voix/${v.f}.wav`)} trimBefore={v.trim} volume={SONS_SEULS ? 0 : 1} /></Sequence>
           {v.txt && <SousTitres texte={v.txt} debut={0} duree={v.dur} blocs={BLOCS[v.f]} />}
         </Sequence>
       ))}
-      <Sequence durationInFrames={456}><Audio src={staticFile('musique/ambiance_foule.wav')} volume={volumeAmbiance} /></Sequence>
+      <Sequence durationInFrames={456}><Audio src={staticFile('musique/ambiance_foule.wav')} volume={SONS_SEULS ? 0 : volumeAmbiance} /></Sequence>
       {/* v27 : un son par appli (synthétisé, libre de droits, évoque le style sans imiter le son de la marque) + vibration ; rien après l'arrêt net */}
       {ACCROCHE === 'A' && ARRIVEES.map((t, i) => t < 0 ? null : (
         <Sequence key={`bip${i}`} from={t + 2} durationInFrames={26}>{/* même image que l'arrivée de la carte et que la syllabe */}
