@@ -243,6 +243,7 @@ qu'elles ne portent pas sur les mêmes ayants droit :
 | « j'ai aussi ces droits-là » — en réponse à une question posée sur ces cinq titres précisément | Ishay Ribo, Motty Steinmetz, MBD, Shmuel | Nafshi, Ata Zocher, Halev Sheli, un quatrième titre Ribo, Give Me One Prayer |
 | les envois suivants, sous la même déclaration | Shneor Lerer (Chabad Melodies), *Tzama with orchestra* | rangés dans `musique/`, hors APK |
 | retrait du 01/11, à la demande du propriétaire | Shneor Lerer, Shmuel, *Tzama*, *Ani Maamin*, *Anim Zemirot*, Yosef Karduner, pianos Breslev | seize fichiers supprimés de `musique/` (jamais dans l'APK ni le site) |
+| accord écrit de Noam Shpayer (WhatsApp : « tu peux les télécharger sur le net et les utiliser »), crédit « נעם שפייר » promis | Noam Shpayer (dont deux titres avec אור) | huit morceaux ajoutés le 03/11, versions Play, GitHub et web |
 
 La seconde a été demandée avant d'ajouter quoi que ce soit : ces cinq-là sont
 des enregistrements commerciaux d'artistes sous label, hors du périmètre de la

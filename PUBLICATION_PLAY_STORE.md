@@ -203,7 +203,8 @@ droits ; l'autorisation d'Ishay Ribo et de MBD n'a pas été demandée. D'où, *
 | `hamelech_basade` — המלך בשדה | **Livré** — déclaré libre de droits par le propriétaire (29/10) ; voir la réserve ci-dessous | Livré |
 | `ribo_sans_titre` — Ishay Ribo | **Retiré** — autorisation non demandée (29/10), comme pour MBD | Livré |
 | `shpayer_beyond` — Beyond — נעם שפייר | **Livré** (accord écrit, 29/10) | Livré |
-| Le reste de la musique de **נעם שפייר** et celle de **יניר קילינסקי** (à recevoir) | **À livrer** — accord écrit reçu par le propriétaire (29/10) pour télécharger et utiliser toutes leurs musiques | À livrer, ainsi que dans la version web |
+| `shpayer_*` — 8 morceaux de נעם שפייר (Sincerity, Awakening, Inward, Even, Fire Kamanche, Tunnel's End ; Eshet Chail et Arba Bavot avec אור) | **Livré** (même accord écrit ; ajoutés le 03/11) | Livré |
+| La musique de **יניר קילינסקי** (à recevoir) | **À livrer** — accord écrit reçu par le propriétaire (29/10) pour télécharger et utiliser toutes leurs musiques | À livrer, ainsi que dans la version web |
 
 **Réserve sur המלך בשדה.** Une mélodie traditionnelle peut être libre alors
 que son **enregistrement** ne l'est pas : l'interprète et le producteur ont
@@ -232,7 +233,7 @@ morceaux livrés par Play, déclarés dans `MusiquePlay.kt`. Les 31 autres sont
 dans `src/musique_hors_play/` (fichiers et liste `MusiqueHorsPlay.kt`), que
 seule la construction GitHub ajoute ; avec `-Pplay=true`, Gradle prend
 `src/musique_play/`, où la même liste est vide. Vérifié sur l'AAB : il ne
-contient que `hamelech_basade.m4a`, `yanuka_nigoun_3.m4a` et `shpayer_beyond.m4a` (AAC 96 kb/s depuis le 29/10). `MusicFilesTest`
+contient que `hamelech_basade.m4a`, `yanuka_nigoun_3.m4a` et `shpayer_beyond.m4a` (AAC 96 kb/s depuis le 29/10). Depuis le 03/11, s'y ajoutent les huit autres `shpayer_*.m4a`. `MusicFilesTest`
 tient la liste ; `play.yml` recontrôle l'AAB lui-même. Le site web garde les
 33 morceaux, comme avant.
 

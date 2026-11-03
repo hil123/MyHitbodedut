@@ -302,6 +302,14 @@
     <string name="track_niggoun_33">Niggoun 33</string>
     <string name="track_yanuka_nigoun_3" translatable="false">ניגון — הינוקא (3)</string>
     <string name="track_shpayer_beyond" translatable="false">Beyond — נעם שפייר</string>
+    <string name="track_shpayer_sincerity" translatable="false">Sincerity — נעם שפייר</string>
+    <string name="track_shpayer_awakening" translatable="false">Awakening — נעם שפייר</string>
+    <string name="track_shpayer_inward" translatable="false">Inward — נעם שפייר</string>
+    <string name="track_shpayer_even" translatable="false">Even — נעם שפייר</string>
+    <string name="track_shpayer_fire_kamanche" translatable="false">Fire Kamanche — נעם שפייר</string>
+    <string name="track_shpayer_tunnels_end" translatable="false">Tunnel\'s End — נעם שפייר</string>
+    <string name="track_shpayer_eshet_chail" translatable="false">Eshet Chail — אור ונעם שפייר</string>
+    <string name="track_shpayer_arba_bavot" translatable="false">Arba Bavot — אור ונעם שפייר</string>
 
     <!-- En reserve : ces morceaux sont dans musique/, hors de l'APK.
          Leurs titres restent ici pour ne pas etre perdus au retour. -->

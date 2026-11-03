@@ -194,7 +194,13 @@ class MusicFilesTest {
     /** Ce que la version Play livre, et rien d'autre (29/10). */
     @Test
     fun `la version Play ne livre que les morceaux autorises`() {
-        val autorises = listOf("hamelech_basade", "shpayer_beyond", "yanuka_nigoun_3")
+        val autorises = listOf(
+            "hamelech_basade",
+            "shpayer_arba_bavot", "shpayer_awakening", "shpayer_beyond", "shpayer_eshet_chail",
+            "shpayer_even", "shpayer_fire_kamanche", "shpayer_inward", "shpayer_sincerity",
+            "shpayer_tunnels_end",
+            "yanuka_nigoun_3",
+        )
         assertEquals(
             "res/raw de main est livré par la version Play : n'y mettre qu'un morceau dont la " +
                 "diffusion publique est établie (PUBLICATION_PLAY_STORE.md § 3.2), sinon dans src/musique_hors_play",
