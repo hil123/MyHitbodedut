@@ -110,23 +110,25 @@ class MusicFilesTest {
      * vingtaine de Mo, sans permission nouvelle, sans hébergement, sans
      * question de droits supplémentaire.
      *
-     * Le seuil a été relevé trois fois (40 → 80 → 110 → 130), la dernière
-     * contre mon avis. Il reste à 130 : c'est le point où la sélection doit
-     * remplacer l'accumulation.
+     * Le seuil a été relevé quatre fois (40 → 80 → 110 → 130 → 150). La
+     * quatrième, le 03/11, sur décision explicite du propriétaire, pour les
+     * 23 morceaux de נעם שפייר et de Ianir, autorisés par écrit et livrés aussi
+     * par la version Play (environ 146 Mo au total). 150 n'est pas une réserve
+     * à remplir : c'est le point où la sélection doit remplacer l'accumulation.
      */
     @Test
     fun `le poids embarque reste sous les yeux`() {
         val octets = embarques().sumOf { it.length() }
         val mo = octets / 1_048_576.0
         assertTrue(
-            "audio embarqué : %.1f Mo. Seuil relevé trois fois ".format(mo) +
-                "(40 → 80 → 110 → 130). Le correctif est de n'embarquer qu'une " +
+            "audio embarqué : %.1f Mo. Seuil relevé quatre fois ".format(mo) +
+                "(40 → 80 → 110 → 130 → 150). Le correctif est de n'embarquer qu'une " +
                 "sélection et de laisser le reste dans musique/, que " +
                 "MusicActivity sait déjà ouvrir depuis le téléphone — pas de " +
                 "relever une quatrième fois, et surtout pas de télécharger à " +
                 "la demande : l'application ne déclare aucune permission " +
                 "INTERNET, et c'est une propriété revendiquée.",
-            mo < 130.0,
+            mo < 150.0,
         )
     }
 
@@ -194,7 +196,36 @@ class MusicFilesTest {
     /** Ce que la version Play livre, et rien d'autre (29/10). */
     @Test
     fun `la version Play ne livre que les morceaux autorises`() {
-        val autorises = listOf("hamelech_basade", "shpayer_beyond", "yanuka_nigoun_3")
+        // Yanuka, המלך בשדה, נעם שפייר et יניר קילינסקי (Ianir) : § 3.2. Liste écrite en
+        // entier, pas un préfixe : chaque morceau ajouté à Play passe par ici.
+        val autorises = listOf(
+            "hamelech_basade",
+            "ianir_al_harega",
+            "ianir_baal_shem_tov",
+            "ianir_berditchev",
+            "ianir_bessarabie",
+            "ianir_eden_el_salvador",
+            "ianir_hakol_milfanekha",
+            "ianir_haleluhu",
+            "ianir_hello",
+            "ianir_houppa",
+            "ianir_kabbalat_chabbat",
+            "ianir_kol_bayaar",
+            "ianir_mirage",
+            "ianir_yohanan_hasandlar",
+            "ianir_zemer_bishvahin",
+            "shpayer_afilou",
+            "shpayer_arba_bavot",
+            "shpayer_beyond",
+            "shpayer_esh_kamanche",
+            "shpayer_eshet_hayil",
+            "shpayer_hithadshout",
+            "shpayer_kenout",
+            "shpayer_ki_hine_kahomer",
+            "shpayer_pnima",
+            "shpayer_tunnels_end",
+            "yanuka_nigoun_3",
+        )
         assertEquals(
             "res/raw de main est livré par la version Play : n'y mettre qu'un morceau dont la " +
                 "diffusion publique est établie (PUBLICATION_PLAY_STORE.md § 3.2), sinon dans src/musique_hors_play",

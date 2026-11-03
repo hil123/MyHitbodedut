@@ -64,7 +64,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--embarque', nargs='*', default=[])
     ap.add_argument('--embarque-fichier')
-    ap.add_argument('--plafond', type=float, default=130.0)
+    ap.add_argument('--plafond', type=float, default=150.0)
     args = ap.parse_args()
 
     voulus = list(args.embarque)

@@ -15,7 +15,7 @@ import kotlin.math.sin
  * Les ambiances (proposition 9 de la feuille de route, 19/10) : pluie, mer,
  * forêt, feu, nuit, ou le silence.
  *
- * Aucune n'est un fichier : l'audio embarqué est au plafond (130 Mo, voir
+ * Aucune n'est un fichier : l'audio embarqué est au plafond (150 Mo, voir
  * musique/README.md), et chaque ambiance enregistrée se serait payée en
  * mégaoctets. Elles sont donc calculées, une boucle de 24 secondes générée à
  * la demande (bruit filtré, gouttes, vagues, oiseaux, crépitements, grillons),

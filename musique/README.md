@@ -18,7 +18,9 @@ d'origine.
 
 L'audio embarqué a atteint le plafond de **130 Mo** — le chiffre exact est
 au tableau plus bas — contre 12 Mo pour tout le reste de l'application après
-R8. Le garde-fou du test, déjà relevé trois fois (40 → 80 → 110 → 130), est
+R8. **Mise à jour du 03/11** : le propriétaire a relevé le plafond à **150 Mo**
+pour faire entrer les 23 morceaux de נעם שפייר et de Ianir (environ 146 Mo au
+total). Ce qui suit décrit l'état antérieur. Le garde-fou du test, relevé trois fois (40 → 80 → 110 → 130), était
 au bout. Il n'a pas bougé depuis, et ne bougera pas sans décision explicite.
 
 ## Ce que contient ce dossier aujourd'hui : un échange en cours
