@@ -18,7 +18,7 @@ Trois choses qu'on a apprises à la dure et qui sont codées ici :
    rangées d'underscores et les tags ID3 sont vides. On nomme avec ce qui
    reste lisible, et à défaut on numérote — on n'invente pas un titre.
 
-Usage :  python3 tools/ajoute_musique.py <dossier des envois> [--plafond 130]
+Usage :  python3 tools/ajoute_musique.py <dossier des envois> [--plafond 150]
 """
 import argparse, hashlib, pathlib, re, shutil, sys
 
@@ -96,7 +96,7 @@ def poids(dossier):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('source')
-    ap.add_argument('--plafond', type=float, default=130.0,
+    ap.add_argument('--plafond', type=float, default=150.0,
                     help='Mo embarqués au-delà desquels on range dans musique/')
     args = ap.parse_args()
 
