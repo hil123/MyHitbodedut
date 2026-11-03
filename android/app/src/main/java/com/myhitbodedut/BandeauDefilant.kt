@@ -125,13 +125,19 @@ object BandeauDefilant {
         is ScrollView -> (v.getChildAt(0)?.height ?: 0) + v.paddingTop + v.paddingBottom - v.height
         is androidx.recyclerview.widget.RecyclerView -> {
             // L'estimation d'Android (range - extent) se trompe quand les lignes n'ont pas la même
-            // hauteur (sections repliées de Cha'harit, 03/11) : la dernière ligne à l'écran, on
-            // mesure exactement ce qui reste sous l'écran, marge du bas comprise.
+            // hauteur (sections repliées de Cha'harit, 03/11) : la liste agrandie se recalait alors
+            // d'elle-même et le texte sautait. Ce qui est déjà mis en page sous l'écran est mesuré ;
+            // s'il ne reste ensuite que quelques lignes, on s'en tient à cette mesure.
             val lm = v.layoutManager as? androidx.recyclerview.widget.LinearLayoutManager
             val n = v.adapter?.itemCount ?: 0
-            val derniere = if (lm != null && n > 0) lm.findViewByPosition(n - 1) else null
-            if (derniere != null) lm!!.getDecoratedBottom(derniere) + v.paddingBottom - v.height
-            else v.computeVerticalScrollRange() - v.computeVerticalScrollExtent()
+            val derniere = lm?.findLastVisibleItemPosition() ?: androidx.recyclerview.widget.RecyclerView.NO_POSITION
+            val vue = if (derniere >= 0) lm?.findViewByPosition(derniere) else null
+            if (lm == null || vue == null) v.computeVerticalScrollRange() - v.computeVerticalScrollExtent()
+            else {
+                val mesure = lm.getDecoratedBottom(vue) + v.paddingBottom - v.height
+                if (n - 1 - derniere <= 3) mesure
+                else maxOf(mesure, v.computeVerticalScrollRange() - v.computeVerticalScrollExtent())
+            }
         }
         else -> Int.MAX_VALUE
     }
