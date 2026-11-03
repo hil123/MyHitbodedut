@@ -36,8 +36,8 @@ const ACCROCHE = ((getInputProps() as {accroche?: string}).accroche ?? (FX ? 'A'
 const DEBUT_S01 = ACCROCHE === 'A' ? 6 : 45; // la voix démarre avant 0,5 s
 export const TOTAL5 = 2610;
 /** v27c : plan du personnage pensif raccourci — on retire les images [COUPE_DE, COUPE_DE + COUPE) du film (aucune voix dans cet intervalle). */
-const COUPE_DE = 255;
-const COUPE = ACCROCHE === 'A' ? 45 : 0;
+const COUPE_DE = 235; // v27f : fin de tempête resserrée de 20 images (0,67 s)
+const COUPE = ACCROCHE === 'A' ? 65 : 0;
 export const DUREE5 = TOTAL5 - COUPE;
 const VOIX: {f: string; at: number; dur: number; txt: string; trim?: number; coupe?: number}[] = [
   {f: 's01', at: DEBUT_S01, dur: 4.95, txt: 'Chaque jour, nous sommes occupés. Le travail, les responsabilités, les soucis…'},
@@ -97,7 +97,7 @@ const POSES_ORIGINE: Pose[] = [
 ];
 // accroche A : les 4 poses d'ouverture sont remplacées par la tempête de notifications ; le personnage pensif revient à 6,7 s
 const POSES: Pose[] = ACCROCHE === 'A'
-  ? [{de: 200, a: COUPE_DE, src: 'char_thinking', type: 'perso', mot: 'le monde ne s’arrête jamais', teinte: '#f1efec', dir: -1}, ...POSES_ORIGINE.filter((p) => p.de >= 300)]
+  ? [{de: 180, a: COUPE_DE, src: 'char_thinking', type: 'perso', mot: 'le monde ne s’arrête jamais', teinte: '#f1efec', dir: -1}, ...POSES_ORIGINE.filter((p) => p.de >= 300)]
   : POSES_ORIGINE;
 
 const RATIO: Record<string, number> = {char_standing_back: 204 / 640, char_walking: 328 / 640, char_writing: 637 / 640, char_thinking: 544 / 640, char_face: 465 / 640, char_debout: 800 / 1200,
@@ -291,7 +291,7 @@ const DEBUT_MUSIQUE = 462;
 const volumeAmbiance = (f: number) => {
   let d = 0;
   for (const v of VOIX) d = Math.max(d, interpolate(f, [v.at - 8, v.at, v.at + v.dur * FPS, v.at + v.dur * FPS + 12], [0, 1, 1, 0], clamp));
-  const tempete = ACCROCHE === 'A' ? interpolate(f, [0, 158, 200], [0, 0, 1], clamp) : 1;
+  const tempete = ACCROCHE === 'A' ? interpolate(f, [0, 158, 185], [0, 0, 1], clamp) : 1;
   return (0.9 - d * 0.6) * tempete;
 };
 
@@ -472,9 +472,9 @@ const STOP = 158; // fin de « les soucis… » : tout s'arrête net
 const MOTS = [{de: -10, a: 40, t: 'CHAQUE JOUR.'}, {de: 40, a: 64, t: 'OCCUPÉS.'}, {de: 65, a: 90, t: 'TRAVAIL.'}, {de: 91, a: 131, t: 'RESPONSABILITÉS.'}, {de: 132, a: 170, t: 'SOUCIS…'}];
 const Tempete: React.FC<{f: number}> = ({f}) => {
   const g = Math.min(f, STOP); // l'instant se fige à STOP
-  const balaye = L(f, STOP + 4, STOP + 18, 0, 1, Easing.in(Easing.cubic)); // « tout effacer »
-  const eteint = L(f, STOP + 14, STOP + 26, 0, 1);
-  const sortie = L(f, 182, 206, 0, 1, Easing.in(Easing.cubic));
+  const balaye = L(f, STOP + 2, STOP + 12, 0, 1, Easing.in(Easing.cubic)); // « tout effacer »
+  const eteint = L(f, STOP + 9, STOP + 17, 0, 1);
+  const sortie = L(f, 166, 184, 0, 1, Easing.in(Easing.cubic));
   // vibration à chaque arrivée
   const vib = ARRIVEES.reduce((a, t) => a + (g >= t && g < t + 7 ? Math.sin((g - t) * 3.1) * (1 - (g - t) / 7) : 0), 0);
   const pousse = 0.9 + 0.1 * L(g, 0, STOP, 0, 1, Easing.inOut(Easing.sin)); // reste dans la zone du sujet : ne touche ni le texte ni les sous-titres
@@ -681,8 +681,8 @@ const Film5: React.FC = () => {
       {FX && f >= T.chabbat - 10 && f < T.chabbat + 14 && <FuiteLumiere k={tr.voile} f={f} />}
 
       {/* textes écran */}
-      {ACCROCHE === 'A' && f < 210 && <Tempete f={f} />}
-      <Sequence from={ACCROCHE === 'A' ? 196 : 0} durationInFrames={ACCROCHE === 'A' ? COUPE_DE - 196 : 300}><TexteEcran texte="Le monde ne s’arrête jamais…" debut={ACCROCHE === 'A' ? 4 : 14} fin={ACCROCHE === 'A' ? COUPE_DE - 196 - 2 : 296} sombre={!NUIT} /></Sequence>
+      {ACCROCHE === 'A' && f < 188 && <Tempete f={f} />}
+      <Sequence from={ACCROCHE === 'A' ? 176 : 0} durationInFrames={ACCROCHE === 'A' ? COUPE_DE - 176 : 300}><TexteEcran texte="Le monde ne s’arrête jamais…" debut={ACCROCHE === 'A' ? 4 : 14} fin={ACCROCHE === 'A' ? COUPE_DE - 176 - 2 : 296} sombre={!NUIT} /></Sequence>
       <Sequence from={300} durationInFrames={130}><TexteEcran texte="Et toi, prends-tu ce moment ?" debut={6} fin={126} sombre={!NUIT} /></Sequence>
       {f >= 442 && f < 600 && (
         <div style={{position: 'absolute', top: Z.texteHaut, height: Z.texteBas - Z.texteHaut, left: 0, right: 0, display: 'flex', alignItems: 'center', justifyContent: 'center',
