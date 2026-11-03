@@ -72,15 +72,42 @@ object BandeauDefilant {
                         defile.setPadding(defile.paddingLeft, defile.paddingTop, defile.paddingRight, defile.paddingBottom + bandeau.height)
                     }
                     bandeau.visibility = View.GONE
+                    // Une liste se recale parfois d'elle-même sur la place libérée, parfois non, et pas
+                    // toujours à la même image : la compensation unique la redescendait alors de trop,
+                    // jusqu'en haut, et la banderole revenait (étape 24, Cha'harit, 03/11). On retient la
+                    // ligne du haut et son ordonnée à l'écran ; pendant quelques images, on l'y remet,
+                    // défilement du doigt compris : seul l'écart venu de la mise en page est corrigé.
+                    val rv = defile as? androidx.recyclerview.widget.RecyclerView
+                    val repere = rv?.getChildAt(0)
+                    val position = repere?.let { rv.getChildAdapterPosition(it) } ?: androidx.recyclerview.widget.RecyclerView.NO_POSITION
+                    val yAvant = repere?.let { ecranY(it) } ?: 0
+                    val cumulAvant = cumul
+                    var propre = 0 // ce que nous avons défilé nous-mêmes
+                    val fin = android.os.SystemClock.uptimeMillis() + 400
+                    var glisse = false
                     val vue = defile.viewTreeObserver
                     vue.addOnPreDrawListener(object : android.view.ViewTreeObserver.OnPreDrawListener {
                         override fun onPreDraw(): Boolean {
-                            if (defile.viewTreeObserver.isAlive) defile.viewTreeObserver.removeOnPreDrawListener(this)
-                            val monte = avant - IntArray(2).also { defile.getLocationOnScreen(it) }[1]
-                            if (monte > 0) glisser(dessous, monte)
-                            val mesurable = defile is ScrollView || defile is androidx.recyclerview.widget.RecyclerView
-                            if (!mesurable || monte <= 0 || decalage() <= monte) return true
-                            defile.scrollBy(0, -monte)
+                            val monte = avant - ecranY(defile)
+                            if (!glisse && monte > 0) { glisse = true; glisser(dessous, monte) }
+                            if (rv == null || position == androidx.recyclerview.widget.RecyclerView.NO_POSITION) {
+                                // Une ScrollView ne se recale pas d'elle-même : une seule compensation.
+                                if (defile.viewTreeObserver.isAlive) defile.viewTreeObserver.removeOnPreDrawListener(this)
+                                if (defile !is ScrollView || monte <= 0 || defile.scrollY <= monte) return true
+                                defile.scrollBy(0, -monte)
+                                return false
+                            }
+                            if (android.os.SystemClock.uptimeMillis() > fin || !defile.viewTreeObserver.isAlive) {
+                                defile.viewTreeObserver.takeIf { it.isAlive }?.removeOnPreDrawListener(this)
+                                return true
+                            }
+                            val ligne = rv.layoutManager?.findViewByPosition(position) ?: return true
+                            val attendu = yAvant - (cumul - cumulAvant - propre)
+                            // Pas jusqu'en haut : la banderole reviendrait par notre faute.
+                            val ecart = (ecranY(ligne) - attendu).coerceAtLeast(-(cumul - 1).coerceAtLeast(0))
+                            if (ecart == 0) return true
+                            propre += ecart
+                            rv.scrollBy(0, ecart)
                             return false // cette image est redessinée, texte en place
                         }
                     })
@@ -97,6 +124,8 @@ object BandeauDefilant {
             }
         }
     }
+
+    private fun ecranY(v: View): Int = IntArray(2).also { v.getLocationOnScreen(it) }[1]
 
     /** [v] est-elle [cible] ou l'un de ses parents ? */
     private fun contient(v: View, cible: View): Boolean {
