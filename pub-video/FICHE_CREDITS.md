@@ -120,7 +120,7 @@ Extraits choisis pour leur régularité (pas de pic ni de cri), filtre 120 Hz–
 
 ## v27 — trois versions
 - jour : --props {"effets":true} ; nuit : {"effets":true,"style":"nuit"}.
-- mix : mix_nuit_jour.sh 13.2 0.9 — nuit jusqu’à l’ouverture de l’appli, puis le jour s’étend en cercle depuis le téléphone (audio de la version nuit, identique).
+- mix : mix_nuit_jour.sh 12.53 0.9 (v28 ; 13.2 pour la v27) — nuit jusqu’à l’ouverture de l’appli, puis le jour s’étend en cercle depuis le téléphone (audio de la version nuit, identique).
 - jour : mots de l’ouverture en pétrole/or foncé (ils étaient blancs sur blanc).
 
 ## v27g
