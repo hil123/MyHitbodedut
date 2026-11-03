@@ -29,6 +29,9 @@ object BandeauDefilant {
         // qu'Android estime (computeVerticalScrollOffset) se trompe quand les lignes n'ont pas la
         // même hauteur, et la banderole partait trop tôt puis revenait en boucle.
         var cumul = 0
+        // Marge du bas de la liste avant qu'on y ajoute la place de la banderole (null : rien d'ajouté).
+        var basOrigine: Int? = null
+        var coupeOrigine = true
         (defile as? androidx.recyclerview.widget.RecyclerView)?.addOnScrollListener(object : androidx.recyclerview.widget.RecyclerView.OnScrollListener() {
             override fun onScrolled(rv: androidx.recyclerview.widget.RecyclerView, dx: Int, dy: Int) {
                 cumul = if (rv.canScrollVertically(-1)) (cumul + dy).coerceAtLeast(0) else 0
@@ -58,6 +61,16 @@ object BandeauDefilant {
                         (p.indexOfChild(bandeau) + 1 until p.childCount).map { p.getChildAt(it) }
                             .filter { it.visibility == View.VISIBLE && !contient(it, defile) }
                     }.orEmpty()
+                    // La liste reçoit en bas la place libérée (03/11) : sans elle, quand il reste moins
+                    // qu'une banderole de texte sous l'écran (sections repliées, que la longueur estimée
+                    // ne voit pas), Android recalait la liste vers le haut, elle retombait en haut de
+                    // page et la banderole revenait (vidéo de l'étape 24, Cha'harit, cinq fois).
+                    if (defile is androidx.recyclerview.widget.RecyclerView && basOrigine == null) {
+                        basOrigine = defile.paddingBottom
+                        coupeOrigine = defile.clipToPadding
+                        defile.clipToPadding = false // le texte passe dans cette marge, pas de bande vide
+                        defile.setPadding(defile.paddingLeft, defile.paddingTop, defile.paddingRight, defile.paddingBottom + bandeau.height)
+                    }
                     bandeau.visibility = View.GONE
                     val vue = defile.viewTreeObserver
                     vue.addOnPreDrawListener(object : android.view.ViewTreeObserver.OnPreDrawListener {
@@ -74,6 +87,11 @@ object BandeauDefilant {
                 }
             } else if (!descendu && cache) {
                 cache = false
+                basOrigine?.let {
+                    defile.setPadding(defile.paddingLeft, defile.paddingTop, defile.paddingRight, it)
+                    (defile as ViewGroup).clipToPadding = coupeOrigine
+                }
+                basOrigine = null
                 bandeau.visibility = View.VISIBLE
                 bandeau.animate().alpha(1f).setDuration(DUREE_MS)
             }
