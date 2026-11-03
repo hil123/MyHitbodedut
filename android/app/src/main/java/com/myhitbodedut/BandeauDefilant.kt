@@ -123,7 +123,16 @@ object BandeauDefilant {
      */
     private fun reste(v: View): Int = when (v) {
         is ScrollView -> (v.getChildAt(0)?.height ?: 0) + v.paddingTop + v.paddingBottom - v.height
-        is androidx.recyclerview.widget.RecyclerView -> v.computeVerticalScrollRange() - v.computeVerticalScrollExtent()
+        is androidx.recyclerview.widget.RecyclerView -> {
+            // L'estimation d'Android (range - extent) se trompe quand les lignes n'ont pas la même
+            // hauteur (sections repliées de Cha'harit, 03/11) : la dernière ligne à l'écran, on
+            // mesure exactement ce qui reste sous l'écran, marge du bas comprise.
+            val lm = v.layoutManager as? androidx.recyclerview.widget.LinearLayoutManager
+            val n = v.adapter?.itemCount ?: 0
+            val derniere = if (lm != null && n > 0) lm.findViewByPosition(n - 1) else null
+            if (derniere != null) lm!!.getDecoratedBottom(derniere) + v.paddingBottom - v.height
+            else v.computeVerticalScrollRange() - v.computeVerticalScrollExtent()
+        }
         else -> Int.MAX_VALUE
     }
 
