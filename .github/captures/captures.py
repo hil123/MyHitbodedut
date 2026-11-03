@@ -841,6 +841,53 @@ def main():
         langue("fr")
     etape("25 nuit, hébreu, צדקת", s25)
 
+    def s26():
+        # La fluidité des passages (03/11) : les animations, coupées pour toutes les autres étapes,
+        # sont rétablies ; on filme et on compte les images en retard (dumpsys gfxinfo). Le rendu
+        # de l'émulateur est logiciel (swiftshader) : les chiffres sont pessimistes, la vidéo dit
+        # surtout si chaque passage se déroule ou saute.
+        for k in ("window_animation_scale", "transition_animation_scale", "animator_duration_scale"):
+            sh(f"settings put global {k} 1")
+        try:
+            lancer(attente=5)
+            sh(f"dumpsys gfxinfo {PKG} reset")
+            sh("rm -f /sdcard/film.mp4")
+            film = subprocess.Popen(["adb", "shell", "screenrecord", "--time-limit", "60", "/sdcard/film.mp4"])
+            pause(1.5)
+            for onglet in ("nav_texts", "nav_zmanim", "nav_journal", "nav_settings", "nav_today"):
+                toucher(rid=onglet, attente=1.6)
+            toucher(rid="trophees_paliers", defilements=4, attente=2.0)
+            retour(); pause(1.5)
+            onglet_textes()
+            toucher(rid="siddur_button", defilements=2, attente=2.0)
+            retour(); pause(1.5)
+            activite("SiddurLectureActivity", "--es id chaharit")
+            pause(2.0)
+            x = W // 2
+            for i in range(3):  # élans vers le bas : la banderole part, le texte glisse
+                sh(f"input swipe {x} {int(H*0.75)} {x} {int(H*0.30)} 120"); pause(1.4)
+            for i in range(5):  # puis vers le haut, jusqu'en haut : elle revient
+                sh(f"input swipe {x} {int(H*0.30)} {x} {int(H*0.75)} 120"); pause(1.4)
+            retour(); pause(2.0)
+            try:
+                film.wait(timeout=70)
+            except subprocess.TimeoutExpired:
+                film.kill()
+            pause(1.5)
+            video = adb("exec-out", "cat", "/sdcard/film.mp4", binary=True)
+            with open(os.path.join(OUT, "26-passages.mp4"), "wb") as f:
+                f.write(video)
+            stats = sh(f"dumpsys gfxinfo {PKG}")
+            garde = [l for l in stats.splitlines() if any(m in l for m in (
+                "Total frames", "Janky frames", "percentile", "Number Missed", "Number High", "Number Slow", "Number Frame deadline"))]
+            with open(os.path.join(OUT, "26-gfxinfo.txt"), "w") as f:
+                f.write("\n".join(garde) + "\n\n" + stats)
+            log("  gfxinfo :", " | ".join(l.strip() for l in garde))
+        finally:
+            for k in ("window_animation_scale", "transition_animation_scale", "animator_duration_scale"):
+                sh(f"settings put global {k} 0")
+    etape("26 fluidité des passages", s26)
+
     log("\ncaptures :", sorted(os.listdir(OUT)))
 
 
