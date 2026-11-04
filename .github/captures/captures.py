@@ -856,6 +856,9 @@ def main():
             pause(1.5)
             for onglet in ("nav_texts", "nav_zmanim", "nav_journal", "nav_settings", "nav_today"):
                 toucher(rid=onglet, attente=1.6)
+                # Journal et Réglages ouvrent leur propre écran, sans la barre d'onglets.
+                if onglet in ("nav_journal", "nav_settings"):
+                    retour(); pause(1.2)
             toucher(rid="trophees_paliers", defilements=4, attente=2.0)
             retour(); pause(1.5)
             onglet_textes()
