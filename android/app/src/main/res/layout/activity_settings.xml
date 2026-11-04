@@ -490,6 +490,21 @@
                 android:orientation="vertical" />
         </LinearLayout>
 
+        <!-- Dédicace (04/11) : la demande part à l'équipe, par la messagerie de l'utilisateur. -->
+        <LinearLayout android:id="@+id/card_dedicace" style="@style/Card">
+
+            <TextView style="@style/CardTitle" android:text="@string/section_dedicace" />
+
+            <TextView style="@style/CardHint" android:text="@string/section_dedicace_hint" />
+
+            <Button
+                android:id="@+id/dedicace_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="@string/dedicace_bouton" />
+        </LinearLayout>
+
         <!-- Sauvegarde -->
         <LinearLayout style="@style/Card">
 

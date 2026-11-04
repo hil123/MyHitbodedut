@@ -26,6 +26,28 @@
     <string name="section_permissions_hint">What the app asks for, and why.</string>
     <string name="section_data">My data</string>
     <string name="section_data_hint">Everything is stored on this phone only. Export from time to time.</string>
+    <!-- Dédicace (04/11) : la demande part à l’équipe, par la messagerie de l’utilisateur. -->
+    <string name="section_dedicace">Dedication</string>
+    <string name="section_dedicace_hint">To dedicate your hitbodedut or your study, the request goes through the MyHitbodedut team. It is written in your own mail app, addressed to myhitbodedut26@gmail.com: nothing is sent without you.</string>
+    <string name="dedicace_bouton">Dedicate</string>
+    <string name="dedicace_quoi">What are you dedicating?</string>
+    <string name="dedicace_hitbodedut">My hitbodedut</string>
+    <string name="dedicace_etude">My study</string>
+    <string name="dedicace_pour">For</string>
+    <string name="dedicace_leilouy">Le’ilui nishmat (לעילוי נשמת)</string>
+    <string name="dedicace_refoua">Refuah shelemah (לרפואה שלמה)</string>
+    <string name="dedicace_hatslaha">Hatzlachah (להצלחה)</string>
+    <string name="dedicace_zivoug">Zivug hagun (לזיווג הגון)</string>
+    <string name="dedicace_autre">Another intention</string>
+    <string name="dedicace_nom">Name (e.g. Moshe ben Sarah)</string>
+    <string name="dedicace_mot">A word for the team (optional)</string>
+    <string name="dedicace_ecrire">Write the email</string>
+    <string name="dedicace_nom_manque">Enter the name.</string>
+    <string name="dedicace_sans_messagerie">No mail app found: write to myhitbodedut26@gmail.com.</string>
+    <string name="dedicace_sujet">Dedication – %1$s</string>
+    <string name="dedicace_corps_intro">Hello,</string>
+    <string name="dedicace_corps_demande">I would like to dedicate %1$s:</string>
+    <string name="dedicace_corps_fin">Sent from the MyHitbodedut app.</string>
 
     <string name="gate_armed_title">“I am with Hashem” is on</string>
     <plurals name="gate_armed_detail">

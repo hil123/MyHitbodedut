@@ -283,6 +283,14 @@ for (const [nom, carte, n] of [['reelle', false, 67], ['carte', true, 109]]) {
 await capture('bibliotheque-he', { langue: 'he', ecran: 'bibliotheque', actions: bas(0) });
 await capture('reglages-fr-personnalisation', { langue: 'fr', ecran: 'reglages', actions: bas(400) });
 await capture('reglages-he', { langue: 'he', ecran: 'reglages', mode: 'sombre', actions: bas(400) });
+// La dédicace (04/11) : la carte des réglages, puis la feuille, le nom manquant signalé.
+const dedicace = async (p) => {
+  await p.click('.carte button.principal >> text=/Dédicacer|Dedicate|הקדשה/');
+  await p.waitForSelector('.feuille .dedicace-choix');
+  await p.click('.feuille .fort');
+};
+await capture('dedicace-fr', { langue: 'fr', ecran: 'reglages', actions: dedicace });
+await capture('dedicace-he', { langue: 'he', ecran: 'reglages', mode: 'sombre', actions: dedicace });
 
 // La séance : avant, pendant, le bravo, l'abandon.
 const finDeSeance = async (page) => {

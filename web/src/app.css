@@ -1669,3 +1669,10 @@ body.avec-mini .seance .contenu { padding-bottom: calc(104px + env(safe-area-ins
 .lecture-nav .principal, .lecture-nav .secondaire { min-height: 48px; padding: 12px 14px; }
 
 .psaume-titre .titre-traduit { display: block; font-size: .72em; font-weight: 600; color: var(--muted); direction: ltr; text-align: start; margin-top: 2px; }
+
+/* La dédicace (04/11) : les choix vont à la ligne, chacun à sa largeur. */
+.dedicace-choix { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 8px; }
+.dedicace-choix .puce-choix { min-height: 44px; }
+.feuille .message + .dedicace-choix { margin-top: 4px; }
+.feuille p.dedicace-legende { margin-top: 16px; margin-bottom: 6px; font-weight: 600; }
+.dedicace-erreur:not(:empty) { color: var(--brand); font-weight: 600; }

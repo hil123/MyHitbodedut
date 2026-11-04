@@ -762,3 +762,15 @@ test('langues de lecture (04/11) : six modes, la règle d’avant par défaut, l
   assert.ok(teh.traductions.fr.psaumes[22][0].includes('L’Éternel est mon berger'));
   assert.ok(teh.traductions.en.psaumes[22][0].includes('The LORD is my shepherd'));
 });
+
+test('Dedicace : la demande va à l’équipe, la formule en hébreu, le lien encodé', async () => {
+  const { Dedicace } = await import('../src/js/regles.js');
+  assert.equal(Dedicace.ADRESSE, 'myhitbodedut26@gmail.com');
+  assert.equal(Dedicace.corps('Bonjour,', 'Je souhaite dédier ma hitbodedout :', 'לעילוי נשמת', ' Moché ben Sarah ', '', 'Fin.'),
+    'Bonjour,\n\nJe souhaite dédier ma hitbodedout :\nלעילוי נשמת Moché ben Sarah\n\nFin.');
+  assert.ok(Dedicace.corps('a', 'b', null, 'Sarah', 'Merci', 'z').includes('\nSarah\n\nMerci\n'));
+  const l = Dedicace.lien('Dédicace – Mon étude', 'a b\nc & d');
+  assert.ok(l.startsWith('mailto:myhitbodedut26@gmail.com?subject='));
+  assert.equal(decodeURIComponent(l.split('&body=')[1]), 'a b\nc & d');
+  assert.equal(Dedicace.INTENTIONS.length, 5);
+});

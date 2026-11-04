@@ -14,7 +14,7 @@ import { creeStore, memoire, repriseValable } from './store.js';
 import { ajouteJours, heureDans, isoDans, isoLocal } from './calendrier.js';
 import { JERUSALEM_GEONAMES, RAPPELS_TEFILA, dansIsrael, USAGES_LEVANA, aJerusalem, calendrier, jour as jourJuif, jourDeLaPriere, levana, rappelsTefila, usageLevana } from './calendrier-juif.js';
 import { conditionsPour, index as indexAjouts, libelleJour, vrai as ajoutVrai } from './siddur-jour.js';
-import { JournalPlus } from './regles.js';
+import { Dedicace, JournalPlus } from './regles.js';
 import { aerer } from './aeration.js';
 import { distanceKm } from './direction.js';
 import * as Paliers from './paliers.js';
@@ -4339,6 +4339,7 @@ function ecranReglages() {
         ligne({ nom: tr.t('halakha_source_titre'), etat: tr.t(SOURCES_HALAKHA.find(([c]) => c === store.sourceHalakha())[1]),
           onclick: () => choisirDans(tr.t('halakha_source_titre'), SOURCES_HALAKHA.map(([, n]) => tr.t(n)), SOURCES_HALAKHA.findIndex(([c]) => c === store.sourceHalakha()),
             (j) => { store.setSourceHalakha(SOURCES_HALAKHA[j][0]); rendre(); }) })),
+      carteDedicace(),
       carteMesDonnees(),
       h('div', { class: 'carte' }, ligne({ nom: tr.t('settings_onboarding'), onclick: presentation })),
       // Réinitialiser l'application (12/10) : en dernier, avec une confirmation.
@@ -4419,6 +4420,45 @@ function carteMaPratique() {
  * « Mes données » (02/11) : la sauvegarde, au même format qu'Android (Store.exportJson). Un
  * fichier exporté du site s'importe sur le téléphone, et l'inverse.
  */
+/** La dédicace (Dedicace.kt, 04/11) : la demande part à l'équipe, par la messagerie. */
+function carteDedicace() {
+  return h('div', { class: 'carte' },
+    h('h3', {}, tr.t('section_dedicace')),
+    h('p', { class: 'indice' }, tr.t('section_dedicace_hint')),
+    h('div', { class: 'actions-donnees' },
+      h('button', { type: 'button', class: 'principal', onclick: dedicacer }, tr.t('dedicace_bouton'))));
+}
+
+function dedicacer() {
+  feuille(tr.t('section_dedicace'), (f, fermer) => {
+    let objet = 0, intention = 0;
+    const groupe = (titre, cles, courant, choisir) => {
+      const boutons = cles.map((c, i) => h('button', { type: 'button', class: 'puce-choix', role: 'radio', 'aria-checked': String(i === courant),
+        onclick: () => { choisir(i); boutons.forEach((b, j) => b.setAttribute('aria-checked', String(j === i))); } }, tr.t(c)));
+      return [h('p', { class: 'message dedicace-legende' }, tr.t(titre)), h('div', { class: 'dedicace-choix', role: 'radiogroup', 'aria-label': tr.t(titre) }, boutons)];
+    };
+    const nom = h('input', { type: 'text', autocomplete: 'off', placeholder: tr.t('dedicace_nom'), 'aria-label': tr.t('dedicace_nom') });
+    const mot = h('textarea', { rows: '2', placeholder: tr.t('dedicace_mot'), 'aria-label': tr.t('dedicace_mot') });
+    const erreur = h('p', { class: 'indice dedicace-erreur', role: 'alert' });
+    const ecrire = () => {
+      if (!nom.value.trim()) { erreur.textContent = tr.t('dedicace_nom_manque'); nom.focus(); return; }
+      const quoi = tr.t(Dedicace.OBJETS[objet]);
+      const [, formule] = Dedicace.INTENTIONS[intention];
+      const corps = Dedicace.corps(tr.t('dedicace_corps_intro'), tr.t('dedicace_corps_demande', quoi.charAt(0).toLowerCase() + quoi.slice(1)),
+        formule, nom.value, mot.value, tr.t('dedicace_corps_fin'));
+      fermer();
+      location.href = Dedicace.lien(tr.t('dedicace_sujet', quoi), corps);
+    };
+    f.append(h('p', { class: 'indice' }, tr.t('section_dedicace_hint')),
+      ...groupe('dedicace_quoi', Dedicace.OBJETS, objet, (i) => { objet = i; }),
+      ...groupe('dedicace_pour', Dedicace.INTENTIONS.map(([c]) => c), intention, (i) => { intention = i; }),
+      nom, mot, erreur,
+      h('div', { class: 'actions' },
+        h('button', { type: 'button', onclick: fermer }, tr.t('action_back')),
+        h('button', { type: 'button', class: 'fort', onclick: ecrire }, tr.t('dedicace_ecrire'))));
+  });
+}
+
 function carteMesDonnees() {
   const exporter = async () => {
     const nom = `myhitbodedut-${store.today()}.json`;

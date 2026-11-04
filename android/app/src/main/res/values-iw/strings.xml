@@ -26,6 +26,28 @@
     <string name="section_permissions_hint">מה האפליקציה מבקשת, ולמה.</string>
     <string name="section_data">הנתונים שלי</string>
     <string name="section_data_hint">הכול נשמר בטלפון הזה בלבד. כדאי לייצא מדי פעם.</string>
+    <!-- Dédicace (04/11) : la demande part à l’équipe, par la messagerie de l’utilisateur. -->
+    <string name="section_dedicace">הקדשה</string>
+    <string name="section_dedicace_hint">כדי להקדיש את ההתבודדות או את הלימוד שלכם, הבקשה עוברת דרך צוות MyHitbodedut. היא נכתבת בתוכנת הדואר שלכם, אל myhitbodedut26@gmail.com: שום דבר לא נשלח בלעדיכם.</string>
+    <string name="dedicace_bouton">הקדשה</string>
+    <string name="dedicace_quoi">מה מקדישים?</string>
+    <string name="dedicace_hitbodedut">את ההתבודדות שלי</string>
+    <string name="dedicace_etude">את הלימוד שלי</string>
+    <string name="dedicace_pour">עבור</string>
+    <string name="dedicace_leilouy">לעילוי נשמת</string>
+    <string name="dedicace_refoua">לרפואה שלמה</string>
+    <string name="dedicace_hatslaha">להצלחה</string>
+    <string name="dedicace_zivoug">לזיווג הגון</string>
+    <string name="dedicace_autre">כוונה אחרת</string>
+    <string name="dedicace_nom">שם (לדוגמה: משה בן שרה)</string>
+    <string name="dedicace_mot">מילה לצוות (לא חובה)</string>
+    <string name="dedicace_ecrire">לכתוב את המייל</string>
+    <string name="dedicace_nom_manque">נא לכתוב את השם.</string>
+    <string name="dedicace_sans_messagerie">לא נמצאה תוכנת דואר: כתבו אל myhitbodedut26@gmail.com.</string>
+    <string name="dedicace_sujet">הקדשה – %1$s</string>
+    <string name="dedicace_corps_intro">שלום,</string>
+    <string name="dedicace_corps_demande">ברצוני להקדיש %1$s:</string>
+    <string name="dedicace_corps_fin">נשלח מהאפליקציה MyHitbodedut.</string>
 
     <string name="gate_armed_title">„אני עם השם” פעיל</string>
     <plurals name="gate_armed_detail">

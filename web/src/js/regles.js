@@ -456,3 +456,28 @@ export const JournalPlus = {
     return { avant: moyenne(notes.map((p) => p.avant)), apres: moyenne(notes.map((p) => p.apres)), jours: notes.length };
   },
 };
+
+/**
+ * La dédicace (Dedicace.kt, 04/11) : la demande va à l'équipe, écrite dans la messagerie de
+ * l'utilisateur ; rien ne part sans lui, rien n'est gardé. La formule reste en hébreu.
+ */
+export const Dedicace = {
+  ADRESSE: 'myhitbodedut26@gmail.com',
+  OBJETS: ['dedicace_hitbodedut', 'dedicace_etude'],
+  INTENTIONS: [
+    ['dedicace_leilouy', 'לעילוי נשמת'],
+    ['dedicace_refoua', 'לרפואה שלמה'],
+    ['dedicace_hatslaha', 'להצלחה'],
+    ['dedicace_zivoug', 'לזיווג הגון'],
+    ['dedicace_autre', null],
+  ],
+  corps(intro, demande, formule, nom, mot, fin) {
+    const l = [intro, '', demande, [formule, nom.trim()].filter(Boolean).join(' ')];
+    if (mot.trim()) l.push('', mot.trim());
+    l.push('', fin);
+    return l.join('\n');
+  },
+  lien(sujet, corps) {
+    return `mailto:${this.ADRESSE}?subject=${encodeURIComponent(sujet)}&body=${encodeURIComponent(corps)}`;
+  },
+};

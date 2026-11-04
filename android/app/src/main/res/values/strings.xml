@@ -31,6 +31,28 @@
     <string name="section_permissions_hint">Ce que l’application demande, et pourquoi.</string>
     <string name="section_data">Mes données</string>
     <string name="section_data_hint">Tout est stocké sur ce téléphone uniquement. Exportez de temps en temps.</string>
+    <!-- Dédicace (04/11) : la demande part à l’équipe, par la messagerie de l’utilisateur. -->
+    <string name="section_dedicace">Dédicace</string>
+    <string name="section_dedicace_hint">Pour dédier votre hitbodedout ou votre étude, la demande passe par l’équipe MyHitbodedut. Elle s’écrit dans votre messagerie, adressée à myhitbodedut26@gmail.com : rien ne part sans vous.</string>
+    <string name="dedicace_bouton">Dédicacer</string>
+    <string name="dedicace_quoi">Que dédiez-vous ?</string>
+    <string name="dedicace_hitbodedut">Ma hitbodedout</string>
+    <string name="dedicace_etude">Mon étude</string>
+    <string name="dedicace_pour">Pour</string>
+    <string name="dedicace_leilouy">Léïlouy nichmat (לעילוי נשמת)</string>
+    <string name="dedicace_refoua">Refoua chéléma (לרפואה שלמה)</string>
+    <string name="dedicace_hatslaha">Hatsla’ha (להצלחה)</string>
+    <string name="dedicace_zivoug">Zivoug hagoun (לזיווג הגון)</string>
+    <string name="dedicace_autre">Autre intention</string>
+    <string name="dedicace_nom">Nom (ex. : Moché ben Sarah)</string>
+    <string name="dedicace_mot">Un mot pour l’équipe (facultatif)</string>
+    <string name="dedicace_ecrire">Écrire l’e-mail</string>
+    <string name="dedicace_nom_manque">Indiquez le nom.</string>
+    <string name="dedicace_sans_messagerie">Aucune messagerie trouvée : écrivez à myhitbodedut26@gmail.com.</string>
+    <string name="dedicace_sujet">Dédicace – %1$s</string>
+    <string name="dedicace_corps_intro">Bonjour,</string>
+    <string name="dedicace_corps_demande">Je souhaite dédier %1$s :</string>
+    <string name="dedicace_corps_fin">Envoyé depuis l’application MyHitbodedut.</string>
 
     <!-- Diagnostic -->
     <string name="gate_armed_title">« Je suis avec Hachem » veille</string>

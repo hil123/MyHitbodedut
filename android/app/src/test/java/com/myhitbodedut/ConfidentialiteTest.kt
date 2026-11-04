@@ -45,11 +45,11 @@ class ConfidentialiteTest {
     fun `chaque langue dit les memes faits`() {
         val faits = mapOf(
             "fr" to listOf("SharedPreferences", "exclus", "Transfert d’appareil", "JSON", "approximative", "opensky-network.org",
-                "dixième de degré", "désactivé par défaut", "api.adsbdb.com", "numéro de vol", "Ni compte, ni publicité, ni outil d’analyse"),
+                "dixième de degré", "désactivé par défaut", "api.adsbdb.com", "numéro de vol", "Ni compte, ni publicité, ni outil d’analyse", "propre messagerie"),
             "en" to listOf("SharedPreferences", "excluded", "Device transfer", "JSON", "Approximate location", "opensky-network.org",
-                "tenth of a degree", "off by default", "api.adsbdb.com", "flight number", "No account, no ads, no audience analytics"),
+                "tenth of a degree", "off by default", "api.adsbdb.com", "flight number", "No account, no ads, no audience analytics", "own mail app"),
             "he" to listOf("SharedPreferences", "אינם נכללים", "העברה למכשיר חדש", "JSON", "מיקום משוער", "opensky-network.org",
-                "לעשירית מעלה", "כבוי כברירת מחדל", "api.adsbdb.com", "מספר הטיסה", "אין חשבון, אין פרסומות"),
+                "לעשירית מעלה", "כבוי כברירת מחדל", "api.adsbdb.com", "מספר הטיסה", "אין חשבון, אין פרסומות", "בתוכנת הדואר שלכם"),
         )
         faits.forEach { (langue, mots) ->
             val texte = section(langue)
