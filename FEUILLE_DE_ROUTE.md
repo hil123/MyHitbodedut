@@ -1092,3 +1092,51 @@ Réponse du propriétaire aux sept questions du 05/10 : « oui tout ».
 - iPhone : l'ambiance se tait écran verrouillé (Web Audio) ;
 - Android : « Je suis avec Hachem » jamais éprouvé sur un vrai téléphone ;
 - les textes du Rav Arush : toujours aucun fourni.
+
+## Mise à jour (04/11) : bilan de la session et ce qui reste
+
+**Fait et fusionné sur `main`** (PR #21 puis 9183a20, site déployé et vérifié) :
+
+- bugs A–D, calendrier et journal, date hébraïque à la tset, bandeau,
+  boussole, Nokia, Safari, revue des écrans, textes roses, avatar de la
+  tsadeket, erreurs R8, fluidité ;
+- Livres découpés (411 chapitres), biographies des hilloulot en arrière-plan,
+  `char_arms_raised` (404) corrigé, détection des notifications ;
+- **Hilloulot réorganisées** (Android et web) : recherche en haut, carte du
+  jour avec flèches et « Aujourd'hui », nombre de tsadikim, une seule carte
+  de lignes dépliables (nom, traduction, année du décès), fiche avec sources
+  et biographie repliée (« Lire la suite ») ; tri : sûrs d'abord, puis les
+  mieux sourcés ; résultats de recherche groupés par date dans l'ordre de
+  l'année, avec « Voir ce jour » ; réglage d'affichage en bas ;
+- **Tikkoun haKlali d'un seul tenant** : le découpage par psaume / partie est
+  supprimé (TikkunActivity, PsalmActivity, LiturgyActivity et leurs écrans ;
+  web : les anciennes adresses mènent à la lecture entière), bouton final
+  « J'ai dit le Tikoun en entier ».
+
+**Fait sur `ccr-314d6592-p0db3w`, PR #22 ouverte, pas encore fusionnée** :
+
+- adresse de contact : **myhitbodedut26@gmail.com** (remplace
+  myhitbodedut@gmail.com) — confidentialité en trois langues, son test,
+  PUBLICATION_PLAY_STORE.md. Également poussée sur les branches
+  ccr-8e34e693, ccr-ed3855d9 et claude/quirky-ptolemy. La branche
+  ccr-49d373f9 (session active) a été prévenue, non modifiée. Le site
+  (myhitbodedut-web) passera à la nouvelle adresse au déploiement suivant
+  la fusion ;
+- captures Android : plantages et ANR relevés dans `plantages.txt`.
+
+**Recherche d'erreurs** : web, 26 écrans × 3 langues sans erreur JS ni 404.
+Interrompus avant résultat : le test « toucher chaque bouton » du web et le
+parcours complet des captures Android minifiées (lancé sur 6d7ebdc, à lire
+dans `plantages.txt` de la branche `claude/captures-android`).
+
+**Reste à faire** :
+
+- fusionner la PR #22 après CI verte, puis vérifier le site déployé
+  (confidentialite.html avec la nouvelle adresse) ;
+- mettre aussi la nouvelle adresse sur la fiche Play Console (à la main) ;
+- appliquer le remplacement sur ccr-49d373f9 si cette session ne l'a pas fait ;
+- lire `plantages.txt` et revoir les captures (dont « Lire la suite » des
+  hilloulot sur Android, pas recapturé après la correction 1c72ebc) ;
+- relancer le test des boutons du web ;
+- ajouter le secret `NOKIA_DEPLOY_TOKEN` dans hil123/MyHitbodedut (utilisateur) ;
+- toujours valables : la liste « Reste » du 19/10 ci-dessus.

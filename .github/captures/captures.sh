@@ -38,6 +38,22 @@ if [ -n "${APK:-}" ]; then
   adb install -r -g "$APK" || adb install -r "$APK" || echo "installation echouee"
 fi
 
+# Les fenetres d'erreur sont cachees (plus haut) : un plantage de l'application ne se
+# verrait pas sur les captures. Le journal des plantages et des ANR est donc releve a
+# part, dans plantages.txt, a cote des captures (04/11).
+adb logcat -G 16M || true
+adb logcat -c || true
+adb logcat -b crash -c || true
+
 python3 .github/captures/captures.py || true
+
+{
+  echo "== Plantages (logcat -b crash) =="
+  adb logcat -d -b crash 2>/dev/null | grep -B2 -A40 "com.myhitbodedut" || echo "aucun"
+  echo
+  echo "== ANR et erreurs de l'application =="
+  adb logcat -d -v brief 2>/dev/null | grep -E "ANR in com.myhitbodedut|FATAL EXCEPTION|E/AndroidRuntime" | head -50 || true
+} > out/plantages.txt
+cat out/plantages.txt
 ls -la out || true
 exit 0
