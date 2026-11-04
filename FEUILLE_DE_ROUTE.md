@@ -1140,3 +1140,24 @@ dans `plantages.txt` de la branche `claude/captures-android`).
 - relancer le test des boutons du web ;
 - ajouter le secret `NOKIA_DEPLOY_TOKEN` dans hil123/MyHitbodedut (utilisateur) ;
 - toujours valables : la liste « Reste » du 19/10 ci-dessus.
+
+## Sujets ouverts de la session ccr-a461212d (04/11)
+
+Fait et poussé sur `main` (b76d154) : paragraphes coupés avec espace réduit,
+« סימניות » regroupés et filtrés par catégorie (bibliothèque, ספרים, סידור,
+תהילים, signets de versets de Tehilim), retour du bandeau masqué par double
+toucher. CI verte (Android, web, Nokia).
+
+**Reste à faire, demandé par l'utilisateur, non commencé** :
+
+1. **Musique de Noam Shpayer** : en attente des fichiers que l'utilisateur
+   doit fournir (les 10 morceaux `shpayer_*` déjà livrés le 03/11 sont
+   dans PUBLICATION_PLAY_STORE.md).
+2. **Check complet de l'app** : six audits indépendants à effort maximal,
+   puis corriger tous les défauts confirmés.
+3. **Mini-lecteur de musique pendant la hitbodedout** : lecteur qui se
+   replie en rond tournant (pochette, ou hassid à la guitare).
+4. **Lot du 28/10** : boutons « question », police (signes absents), mots
+   collés dans les biographies, ordre des Sheva Berakhot, trois widgets.
+   Une partie a pu être traitée dans le lot « 28/10 bis » (boussole,
+   position exacte, Roch 'Hodech) : vérifier chaque point avant de coder.
