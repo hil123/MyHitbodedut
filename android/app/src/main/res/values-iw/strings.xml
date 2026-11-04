@@ -26,6 +26,28 @@
     <string name="section_permissions_hint">מה האפליקציה מבקשת, ולמה.</string>
     <string name="section_data">הנתונים שלי</string>
     <string name="section_data_hint">הכול נשמר בטלפון הזה בלבד. כדאי לייצא מדי פעם.</string>
+    <!-- Dédicace (04/11) : la demande part à l’équipe, par la messagerie de l’utilisateur. -->
+    <string name="section_dedicace">הקדשה</string>
+    <string name="section_dedicace_hint">כדי להקדיש את ההתבודדות או את הלימוד שלכם, הבקשה עוברת דרך צוות MyHitbodedut. היא נכתבת בתוכנת הדואר שלכם, אל myhitbodedut26@gmail.com: שום דבר לא נשלח בלעדיכם.</string>
+    <string name="dedicace_bouton">הקדשה</string>
+    <string name="dedicace_quoi">מה מקדישים?</string>
+    <string name="dedicace_hitbodedut">את ההתבודדות שלי</string>
+    <string name="dedicace_etude">את הלימוד שלי</string>
+    <string name="dedicace_pour">עבור</string>
+    <string name="dedicace_leilouy">לעילוי נשמת</string>
+    <string name="dedicace_refoua">לרפואה שלמה</string>
+    <string name="dedicace_hatslaha">להצלחה</string>
+    <string name="dedicace_zivoug">לזיווג הגון</string>
+    <string name="dedicace_autre">כוונה אחרת</string>
+    <string name="dedicace_nom">שם (לדוגמה: משה בן שרה)</string>
+    <string name="dedicace_mot">מילה לצוות (לא חובה)</string>
+    <string name="dedicace_ecrire">לכתוב את המייל</string>
+    <string name="dedicace_nom_manque">נא לכתוב את השם.</string>
+    <string name="dedicace_sans_messagerie">לא נמצאה תוכנת דואר: כתבו אל myhitbodedut26@gmail.com.</string>
+    <string name="dedicace_sujet">הקדשה – %1$s</string>
+    <string name="dedicace_corps_intro">שלום,</string>
+    <string name="dedicace_corps_demande">ברצוני להקדיש %1$s:</string>
+    <string name="dedicace_corps_fin">נשלח מהאפליקציה MyHitbodedut.</string>
 
     <string name="gate_armed_title">„אני עם השם” פעיל</string>
     <plurals name="gate_armed_detail">
@@ -719,6 +741,9 @@
     <string name="ajout_motsae_chabbat_yt">מוצאי שבת ויום טוב</string>
     <string name="ajout_cheva_berakhot">שבע ברכות</string>
     <string name="ajout_zimun">זימון</string>
+    <string name="ajout_facultatif">מנהג, לא חובה</string>
+    <string name="ajout_facultatif_avant">מזמורים לפני ברכת המזון (מנהג, לא חובה)</string>
+    <string name="ajout_facultatif_apres">הרחמן וסיום (מנהג, לא חובה)</string>
     <string name="ajout_embolismique">שנה מעוברת (וּלְכַפָּרַת פֶּשַׁע)</string>
     <string name="ajout_beit_avel">בית האבל</string>
     <string name="siddur_seul">ביחיד</string>
@@ -934,6 +959,19 @@
         <item quantity="one">רשומה אחת ביומן</item>
         <item quantity="two">%1$d רשומות ביומן</item>
         <item quantity="other">%1$d רשומות ביומן</item>
+    </plurals>
+    <!-- Le Tikoun HaKlali (04/11) : lectures complètes, jours d’affilée. -->
+    <string name="trophee_tikkun">התיקון הכללי</string>
+    <string name="trophee_tikkun_serie">כינור דוד</string>
+    <plurals name="trophee_tikkun_desc">
+        <item quantity="one">תיקון כללי אחד שלם</item>
+        <item quantity="two">%1$d תיקונים כלליים שלמים</item>
+        <item quantity="other">%1$d תיקונים כלליים שלמים</item>
+    </plurals>
+    <plurals name="trophee_tikkun_serie_desc">
+        <item quantity="one">יום אחד של תיקון ברציפות</item>
+        <item quantity="two">יומיים של תיקון ברציפות</item>
+        <item quantity="other">%1$d ימים של תיקון ברציפות</item>
     </plurals>
     <string name="metal_bronze">ארד</string>
     <string name="metal_argent">כסף</string>
@@ -1225,7 +1263,7 @@
     <string name="vol_priere_titre">התפילה כעת</string>
     <string name="vol_jusqua">עד %1$s</string>
     <string name="vol_sans_limite">עד עלות השחר, ללא שעה מוצגת</string>
-    <string name="vol_dans">בעוד %1$s</string>
+    <string name="vol_dans">עד %1$s</string>
     <string name="vol_hors_fenetre">החישוב מכסה את הטיסה ואת 6 השעות שלפניה ואחריה.</string>
     <string name="vol_en_vol_titre">במהלך הטיסה</string>
     <string name="vol_aucun_zman">אין זמנים במהלך טיסה זו.</string>
@@ -1360,4 +1398,31 @@
 
     <!-- Sous l’interrupteur des services en ligne, dans le formulaire du vol (02/11, VolActivity). -->
     <string name="vol_en_ligne_aide">כבויים כברירת מחדל: שום דבר לא יוצא מהטלפון. כשהם פעילים, הזכוכית המגדלת 🔍 שולחת ל־adsbdb.com את מספר הטיסה בלבד כדי למלא את היעד, והמעקב בזמן אמת פונה ל־OpenSky Network.</string>
+    <string name="vol_en_ligne_titre">לחפש את המסלול ברשת?</string>
+    <string name="vol_en_ligne_oui">להפעיל ולחפש</string>
+    <string name="vol_rapide_titre">תארו את הטיסה</string>
+    <string name="vol_rapide_aide">כמו שהייתם אומרים, או הדביקו את טקסט הכרטיס. הכול נקרא בטלפון.</string>
+    <string name="vol_rapide_exemple">למשל: אל על מליון לתל אביב מחר בשעה 11</string>
+    <string name="vol_rapide_remplir">מילוי הטיסה</string>
+    <string name="vol_rapide_billet">ייבוא הכרטיס (PDF או תמונה)</string>
+    <string name="vol_rapide_rien">לא זוהה דבר. נסו למשל: ‎«LY 382 פריז תל אביב 12.11 בשעה 9:40»‎.</string>
+    <string name="vol_rapide_heure">שעת ההמראה</string>
+    <string name="vol_rapide_compris">הובן: %1$s</string>
+    <string name="vol_rapide_estimee">הנחיתה הוערכה לפי המרחק: תקנו אותה לפי השעה שבכרטיס.</string>
+    <string name="vol_rapide_estimee_court">הערכה לפי המרחק: יש לבדוק בכרטיס.</string>
+    <string name="vol_rapide_manque">נותר למלא: %1$s.</string>
+    <string name="vol_rapide_lecture">קורא את הכרטיס…</string>
+    <string name="vol_rapide_billet_sans_code">לא נמצא ברקוד של כרטיס עלייה למטוס. פתחו את הכרטיס, העתיקו את הטקסט והדביקו אותו למעלה.</string>
+    <string name="vol_rapide_billet_illisible">נקרא ברקוד, אבל הוא אינו של כרטיס עלייה למטוס.</string>
+    <string name="vol_rapide_billet_lu">כרטיס העלייה למטוס נקרא (הברקוד אינו כולל את השעות).</string>
+
+    <!-- Les langues d’un texte à lire (04/11), LanguesTexte. -->
+    <string name="lecture_langues">שפות הטקסט</string>
+    <string name="lecture_sans_traduction">לטקסט הזה עדיין אין תרגום: הוא מוצג בעברית.</string>
+    <string name="langues_he">עברית</string>
+    <string name="langues_fr">Français</string>
+    <string name="langues_en">English</string>
+    <string name="langues_he_fr">עברית + Français</string>
+    <string name="langues_he_en">עברית + English</string>
+    <string name="langues_fr_en">Français + English</string>
 </resources>

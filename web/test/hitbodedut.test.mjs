@@ -38,7 +38,7 @@ test('les intitulés sont ceux de leurs sources, et les sources suivent la langu
   assert.equal(Reference.localise(SOURCE_LIKOUTEI, 'he'), 'ליקוטי מוהר״ן תניינא, כ״ה');
   assert.equal(Reference.localise(SOURCE_RAMBAM, 'he'), 'רמב״ם, הלכות תפילה א׳, ב׳');
   assert.equal(Reference.localise(SOURCE_LIKOUTEI, 'en'), 'Likutei Moharan II, 25');
-  assert.equal(Reference.localise(SOURCE_RAMBAM, 'en'), 'Rambam, Hilkhot Tefillah 1:2');
+  assert.equal(Reference.localise(SOURCE_RAMBAM, 'en'), 'Rambam, Hilchot Tefillah 1:2');
 });
 
 test('chaque temps se réclame de la source dont il vient, l’action de grâce après la demande', () => {

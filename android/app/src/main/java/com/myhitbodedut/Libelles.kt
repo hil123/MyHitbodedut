@@ -26,12 +26,14 @@ object Libelles {
         "ajout_chabbat" -> R.string.ajout_chabbat
         "ajout_chabbat_roch_hodech" -> R.string.ajout_chabbat_roch_hodech
         "ajout_cheva_berakhot" -> R.string.ajout_cheva_berakhot
-        "ajout_zimun" -> R.string.ajout_zimun
         "ajout_chiva_assar_tamouz" -> R.string.ajout_chiva_assar_tamouz
         "ajout_chol" -> R.string.ajout_chol
         "ajout_embolismique" -> R.string.ajout_embolismique
         "ajout_embolismique_avant_nissan" -> R.string.ajout_embolismique
         "ajout_esther_pourim" -> R.string.ajout_esther_pourim
+        "ajout_facultatif" -> R.string.ajout_facultatif
+        "ajout_facultatif_apres" -> R.string.ajout_facultatif_apres
+        "ajout_facultatif_avant" -> R.string.ajout_facultatif_avant
         "ajout_hallel" -> R.string.ajout_hallel
         "ajout_hallel_annonce" -> R.string.ajout_hallel_annonce
         "ajout_hallel_complet" -> R.string.ajout_hallel_complet
@@ -69,6 +71,7 @@ object Libelles {
         "ajout_yaale_veyavo" -> R.string.ajout_yaale_veyavo
         "ajout_yom_tov" -> R.string.ajout_yom_tov
         "ajout_yom_tov_chabbat" -> R.string.ajout_yom_tov_chabbat
+        "ajout_zimun" -> R.string.ajout_zimun
         "fete_chavouot" -> R.string.fete_chavouot
         "fete_chemini_atseret" -> R.string.fete_chemini_atseret
         "fete_chouchan_pourim" -> R.string.fete_chouchan_pourim

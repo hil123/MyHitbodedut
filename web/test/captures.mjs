@@ -230,12 +230,15 @@ const ouvrirTexte = (titre, y) => async (p) => {
   // Les titres sont vocalisés : comparés sans voyelles.
   await p.evaluate((t) => [...document.querySelectorAll('.ligne-he')]
     .find((b) => b.querySelector('.nom-he').textContent.replace(/[\u0591-\u05C7]/g, '') .includes(t)).click(), titre);
-  await p.waitForSelector('.siddour .priere');
+  await p.waitForSelector('.siddour .priere >> visible=true');
   await p.evaluate((y) => { const d = document.querySelector('.defile'); d.scrollTop = y < 0 ? d.scrollHeight : y; }, y);
 };
 await capture('priere-aeree-he', { langue: 'he', ecran: 'siddur', actions: ouvrirTexte('תפלת שחרית', 1400) });
 await capture('birkat-cheva-he', { langue: 'he', ecran: 'siddur', actions: ouvrirTexte('ברכת המזון', -1) });
 await capture('birkat-zimun-fr', { langue: 'fr', ecran: 'siddur', actions: ouvrirTexte('ברכת המזון', 560) });
+// Le 03/11 : ce qui n'est pas obligatoire, replié (psaumes d'avant, הרחמן et fin).
+await capture('birkat-facultatif-he', { langue: 'he', ecran: 'siddur', actions: ouvrirTexte('ברכת המזון', 0) });
+await capture('birkat-facultatif-fin-he', { langue: 'he', ecran: 'siddur', actions: ouvrirTexte('ברכת המזון', -1) });
 // Le 29/10 : Méèn chaloch, les ajouts de fêtes repliés (le 29/09 est 'Hol hamoed Soukkot :
 // Soukkot du jour, le reste replié) ; le meteg masqué dans la police par défaut (עָלֶֽיהָ).
 for (const nusah of ['edot', 'sefard', 'ashkenaz']) {
@@ -280,6 +283,14 @@ for (const [nom, carte, n] of [['reelle', false, 67], ['carte', true, 109]]) {
 await capture('bibliotheque-he', { langue: 'he', ecran: 'bibliotheque', actions: bas(0) });
 await capture('reglages-fr-personnalisation', { langue: 'fr', ecran: 'reglages', actions: bas(400) });
 await capture('reglages-he', { langue: 'he', ecran: 'reglages', mode: 'sombre', actions: bas(400) });
+// La dédicace (04/11) : la carte des réglages, puis la feuille, le nom manquant signalé.
+const dedicace = async (p) => {
+  await p.click('.carte button.principal >> text=/Dédicacer|Dedicate|הקדשה/');
+  await p.waitForSelector('.feuille .dedicace-choix');
+  await p.click('.feuille .fort');
+};
+await capture('dedicace-fr', { langue: 'fr', ecran: 'reglages', actions: dedicace });
+await capture('dedicace-he', { langue: 'he', ecran: 'reglages', mode: 'sombre', actions: dedicace });
 
 // La séance : avant, pendant, le bravo, l'abandon.
 const finDeSeance = async (page) => {

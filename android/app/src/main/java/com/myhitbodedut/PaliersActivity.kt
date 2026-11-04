@@ -83,9 +83,11 @@ class PaliersActivity : AppCompatActivity() {
                     }
                 })
             })
-            val proches = Trophees.plusProches(pratique, 3)
+            // Le prochain a déjà sa carte « Tu es ici » : pas deux fois le même (04/11).
+            val prochainCle = Trophees.prochain(pratique)?.cle
+            val proches = Trophees.plusProches(pratique, 4).filter { it.cle != prochainCle }.take(3)
             if (proches.isNotEmpty()) {
-                addView(VueJour.texte(context, getString(R.string.trophees_proches_titre), 12f, R.color.muted, gras = true, haut = 14).apply { letterSpacing = 0.04f })
+                addView(VueJour.texte(context, getString(R.string.trophees_proches_titre), 13f, R.color.muted, gras = true, haut = 14).apply { letterSpacing = 0.04f })
                 proches.forEach { t -> addView(proche(t, pratique) { ouvrirDetail(t) }) }
             }
             if (n > 0) addView(TextView(context).apply {
@@ -214,7 +216,7 @@ class PaliersActivity : AppCompatActivity() {
                     isSelected = choisi
                     contentDescription = getString(R.string.trophees_filtre, text)
                     setOnClickListener { filtre = fam; afficher(anime = false) }
-                    layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, dp(40)).apply { marginEnd = dp(8) }
+                    layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, dp(48)).apply { marginEnd = dp(8) }
                 })
             }
         })
@@ -227,7 +229,7 @@ class PaliersActivity : AppCompatActivity() {
         minimumHeight = dp(48)
         layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
         val v = Trophees.valeur(p, t.famille).coerceAtMost(t.seuil)
-        addView(View(context).apply { background = TropheeDessin(context, t.famille.forme, null, t.famille.icone); alpha = 0.6f },
+        addView(View(context).apply { background = TropheeDessin(context, t.famille.forme, null, t.famille.icone); alpha = 0.85f },
             LinearLayout.LayoutParams(dp(30), dp(30)))
         addView(VueJour.texte(context, TropheesVue.description(context, t.famille, t.seuil), 14f, R.color.ink).apply {
             layoutParams = LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f).apply { marginStart = dp(8) }
@@ -252,7 +254,8 @@ class PaliersActivity : AppCompatActivity() {
         val trait = View(this).apply { background = trait(metal) }
         val objet = View(this).apply {
             background = TropheeDessin(context, t.famille.forme, metal, t.famille.icone)
-            if (metal == null) { alpha = 0.5f; tag = 0.5f }
+            // Déjà gris : un léger voile suffit, l'objet reste lisible (04/11).
+            if (metal == null) { alpha = 0.8f; tag = 0.8f }
         }
         val vue = LinearLayout(this).apply {
             orientation = LinearLayout.HORIZONTAL
@@ -291,14 +294,14 @@ class PaliersActivity : AppCompatActivity() {
                 setColor(Apparence.couleur(context, R.color.card))
                 setStroke(dp(2), brand)
             }
-            addView(VueJour.texte(context, getString(R.string.trophees_ici), 11f, R.color.brand, gras = true).apply { letterSpacing = 0.06f })
+            addView(VueJour.texte(context, getString(R.string.trophees_ici), 13f, R.color.brand, gras = true).apply { letterSpacing = 0.06f })
             addView(LinearLayout(context).apply {
                 orientation = LinearLayout.HORIZONTAL
                 gravity = Gravity.CENTER_VERTICAL
                 layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply { topMargin = dp(8) }
                 addView(View(context).apply {
                     background = TropheeDessin(context, t.famille.forme, null, t.famille.icone)
-                    alpha = 0.7f
+                    alpha = 0.9f
                 }, LinearLayout.LayoutParams(dp(64), dp(64)))
                 addView(LinearLayout(context).apply {
                     orientation = LinearLayout.VERTICAL
@@ -358,7 +361,8 @@ class PaliersActivity : AppCompatActivity() {
         layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply { setMargins(0, dp(4), 0, dp(4)) }
         val (clair, fonce, _) = TropheeDessin.teintes(g)
         background = GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT,
-            if (atteint) intArrayOf(clair, fonce) else intArrayOf(0x1AFFFFFF, 0x1AFFFFFF)).apply { cornerRadius = dp(14).toFloat() }
+            // À venir : un fond visible dans les deux thèmes (le blanc à 10 % disparaissait en clair, 04/11).
+            if (atteint) intArrayOf(clair, fonce) else Apparence.couleur(context, R.color.line).let { intArrayOf(it, it) }).apply { cornerRadius = dp(14).toFloat() }
         addView(medaille(if (atteint) g else null, "★", 34))
         addView(LinearLayout(context).apply {
             orientation = LinearLayout.VERTICAL
@@ -368,7 +372,7 @@ class PaliersActivity : AppCompatActivity() {
                 text = getString(if (atteint) R.string.grade_atteint else R.string.grade_titre, TropheesVue.metal(context, g))
                 textSize = 15f; setTypeface(typeface, Typeface.BOLD); setTextColor(encre)
             })
-            addView(TextView(context).apply { text = getString(R.string.grade_au, rang); textSize = 12f; setTextColor(encre); alpha = 0.75f })
+            addView(TextView(context).apply { text = getString(R.string.grade_au, rang); textSize = 13f; setTextColor(encre); alpha = 0.85f })
         })
     }
 
@@ -491,6 +495,8 @@ object TropheesVue {
         Trophees.Famille.EREV_CHABBAT -> R.string.trophee_erev_chabbat
         Trophees.Famille.RETOUR -> R.string.trophee_retour
         Trophees.Famille.PLUME -> R.string.trophee_plume
+        Trophees.Famille.TIKKUN -> R.string.trophee_tikkun
+        Trophees.Famille.TIKKUN_SERIE -> R.string.trophee_tikkun_serie
     })
 
     /** Ce que demande un seuil de la famille (« 40 jours de pratique »). */
@@ -504,6 +510,8 @@ object TropheesVue {
         Trophees.Famille.EREV_CHABBAT -> R.plurals.trophee_erev_chabbat_desc
         Trophees.Famille.RETOUR -> R.plurals.trophee_retour_desc
         Trophees.Famille.PLUME -> R.plurals.trophee_plume_desc
+        Trophees.Famille.TIKKUN -> R.plurals.trophee_tikkun_desc
+        Trophees.Famille.TIKKUN_SERIE -> R.plurals.trophee_tikkun_serie_desc
     }, seuil, seuil)
 
     fun metal(c: Context, m: Trophees.Metal): String = c.getString(when (m) {

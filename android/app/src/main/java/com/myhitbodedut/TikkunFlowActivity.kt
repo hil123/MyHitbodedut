@@ -40,24 +40,43 @@ class TikkunFlowActivity : AppCompatActivity() {
         val contenu = findViewById<LinearLayout>(R.id.flow_content)
         var premier = true
 
+        val mode = LanguesTexte.mode(this)
         tikkun.avant.forEach { bloc ->
             contenu.addView(titre(bloc.titre.he, premier))
             premier = false
-            bloc.paragraphes.forEach { contenu.addView(paragraphe(it)) }
+            paragraphesTraduits(bloc, contenu, mode)
         }
 
         tikkun.psaumes.forEach { psaume ->
             contenu.addView(titre(getString(R.string.tikkun_psalm_he, Reference.lettres(psaume.numero)), premier))
             premier = false
             psaume.versets.forEach { verset ->
-                contenu.addView(vueVerset(verset))
-                verset.arret?.let { contenu.addView(vueArret(it)) }
+                // Les langues choisies (04/11) : l'hébreu, la traduction, ou les deux.
+                val textes = LanguesTexte.textes(mode, verset.he, verset.fr, verset.en)
+                val avecHebreu = textes.any { it.first == "he" }
+                if (avecHebreu) {
+                    // L'arret se marque dans le verset, avant « מִצַּר ».
+                    val coupe = verset.coupe()
+                    if (coupe == null) {
+                        contenu.addView(vueVerset(verset.he))
+                        verset.arret?.let { contenu.addView(vueArret(it)) }
+                    } else {
+                        contenu.addView(vueVerset(coupe.first))
+                        contenu.addView(vueArret(verset.arret!!))
+                        contenu.addView(vueVerset(coupe.second))
+                    }
+                }
+                textes.filter { it.first != "he" }.forEachIndexed { k, (_, t) ->
+                    contenu.addView(LanguesTexte.vueMarquee(this, t, seule = !avecHebreu).apply {
+                        layoutParams = ligneParams().apply { topMargin = if (avecHebreu || k > 0) dp(4) else dp(12) }
+                    })
+                }
             }
         }
 
         tikkun.bloc(Tikkun.CLOTURE)?.let { bloc ->
             contenu.addView(titre(bloc.titre.he, false))
-            bloc.paragraphes.forEach { contenu.addView(paragraphe(it)) }
+            paragraphesTraduits(bloc, contenu, mode)
         }
 
         // Après le Tikoun (04/11, la liste retirée) : la kavana, puis la prière de Rabbi Natan.
@@ -69,7 +88,7 @@ class TikkunFlowActivity : AppCompatActivity() {
                 ?.let { contenu.addView(note(it)) }
             // La formule de la kavana est centrée : c'est un tableau de lettres, pas une phrase.
             bloc.formule?.let { contenu.addView(paragraphe(it).apply { (this as TextView).textAlignment = View.TEXT_ALIGNMENT_CENTER }) }
-            bloc.paragraphes.forEach { contenu.addView(paragraphe(it)) }
+            paragraphesTraduits(bloc, contenu, mode)
         }
 
         // Le bouton de lecture : taille des lettres et lecture de nuit.
@@ -109,9 +128,9 @@ class TikkunFlowActivity : AppCompatActivity() {
         PoliceHebraique.appliquer(this)
     }, Role.TITRE)
 
-    private fun vueVerset(verset: Verse): View = ReglagesLecture.marquer(TextView(this).apply {
+    private fun vueVerset(texte: String): View = ReglagesLecture.marquer(TextView(this).apply {
         layoutParams = ligneParams()
-        text = verset.he
+        text = texte
         layoutDirection = View.LAYOUT_DIRECTION_RTL
         textAlignment = View.TEXT_ALIGNMENT_VIEW_START
         textSize = 19f
@@ -119,6 +138,20 @@ class TikkunFlowActivity : AppCompatActivity() {
         setTextColor(Apparence.couleur(context, R.color.ink))
         PoliceHebraique.appliquer(this)
     }, Role.TEXTE)
+
+    /** Les paragraphes d'une partie liturgique, dans les langues choisies (04/11). */
+    private fun paragraphesTraduits(bloc: LiturgyBlock, contenu: LinearLayout, mode: LanguesTexte.Mode) {
+        bloc.paragraphes.forEachIndexed { i, p ->
+            val textes = LanguesTexte.textes(mode, p, bloc.paragraphesFr.getOrNull(i), bloc.paragraphesEn.getOrNull(i))
+            val avecHebreu = textes.any { it.first == "he" }
+            if (avecHebreu) contenu.addView(paragraphe(p))
+            textes.filter { it.first != "he" }.forEachIndexed { k, (_, t) ->
+                contenu.addView(LanguesTexte.vueMarquee(this, t, seule = !avecHebreu, base = 18f).apply {
+                    layoutParams = ligneParams().apply { topMargin = if (avecHebreu || k > 0) dp(4) else dp(12) }
+                })
+            }
+        }
+    }
 
     private fun paragraphe(texte: String): View = ReglagesLecture.marquer(TextView(this).apply {
         layoutParams = ligneParams()

@@ -4,7 +4,7 @@
 // n'existe pas encore est montré, mais inerte (classe « a-venir »).
 
 import { chargeTraduction, formate, langueInitiale, LANGUES } from './i18n.js';
-import { Anneaux, CycleTehilim, DureeSeance, JaugeSemaine, LibraryRules, Plaque, Reference, Salutation, SiddurMoment, SignetsSiddur, SourceDuJour, Parcours } from './regles.js';
+import { Anneaux, CycleTehilim, LanguesTexte, DureeSeance, JaugeSemaine, LibraryRules, Plaque, Reference, Salutation, SiddurMoment, SignetsSiddur, SourceDuJour, Parcours } from './regles.js';
 import { ART_DU_MOMENT, ChizukBag, ChizukRules } from './chizuk.js';
 import { AMBIANCES, arreter as arreteAmbiance, jouer as joueAmbiance } from './ambiance.js';
 import { MelangeMusique, estQuota, nomDonne, renomme, titreDeFichier } from './musique.js';
@@ -14,7 +14,7 @@ import { creeStore, memoire, repriseValable } from './store.js';
 import { ajouteJours, heureDans, isoDans, isoLocal } from './calendrier.js';
 import { JERUSALEM_GEONAMES, RAPPELS_TEFILA, dansIsrael, USAGES_LEVANA, aJerusalem, calendrier, jour as jourJuif, jourDeLaPriere, levana, rappelsTefila, usageLevana } from './calendrier-juif.js';
 import { conditionsPour, index as indexAjouts, libelleJour, vrai as ajoutVrai } from './siddur-jour.js';
-import { JournalPlus } from './regles.js';
+import { Dedicace, JournalPlus } from './regles.js';
 import { aerer } from './aeration.js';
 import { distanceKm } from './direction.js';
 import * as Paliers from './paliers.js';
@@ -777,10 +777,37 @@ function etatMusique() {
 // --- Tehilim (Tehilim.kt, TehilimActivity.kt) ------------------------------------
 // Le livre entier, chargé au premier besoin : 327 ko qu'on ne lit pas à chaque ouverture.
 let tehilim = null;
+// Les traductions du domaine public (04/11) : { fr: { psaumes }, en: { psaumes } }.
+let tehilimTrad = {};
 let lecture = null;
+
+// --- Les langues de lecture (LanguesTexte, 04/11) ------------------------------------
+const languesLecture = () => LanguesTexte.mode(store.lectureLangues(), tr.langue);
+/**
+ * Des paragraphes hébreux et leurs traductions (paragraphes_fr / _en, 04/11), dans les langues
+ * choisies : fait(p) rend un paragraphe hébreu.
+ */
+const paragraphesTraduits = (heb, fr, en, fait) => heb.flatMap((p, i) => {
+  const textes = LanguesTexte.textes(languesLecture(), p, fr?.[i], en?.[i]);
+  const avecHe = textes.some(([l]) => l === 'he');
+  return textes.map(([l, t]) => (l === 'he' ? fait(t) : paraTraduction(l, t, !avecHe)));
+});
+/** Une traduction affichée : de gauche à droite, en romain ; plus discrète sous l'hébreu. */
+const paraTraduction = (langue, texte, seule) => h('p', { class: `traduction${seule ? ' seule' : ''}`, lang: langue, dir: 'ltr' }, texte);
+/** Le choix des six façons de lire : la feuille, et l'écran redessiné. */
+function choisirLangues() {
+  feuille(tl('lecture_langues'), (f, fermer) => {
+    const actuel = languesLecture();
+    f.append(h('div', { role: 'radiogroup', 'aria-label': tl('lecture_langues') }, LanguesTexte.MODES.map((m) => h('button', {
+      type: 'button', class: 'choix choix-radio', role: 'radio', 'aria-checked': String(m === actuel),
+      onclick: () => { fermer(); store.setLectureLangues(m); rendreEtViser('.lecture-langues'); },
+    }, h('span', { class: 'radio', 'aria-hidden': 'true' }), tr.t(`langues_${m.replace('+', '_')}`)))));
+  });
+  document.querySelector('.feuille [aria-checked="true"]')?.focus();
+}
 function chargeTehilim() {
   if (tehilim) return true;
-  fetch('data/tehilim.json').then((r) => r.json()).then((d) => { tehilim = d.psaumes; rendre(); });
+  fetch('data/tehilim.json').then((r) => r.json()).then((d) => { tehilim = d.psaumes; tehilimTrad = d.traductions ?? {}; rendre(); });
   return false;
 }
 
@@ -870,7 +897,16 @@ function ecranLecture() {
     const quels = CycleTehilim.versets(p, n, tous.length);
     total += quels.length;
     blocs.push(h('h2', { class: 'psaume-titre', lang: 'he', dir: 'rtl' }, tr.t('tikkun_psalm_he', Reference.lettres(n))));
-    blocs.push(h('div', { class: 'psaume', lang: 'he', dir: 'rtl' }, quels.map((v) => verset(n, v, tous[v - 1]))));
+    // Les langues choisies (04/11) : verset par verset, l'hébreu et/ou la traduction.
+    const mode = languesLecture();
+    const trad = (l, v) => tehilimTrad[l]?.psaumes?.[n - 1]?.[v - 1];
+    blocs.push(h('div', { class: 'psaume', lang: 'he', dir: 'rtl' }, quels.flatMap((v) => {
+      if (mode === 'he') return [verset(n, v, tous[v - 1])];
+      const textes = LanguesTexte.textes(mode, tous[v - 1], trad('fr', v), trad('en', v));
+      const avecHe = textes.some(([l]) => l === 'he');
+      return textes.map(([l, t], k) => (l === 'he' ? verset(n, v, t)
+        : paraTraduction(l, avecHe || k > 0 ? t : `${v}  ${t}`, !avecHe)));
+    })));
   }
   const aller = (n) => { lecture = CycleTehilim.portion(n, n); rendre(); app.querySelector('.defile').scrollTop = 0; };
   const ecran = ecranLu(libellePortion(p), h('div', { class: 'contenu lecture' },
@@ -1112,6 +1148,8 @@ function reglagesLecture({ avecNusah, sansNuit = false }) {
         new Intl.NumberFormat(tr.langue, { style: 'percent' }).format(pourcent / 100)),
       bouton({ class: 'lettres', lang: 'en', dir: 'ltr', 'aria-label': tl('lecture_plus'), disabled: e >= 2, onclick: () => echelle(e + 0.1) }, 'A+'),
       separateur(),
+      // « אA » : les langues du texte (04/11) — hébreu, français, anglais, ou deux à la fois.
+      bouton({ class: 'lecture-langues', lang: 'en', dir: 'ltr', 'aria-label': tl('lecture_langues'), title: tr.t(`langues_${languesLecture().replace('+', '_')}`), onclick: choisirLangues }, 'אA'),
       // « אב » : la police suivante (les sept, l'une après l'autre), pour tous les textes.
       bouton({ class: 'lecture-police', lang: 'he', dir: 'rtl', 'aria-label': `${tl('lecture_police')} : ${tl(`police_${store.lecturePolice()}`)}`, title: tl(`police_${store.lecturePolice()}`),
         onclick: choisirPolice }, 'אב'),
@@ -1361,6 +1399,17 @@ function ecranPriere() {
     const si = rangSection.get(s);
     const p = h('p', { class: `${b.c !== undefined ? 'consigne' : 'priere'}${marquee(si, i) ? ' marque-page' : ''}${livre ? ' marque-etude' : ''}`, lang: 'he', dir: 'rtl', 'data-place': `${si}:${i}` }, riche(b.c !== undefined ? (texte ?? b.c) : aerer(texte ?? b.t)));
     if (p.firstChild?.nodeName === 'B') p.firstChild.classList.add('premier-mot');
+    // Un verset traduit (Esther, Chir HaChirim, 04/11) : la traduction sous l'hébreu, ou seule.
+    if (b.c === undefined && (b.fr || b.en)) {
+      const textes = LanguesTexte.textes(languesLecture(), b.t, b.fr, b.en);
+      const avecHe = textes.some(([l]) => l === 'he');
+      const traductions = textes.filter(([l]) => l !== 'he').map(([l, t]) => paraTraduction(l, t, !avecHe));
+      if (traductions.length) {
+        if (!avecHe) p.replaceChildren();
+        p.append(...traductions);
+        if (!avecHe) { p.setAttribute('dir', 'ltr'); p.removeAttribute('lang'); }
+      }
+    }
     let minuteur = null;
     const poser = () => {
       const pose = store.basculerMarque({ cle: cleMarque, nusah: nusahMarque, section: si, bloc: i, apercu: apercuMarque(b.c ?? b.t) });
@@ -1420,6 +1469,8 @@ function ecranPriere() {
       }
     return [...corps, ...renvois(si)];
   };
+  // Un livre sans traduction, quand on en a demandé une (04/11) : on le dit, l'hébreu reste.
+  const sansTraduction = livre && LanguesTexte.manque(languesLecture(), x.sections.some((s) => s.blocs.some((b) => b.fr || b.en)));
   // Une longue prière (Cha'harit, 04/11) se construit comme un livre, section par section à
   // l'approche de l'écran : construite et mise en page d'un coup, son ouverture gelait l'écran
   // (0,5 s mesurée sur un téléphone moyen, Chromium ralenti 4 fois : 0,4 s de construction et
@@ -1427,10 +1478,14 @@ function ecranPriere() {
   const parSections = livre || (x.sections.length > 3 &&
     x.sections.reduce((t, s) => t + hauteurEstimee(s), 0) > 6 * Math.max(600, window.innerHeight));
   const contenu = h('div', { class: 'contenu lecture siddour' },
+    sansTraduction ? h('p', { class: 'indice' }, tl('lecture_sans_traduction')) : null,
     annotations ? h('p', { class: 'indice note-ajouts' }, tr.t('siddur_jour_ajouts', jourDuTexte.dateHebraique,
       tr.t(store.inIsrael() ? 'region_israel' : 'region_diaspora'))) : null,
     ...x.sections.flatMap((s, si) => {
-      const t = plusieurs && s.titre ? h('h2', { class: 'psaume-titre', lang: 'he', dir: 'rtl' }, s.titre) : null;
+      // Le titre traduit (04/11), sous l'hébreu ou à sa place.
+      const titres = s.titre ? LanguesTexte.textes(languesLecture(), s.titre, s.titre_fr, s.titre_en) : [];
+      const t = plusieurs && s.titre ? h('h2', { class: 'psaume-titre', lang: titres[0][0], dir: titres[0][0] === 'he' ? 'rtl' : 'ltr' }, titres[0][1],
+        ...titres.slice(1).map(([l, x]) => h('span', { class: 'titre-traduit', lang: l, dir: 'ltr' }, x))) : null;
       if (t) titres.push({ titre: s.titre, el: t });
       if (!parSections) return [t, ...corpsDe(s, si)];
       // Un livre (02/11) : chaque chapitre dans sa propre boîte, vide tant qu'il n'approche pas de
@@ -1911,7 +1966,7 @@ function ajout(nom, applique, blocs, cond = '') {
 }
 
 /** Les ajouts qui ne sont jamais « du jour » : « toucher pour lire », pas « pas aujourd'hui ». */
-const JAMAIS_DU_JOUR = new Set(['minyan', 'beit_avel', 'oubli', 'cheva_berakhot', 'zimun']);
+const JAMAIS_DU_JOUR = new Set(['minyan', 'beit_avel', 'oubli', 'cheva_berakhot', 'zimun', 'facultatif']);
 
 /**
  * La bande de signets en tête de la lecture (demande du 10/10, comme
@@ -1978,27 +2033,37 @@ function ecranTikkun() {
   if (!tikkun) return h('div', { class: 'ecran' }, barre(tr.t('tikkun_title')), h('div', { class: 'defile' }));
   const titre = (texte) => h('h2', { class: 'psaume-titre' }, texte);
   const paragraphe = (texte) => h('p', { class: 'verset paragraphe' }, texte);
+  const mode = languesLecture();
   const blocs = [];
-  for (const b of Tikkun.avant(tikkun)) blocs.push(titre(b.titre.he), ...b.paragraphes.map(paragraphe));
+  for (const b of Tikkun.avant(tikkun)) blocs.push(titre(b.titre.he), ...paragraphesTraduits(b.paragraphes, b.paragraphes_fr, b.paragraphes_en, paragraphe));
   for (const p of tikkun.psaumes) {
     blocs.push(titre(tr.t('tikkun_psalm_he', Reference.lettres(p.numero))));
     for (const v of p.versets) {
-      blocs.push(h('p', { class: 'verset' }, v.he));
-      if (v.arret) blocs.push(h('p', { class: 'arret' }, v.arret.note));
+      const c = Tikkun.coupe(v);
+      const textes = LanguesTexte.textes(mode, v.he, v.fr, v.en);
+      const avecHe = textes.some(([l]) => l === 'he');
+      if (avecHe) {
+        blocs.push(h('p', { class: 'verset' }, c ? c[0] : v.he));
+        if (v.arret) blocs.push(h('p', { class: 'arret' }, v.arret.note));
+        if (c) blocs.push(h('p', { class: 'verset suite' }, c[1]));
+      }
+      textes.filter(([l]) => l !== 'he').forEach(([l, t]) => blocs.push(paraTraduction(l, t, !avecHe)));
     }
   }
   const cloture = Tikkun.bloc(tikkun, Tikkun.CLOTURE);
-  if (cloture) blocs.push(titre(cloture.titre.he), ...cloture.paragraphes.map(paragraphe));
+  if (cloture) blocs.push(titre(cloture.titre.he), ...paragraphesTraduits(cloture.paragraphes, cloture.paragraphes_fr, cloture.paragraphes_en, paragraphe));
   for (const b of [Tikkun.KAVANA, Tikkun.PRIERE].map((c) => Tikkun.bloc(tikkun, c)).filter(Boolean)) {
     const note = Tikkun.sousTitreBloc(b, tr.langue);
     blocs.push(titre(b.titre.he), note ? h('p', { class: 'arret', dir: 'auto' }, note) : null,
       // La formule de la kavana est centrée : c'est un tableau de lettres, pas une phrase.
-      b.formule ? h('p', { class: 'verset formule' }, b.formule) : null, ...b.paragraphes.map(paragraphe));
+      b.formule ? h('p', { class: 'verset formule' }, b.formule) : null,
+      ...paragraphesTraduits(b.paragraphes, b.paragraphes_fr, b.paragraphes_en, paragraphe));
   }
   const fini = () => {
     // Tout dire d'un trait vaut les dix psaumes.
     for (const p of tikkun.psaumes) store.setTikkunDone(p.numero, true);
     retour();
+    feterTikkun();
   };
   // Pas d'image dans une prière (13/10).
   return ecranLu(tr.t('tikkun_title'), h('div', { class: 'contenu lecture tikkun' },
@@ -2103,7 +2168,7 @@ function ecranSource() {
         h('h2', { class: 'source-titre', lang: 'he', dir: 'rtl' }, e.titre_he),
         h('p', { class: 'source-ref' }, Reference.localise(e.ref, tr.langue)))),
     h('div', { class: 'carte carte-texte psaume', lang: 'he', dir: 'rtl' },
-      LibraryRules.paragraphes(bibliotheque, e).map((p) => h('p', { class: 'verset paragraphe-source' }, p))),
+      paragraphesTraduits(LibraryRules.paragraphes(bibliotheque, e), e.paragraphes_fr, e.paragraphes_en, (p) => h('p', { class: 'verset paragraphe-source' }, p))),
     // Ni note ni édition sous le texte : l'attribution passe par le lien vers Sefaria.
     e.url ? h('a', { class: 'principal lien-sefaria', href: e.url, target: '_blank', rel: 'noopener noreferrer' }, tr.t('library_open_sefaria')) : null));
 }
@@ -3360,6 +3425,71 @@ const ecartVol = (ms) => tr.t(calculVol && calculVol.fiabilite !== 'route_prevue
  * l'arrivée (et le départ s'il est vide) et l'indicatif du suivi en direct ; les heures restent à saisir.
  */
 let routeVol = { attente: false, texte: '' };
+
+/** La loupe (VolActivity.loupe) : services en ligne éteints, on demande d'abord, une fois, ce qui partira. */
+function loupeVol(v) {
+  if (store.suiviDirect()) return chercherRouteVol(v);
+  feuille(tr.t('vol_en_ligne_titre'), (f, fermer) => f.append(
+    h('p', {}, tr.t('vol_en_ligne_aide')),
+    h('button', { class: 'principal', onclick: () => { fermer(); store.setSuiviDirect(true); chercherRouteVol(v); } }, tr.t('vol_en_ligne_oui')),
+    h('button', { class: 'lien-discret', onclick: fermer }, tr.t('vol_fermer'))));
+}
+
+/** La saisie rapide (VolActivity.carteRapide) : une phrase, ou le texte collé du billet. */
+let phraseVol = '';
+let rapideVol = null;
+function carteRapideVol(v, pret, calculer) {
+  const champ = h('textarea', { class: 'champ-recherche champ-vol saisie-rapide', rows: 2, placeholder: tr.t('vol_rapide_exemple'),
+    oninput: (e) => { phraseVol = e.target.value; } });
+  champ.value = phraseVol;
+  const remplir = async () => {
+    if (!pret) return;
+    const p = Vol.lirePhrase(phraseVol, aeroportsVol, isoLocal(new Date()));
+    if (Vol.phraseVide(p)) { rapideVol = tr.t('vol_rapide_rien'); return rendre(); }
+    if (p.numero) v.numero = p.numero;
+    if (p.depart) v.depart = p.depart;
+    if (p.arrivee) v.arrivee = p.arrivee;
+    const jour = p.date ?? v.decollage?.slice(0, 10);
+    if (jour && p.heureDepart) v.decollage = `${jour}T${p.heureDepart}`;
+    let estimee = false;
+    const a = aeroportsVol.find((x) => x.iata === v.depart);
+    const b = aeroportsVol.find((x) => x.iata === v.arrivee);
+    if (a && b && v.decollage) {
+      const i1 = Vol.instant(v.decollage, a);
+      if (i1 && p.heureArrivee) {
+        // L'arrivée donnée : le premier jour où elle tombe après le départ (vol de nuit).
+        let j = p.dateArrivee ?? jour ?? v.decollage.slice(0, 10);
+        for (let n = 0; n < 3; n++) {
+          const i2 = Vol.instant(`${j}T${p.heureArrivee}`, b);
+          if (i2 && i2 > i1) break;
+          const d = new Date(`${j}T00:00:00Z`); d.setUTCDate(d.getUTCDate() + 1); j = d.toISOString().slice(0, 10);
+        }
+        v.atterrissage = `${j}T${p.heureArrivee}`;
+      } else if (i1) {
+        const t = new Date(+i1 + Vol.dureeEstimee(a, b));
+        const q = Object.fromEntries(new Intl.DateTimeFormat('en-CA', { timeZone: b.fuseau, year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' })
+          .formatToParts(t).map((x) => [x.type, x.value]));
+        v.atterrissage = `${q.year}-${q.month}-${q.day}T${q.hour}:${q.minute}`;
+        estimee = true;
+      }
+    }
+    const compris = [p.numero ?? p.compagnie, v.depart || v.arrivee ? `${v.depart ?? '?'} → ${v.arrivee ?? '?'}` : null,
+      v.decollage ? v.decollage.replace('T', ' · ') : p.date].filter(Boolean).join(' · ');
+    const manque = [!v.depart && tr.t('vol_depart'), !v.arrivee && tr.t('vol_arrivee'), !v.decollage && tr.t('vol_rapide_heure')].filter(Boolean);
+    rapideVol = [tr.t('vol_rapide_compris', compris), estimee ? tr.t('vol_rapide_estimee') : null,
+      manque.length ? tr.t('vol_rapide_manque', manque.join(', ')) : null].filter(Boolean).join('\n');
+    if (v.numero && (!v.depart || !v.arrivee)) { rendre(); return loupeVol(v); }
+    if (v.depart && v.arrivee && v.decollage && v.atterrissage) return calculer();
+    rendre();
+  };
+  return h('div', { class: 'carte carte-texte carte-rapide' },
+    h('p', { class: 'vol-rapide-titre' }, tr.t('vol_rapide_titre')),
+    h('p', { class: 'indice' }, tr.t('vol_rapide_aide')),
+    champ,
+    h('button', { class: 'principal', onclick: remplir }, tr.t('vol_rapide_remplir')),
+    rapideVol ? h('p', { class: 'vol-rapide-compris', 'aria-live': 'polite' }, rapideVol) : null);
+}
+
 async function chercherRouteVol(v) {
   // Services en ligne désactivés (02/11) : pas de loupe, et la garde tient même si elle réapparaissait.
   if (!store.suiviDirect()) return;
@@ -3431,7 +3561,8 @@ const interrupteurEnLigne = () => h('label', { class: 'ligne' }, h('span', { cla
 function suiviDirect() {
   const actif = store.suiviDirect();
   // Formulaire ouvert, l'interrupteur y est déjà : pas de second exemplaire ici.
-  const bloc = formulaireVolOuvert ? [] : [interrupteurEnLigne()];
+  // L'interrupteur n'est plus dans le formulaire (04/11) : il vit ici, sous « Préciser la position ».
+  const bloc = [interrupteurEnLigne()];
   if (!actif) return bloc;
   if (!RELAIS_VOL) return [...bloc, h('p', { class: 'indice' }, tr.t('vol_direct_inactif'))];
   const champ = h('input', { type: 'text', class: 'champ-recherche champ-vol', maxlength: 9, autocapitalize: 'characters', placeholder: tr.t('vol_indicatif'), value: store.volIndicatif() || null });
@@ -3470,8 +3601,23 @@ function positionVol(e) {
     tr.t(e.longitude >= 0 ? 'vol_lon_est' : 'vol_lon_ouest', n(e.longitude)));
 }
 
+/** Ce qui, en changeant, demande de redessiner l'écran du vol : la prière, sa limite, la place de « maintenant ». */
+function signatureVol(c = calculVol, maintenant = new Date()) {
+  if (!c) return null;
+  const p = Vol.priere(c, maintenant);
+  const place = Vol.enVol(c).findIndex((e) => maintenant < e.instant);
+  return `${p?.[0]}|${p?.[1] ? +p[1] : ''}|${place}`;
+}
+let signatureVolAffichee = null;
+
+function texteCompteVol(c = calculVol, maintenant = new Date()) {
+  const limite = c ? Vol.priere(c, maintenant)?.[1] : null;
+  return limite ? tr.t('vol_dans', dureeEnMots(Math.max(0, Math.floor((limite - maintenant) / 60000)))) : null;
+}
+
 function resultatsVol(c) {
   const maintenant = new Date();
+  signatureVolAffichee = signatureVol(c, maintenant);
   const p = Vol.priere(c, maintenant);
   const NOMS = { chaharit: 'widget_zmanim_chaharit', minha: 'widget_zmanim_minha', arvit: 'widget_zmanim_arvit' };
   const enVol = Vol.enVol(c);
@@ -3489,7 +3635,8 @@ function resultatsVol(c) {
   const RESERVES = ['haute_latitude', 'absent', 'erreur', 'a_rebours'];
   const date = (iso) => new Intl.DateTimeFormat(tr.langue, { timeZone: 'UTC', weekday: 'short', day: 'numeric', month: 'short' }).format(new Date(`${iso}T12:00:00Z`));
   return [
-    h('div', { class: 'carte carte-texte carte-vol carte-heros' }, h('p', { class: 'indice' }, tr.t('vol_priere_titre')), ...priere),
+    // La carte prend le ciel de son heure (04/11) : aube, après-midi, nuit.
+    h('div', { class: `carte carte-texte carte-vol carte-heros ciel-${p ? p[0] : 'hors'}` }, h('p', { class: 'indice' }, tr.t('vol_priere_titre')), ...priere),
     h('div', { class: 'carte carte-texte carte-vol' },
       // La route prévue tient en une étiquette ; le détail du calcul se déplie.
       c.fiabilite === 'route_prevue' ? h('p', { class: 'vol-etiquette' }, tr.t('vol_fiabilite_court'))
@@ -3576,7 +3723,13 @@ function ecranVol() {
   if (!minuterieVol) {
     minuterieVol = setInterval(() => {
       if (ecranCourant() !== 'vol') { clearInterval(minuterieVol); minuterieVol = null; return; }
-      if (!document.querySelector('.voile') && !app.contains(document.activeElement?.closest('input'))) rendre();
+      if (document.querySelector('.voile') || app.contains(document.activeElement?.closest('input'))) return;
+      // Seul le compte à rebours change d'ordinaire (04/11) : on récrit son texte. L'écran entier
+      // n'est redessiné que si la prière ou la place de « maintenant » change — sinon la page sautait.
+      const sig = signatureVol();
+      const compte = app.querySelector('.vol-compte');
+      if (sig === signatureVolAffichee && compte) compte.textContent = texteCompteVol() ?? compte.textContent;
+      else rendre();
     }, 30000);
   }
   const pret = chargeAeroports();
@@ -3616,17 +3769,14 @@ function ecranVol() {
   const champNumero = h('input', { type: 'text', class: 'champ-recherche champ-vol', maxlength: 12, autocapitalize: 'characters', value: v.numero || null, onchange: (e) => { v.numero = e.target.value.trim(); } });
   // La loupe au bout du champ cherche la route du numéro (adsbdb) ; une ligne dit ce qui part.
   const loupe = h('button', { class: 'loupe-vol', type: 'button', disabled: routeVol.attente, 'aria-label': tr.t('vol_route_bouton'), title: tr.t('vol_route_bouton'),
-    onclick: () => { v.numero = champNumero.value.trim(); chercherRouteVol(v); } });
+    onclick: () => { v.numero = champNumero.value.trim(); loupeVol(v); } });
   loupe.innerHTML = routeVol.attente ? '<span class="loupe-attente" aria-hidden="true"></span>'
     : '<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M15.5 15.5 21 21" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>';
-  // Services en ligne désactivés (02/11) : pas de loupe, l'interrupteur et ce qui partirait.
-  const enLigne = store.suiviDirect();
+  // La loupe est toujours là (04/11) ; services en ligne éteints, elle demande d'abord l'accord.
   const formulaire = h('div', { class: 'carte' },
     h('label', { class: 'ligne' }, h('span', { class: 'corps' }, h('div', { class: 'etat' }, tr.t('vol_numero')),
-      enLigne ? h('span', { class: 'champ-et-loupe' }, champNumero, loupe) : champNumero)),
-    enLigne ? h('p', { class: 'indice', 'aria-live': 'polite' }, routeVol.texte || tr.t('vol_route_aide')) : null,
-    interrupteurEnLigne(),
-    enLigne ? null : h('p', { class: 'indice' }, tr.t('vol_en_ligne_aide')),
+      h('span', { class: 'champ-et-loupe' }, champNumero, loupe))),
+    routeVol.texte || routeVol.attente ? h('p', { class: 'indice', 'aria-live': 'polite' }, routeVol.texte || tr.t('vol_route_attente')) : null,
     ligne(tr.t('vol_depart'), nomA(v.depart), () => pret && choisirAeroport((a) => { v.depart = a.iata; rendre(); })),
     ligne(tr.t('vol_arrivee'), nomA(v.arrivee), () => pret && choisirAeroport((a) => { v.arrivee = a.iata; rendre(); })),
     v.depart ? heure('decollage', tr.t('vol_decollage', villeA(v.depart))) : null,
@@ -3644,7 +3794,7 @@ function ecranVol() {
   const puce = h('span', { class: 'puce-bandeau' }, garde ? libelleVol(garde) : tr.t('vol_carte_sous'));
   return h('div', { class: 'ecran avec-bandeau' }, bandeau(tr.t('vol_title'), { puce, dessin: 'scene_airport' }),
     h('div', { class: 'defile' }, h('div', { class: 'contenu' },
-      resume ?? formulaire,
+      ...(resume ? [resume] : [carteRapideVol(v, pret, calculer), formulaire]),
       ...(garde && !pret ? [h('div', { class: 'carte carte-texte' }, h('p', { class: 'message' }, tr.t('vol_calcul_en_cours')))] : []),
       ...(garde && calculVol ? resultatsVol(calculVol) : []),
       // La méthode, les aéroports, les routes : repliés sous « Sources ».
@@ -3702,7 +3852,7 @@ function lignePaliers() {
     medailleGrade(g, 26), h('span', {}, `${texte}  ›`));
 }
 
-const pratique = () => ({ minutes: store.minutesParJour(), notes: store.nombreNotes(), meilleureSerie: store.meilleureSerie() });
+const pratique = () => ({ minutes: store.minutesParJour(), notes: store.nombreNotes(), meilleureSerie: store.meilleureSerie(), tikkun: store.tikkunJournal() });
 
 /** Des confettis par-dessus l'écran, 2,8 s ; rien si l'on a demandé moins d'animations. */
 function confettis() {
@@ -3761,7 +3911,8 @@ function objetTrophee(forme, metal, icone, taille) {
       ? ((cote) => el('path', { d: ICONES[icone], transform: `translate(${ex - cote / 2} ${ey - cote / 2}) scale(${cote / 24})`,
         fill: 'none', stroke: sombre, 'stroke-width': Math.max(1.3, taille / 45), 'vector-effect': 'non-scaling-stroke',
         'stroke-linecap': 'round', 'stroke-linejoin': 'round', opacity: metal ? '1' : '.7' }))(Math.max(et * 1.15, 20))
-      : el('text', { x: ex, y: ey, 'font-size': et, 'text-anchor': 'middle', 'dominant-baseline': 'central', opacity: metal ? '1' : '.45' }, icone));
+      // L'étoile du grade du ton sombre du métal (elle était noire, faute de couleur ; 04/11).
+      : el('text', { x: ex, y: ey, 'font-size': et, 'text-anchor': 'middle', 'dominant-baseline': 'central', fill: sombre, opacity: metal ? '1' : '.45' }, icone));
 }
 
 // --- Les trophées : outils partagés par l'écran, l'accueil et le bilan (16/10) ---------------
@@ -3772,7 +3923,7 @@ const medailleGrade = (m, taille) => h('span', { class: 'medaille-grade', 'aria-
 const moinsAnime = () => !!window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
 /** Le jour de gain de chaque trophée gagné (Trophees.datesGain) : l'historique rejoué. */
 function datesTrophees() {
-  return Trophees.datesGain(store.minutesParJour(), store.joursAvecNote(), (d) => store.isExempt(d));
+  return Trophees.datesGain(store.minutesParJour(), store.joursAvecNote(), (d) => store.isExempt(d), store.tikkunJournal());
 }
 /** La date civile en toutes lettres, avec le jour (VueJour.dateCivile) : « mardi 29 septembre 2026 ». */
 const dateCivile = (iso) => new Intl.DateTimeFormat(tr.langue, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' }).format(new Date(`${iso}T12:00:00Z`));
@@ -3804,6 +3955,15 @@ function detailTrophee(e, p, dates, rangGlobal, apres = null) {
  * Un trophée gagné (19/10) : sa fiche s'ouvre d'elle-même, l'objet se retourne, des
  * confettis tombent et des étincelles du métal jaillissent ; plusieurs, l'une après l'autre.
  */
+/** Un Tikoun fini peut gagner un trophée (04/11) : fêté tout de suite, comme à l'accueil. */
+function feterTikkun() {
+  const gagnes = Trophees.gagnes(pratique());
+  const neufs = Trophees.nouveaux(gagnes, store.tropheesVus());
+  if (!neufs.length) return;
+  store.setTropheesVus(new Set(gagnes));
+  setTimeout(() => feterTrophees(neufs), 400);
+}
+
 function feterTrophees(nouveaux) {
   const p = pratique();
   const dates = datesTrophees();
@@ -3914,7 +4074,9 @@ function ecranPaliers() {
   const ouvrirDetail = (e) => detailTrophee(e, p, dates, rangDe.get(e.cle) ?? n + 1);
 
   // En tête : le grade, la barre vers le suivant, les trois plus proches, le partage.
-  const proches = Trophees.plusProches(p, 3);
+  // Le prochain a déjà sa carte « Tu es ici » : pas deux fois le même (04/11).
+  const prochainCle = Trophees.prochain(p)?.cle;
+  const proches = Trophees.plusProches(p, 4).filter((e) => e.cle !== prochainCle).slice(0, 3);
   const tete = h('div', { class: 'carte grade-tete' },
     h('div', { class: 'grade-ligne' }, medailleGrade(g, 48), h('div', { class: 'trophee-texte' },
       h('p', { class: 'grade-nom' }, tr.t('grade_titre', nomMetal(g))),
@@ -4177,6 +4339,7 @@ function ecranReglages() {
         ligne({ nom: tr.t('halakha_source_titre'), etat: tr.t(SOURCES_HALAKHA.find(([c]) => c === store.sourceHalakha())[1]),
           onclick: () => choisirDans(tr.t('halakha_source_titre'), SOURCES_HALAKHA.map(([, n]) => tr.t(n)), SOURCES_HALAKHA.findIndex(([c]) => c === store.sourceHalakha()),
             (j) => { store.setSourceHalakha(SOURCES_HALAKHA[j][0]); rendre(); }) })),
+      carteDedicace(),
       carteMesDonnees(),
       h('div', { class: 'carte' }, ligne({ nom: tr.t('settings_onboarding'), onclick: presentation })),
       // Réinitialiser l'application (12/10) : en dernier, avec une confirmation.
@@ -4257,6 +4420,45 @@ function carteMaPratique() {
  * « Mes données » (02/11) : la sauvegarde, au même format qu'Android (Store.exportJson). Un
  * fichier exporté du site s'importe sur le téléphone, et l'inverse.
  */
+/** La dédicace (Dedicace.kt, 04/11) : la demande part à l'équipe, par la messagerie. */
+function carteDedicace() {
+  return h('div', { class: 'carte' },
+    h('h3', {}, tr.t('section_dedicace')),
+    h('p', { class: 'indice' }, tr.t('section_dedicace_hint')),
+    h('div', { class: 'actions-donnees' },
+      h('button', { type: 'button', class: 'principal', onclick: dedicacer }, tr.t('dedicace_bouton'))));
+}
+
+function dedicacer() {
+  feuille(tr.t('section_dedicace'), (f, fermer) => {
+    let objet = 0, intention = 0;
+    const groupe = (titre, cles, courant, choisir) => {
+      const boutons = cles.map((c, i) => h('button', { type: 'button', class: 'puce-choix', role: 'radio', 'aria-checked': String(i === courant),
+        onclick: () => { choisir(i); boutons.forEach((b, j) => b.setAttribute('aria-checked', String(j === i))); } }, tr.t(c)));
+      return [h('p', { class: 'message dedicace-legende' }, tr.t(titre)), h('div', { class: 'dedicace-choix', role: 'radiogroup', 'aria-label': tr.t(titre) }, boutons)];
+    };
+    const nom = h('input', { type: 'text', autocomplete: 'off', placeholder: tr.t('dedicace_nom'), 'aria-label': tr.t('dedicace_nom') });
+    const mot = h('textarea', { rows: '2', placeholder: tr.t('dedicace_mot'), 'aria-label': tr.t('dedicace_mot') });
+    const erreur = h('p', { class: 'indice dedicace-erreur', role: 'alert' });
+    const ecrire = () => {
+      if (!nom.value.trim()) { erreur.textContent = tr.t('dedicace_nom_manque'); nom.focus(); return; }
+      const quoi = tr.t(Dedicace.OBJETS[objet]);
+      const [, formule] = Dedicace.INTENTIONS[intention];
+      const corps = Dedicace.corps(tr.t('dedicace_corps_intro'), tr.t('dedicace_corps_demande', quoi.charAt(0).toLowerCase() + quoi.slice(1)),
+        formule, nom.value, mot.value, tr.t('dedicace_corps_fin'));
+      fermer();
+      location.href = Dedicace.lien(tr.t('dedicace_sujet', quoi), corps);
+    };
+    f.append(h('p', { class: 'indice' }, tr.t('section_dedicace_hint')),
+      ...groupe('dedicace_quoi', Dedicace.OBJETS, objet, (i) => { objet = i; }),
+      ...groupe('dedicace_pour', Dedicace.INTENTIONS.map(([c]) => c), intention, (i) => { intention = i; }),
+      nom, mot, erreur,
+      h('div', { class: 'actions' },
+        h('button', { type: 'button', onclick: fermer }, tr.t('action_back')),
+        h('button', { type: 'button', class: 'fort', onclick: ecrire }, tr.t('dedicace_ecrire'))));
+  });
+}
+
 function carteMesDonnees() {
   const exporter = async () => {
     const nom = `myhitbodedut-${store.today()}.json`;
@@ -4477,13 +4679,16 @@ function tireChizuk(moment) {
 function carteChizuk(tire, { compacte = false } = {}) {
   if (!tire) return null;
   const { moment, item } = tire;
-  const traduction = ChizukRules.traduction(item, tr.langue);
+  // Les langues de lecture (LanguesTexte, 04/11) : par défaut l'hébreu et la traduction, comme avant.
+  const textes = LanguesTexte.textes(languesLecture(), ChizukRules.hebreu(chizuk, item), item.fr || null, item.en || null);
+  const [[l1, t1]] = textes;
+  const traduction = textes[1]?.[1] ?? '';
   return h('section', { class: `chizuk${compacte ? ' compacte' : ''}` },
     h('div', { class: 'chizuk-tete' },
       h('div', { class: 'chizuk-art' }, h('img', { src: `img/${ART_DU_MOMENT[moment]}.webp`, alt: '' })),
       h('h2', { class: 'chizuk-moment' }, tr.t(moment === 'demande' ? 'chizuk_demande_title' : `moment_${moment}`))),
     // L'hébreu, de droite à gauche en toute langue.
-    h('p', { class: 'chizuk-he ajuste', lang: 'he', dir: 'rtl' }, ChizukRules.hebreu(chizuk, item)),
+    l1 === 'he' ? h('p', { class: 'chizuk-he ajuste', lang: 'he', dir: 'rtl' }, t1) : h('p', { class: 'chizuk-he chizuk-latin ajuste', lang: l1, dir: 'ltr' }, t1),
     traduction ? h('hr', {}) : null,
     traduction ? h('p', { class: 'chizuk-trad ajuste' }, traduction) : null,
     h('p', { class: 'chizuk-ref' }, Reference.localise(item.ref, tr.langue)));

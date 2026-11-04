@@ -1511,6 +1511,22 @@ body.avec-mini .seance .contenu { padding-bottom: calc(104px + env(safe-area-ins
 .carte-heros { background: color-mix(in srgb, var(--brand) 9%, var(--card)); border-color: color-mix(in srgb, var(--brand) 28%, var(--line)); }
 .carte-heros .vol-priere { font-size: 30px; }
 .carte-heros .vol-compte { font-size: 22px; color: var(--brand); }
+/* La prière du moment aux couleurs de son ciel (04/11), comme sur Android. */
+.carte-heros[class*="ciel-"] { border: 0; color: #fff; border-radius: 24px; padding: 20px; box-shadow: 0 6px 20px rgb(0 0 0 / 0.12); }
+.carte-heros.ciel-chaharit { background: linear-gradient(135deg, #2B3F6E, #8C5A7A 55%, #E0906B); }
+.carte-heros.ciel-minha { background: linear-gradient(135deg, #17525A, #6E7A3E 55%, #C9962E); }
+.carte-heros.ciel-arvit { background: linear-gradient(135deg, #0E1530, #1E2A55 55%, #3E4F86); }
+.carte-heros.ciel-hors { background: linear-gradient(135deg, var(--brand), color-mix(in srgb, var(--brand) 65%, #000)); }
+.carte-heros[class*="ciel-"] .indice { color: rgb(255 255 255 / 0.78); text-transform: uppercase; letter-spacing: 0.08em; font-size: 12px; }
+.carte-heros[class*="ciel-"] .vol-priere { color: #fff; font-size: 34px; }
+.carte-heros[class*="ciel-"] .vol-compte { color: #fff; }
+.carte-heros[class*="ciel-"] p { color: rgb(255 255 255 / 0.88); }
+/* La saisie rapide (04/11). */
+.carte-rapide { background: linear-gradient(135deg, color-mix(in srgb, var(--brand) 10%, var(--card)), var(--card)); border-color: color-mix(in srgb, var(--brand) 25%, var(--line)); }
+.vol-rapide-titre { font-size: 17px; font-weight: 700; color: var(--ink); }
+.saisie-rapide { width: 100%; box-sizing: border-box; min-height: 64px; margin-top: 12px; resize: vertical; font: inherit; }
+.carte-rapide .principal { margin-top: 12px; width: 100%; }
+.vol-rapide-compris { margin-top: 12px; white-space: pre-line; color: var(--ink); }
 .vol-etiquette { display: inline-block; margin-top: 4px !important; padding: 6px 12px; border-radius: 999px; background: color-mix(in srgb, var(--brand) 10%, transparent); color: var(--ink); font-weight: 600; font-size: 14px; }
 .vol-details { margin-top: 6px; }
 .vol-details summary { min-height: 44px; display: flex; align-items: center; color: var(--brand); font-weight: 600; font-size: 14px; cursor: pointer; list-style: none; }
@@ -1623,3 +1639,40 @@ body.avec-mini .seance .contenu { padding-bottom: calc(104px + env(safe-area-ins
 .signet-choix { display: flex; flex-direction: column; align-items: stretch; gap: 2px; }
 .signet-choix .nom-marque { display: flex; }
 .signet-choix .apercu { display: block; color: var(--muted); font-size: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* Les traductions (LanguesTexte, 04/11) : de gauche à droite, en romain, sous l'hébreu ou seules. */
+.lecture .traduction { direction: ltr; text-align: start; font-family: Georgia, 'Times New Roman', serif; color: var(--muted);
+  font-size: calc(16px * var(--echelle, 1)); line-height: 1.6; margin: 4px 0 14px; }
+.lecture .traduction.seule { color: var(--ink); font-size: calc(18px * var(--echelle, 1)); margin-top: 10px; }
+.lecture .priere .traduction { margin: 8px 0 0; }
+.ecran.lu.nuit .lecture .traduction:not(.seule) { color: var(--lecture-nuit-discret, #A3A8A5); }
+.chizuk-latin { font-family: Georgia, 'Times New Roman', serif; }
+.lecture-langues { font-weight: 700; }
+
+/* Les boutons, affinés (04/11) : une seule famille — pilule pleine, pilule cerclée, lien —,
+   52 px de haut, texte medium, une ombre douce sous le principal, un anneau de focus net. */
+.principal, .secondaire {
+  display: flex; align-items: center; justify-content: center; gap: 8px; min-height: 52px;
+  padding: 14px 22px; letter-spacing: .01em; line-height: 1.25; text-align: center;
+  -webkit-tap-highlight-color: transparent;
+}
+.principal { font-size: 16px; font-weight: 650;
+  box-shadow: 0 1px 2px rgb(0 0 0 / .08), 0 6px 16px -6px color-mix(in srgb, var(--brand) 45%, transparent); }
+.secondaire { font-weight: 650; border-color: color-mix(in srgb, var(--brand) 28%, var(--line)); }
+.principal:focus-visible, .secondaire:focus-visible, .lien-discret:focus-visible, .lien-bouton:focus-visible {
+  outline: 2px solid var(--brand); outline-offset: 3px; }
+.principal:disabled, .secondaire:disabled { opacity: .45; box-shadow: none; cursor: default; transform: none; }
+@media (hover: hover) {
+  .principal:hover:not(:disabled) { filter: brightness(1.06); }
+  .secondaire:hover:not(:disabled) { background: color-mix(in srgb, var(--brand) 6%, var(--card)); }
+}
+.lecture-nav .principal, .lecture-nav .secondaire { min-height: 48px; padding: 12px 14px; }
+
+.psaume-titre .titre-traduit { display: block; font-size: .72em; font-weight: 600; color: var(--muted); direction: ltr; text-align: start; margin-top: 2px; }
+
+/* La dédicace (04/11) : les choix vont à la ligne, chacun à sa largeur. */
+.dedicace-choix { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 8px; }
+.dedicace-choix .puce-choix { min-height: 44px; }
+.feuille .message + .dedicace-choix { margin-top: 4px; }
+.feuille p.dedicace-legende { margin-top: 16px; margin-bottom: 6px; font-weight: 600; }
+.dedicace-erreur:not(:empty) { color: var(--brand); font-weight: 600; }

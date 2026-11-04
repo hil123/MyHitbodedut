@@ -171,6 +171,7 @@ class SettingsActivity : AppCompatActivity() {
             importFile.launch(arrayOf("application/json", "text/plain", "*/*"))
         }
         findViewById<Button>(R.id.privacy_policy).setOnClickListener { ouvrirConfidentialite() }
+        findViewById<Button>(R.id.dedicace_button).setOnClickListener { Dedicace.ouvrir(this) }
         findViewById<Button>(R.id.reset_app).setOnClickListener { confirmerReinitialisation() }
     }
 

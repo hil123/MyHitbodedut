@@ -54,3 +54,16 @@ export function sousTitreBloc(b, langue) {
   const titre = pourLangue(b.titre, langue);
   return titre !== b.titre.he ? titre : null;
 }
+
+/**
+ * Verse.coupe : le verset coupé là où l'arrêt se marque — ce qui précède le mot
+ * « avant », puis ce qui commence par lui. Null sans arrêt, ou si le mot n'est pas
+ * dans le verset (l'indication suit alors le verset entier).
+ */
+export function coupe(v) {
+  const mot = v?.arret?.avant;
+  if (!mot) return null;
+  const i = v.he.indexOf(mot);
+  if (i <= 0) return null;
+  return [v.he.slice(0, i).trimEnd(), v.he.slice(i)];
+}

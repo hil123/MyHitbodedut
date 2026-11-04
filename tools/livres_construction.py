@@ -276,6 +276,9 @@ def main(dossier):
     # Pour l'application : l'index et un fichier par livre (tools/livres_decoupe.py, 04/11).
     import livres_decoupe
     livres_decoupe.decoupe(sortie)
+    # Le Nom abrégé ה' hors des versets (04/11) : tools/noms_abreges.py, à relancer après
+    # (il relance lui-même la découpe).
+    print("Ensuite : python3 tools/noms_abreges.py <export Tanakh> (le Nom abrégé ה' hors des versets).")
 
     for t in sortie["textes"]:
         print(t["id"], len(t["sections"]), "chapitres", sum(len(s["blocs"]) for s in t["sections"]), "paragraphes")

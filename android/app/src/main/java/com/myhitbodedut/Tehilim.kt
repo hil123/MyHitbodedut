@@ -11,10 +11,14 @@ import java.time.LocalDate
  * versets, dans l'édition et selon les conventions du Tikoun (tehilim.json,
  * dont le bloc _meta dit la source et la vérification).
  */
-class Tehilim(val psaumes: List<List<String>>) {
+class Tehilim(val psaumes: List<List<String>>, val traductions: Map<String, List<List<String>>> = emptyMap()) {
 
     /** Les versets du psaume [numero] (1 à 150), dans l'ordre. */
     fun versets(numero: Int): List<String> = psaumes.getOrElse(numero - 1) { emptyList() }
+
+    /** La traduction (« fr », « en ») du verset [verset] du psaume [numero] ; null sans traduction (04/11). */
+    fun traduction(langue: String, numero: Int, verset: Int): String? =
+        traductions[langue]?.getOrNull(numero - 1)?.getOrNull(verset - 1)?.takeIf { it.isNotBlank() }
 
     val versetsTotal: Int get() = psaumes.sumOf { it.size }
 
@@ -26,11 +30,17 @@ class Tehilim(val psaumes: List<List<String>>) {
 object TehilimLoader {
 
     fun parse(json: String): Tehilim {
-        val tableau = JSONObject(json).getJSONArray("psaumes")
-        return Tehilim((0 until tableau.length()).map { i ->
+        val racine = JSONObject(json)
+        fun lire(tableau: org.json.JSONArray) = (0 until tableau.length()).map { i ->
             val versets = tableau.getJSONArray(i)
             (0 until versets.length()).map { versets.getString(it) }
-        })
+        }
+        // Les traductions (04/11) : « traductions » {fr, en} → {edition, psaumes}, à côté de l'hébreu.
+        val trad = racine.optJSONObject("traductions")
+        val traductions = trad?.keys()?.asSequence()?.mapNotNull { l ->
+            trad.optJSONObject(l)?.optJSONArray("psaumes")?.let { l to lire(it) }
+        }?.toMap().orEmpty()
+        return Tehilim(lire(racine.getJSONArray("psaumes")), traductions)
     }
 
     fun load(context: Context): Tehilim = parse(Json.readRaw(context, R.raw.tehilim))

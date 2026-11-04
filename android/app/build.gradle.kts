@@ -221,6 +221,8 @@ dependencies {
     implementation("com.google.android.material:material:1.12.0")
     implementation("androidx.constraintlayout:constraintlayout:2.2.0")
     implementation("androidx.recyclerview:recyclerview:1.3.2")
+    // Le code-barres des cartes d'embarquement (04/11), lu sur le téléphone : Java pur, sans réseau, Apache 2.0.
+    implementation("com.google.zxing:core:3.5.3")
 
     testImplementation("junit:junit:4.13.2")
     // org.json n'existe qu'en stub dans le jar Android des tests unitaires :

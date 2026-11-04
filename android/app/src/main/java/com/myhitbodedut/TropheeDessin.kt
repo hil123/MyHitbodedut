@@ -78,6 +78,8 @@ class TropheeDessin(context: Context, forme: Trophees.Forme, private val metal: 
             dessinerIcone(c, trace, embleme[0], embleme[1], taille, trait)
         } else {
             texte.textSize = embleme[2]
+            // L'étoile du grade prend le ton sombre du métal (elle était noire, faute de couleur ; 04/11).
+            texte.color = teintes(metal).third
             texte.alpha = if (metal != null) 0xFF else 0x73
             val fm = texte.fontMetrics
             c.drawText(icone, embleme[0], embleme[1] - (fm.ascent + fm.descent) / 2, texte)

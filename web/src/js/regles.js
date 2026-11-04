@@ -39,17 +39,17 @@ const LIVRES = [
   ["Likoutei Etsot, Hit'hazkout ", 'Likutei Etsot, Strengthening ', 'ליקוטי עצות, התחזקות '],
   ['Likoutei Etsot, Hitbodedout ', 'Likutei Etsot, Hitbodedut ', 'ליקוטי עצות, התבודדות '],
   ['Likoutei Etsot, Téfila ', 'Likutei Etsot, Prayer ', 'ליקוטי עצות, תפילה '],
-  ['Rambam, Hilkhot Tefila ', 'Rambam, Hilkhot Tefillah ', 'רמב״ם, הלכות תפילה '],
+  ['Rambam, Hilkhot Tefila ', 'Rambam, Hilchot Tefillah ', 'רמב״ם, הלכות תפילה '],
   ['Likoutei Moharan II, ', 'Likutei Moharan II, ', 'ליקוטי מוהר״ן תניינא, '],
   ['Likoutei Moharan I, ', 'Likutei Moharan I, ', 'ליקוטי מוהר״ן, '],
   ['Likoutei Tefilot II, ', 'Likutei Tefilot II, ', 'ליקוטי תפילות ב, '],
   ['Likoutei Tefilot I, ', 'Likutei Tefilot I, ', 'ליקוטי תפילות א, '],
-  ["Si'hot HaRan ", 'Sihot HaRan ', 'שיחות הר״ן '],
-  ["'Hayé Moharan ", 'Hayei Moharan ', 'חיי מוהר״ן '],
-  ["Chiv'hei HaRan ", 'Shivhei HaRan ', 'שבחי הר״ן '],
+  ["Si'hot HaRan ", 'Sichot HaRan ', 'שיחות הר״ן '],
+  ["'Hayé Moharan ", 'Chayei Moharan ', 'חיי מוהר״ן '],
+  ["Chiv'hei HaRan ", 'Shivchei HaRan ', 'שבחי הר״ן '],
   ['Tehilim ', 'Tehillim ', 'תהילים '],
   ['Michlé ', 'Mishlei ', 'משלי '],
-  ['Eikha ', 'Eikha ', 'איכה '],
+  ['Eikha ', 'Eicha ', 'איכה '],
   ['Chmouel I ', 'I Samuel ', 'שמואל א '],
   ['Yechayahou ', 'Isaiah ', 'ישעיהו '],
   ['Hochéa ', 'Hosea ', 'הושע '],
@@ -59,6 +59,22 @@ const LIVRES = [
 const UNITES = ' אבגדהוזחט';
 const DIZAINES = ' יכלמנסעפצ';
 const CENTAINES = ' קרש';
+
+/**
+ * Les langues d'un texte à lire (LanguesTexte.kt, 04/11) : hébreu, français, anglais, ou deux
+ * langues l'une sous l'autre. Par défaut, la règle d'avant : l'hébreu seul en hébreu, l'hébreu
+ * et la traduction de l'interface ailleurs. Une traduction absente est sautée ; sans rien, l'hébreu.
+ */
+export const LanguesTexte = {
+  MODES: ['he', 'fr', 'en', 'he+fr', 'he+en', 'fr+en'],
+  defaut: (langue) => (langue === 'he' || langue === 'iw' ? 'he' : langue === 'en' ? 'he+en' : 'he+fr'),
+  mode(choix, langue) { return this.MODES.includes(choix) ? choix : this.defaut(langue); },
+  textes(mode, he, fr, en) {
+    const tous = mode.split('+').map((l) => (l === 'he' ? ['he', he] : l === 'fr' ? (fr ? ['fr', fr] : null) : (en ? ['en', en] : null))).filter(Boolean);
+    return tous.length ? tous : [['he', he]];
+  },
+  manque: (mode, aTraduction) => !aTraduction && mode.split('+').some((l) => l !== 'he'),
+};
 
 export const Reference = {
   /**
@@ -438,5 +454,30 @@ export const JournalPlus = {
     if (notes.length === 0) return null;
     const moyenne = (l) => Math.round(l.reduce((s, x) => s + x, 0) / l.length);
     return { avant: moyenne(notes.map((p) => p.avant)), apres: moyenne(notes.map((p) => p.apres)), jours: notes.length };
+  },
+};
+
+/**
+ * La dédicace (Dedicace.kt, 04/11) : la demande va à l'équipe, écrite dans la messagerie de
+ * l'utilisateur ; rien ne part sans lui, rien n'est gardé. La formule reste en hébreu.
+ */
+export const Dedicace = {
+  ADRESSE: 'myhitbodedut26@gmail.com',
+  OBJETS: ['dedicace_hitbodedut', 'dedicace_etude'],
+  INTENTIONS: [
+    ['dedicace_leilouy', 'לעילוי נשמת'],
+    ['dedicace_refoua', 'לרפואה שלמה'],
+    ['dedicace_hatslaha', 'להצלחה'],
+    ['dedicace_zivoug', 'לזיווג הגון'],
+    ['dedicace_autre', null],
+  ],
+  corps(intro, demande, formule, nom, mot, fin) {
+    const l = [intro, '', demande, [formule, nom.trim()].filter(Boolean).join(' ')];
+    if (mot.trim()) l.push('', mot.trim());
+    l.push('', fin);
+    return l.join('\n');
+  },
+  lien(sujet, corps) {
+    return `mailto:${this.ADRESSE}?subject=${encodeURIComponent(sujet)}&body=${encodeURIComponent(corps)}`;
   },
 };

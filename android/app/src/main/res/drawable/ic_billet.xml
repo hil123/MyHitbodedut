@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Un billet à encoche (04/11) : « Importer le billet » des zmanim en vol. Teinté par le bouton. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android" android:width="22dp" android:height="22dp" android:viewportWidth="24" android:viewportHeight="24">
+    <path android:strokeColor="#FFFFFFFF" android:strokeWidth="1.8" android:strokeLineJoin="round"
+        android:pathData="M4,6.5h16v3.2a2.3,2.3 0,0 0,0 4.6v3.2h-16v-3.2a2.3,2.3 0,0 0,0 -4.6z" />
+    <path android:strokeColor="#FFFFFFFF" android:strokeWidth="1.8" android:strokeLineCap="round" android:pathData="M14.5,7.5v1.5M14.5,11.25v1.5M14.5,15v1.5" />
+</vector>

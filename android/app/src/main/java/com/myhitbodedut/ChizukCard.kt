@@ -46,15 +46,29 @@ object ChizukCard {
         card.findViewById<ImageView>(R.id.chizuk_art).setImageResource(Character.ofMoment(moment))
         card.findViewById<TextView>(R.id.chizuk_moment).setText(moment.labelRes)
 
+        // Les langues de lecture choisies (LanguesTexte, 04/11) : par défaut, l'hébreu et la
+        // traduction de l'interface, comme avant ; ou une seule langue ; ou français et anglais.
+        val mode = LanguesTexte.mode(card.context)
+        val textes = LanguesTexte.textes(mode, ChizukRules.hebrew(chizuk, item),
+            item.fr.ifBlank { null }, item.en.ifBlank { null })
+        val (langue1, texte1) = textes.first()
         val hebreu = card.findViewById<TextView>(R.id.chizuk_he)
-        hebreu.text = ChizukRules.hebrew(chizuk, item)
+        hebreu.text = texte1
+        if (langue1 == "he") {
+            hebreu.textDirection = View.TEXT_DIRECTION_RTL
+            hebreu.layoutDirection = View.LAYOUT_DIRECTION_RTL
+        } else {
+            // Une traduction seule prend la place de l'hébreu, de gauche à droite.
+            hebreu.textDirection = View.TEXT_DIRECTION_LTR
+            hebreu.layoutDirection = View.LAYOUT_DIRECTION_LTR
+        }
         ajusterHauteur(hebreu)
 
         val translation = card.findViewById<TextView>(R.id.chizuk_translation)
-        val text = translationOf(item, language(card.context))
+        val text = textes.getOrNull(1)?.second.orEmpty()
         translation.text = text
         ajusterHauteur(translation)
-        // En hébreu, la traduction répéterait le texte du dessus.
+        // Une seule langue : pas de second texte (en hébreu, il répéterait celui du dessus).
         translation.visibility = if (text.isBlank()) View.GONE else View.VISIBLE
 
         card.findViewById<TextView>(R.id.chizuk_ref).text = Reference.localise(card.context, item.ref)

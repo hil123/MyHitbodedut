@@ -43,3 +43,27 @@ test('למנצח, לדוד ה׳ אורי, בית האבל, ברכת כהנים d
   assert.ok(si('edot', 'birkat_hamazon').has('oubli') && si('edot', 'birkat_hamazon').has('yom_tov'));
   assert.ok(si('edot', 'arvit').has('motsae_chabbat_yt'));
 });
+
+// Birkat haMazon (03/11, « replie tout ce qui n'est pas obligatoire ») : psaumes d'avant, הרחמן
+// et fin repliés (« facultatif », jamais du jour) ; les quatre bénédictions restent dépliées.
+test('Birkat haMazon : ce qui n\'est pas obligatoire est replié, les bénédictions non', () => {
+  const NOM = { edot: 'siddur_edot', sefard: 'siddur_sefard', ashkenaz: 'siddur_ashkenaz' };
+  const nu = (s) => s.replace(/<[^>]+>/g, ' ').replace(/[֑-ׇ]/g, '').replace(/\s+/g, ' ').trim();
+  for (const nusah of Object.keys(NOM)) {
+    const siddur = JSON.parse(readFileSync(new URL(`../../android/app/src/main/res/raw/${NOM[nusah]}.json`, import.meta.url), 'utf8'));
+    const blocs = siddur.textes.find((t) => t.id === 'birkat_hamazon').sections[0].blocs;
+    const a = annotations[nusah].birkat_hamazon.filter((e) => e.sorte === 'bloc');
+    const replie = new Set(a.filter((e) => e.racine === 'facultatif').map((e) => e.b));
+    assert.ok(!vrai('facultatif', c('2026-10-19')) && !vrai('facultatif', c('2026-10-17')), nusah);
+    // Les quatre bénédictions (הזן, נודה, רחם, הטוב והמטיב) ne sont jamais « facultatif ».
+    for (const debut of ['ברוך אתה יהוה אלהינו מלך העולם', 'נודה לך', 'רחם']) {
+      const i = blocs.findIndex((b) => b.t && nu(b.t).replace(/[.,]/g, '').startsWith(debut));
+      assert.ok(i >= 0 && !replie.has(i), `${nusah} : ${debut}`);
+    }
+    const harahaman = blocs.findIndex((b) => b.t && nu(b.t).startsWith('הרחמן'));
+    assert.ok(replie.has(harahaman), `${nusah} : הרחמן`);
+    assert.ok(replie.has(1), `${nusah} : psaume d'avant`);
+    // Le zimoun, les Chéva bérakhot et les oublis gardent leur repli à eux.
+    assert.ok(a.some((e) => e.racine === 'zimun') && a.some((e) => e.racine === 'cheva_berakhot'), nusah);
+  }
+});

@@ -33,6 +33,20 @@ class AerationTest {
     }
 
     @Test
+    fun psaumeJamaisCoupe() {
+        val verset = "אֱֽלֹהִ֗ים יְחׇנֵּ֥נוּ וִיבָרְכֵ֑נוּ ".repeat(12).trim()
+        val avecTeamim = "<b>לַמְנַצֵּ֥חַ</b> $verset׃ $verset׃ $verset׃"
+        assertTrue(avecTeamim.replace(Regex("<[^>]+>"), "").length > Aeration.LONG)
+        assertTrue(Aeration.psaume(avecTeamim))
+        assertEquals(avecTeamim, Aeration.couper(avecTeamim))
+        val phrase = "אבגד ".repeat(60).trim()
+        val sansTeamim = "<b>מִזְמוֹר</b> לְדָוִד: $phrase: $phrase"
+        assertTrue(Aeration.psaume(sansTeamim))
+        assertEquals(sansTeamim, Aeration.couper(sansTeamim))
+        assertFalse(Aeration.psaume("$phrase: $phrase"))
+    }
+
+    @Test
     fun lesDeuxEnsemble() {
         val phrase = "אבגד ".repeat(60).trim()
         val r = Aeration.aerer("$phrase: $phrase")

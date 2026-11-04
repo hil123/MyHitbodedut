@@ -73,6 +73,8 @@ export function creeStore(stockage, { maintenant = () => new Date(), fuseau } = 
     ecrit(PREFS, p);
   };
 
+  // Les dix psaumes du Tikoun (Tikkun.ORDRE), pour le journal de ses lectures complètes (04/11).
+  const TIKKUN_ORDRE = [16, 32, 41, 42, 59, 77, 90, 105, 137, 150];
   const today = () => isoLocal(maintenant());
   // Le jour du Tikoun bascule à 4 h, pas à minuit : commencé à 23 h 45, il se finit après minuit (Store.jourTikkun, 02/11).
   // Quatre heures d'horloge, comme LocalDateTime.minusHours : la nuit du changement d'heure ne décale rien.
@@ -354,6 +356,9 @@ export function creeStore(stockage, { maintenant = () => new Date(), fuseau } = 
     setLecturePolice: (p) => set('lecture_police', p),
     lectureSombre: () => get('lecture_sombre', false) === true,
     setLectureSombre: (v) => set('lecture_sombre', !!v),
+    /** Les langues de lecture (LanguesTexte, 04/11) ; null : celles de la langue de l'application. */
+    lectureLangues: () => get('lecture_langues', null),
+    setLectureLangues: (v) => set('lecture_langues', v),
     /** Le bouton de lecture masqué par l'utilisateur, sur tous les écrans de lecture. */
     lectureMasquee: () => get('lecture_masquee', false) === true,
     setLectureMasquee: (v) => set('lecture_masquee', !!v),
@@ -471,9 +476,16 @@ export function creeStore(stockage, { maintenant = () => new Date(), fuseau } = 
     setTikkunDone(numero, fait) {
       const courant = store.tikkunDone();
       if (fait) courant.add(numero); else courant.delete(numero);
-      set('tikkun_day', jourTikkun());
+      // Les dix psaumes dits : le jour entre au journal du Tikoun (04/11) ; un psaume décoché l'en retire.
+      const jour = jourTikkun();
+      const journal = new Set(store.tikkunJournal());
+      if (TIKKUN_ORDRE.every((n) => courant.has(n))) journal.add(jour); else journal.delete(jour);
+      set('tikkun_day', jour);
       set('tikkun_done', [...courant].sort((a, b) => a - b).join(','));
+      set('tikkun_journal', [...journal].sort().join(','));
     },
+    /** Store.tikkunJournal : les jours où les dix psaumes ont été dits. */
+    tikkunJournal: () => String(get('tikkun_journal', '')).split(',').map((s) => s.trim()).filter((s) => /^\d{4}-\d{2}-\d{2}$/.test(s)),
     /** Store.resetTikkun (« Repartir de zéro », 02/11) : la liste du jour vidée. */
     resetTikkun() {
       set('tikkun_day', jourTikkun());

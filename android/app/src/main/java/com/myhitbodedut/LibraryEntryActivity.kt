@@ -59,8 +59,18 @@ class LibraryEntryActivity : AppCompatActivity() {
 
         val container = findViewById<LinearLayout>(R.id.entry_paragraphs)
         container.visibility = View.VISIBLE
+        // Les langues choisies (04/11) : l'hébreu, la traduction, ou les deux.
+        val mode = LanguesTexte.mode(this)
         LibraryRules.paragraphs(library, source).forEachIndexed { index, paragraphe ->
-            container.addView(hebrewParagraph(paragraphe, first = index == 0))
+            val textes = LanguesTexte.textes(mode, paragraphe, source.paragraphesFr.getOrNull(index), source.paragraphesEn.getOrNull(index))
+            val avecHebreu = textes.any { it.first == "he" }
+            if (avecHebreu) container.addView(hebrewParagraph(paragraphe, first = index == 0))
+            textes.filter { it.first != "he" }.forEachIndexed { k, (_, t) ->
+                container.addView(LanguesTexte.vueMarquee(this, t, seule = !avecHebreu, base = 17f).apply {
+                    layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+                        .apply { topMargin = if (avecHebreu || k > 0) dp(6) else if (index == 0) 0 else dp(12) }
+                })
+            }
         }
 
         // Le bouton de lecture, pour le texte hébreu : taille et lecture de nuit.

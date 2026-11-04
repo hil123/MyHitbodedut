@@ -148,6 +148,18 @@ class TikkunTest {
         )
     }
 
+    /** L'arret se marque dans le verset : apres « אַתָּה סֵתֶר לִי », avant « מִצַּר ». */
+    @Test
+    fun `l arret coupe le verset avant mitsar`() {
+        val verset = tikkun.byNumero(32)!!.versets.first { it.numero == 7 }
+        val coupe = verset.coupe()
+        assertTrue("pas de coupe en 32:7", coupe != null)
+        assertEquals("אַתָּה סֵתֶר לִי", coupe!!.first)
+        assertTrue(coupe.second.startsWith("מִצַּר"))
+        assertEquals(verset.he, coupe.first + " " + coupe.second)
+        assertEquals(null, Verse(1, "א ב").coupe())
+    }
+
     /**
      * Le texte des psaumes ne vient pas de la page fournie mais d'une edition
      * massoretique. La page porte une coquille confirmee sur trois editions —

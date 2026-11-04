@@ -17,7 +17,19 @@ import org.json.JSONObject
  */
 data class Pause(val avant: String, val note: String)
 
-data class Verse(val numero: Int, val he: String, val arret: Pause? = null)
+data class Verse(val numero: Int, val he: String, val arret: Pause? = null, val fr: String? = null, val en: String? = null) {
+    /**
+     * Le verset coupe la ou l'arret se marque : ce qui precede le mot
+     * « avant », puis ce qui commence par lui. Null sans arret, ou si le mot
+     * n'est pas dans le verset (l'indication suit alors le verset entier).
+     */
+    fun coupe(): Pair<String, String>? {
+        val mot = arret?.avant ?: return null
+        val i = he.indexOf(mot)
+        if (i <= 0) return null
+        return he.substring(0, i).trimEnd() to he.substring(i)
+    }
+}
 
 /**
  * Une partie liturgique qui n'est pas un psaume : ce qui se dit avant, ce
@@ -29,6 +41,9 @@ data class LiturgyBlock(
     val note: LocalizedText?,
     val formule: String?,
     val paragraphes: List<String>,
+    /** Les traductions, paragraphe par paragraphe (04/11) ; vides sans traduction. */
+    val paragraphesFr: List<String> = emptyList(),
+    val paragraphesEn: List<String> = emptyList(),
 )
 
 data class Psalm(
@@ -66,6 +81,9 @@ data class Tikkun(
         const val CLOTURE = "cloture"
         const val KAVANA = "kavana"
         const val PRIERE = "priere_rabbi_nathan"
+
+        /** Les dix psaumes, dans l'ordre établi (le journal du Tikoun, 04/11, sans relire le JSON). */
+        val ORDRE = listOf(16, 32, 41, 42, 59, 77, 90, 105, 137, 150)
     }
 }
 
@@ -100,6 +118,8 @@ object TikkunLoader {
         note = o.optJSONObject("note")?.let { LocalizedText.parse(it) },
         formule = Json.nullable(o, "formule"),
         paragraphes = Json.strings(o.optJSONArray("paragraphes")),
+        paragraphesFr = Json.strings(o.optJSONArray("paragraphes_fr")),
+        paragraphesEn = Json.strings(o.optJSONArray("paragraphes_en")),
     )
 
     private fun psaume(o: JSONObject) = Psalm(
@@ -115,6 +135,9 @@ object TikkunLoader {
                 arret = v.optJSONObject("arret")?.let {
                     Pause(it.optString("avant", ""), it.optString("note", ""))
                 },
+                // Les traductions du domaine public (04/11, tools/traductions_tanakh.py).
+                fr = v.optString("fr", "").ifBlank { null },
+                en = v.optString("en", "").ifBlank { null },
             )
         },
     )

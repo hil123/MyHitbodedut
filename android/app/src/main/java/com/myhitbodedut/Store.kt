@@ -94,6 +94,8 @@ object Store {
     private const val KEY_LECTURE_ECHELLE = "lecture_echelle"
     private const val KEY_LECTURE_SOMBRE = "lecture_sombre"
     private const val KEY_LECTURE_POLICE = "lecture_police"
+    /** Les langues d'un texte à lire (04/11) : « he », « fr », « en », « he+fr », « he+en », « fr+en ». */
+    private const val KEY_LECTURE_LANGUES = "lecture_langues"
     private const val KEY_LECTURE_MASQUEE = "lecture_masquee"
     private const val KEY_PAUSE_SHABBAT = "pause_shabbat"
     private const val KEY_IN_ISRAEL = "in_israel"
@@ -153,6 +155,8 @@ object Store {
     private const val KEY_MUSIC_USER = "music_user_tracks"
     private const val KEY_TIKKUN_DAY = "tikkun_day"
     private const val KEY_TIKKUN_DONE = "tikkun_done"
+    /** Les jours où le Tikoun a été dit en entier (04/11), « 2026-11-04,… » : pour ses trophées. */
+    private const val KEY_TIKKUN_JOURNAL = "tikkun_journal"
 
     /** Le jour du Tikoun bascule à 4 h, pas à minuit : commencé à 23 h 45, il se finit après minuit (bug du 02/11). */
     fun jourTikkun(maintenant: java.time.LocalDateTime = java.time.LocalDateTime.now()): String =
@@ -757,6 +761,13 @@ object Store {
         prefs(context).edit().putString(KEY_LECTURE_POLICE, police.cle).apply()
     }
 
+    /** Le choix des langues des textes à lire (LanguesTexte) ; null : celui de la langue de l'application. */
+    fun lectureLangues(context: Context): String? = prefs(context).getString(KEY_LECTURE_LANGUES, null)
+
+    fun setLectureLangues(context: Context, cle: String) {
+        prefs(context).edit().putString(KEY_LECTURE_LANGUES, cle).apply()
+    }
+
     /** La lecture sur fond noir, choisie d'un toucher sur la lune. */
     fun lectureSombre(context: Context): Boolean = prefs(context).getBoolean(KEY_LECTURE_SOMBRE, false)
 
@@ -987,7 +998,7 @@ object Store {
     fun pratique(context: Context): Trophees.Pratique {
         val tous = days(context).values
         val minutes = tous.filter { it.faite }.mapNotNull { r -> dateValide(r.date)?.let { it to r.minutes } }.toMap()
-        return Trophees.Pratique(minutes, tous.count { it.note.isNotBlank() }, meilleureSerie(context))
+        return Trophees.Pratique(minutes, tous.count { it.note.isNotBlank() }, meilleureSerie(context), tikkunJournal(context))
     }
 
     /**
@@ -998,7 +1009,7 @@ object Store {
         val tous = days(context).values
         val minutes = tous.filter { it.faite }.mapNotNull { r -> dateValide(r.date)?.let { it to r.minutes } }.toMap()
         val notes = tous.filter { it.note.isNotBlank() }.mapNotNull { dateValide(it.date) }.toSet()
-        return Trophees.datesGain(minutes, notes) { isExempt(context, it) }
+        return Trophees.datesGain(minutes, notes, tikkunJournal(context)) { isExempt(context, it) }
     }
 
     /** Le dernier bilan de semaine montré : le dimanche de la semaine résumée (16/10). */
@@ -1421,11 +1432,21 @@ object Store {
     fun setTikkunDone(context: Context, numero: Int, done: Boolean) {
         val courant = tikkunDone(context).toMutableSet()
         if (done) courant.add(numero) else courant.remove(numero)
+        // Les dix psaumes dits : le jour entre au journal du Tikoun ; un psaume décoché l'en retire.
+        val jour = LocalDate.parse(jourTikkun())
+        val journal = tikkunJournal(context).toMutableSet()
+        if (courant.containsAll(Tikkun.ORDRE)) journal += jour else journal -= jour
         prefs(context).edit()
             .putString(KEY_TIKKUN_DAY, jourTikkun())
             .putString(KEY_TIKKUN_DONE, courant.sorted().joinToString(","))
+            .putString(KEY_TIKKUN_JOURNAL, journal.sorted().joinToString(","))
             .apply()
     }
+
+    /** Les jours (du Tikoun, bascule à 4 h) où les dix psaumes ont été dits. */
+    fun tikkunJournal(context: Context): Set<LocalDate> =
+        prefs(context).getString(KEY_TIKKUN_JOURNAL, "").orEmpty().split(',')
+            .mapNotNull { runCatching { LocalDate.parse(it.trim()) }.getOrNull() }.toSet()
 
     fun resetTikkun(context: Context) {
         prefs(context).edit()

@@ -182,6 +182,9 @@ class SiddurLectureActivity : AppCompatActivity() {
     /** Un livre de la bibliothèque (Likoutei Etsot, Sefer HaMiddot, 12/10), lu comme une prière, sans nusah ni ajouts du jour. */
     private var livre = false
 
+    /** Les langues de lecture (LanguesTexte, 04/11). */
+    private var langues = LanguesTexte.Mode.HE
+
     // Un livre seul (04/11) : ouvrir la Méguila ne lit plus les 16 Mo de tous les livres.
     private fun recueil(): Siddur = if (livre) Data.livre(this, id) ?: Siddur(emptyList(), emptyList()) else Data.siddur(this)
 
@@ -245,7 +248,11 @@ class SiddurLectureActivity : AppCompatActivity() {
         val annotations = if (livre) emptyList() else Data.ajouts(this)[id].orEmpty()
         val note = if (annotations.isEmpty()) emptyList() else listOf(Note(getString(R.string.siddur_jour_ajouts,
             jour.dateHebraique, getString(if (israel) R.string.region_israel else R.string.region_diaspora))))
-        val lignes: List<Any> = note + SiddurJour.lignes(texte, annotations, jour.conditions, ouverts,
+        // Un livre sans traduction, quand on en a demandé une (04/11) : on le dit, l'hébreu reste.
+        langues = LanguesTexte.mode(this)
+        val traduit = texte.sections.any { s -> s.blocs.any { it.fr != null || it.en != null } }
+        val sansTraduction = if (livre && LanguesTexte.manque(langues, traduit)) listOf(Note(getString(R.string.lecture_sans_traduction))) else emptyList()
+        val lignes: List<Any> = sansTraduction + note + SiddurJour.lignes(texte, annotations, jour.conditions, ouverts,
             Store.siddurNusah(this).cle, israel, Store.sansTahanounFinTichri(this), Store.hemisphereSud(this))
         val rendu = ReglagesLecture.rendu(this)
         val gestion = liste.layoutManager as LinearLayoutManager
@@ -363,7 +370,7 @@ class SiddurLectureActivity : AppCompatActivity() {
     private fun nom(libelle: String): String = Libelles.res(libelle)?.let { getString(it) } ?: libelle
 
     /** Les ajouts qui ne sont jamais « du jour » : on dit « toucher pour lire », pas « pas aujourd'hui ». */
-    private val jamaisDuJour = setOf(CalendrierJuif.C.MINYAN, CalendrierJuif.C.BEIT_AVEL, CalendrierJuif.C.OUBLI, CalendrierJuif.C.CHEVA_BERAKHOT, CalendrierJuif.C.ZIMUN)
+    private val jamaisDuJour = setOf(CalendrierJuif.C.MINYAN, CalendrierJuif.C.BEIT_AVEL, CalendrierJuif.C.OUBLI, CalendrierJuif.C.CHEVA_BERAKHOT, CalendrierJuif.C.ZIMUN, CalendrierJuif.C.FACULTATIF)
 
     /** Le chevron d'un repli, tourné d'un quart de tour quand l'ajout est ouvert ; [haut] : vers le haut. */
     private fun chevron(couleur: Int, ouvert: Boolean, haut: Boolean = false): android.graphics.drawable.RotateDrawable {
@@ -471,7 +478,20 @@ class SiddurLectureActivity : AppCompatActivity() {
                 is SiddurJour.Ligne.Titre -> vue.apply {
                     PoliceHebraique.appliquer(this)
                     setPadding(dp(16), dp(if (position == 0) 8 else 32), dp(16), dp(8))
-                    text = ligne.texte
+                    // Le titre traduit (04/11), sous l'hébreu ou à sa place, selon les langues choisies.
+                    val titres = LanguesTexte.textes(langues, ligne.texte, ligne.fr, ligne.en)
+                    text = if (titres.size == 1) titres[0].second else android.text.SpannableStringBuilder().apply {
+                        titres.forEachIndexed { k, (_, t) ->
+                            if (k > 0) append("\n")
+                            val d = length
+                            append(t)
+                            if (k > 0) setSpan(android.text.style.RelativeSizeSpan(0.72f), d, length, android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                        }
+                    }
+                    if (titres.any { it.first != "he" }) {
+                        textDirection = View.TEXT_DIRECTION_FIRST_STRONG
+                        textAlignment = View.TEXT_ALIGNMENT_TEXT_START
+                    }
                     textSize = 20f * e
                     setTypeface(typeface, android.graphics.Typeface.BOLD)
                     setTextColor(rendu.titre)
@@ -482,8 +502,29 @@ class SiddurLectureActivity : AppCompatActivity() {
                     // Des paragraphes aérés ; les consignes, petites, collées au texte qu'elles annoncent (12/10).
                     setPadding(dp(16), dp(if (consigne) 24 else 14), dp(16), dp(if (consigne) 4 else 26))
                     // Aéré (28/10) : les longs paragraphes coupés aux fins de phrase, le premier mot en gras, agrandi.
-                    text = if (consigne) Html.fromHtml(ligne.bloc.texte, Html.FROM_HTML_MODE_LEGACY)
+                    val hebreu = if (consigne) Html.fromHtml(ligne.bloc.texte, Html.FROM_HTML_MODE_LEGACY)
                     else premierMotAgrandi(Html.fromHtml(Aeration.aerer(ligne.bloc.texte), Html.FROM_HTML_MODE_LEGACY))
+                    // Un verset traduit (Esther, Chir HaChirim, 04/11) : l'hébreu et/ou la traduction, un
+                    // paragraphe chacun, chacun dans son sens (premier caractère fort).
+                    val textes = if (consigne) emptyList() else LanguesTexte.textes(langues, ligne.bloc.texte, ligne.bloc.fr, ligne.bloc.en)
+                    text = if (textes.none { it.first != "he" }) hebreu else android.text.SpannableStringBuilder().apply {
+                        val avecHebreu = textes.any { it.first == "he" }
+                        textes.forEach { (l, t) ->
+                            if (isNotEmpty()) append("\n")
+                            if (l == "he") { append(hebreu); return@forEach }
+                            val d = length
+                            append(t)
+                            setSpan(android.text.style.TypefaceSpan("serif"), d, length, android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                            if (avecHebreu) {
+                                setSpan(android.text.style.RelativeSizeSpan(0.84f), d, length, android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                                setSpan(android.text.style.ForegroundColorSpan(rendu.discret), d, length, android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                            }
+                        }
+                    }
+                    if (textes.any { it.first != "he" }) {
+                        textDirection = View.TEXT_DIRECTION_FIRST_STRONG
+                        textAlignment = View.TEXT_ALIGNMENT_TEXT_START
+                    }
                     textSize = (if (consigne) 12f else 19f) * e
                     setLineSpacing(dp(if (consigne) 3 else 8).toFloat() * e, 1f)
                     setTextColor(if (consigne) rendu.discret else rendu.texte)

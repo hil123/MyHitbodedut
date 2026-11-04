@@ -31,6 +31,28 @@
     <string name="section_permissions_hint">Ce que l’application demande, et pourquoi.</string>
     <string name="section_data">Mes données</string>
     <string name="section_data_hint">Tout est stocké sur ce téléphone uniquement. Exportez de temps en temps.</string>
+    <!-- Dédicace (04/11) : la demande part à l’équipe, par la messagerie de l’utilisateur. -->
+    <string name="section_dedicace">Dédicace</string>
+    <string name="section_dedicace_hint">Pour dédier votre hitbodedout ou votre étude, la demande passe par l’équipe MyHitbodedut. Elle s’écrit dans votre messagerie, adressée à myhitbodedut26@gmail.com : rien ne part sans vous.</string>
+    <string name="dedicace_bouton">Dédicacer</string>
+    <string name="dedicace_quoi">Que dédiez-vous ?</string>
+    <string name="dedicace_hitbodedut">Ma hitbodedout</string>
+    <string name="dedicace_etude">Mon étude</string>
+    <string name="dedicace_pour">Pour</string>
+    <string name="dedicace_leilouy">Léïlouy nichmat (לעילוי נשמת)</string>
+    <string name="dedicace_refoua">Refoua chéléma (לרפואה שלמה)</string>
+    <string name="dedicace_hatslaha">Hatsla’ha (להצלחה)</string>
+    <string name="dedicace_zivoug">Zivoug hagoun (לזיווג הגון)</string>
+    <string name="dedicace_autre">Autre intention</string>
+    <string name="dedicace_nom">Nom (ex. : Moché ben Sarah)</string>
+    <string name="dedicace_mot">Un mot pour l’équipe (facultatif)</string>
+    <string name="dedicace_ecrire">Écrire l’e-mail</string>
+    <string name="dedicace_nom_manque">Indiquez le nom.</string>
+    <string name="dedicace_sans_messagerie">Aucune messagerie trouvée : écrivez à myhitbodedut26@gmail.com.</string>
+    <string name="dedicace_sujet">Dédicace – %1$s</string>
+    <string name="dedicace_corps_intro">Bonjour,</string>
+    <string name="dedicace_corps_demande">Je souhaite dédier %1$s :</string>
+    <string name="dedicace_corps_fin">Envoyé depuis l’application MyHitbodedut.</string>
 
     <!-- Diagnostic -->
     <string name="gate_armed_title">« Je suis avec Hachem » veille</string>
@@ -769,6 +791,9 @@
     <string name="ajout_motsae_chabbat_yt">Motsaé Chabbat et Yom tov</string>
     <string name="ajout_cheva_berakhot">Chéva bérakhot (repas de noces)</string>
     <string name="ajout_zimun">Zimoun (à trois convives ou plus)</string>
+    <string name="ajout_facultatif">Usage, non obligatoire</string>
+    <string name="ajout_facultatif_avant">Avant le Birkat : psaumes d’usage (non obligatoires)</string>
+    <string name="ajout_facultatif_apres">הרחמן et fin : d’usage (non obligatoires)</string>
     <string name="ajout_embolismique">Année embolismique (וּלְכַפָּרַת פֶּשַׁע)</string>
     <string name="ajout_beit_avel">Maison endeuillée</string>
     <string name="siddur_seul">Si l’on prie seul</string>
@@ -971,6 +996,17 @@
     <plurals name="trophee_plume_desc">
         <item quantity="one">%1$d note au journal</item>
         <item quantity="other">%1$d notes au journal</item>
+    </plurals>
+    <!-- Le Tikoun HaKlali (04/11) : lectures complètes, jours d’affilée. -->
+    <string name="trophee_tikkun">Le Tikoun HaKlali</string>
+    <string name="trophee_tikkun_serie">La harpe de David</string>
+    <plurals name="trophee_tikkun_desc">
+        <item quantity="one">%1$d Tikoun HaKlali dit en entier</item>
+        <item quantity="other">%1$d Tikoun HaKlali dits en entier</item>
+    </plurals>
+    <plurals name="trophee_tikkun_serie_desc">
+        <item quantity="one">%1$d jour de Tikoun d’affilée</item>
+        <item quantity="other">%1$d jours de Tikoun d’affilée</item>
     </plurals>
     <string name="metal_bronze">Bronze</string>
     <string name="metal_argent">Argent</string>
@@ -1255,7 +1291,7 @@
     <string name="vol_priere_titre">Prière du moment</string>
     <string name="vol_jusqua">jusqu’à %1$s</string>
     <string name="vol_sans_limite">jusqu’à l’aube, sans limite affichée</string>
-    <string name="vol_dans">dans %1$s</string>
+    <string name="vol_dans">encore %1$s</string>
     <string name="vol_hors_fenetre">Le calcul couvre le vol et les 6 heures qui l’entourent.</string>
     <string name="vol_en_vol_titre">Pendant le vol</string>
     <string name="vol_aucun_zman">Aucun zman pendant ce vol.</string>
@@ -1391,4 +1427,31 @@
 
     <!-- Sous l’interrupteur des services en ligne, dans le formulaire du vol (02/11, VolActivity). -->
     <string name="vol_en_ligne_aide">Désactivés par défaut : rien ne quitte le téléphone. Activés, la loupe 🔍 envoie le seul numéro de vol à adsbdb.com pour remplir l’arrivée, et le suivi en direct interroge OpenSky Network.</string>
+    <string name="vol_en_ligne_titre">Chercher la route en ligne ?</string>
+    <string name="vol_en_ligne_oui">Activer et chercher</string>
+    <string name="vol_rapide_titre">Décrivez votre vol</string>
+    <string name="vol_rapide_aide">Comme vous le diriez, ou collez le texte du billet. Tout est lu sur le téléphone.</string>
+    <string name="vol_rapide_exemple">Ex. : El Al Lyon → TLV demain à 11h</string>
+    <string name="vol_rapide_remplir">Remplir le vol</string>
+    <string name="vol_rapide_billet">Importer le billet (PDF ou photo)</string>
+    <string name="vol_rapide_rien">Rien de reconnu. Essayez par exemple : « LY 382 Paris Tel Aviv le 12/11 à 9h40 ».</string>
+    <string name="vol_rapide_heure">l’heure de départ</string>
+    <string name="vol_rapide_compris">Compris : %1$s</string>
+    <string name="vol_rapide_estimee">Arrivée estimée d’après la distance : corrigez-la avec l’heure du billet.</string>
+    <string name="vol_rapide_estimee_court">Estimée d’après la distance : à vérifier sur le billet.</string>
+    <string name="vol_rapide_manque">Reste à indiquer : %1$s.</string>
+    <string name="vol_rapide_lecture">Lecture du billet…</string>
+    <string name="vol_rapide_billet_sans_code">Aucun code-barres de carte d’embarquement trouvé. Ouvrez le billet, copiez son texte et collez-le ci-dessus.</string>
+    <string name="vol_rapide_billet_illisible">Un code-barres a été lu, mais ce n’est pas celui d’une carte d’embarquement.</string>
+    <string name="vol_rapide_billet_lu">Carte d’embarquement lue (le code-barres ne porte pas les heures).</string>
+
+    <!-- Les langues d’un texte à lire (04/11), LanguesTexte. -->
+    <string name="lecture_langues">Langues du texte</string>
+    <string name="lecture_sans_traduction">Ce texte n’a pas encore de traduction : il reste en hébreu.</string>
+    <string name="langues_he">עברית</string>
+    <string name="langues_fr">Français</string>
+    <string name="langues_en">English</string>
+    <string name="langues_he_fr">עברית + Français</string>
+    <string name="langues_he_en">עברית + English</string>
+    <string name="langues_fr_en">Français + English</string>
 </resources>

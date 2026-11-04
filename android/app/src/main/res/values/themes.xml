@@ -15,6 +15,10 @@
         <item name="viewInflaterClass">com.myhitbodedut.PersonnageViewInflater</item>
         <!-- Le passage d'un écran à l'autre (19/10, effets) : glissement court et fondu. -->
         <item name="android:windowAnimationStyle">@style/Effets.Fenetres</item>
+        <!-- Les boutons, affinés (04/11) : pilule pleine, pilule cerclée, lien, une seule famille. -->
+        <item name="materialButtonStyle">@style/Bouton.Plein</item>
+        <item name="materialButtonOutlinedStyle">@style/Bouton.Contour</item>
+        <item name="borderlessButtonStyle">@style/Bouton.Texte</item>
         <item name="colorPrimary">@color/brand</item>
         <item name="colorOnPrimary">@color/on_brand</item>
         <item name="colorSecondary">@color/brand_dark</item>
@@ -108,6 +112,76 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textColor">?attr/mhInk</item>
         <item name="android:textSize">15sp</item>
+    </style>
+
+    <!--
+        Le bouton « Commencer » de l'accueil (03/11, demande du propriétaire :
+        « plus élégant ») : une pilule pleine à la couleur de l'accent, plus
+        haute que les autres boutons, avec le triangle de lecture devant le
+        libellé et une ombre légère qui la détache de la carte. La couleur
+        suit la palette choisie (colorPrimary / colorOnPrimary).
+    -->
+    <!--
+        La famille des boutons (04/11, « améliore les boutons, l'affinement et l'affichage ») :
+        48 dp de haut sans marge cachée (la même place qu'avant, un bouton plus grand à l'œil),
+        coins entièrement ronds, texte medium sans majuscules, à plat (ni ombre portée Material
+        ni saut au toucher, le relief vient de la couleur).
+    -->
+    <style name="Bouton.Plein" parent="Widget.Material3.Button">
+        <item name="android:minHeight">48dp</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:paddingHorizontal">22dp</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:letterSpacing">0.01</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:stateListAnimator">@null</item>
+        <item name="cornerRadius">24dp</item>
+    </style>
+
+    <style name="Bouton.Contour" parent="Widget.Material3.Button.OutlinedButton">
+        <item name="android:minHeight">48dp</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:paddingHorizontal">22dp</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:letterSpacing">0.01</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="cornerRadius">24dp</item>
+        <item name="strokeColor">@color/line</item>
+        <item name="strokeWidth">1dp</item>
+    </style>
+
+    <style name="Bouton.Texte" parent="Widget.Material3.Button.TextButton">
+        <item name="android:minHeight">48dp</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:letterSpacing">0.01</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+
+    <style name="StartButton" parent="Widget.Material3.Button">
+        <item name="android:minHeight">60dp</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:paddingHorizontal">24dp</item>
+        <item name="android:paddingVertical">14dp</item>
+        <item name="cornerRadius">30dp</item>
+        <item name="android:textSize">17sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:letterSpacing">0.01</item>
+        <item name="android:textAllCaps">false</item>
+        <!-- Sur deux lignes (« Commencer une hitbodedout de 15 min »), deux moitiés égales plutôt qu'un « min » seul. -->
+        <item name="android:breakStrategy">balanced</item>
+        <item name="icon">@drawable/ic_lecteur_lecture</item>
+        <item name="iconGravity">textStart</item>
+        <item name="iconSize">22dp</item>
+        <item name="iconPadding">10dp</item>
+        <item name="iconTint">?attr/colorOnPrimary</item>
+        <item name="android:stateListAnimator">@null</item>
+        <item name="android:elevation">3dp</item>
     </style>
 
     <style name="SettingValue" parent="Widget.Material3.Button.OutlinedButton">

@@ -131,3 +131,5 @@ if __name__ == "__main__":
     parcourt(biblio)
     json.dump(biblio, open(racine + "bibliotheque.json", "w", encoding="utf-8"), ensure_ascii=False, indent=2)
     print("formes développées :", total)
+    # Depuis le 04/11, les livres ont le Nom abrégé hors des versets : cette étape doit suivre.
+    print("Ensuite : python3 tools/noms_abreges.py <export Tanakh> (le Nom abrégé ה' hors des versets).")

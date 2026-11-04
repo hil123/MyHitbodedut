@@ -735,3 +735,42 @@ test('relecture du 02/11 : sauvegarde, dates, notes', () => {
   s.setNote('2026-09-10', '');
   assert.equal(s.record('2026-09-10') ?? null, null);
 });
+
+test('trophées du Tikoun (04/11) : lectures complètes et jours d’affilée, comme Android', async () => {
+  const T = await import('../src/js/trophees.js');
+  const p = { minutes: {}, notes: 0, meilleureSerie: 0, tikkun: ['2026-11-01', '2026-11-02', '2026-11-03', '2026-11-06', '2026-11-07', '2026-11-10'] };
+  assert.equal(T.valeur(p, 'tikkun'), 6);
+  assert.equal(T.valeur(p, 'tikkun_serie'), 3);
+  assert.ok(T.gagnes(p).has('tikkun:2'));
+  const d = T.datesGain({}, [], () => false, ['2026-11-01', '2026-11-02', '2026-11-03']);
+  assert.equal(d['tikkun:1'], '2026-11-01');
+  assert.equal(d['tikkun_serie:1'], '2026-11-03');
+});
+
+test('langues de lecture (04/11) : six modes, la règle d’avant par défaut, l’hébreu faute de traduction', async () => {
+  const { LanguesTexte } = await import('../src/js/regles.js');
+  assert.equal(LanguesTexte.defaut('he'), 'he');
+  assert.equal(LanguesTexte.defaut('fr'), 'he+fr');
+  assert.equal(LanguesTexte.defaut('en'), 'he+en');
+  assert.equal(LanguesTexte.mode('fr+en', 'he'), 'fr+en');
+  assert.equal(LanguesTexte.mode('xx', 'fr'), 'he+fr');
+  assert.deepEqual(LanguesTexte.textes('fr+en', 'אחד', 'un', 'one'), [['fr', 'un'], ['en', 'one']]);
+  assert.deepEqual(LanguesTexte.textes('fr', 'אחד', null, 'one'), [['he', 'אחד']]);
+  assert.ok(LanguesTexte.manque('he+fr', false));
+  const teh = JSON.parse(readFileSync(new URL('../../android/app/src/main/res/raw/tehilim.json', import.meta.url), 'utf8'));
+  assert.equal(teh.traductions.fr.psaumes.length, 150);
+  assert.ok(teh.traductions.fr.psaumes[22][0].includes('L’Éternel est mon berger'));
+  assert.ok(teh.traductions.en.psaumes[22][0].includes('The LORD is my shepherd'));
+});
+
+test('Dedicace : la demande va à l’équipe, la formule en hébreu, le lien encodé', async () => {
+  const { Dedicace } = await import('../src/js/regles.js');
+  assert.equal(Dedicace.ADRESSE, 'myhitbodedut26@gmail.com');
+  assert.equal(Dedicace.corps('Bonjour,', 'Je souhaite dédier ma hitbodedout :', 'לעילוי נשמת', ' Moché ben Sarah ', '', 'Fin.'),
+    'Bonjour,\n\nJe souhaite dédier ma hitbodedout :\nלעילוי נשמת Moché ben Sarah\n\nFin.');
+  assert.ok(Dedicace.corps('a', 'b', null, 'Sarah', 'Merci', 'z').includes('\nSarah\n\nMerci\n'));
+  const l = Dedicace.lien('Dédicace – Mon étude', 'a b\nc & d');
+  assert.ok(l.startsWith('mailto:myhitbodedut26@gmail.com?subject='));
+  assert.equal(decodeURIComponent(l.split('&body=')[1]), 'a b\nc & d');
+  assert.equal(Dedicace.INTENTIONS.length, 5);
+});

@@ -41,15 +41,53 @@ object Aeroports {
     fun chercher(aeroports: List<Vol.Aeroport>, texte: String, max: Int = 20): List<Vol.Aeroport> {
         val q = plier(texte)
         if (q.isEmpty()) return emptyList()
-        val exact = aeroports.filter { plier(it.iata) == q }
-        val ville = aeroports.filter { plier(it.ville).startsWith(q) || it.alias.any { a -> plier(a).startsWith(q) } }
-        val nom = aeroports.filter { plier(it.nom).contains(q) || plier(it.ville).contains(q) || it.alias.any { a -> plier(a).contains(q) } }
-        return (exact + ville + nom).distinct().take(max)
+        // Les noms pliés une fois pour toutes (04/11) : avant, chaque lettre tapée repliait
+        // les 3 226 aéroports et leurs alias sur le fil de l'interface — la saisie ramait.
+        val idx = index(aeroports)
+        val exact = ArrayList<Int>()
+        val ville = ArrayList<Int>()
+        val nom = ArrayList<Int>()
+        for (i in idx.indices) {
+            val p = idx[i]
+            when {
+                p.iata == q -> exact += i
+                p.ville.startsWith(q) || p.alias.any { it.startsWith(q) } -> ville += i
+                p.nom.contains(q) || p.ville.contains(q) || p.alias.any { it.contains(q) } -> nom += i
+            }
+        }
+        return (exact + ville + nom).asSequence().take(max).map { aeroports[it] }.toList()
     }
 
+    /** Les champs d'un aéroport, déjà pliés. */
+    private class Plie(val iata: String, val ville: String, val nom: String, val alias: List<String>)
+
+    @Volatile
+    private var cache: Pair<List<Vol.Aeroport>, List<Plie>>? = null
+
+    private fun index(aeroports: List<Vol.Aeroport>): List<Plie> {
+        cache?.let { (liste, plies) -> if (liste === aeroports) return plies }
+        val plies = aeroports.map { Plie(plier(it.iata), plier(it.ville), plier(it.nom), it.alias.map(::plier)) }
+        cache = aeroports to plies
+        return plies
+    }
+
+    /** L'aéroport dont la ville (ou un autre nom) est exactement `texte`, déjà plié ; null sinon. */
+    fun exact(aeroports: List<Vol.Aeroport>, texte: String): Vol.Aeroport? {
+        val idx = index(aeroports)
+        for (i in idx.indices) if (idx[i].ville == texte || idx[i].alias.any { it == texte }) return aeroports[i]
+        return null
+    }
+
+    /** Prépare l'index hors du fil de l'interface, pour que la première lettre réponde aussitôt. */
+    fun preparer(aeroports: List<Vol.Aeroport>) { index(aeroports) }
+
     /** Les marques (accents, nikoud) ôtées ; tiret, maqaf, apostrophe, guillemets, géresh et points deviennent des espaces. */
-    internal fun plier(s: String) = Normalizer.normalize(s, Normalizer.Form.NFD).replace(Regex("\\p{M}"), "").lowercase()
-        .replace(Regex("[-־'’\"׳״.]"), " ").replace(Regex("\\s+"), " ").trim()
+    internal fun plier(s: String) = Normalizer.normalize(s, Normalizer.Form.NFD).replace(MARQUES, "").lowercase()
+        .replace(PONCTUATION, " ").replace(BLANCS, " ").trim()
+
+    private val MARQUES = Regex("\\p{M}")
+    private val PONCTUATION = Regex("[-־'’\"׳״.]")
+    private val BLANCS = Regex("\\s+")
 
     /** Le nom dans la langue de l'application s'il existe, sinon celui d'OurAirports (en anglais). */
     fun nomLocal(a: Vol.Aeroport, langue: String): String = a.noms[if (langue == "iw") "he" else langue] ?: a.nom

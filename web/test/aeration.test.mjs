@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { aerer, couper, premierMot, LONG } from '../src/js/aeration.js';
+import { aerer, couper, premierMot, psaume, LONG } from '../src/js/aeration.js';
 
 test('premier mot : mis en gras, sauf déjà gras, <small> ou parenthèse', () => {
   assert.equal(premierMot('בָּרוּךְ אַתָּה'), '<b>בָּרוּךְ</b> אַתָּה');
@@ -22,6 +22,19 @@ test('couper : un long paragraphe se coupe aux fins de phrase, jamais dans <smal
   assert.equal(r.split('<br><br>').length, 3);
   assert.ok(!/<small>[^<]*<br><br>/.test(r));
   assert.equal(r.replace(/<br><br>/g, ' '), long);
+});
+
+test('couper : un psaume n\'est jamais coupé (té\'amim, ou ouverture de psaume)', () => {
+  const verset = 'אֱֽלֹהִ֗ים יְחׇנֵּ֥נוּ וִיבָרְכֵ֑נוּ '.repeat(12).trim();
+  const avecTeamim = `<b>לַמְנַצֵּ֥חַ</b> ${verset}׃ ${verset}׃ ${verset}׃`;
+  assert.ok(avecTeamim.replace(/<[^>]+>/g, '').length > LONG);
+  assert.ok(psaume(avecTeamim));
+  assert.equal(couper(avecTeamim), avecTeamim);
+  const phrase = 'אבגד '.repeat(60).trim();
+  const sansTeamim = `<b>מִזְמוֹר</b> לְדָוִד: ${phrase}: ${phrase}`;
+  assert.ok(psaume(sansTeamim));
+  assert.equal(couper(sansTeamim), sansTeamim);
+  assert.ok(!psaume(`${phrase}: ${phrase}`));
 });
 
 test('aerer : les deux gestes ensemble', () => {

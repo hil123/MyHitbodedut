@@ -47,12 +47,23 @@ const plier = (s) => s.normalize('NFD').replace(/\p{M}/gu, '').toLowerCase()
 export function chercher(liste, texte, max = 20) {
   const q = plier(texte);
   if (!q) return [];
-  const alias = (a) => (a.alias ?? []).map(plier);
-  const exact = liste.filter((a) => plier(a.iata) === q);
-  const ville = liste.filter((a) => plier(a.ville).startsWith(q) || alias(a).some((x) => x.startsWith(q)));
-  const nom = liste.filter((a) => plier(a.nom).includes(q) || plier(a.ville).includes(q) || alias(a).some((x) => x.includes(q)));
-  return [...new Set([...exact, ...ville, ...nom])].slice(0, max);
+  // Les noms pliés une fois par liste (04/11) : avant, chaque lettre repliait les 3 226 aéroports.
+  let idx = INDEX.get(liste);
+  if (!idx) {
+    idx = liste.map((a) => ({ iata: plier(a.iata), ville: plier(a.ville), nom: plier(a.nom), alias: (a.alias ?? []).map(plier) }));
+    INDEX.set(liste, idx);
+  }
+  const exact = [];
+  const ville = [];
+  const nom = [];
+  idx.forEach((p, i) => {
+    if (p.iata === q) exact.push(i);
+    else if (p.ville.startsWith(q) || p.alias.some((x) => x.startsWith(q))) ville.push(i);
+    else if (p.nom.includes(q) || p.ville.includes(q) || p.alias.some((x) => x.includes(q))) nom.push(i);
+  });
+  return [...exact, ...ville, ...nom].slice(0, max).map((i) => liste[i]);
 }
+const INDEX = new WeakMap();
 
 /** Le nom dans la langue de l'application s'il existe, sinon celui d'OurAirports (Aeroports.nomLocal). */
 export const nomLocal = (a, langue) => a.noms?.[langue === 'iw' ? 'he' : langue] ?? a.nom;
@@ -473,3 +484,201 @@ export async function chercherRoute(numero, depart = null, chercher = fetch) {
     return { statut: 'erreur', raison: e.raison ?? Raison.HORS_LIGNE };
   }
 }
+
+// --- La saisie rapide (SaisieVol, 04/11) ------------------------------------------------
+// Une phrase comme on la dirait, ou le texte collé d'un billet : tout est lu ici, sans réseau.
+
+/** L'aéroport dont la ville (ou un autre nom) est exactement `q`, déjà plié ; null sinon (Aeroports.exact). */
+export function exact(liste, q) {
+  chercher(liste, 'x'); // construit l'index au besoin
+  const idx = INDEX.get(liste);
+  const i = idx.findIndex((p) => p.ville === q || p.alias.includes(q));
+  return i < 0 ? null : liste[i];
+}
+
+export const COMPAGNIES = {
+  'el al': 'LY', elal: 'LY', 'אל על': 'LY', arkia: 'IZ', 'ארקיע': 'IZ', israir: '6H', 'ישראייר': '6H',
+  'air haifa': 'H9', 'air france': 'AF', transavia: 'TO', easyjet: 'U2', 'easy jet': 'U2', wizz: 'W6',
+  'wizz air': 'W6', ryanair: 'FR', lufthansa: 'LH', swiss: 'LX', 'british airways': 'BA', klm: 'KL',
+  delta: 'DL', united: 'UA', 'american airlines': 'AA', turkish: 'TK', 'turkish airlines': 'TK',
+  aegean: 'A3', ita: 'AZ', 'ita airways': 'AZ', iberia: 'IB', 'air europa': 'UX', emirates: 'EK',
+  etihad: 'EY', flydubai: 'FZ', 'brussels airlines': 'SN', austrian: 'OS', lot: 'LO', 'air canada': 'AC',
+  ethiopian: 'ET', vueling: 'VY', volotea: 'V7', tap: 'TP', 'air portugal': 'TP', finnair: 'AY',
+  sas: 'SK', aeroflot: 'SU', 'air india': 'AI', cathay: 'CX', qatar: 'QR', 'qatar airways': 'QR',
+  eurowings: 'EW', pegasus: 'PC', bluebird: 'BZ', smartwings: 'QS', corsair: 'SS', 'air corsica': 'XK',
+  'air senegal': 'HC', 'royal air maroc': 'AT', tunisair: 'TU', egyptair: 'MS', jet2: 'LS',
+};
+
+const PRINCIPAL = {
+  paris: 'CDG', london: 'LHR', londres: 'LHR', 'new york': 'JFK', milan: 'MXP', milano: 'MXP',
+  rome: 'FCO', roma: 'FCO', moscow: 'SVO', moscou: 'SVO', tokyo: 'NRT', berlin: 'BER',
+  bruxelles: 'BRU', brussels: 'BRU', 'tel aviv': 'TLV', 'tel aviv yafo': 'TLV', chicago: 'ORD',
+  washington: 'IAD', montreal: 'YUL', toronto: 'YYZ', istanbul: 'IST', stockholm: 'ARN',
+  bangkok: 'BKK', dubai: 'DXB', lyon: 'LYS', nice: 'NCE', marseille: 'MRS', geneve: 'GVA',
+  geneva: 'GVA', bale: 'BSL', basel: 'BSL', eilat: 'ETM', 'buenos aires': 'EZE', 'sao paulo': 'GRU',
+  'los angeles': 'LAX', miami: 'MIA', venise: 'VCE', venice: 'VCE', barcelone: 'BCN', madrid: 'MAD',
+  athenes: 'ATH', athens: 'ATH', kiev: 'KBP', kyiv: 'KBP', varsovie: 'WAW', warsaw: 'WAW',
+  'פריז': 'CDG', 'לונדון': 'LHR', 'ניו יורק': 'JFK', 'תל אביב': 'TLV', 'אילת': 'ETM', 'ליון': 'LYS',
+  'מרסיי': 'MRS', 'ניס': 'NCE', 'רומא': 'FCO', 'מילאנו': 'MXP', 'ברלין': 'BER',
+};
+
+const MOTS = new Set(['les', 'des', 'vol', 'par', 'sur', 'pour', 'une', 'est', 'and', 'the', 'for', 'via', 'dep', 'arr', 'seat', 'gate',
+  'you', 'are', 'air', 'new', 'bus', 'car', 'jet', 'fly', 'pax', 'ref', 'tax', 'fee', 'eur', 'usd', 'ils',
+  'son', 'ses', 'mon', 'mes', 'ton', 'nos', 'vos', 'aux', 'pas', 'que', 'qui', 'oui', 'non', 'lun', 'mar', 'mer',
+  'jeu', 'ven', 'sam', 'dim', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun', 'jan', 'fev', 'feb', 'avr', 'apr',
+  'mai', 'may', 'jun', 'jul', 'aou', 'aug', 'sep', 'oct', 'nov', 'dec', 'bag', 'row', 'pnr', 'age', 'end', 'all']);
+
+const MOIS = {
+  janvier: 1, janv: 1, jan: 1, january: 1, 'ינואר': 1, fevrier: 2, fevr: 2, fev: 2, february: 2, feb: 2, 'פברואר': 2,
+  mars: 3, march: 3, 'מרץ': 3, 'מרס': 3, avril: 4, avr: 4, april: 4, apr: 4, 'אפריל': 4, mai: 5, may: 5, 'מאי': 5,
+  juin: 6, june: 6, jun: 6, 'יוני': 6, juillet: 7, juil: 7, july: 7, jul: 7, 'יולי': 7, aout: 8, august: 8, aug: 8, 'אוגוסט': 8,
+  septembre: 9, sept: 9, sep: 9, september: 9, 'ספטמבר': 9, octobre: 10, oct: 10, october: 10, 'אוקטובר': 10,
+  novembre: 11, nov: 11, november: 11, 'נובמבר': 11, decembre: 12, dec: 12, december: 12, 'דצמבר': 12,
+};
+
+// 1 = lundi … 7 = dimanche (ISO), comme DayOfWeek.
+const JOURS = {
+  lundi: 1, monday: 1, 'שני': 1, mardi: 2, tuesday: 2, 'שלישי': 2, mercredi: 3, wednesday: 3, 'רביעי': 3,
+  jeudi: 4, thursday: 4, 'חמישי': 4, vendredi: 5, friday: 5, 'שישי': 5, samedi: 6, saturday: 6, 'שבת': 6,
+  dimanche: 7, sunday: 7, 'ראשון': 7,
+};
+
+const VERS = new Set(['vers', 'pour', 'a', 'to', 'destination', 'arrivee', 'arrival', 'arr', '→', '->']);
+const DE = new Set(['de', 'depuis', 'from', 'depart', 'departure', 'dep']);
+
+const pad = (n) => String(n).padStart(2, '0');
+const iso = (a, m, j) => {
+  const d = new Date(Date.UTC(a, m - 1, j));
+  return d.getUTCFullYear() === a && d.getUTCMonth() === m - 1 && d.getUTCDate() === j ? `${a}-${pad(m)}-${pad(j)}` : null;
+};
+const plusJours = (isoJour, n) => {
+  const [a, m, j] = isoJour.split('-').map(Number);
+  const d = new Date(Date.UTC(a, m - 1, j + n));
+  return `${d.getUTCFullYear()}-${pad(d.getUTCMonth() + 1)}-${pad(d.getUTCDate())}`;
+};
+const jourIso = (isoJour) => { const [a, m, j] = isoJour.split('-').map(Number); return ((new Date(Date.UTC(a, m - 1, j)).getUTCDay() + 6) % 7) + 1; };
+
+function prochaineDate(aujourdhui, mois, jour) {
+  const an = Number(aujourdhui.slice(0, 4));
+  const d = iso(an, mois, jour);
+  if (!d) return null;
+  return d < plusJours(aujourdhui, -7) ? iso(an + 1, mois, jour) : d;
+}
+
+/** Les heures, dans l'ordre ; celles de l'embarquement ou de la porte sont écartées (SaisieVol.heures). */
+export function heuresPhrase(leger) {
+  const r = /(?<![0-9])([01]?[0-9]|2[0-3])(?:\s?h\s?([0-5][0-9])?|:([0-5][0-9])(?:\s?(am|pm))?|\s?(am|pm))(?![0-9])|(?<![a-zא-ת])(?:בשעה|a|à|at|vers)\s([01]?[0-9]|2[0-3])(?![0-9/:.]|\s?h|\s?am|\s?pm)/g;
+  const res = [];
+  for (const m of leger.matchAll(r)) {
+    const avant = leger.slice(Math.max(0, m.index - 24), m.index);
+    if (/boarding|embarquement|gate|porte|עלייה|שער|fermeture|closes/.test(avant)) continue;
+    if (m[6]) { res.push(`${pad(Number(m[6]))}:00`); continue; }
+    let h = Number(m[1]);
+    const min = Number(m[2] || m[3] || 0);
+    const apm = m[4] || m[5];
+    if (apm === 'pm' && h < 12) h += 12;
+    if (apm === 'am' && h === 12) h = 0;
+    res.push(`${pad(h)}:${pad(min)}`);
+  }
+  return res;
+}
+
+/**
+ * « El Al Lyon TLV demain à 11h » → { numero, compagnie, depart, arrivee (codes IATA), date
+ * « AAAA-MM-JJ », heureDepart « HH:MM », heureArrivee, dateArrivee } (SaisieVol.lire).
+ */
+export function lirePhrase(texte, liste, aujourdhui) {
+  const pl = plier(String(texte).replace(/→/g, ' → ').replace(/->/g, ' → ').replace(/✈/g, ' '));
+  const mots = pl.split(' ').filter(Boolean);
+  const leger = String(texte).normalize('NFD').replace(/\p{M}/gu, '').toLowerCase();
+
+  let numero = null;
+  const reNum = /(?<![a-z0-9])([a-z]{2,3}|[a-z][0-9]|[0-9][a-z])\s?([0-9]{1,4})([a-z]?)(?![a-z0-9:h/])(?!\s?(?:jan|fe|mar|av|ap|mai|may|juin|jun|juil|jul|ao|aug|sep|oct|nov|dec))/g;
+  for (const m of pl.matchAll(reNum)) {
+    const code = m[1];
+    if (['a', 'le', 'la', 'de', 'du', 'au', 'et', 'on', 'at', 'the'].includes(code) || MOTS.has(code)) continue;
+    const n = `${code}${m[2]}${m[3]}`.toUpperCase();
+    if (normaliserNumero(n)) { numero = n; break; }
+  }
+  const avecMot = (mot) => new RegExp(`(^|\\s)${mot.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(\\s|$)`).test(pl);
+  const compagnie = (numero && normaliserNumero(numero).code.length === 2 ? normaliserNumero(numero).code : null)
+    ?? Object.entries(COMPAGNIES).sort((a, b) => b[0].length - a[0].length).find(([nom]) => avecMot(plier(nom)))?.[1] ?? null;
+
+  // Les aéroports : groupes de trois, deux puis un mot ; « de », « vers », מ et ל donnent le rôle.
+  const parIata = (c) => liste.find((a) => a.iata === c) ?? null;
+  const trouver = (gram, n) => {
+    if (gram.length < 3) return null;
+    if (n === 1 && (MOTS.has(gram) || VERS.has(gram) || DE.has(gram) || gram in MOIS || gram in JOURS)) return null;
+    if (PRINCIPAL[gram]) { const a = parIata(PRINCIPAL[gram]); if (a) return a; }
+    if (n === 1 && gram.length === 3 && /^[a-z]{3}$/.test(gram)) { const a = parIata(gram.toUpperCase()); if (a) return a; }
+    return exact(liste, gram);
+  };
+  const trouves = [];
+  const pris = new Array(mots.length).fill(false);
+  for (let n = 3; n >= 1; n--) {
+    for (let i = 0; i + n <= mots.length; i++) {
+      if (pris.slice(i, i + n).some(Boolean)) continue;
+      let gram = mots.slice(i, i + n).join(' ');
+      let role = 0;
+      let a = trouver(gram, n);
+      if (!a && (gram.startsWith('מ') || gram.startsWith('ל'))) {
+        a = trouver(gram.slice(1), n);
+        if (a) role = gram.startsWith('ל') ? 1 : -1;
+        gram = gram.slice(1);
+      }
+      if (!a) continue;
+      if (numero && gram.toUpperCase() === numero) continue;
+      const avant = mots[i - 1];
+      if (role === 0) role = VERS.has(avant) ? 1 : DE.has(avant) ? -1 : 0;
+      for (let k = i; k < i + n; k++) pris[k] = true;
+      if (!trouves.some((t) => t.a === a)) trouves.push({ a, pos: i, role });
+    }
+  }
+  trouves.sort((x, y) => x.pos - y.pos);
+  const dep = trouves.find((t) => t.role === -1) ?? trouves.find((t) => t.role === 0);
+  const arr = trouves.find((t) => t.role === 1 && t !== dep) ?? trouves.find((t) => t !== dep && t.role === 0);
+
+  // Les dates.
+  const dates = [];
+  const ajoute = (pos, d) => { if (d) dates.push([pos, d]); };
+  let m = /apres demain|after tomorrow|מחרתיים/.exec(pl);
+  if (m) ajoute(m.index, plusJours(aujourdhui, 2));
+  if (!dates.length && (m = /(^|\s)(demain|tomorrow|מחר)(\s|$)/.exec(pl))) ajoute(m.index, plusJours(aujourdhui, 1));
+  if ((m = /(^|\s)(aujourd hui|aujourdhui|today|ce soir|tonight|היום|הערב)(\s|$)/.exec(pl))) ajoute(m.index, aujourdhui);
+  for (const x of leger.matchAll(/(?<![0-9])([0-9]{4})-([0-9]{1,2})-([0-9]{1,2})(?![0-9])/g)) ajoute(x.index, iso(+x[1], +x[2], +x[3]));
+  for (const x of leger.matchAll(/(?<![0-9:./])([0-9]{1,2})[/.]([0-9]{1,2})(?:[/.]([0-9]{2,4}))?(?![0-9:])/g)) {
+    const an = x[3] ? (Number(x[3]) < 100 ? 2000 + Number(x[3]) : Number(x[3])) : null;
+    ajoute(x.index, an ? iso(an, +x[2], +x[1]) : prochaineDate(aujourdhui, +x[2], +x[1]));
+  }
+  for (const x of pl.matchAll(/(?<![0-9])([0-9]{1,2})(?:er)?\s+([a-zא-ת]+)(?:\s+([0-9]{4}))?/g)) {
+    const mo = MOIS[x[2]] ?? MOIS[x[2].replace(/^ב/, '')];
+    if (!mo) continue;
+    ajoute(x.index, x[3] ? iso(+x[3], mo, +x[1]) : prochaineDate(aujourdhui, mo, +x[1]));
+  }
+  for (const x of pl.matchAll(/([a-z]+)\s+([0-9]{1,2})(?![0-9:h])(?:\s+([0-9]{4}))?/g)) {
+    const mo = MOIS[x[1]];
+    if (!mo) continue;
+    ajoute(x.index, x[3] ? iso(+x[3], mo, +x[2]) : prochaineDate(aujourdhui, mo, +x[2]));
+  }
+  if (!dates.length) mots.forEach((mot, i) => {
+    const j = JOURS[mot] ?? JOURS[mot.replace(/^ב/, '')];
+    if (!j) return;
+    if (/[א-ת]/.test(mot) && mot !== 'שבת' && mot !== 'בשבת' && !['יום', 'ביום'].includes(mots[i - 1])) return;
+    dates.push([i, plusJours(aujourdhui, (j - jourIso(aujourdhui) + 7) % 7)]);
+  });
+  const tri = [...new Set(dates.sort((x, y) => x[0] - y[0]).map((x) => x[1]))];
+  const heures = heuresPhrase(leger);
+  return {
+    numero, compagnie, depart: dep?.a.iata ?? null, arrivee: arr?.a.iata ?? null,
+    date: tri[0] ?? null, dateArrivee: tri[1] ?? null, heureDepart: heures[0] ?? null, heureArrivee: heures[1] ?? null,
+  };
+}
+
+/** La durée estimée, en ms : distance à 820 km/h + 30 min, au quart d'heure (SaisieVol.dureeEstimee). */
+export function dureeEstimee(a, b) {
+  const minutes = Math.round(distanceKm(a.latitude, a.longitude, b.latitude, b.longitude) / 820 * 60 + 30);
+  return Math.floor((minutes + 7) / 15) * 15 * MIN;
+}
+
+/** Une phrase sans rien de reconnu. */
+export const phraseVide = (p) => !p.numero && !p.depart && !p.arrivee && !p.date && !p.heureDepart;

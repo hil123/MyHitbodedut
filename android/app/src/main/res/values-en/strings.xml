@@ -26,6 +26,28 @@
     <string name="section_permissions_hint">What the app asks for, and why.</string>
     <string name="section_data">My data</string>
     <string name="section_data_hint">Everything is stored on this phone only. Export from time to time.</string>
+    <!-- Dédicace (04/11) : la demande part à l’équipe, par la messagerie de l’utilisateur. -->
+    <string name="section_dedicace">Dedication</string>
+    <string name="section_dedicace_hint">To dedicate your hitbodedut or your study, the request goes through the MyHitbodedut team. It is written in your own mail app, addressed to myhitbodedut26@gmail.com: nothing is sent without you.</string>
+    <string name="dedicace_bouton">Dedicate</string>
+    <string name="dedicace_quoi">What are you dedicating?</string>
+    <string name="dedicace_hitbodedut">My hitbodedut</string>
+    <string name="dedicace_etude">My study</string>
+    <string name="dedicace_pour">For</string>
+    <string name="dedicace_leilouy">Le’ilui nishmat (לעילוי נשמת)</string>
+    <string name="dedicace_refoua">Refuah shelemah (לרפואה שלמה)</string>
+    <string name="dedicace_hatslaha">Hatzlachah (להצלחה)</string>
+    <string name="dedicace_zivoug">Zivug hagun (לזיווג הגון)</string>
+    <string name="dedicace_autre">Another intention</string>
+    <string name="dedicace_nom">Name (e.g. Moshe ben Sarah)</string>
+    <string name="dedicace_mot">A word for the team (optional)</string>
+    <string name="dedicace_ecrire">Write the email</string>
+    <string name="dedicace_nom_manque">Enter the name.</string>
+    <string name="dedicace_sans_messagerie">No mail app found: write to myhitbodedut26@gmail.com.</string>
+    <string name="dedicace_sujet">Dedication – %1$s</string>
+    <string name="dedicace_corps_intro">Hello,</string>
+    <string name="dedicace_corps_demande">I would like to dedicate %1$s:</string>
+    <string name="dedicace_corps_fin">Sent from the MyHitbodedut app.</string>
 
     <string name="gate_armed_title">“I am with Hashem” is on</string>
     <plurals name="gate_armed_detail">
@@ -274,7 +296,7 @@
     <string name="tip_5_title">Start with Tehillim, or your own words</string>
     <string name="tip_5_body">If you are not sure how to begin, open Tehillim and read a few chapters. The Psalms are prayer already formed, very direct, and they touch the soul. In hitbodedut they can be a spiritual thread leading you straight to Hashem. And if you feel you have no words, you can simply speak with Hashem freely, sharing your thoughts and what you feel.</string>
     <string name="tip_6_title">Ask yourself inward questions</string>
-    <string name="tip_6_body">During hitbodedut, ask yourself inward questions. What am I feeling right now? What am I going through? How can I feel closer to Hashem? What do I need to improve in my life? This is a time for a real heshbon nefesh. Sometimes, in the inner quiet, you come to see your real needs and the right direction for your life.</string>
+    <string name="tip_6_body">During hitbodedut, ask yourself inward questions. What am I feeling right now? What am I going through? How can I feel closer to Hashem? What do I need to improve in my life? This is a time for a real cheshbon nefesh. Sometimes, in the inner quiet, you come to see your real needs and the right direction for your life.</string>
     <string name="tip_7_title">Put honesty first</string>
     <string name="tip_7_body">During hitbodedut, do not try to hide from Hashem what you feel. This is a time when you are allowed to be honest with yourself and with Hashem. If you feel anger, frustration, fear or insecurity, this is the place to say it. Honesty is the key to spiritual growth. The more honest you are, the more inner quiet you will find.</string>
     <string name="tip_8_title">Make peace with yourself</string>
@@ -470,8 +492,8 @@
         <item quantity="other">%d minutes of hitbodedut</item>
     </plurals>
     <!-- Séance annulée : un encouragement au lieu du bravo (28/09). -->
-    <string name="annulation_hazak">Hazak!</string>
-    <string name="annulation_hizki">Hizki!</string>
+    <string name="annulation_hazak">Chazak!</string>
+    <string name="annulation_hizki">Chizki!</string>
     <string name="annulation_neutral">Take heart!</string>
     <string name="annulation_subtitle">For everything you have done so far. Next time will be better.</string>
 
@@ -559,7 +581,7 @@
     <string name="siddur_title">Siddur</string>
     <string name="siddur_hint">Shacharit, Mincha, Arvit, blessings…</string>
     <string name="siddur_books">Books</string>
-    <string name="siddur_nusah">Sephardi nusach (Edot HaMizrah)</string>
+    <string name="siddur_nusah">Sephardi nusach (Edot HaMizrach)</string>
     <string name="lecture_reglages">Reading settings</string>
     <string name="lecture_nuit">Read on a black background</string>
     <string name="lecture_replier">Fold away</string>
@@ -579,7 +601,7 @@
     <string name="lecture_moins">Smaller letters</string>
     <string name="siddur_choose">Nusach</string>
     <string name="siddur_signets">Sections</string>
-    <string name="siddur_nusah_edot">Sephardi (Edot HaMizrah)</string>
+    <string name="siddur_nusah_edot">Sephardi (Edot HaMizrach)</string>
     <string name="siddur_nusah_sefard">Sfard (Arizal)</string>
     <string name="siddur_nusah_ashkenaz">Ashkenaz</string>
     <string name="siddur_sources">Sources: %1$s</string>
@@ -703,8 +725,11 @@
     <string name="ajout_yom_tov_chabbat">Yom Tov on Shabbat</string>
     <string name="ajout_roch_hachana_chabbat">Rosh Hashanah on Shabbat</string>
     <string name="ajout_motsae_chabbat_yt">Motzaei Shabbat and Yom Tov</string>
-    <string name="ajout_cheva_berakhot">Sheva Berakhot (wedding meal)</string>
+    <string name="ajout_cheva_berakhot">Sheva Berachot (wedding meal)</string>
     <string name="ajout_zimun">Zimun (three or more who ate together)</string>
+    <string name="ajout_facultatif">Custom, not required</string>
+    <string name="ajout_facultatif_avant">Psalms before Birkat HaMazon (custom, not required)</string>
+    <string name="ajout_facultatif_apres">HaRachaman and closing (custom, not required)</string>
     <string name="ajout_embolismique">Leap year (וּלְכַפָּרַת פֶּשַׁע)</string>
     <string name="ajout_beit_avel">House of mourning</string>
     <string name="siddur_seul">Praying alone</string>
@@ -908,6 +933,17 @@
         <item quantity="one">%1$d journal note</item>
         <item quantity="other">%1$d journal notes</item>
     </plurals>
+    <!-- Le Tikoun HaKlali (04/11) : lectures complètes, jours d’affilée. -->
+    <string name="trophee_tikkun">Tikkun HaKlali</string>
+    <string name="trophee_tikkun_serie">The harp of David</string>
+    <plurals name="trophee_tikkun_desc">
+        <item quantity="one">%1$d full Tikkun HaKlali</item>
+        <item quantity="other">%1$d full Tikkun HaKlali readings</item>
+    </plurals>
+    <plurals name="trophee_tikkun_serie_desc">
+        <item quantity="one">%1$d day of Tikkun in a row</item>
+        <item quantity="other">%1$d days of Tikkun in a row</item>
+    </plurals>
     <string name="metal_bronze">Bronze</string>
     <string name="metal_argent">Silver</string>
     <string name="metal_or">Gold</string>
@@ -928,7 +964,7 @@
     <string name="livres_hint">Likutei Moharan, Hishtapchut HaNefesh, Kochvei Or, megillot, Perek Shira, Nishmat…</string>
     <!-- La halakha du jour : le Yalkut Yosef, puis le Ben Ish 'Haï (13/10) -->
     <string name="halakha_ben_ish_hai">Ben Ish Chai, weekly portion</string>
-    <string name="halakha_yalkut_source">Yalkut Yosef – Kitzur Shulchan Aruch, Rav Yitzhak Yosef (Torat Emet text, CC BY-NC-SA 2.5): a selection, not the whole book.</string>
+    <string name="halakha_yalkut_source">Yalkut Yosef – Kitzur Shulchan Aruch, Rav Yitzchak Yosef (Torat Emet text, CC BY-NC-SA 2.5): a selection, not the whole book.</string>
     <!-- Birkat haLevana sur la carte du jour (13/10) -->
     <string name="levana_titre">Birkat HaLevana</string>
     <string name="levana_fenetre">From %1$s to %2$s</string>
@@ -1064,7 +1100,7 @@
     <string name="moment_mot_journee">In the middle of the day, a moment apart with Hashem.</string>
     <string name="moment_mot_soir">As evening comes, tell Hashem about your day.</string>
     <string name="moment_mot_nuit">At night, when all is quiet, speak to Hashem.</string>
-    <string name="chizuk_demande_title">I need hizuk</string>
+    <string name="chizuk_demande_title">I need chizuk</string>
     <string name="chizuk_demande_hint">A text to lift you up, whenever you want.</string>
     <string name="chizuk_autre">Another</string>
     <string name="chizuk_garder">Save</string>
@@ -1191,7 +1227,7 @@
     <string name="vol_priere_titre">Current prayer</string>
     <string name="vol_jusqua">until %1$s</string>
     <string name="vol_sans_limite">until dawn, no limit shown</string>
-    <string name="vol_dans">in %1$s</string>
+    <string name="vol_dans">%1$s left</string>
     <string name="vol_hors_fenetre">The calculation covers the flight and the 6 hours either side.</string>
     <string name="vol_en_vol_titre">During the flight</string>
     <string name="vol_aucun_zman">No zman during this flight.</string>
@@ -1326,4 +1362,31 @@
 
     <!-- Sous l’interrupteur des services en ligne, dans le formulaire du vol (02/11, VolActivity). -->
     <string name="vol_en_ligne_aide">Off by default: nothing leaves the phone. When on, the 🔍 sends only the flight number to adsbdb.com to fill in the arrival, and live tracking queries OpenSky Network.</string>
+    <string name="vol_en_ligne_titre">Look up the route online?</string>
+    <string name="vol_en_ligne_oui">Turn on and search</string>
+    <string name="vol_rapide_titre">Describe your flight</string>
+    <string name="vol_rapide_aide">As you would say it, or paste the ticket text. Everything is read on the phone.</string>
+    <string name="vol_rapide_exemple">E.g. El Al Lyon → TLV tomorrow at 11am</string>
+    <string name="vol_rapide_remplir">Fill in the flight</string>
+    <string name="vol_rapide_billet">Import the ticket (PDF or photo)</string>
+    <string name="vol_rapide_rien">Nothing recognised. Try for example: “LY 382 Paris Tel Aviv 12/11 at 9:40”.</string>
+    <string name="vol_rapide_heure">the departure time</string>
+    <string name="vol_rapide_compris">Understood: %1$s</string>
+    <string name="vol_rapide_estimee">Arrival estimated from the distance: correct it with the time on the ticket.</string>
+    <string name="vol_rapide_estimee_court">Estimated from the distance: check it on the ticket.</string>
+    <string name="vol_rapide_manque">Still needed: %1$s.</string>
+    <string name="vol_rapide_lecture">Reading the ticket…</string>
+    <string name="vol_rapide_billet_sans_code">No boarding-pass barcode found. Open the ticket, copy its text and paste it above.</string>
+    <string name="vol_rapide_billet_illisible">A barcode was read, but it is not a boarding pass.</string>
+    <string name="vol_rapide_billet_lu">Boarding pass read (the barcode does not carry the times).</string>
+
+    <!-- Les langues d’un texte à lire (04/11), LanguesTexte. -->
+    <string name="lecture_langues">Text languages</string>
+    <string name="lecture_sans_traduction">This text has no translation yet: it stays in Hebrew.</string>
+    <string name="langues_he">עברית</string>
+    <string name="langues_fr">Français</string>
+    <string name="langues_en">English</string>
+    <string name="langues_he_fr">עברית + Français</string>
+    <string name="langues_he_en">עברית + English</string>
+    <string name="langues_fr_en">Français + English</string>
 </resources>
