@@ -940,6 +940,19 @@
         <item quantity="two">%1$d רשומות ביומן</item>
         <item quantity="other">%1$d רשומות ביומן</item>
     </plurals>
+    <!-- Le Tikoun HaKlali (04/11) : lectures complètes, jours d’affilée. -->
+    <string name="trophee_tikkun">התיקון הכללי</string>
+    <string name="trophee_tikkun_serie">כינור דוד</string>
+    <plurals name="trophee_tikkun_desc">
+        <item quantity="one">תיקון כללי אחד שלם</item>
+        <item quantity="two">%1$d תיקונים כלליים שלמים</item>
+        <item quantity="other">%1$d תיקונים כלליים שלמים</item>
+    </plurals>
+    <plurals name="trophee_tikkun_serie_desc">
+        <item quantity="one">יום אחד של תיקון ברציפות</item>
+        <item quantity="two">יומיים של תיקון ברציפות</item>
+        <item quantity="other">%1$d ימים של תיקון ברציפות</item>
+    </plurals>
     <string name="metal_bronze">ארד</string>
     <string name="metal_argent">כסף</string>
     <string name="metal_or">זהב</string>

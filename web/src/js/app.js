@@ -2048,7 +2048,7 @@ function ecranTikkunPsaume() {
       tr.t('tikkun_position', rang, tikkun.psaumes.length, psaume.versets.length)),
     pied: h('div', { class: 'lecture-nav' },
       h('button', { class: 'principal tikkun-marque', 'aria-pressed': String(dit),
-        onclick: () => { store.setTikkunDone(psaume.numero, !dit); rendreEtViser('.tikkun-marque'); } },
+        onclick: () => { store.setTikkunDone(psaume.numero, !dit); rendreEtViser('.tikkun-marque'); feterTikkun(); } },
       tr.t(dit ? 'tikkun_unmark' : 'tikkun_mark')),
       suivant ? h('button', { class: 'secondaire', onclick: aller }, tr.t('tikkun_next')) : null),
   });
@@ -2096,6 +2096,7 @@ function ecranTikkunTrait() {
     // Tout dire d'un trait vaut les dix psaumes.
     for (const p of tikkun.psaumes) store.setTikkunDone(p.numero, true);
     retour();
+    feterTikkun();
   };
   return ecranLu(tr.t('tikkun_title'), h('div', { class: 'contenu lecture tikkun' },
     h('div', { class: 'psaume', lang: 'he', dir: 'rtl' }, blocs)), {
@@ -3822,7 +3823,7 @@ function lignePaliers() {
     medailleGrade(g, 26), h('span', {}, `${texte}  ›`));
 }
 
-const pratique = () => ({ minutes: store.minutesParJour(), notes: store.nombreNotes(), meilleureSerie: store.meilleureSerie() });
+const pratique = () => ({ minutes: store.minutesParJour(), notes: store.nombreNotes(), meilleureSerie: store.meilleureSerie(), tikkun: store.tikkunJournal() });
 
 /** Des confettis par-dessus l'écran, 2,8 s ; rien si l'on a demandé moins d'animations. */
 function confettis() {
@@ -3881,7 +3882,8 @@ function objetTrophee(forme, metal, icone, taille) {
       ? ((cote) => el('path', { d: ICONES[icone], transform: `translate(${ex - cote / 2} ${ey - cote / 2}) scale(${cote / 24})`,
         fill: 'none', stroke: sombre, 'stroke-width': Math.max(1.3, taille / 45), 'vector-effect': 'non-scaling-stroke',
         'stroke-linecap': 'round', 'stroke-linejoin': 'round', opacity: metal ? '1' : '.7' }))(Math.max(et * 1.15, 20))
-      : el('text', { x: ex, y: ey, 'font-size': et, 'text-anchor': 'middle', 'dominant-baseline': 'central', opacity: metal ? '1' : '.45' }, icone));
+      // L'étoile du grade du ton sombre du métal (elle était noire, faute de couleur ; 04/11).
+      : el('text', { x: ex, y: ey, 'font-size': et, 'text-anchor': 'middle', 'dominant-baseline': 'central', fill: sombre, opacity: metal ? '1' : '.45' }, icone));
 }
 
 // --- Les trophées : outils partagés par l'écran, l'accueil et le bilan (16/10) ---------------
@@ -3892,7 +3894,7 @@ const medailleGrade = (m, taille) => h('span', { class: 'medaille-grade', 'aria-
 const moinsAnime = () => !!window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
 /** Le jour de gain de chaque trophée gagné (Trophees.datesGain) : l'historique rejoué. */
 function datesTrophees() {
-  return Trophees.datesGain(store.minutesParJour(), store.joursAvecNote(), (d) => store.isExempt(d));
+  return Trophees.datesGain(store.minutesParJour(), store.joursAvecNote(), (d) => store.isExempt(d), store.tikkunJournal());
 }
 /** La date civile en toutes lettres, avec le jour (VueJour.dateCivile) : « mardi 29 septembre 2026 ». */
 const dateCivile = (iso) => new Intl.DateTimeFormat(tr.langue, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' }).format(new Date(`${iso}T12:00:00Z`));
@@ -3924,6 +3926,15 @@ function detailTrophee(e, p, dates, rangGlobal, apres = null) {
  * Un trophée gagné (19/10) : sa fiche s'ouvre d'elle-même, l'objet se retourne, des
  * confettis tombent et des étincelles du métal jaillissent ; plusieurs, l'une après l'autre.
  */
+/** Un Tikoun fini peut gagner un trophée (04/11) : fêté tout de suite, comme à l'accueil. */
+function feterTikkun() {
+  const gagnes = Trophees.gagnes(pratique());
+  const neufs = Trophees.nouveaux(gagnes, store.tropheesVus());
+  if (!neufs.length) return;
+  store.setTropheesVus(new Set(gagnes));
+  setTimeout(() => feterTrophees(neufs), 400);
+}
+
 function feterTrophees(nouveaux) {
   const p = pratique();
   const dates = datesTrophees();
@@ -4034,7 +4045,9 @@ function ecranPaliers() {
   const ouvrirDetail = (e) => detailTrophee(e, p, dates, rangDe.get(e.cle) ?? n + 1);
 
   // En tête : le grade, la barre vers le suivant, les trois plus proches, le partage.
-  const proches = Trophees.plusProches(p, 3);
+  // Le prochain a déjà sa carte « Tu es ici » : pas deux fois le même (04/11).
+  const prochainCle = Trophees.prochain(p)?.cle;
+  const proches = Trophees.plusProches(p, 4).filter((e) => e.cle !== prochainCle).slice(0, 3);
   const tete = h('div', { class: 'carte grade-tete' },
     h('div', { class: 'grade-ligne' }, medailleGrade(g, 48), h('div', { class: 'trophee-texte' },
       h('p', { class: 'grade-nom' }, tr.t('grade_titre', nomMetal(g))),

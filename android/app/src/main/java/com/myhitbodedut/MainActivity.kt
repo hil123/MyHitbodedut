@@ -603,7 +603,9 @@ class MainActivity : AppCompatActivity() {
             if (b.record) addView(VueJour.texte(context, getString(R.string.bilan_record), 15f, R.color.brand, gras = true, haut = 6))
             if (b.trophees.isNotEmpty()) {
                 addView(VueJour.texte(context, getString(R.string.bilan_trophees), 15f, R.color.muted, haut = 10))
-                val faits = Trophees.chemin.filter { Trophees.gagne(Store.pratique(context), it) }
+                // La pratique lue une fois, pas une fois par niveau (04/11).
+                val pratique = Store.pratique(context)
+                val faits = Trophees.chemin.filter { Trophees.gagne(pratique, it) }
                 addView(android.widget.LinearLayout(context).apply {
                     orientation = android.widget.LinearLayout.HORIZONTAL
                     b.trophees.take(6).forEach { t ->

@@ -723,3 +723,14 @@ test('relecture du 02/11 : sauvegarde, dates, notes', () => {
   s.setNote('2026-09-10', '');
   assert.equal(s.record('2026-09-10') ?? null, null);
 });
+
+test('trophées du Tikoun (04/11) : lectures complètes et jours d’affilée, comme Android', async () => {
+  const T = await import('../src/js/trophees.js');
+  const p = { minutes: {}, notes: 0, meilleureSerie: 0, tikkun: ['2026-11-01', '2026-11-02', '2026-11-03', '2026-11-06', '2026-11-07', '2026-11-10'] };
+  assert.equal(T.valeur(p, 'tikkun'), 6);
+  assert.equal(T.valeur(p, 'tikkun_serie'), 3);
+  assert.ok(T.gagnes(p).has('tikkun:2'));
+  const d = T.datesGain({}, [], () => false, ['2026-11-01', '2026-11-02', '2026-11-03']);
+  assert.equal(d['tikkun:1'], '2026-11-01');
+  assert.equal(d['tikkun_serie:1'], '2026-11-03');
+});

@@ -78,6 +78,9 @@ data class Tikkun(
         const val CLOTURE = "cloture"
         const val KAVANA = "kavana"
         const val PRIERE = "priere_rabbi_nathan"
+
+        /** Les dix psaumes, dans l'ordre établi (le journal du Tikoun, 04/11, sans relire le JSON). */
+        val ORDRE = listOf(16, 32, 41, 42, 59, 77, 90, 105, 137, 150)
     }
 }
 

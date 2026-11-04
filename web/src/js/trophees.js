@@ -1,4 +1,4 @@
-// Les trophées (Trophees.kt, 11/10, à niveaux depuis le 12/10) : neuf
+// Les trophées (Trophees.kt, 11/10, à niveaux depuis le 12/10) : onze
 // familles qui montent par niveaux, la médaille passant du bronze à
 // l'argent, à l'or puis au platine. Mêmes règles que l'application Android.
 
@@ -14,6 +14,9 @@ export const FAMILLES = [
   ['erev_chabbat', 'erev_chabbat', [1, 4, 12, 26, 52], 'cristal'],
   ['retour', 'retour', [1, 3, 5, 10], 'gemme'],
   ['plume', 'plume', [1, 10, 25, 50, 100, 150], 'coupe'],
+  // Le Tikoun HaKlali (04/11) : lectures complètes, jours d'affilée ; la harpe de David.
+  ['tikkun', 'tikkun', [1, 3, 7, 10, 18, 26, 40, 50, 70, 100, 150, 200], 'kinor'],
+  ['tikkun_serie', 'tikkun_serie', [3, 7, 10, 18, 30, 40, 70, 100], 'kinor'],
 ].map(([cle, icone, seuils, forme]) => ({ cle, icone, seuils, forme }));
 
 export const METAUX = ['bronze', 'argent', 'or', 'platine'];
@@ -39,8 +42,16 @@ export function retours(jours) {
   return n.filter((v, i) => i > 0 && v - n[i - 1] > 7).length;
 }
 
-/** La valeur que compte une famille. pratique = { minutes: { iso: min }, notes, meilleureSerie }. */
-export function valeur({ minutes, notes, meilleureSerie }, cle) {
+/** La plus longue suite de jours consécutifs (Trophees.plusLongueSuite). */
+export function plusLongueSuite(jours) {
+  const n = [...new Set([...jours].map(jourDe))].sort((a, b) => a - b);
+  let meilleure = 0; let courante = 0;
+  n.forEach((v, i) => { courante = i > 0 && v - n[i - 1] === 1 ? courante + 1 : 1; meilleure = Math.max(meilleure, courante); });
+  return meilleure;
+}
+
+/** La valeur que compte une famille. pratique = { minutes: { iso: min }, notes, meilleureSerie, tikkun: [iso] }. */
+export function valeur({ minutes, notes, meilleureSerie, tikkun = [] }, cle) {
   // Un jour validé compte, même à 0 min (Trophees.valeur) : comme la série.
   const jours = Object.keys(minutes);
   const valeurs = Object.values(minutes);
@@ -54,6 +65,8 @@ export function valeur({ minutes, notes, meilleureSerie }, cle) {
     case 'erev_chabbat': return jours.filter((iso) => semaineDe(iso) === 5).length;
     case 'retour': return retours(jours);
     case 'plume': return notes;
+    case 'tikkun': return new Set(tikkun).size;
+    case 'tikkun_serie': return plusLongueSuite(tikkun);
     default: return 0;
   }
 }
@@ -93,7 +106,8 @@ export function nouveaux(g, vus) {
 
 /** Le chemin (15/10, Trophees.chemin) : tous les niveaux en une liste, du plus facile au plus dur. */
 const COUTS = { premier_pas: (s) => s, jours: (s) => s, seance_longue: (s) => s / 2, serie: (s) => s * 1.5, heures: (s) => s * 4,
-  semaines: (s) => s * 8, erev_chabbat: (s) => s * 7, retour: (s) => s * 30 + 10, plume: (s) => s * 1.3 };
+  semaines: (s) => s * 8, erev_chabbat: (s) => s * 7, retour: (s) => s * 30 + 10, plume: (s) => s * 1.3,
+  tikkun: (s) => s * 2, tikkun_serie: (s) => s * 3 };
 export const cout = (f, seuil) => COUTS[f.cle](seuil);
 export const chemin = FAMILLES.flatMap((f, ordre) => f.seuils.map((seuil, i) => ({ f, rang: i + 1, seuil, ordre, cle: `${f.cle}:${i + 1}` })))
   .sort((a, b) => cout(a.f, a.seuil) - cout(b.f, b.seuil) || a.ordre - b.ordre);
@@ -129,7 +143,7 @@ export function proche(p) {
  * Le jour où chaque niveau a été gagné (Trophees.datesGain) : l'historique rejoué jour
  * après jour. minutes : { iso: min } ; notes : Set d'iso ; serie(faits) : la meilleure série.
  */
-export function datesGain(minutes, notes, exempt) {
+export function datesGain(minutes, notes, exempt, tikkun = []) {
   // Rejeu incrémental (16/10, comme Trophees.datesGain) : chaque valeur avance jour après jour.
   // exempt(iso) : un jour exempté ne compte pas et ne casse pas la série.
   const res = {};
@@ -139,8 +153,16 @@ export function datesGain(minutes, notes, exempt) {
   let jours = 0; let plusLongue = 0; let total = 0; let vendredis = 0; let nbRetours = 0;
   let semaines = 0; let notesVues = 0; let courante = 0; let meilleure = 0; let precedent = null;
   const notesSet = new Set(notes);
-  for (const d of [...new Set([...Object.keys(minutes), ...notesSet])].sort()) {
+  const tikkunSet = new Set(tikkun);
+  let tikkunN = 0; let tikkunSuite = 0; let tikkunMeilleure = 0; let tikkunAvant = null;
+  for (const d of [...new Set([...Object.keys(minutes), ...notesSet, ...tikkunSet])].sort()) {
     if (notesSet.has(d)) notesVues++;
+    if (tikkunSet.has(d)) {
+      tikkunN++;
+      tikkunSuite = tikkunAvant && jourDe(d) - jourDe(tikkunAvant) === 1 ? tikkunSuite + 1 : 1;
+      tikkunMeilleure = Math.max(tikkunMeilleure, tikkunSuite);
+      tikkunAvant = d;
+    }
     const m = minutes[d] ?? 0;
     if (d in minutes) {
       faits.add(d);
@@ -156,7 +178,7 @@ export function datesGain(minutes, notes, exempt) {
       if (!pleines.has(dimanche) && [0, 1, 2, 3, 4, 5].every((k) => faits.has(ajoute(dimanche, k)))) { pleines.add(dimanche); semaines++; }
     }
     const v = { premier_pas: Math.min(jours, 5), seance_longue: plusLongue, jours, serie: meilleure, heures: Math.floor(total / 60),
-      semaines, erev_chabbat: vendredis, retour: nbRetours, plume: notesVues };
+      semaines, erev_chabbat: vendredis, retour: nbRetours, plume: notesVues, tikkun: tikkunN, tikkun_serie: tikkunMeilleure };
     for (const [cle, niveaux] of restants) {
       while (niveaux.length && niveaux[0].seuil <= v[cle]) res[niveaux.shift().cle] = d;
       if (!niveaux.length) restants.delete(cle);

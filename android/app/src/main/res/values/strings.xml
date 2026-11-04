@@ -978,6 +978,17 @@
         <item quantity="one">%1$d note au journal</item>
         <item quantity="other">%1$d notes au journal</item>
     </plurals>
+    <!-- Le Tikoun HaKlali (04/11) : lectures complètes, jours d’affilée. -->
+    <string name="trophee_tikkun">Le Tikoun HaKlali</string>
+    <string name="trophee_tikkun_serie">La harpe de David</string>
+    <plurals name="trophee_tikkun_desc">
+        <item quantity="one">%1$d Tikoun HaKlali dit en entier</item>
+        <item quantity="other">%1$d Tikoun HaKlali dits en entier</item>
+    </plurals>
+    <plurals name="trophee_tikkun_serie_desc">
+        <item quantity="one">%1$d jour de Tikoun d’affilée</item>
+        <item quantity="other">%1$d jours de Tikoun d’affilée</item>
+    </plurals>
     <string name="metal_bronze">Bronze</string>
     <string name="metal_argent">Argent</string>
     <string name="metal_or">Or</string>

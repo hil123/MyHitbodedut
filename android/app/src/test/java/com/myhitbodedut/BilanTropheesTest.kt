@@ -86,7 +86,7 @@ class BilanTropheesTest {
             if (!exempt(d) && (i * 37) % 11 != 3 && i !in 121..131) m[d] = 5 + (i * 13) % 70
             if (i % 9 == 0) notes += d
         }
-        val dates = Trophees.datesGain(m, notes, exempt)
+        val dates = Trophees.datesGain(m, notes, exempt = exempt)
         val p = Trophees.Pratique(m, notes.size, Plaque.meilleureSerie(m.keys, exempt))
         assertEquals(Trophees.gagnes(p).map { it.cle }.toSet(), dates.keys)
         dates.forEach { (cle, d) ->

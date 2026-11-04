@@ -60,6 +60,9 @@ class TikkunActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         render()
+        // Le Tikoun fini (d'un trait, ou au dixième psaume) peut gagner un trophée : fêté ici,
+        // au retour, sans attendre l'accueil (04/11).
+        Celebrations.ecran(this)
     }
 
     private fun render() {
