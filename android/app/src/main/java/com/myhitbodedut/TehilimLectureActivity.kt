@@ -50,8 +50,20 @@ class TehilimLectureActivity : AppCompatActivity() {
     /** Les versets affichés, psaume par psaume : la vue, et pour chaque verset sa place dans le texte. */
     private val places = mutableMapOf<Int, Pair<TextView, List<Triple<Int, Int, Int>>>>()
 
+    /** En lecture traduite (04/11), un bloc par verset : (psaume, verset) → sa vue. */
+    private val blocs = mutableMapOf<Pair<Int, Int>, View>()
+
     private fun allerAuVerset(n: Int, v: Int) {
         val defile = findViewById<ScrollView>(R.id.lecture_scroll)
+        blocs[n to v]?.let { bloc ->
+            defile.post {
+                var y = bloc.top
+                var parent = bloc.parent as? View
+                while (parent != null && parent !== defile) { y += parent.top; parent = parent.parent as? View }
+                defile.scrollTo(0, (y - dp(8)).coerceAtLeast(0))
+            }
+            return
+        }
         defile.post {
             val (vue, versets) = places[n] ?: return@post
             val debut = versets.firstOrNull { it.third == v }?.first ?: return@post
@@ -75,11 +87,15 @@ class TehilimLectureActivity : AppCompatActivity() {
         val contenu = findViewById<LinearLayout>(R.id.lecture_content)
         contenu.removeAllViews()
         places.clear()
+        blocs.clear()
+        val mode = LanguesTexte.mode(this)
         val marques = MarquesPages.duTexte(Store.marques(this), CLE, "").map { it.section to it.bloc }.toSet()
         p.psaumes.forEachIndexed { i, n ->
             val tous = livre.versets(n)
             contenu.addView(titre(getString(R.string.tikkun_psalm_he, Reference.lettres(n)), i == 0))
-            contenu.addView(texte(n, tous, p.versets(n, tous.size), marques))
+            // L'hébreu seul garde son bloc d'un seul tenant ; avec une traduction, verset par verset (04/11).
+            contenu.addView(if (mode == LanguesTexte.Mode.HE) texte(n, tous, p.versets(n, tous.size), marques)
+                else texteTraduit(n, tous, p.versets(n, tous.size), marques, mode, livre))
         }
 
         // Un psaume seul se lit de proche en proche ; une portion d'un trait.
@@ -170,6 +186,71 @@ class TehilimLectureActivity : AppCompatActivity() {
         setTextColor(rendu.texte)
         setTextIsSelectable(false)
         PoliceHebraique.appliquer(this)
+    }
+
+    /**
+     * Les versets avec leur traduction (04/11) : pour chaque verset, l'hébreu et/ou la
+     * traduction choisie, l'une sous l'autre. Un appui long marque le verset, comme en hébreu seul.
+     */
+    private fun texteTraduit(n: Int, versets: List<String>, quels: IntRange, marques: Set<Pair<Int, Int>>,
+                             mode: LanguesTexte.Mode, livre: Tehilim): View = LinearLayout(this).apply {
+        orientation = LinearLayout.VERTICAL
+        layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply {
+            marginStart = dp(16)
+            marginEnd = dp(16)
+        }
+        quels.forEach { v ->
+            val verset = versets.getOrNull(v - 1) ?: return@forEach
+            val textes = LanguesTexte.textes(mode, verset, livre.traduction("fr", n, v), livre.traduction("en", n, v))
+            val avecHebreu = textes.any { it.first == "he" }
+            val marque = n to v in marques
+            val bloc = LinearLayout(this@TehilimLectureActivity).apply {
+                orientation = LinearLayout.VERTICAL
+                layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply { topMargin = dp(12) }
+                setPadding(dp(8), dp(4), dp(8), dp(6))
+                if (marque) background = android.graphics.drawable.GradientDrawable().apply {
+                    cornerRadius = dp(10).toFloat()
+                    setColor(androidx.core.graphics.ColorUtils.setAlphaComponent(rendu.titre, 0x22))
+                }
+            }
+            textes.forEach { (langue, t) ->
+                if (langue == "he") bloc.addView(TextView(this@TehilimLectureActivity).apply {
+                    val s = SpannableStringBuilder(Reference.lettres(v)).append(" ")
+                    s.setSpan(ForegroundColorSpan(if (marque) rendu.titre else rendu.discret), 0, s.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                    s.setSpan(RelativeSizeSpan(0.7f), 0, s.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                    text = s.append(t)
+                    layoutDirection = View.LAYOUT_DIRECTION_RTL
+                    textAlignment = View.TEXT_ALIGNMENT_VIEW_START
+                    textSize = 19f * rendu.echelle
+                    setLineSpacing(dp(8).toFloat() * rendu.echelle, 1f)
+                    setTextColor(rendu.texte)
+                    PoliceHebraique.appliquer(this)
+                }) else {
+                    // Sans l'hébreu, le numéro du verset en chiffres devant la traduction.
+                    val s = SpannableStringBuilder()
+                    if (!avecHebreu && s.isEmpty() && bloc.childCount == 0) {
+                        s.append("$v ")
+                        s.setSpan(ForegroundColorSpan(if (marque) rendu.titre else rendu.discret), 0, s.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                        s.setSpan(RelativeSizeSpan(0.75f), 0, s.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                    }
+                    s.append(t)
+                    bloc.addView(LanguesTexte.vueTraduction(this@TehilimLectureActivity, s, rendu, seule = !avecHebreu).apply {
+                        layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+                            .apply { topMargin = if (bloc.childCount > 0) dp(4) else 0 }
+                    })
+                }
+            }
+            bloc.setOnTouchListener { _, e -> reglages?.toucher(e); false }
+            bloc.setOnLongClickListener {
+                val pose = Store.basculerMarque(this@TehilimLectureActivity, MarquesPages.Marque(CLE, "", n, v,
+                    "${Reference.lettres(n)}, ${Reference.lettres(v)} · ${MarquesPages.apercu(verset, 5)}"))
+                android.widget.Toast.makeText(this@TehilimLectureActivity, if (pose) R.string.marque_posee else R.string.marque_retiree, android.widget.Toast.LENGTH_SHORT).show()
+                afficher(portion, garderPlace = true)
+                true
+            }
+            blocs[n to v] = bloc
+            addView(bloc)
+        }
     }
 
     private fun dp(value: Int): Int = (value * resources.displayMetrics.density).toInt()

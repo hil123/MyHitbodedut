@@ -9,7 +9,7 @@ import org.json.JSONObject
  * en trois nusah au choix. Chaque siddur_<nusah>.json dit la source et la
  * licence de chaque texte (tools/siddur_construction.py).
  */
-data class SiddurBloc(val texte: String, val consigne: Boolean)
+data class SiddurBloc(val texte: String, val consigne: Boolean, val fr: String? = null, val en: String? = null)
 
 data class SiddurSection(val titre: String, val blocs: List<SiddurBloc>)
 
@@ -88,7 +88,8 @@ object SiddurLoader {
                         SiddurSection(
                             titre = s.optString("titre", ""),
                             blocs = Json.array(s.getJSONArray("blocs")) { b ->
-                                if (b.has("c")) SiddurBloc(b.getString("c"), true) else SiddurBloc(b.getString("t"), false)
+                                if (b.has("c")) SiddurBloc(b.getString("c"), true)
+                                else SiddurBloc(b.getString("t"), false, b.optString("fr", "").ifBlank { null }, b.optString("en", "").ifBlank { null })
                             },
                         )
                     },

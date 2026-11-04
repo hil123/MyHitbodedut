@@ -1395,4 +1395,14 @@
     <string name="vol_rapide_billet_sans_code">לא נמצא ברקוד של כרטיס עלייה למטוס. פתחו את הכרטיס, העתיקו את הטקסט והדביקו אותו למעלה.</string>
     <string name="vol_rapide_billet_illisible">נקרא ברקוד, אבל הוא אינו של כרטיס עלייה למטוס.</string>
     <string name="vol_rapide_billet_lu">כרטיס העלייה למטוס נקרא (הברקוד אינו כולל את השעות).</string>
+
+    <!-- Les langues d’un texte à lire (04/11), LanguesTexte. -->
+    <string name="lecture_langues">שפות הטקסט</string>
+    <string name="lecture_sans_traduction">לטקסט הזה עדיין אין תרגום: הוא מוצג בעברית.</string>
+    <string name="langues_he">עברית</string>
+    <string name="langues_fr">Français</string>
+    <string name="langues_en">English</string>
+    <string name="langues_he_fr">עברית + Français</string>
+    <string name="langues_he_en">עברית + English</string>
+    <string name="langues_fr_en">Français + English</string>
 </resources>

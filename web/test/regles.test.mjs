@@ -734,3 +734,19 @@ test('trophées du Tikoun (04/11) : lectures complètes et jours d’affilée, c
   assert.equal(d['tikkun:1'], '2026-11-01');
   assert.equal(d['tikkun_serie:1'], '2026-11-03');
 });
+
+test('langues de lecture (04/11) : six modes, la règle d’avant par défaut, l’hébreu faute de traduction', async () => {
+  const { LanguesTexte } = await import('../src/js/regles.js');
+  assert.equal(LanguesTexte.defaut('he'), 'he');
+  assert.equal(LanguesTexte.defaut('fr'), 'he+fr');
+  assert.equal(LanguesTexte.defaut('en'), 'he+en');
+  assert.equal(LanguesTexte.mode('fr+en', 'he'), 'fr+en');
+  assert.equal(LanguesTexte.mode('xx', 'fr'), 'he+fr');
+  assert.deepEqual(LanguesTexte.textes('fr+en', 'אחד', 'un', 'one'), [['fr', 'un'], ['en', 'one']]);
+  assert.deepEqual(LanguesTexte.textes('fr', 'אחד', null, 'one'), [['he', 'אחד']]);
+  assert.ok(LanguesTexte.manque('he+fr', false));
+  const teh = JSON.parse(readFileSync(new URL('../../android/app/src/main/res/raw/tehilim.json', import.meta.url), 'utf8'));
+  assert.equal(teh.traductions.fr.psaumes.length, 150);
+  assert.ok(teh.traductions.fr.psaumes[22][0].includes('L’Éternel est mon berger'));
+  assert.ok(teh.traductions.en.psaumes[22][0].includes('The LORD is my shepherd'));
+});

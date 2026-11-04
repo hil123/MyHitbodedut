@@ -38,18 +38,33 @@ class PsalmActivity : AppCompatActivity() {
             getString(R.string.tikkun_position, rang, tikkun.psaumes.size, psaume.versets.size)
 
         val conteneur = findViewById<LinearLayout>(R.id.psalm_verses)
+        val mode = LanguesTexte.mode(this)
         psaume.versets.forEachIndexed { index, verset ->
-            // L'indication d'arret se place la ou l'on s'arrete : entre
-            // « אַתָּה סֵתֶר לִי » et « מִצַּר ». Elle n'est pas du texte, elle
-            // dit comment le lire.
-            val coupe = verset.coupe()
-            if (coupe == null) {
-                conteneur.addView(vue(verset, premier = index == 0))
-                verset.arret?.let { conteneur.addView(vueArret(it)) }
-            } else {
-                conteneur.addView(vue(verset, premier = index == 0, texte = coupe.first))
-                conteneur.addView(vueArret(verset.arret!!))
-                conteneur.addView(vue(verset, premier = false, texte = coupe.second, numero = false))
+            // Les langues choisies (04/11) : l'hébreu, la traduction, ou les deux.
+            val textes = LanguesTexte.textes(mode, verset.he, verset.fr, verset.en)
+            val avecHebreu = textes.any { it.first == "he" }
+            if (avecHebreu) {
+                // L'indication d'arret se place la ou l'on s'arrete : entre
+                // « אַתָּה סֵתֶר לִי » et « מִצַּר ». Elle n'est pas du texte, elle
+                // dit comment le lire.
+                val coupe = verset.coupe()
+                if (coupe == null) {
+                    conteneur.addView(vue(verset, premier = index == 0))
+                    verset.arret?.let { conteneur.addView(vueArret(it)) }
+                } else {
+                    conteneur.addView(vue(verset, premier = index == 0, texte = coupe.first))
+                    conteneur.addView(vueArret(verset.arret!!))
+                    conteneur.addView(vue(verset, premier = false, texte = coupe.second, numero = false))
+                }
+            }
+            textes.filter { it.first != "he" }.forEachIndexed { k, (_, t) ->
+                val s = if (avecHebreu || k > 0) t else "${verset.numero}  $t"
+                conteneur.addView(LanguesTexte.vueMarquee(this, s, seule = !avecHebreu).apply {
+                    layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply {
+                        topMargin = if (avecHebreu || k > 0) dp(4) else if (index == 0) 0 else dp(12)
+                        marginStart = dp(26)
+                    }
+                })
             }
         }
 

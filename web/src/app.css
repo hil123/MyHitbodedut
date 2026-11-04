@@ -1614,3 +1614,12 @@ body.avec-mini .seance .contenu { padding-bottom: calc(104px + env(safe-area-ins
 .signet-choix { display: flex; flex-direction: column; align-items: stretch; gap: 2px; }
 .signet-choix .nom-marque { display: flex; }
 .signet-choix .apercu { display: block; color: var(--muted); font-size: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* Les traductions (LanguesTexte, 04/11) : de gauche à droite, en romain, sous l'hébreu ou seules. */
+.lecture .traduction { direction: ltr; text-align: start; font-family: Georgia, 'Times New Roman', serif; color: var(--muted);
+  font-size: calc(16px * var(--echelle, 1)); line-height: 1.6; margin: 4px 0 14px; }
+.lecture .traduction.seule { color: var(--ink); font-size: calc(18px * var(--echelle, 1)); margin-top: 10px; }
+.lecture .priere .traduction { margin: 8px 0 0; }
+.ecran.lu.nuit .lecture .traduction:not(.seule) { color: var(--lecture-nuit-discret, #A3A8A5); }
+.chizuk-latin { font-family: Georgia, 'Times New Roman', serif; }
+.lecture-langues { font-weight: 700; }

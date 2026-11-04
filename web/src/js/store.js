@@ -356,6 +356,9 @@ export function creeStore(stockage, { maintenant = () => new Date(), fuseau } = 
     setLecturePolice: (p) => set('lecture_police', p),
     lectureSombre: () => get('lecture_sombre', false) === true,
     setLectureSombre: (v) => set('lecture_sombre', !!v),
+    /** Les langues de lecture (LanguesTexte, 04/11) ; null : celles de la langue de l'application. */
+    lectureLangues: () => get('lecture_langues', null),
+    setLectureLangues: (v) => set('lecture_langues', v),
     /** Le bouton de lecture masqué par l'utilisateur, sur tous les écrans de lecture. */
     lectureMasquee: () => get('lecture_masquee', false) === true,
     setLectureMasquee: (v) => set('lecture_masquee', !!v),

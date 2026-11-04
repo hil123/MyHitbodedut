@@ -1425,4 +1425,14 @@
     <string name="vol_rapide_billet_sans_code">Aucun code-barres de carte d’embarquement trouvé. Ouvrez le billet, copiez son texte et collez-le ci-dessus.</string>
     <string name="vol_rapide_billet_illisible">Un code-barres a été lu, mais ce n’est pas celui d’une carte d’embarquement.</string>
     <string name="vol_rapide_billet_lu">Carte d’embarquement lue (le code-barres ne porte pas les heures).</string>
+
+    <!-- Les langues d’un texte à lire (04/11), LanguesTexte. -->
+    <string name="lecture_langues">Langues du texte</string>
+    <string name="lecture_sans_traduction">Ce texte n’a pas encore de traduction : il reste en hébreu.</string>
+    <string name="langues_he">עברית</string>
+    <string name="langues_fr">Français</string>
+    <string name="langues_en">English</string>
+    <string name="langues_he_fr">עברית + Français</string>
+    <string name="langues_he_en">עברית + English</string>
+    <string name="langues_fr_en">Français + English</string>
 </resources>

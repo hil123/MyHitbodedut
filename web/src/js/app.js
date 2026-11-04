@@ -4,7 +4,7 @@
 // n'existe pas encore est montré, mais inerte (classe « a-venir »).
 
 import { chargeTraduction, formate, langueInitiale, LANGUES } from './i18n.js';
-import { Anneaux, CycleTehilim, DureeSeance, JaugeSemaine, LibraryRules, Plaque, Reference, Salutation, SiddurMoment, SignetsSiddur, SourceDuJour, Parcours } from './regles.js';
+import { Anneaux, CycleTehilim, LanguesTexte, DureeSeance, JaugeSemaine, LibraryRules, Plaque, Reference, Salutation, SiddurMoment, SignetsSiddur, SourceDuJour, Parcours } from './regles.js';
 import { ART_DU_MOMENT, ChizukBag, ChizukRules } from './chizuk.js';
 import { AMBIANCES, arreter as arreteAmbiance, jouer as joueAmbiance } from './ambiance.js';
 import { MelangeMusique, estQuota, nomDonne, renomme, titreDeFichier } from './musique.js';
@@ -777,10 +777,28 @@ function etatMusique() {
 // --- Tehilim (Tehilim.kt, TehilimActivity.kt) ------------------------------------
 // Le livre entier, chargé au premier besoin : 327 ko qu'on ne lit pas à chaque ouverture.
 let tehilim = null;
+// Les traductions du domaine public (04/11) : { fr: { psaumes }, en: { psaumes } }.
+let tehilimTrad = {};
 let lecture = null;
+
+// --- Les langues de lecture (LanguesTexte, 04/11) ------------------------------------
+const languesLecture = () => LanguesTexte.mode(store.lectureLangues(), tr.langue);
+/** Une traduction affichée : de gauche à droite, en romain ; plus discrète sous l'hébreu. */
+const paraTraduction = (langue, texte, seule) => h('p', { class: `traduction${seule ? ' seule' : ''}`, lang: langue, dir: 'ltr' }, texte);
+/** Le choix des six façons de lire : la feuille, et l'écran redessiné. */
+function choisirLangues() {
+  feuille(tl('lecture_langues'), (f, fermer) => {
+    const actuel = languesLecture();
+    f.append(h('div', { role: 'radiogroup', 'aria-label': tl('lecture_langues') }, LanguesTexte.MODES.map((m) => h('button', {
+      type: 'button', class: 'choix choix-radio', role: 'radio', 'aria-checked': String(m === actuel),
+      onclick: () => { fermer(); store.setLectureLangues(m); rendreEtViser('.lecture-langues'); },
+    }, h('span', { class: 'radio', 'aria-hidden': 'true' }), tr.t(`langues_${m.replace('+', '_')}`)))));
+  });
+  document.querySelector('.feuille [aria-checked="true"]')?.focus();
+}
 function chargeTehilim() {
   if (tehilim) return true;
-  fetch('data/tehilim.json').then((r) => r.json()).then((d) => { tehilim = d.psaumes; rendre(); });
+  fetch('data/tehilim.json').then((r) => r.json()).then((d) => { tehilim = d.psaumes; tehilimTrad = d.traductions ?? {}; rendre(); });
   return false;
 }
 
@@ -870,7 +888,16 @@ function ecranLecture() {
     const quels = CycleTehilim.versets(p, n, tous.length);
     total += quels.length;
     blocs.push(h('h2', { class: 'psaume-titre', lang: 'he', dir: 'rtl' }, tr.t('tikkun_psalm_he', Reference.lettres(n))));
-    blocs.push(h('div', { class: 'psaume', lang: 'he', dir: 'rtl' }, quels.map((v) => verset(n, v, tous[v - 1]))));
+    // Les langues choisies (04/11) : verset par verset, l'hébreu et/ou la traduction.
+    const mode = languesLecture();
+    const trad = (l, v) => tehilimTrad[l]?.psaumes?.[n - 1]?.[v - 1];
+    blocs.push(h('div', { class: 'psaume', lang: 'he', dir: 'rtl' }, quels.flatMap((v) => {
+      if (mode === 'he') return [verset(n, v, tous[v - 1])];
+      const textes = LanguesTexte.textes(mode, tous[v - 1], trad('fr', v), trad('en', v));
+      const avecHe = textes.some(([l]) => l === 'he');
+      return textes.map(([l, t], k) => (l === 'he' ? verset(n, v, t)
+        : paraTraduction(l, avecHe || k > 0 ? t : `${v}  ${t}`, !avecHe)));
+    })));
   }
   const aller = (n) => { lecture = CycleTehilim.portion(n, n); rendre(); app.querySelector('.defile').scrollTop = 0; };
   const ecran = ecranLu(libellePortion(p), h('div', { class: 'contenu lecture' },
@@ -1112,6 +1139,8 @@ function reglagesLecture({ avecNusah, sansNuit = false }) {
         new Intl.NumberFormat(tr.langue, { style: 'percent' }).format(pourcent / 100)),
       bouton({ class: 'lettres', lang: 'en', dir: 'ltr', 'aria-label': tl('lecture_plus'), disabled: e >= 2, onclick: () => echelle(e + 0.1) }, 'A+'),
       separateur(),
+      // « אA » : les langues du texte (04/11) — hébreu, français, anglais, ou deux à la fois.
+      bouton({ class: 'lecture-langues', lang: 'en', dir: 'ltr', 'aria-label': tl('lecture_langues'), title: tr.t(`langues_${languesLecture().replace('+', '_')}`), onclick: choisirLangues }, 'אA'),
       // « אב » : la police suivante (les sept, l'une après l'autre), pour tous les textes.
       bouton({ class: 'lecture-police', lang: 'he', dir: 'rtl', 'aria-label': `${tl('lecture_police')} : ${tl(`police_${store.lecturePolice()}`)}`, title: tl(`police_${store.lecturePolice()}`),
         onclick: choisirPolice }, 'אב'),
@@ -1361,6 +1390,17 @@ function ecranPriere() {
     const si = rangSection.get(s);
     const p = h('p', { class: `${b.c !== undefined ? 'consigne' : 'priere'}${marquee(si, i) ? ' marque-page' : ''}${livre ? ' marque-etude' : ''}`, lang: 'he', dir: 'rtl', 'data-place': `${si}:${i}` }, riche(b.c !== undefined ? (texte ?? b.c) : aerer(texte ?? b.t)));
     if (p.firstChild?.nodeName === 'B') p.firstChild.classList.add('premier-mot');
+    // Un verset traduit (Esther, Chir HaChirim, 04/11) : la traduction sous l'hébreu, ou seule.
+    if (b.c === undefined && (b.fr || b.en)) {
+      const textes = LanguesTexte.textes(languesLecture(), b.t, b.fr, b.en);
+      const avecHe = textes.some(([l]) => l === 'he');
+      const traductions = textes.filter(([l]) => l !== 'he').map(([l, t]) => paraTraduction(l, t, !avecHe));
+      if (traductions.length) {
+        if (!avecHe) p.replaceChildren();
+        p.append(...traductions);
+        if (!avecHe) { p.setAttribute('dir', 'ltr'); p.removeAttribute('lang'); }
+      }
+    }
     let minuteur = null;
     const poser = () => {
       const pose = store.basculerMarque({ cle: cleMarque, nusah: nusahMarque, section: si, bloc: i, apercu: apercuMarque(b.c ?? b.t) });
@@ -1420,7 +1460,10 @@ function ecranPriere() {
       }
     return [...corps, ...renvois(si)];
   };
+  // Un livre sans traduction, quand on en a demandé une (04/11) : on le dit, l'hébreu reste.
+  const sansTraduction = livre && LanguesTexte.manque(languesLecture(), x.sections.some((s) => s.blocs.some((b) => b.fr || b.en)));
   const contenu = h('div', { class: 'contenu lecture siddour' },
+    sansTraduction ? h('p', { class: 'indice' }, tl('lecture_sans_traduction')) : null,
     annotations ? h('p', { class: 'indice note-ajouts' }, tr.t('siddur_jour_ajouts', jourDuTexte.dateHebraique,
       tr.t(store.inIsrael() ? 'region_israel' : 'region_diaspora'))) : null,
     ...x.sections.flatMap((s, si) => {
@@ -2025,14 +2068,21 @@ function ecranTikkunPsaume() {
   // Rouvert sans psaume choisi : la liste.
   if (!psaume) return ecranTikkun();
   const rang = Tikkun.rang(tikkun, psaume.numero);
+  const mode = languesLecture();
   const blocs = [];
   for (const v of psaume.versets) {
     // L'indication d'arrêt se place là où l'on s'arrête, entre « אַתָּה סֵתֶר לִי » et
     // « מִצַּר » : elle n'est pas du texte, elle dit comment le lire.
     const c = Tikkun.coupe(v);
-    blocs.push(h('p', { class: 'verset' }, h('span', { class: 'num', 'aria-hidden': 'true' }, `${v.n} `), c ? c[0] : v.he));
-    if (v.arret) blocs.push(h('p', { class: 'arret' }, v.arret.note));
-    if (c) blocs.push(h('p', { class: 'verset suite' }, c[1]));
+    const textes = LanguesTexte.textes(mode, v.he, v.fr, v.en);
+    const avecHe = textes.some(([l]) => l === 'he');
+    if (avecHe) {
+      blocs.push(h('p', { class: 'verset' }, h('span', { class: 'num', 'aria-hidden': 'true' }, `${v.n} `), c ? c[0] : v.he));
+      if (v.arret) blocs.push(h('p', { class: 'arret' }, v.arret.note));
+      if (c) blocs.push(h('p', { class: 'verset suite' }, c[1]));
+    }
+    // Les traductions choisies (04/11), sous le verset ou à sa place.
+    textes.filter(([l]) => l !== 'he').forEach(([l, t], k) => blocs.push(paraTraduction(l, avecHe || k > 0 ? t : `${v.n}  ${t}`, !avecHe)));
   }
   const dit = store.tikkunDone().has(psaume.numero);
   const suivant = Tikkun.suivant(tikkun, psaume.numero);
@@ -2080,15 +2130,21 @@ function ecranTikkunTrait() {
   if (!tikkun) return h('div', { class: 'ecran' }, barre(tr.t('tikkun_title')), h('div', { class: 'defile' }));
   const titre = (texte) => h('h2', { class: 'psaume-titre' }, texte);
   const paragraphe = (texte) => h('p', { class: 'verset paragraphe' }, texte);
+  const mode = languesLecture();
   const blocs = [];
   for (const b of [tikkun.ouverture].filter(Boolean)) blocs.push(titre(b.titre.he), ...b.paragraphes.map(paragraphe));
   for (const p of tikkun.psaumes) {
     blocs.push(titre(tr.t('tikkun_psalm_he', Reference.lettres(p.numero))));
     for (const v of p.versets) {
       const c = Tikkun.coupe(v);
-      blocs.push(h('p', { class: 'verset' }, c ? c[0] : v.he));
-      if (v.arret) blocs.push(h('p', { class: 'arret' }, v.arret.note));
-      if (c) blocs.push(h('p', { class: 'verset suite' }, c[1]));
+      const textes = LanguesTexte.textes(mode, v.he, v.fr, v.en);
+      const avecHe = textes.some(([l]) => l === 'he');
+      if (avecHe) {
+        blocs.push(h('p', { class: 'verset' }, c ? c[0] : v.he));
+        if (v.arret) blocs.push(h('p', { class: 'arret' }, v.arret.note));
+        if (c) blocs.push(h('p', { class: 'verset suite' }, c[1]));
+      }
+      textes.filter(([l]) => l !== 'he').forEach(([l, t]) => blocs.push(paraTraduction(l, t, !avecHe)));
     }
   }
   if (tikkun.cloture) blocs.push(titre(tikkun.cloture.titre.he), ...tikkun.cloture.paragraphes.map(paragraphe));
@@ -4610,13 +4666,16 @@ function tireChizuk(moment) {
 function carteChizuk(tire, { compacte = false } = {}) {
   if (!tire) return null;
   const { moment, item } = tire;
-  const traduction = ChizukRules.traduction(item, tr.langue);
+  // Les langues de lecture (LanguesTexte, 04/11) : par défaut l'hébreu et la traduction, comme avant.
+  const textes = LanguesTexte.textes(languesLecture(), ChizukRules.hebreu(chizuk, item), item.fr || null, item.en || null);
+  const [[l1, t1]] = textes;
+  const traduction = textes[1]?.[1] ?? '';
   return h('section', { class: `chizuk${compacte ? ' compacte' : ''}` },
     h('div', { class: 'chizuk-tete' },
       h('div', { class: 'chizuk-art' }, h('img', { src: `img/${ART_DU_MOMENT[moment]}.webp`, alt: '' })),
       h('h2', { class: 'chizuk-moment' }, tr.t(moment === 'demande' ? 'chizuk_demande_title' : `moment_${moment}`))),
     // L'hébreu, de droite à gauche en toute langue.
-    h('p', { class: 'chizuk-he ajuste', lang: 'he', dir: 'rtl' }, ChizukRules.hebreu(chizuk, item)),
+    l1 === 'he' ? h('p', { class: 'chizuk-he ajuste', lang: 'he', dir: 'rtl' }, t1) : h('p', { class: 'chizuk-he chizuk-latin ajuste', lang: l1, dir: 'ltr' }, t1),
     traduction ? h('hr', {}) : null,
     traduction ? h('p', { class: 'chizuk-trad ajuste' }, traduction) : null,
     h('p', { class: 'chizuk-ref' }, Reference.localise(item.ref, tr.langue)));

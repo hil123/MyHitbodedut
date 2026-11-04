@@ -1360,4 +1360,14 @@
     <string name="vol_rapide_billet_sans_code">No boarding-pass barcode found. Open the ticket, copy its text and paste it above.</string>
     <string name="vol_rapide_billet_illisible">A barcode was read, but it is not a boarding pass.</string>
     <string name="vol_rapide_billet_lu">Boarding pass read (the barcode does not carry the times).</string>
+
+    <!-- Les langues d’un texte à lire (04/11), LanguesTexte. -->
+    <string name="lecture_langues">Text languages</string>
+    <string name="lecture_sans_traduction">This text has no translation yet: it stays in Hebrew.</string>
+    <string name="langues_he">עברית</string>
+    <string name="langues_fr">Français</string>
+    <string name="langues_en">English</string>
+    <string name="langues_he_fr">עברית + Français</string>
+    <string name="langues_he_en">עברית + English</string>
+    <string name="langues_fr_en">Français + English</string>
 </resources>

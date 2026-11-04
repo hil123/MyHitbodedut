@@ -47,19 +47,30 @@ class TikkunFlowActivity : AppCompatActivity() {
             bloc.paragraphes.forEach { contenu.addView(paragraphe(it)) }
         }
 
+        val mode = LanguesTexte.mode(this)
         tikkun.psaumes.forEach { psaume ->
             contenu.addView(titre(getString(R.string.tikkun_psalm_he, Reference.lettres(psaume.numero)), premier))
             premier = false
             psaume.versets.forEach { verset ->
-                // L'arret se marque dans le verset, avant « מִצַּר ».
-                val coupe = verset.coupe()
-                if (coupe == null) {
-                    contenu.addView(vueVerset(verset.he))
-                    verset.arret?.let { contenu.addView(vueArret(it)) }
-                } else {
-                    contenu.addView(vueVerset(coupe.first))
-                    contenu.addView(vueArret(verset.arret!!))
-                    contenu.addView(vueVerset(coupe.second))
+                // Les langues choisies (04/11) : l'hébreu, la traduction, ou les deux.
+                val textes = LanguesTexte.textes(mode, verset.he, verset.fr, verset.en)
+                val avecHebreu = textes.any { it.first == "he" }
+                if (avecHebreu) {
+                    // L'arret se marque dans le verset, avant « מִצַּר ».
+                    val coupe = verset.coupe()
+                    if (coupe == null) {
+                        contenu.addView(vueVerset(verset.he))
+                        verset.arret?.let { contenu.addView(vueArret(it)) }
+                    } else {
+                        contenu.addView(vueVerset(coupe.first))
+                        contenu.addView(vueArret(verset.arret!!))
+                        contenu.addView(vueVerset(coupe.second))
+                    }
+                }
+                textes.filter { it.first != "he" }.forEachIndexed { k, (_, t) ->
+                    contenu.addView(LanguesTexte.vueMarquee(this, t, seule = !avecHebreu).apply {
+                        layoutParams = ligneParams().apply { topMargin = if (avecHebreu || k > 0) dp(4) else dp(12) }
+                    })
                 }
             }
         }

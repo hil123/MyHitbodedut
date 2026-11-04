@@ -17,7 +17,7 @@ import org.json.JSONObject
  */
 data class Pause(val avant: String, val note: String)
 
-data class Verse(val numero: Int, val he: String, val arret: Pause? = null) {
+data class Verse(val numero: Int, val he: String, val arret: Pause? = null, val fr: String? = null, val en: String? = null) {
     /**
      * Le verset coupe la ou l'arret se marque : ce qui precede le mot
      * « avant », puis ce qui commence par lui. Null sans arret, ou si le mot
@@ -130,6 +130,9 @@ object TikkunLoader {
                 arret = v.optJSONObject("arret")?.let {
                     Pause(it.optString("avant", ""), it.optString("note", ""))
                 },
+                // Les traductions du domaine public (04/11, tools/traductions_tanakh.py).
+                fr = v.optString("fr", "").ifBlank { null },
+                en = v.optString("en", "").ifBlank { null },
             )
         },
     )

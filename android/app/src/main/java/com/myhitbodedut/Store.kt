@@ -94,6 +94,8 @@ object Store {
     private const val KEY_LECTURE_ECHELLE = "lecture_echelle"
     private const val KEY_LECTURE_SOMBRE = "lecture_sombre"
     private const val KEY_LECTURE_POLICE = "lecture_police"
+    /** Les langues d'un texte à lire (04/11) : « he », « fr », « en », « he+fr », « he+en », « fr+en ». */
+    private const val KEY_LECTURE_LANGUES = "lecture_langues"
     private const val KEY_LECTURE_MASQUEE = "lecture_masquee"
     private const val KEY_PAUSE_SHABBAT = "pause_shabbat"
     private const val KEY_IN_ISRAEL = "in_israel"
@@ -757,6 +759,13 @@ object Store {
 
     fun setLecturePolice(context: Context, police: PoliceHebraique.Police) {
         prefs(context).edit().putString(KEY_LECTURE_POLICE, police.cle).apply()
+    }
+
+    /** Le choix des langues des textes à lire (LanguesTexte) ; null : celui de la langue de l'application. */
+    fun lectureLangues(context: Context): String? = prefs(context).getString(KEY_LECTURE_LANGUES, null)
+
+    fun setLectureLangues(context: Context, cle: String) {
+        prefs(context).edit().putString(KEY_LECTURE_LANGUES, cle).apply()
     }
 
     /** La lecture sur fond noir, choisie d'un toucher sur la lune. */

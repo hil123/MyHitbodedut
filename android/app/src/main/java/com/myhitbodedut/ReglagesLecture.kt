@@ -59,7 +59,7 @@ class ReglagesLecture private constructor(
      */
     private val bouton: Int = run {
         val largeur = contexte.resources.displayMetrics.widthPixels / densite
-        val nombre = if (avecNusah) 8 else 7
+        val nombre = if (avecNusah) 9 else 8
         (((largeur - 24 - 48 - 18 - 12) / nombre).toInt()).coerceIn(30, 44)
     }
 
@@ -135,6 +135,18 @@ class ReglagesLecture private constructor(
             contentDescription = contexte.getString(R.string.lecture_police)
             touchable(this)
             setOnClickListener { choisirPolice(it) }
+        })
+        barre.addView(TextView(contexte).apply {
+            // « אA » : les langues du texte (04/11) — hébreu, français, anglais, ou deux à la fois.
+            layoutParams = LinearLayout.LayoutParams(dp(bouton), dp(44))
+            gravity = Gravity.CENTER
+            text = "אA"
+            textSize = 15f
+            typeface = Typeface.DEFAULT_BOLD
+            setTextColor(surAccent)
+            contentDescription = contexte.getString(R.string.lecture_langues)
+            touchable(this)
+            setOnClickListener { choisirLangues(it) }
         })
         if (avecNusah) barre.addView(icone(R.drawable.ic_lecture_nusah, R.string.siddur_choose) { choisirNusah(it) })
         barre.addView(filet())
@@ -240,6 +252,24 @@ class ReglagesLecture private constructor(
             setOnMenuItemClickListener { item ->
                 Store.setLecturePolice(contexte, PoliceHebraique.Police.entries[item.itemId])
                 surChangement()
+                true
+            }
+            show()
+        }
+    }
+
+    /** Les six façons de lire (LanguesTexte) ; le choix redessine l'écran entier. */
+    private fun choisirLangues(ancre: View) {
+        PopupMenu(contexte, ancre).apply {
+            val actuel = LanguesTexte.mode(contexte)
+            LanguesTexte.Mode.entries.forEachIndexed { i, m ->
+                menu.add(0, i, i, contexte.getString(m.libelle)).isChecked = m == actuel
+            }
+            menu.setGroupCheckable(0, true, true)
+            setOnMenuItemClickListener { item ->
+                Store.setLectureLangues(contexte, LanguesTexte.Mode.entries[item.itemId].cle)
+                // Le texte lui-même change : l'écran se refait (il garde sa place de défilement).
+                (contexte as? Activity)?.recreate()
                 true
             }
             show()

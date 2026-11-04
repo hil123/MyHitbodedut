@@ -60,6 +60,22 @@ const UNITES = ' אבגדהוזחט';
 const DIZAINES = ' יכלמנסעפצ';
 const CENTAINES = ' קרש';
 
+/**
+ * Les langues d'un texte à lire (LanguesTexte.kt, 04/11) : hébreu, français, anglais, ou deux
+ * langues l'une sous l'autre. Par défaut, la règle d'avant : l'hébreu seul en hébreu, l'hébreu
+ * et la traduction de l'interface ailleurs. Une traduction absente est sautée ; sans rien, l'hébreu.
+ */
+export const LanguesTexte = {
+  MODES: ['he', 'fr', 'en', 'he+fr', 'he+en', 'fr+en'],
+  defaut: (langue) => (langue === 'he' || langue === 'iw' ? 'he' : langue === 'en' ? 'he+en' : 'he+fr'),
+  mode(choix, langue) { return this.MODES.includes(choix) ? choix : this.defaut(langue); },
+  textes(mode, he, fr, en) {
+    const tous = mode.split('+').map((l) => (l === 'he' ? ['he', he] : l === 'fr' ? (fr ? ['fr', fr] : null) : (en ? ['en', en] : null))).filter(Boolean);
+    return tous.length ? tous : [['he', he]];
+  },
+  manque: (mode, aTraduction) => !aTraduction && mode.split('+').some((l) => l !== 'he'),
+};
+
 export const Reference = {
   /**
    * Un nombre en lettres hébraïques, de 1 à 999 : כ״ה, תל״ז, ז׳.
