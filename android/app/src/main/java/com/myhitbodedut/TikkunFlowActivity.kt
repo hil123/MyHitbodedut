@@ -41,13 +41,13 @@ class TikkunFlowActivity : AppCompatActivity() {
         val contenu = findViewById<LinearLayout>(R.id.flow_content)
         var premier = true
 
+        val mode = LanguesTexte.mode(this)
         tikkun.avant.forEach { bloc ->
             contenu.addView(titre(bloc.titre.he, premier))
             premier = false
-            bloc.paragraphes.forEach { contenu.addView(paragraphe(it)) }
+            paragraphesTraduits(bloc, contenu, mode)
         }
 
-        val mode = LanguesTexte.mode(this)
         tikkun.psaumes.forEach { psaume ->
             contenu.addView(titre(getString(R.string.tikkun_psalm_he, Reference.lettres(psaume.numero)), premier))
             premier = false
@@ -77,7 +77,7 @@ class TikkunFlowActivity : AppCompatActivity() {
 
         tikkun.bloc(Tikkun.CLOTURE)?.let { bloc ->
             contenu.addView(titre(bloc.titre.he, false))
-            bloc.paragraphes.forEach { contenu.addView(paragraphe(it)) }
+            paragraphesTraduits(bloc, contenu, mode)
         }
 
         // Le bouton de lecture : taille des lettres et lecture de nuit.
@@ -127,6 +127,20 @@ class TikkunFlowActivity : AppCompatActivity() {
         setTextColor(Apparence.couleur(context, R.color.ink))
         PoliceHebraique.appliquer(this)
     }, Role.TEXTE)
+
+    /** Les paragraphes d'une partie liturgique, dans les langues choisies (04/11). */
+    private fun paragraphesTraduits(bloc: LiturgyBlock, contenu: LinearLayout, mode: LanguesTexte.Mode) {
+        bloc.paragraphes.forEachIndexed { i, p ->
+            val textes = LanguesTexte.textes(mode, p, bloc.paragraphesFr.getOrNull(i), bloc.paragraphesEn.getOrNull(i))
+            val avecHebreu = textes.any { it.first == "he" }
+            if (avecHebreu) contenu.addView(paragraphe(p))
+            textes.filter { it.first != "he" }.forEachIndexed { k, (_, t) ->
+                contenu.addView(LanguesTexte.vueMarquee(this, t, seule = !avecHebreu, base = 18f).apply {
+                    layoutParams = ligneParams().apply { topMargin = if (avecHebreu || k > 0) dp(4) else dp(12) }
+                })
+            }
+        }
+    }
 
     private fun paragraphe(texte: String): View = ReglagesLecture.marquer(TextView(this).apply {
         layoutParams = ligneParams()

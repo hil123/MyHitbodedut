@@ -41,6 +41,9 @@ data class LiturgyBlock(
     val note: LocalizedText?,
     val formule: String?,
     val paragraphes: List<String>,
+    /** Les traductions, paragraphe par paragraphe (04/11) ; vides sans traduction. */
+    val paragraphesFr: List<String> = emptyList(),
+    val paragraphesEn: List<String> = emptyList(),
 )
 
 data class Psalm(
@@ -115,6 +118,8 @@ object TikkunLoader {
         note = o.optJSONObject("note")?.let { LocalizedText.parse(it) },
         formule = Json.nullable(o, "formule"),
         paragraphes = Json.strings(o.optJSONArray("paragraphes")),
+        paragraphesFr = Json.strings(o.optJSONArray("paragraphes_fr")),
+        paragraphesEn = Json.strings(o.optJSONArray("paragraphes_en")),
     )
 
     private fun psaume(o: JSONObject) = Psalm(

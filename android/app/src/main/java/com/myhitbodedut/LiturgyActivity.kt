@@ -42,10 +42,18 @@ class LiturgyActivity : AppCompatActivity() {
         // La formule de la kavana est centree : c'est un tableau de lettres,
         // pas une phrase qui se lit d'un bout a l'autre.
         bloc.formule?.let { conteneur.addView(paragraphe(it, premier = true, centre = true)) }
+        // Les langues choisies (04/11) : l'hébreu, la traduction, ou les deux.
+        val mode = LanguesTexte.mode(this)
         bloc.paragraphes.forEachIndexed { index, p ->
-            conteneur.addView(
-                paragraphe(p, premier = index == 0 && bloc.formule == null, centre = false)
-            )
+            val textes = LanguesTexte.textes(mode, p, bloc.paragraphesFr.getOrNull(index), bloc.paragraphesEn.getOrNull(index))
+            val avecHebreu = textes.any { it.first == "he" }
+            if (avecHebreu) conteneur.addView(paragraphe(p, premier = index == 0 && bloc.formule == null, centre = false))
+            textes.filter { it.first != "he" }.forEachIndexed { k, (_, t) ->
+                conteneur.addView(LanguesTexte.vueMarquee(this, t, seule = !avecHebreu, base = 18f).apply {
+                    layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+                        .apply { topMargin = if (avecHebreu || k > 0) (6 * resources.displayMetrics.density).toInt() else (16 * resources.displayMetrics.density).toInt() }
+                })
+            }
         }
 
         findViewById<Button>(R.id.psalm_done).visibility = View.GONE

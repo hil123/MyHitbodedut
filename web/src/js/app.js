@@ -783,6 +783,15 @@ let lecture = null;
 
 // --- Les langues de lecture (LanguesTexte, 04/11) ------------------------------------
 const languesLecture = () => LanguesTexte.mode(store.lectureLangues(), tr.langue);
+/**
+ * Des paragraphes hébreux et leurs traductions (paragraphes_fr / _en, 04/11), dans les langues
+ * choisies : fait(p) rend un paragraphe hébreu.
+ */
+const paragraphesTraduits = (heb, fr, en, fait) => heb.flatMap((p, i) => {
+  const textes = LanguesTexte.textes(languesLecture(), p, fr?.[i], en?.[i]);
+  const avecHe = textes.some(([l]) => l === 'he');
+  return textes.map(([l, t]) => (l === 'he' ? fait(t) : paraTraduction(l, t, !avecHe)));
+});
 /** Une traduction affichée : de gauche à droite, en romain ; plus discrète sous l'hébreu. */
 const paraTraduction = (langue, texte, seule) => h('p', { class: `traduction${seule ? ' seule' : ''}`, lang: langue, dir: 'ltr' }, texte);
 /** Le choix des six façons de lire : la feuille, et l'écran redessiné. */
@@ -2114,7 +2123,7 @@ function ecranTikkunPartie() {
   // La formule de la kavana est centrée : c'est un tableau de lettres, pas une phrase.
   const contenu = [
     b.formule ? h('p', { class: 'verset formule' }, b.formule) : null,
-    ...b.paragraphes.map((p) => h('p', { class: 'verset paragraphe' }, p)),
+    ...paragraphesTraduits(b.paragraphes, b.paragraphes_fr, b.paragraphes_en, (p) => h('p', { class: 'verset paragraphe' }, p)),
   ];
   return ecranLu(b.titre.he, h('div', { class: 'contenu lecture tikkun' },
     h('div', { class: 'psaume', lang: 'he', dir: 'rtl' }, contenu)), {
@@ -2132,7 +2141,7 @@ function ecranTikkunTrait() {
   const paragraphe = (texte) => h('p', { class: 'verset paragraphe' }, texte);
   const mode = languesLecture();
   const blocs = [];
-  for (const b of [tikkun.ouverture].filter(Boolean)) blocs.push(titre(b.titre.he), ...b.paragraphes.map(paragraphe));
+  for (const b of [tikkun.ouverture].filter(Boolean)) blocs.push(titre(b.titre.he), ...paragraphesTraduits(b.paragraphes, b.paragraphes_fr, b.paragraphes_en, paragraphe));
   for (const p of tikkun.psaumes) {
     blocs.push(titre(tr.t('tikkun_psalm_he', Reference.lettres(p.numero))));
     for (const v of p.versets) {
@@ -2147,7 +2156,7 @@ function ecranTikkunTrait() {
       textes.filter(([l]) => l !== 'he').forEach(([l, t]) => blocs.push(paraTraduction(l, t, !avecHe)));
     }
   }
-  if (tikkun.cloture) blocs.push(titre(tikkun.cloture.titre.he), ...tikkun.cloture.paragraphes.map(paragraphe));
+  if (tikkun.cloture) blocs.push(titre(tikkun.cloture.titre.he), ...paragraphesTraduits(tikkun.cloture.paragraphes, tikkun.cloture.paragraphes_fr, tikkun.cloture.paragraphes_en, paragraphe));
   const fini = () => {
     // Tout dire d'un trait vaut les dix psaumes.
     for (const p of tikkun.psaumes) store.setTikkunDone(p.numero, true);
@@ -2256,7 +2265,7 @@ function ecranSource() {
         h('h2', { class: 'source-titre', lang: 'he', dir: 'rtl' }, e.titre_he),
         h('p', { class: 'source-ref' }, Reference.localise(e.ref, tr.langue)))),
     h('div', { class: 'carte carte-texte psaume', lang: 'he', dir: 'rtl' },
-      LibraryRules.paragraphes(bibliotheque, e).map((p) => h('p', { class: 'verset paragraphe-source' }, p))),
+      paragraphesTraduits(LibraryRules.paragraphes(bibliotheque, e), e.paragraphes_fr, e.paragraphes_en, (p) => h('p', { class: 'verset paragraphe-source' }, p))),
     // Ni note ni édition sous le texte : l'attribution passe par le lien vers Sefaria.
     e.url ? h('a', { class: 'principal lien-sefaria', href: e.url, target: '_blank', rel: 'noopener noreferrer' }, tr.t('library_open_sefaria')) : null));
 }
