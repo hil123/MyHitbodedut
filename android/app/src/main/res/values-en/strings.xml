@@ -1334,4 +1334,19 @@
     <string name="vol_en_ligne_aide">Off by default: nothing leaves the phone. When on, the 🔍 sends only the flight number to adsbdb.com to fill in the arrival, and live tracking queries OpenSky Network.</string>
     <string name="vol_en_ligne_titre">Look up the route online?</string>
     <string name="vol_en_ligne_oui">Turn on and search</string>
+    <string name="vol_rapide_titre">Describe your flight</string>
+    <string name="vol_rapide_aide">As you would say it, or paste the ticket text. Everything is read on the phone.</string>
+    <string name="vol_rapide_exemple">E.g. El Al Lyon → TLV tomorrow at 11am</string>
+    <string name="vol_rapide_remplir">Fill in the flight</string>
+    <string name="vol_rapide_billet">Import the ticket (PDF or photo)</string>
+    <string name="vol_rapide_rien">Nothing recognised. Try for example: “LY 382 Paris Tel Aviv 12/11 at 9:40”.</string>
+    <string name="vol_rapide_heure">the departure time</string>
+    <string name="vol_rapide_compris">Understood: %1$s</string>
+    <string name="vol_rapide_estimee">Arrival estimated from the distance: correct it with the time on the ticket.</string>
+    <string name="vol_rapide_estimee_court">Estimated from the distance: check it on the ticket.</string>
+    <string name="vol_rapide_manque">Still needed: %1$s.</string>
+    <string name="vol_rapide_lecture">Reading the ticket…</string>
+    <string name="vol_rapide_billet_sans_code">No boarding-pass barcode found. Open the ticket, copy its text and paste it above.</string>
+    <string name="vol_rapide_billet_illisible">A barcode was read, but it is not a boarding pass.</string>
+    <string name="vol_rapide_billet_lu">Boarding pass read (the barcode does not carry the times).</string>
 </resources>

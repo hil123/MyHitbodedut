@@ -71,6 +71,13 @@ object Aeroports {
         return plies
     }
 
+    /** L'aéroport dont la ville (ou un autre nom) est exactement `texte`, déjà plié ; null sinon. */
+    fun exact(aeroports: List<Vol.Aeroport>, texte: String): Vol.Aeroport? {
+        val idx = index(aeroports)
+        for (i in idx.indices) if (idx[i].ville == texte || idx[i].alias.any { it == texte }) return aeroports[i]
+        return null
+    }
+
     /** Prépare l'index hors du fil de l'interface, pour que la première lettre réponde aussitôt. */
     fun preparer(aeroports: List<Vol.Aeroport>) { index(aeroports) }
 

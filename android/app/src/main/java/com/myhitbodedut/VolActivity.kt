@@ -58,6 +58,7 @@ class VolActivity : AppCompatActivity() {
         if (r[Manifest.permission.ACCESS_FINE_LOCATION] == true) releverGps() else message(getString(R.string.vol_gps_refuse))
     }
     private var enCours = false
+    private val choixBillet = registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri -> if (uri != null) lireBillet(uri) }
     private val autorisationNotifications = registerForActivityResult(ActivityResultContracts.RequestPermission()) { afficherResultats() }
     private val minuterie = Handler(Looper.getMainLooper())
     private val rafraichir = object : Runnable {
@@ -168,6 +169,7 @@ class VolActivity : AppCompatActivity() {
         contenu.removeAllViews()
         val garde = Store.vol(this, aeroports)
         formulaireOuvert = garde == null || modifier
+        if (formulaireOuvert) contenu.addView(carteRapide())
         contenu.addView(if (!formulaireOuvert) carteResume(garde!!) else carteFormulaire())
         contenu.addView(LinearLayout(this).apply {
             id = R.id.vol_resultats
@@ -256,13 +258,14 @@ class VolActivity : AppCompatActivity() {
         })
         depart?.let { a ->
             addView(champ(getString(R.string.vol_decollage, a.ville.ifEmpty { a.iata }), decollage?.format(formatSaisie()), getString(R.string.vol_choisir_heure)) {
-                choisirHeure(decollage) { decollage = it; afficherFormulaire() }
+                choisirHeure(decollage ?: dateSeule?.atTime(12, 0)) { decollage = it; afficherFormulaire() }
             })
         }
         arrivee?.let { a ->
             addView(champ(getString(R.string.vol_atterrissage, a.ville.ifEmpty { a.iata }), atterrissage?.format(formatSaisie()), getString(R.string.vol_choisir_heure)) {
-                choisirHeure(atterrissage ?: decollage) { atterrissage = it; afficherFormulaire() }
+                choisirHeure(atterrissage ?: decollage) { atterrissage = it; arriveeEstimee = false; afficherFormulaire() }
             })
+            if (arriveeEstimee) addView(VueJour.texte(this@VolActivity, getString(R.string.vol_rapide_estimee_court), 12f, R.color.muted, haut = 4))
         }
         // « Calculer » en pilule pleine ; « Effacer le vol », rare et destructif, en simple lien.
         addView(bouton(getString(R.string.vol_calculer), Genre.PRINCIPAL) { calculer() }.apply {
@@ -314,6 +317,158 @@ class VolActivity : AppCompatActivity() {
             layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
             setOnClickListener { action() }
         }
+    }
+
+    /** Le texte de la saisie rapide, gardé quand l'écran se redessine. */
+    private var phrase = ""
+
+    /** L'arrivée a été estimée d'après la distance : on le dit sous la tuile. */
+    private var arriveeEstimee = false
+
+    /**
+     * La saisie rapide (04/11) : on écrit le vol comme on le dirait — « El Al Lyon TLV demain
+     * 11h » — ou on colle le texte du billet ; ou on importe le billet (PDF, photo), dont le
+     * code-barres donne la route et la date. Tout est lu sur le téléphone (SaisieVol).
+     */
+    private fun carteRapide() = VueJour.carte(this).apply {
+        val marque = Apparence.couleur(this@VolActivity, R.color.brand)
+        background = android.graphics.drawable.GradientDrawable(android.graphics.drawable.GradientDrawable.Orientation.TL_BR, intArrayOf(
+            androidx.core.graphics.ColorUtils.blendARGB(Apparence.couleur(this@VolActivity, R.color.card), marque, 0.10f),
+            Apparence.couleur(this@VolActivity, R.color.card),
+        )).apply {
+            cornerRadius = dp(20).toFloat()
+            setStroke(dp(1), androidx.core.graphics.ColorUtils.blendARGB(Apparence.couleur(this@VolActivity, R.color.line), marque, 0.25f))
+        }
+        addView(VueJour.texte(this@VolActivity, getString(R.string.vol_rapide_titre), 17f, R.color.ink, gras = true))
+        addView(VueJour.texte(this@VolActivity, getString(R.string.vol_rapide_aide), 13f, R.color.muted, haut = 4))
+        val champ = EditText(this@VolActivity).apply {
+            hint = getString(R.string.vol_rapide_exemple)
+            setText(phrase)
+            textSize = 16f
+            minLines = 2
+            maxLines = 6
+            gravity = android.view.Gravity.TOP or android.view.Gravity.START
+            inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_MULTI_LINE or InputType.TYPE_TEXT_FLAG_CAP_SENTENCES
+            background = cadreSaisie()
+            setPaddingRelative(dp(14), dp(12), dp(14), dp(12))
+            layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply { topMargin = dp(12) }
+            addTextChangedListener(object : TextWatcher {
+                override fun beforeTextChanged(s: CharSequence?, a: Int, b: Int, c: Int) = Unit
+                override fun onTextChanged(s: CharSequence?, a: Int, b: Int, c: Int) = Unit
+                override fun afterTextChanged(s: Editable?) { phrase = s?.toString().orEmpty() }
+            })
+        }
+        addView(champ)
+        addView(bouton(getString(R.string.vol_rapide_remplir), Genre.PRINCIPAL) {
+            (getSystemService(INPUT_METHOD_SERVICE) as? android.view.inputmethod.InputMethodManager)?.hideSoftInputFromWindow(champ.windowToken, 0)
+            appliquer(SaisieVol.lire(phrase, aeroports, LocalDate.now()), source = null)
+        }.apply { (layoutParams as LinearLayout.LayoutParams).topMargin = dp(12) })
+        addView(bouton(getString(R.string.vol_rapide_billet), Genre.SECONDAIRE) {
+            choixBillet.launch(arrayOf("application/pdf", "image/*"))
+        }.apply {
+            (layoutParams as LinearLayout.LayoutParams).topMargin = dp(8)
+            setIconResource(R.drawable.ic_billet)
+            iconGravity = MaterialButton.ICON_GRAVITY_TEXT_START
+            iconPadding = dp(8)
+        })
+        rapideTexte?.let { t ->
+            addView(VueJour.texte(this@VolActivity, t, 14f, R.color.ink, haut = 12).apply {
+                accessibilityLiveRegion = View.ACCESSIBILITY_LIVE_REGION_POLITE
+                setLineSpacing(dp(3).toFloat(), 1f)
+            })
+        }
+    }
+
+    /** Ce que la saisie rapide a compris, ou ce qui manque. */
+    private var rapideTexte: String? = null
+
+    /**
+     * Remplit le formulaire avec ce qui a été compris ; l'arrivée manquante est estimée d'après
+     * la distance. Complet, le vol se calcule aussitôt ; sinon on dit ce qui manque, et l'heure
+     * de départ manquante (un code-barres n'en porte pas) s'ouvre d'elle-même.
+     */
+    private fun appliquer(p: SaisieVol.Proposition, source: String?) {
+        if (p.vide) {
+            rapideTexte = getString(R.string.vol_rapide_rien)
+            return afficherFormulaire()
+        }
+        p.numero?.let { numero = it }
+        p.depart?.let { depart = it }
+        p.arrivee?.let { arrivee = it }
+        if (p.depart != null || p.arrivee != null) routeTexte = null
+        val jour = p.date ?: decollage?.toLocalDate()
+        if (jour != null && p.heureDepart != null) decollage = LocalDateTime.of(jour, p.heureDepart)
+        else if (jour != null) dateSeule = jour
+        arriveeEstimee = false
+        val d = depart
+        val a = arrivee
+        val t1 = decollage
+        if (d != null && a != null && t1 != null) {
+            val i1 = Vol.instant(t1, d)
+            val za = Vol.zone(a.fuseau)
+            if (p.heureArrivee != null && i1 != null && za != null) {
+                // L'arrivée donnée : le premier jour où elle tombe après le départ (vol de nuit).
+                var t2 = LocalDateTime.of(p.dateArrivee ?: jour ?: t1.toLocalDate(), p.heureArrivee)
+                var n = 0
+                while ((Vol.instant(t2, a)?.isAfter(i1) != true) && n++ < 2) t2 = t2.plusDays(1)
+                atterrissage = t2
+            } else if (i1 != null && za != null) {
+                atterrissage = LocalDateTime.ofInstant(i1.plus(SaisieVol.dureeEstimee(d, a)), za)
+                arriveeEstimee = true
+            }
+        }
+        val compris = listOfNotNull(
+            p.numero ?: p.compagnie,
+            if (depart != null || arrivee != null) "${depart?.iata ?: "?"} → ${arrivee?.iata ?: "?"}" else null,
+            decollage?.format(formatSaisie()) ?: (dateSeule)?.format(DateTimeFormatter.ofPattern("EEE d MMM", locale)),
+        ).joinToString(" · ")
+        val manque = listOfNotNull(
+            if (depart == null) getString(R.string.vol_depart) else null,
+            if (arrivee == null) getString(R.string.vol_arrivee) else null,
+            if (decollage == null) getString(R.string.vol_rapide_heure) else null,
+        )
+        rapideTexte = listOfNotNull(
+            source,
+            getString(R.string.vol_rapide_compris, compris),
+            if (arriveeEstimee) getString(R.string.vol_rapide_estimee) else null,
+            if (manque.isNotEmpty()) getString(R.string.vol_rapide_manque, manque.joinToString(", ")) else null,
+        ).joinToString("\n")
+        afficherFormulaire()
+        when {
+            // Le numéro sans la route : la loupe s'en charge (avec l'accord si besoin).
+            BuildConfig.SUIVI_VOL && numero.isNotEmpty() && (depart == null || arrivee == null) -> loupe()
+            depart != null && decollage == null -> choisirHeure(dateSeule?.atTime(12, 0)) {
+                appliquer(SaisieVol.Proposition(date = it.toLocalDate(), heureDepart = it.toLocalTime()), null)
+            }
+            depart != null && arrivee != null && decollage != null && atterrissage != null -> calculer()
+        }
+    }
+
+    /** Une date sans heure (code-barres, « demain ») : le sélecteur d'heure s'ouvre sur elle. */
+    private var dateSeule: LocalDate? = null
+
+    /** Le billet choisi : son code-barres, lu hors du fil de l'interface. */
+    private fun lireBillet(uri: android.net.Uri) {
+        rapideTexte = getString(R.string.vol_rapide_lecture)
+        afficherFormulaire()
+        Thread {
+            val code = runCatching { LecteurBillet.code(this, uri) }.getOrNull()
+            val troncon = code?.let { CarteEmbarquement.lire(it, LocalDate.now()) }
+            runOnUiThread {
+                if (isFinishing || isDestroyed) return@runOnUiThread
+                if (troncon == null) {
+                    rapideTexte = getString(if (code == null) R.string.vol_rapide_billet_sans_code else R.string.vol_rapide_billet_illisible)
+                    return@runOnUiThread afficherFormulaire()
+                }
+                appliquer(SaisieVol.Proposition(
+                    numero = troncon.numero,
+                    compagnie = troncon.compagnie,
+                    depart = Aeroports.parIata(aeroports, troncon.depart),
+                    arrivee = Aeroports.parIata(aeroports, troncon.arrivee),
+                    date = troncon.date,
+                ), source = getString(R.string.vol_rapide_billet_lu))
+            }
+        }.start()
     }
 
     /** La loupe : services en ligne éteints, on demande d'abord, une fois, ce qui partira. */
@@ -431,7 +586,9 @@ class VolActivity : AppCompatActivity() {
                 (v.getChildAt(0) as TextView).text = a.iata
                 val textes = v.getChildAt(1) as LinearLayout
                 (textes.getChildAt(0) as TextView).text = a.ville.ifEmpty { Aeroports.nomLocal(a, langue) }
-                (textes.getChildAt(1) as TextView).text = "${Aeroports.nomLocal(a, langue)} · ${a.pays}"
+                // Des noms propres et un code pays : rien à traduire.
+                val detail = listOf(Aeroports.nomLocal(a, langue), a.pays).joinToString(" · ")
+                (textes.getChildAt(1) as TextView).text = detail
                 v.setOnClickListener { choisi(a); dialogue?.dismiss() }
             }
         }
@@ -577,6 +734,10 @@ class VolActivity : AppCompatActivity() {
         atterrissage = null
         calcul = null
         modifier = false
+        phrase = ""
+        rapideTexte = null
+        dateSeule = null
+        arriveeEstimee = false
         afficherFormulaire()
     }
 
@@ -677,18 +838,30 @@ class VolActivity : AppCompatActivity() {
         addView(VueJour.texte(this@VolActivity, getString(R.string.vol_rappels_note), 12f, R.color.muted, haut = 10))
     }
 
-    /** La prière du moment mise en avant (29/10) : fond vert pâle, nom en grand, compte à rebours en vert. */
+    /**
+     * La prière du moment mise en avant : la carte prend le ciel de son heure (04/11) — l'aube
+     * pour Cha'harit, l'or de l'après-midi pour Min'ha, la nuit pour Arvit —, texte en blanc,
+     * le compte à rebours en grand.
+     */
     private fun cartePriere(c: Vol.Calcul, maintenant: Instant) = VueJour.carte(this).apply {
-        val marque = Apparence.couleur(this@VolActivity, R.color.brand)
-        background = android.graphics.drawable.GradientDrawable().apply {
-            cornerRadius = dp(20).toFloat()
-            setColor(androidx.core.graphics.ColorUtils.blendARGB(Apparence.couleur(this@VolActivity, R.color.card), marque, 0.09f))
-            setStroke(dp(1), androidx.core.graphics.ColorUtils.blendARGB(Apparence.couleur(this@VolActivity, R.color.line), marque, 0.28f))
-        }
-        addView(VueJour.texte(this@VolActivity, getString(R.string.vol_priere_titre), 13f, R.color.muted))
         val p = VolPriere.priere(c, maintenant)
+        val ciel = when (p?.first) {
+            "chaharit" -> intArrayOf(0xFF2B3F6E.toInt(), 0xFF8C5A7A.toInt(), 0xFFE0906B.toInt())
+            "minha" -> intArrayOf(0xFF17525A.toInt(), 0xFF6E7A3E.toInt(), 0xFFC9962E.toInt())
+            null -> intArrayOf(Apparence.couleur(this@VolActivity, R.color.brand), androidx.core.graphics.ColorUtils.blendARGB(Apparence.couleur(this@VolActivity, R.color.brand), 0xFF000000.toInt(), 0.35f))
+            else -> intArrayOf(0xFF0E1530.toInt(), 0xFF1E2A55.toInt(), 0xFF3E4F86.toInt())
+        }
+        background = android.graphics.drawable.GradientDrawable(android.graphics.drawable.GradientDrawable.Orientation.TL_BR, ciel).apply {
+            cornerRadius = dp(24).toFloat()
+        }
+        setPadding(dp(20), dp(20), dp(20), dp(20))
+        elevation = dp(2).toFloat()
+        val blanc = { a: Int -> androidx.core.graphics.ColorUtils.setAlphaComponent(0xFFFFFFFF.toInt(), a) }
+        addView(VueJour.texte(this@VolActivity, getString(R.string.vol_priere_titre).uppercase(locale), 12f, R.color.muted).apply {
+            setTextColor(blanc(200)); letterSpacing = 0.08f
+        })
         if (p == null) {
-            addView(VueJour.texte(this@VolActivity, getString(R.string.vol_hors_fenetre), 14f, R.color.ink, haut = 4))
+            addView(VueJour.texte(this@VolActivity, getString(R.string.vol_hors_fenetre), 15f, R.color.ink, haut = 8).apply { setTextColor(blanc(240)) })
             return@apply
         }
         val (priere, limite) = p
@@ -697,15 +870,19 @@ class VolActivity : AppCompatActivity() {
             "minha" -> R.string.widget_zmanim_minha
             else -> R.string.widget_zmanim_arvit
         }
-        addView(VueJour.texte(this@VolActivity, getString(nom), 30f, R.color.brand, gras = true, haut = 4))
+        addView(VueJour.texte(this@VolActivity, getString(nom), 34f, R.color.ink, gras = true, haut = 4).apply { setTextColor(blanc(255)) })
         if (limite == null) {
-            addView(VueJour.texte(this@VolActivity, getString(R.string.vol_sans_limite), 14f, R.color.ink, haut = 2))
+            addView(VueJour.texte(this@VolActivity, getString(R.string.vol_sans_limite), 14f, R.color.ink, haut = 4).apply { setTextColor(blanc(225)) })
         } else {
-            addView(VueJour.texte(this@VolActivity, getString(R.string.vol_jusqua, deuxHeures(c.plan, limite)), 14f, R.color.ink, haut = 2))
             val minutes = Duration.between(maintenant, limite).toMinutes().toInt().coerceAtLeast(0)
-            addView(VueJour.texte(this@VolActivity, getString(R.string.vol_dans, dureeEnMots(minutes)), 22f, R.color.brand, gras = true, haut = 4).also { compteur = it })
+            addView(VueJour.texte(this@VolActivity, getString(R.string.vol_dans, dureeEnMots(minutes)), 22f, R.color.ink, gras = true, haut = 8).apply {
+                setTextColor(blanc(255)); fontFeatureSettings = "tnum"
+            }.also { compteur = it })
+            addView(VueJour.texte(this@VolActivity, getString(R.string.vol_jusqua, deuxHeures(c.plan, limite)), 14f, R.color.ink, haut = 4).apply {
+                setTextColor(blanc(215)); fontFeatureSettings = "tnum"
+            })
             c.enVol.firstOrNull { it.instant == limite }?.ecartSiRetard?.let {
-                addView(VueJour.texte(this@VolActivity, ecart(it), 12f, R.color.muted, haut = 2))
+                addView(VueJour.texte(this@VolActivity, ecart(it), 12f, R.color.muted, haut = 4).apply { setTextColor(blanc(170)) })
             }
         }
     }
@@ -860,6 +1037,12 @@ class VolActivity : AppCompatActivity() {
                         else {
                             depart = de
                             arrivee = vers
+                            // La route trouvée complète la saisie rapide : arrivée estimée, heure, calcul.
+                            if (rapideTexte != null) {
+                                routeTexte = getString(R.string.vol_route_trouvee, n.uppercase(), r.compagnie, r.de, r.vers)
+                                defile.post { appliquer(SaisieVol.Proposition(depart = de, arrivee = vers, date = decollage?.toLocalDate() ?: dateSeule,
+                                    heureDepart = decollage?.toLocalTime()), source = routeTexte) }
+                            }
                             getString(R.string.vol_route_trouvee, n.uppercase(), r.compagnie, r.de, r.vers)
                         }
                     }

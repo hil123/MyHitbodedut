@@ -1399,4 +1399,19 @@
     <string name="vol_en_ligne_aide">Désactivés par défaut : rien ne quitte le téléphone. Activés, la loupe 🔍 envoie le seul numéro de vol à adsbdb.com pour remplir l’arrivée, et le suivi en direct interroge OpenSky Network.</string>
     <string name="vol_en_ligne_titre">Chercher la route en ligne ?</string>
     <string name="vol_en_ligne_oui">Activer et chercher</string>
+    <string name="vol_rapide_titre">Décrivez votre vol</string>
+    <string name="vol_rapide_aide">Comme vous le diriez, ou collez le texte du billet. Tout est lu sur le téléphone.</string>
+    <string name="vol_rapide_exemple">Ex. : El Al Lyon → TLV demain à 11h</string>
+    <string name="vol_rapide_remplir">Remplir le vol</string>
+    <string name="vol_rapide_billet">Importer le billet (PDF ou photo)</string>
+    <string name="vol_rapide_rien">Rien de reconnu. Essayez par exemple : « LY 382 Paris Tel Aviv le 12/11 à 9h40 ».</string>
+    <string name="vol_rapide_heure">l’heure de départ</string>
+    <string name="vol_rapide_compris">Compris : %1$s</string>
+    <string name="vol_rapide_estimee">Arrivée estimée d’après la distance : corrigez-la avec l’heure du billet.</string>
+    <string name="vol_rapide_estimee_court">Estimée d’après la distance : à vérifier sur le billet.</string>
+    <string name="vol_rapide_manque">Reste à indiquer : %1$s.</string>
+    <string name="vol_rapide_lecture">Lecture du billet…</string>
+    <string name="vol_rapide_billet_sans_code">Aucun code-barres de carte d’embarquement trouvé. Ouvrez le billet, copiez son texte et collez-le ci-dessus.</string>
+    <string name="vol_rapide_billet_illisible">Un code-barres a été lu, mais ce n’est pas celui d’une carte d’embarquement.</string>
+    <string name="vol_rapide_billet_lu">Carte d’embarquement lue (le code-barres ne porte pas les heures).</string>
 </resources>

@@ -1367,4 +1367,19 @@
     <string name="vol_en_ligne_aide">כבויים כברירת מחדל: שום דבר לא יוצא מהטלפון. כשהם פעילים, הזכוכית המגדלת 🔍 שולחת ל־adsbdb.com את מספר הטיסה בלבד כדי למלא את היעד, והמעקב בזמן אמת פונה ל־OpenSky Network.</string>
     <string name="vol_en_ligne_titre">לחפש את המסלול ברשת?</string>
     <string name="vol_en_ligne_oui">להפעיל ולחפש</string>
+    <string name="vol_rapide_titre">תארו את הטיסה</string>
+    <string name="vol_rapide_aide">כמו שהייתם אומרים, או הדביקו את טקסט הכרטיס. הכול נקרא בטלפון.</string>
+    <string name="vol_rapide_exemple">למשל: אל על מליון לתל אביב מחר בשעה 11</string>
+    <string name="vol_rapide_remplir">מילוי הטיסה</string>
+    <string name="vol_rapide_billet">ייבוא הכרטיס (PDF או תמונה)</string>
+    <string name="vol_rapide_rien">לא זוהה דבר. נסו למשל: ‎«LY 382 פריז תל אביב 12.11 בשעה 9:40»‎.</string>
+    <string name="vol_rapide_heure">שעת ההמראה</string>
+    <string name="vol_rapide_compris">הובן: %1$s</string>
+    <string name="vol_rapide_estimee">הנחיתה הוערכה לפי המרחק: תקנו אותה לפי השעה שבכרטיס.</string>
+    <string name="vol_rapide_estimee_court">הערכה לפי המרחק: יש לבדוק בכרטיס.</string>
+    <string name="vol_rapide_manque">נותר למלא: %1$s.</string>
+    <string name="vol_rapide_lecture">קורא את הכרטיס…</string>
+    <string name="vol_rapide_billet_sans_code">לא נמצא ברקוד של כרטיס עלייה למטוס. פתחו את הכרטיס, העתיקו את הטקסט והדביקו אותו למעלה.</string>
+    <string name="vol_rapide_billet_illisible">נקרא ברקוד, אבל הוא אינו של כרטיס עלייה למטוס.</string>
+    <string name="vol_rapide_billet_lu">כרטיס העלייה למטוס נקרא (הברקוד אינו כולל את השעות).</string>
 </resources>
