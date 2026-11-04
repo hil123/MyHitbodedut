@@ -274,7 +274,7 @@
     <string name="tip_5_title">Start with Tehillim, or your own words</string>
     <string name="tip_5_body">If you are not sure how to begin, open Tehillim and read a few chapters. The Psalms are prayer already formed, very direct, and they touch the soul. In hitbodedut they can be a spiritual thread leading you straight to Hashem. And if you feel you have no words, you can simply speak with Hashem freely, sharing your thoughts and what you feel.</string>
     <string name="tip_6_title">Ask yourself inward questions</string>
-    <string name="tip_6_body">During hitbodedut, ask yourself inward questions. What am I feeling right now? What am I going through? How can I feel closer to Hashem? What do I need to improve in my life? This is a time for a real heshbon nefesh. Sometimes, in the inner quiet, you come to see your real needs and the right direction for your life.</string>
+    <string name="tip_6_body">During hitbodedut, ask yourself inward questions. What am I feeling right now? What am I going through? How can I feel closer to Hashem? What do I need to improve in my life? This is a time for a real cheshbon nefesh. Sometimes, in the inner quiet, you come to see your real needs and the right direction for your life.</string>
     <string name="tip_7_title">Put honesty first</string>
     <string name="tip_7_body">During hitbodedut, do not try to hide from Hashem what you feel. This is a time when you are allowed to be honest with yourself and with Hashem. If you feel anger, frustration, fear or insecurity, this is the place to say it. Honesty is the key to spiritual growth. The more honest you are, the more inner quiet you will find.</string>
     <string name="tip_8_title">Make peace with yourself</string>
@@ -328,7 +328,7 @@
 
     <!-- Section Tikoun HaKlali -->
     <string name="tikkun_title">Tikkun HaKlali</string>
-    <string name="tikkun_hint">The ten Tehillim of Rabbi Nahman, in order: 16, 32, 41, 42, 59, 77, 90, 105, 137, 150.</string>
+    <string name="tikkun_hint">The ten Tehillim of Rabbi Nachman, in order: 16, 32, 41, 42, 59, 77, 90, 105, 137, 150.</string>
     <string name="tikkun_open">Open the Tikkun</string>
     <string name="tikkun_psalm_he">תהילים %1$s</string>
     <string name="tikkun_verses">%1$d verses</string>
@@ -481,8 +481,8 @@
         <item quantity="other">%d minutes of hitbodedut</item>
     </plurals>
     <!-- Séance annulée : un encouragement au lieu du bravo (28/09). -->
-    <string name="annulation_hazak">Hazak!</string>
-    <string name="annulation_hizki">Hizki!</string>
+    <string name="annulation_hazak">Chazak!</string>
+    <string name="annulation_hizki">Chizki!</string>
     <string name="annulation_neutral">Take heart!</string>
     <string name="annulation_subtitle">For everything you have done so far. Next time will be better.</string>
 
@@ -570,7 +570,7 @@
     <string name="siddur_title">Siddur</string>
     <string name="siddur_hint">Shacharit, Mincha, Arvit, blessings…</string>
     <string name="siddur_books">Books</string>
-    <string name="siddur_nusah">Sephardi nusach (Edot HaMizrah)</string>
+    <string name="siddur_nusah">Sephardi nusach (Edot HaMizrach)</string>
     <string name="lecture_reglages">Reading settings</string>
     <string name="lecture_nuit">Read on a black background</string>
     <string name="lecture_replier">Fold away</string>
@@ -590,7 +590,7 @@
     <string name="lecture_moins">Smaller letters</string>
     <string name="siddur_choose">Nusach</string>
     <string name="siddur_signets">Sections</string>
-    <string name="siddur_nusah_edot">Sephardi (Edot HaMizrah)</string>
+    <string name="siddur_nusah_edot">Sephardi (Edot HaMizrach)</string>
     <string name="siddur_nusah_sefard">Sfard (Arizal)</string>
     <string name="siddur_nusah_ashkenaz">Ashkenaz</string>
     <string name="siddur_sources">Sources: %1$s</string>
@@ -714,7 +714,7 @@
     <string name="ajout_yom_tov_chabbat">Yom Tov on Shabbat</string>
     <string name="ajout_roch_hachana_chabbat">Rosh Hashanah on Shabbat</string>
     <string name="ajout_motsae_chabbat_yt">Motzaei Shabbat and Yom Tov</string>
-    <string name="ajout_cheva_berakhot">Sheva Berakhot (wedding meal)</string>
+    <string name="ajout_cheva_berakhot">Sheva Berachot (wedding meal)</string>
     <string name="ajout_zimun">Zimun (three or more who ate together)</string>
     <string name="ajout_facultatif">Custom, not required</string>
     <string name="ajout_facultatif_avant">Psalms before Birkat HaMazon (custom, not required)</string>
@@ -945,7 +945,7 @@
     <string name="livres_hint">Likutei Moharan, Hishtapchut HaNefesh, Kochvei Or, megillot, Perek Shira, Nishmat…</string>
     <!-- La halakha du jour : le Yalkut Yosef, puis le Ben Ish 'Haï (13/10) -->
     <string name="halakha_ben_ish_hai">Ben Ish Chai, weekly portion</string>
-    <string name="halakha_yalkut_source">Yalkut Yosef – Kitzur Shulchan Aruch, Rav Yitzhak Yosef (Torat Emet text, CC BY-NC-SA 2.5): a selection, not the whole book.</string>
+    <string name="halakha_yalkut_source">Yalkut Yosef – Kitzur Shulchan Aruch, Rav Yitzchak Yosef (Torat Emet text, CC BY-NC-SA 2.5): a selection, not the whole book.</string>
     <!-- Birkat haLevana sur la carte du jour (13/10) -->
     <string name="levana_titre">Birkat HaLevana</string>
     <string name="levana_fenetre">From %1$s to %2$s</string>
@@ -1081,7 +1081,7 @@
     <string name="moment_mot_journee">In the middle of the day, a moment apart with Hashem.</string>
     <string name="moment_mot_soir">As evening comes, tell Hashem about your day.</string>
     <string name="moment_mot_nuit">At night, when all is quiet, speak to Hashem.</string>
-    <string name="chizuk_demande_title">I need hizuk</string>
+    <string name="chizuk_demande_title">I need chizuk</string>
     <string name="chizuk_demande_hint">A text to lift you up, whenever you want.</string>
     <string name="chizuk_autre">Another</string>
     <string name="chizuk_garder">Save</string>

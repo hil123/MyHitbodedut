@@ -59,7 +59,7 @@ TEXTES = [
      ["Assorted Blessings and Prayers", "Separating Tithes"], ["Blessings", "Separating Terumot & Maasrot"], None),
     ("refoua", sc.T("תְּפִלַּת הַנּוֹטֵל תְּרוּפָה", "Avant un remède", "Before taking medicine"),
      ["Assorted Blessings and Prayers", "Prayer for Taking Medicine"], None, None),
-    ("nerot_hanouka", sc.T("הַדְלָקַת נֵרוֹת חֲנֻכָּה", "Allumage de ’Hanouka", "Hanukkah candles"),
+    ("nerot_hanouka", sc.T("הַדְלָקַת נֵרוֹת חֲנֻכָּה", "Allumage de ’Hanouka", "Chanukah candles"),
      ["Hanukkah", "Menorah Lighting"], ["Chanukah", "Menorah Lighting"],
      ["Festivals", "Chanukah", "Service for Lighting Chanukah Candles"]),
     ("megila", sc.T("קְרִיאַת הַמְּגִלָּה", "Lecture de la Méguila", "Megillah reading"),

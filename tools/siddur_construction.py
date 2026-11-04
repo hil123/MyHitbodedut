@@ -166,11 +166,11 @@ def T(he, fr, en):
 
 TITRES = {
     "birkot_hachahar": ("jour", T("בִּרְכוֹת הַשַּׁחַר", "Birkot hacha’har", "Morning blessings")),
-    "chaharit": ("jour", T("תְּפִלַּת שַׁחֲרִית", "Cha’harit", "Shaharit")),
-    "minha": ("jour", T("תְּפִלַּת מִנְחָה", "Min’ha", "Minha")),
+    "chaharit": ("jour", T("תְּפִלַּת שַׁחֲרִית", "Cha’harit", "Shacharit")),
+    "minha": ("jour", T("תְּפִלַּת מִנְחָה", "Min’ha", "Mincha")),
     "arvit": ("jour", T("תְּפִלַּת עַרְבִית", "Arvit", "Arvit")),
     "chema_coucher": ("jour", T("קְרִיאַת שְׁמַע שֶׁעַל הַמִּטָּה", "Chema du coucher", "Bedtime Shema")),
-    "tikoun_hatsot": ("jour", T("תִּקּוּן חֲצוֹת", "Tikoun ’hatsot", "Tikkun Hatsot")),
+    "tikoun_hatsot": ("jour", T("תִּקּוּן חֲצוֹת", "Tikoun ’hatsot", "Tikkun Chatzot")),
     "acher_yatsar": ("brakhot", T("אֲשֶׁר יָצַר", "Acher yatsar", "Asher Yatsar")),
     "birkat_hamazon": ("brakhot", T("בִּרְכַּת הַמָּזוֹן", "Birkat hamazone", "Birkat HaMazon")),
     "meen_chaloch": ("brakhot", T("בְּרָכָה מֵעֵין שָׁלֹשׁ", "Méèn chaloch", "Me’ein Shalosh")),
@@ -179,16 +179,16 @@ TITRES = {
     "birkat_halevana": ("moments", T("בִּרְכַּת הַלְּבָנָה", "Birkat halévana", "Blessing of the moon")),
     "hallel": ("moments", T("הַלֵּל", "Hallel", "Hallel")),
     "moussaf_rosh_hodech": ("moments", T("מוּסָף לְרֹאשׁ חֹדֶשׁ", "Moussaf de Roch ’Hodech", "Musaf for Rosh Chodesh")),
-    "cheva_berakhot": ("moments", T("שֶׁבַע בְּרָכוֹת", "Chéva bérakhot", "Sheva Berakhot")),
+    "cheva_berakhot": ("moments", T("שֶׁבַע בְּרָכוֹת", "Chéva bérakhot", "Sheva Berachot")),
     "parachat_haman": ("moments", T("פָּרָשַׁת הַמָּן", "Parachat hamane", "Parashat HaMan")),
     "kaddich": ("moments", T("קַדִּישׁ", "Kaddich", "Kaddish")),
     "hachkavot": ("moments", T("הַשְׁכָּבוֹת", "Hachkavot", "Hashkavot")),
 }
-EL_MALE = T("אֵל מָלֵא רַחֲמִים", "El malé ra’hamim", "El Malei Rahamim")
+EL_MALE = T("אֵל מָלֵא רַחֲמִים", "El malé ra’hamim", "El Malei Rachamim")
 NUSAH = {
-    "edot": T("נוסח ספרדי – עדות המזרח", "Noussa’h séfarade (Edot HaMizra’h)", "Sephardi nusah (Edot HaMizrah)"),
-    "sefard": T("נוסח ספרד (האר״י)", "Noussa’h Sfard (Arizal)", "Nusah Sfard (Arizal)"),
-    "ashkenaz": T("נוסח אשכנז", "Noussa’h Ashkenaz", "Nusah Ashkenaz"),
+    "edot": T("נוסח ספרדי – עדות המזרח", "Noussa’h séfarade (Edot HaMizra’h)", "Sephardi nusach (Edot HaMizrach)"),
+    "sefard": T("נוסח ספרד (האר״י)", "Noussa’h Sfard (Arizal)", "Nusach Sfard (Arizal)"),
+    "ashkenaz": T("נוסח אשכנז", "Noussa’h Ashkenaz", "Nusach Ashkenaz"),
 }
 GROUPES = [
     {"cle": "jour", "titre": T("תְּפִלּוֹת הַיּוֹם", "Prières du jour", "Daily prayers")},

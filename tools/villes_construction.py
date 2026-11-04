@@ -35,7 +35,7 @@ VILLES = [
     (294071, "נתניה", "Netanya", "Netanya"),
     (295629, "אשדוד", "Ashdod", "Ashdod"),
     (295530, "באר שבע", "Beer-Sheva", "Beersheba"),
-    (293918, "פתח תקווה", "Petah Tikva", "Petah Tikva"),
+    (293918, "פתח תקווה", "Petah Tikva", "Petach Tikva"),
     (282926, "מודיעין", "Modiin", "Modiin"),
     (293788, "רמת גן", "Ramat Gan", "Ramat Gan"),
     (293703, "ראשון לציון", "Rishon LeZion", "Rishon LeZion"),
