@@ -262,3 +262,18 @@ test('les raisons d\'échec du vol sont des codes, traduits par l\'écran (audit
     for (const fr of ['pas de connexion', 'réponse illisible', 'position invalide', 'relais non configuré']) assert.ok(!source.includes(`'${fr}'`), `${fichier} : ${fr}`);
   }
 });
+
+test('saisie rapide : la phrase du propriétaire, en hébreu, et un billet collé (SaisieVolTest)', () => {
+  const R = new URL('../../android/app/src/main/res/raw/', import.meta.url);
+  const liste = Vol.aeroports(JSON.parse(readFileSync(new URL('aeroports.json', R), 'utf8')), JSON.parse(readFileSync(new URL('aeroports_noms.json', R), 'utf8')));
+  const lire = (t) => Vol.lirePhrase(t, liste, '2026-11-04');
+  assert.deepEqual(lire('je prends le vol elal Lyon tlv de demain a 11h'),
+    { numero: null, compagnie: 'LY', depart: 'LYS', arrivee: 'TLV', date: '2026-11-05', dateArrivee: null, heureDepart: '11:00', heureArrivee: null });
+  const he = lire('מחר בשעה 11 טיסת אל על מליון לתל אביב');
+  assert.equal(`${he.depart}-${he.arrivee}-${he.date}-${he.heureDepart}`, 'LYS-TLV-2026-11-05-11:00');
+  const billet = lire('Boarding 10:20 Departure 11:00 LYS TLV 14 nov. 2026 Arrival 16:05');
+  assert.equal(billet.numero, null);
+  assert.equal(`${billet.heureDepart}-${billet.heureArrivee}-${billet.date}`, '11:00-16:05-2026-11-14');
+  assert.equal(lire('Flight LY81 Tel Aviv to Bangkok on Nov 12 at 11:30pm').heureDepart, '23:30');
+  assert.ok(Vol.phraseVide(lire('bonjour')));
+});

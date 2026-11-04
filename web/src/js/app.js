@@ -3395,6 +3395,71 @@ const ecartVol = (ms) => tr.t(calculVol && calculVol.fiabilite !== 'route_prevue
  * l'arrivée (et le départ s'il est vide) et l'indicatif du suivi en direct ; les heures restent à saisir.
  */
 let routeVol = { attente: false, texte: '' };
+
+/** La loupe (VolActivity.loupe) : services en ligne éteints, on demande d'abord, une fois, ce qui partira. */
+function loupeVol(v) {
+  if (store.suiviDirect()) return chercherRouteVol(v);
+  feuille(tr.t('vol_en_ligne_titre'), (f, fermer) => f.append(
+    h('p', {}, tr.t('vol_en_ligne_aide')),
+    h('button', { class: 'principal', onclick: () => { fermer(); store.setSuiviDirect(true); chercherRouteVol(v); } }, tr.t('vol_en_ligne_oui')),
+    h('button', { class: 'lien-discret', onclick: fermer }, tr.t('vol_fermer'))));
+}
+
+/** La saisie rapide (VolActivity.carteRapide) : une phrase, ou le texte collé du billet. */
+let phraseVol = '';
+let rapideVol = null;
+function carteRapideVol(v, pret, calculer) {
+  const champ = h('textarea', { class: 'champ-recherche champ-vol saisie-rapide', rows: 2, placeholder: tr.t('vol_rapide_exemple'),
+    oninput: (e) => { phraseVol = e.target.value; } });
+  champ.value = phraseVol;
+  const remplir = async () => {
+    if (!pret) return;
+    const p = Vol.lirePhrase(phraseVol, aeroportsVol, isoLocal(new Date()));
+    if (Vol.phraseVide(p)) { rapideVol = tr.t('vol_rapide_rien'); return rendre(); }
+    if (p.numero) v.numero = p.numero;
+    if (p.depart) v.depart = p.depart;
+    if (p.arrivee) v.arrivee = p.arrivee;
+    const jour = p.date ?? v.decollage?.slice(0, 10);
+    if (jour && p.heureDepart) v.decollage = `${jour}T${p.heureDepart}`;
+    let estimee = false;
+    const a = aeroportsVol.find((x) => x.iata === v.depart);
+    const b = aeroportsVol.find((x) => x.iata === v.arrivee);
+    if (a && b && v.decollage) {
+      const i1 = Vol.instant(v.decollage, a);
+      if (i1 && p.heureArrivee) {
+        // L'arrivée donnée : le premier jour où elle tombe après le départ (vol de nuit).
+        let j = p.dateArrivee ?? jour ?? v.decollage.slice(0, 10);
+        for (let n = 0; n < 3; n++) {
+          const i2 = Vol.instant(`${j}T${p.heureArrivee}`, b);
+          if (i2 && i2 > i1) break;
+          const d = new Date(`${j}T00:00:00Z`); d.setUTCDate(d.getUTCDate() + 1); j = d.toISOString().slice(0, 10);
+        }
+        v.atterrissage = `${j}T${p.heureArrivee}`;
+      } else if (i1) {
+        const t = new Date(+i1 + Vol.dureeEstimee(a, b));
+        const q = Object.fromEntries(new Intl.DateTimeFormat('en-CA', { timeZone: b.fuseau, year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' })
+          .formatToParts(t).map((x) => [x.type, x.value]));
+        v.atterrissage = `${q.year}-${q.month}-${q.day}T${q.hour}:${q.minute}`;
+        estimee = true;
+      }
+    }
+    const compris = [p.numero ?? p.compagnie, v.depart || v.arrivee ? `${v.depart ?? '?'} → ${v.arrivee ?? '?'}` : null,
+      v.decollage ? v.decollage.replace('T', ' · ') : p.date].filter(Boolean).join(' · ');
+    const manque = [!v.depart && tr.t('vol_depart'), !v.arrivee && tr.t('vol_arrivee'), !v.decollage && tr.t('vol_rapide_heure')].filter(Boolean);
+    rapideVol = [tr.t('vol_rapide_compris', compris), estimee ? tr.t('vol_rapide_estimee') : null,
+      manque.length ? tr.t('vol_rapide_manque', manque.join(', ')) : null].filter(Boolean).join('\n');
+    if (v.numero && (!v.depart || !v.arrivee)) { rendre(); return loupeVol(v); }
+    if (v.depart && v.arrivee && v.decollage && v.atterrissage) return calculer();
+    rendre();
+  };
+  return h('div', { class: 'carte carte-texte carte-rapide' },
+    h('p', { class: 'vol-rapide-titre' }, tr.t('vol_rapide_titre')),
+    h('p', { class: 'indice' }, tr.t('vol_rapide_aide')),
+    champ,
+    h('button', { class: 'principal', onclick: remplir }, tr.t('vol_rapide_remplir')),
+    rapideVol ? h('p', { class: 'vol-rapide-compris', 'aria-live': 'polite' }, rapideVol) : null);
+}
+
 async function chercherRouteVol(v) {
   // Services en ligne désactivés (02/11) : pas de loupe, et la garde tient même si elle réapparaissait.
   if (!store.suiviDirect()) return;
@@ -3466,7 +3531,8 @@ const interrupteurEnLigne = () => h('label', { class: 'ligne' }, h('span', { cla
 function suiviDirect() {
   const actif = store.suiviDirect();
   // Formulaire ouvert, l'interrupteur y est déjà : pas de second exemplaire ici.
-  const bloc = formulaireVolOuvert ? [] : [interrupteurEnLigne()];
+  // L'interrupteur n'est plus dans le formulaire (04/11) : il vit ici, sous « Préciser la position ».
+  const bloc = [interrupteurEnLigne()];
   if (!actif) return bloc;
   if (!RELAIS_VOL) return [...bloc, h('p', { class: 'indice' }, tr.t('vol_direct_inactif'))];
   const champ = h('input', { type: 'text', class: 'champ-recherche champ-vol', maxlength: 9, autocapitalize: 'characters', placeholder: tr.t('vol_indicatif'), value: store.volIndicatif() || null });
@@ -3539,7 +3605,8 @@ function resultatsVol(c) {
   const RESERVES = ['haute_latitude', 'absent', 'erreur', 'a_rebours'];
   const date = (iso) => new Intl.DateTimeFormat(tr.langue, { timeZone: 'UTC', weekday: 'short', day: 'numeric', month: 'short' }).format(new Date(`${iso}T12:00:00Z`));
   return [
-    h('div', { class: 'carte carte-texte carte-vol carte-heros' }, h('p', { class: 'indice' }, tr.t('vol_priere_titre')), ...priere),
+    // La carte prend le ciel de son heure (04/11) : aube, après-midi, nuit.
+    h('div', { class: `carte carte-texte carte-vol carte-heros ciel-${p ? p[0] : 'hors'}` }, h('p', { class: 'indice' }, tr.t('vol_priere_titre')), ...priere),
     h('div', { class: 'carte carte-texte carte-vol' },
       // La route prévue tient en une étiquette ; le détail du calcul se déplie.
       c.fiabilite === 'route_prevue' ? h('p', { class: 'vol-etiquette' }, tr.t('vol_fiabilite_court'))
@@ -3672,17 +3739,14 @@ function ecranVol() {
   const champNumero = h('input', { type: 'text', class: 'champ-recherche champ-vol', maxlength: 12, autocapitalize: 'characters', value: v.numero || null, onchange: (e) => { v.numero = e.target.value.trim(); } });
   // La loupe au bout du champ cherche la route du numéro (adsbdb) ; une ligne dit ce qui part.
   const loupe = h('button', { class: 'loupe-vol', type: 'button', disabled: routeVol.attente, 'aria-label': tr.t('vol_route_bouton'), title: tr.t('vol_route_bouton'),
-    onclick: () => { v.numero = champNumero.value.trim(); chercherRouteVol(v); } });
+    onclick: () => { v.numero = champNumero.value.trim(); loupeVol(v); } });
   loupe.innerHTML = routeVol.attente ? '<span class="loupe-attente" aria-hidden="true"></span>'
     : '<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M15.5 15.5 21 21" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>';
-  // Services en ligne désactivés (02/11) : pas de loupe, l'interrupteur et ce qui partirait.
-  const enLigne = store.suiviDirect();
+  // La loupe est toujours là (04/11) ; services en ligne éteints, elle demande d'abord l'accord.
   const formulaire = h('div', { class: 'carte' },
     h('label', { class: 'ligne' }, h('span', { class: 'corps' }, h('div', { class: 'etat' }, tr.t('vol_numero')),
-      enLigne ? h('span', { class: 'champ-et-loupe' }, champNumero, loupe) : champNumero)),
-    enLigne ? h('p', { class: 'indice', 'aria-live': 'polite' }, routeVol.texte || tr.t('vol_route_aide')) : null,
-    interrupteurEnLigne(),
-    enLigne ? null : h('p', { class: 'indice' }, tr.t('vol_en_ligne_aide')),
+      h('span', { class: 'champ-et-loupe' }, champNumero, loupe))),
+    routeVol.texte || routeVol.attente ? h('p', { class: 'indice', 'aria-live': 'polite' }, routeVol.texte || tr.t('vol_route_attente')) : null,
     ligne(tr.t('vol_depart'), nomA(v.depart), () => pret && choisirAeroport((a) => { v.depart = a.iata; rendre(); })),
     ligne(tr.t('vol_arrivee'), nomA(v.arrivee), () => pret && choisirAeroport((a) => { v.arrivee = a.iata; rendre(); })),
     v.depart ? heure('decollage', tr.t('vol_decollage', villeA(v.depart))) : null,
@@ -3700,7 +3764,7 @@ function ecranVol() {
   const puce = h('span', { class: 'puce-bandeau' }, garde ? libelleVol(garde) : tr.t('vol_carte_sous'));
   return h('div', { class: 'ecran avec-bandeau' }, bandeau(tr.t('vol_title'), { puce, dessin: 'scene_airport' }),
     h('div', { class: 'defile' }, h('div', { class: 'contenu' },
-      resume ?? formulaire,
+      ...(resume ? [resume] : [carteRapideVol(v, pret, calculer), formulaire]),
       ...(garde && !pret ? [h('div', { class: 'carte carte-texte' }, h('p', { class: 'message' }, tr.t('vol_calcul_en_cours')))] : []),
       ...(garde && calculVol ? resultatsVol(calculVol) : []),
       // La méthode, les aéroports, les routes : repliés sous « Sources ».

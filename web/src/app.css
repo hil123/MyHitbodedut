@@ -1486,6 +1486,22 @@ body.avec-mini .seance .contenu { padding-bottom: calc(104px + env(safe-area-ins
 .carte-heros { background: color-mix(in srgb, var(--brand) 9%, var(--card)); border-color: color-mix(in srgb, var(--brand) 28%, var(--line)); }
 .carte-heros .vol-priere { font-size: 30px; }
 .carte-heros .vol-compte { font-size: 22px; color: var(--brand); }
+/* La prière du moment aux couleurs de son ciel (04/11), comme sur Android. */
+.carte-heros[class*="ciel-"] { border: 0; color: #fff; border-radius: 24px; padding: 20px; box-shadow: 0 6px 20px rgb(0 0 0 / 0.12); }
+.carte-heros.ciel-chaharit { background: linear-gradient(135deg, #2B3F6E, #8C5A7A 55%, #E0906B); }
+.carte-heros.ciel-minha { background: linear-gradient(135deg, #17525A, #6E7A3E 55%, #C9962E); }
+.carte-heros.ciel-arvit { background: linear-gradient(135deg, #0E1530, #1E2A55 55%, #3E4F86); }
+.carte-heros.ciel-hors { background: linear-gradient(135deg, var(--brand), color-mix(in srgb, var(--brand) 65%, #000)); }
+.carte-heros[class*="ciel-"] .indice { color: rgb(255 255 255 / 0.78); text-transform: uppercase; letter-spacing: 0.08em; font-size: 12px; }
+.carte-heros[class*="ciel-"] .vol-priere { color: #fff; font-size: 34px; }
+.carte-heros[class*="ciel-"] .vol-compte { color: #fff; }
+.carte-heros[class*="ciel-"] p { color: rgb(255 255 255 / 0.88); }
+/* La saisie rapide (04/11). */
+.carte-rapide { background: linear-gradient(135deg, color-mix(in srgb, var(--brand) 10%, var(--card)), var(--card)); border-color: color-mix(in srgb, var(--brand) 25%, var(--line)); }
+.vol-rapide-titre { font-size: 17px; font-weight: 700; color: var(--ink); }
+.saisie-rapide { width: 100%; box-sizing: border-box; min-height: 64px; margin-top: 12px; resize: vertical; font: inherit; }
+.carte-rapide .principal { margin-top: 12px; width: 100%; }
+.vol-rapide-compris { margin-top: 12px; white-space: pre-line; color: var(--ink); }
 .vol-etiquette { display: inline-block; margin-top: 4px !important; padding: 6px 12px; border-radius: 999px; background: color-mix(in srgb, var(--brand) 10%, transparent); color: var(--ink); font-weight: 600; font-size: 14px; }
 .vol-details { margin-top: 6px; }
 .vol-details summary { min-height: 44px; display: flex; align-items: center; color: var(--brand); font-weight: 600; font-size: 14px; cursor: pointer; list-style: none; }
