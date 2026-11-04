@@ -169,8 +169,9 @@ object BandeauDefilant {
     private fun marge(v: View): Int = (48 * v.resources.displayMetrics.density).toInt()
 
     private fun premierDefilant(v: View): View? {
-        if (v is ScrollView || v is AbsListView || v.javaClass.name.endsWith("RecyclerView") ||
-            v.javaClass.name.endsWith("NestedScrollView")) return v
+        // Par le type, pas par le nom de classe, que R8 peut renommer dans la version publiée (03/11).
+        if (v is ScrollView || v is AbsListView || v is androidx.recyclerview.widget.RecyclerView ||
+            v is androidx.core.widget.NestedScrollView) return v
         if (v is ViewGroup) for (i in 0 until v.childCount) premierDefilant(v.getChildAt(i))?.let { return it }
         return null
     }

@@ -62,7 +62,7 @@ class SiddurActivity : AppCompatActivity() {
         }
         // Pourim (13/10) : la Méguila sous Arvit (la nuit qui ouvre Pourim) et sous Cha'harit.
         if (SiddurMoment.megila(moment, java.time.LocalDate.now(), Store.inIsrael(this), Store.mukafChoma(this))) {
-            Data.livres(this).texte("meguilat_esther")?.let { esther ->
+            Data.livresIndex(this).texte("meguilat_esther")?.let { esther ->
                 liste.addView(maintenant(esther, langue, R.drawable.char_purim) { SiddurLectureActivity.ouvrirLivre(this, esther.id) })
             }
         }
@@ -76,7 +76,7 @@ class SiddurActivity : AppCompatActivity() {
                 startActivity(Intent(this@SiddurActivity, TehilimActivity::class.java))
             })
             addView(livre(getString(R.string.siddur_tikkun_he), getString(R.string.tikkun_title), R.drawable.char_torah, fin = true) {
-                startActivity(Intent(this@SiddurActivity, TikkunActivity::class.java))
+                startActivity(Intent(this@SiddurActivity, TikkunFlowActivity::class.java))
             })
         })
 

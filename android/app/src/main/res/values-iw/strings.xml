@@ -335,22 +335,11 @@
 
     <!-- Section Tikoun HaKlali -->
     <string name="tikkun_title">התיקון הכללי</string>
-    <string name="tikkun_hint">עשרת המזמורים של רבי נחמן, לפי הסדר: ט״ז, ל״ב, מ״א, מ״ב, נ״ט, ע״ז, צ׳, ק״ה, קל״ז, ק״נ.</string>
-    <string name="tikkun_open">פתיחת התיקון</string>
     <string name="tikkun_psalm_he">תהילים %1$s</string>
-    <string name="tikkun_verses">%1$d פסוקים</string>
-    <string name="tikkun_position">מזמור %1$d מתוך %2$d · %3$d פסוקים</string>
     <string name="tikkun_progress_none">%1$d מזמורים, %2$d פסוקים</string>
     <string name="tikkun_progress">%1$d מתוך %2$d מזמורים נאמרו היום</string>
     <string name="tikkun_progress_all">נאמר במלואו היום.</string>
-    <string name="tikkun_next">המזמור הבא</string>
-    <string name="tikkun_paragraphs">%1$d פסקאות</string>
-    <string name="tikkun_flow_open">לומר הכול ברצף</string>
     <string name="tikkun_flow_done">אמרתי את התיקון כולו</string>
-    <string name="tikkun_mark">סימון כנאמר</string>
-    <string name="tikkun_unmark">הסרת הסימון</string>
-    <string name="tikkun_said">נאמר</string>
-    <string name="tikkun_reset">להתחיל מחדש</string>
 
     <!-- Rappels de hitbodedout -->
     <string name="reminders_title">תזכורות</string>
@@ -830,6 +819,15 @@
     <string name="hilloula_lire_plus">להמשך קריאה</string>
     <string name="hilloula_reduire">להסתיר</string>
     <string name="hilloulot_tout">כל ההילולות ›</string>
+    <!-- L'écran des hilloulot réorganisé (04/11) -->
+    <plurals name="hilloulot_nombre">
+        <item quantity="one">צדיק אחד ביום זה</item>
+        <item quantity="two">%1$d צדיקים ביום זה</item>
+        <item quantity="other">%1$d צדיקים ביום זה</item>
+    </plurals>
+    <string name="hilloulot_afficher_detail">בכרטיס היום, במסך הבית</string>
+    <string name="hilloulot_toucher">לחצו על שם כדי לקרוא את תולדותיו.</string>
+    <string name="hilloulot_ouvrir_jour">לעבור ליום זה ›</string>
     <!-- La halakha du jour hors ligne : le Ben Ish 'Haï (11/10) -->
     <string name="halakha_title">הלכה יומית</string>
     <string name="halakha_afficher">הצגת הלכה יומית</string>

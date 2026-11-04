@@ -198,13 +198,31 @@ object Data {
             Json.readRaw(context.applicationContext, R.raw.aeroports_noms)).also { aeroports = it }
 
     @Volatile
-    private var livres: Siddur? = null
+    private var livresIndex: Siddur? = null
+    private val livresLus = java.util.concurrent.ConcurrentHashMap<String, Siddur>()
 
-    /** Les livres entiers de la bibliothèque (res/raw/livres.json, au format du siddour), lus une fois. */
-    fun livres(context: Context): Siddur =
-        livres ?: synchronized(this) {
-            livres ?: SiddurLoader.parse(Json.readRaw(context.applicationContext, R.raw.livres)).also { livres = it }
+    /**
+     * Les livres sans leur texte (res/raw/livres_titres.json, 04/11) : groupes, titres, nombre de
+     * chapitres. Assez pour l'accueil, la liste des livres, la Méguila sous le siddour ; les 16 Mo
+     * des livres entiers y étaient lus sur le fil principal, puis gardés en mémoire.
+     */
+    fun livresIndex(context: Context): Siddur =
+        livresIndex ?: synchronized(this) {
+            livresIndex ?: SiddurLoader.parse(Json.readRaw(context.applicationContext, R.raw.livres_titres)).also { livresIndex = it }
         }
+
+    /** Un livre entier, seul (res/raw/livre_<id>.json, tools/livres_decoupe.py) ; null s'il n'existe pas. */
+    fun livre(context: Context, id: String): Siddur? {
+        livresLus[id]?.let { return it }
+        val brut = LivresBruts.parId[id] ?: return null
+        return SiddurLoader.parse(Json.readRaw(context.applicationContext, brut)).also { livresLus[id] = it }
+    }
+
+    /** Tous les livres entiers, dans l'ordre de l'index : pour la recherche, hors du fil principal. */
+    fun livres(context: Context): Siddur {
+        val index = livresIndex(context)
+        return Siddur(index.groupes, index.textes.mapNotNull { e -> livre(context, e.id)?.texte(e.id) }, index.nusah, index.sources)
+    }
 
     /** Le siddour du nusah choisi : environ 550 ko par nusah, lus une fois par processus. */
     fun siddur(context: Context, nusah: Nusah = Store.siddurNusah(context)): Siddur =

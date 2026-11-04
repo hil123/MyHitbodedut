@@ -93,14 +93,16 @@ class RemindersActivity : AppCompatActivity() {
         adapter.notifyDataSetChanged()
     }
 
-    private fun notificationsAutorisees(): Boolean {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) return true
-        return ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) ==
-            PackageManager.PERMISSION_GRANTED
-    }
+    private fun notificationsAutorisees(): Boolean = Permissions.hasNotifications(this)
 
     private fun demandeNotificationsSiBesoin() {
         if (notificationsAutorisees()) return
+        // Coupées dans les réglages du téléphone, ou refusées pour de bon : l'écran système.
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU ||
+            ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED) {
+            runCatching { startActivity(Permissions.notificationSettingsIntent(this)) }
+            return
+        }
         demandeNotifications.launch(Manifest.permission.POST_NOTIFICATIONS)
     }
 

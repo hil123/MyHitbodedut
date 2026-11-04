@@ -22,7 +22,7 @@ import * as Trophees from './trophees.js';
 import { FORMES, ICONES } from './trophees-formes.js';
 import { pour as halakhotPour, recherche as rechercheHalakha, source as sourceHalakha } from './halakha.js';
 import { pour as yalkutPour, recherche as rechercheYalkut, source as sourceYalkut, texteCarte, titreCarte } from './yalkut.js';
-import { ajouts as ajoutsDuJour, dateHilloula, debutMoisHebreu, hilloulotPour, lienArticle, rechercheHilloula, horaires, illustration as illustrationDuJour, lienHalakha, lienHyomi, momentDuSiddour, moisHebreuVoisin, semaines, semainesHebreu } from './jour-affiche.js';
+import { ajouts as ajoutsDuJour, dateHilloula, debutMoisHebreu, hilloulotPour, clesHilloulotPour, prochainJourHilloula, lienArticle, rechercheHilloula, horaires, illustration as illustrationDuJour, lienHalakha, lienHyomi, momentDuSiddour, moisHebreuVoisin, semaines, semainesHebreu } from './jour-affiche.js';
 import { ALLUMAGES, heure as heureZman, jour as zmanimDuJour } from './zmanim.js';
 import * as Vol from './vol.js';
 import * as Boussole from './boussole.js';
@@ -107,7 +107,7 @@ function duJour(pool, sel) {
   return pool[((jourEpoque % pool.length) + pool.length) % pool.length];
 }
 const APPEL = ['char_praise', 'char_pointing', 'char_walking', 'char_tehilim', 'char_thinking', 'char_welcome', 'char_open_arms'];
-const PENDANT = ['char_arms_raised', 'char_praying', 'char_standing_back', 'char_praise'];
+const PENDANT = ['char_open_arms', 'char_praying', 'char_standing_back', 'char_praise'];
 // Au centre de l'anneau : tant que la hitbodedout du jour reste à faire, celui qui accueille (13/10).
 const salutation = (fait) => (fait ? duJour(JOIE, 3) : 'char_welcome');
 const joie = () => duJour(JOIE, 3);
@@ -978,7 +978,7 @@ function chargeSiddur() {
 let reglagesOuverts = false;
 let choixNusahOuvert = false;
 const ECRANS_LUS = ['lecture', 'priere', 'tikkun', 'source'];
-// Les lectures du Tikoun (02/11) : le trait, un psaume, une partie.
+// Les anciennes adresses du Tikoun découpé (02/11), qui mènent au texte entier (04/11).
 ECRANS_LUS.push('tikkun-trait', 'tikkun-psaume', 'tikkun-partie');
 
 /** Les chaînes nouvelles, tant qu'Android ne les a pas encore : le français. */
@@ -1420,13 +1420,19 @@ function ecranPriere() {
       }
     return [...corps, ...renvois(si)];
   };
+  // Une longue prière (Cha'harit, 04/11) se construit comme un livre, section par section à
+  // l'approche de l'écran : construite et mise en page d'un coup, son ouverture gelait l'écran
+  // (0,5 s mesurée sur un téléphone moyen, Chromium ralenti 4 fois : 0,4 s de construction et
+  // 0,4 s de mise en page forcée par la bande des signets). Une courte reste d'un seul tenant.
+  const parSections = livre || (x.sections.length > 3 &&
+    x.sections.reduce((t, s) => t + hauteurEstimee(s), 0) > 6 * Math.max(600, window.innerHeight));
   const contenu = h('div', { class: 'contenu lecture siddour' },
     annotations ? h('p', { class: 'indice note-ajouts' }, tr.t('siddur_jour_ajouts', jourDuTexte.dateHebraique,
       tr.t(store.inIsrael() ? 'region_israel' : 'region_diaspora'))) : null,
     ...x.sections.flatMap((s, si) => {
       const t = plusieurs && s.titre ? h('h2', { class: 'psaume-titre', lang: 'he', dir: 'rtl' }, s.titre) : null;
       if (t) titres.push({ titre: s.titre, el: t });
-      if (!livre) return [t, ...corpsDe(s, si)];
+      if (!parSections) return [t, ...corpsDe(s, si)];
       // Un livre (02/11) : chaque chapitre dans sa propre boîte, vide tant qu'il n'approche pas de
       // l'écran, à la hauteur estimée. Le livre entier construit et mis en page d'un coup faisait
       // tomber Safari sur iPhone (« Un problème récurrent est survenu »), là où Android ne
@@ -1458,7 +1464,7 @@ function ecranPriere() {
     choisirDans(tr.t('marques_titre'), l.map((m) => `${m.apercu}…`), -1, (k) => allerAMarque(ecran, l[k]));
   } }, iconeMarque(livre));
   ecran.querySelector('.bandeau-actions')?.append(listeMarques, etoile);
-  if (livre) { const d = ecran.querySelector('.defile'); if (d) { d.classList.add('defile-livre'); remplirAuDefilement(d); ancrerChapitres(d); } }
+  if (parSections) { const d = ecran.querySelector('.defile'); if (d) { d.classList.add('defile-livre'); remplirAuDefilement(d); ancrerChapitres(d); } }
   if (marqueAOuvrir?.cle === cleMarque) { const m = { ...marqueAOuvrir, priere }; marqueAOuvrir = null; requestAnimationFrame(() => {
     // Redessiné entre-temps (un livre arrivé, « Aa ») : on vise l'écran qui l'a remplacé, s'il est encore ce texte.
     const e = ecran.isConnected ? ecran : (app.dataset.ecran?.startsWith('priere/') && priere === m.priere) ? app.querySelector('.ecran') : null;
@@ -1469,7 +1475,7 @@ function ecranPriere() {
     const place = store.positionLecture(cle);
     // Un livre reprend au paragraphe (02/11) : ses chapitres hors écran n'ont qu'une hauteur
     // estimée, un nombre de pixels n'y retomberait pas juste.
-    const ancre = livre && place > 0 ? store.ancreLecture(cle) : null;
+    const ancre = parSections && place > 0 ? store.ancreLecture(cle) : null;
     if (place > 0 && !rendreSurPlace) {
       requestAnimationFrame(() => {
         const [section, bloc] = (ancre ?? '').split(':').map(Number);
@@ -1491,7 +1497,7 @@ function ecranPriere() {
       clearTimeout(minuteur);
       minuteur = setTimeout(() => {
         store.setPositionLecture(cle, Math.round(defile.scrollTop));
-        if (livre) store.setAncreLecture(cle, premierVu());
+        if (parSections) store.setAncreLecture(cle, premierVu());
       }, 400);
     }, { passive: true });
   }
@@ -1960,125 +1966,20 @@ function bandeSignets(titres) {
   };
 }
 
-// --- Le Tikoun HaKlali (TikkunActivity, PsalmActivity, LiturgyActivity, 02/11) : tikkun.js ---
-// La liste suit l'ordre réel du Tikoun : ce qui se dit avant, les dix psaumes, ce qui se
-// dit après. « Tout lire d'un trait » est l'action ; pour reprendre à un psaume précis, on
-// le touche dans la liste. Le psaume et la partie ouverts vivent dans l'historique : le
-// retour et un rechargement les retrouvent.
+// --- Le Tikoun HaKlali (TikkunFlowActivity.kt) : le texte entier, d'un trait ---------
+// « להמשיך מזה לזה ברצף אחד, ללא הפסק » : l'ouverture, les dix psaumes à la suite, la
+// clôture ; rien à toucher entre les psaumes. Puis ce qui se dit après sans en faire partie :
+// la kavana du milouy et la prière de Rabbi Natan, chacune avec sa note. Le Tikoun découpé
+// psaume par psaume (liste, un écran par psaume ou par partie) est retiré (04/11) ; ses
+// anciennes adresses (#tikkun-trait, #tikkun-psaume, #tikkun-partie) mènent ici.
 const ECRANS_TIKKUN = ['tikkun-trait', 'tikkun-psaume', 'tikkun-partie'];
 
-function ouvrirTikkun(ecran, etat) {
-  history.pushState({ interne: true, ...etat }, '', `#${ecran}`);
-  rendre();
-}
-
-/** TikkunActivity : le titre, la progression du jour, le trait, la remise à zéro, la liste. */
 function ecranTikkun() {
-  if (!tikkun) return h('div', { class: 'ecran' }, barre(tr.t('tikkun_title')), h('div', { class: 'defile' }));
-  const dits = store.tikkunDone();
-  const rangee = (l) => {
-    // Une partie liturgique n'a pas de rang : elle ne se compte pas dans les dix, et ne se marque pas comme dite.
-    if (l.bloc) {
-      const d = Tikkun.detailBloc(l.bloc, tr.langue);
-      return ligneTikkun(null, l.bloc.titre.he, d.traduction ?? tr.t('tikkun_paragraphs', d.paragraphes), false,
-        () => ouvrirTikkun('tikkun-partie', { tikkunPartie: l.bloc.cle }));
-    }
-    return ligneTikkun(l.rang, tr.t('tikkun_psalm_he', Reference.lettres(l.psaume.numero)), tr.t('tikkun_verses', l.psaume.versets.length),
-      dits.has(l.psaume.numero), () => ouvrirTikkun('tikkun-psaume', { tikkunPsaume: l.psaume.numero }));
-  };
-  // Pas d'image dans une prière (13/10).
-  return h('div', { class: 'ecran avec-bandeau' },
-    bandeau(tr.t('tikkun_title'), { puce: h('p', { class: 'bandeau-sous-titre' }, etatTikkun()) }),
-    h('div', { class: 'defile' }, h('div', { class: 'contenu tikkun-liste' },
-      // Le Tikoun se dit d'un trait : c'est l'action, pas une variante.
-      h('button', { class: 'principal tikkun-trait', onclick: () => ouvrir('tikkun-trait') }, tr.t('tikkun_flow_open')),
-      dits.size ? h('button', { class: 'texte-bouton', onclick: () => { store.resetTikkun(); rendreEtViser('.tikkun-trait'); } }, tr.t('tikkun_reset')) : null,
-      h('div', { class: 'carte' }, Tikkun.lignes(tikkun).map(rangee)))));
-}
-
-/** item_psalm : le rang en pastille (vide pour une partie), le titre hébreu, le détail, « dit ». */
-function ligneTikkun(rang, hebreu, detail, dit, onclick) {
-  return h('button', { class: 'ligne ligne-he ligne-tikkun', onclick },
-    h('span', { class: `tikkun-rang${rang ? '' : ' sans-rang'}`, 'aria-hidden': 'true' }, rang ? String(rang) : ''),
-    h('span', { class: 'corps' },
-      h('span', { class: 'nom-he', lang: 'he', dir: 'rtl' }, hebreu),
-      h('span', { class: 'etat' }, detail)),
-    dit ? h('span', { class: 'tikkun-dit' }, tr.t('tikkun_said')) : null,
-    h('span', { class: 'chevron', 'aria-hidden': 'true' }));
-}
-
-/** Le bandeau de PsalmActivity et LiturgyActivity : le titre en hébreu, une ligne dessous. */
-function bandeauTikkun(titreHe, sous) {
-  return h('header', { class: 'bandeau bandeau-priere' },
-    h('div', { class: 'bandeau-haut' }, h('button', { class: 'retour', 'aria-label': tr.t('action_back'), onclick: retour })),
-    h('div', { class: 'bandeau-corps' },
-      h('h1', { lang: 'he', dir: 'rtl', class: 'titre-priere' }, titreHe),
-      sous ? h('p', { class: 'bandeau-sous-titre' }, sous) : null));
-}
-
-/**
- * PsalmActivity : un psaume, verset par verset ; « Marquer comme dit » se défait (on peut
- * s'être trompé de ligne) ; « Tehilim suivant » remplace l'écran, absent après le dixième.
- */
-function ecranTikkunPsaume() {
-  const psaume = tikkun && Tikkun.parNumero(tikkun, history.state?.tikkunPsaume);
-  // Rouvert sans psaume choisi : la liste.
-  if (!psaume) return ecranTikkun();
-  const rang = Tikkun.rang(tikkun, psaume.numero);
-  const blocs = [];
-  for (const v of psaume.versets) {
-    blocs.push(h('p', { class: 'verset' }, h('span', { class: 'num', 'aria-hidden': 'true' }, `${v.n} `), v.he));
-    // L'indication d'arrêt suit le verset qu'elle concerne : elle n'est pas du texte, elle dit comment le lire.
-    if (v.arret) blocs.push(h('p', { class: 'arret' }, v.arret.note));
-  }
-  const dit = store.tikkunDone().has(psaume.numero);
-  const suivant = Tikkun.suivant(tikkun, psaume.numero);
-  const aller = () => {
-    history.replaceState({ ...history.state, tikkunPsaume: suivant.numero }, '', location.hash);
-    // Un nouvel écran, comme le startActivity + finish d'Android : en haut du psaume.
-    delete app.dataset.ecran;
-    rendre();
-  };
-  return ecranLu(tr.t('tikkun_title'), h('div', { class: 'contenu lecture tikkun' },
-    h('div', { class: 'psaume', lang: 'he', dir: 'rtl' }, blocs)), {
-    entete: bandeauTikkun(tr.t('tikkun_psalm_he', Reference.lettres(psaume.numero)),
-      tr.t('tikkun_position', rang, tikkun.psaumes.length, psaume.versets.length)),
-    pied: h('div', { class: 'lecture-nav' },
-      h('button', { class: 'principal tikkun-marque', 'aria-pressed': String(dit),
-        onclick: () => { store.setTikkunDone(psaume.numero, !dit); rendreEtViser('.tikkun-marque'); } },
-      tr.t(dit ? 'tikkun_unmark' : 'tikkun_mark')),
-      suivant ? h('button', { class: 'secondaire', onclick: aller }, tr.t('tikkun_next')) : null),
-  });
-}
-
-/**
- * LiturgyActivity : une partie qui n'est pas un psaume (ce qui se dit avant, la clôture, la
- * kavana, la prière de Rabbi Natan), sans les boutons de progression : elle ne se compte pas.
- */
-function ecranTikkunPartie() {
-  const b = tikkun && Tikkun.bloc(tikkun, history.state?.tikkunPartie);
-  if (!b) return ecranTikkun();
-  // La formule de la kavana est centrée : c'est un tableau de lettres, pas une phrase.
-  const contenu = [
-    b.formule ? h('p', { class: 'verset formule' }, b.formule) : null,
-    ...b.paragraphes.map((p) => h('p', { class: 'verset paragraphe' }, p)),
-  ];
-  return ecranLu(b.titre.he, h('div', { class: 'contenu lecture tikkun' },
-    h('div', { class: 'psaume', lang: 'he', dir: 'rtl' }, contenu)), {
-    entete: bandeauTikkun(b.titre.he, Tikkun.sousTitreBloc(b, tr.langue)),
-  });
-}
-
-// --- Le Tikoun lu d'un seul trait (TikkunFlowActivity.kt) -------------------------
-// « להמשיך מזה לזה ברצף אחד, ללא הפסק » : l'ouverture, les dix psaumes à la
-// suite, la clôture ; rien à toucher entre les psaumes. La kavana et la
-// prière de Rabbi Natan ne font pas partie du trait.
-function ecranTikkunTrait() {
   if (!tikkun) return h('div', { class: 'ecran' }, barre(tr.t('tikkun_title')), h('div', { class: 'defile' }));
   const titre = (texte) => h('h2', { class: 'psaume-titre' }, texte);
   const paragraphe = (texte) => h('p', { class: 'verset paragraphe' }, texte);
   const blocs = [];
-  for (const b of [tikkun.ouverture].filter(Boolean)) blocs.push(titre(b.titre.he), ...b.paragraphes.map(paragraphe));
+  for (const b of Tikkun.avant(tikkun)) blocs.push(titre(b.titre.he), ...b.paragraphes.map(paragraphe));
   for (const p of tikkun.psaumes) {
     blocs.push(titre(tr.t('tikkun_psalm_he', Reference.lettres(p.numero))));
     for (const v of p.versets) {
@@ -2086,15 +1987,23 @@ function ecranTikkunTrait() {
       if (v.arret) blocs.push(h('p', { class: 'arret' }, v.arret.note));
     }
   }
-  if (tikkun.cloture) blocs.push(titre(tikkun.cloture.titre.he), ...tikkun.cloture.paragraphes.map(paragraphe));
+  const cloture = Tikkun.bloc(tikkun, Tikkun.CLOTURE);
+  if (cloture) blocs.push(titre(cloture.titre.he), ...cloture.paragraphes.map(paragraphe));
+  for (const b of [Tikkun.KAVANA, Tikkun.PRIERE].map((c) => Tikkun.bloc(tikkun, c)).filter(Boolean)) {
+    const note = Tikkun.sousTitreBloc(b, tr.langue);
+    blocs.push(titre(b.titre.he), note ? h('p', { class: 'arret', dir: 'auto' }, note) : null,
+      // La formule de la kavana est centrée : c'est un tableau de lettres, pas une phrase.
+      b.formule ? h('p', { class: 'verset formule' }, b.formule) : null, ...b.paragraphes.map(paragraphe));
+  }
   const fini = () => {
     // Tout dire d'un trait vaut les dix psaumes.
     for (const p of tikkun.psaumes) store.setTikkunDone(p.numero, true);
     retour();
   };
+  // Pas d'image dans une prière (13/10).
   return ecranLu(tr.t('tikkun_title'), h('div', { class: 'contenu lecture tikkun' },
     h('div', { class: 'psaume', lang: 'he', dir: 'rtl' }, blocs)), {
-    pied: h('div', { class: 'lecture-nav' }, h('button', { class: 'principal', onclick: fini }, tr.t('tikkun_flow_done'))),
+    pied: h('div', { class: 'lecture-nav' }, h('button', { class: 'principal tikkun-fini', onclick: fini }, tr.t('tikkun_flow_done'))),
   });
 }
 
@@ -2635,19 +2544,22 @@ function tableHilloulot() {
   return hilloulots;
 }
 
-// Les biographies d'autres sources (hilloulot_bios.json, 12/10), à part pour que la carte du
-// jour reste légère : lues à l'écran des hilloulot ; par jour, une entrée par hilloula, dans le même ordre.
-let biosDemandees = false;
-function chargeBiosHilloulot() {
-  if (biosDemandees) return;
-  biosDemandees = true;
-  Promise.all([fetch('data/hilloulot.json').then((r) => r.json()), fetch('data/hilloulot_bios.json').then((r) => r.json())])
-    .then(([d, bios]) => {
-      hilloulots = hilloulots ?? d.jours;
-      hilloulotsDemandees = true;
-      for (const [cle, ligne] of Object.entries(bios)) ligne.forEach((b, i) => { if (b && hilloulots[cle]?.[i]) hilloulots[cle][i].b = b; });
-      rendre();
-    }).catch(() => { biosDemandees = false; });
+// Les biographies d'autres sources (hilloulot_bios, 12/10), à part pour que la carte du jour
+// reste légère ; par jour, une entrée par hilloula, dans le même ordre. Un fichier par mois
+// (04/11) : l'écran ne télécharge plus les 6,9 Mo de l'année pour montrer un jour.
+const biosMois = new Map();
+function chargeBiosHilloulot(cles) {
+  if (!tableHilloulot()) return; // la table arrive, puis un nouveau rendu redemande
+  for (const mois of new Set(cles.map((k) => k.split('-')[0]))) {
+    if (biosMois.has(mois)) continue;
+    biosMois.set(mois, 'attente');
+    fetch(`data/hilloulot_bios/${mois}.json`).then((r) => { if (!r.ok) throw new Error(r.status); return r.json(); })
+      .then((bios) => {
+        for (const [cle, ligne] of Object.entries(bios)) ligne.forEach((b, i) => { if (b && hilloulots[cle]?.[i]) hilloulots[cle][i].b = b; });
+        biosMois.set(mois, 'ok');
+        if (ecranCourant() === 'hilloulot') rendre();
+      }).catch(() => { biosMois.delete(mois); });
+  }
 }
 
 // La halakha du jour (11/10) : ben_ish_hai.json, chargé à la première carte.
@@ -2951,63 +2863,121 @@ function blocHilloula(iso) {
 let jourHilloulot = null;
 let rechercheHilloulot = '';
 
-function ecranHilloulot() {
-  chargeBiosHilloulot();
-  const table = tableHilloulot() ?? {};
-  const iso = jourHilloulot ?? isoLocal(new Date());
-  const carte = (x, date) => h('div', { class: 'carte carte-hilloula' },
-    h('p', { class: 'hilloula-nom', lang: 'he', dir: 'rtl' }, x.he),
-    nomTraduitHilloula(x) ? h('p', { class: 'hilloula-traduit' }, nomTraduitHilloula(x)) : null,
-    // Isolés (FSI … PDI) : la date et l'année hébraïques ne renversent pas la ligne.
-    [date, x.a].some(Boolean)
-      ? h('p', { class: 'hilloula-annee' }, [date ? `\u2068${date}\u2069` : null, x.a ? tr.t('hilloula_annee', `\u2068${x.a}\u2069`) : null].filter(Boolean).join(' · ')) : null,
+// HilloulotActivity, réorganisé (04/11) : la recherche en tête, puis le jour et ses tsadikim
+// en liste compacte, les mieux connus d'abord ; un nom touché déplie sa notice et ses
+// biographies. La recherche range par date, de Tichri à Eloul, chaque date menant à son
+// jour. L'interrupteur de la carte du jour, un réglage, est en bas.
+const hilloulotDepliees = new Set();
+const hilloulotRepliees = new Set();
+
+function ficheHilloula(x) {
+  // dir auto : la flèche reste au bout du nom, latin ou hébreu.
+  const source = (nom, lien) => (lien ? h('a', { class: 'hilloula-source', dir: 'auto', href: lien, target: '_blank', rel: 'noopener' }, `${nom} ↗`)
+    : h('p', { class: 'hilloula-source sans-lien', dir: 'auto' }, nom));
+  return h('div', { class: 'hilloula-fiche' },
     x.t ? h('p', { class: 'hilloula-description', lang: 'he', dir: 'rtl' }, paragraphes(x.t)) : null,
-    x.s.includes('w') ? (x.w ? h('a', { class: 'hilloula-source', href: lienArticle(x.w), target: '_blank', rel: 'noopener' }, tr.t('hilloula_source_wiki'))
-      : h('p', { class: 'hilloula-source' }, tr.t('hilloula_source_wiki'))) : null,
-    x.s.includes('h') ? h('p', { class: 'hilloula-source' }, tr.t('hilloula_source_hyomi')) : null,
-    x.s.includes('e') ? h('p', { class: 'hilloula-source' }, tr.t('hilloula_source_toratemet')) : null,
+    x.s.includes('w') ? source(tr.t('hilloula_source_wiki'), x.w ? lienArticle(x.w) : null) : null,
+    x.s.includes('h') ? source(tr.t('hilloula_source_hyomi')) : null,
+    x.s.includes('e') ? source(tr.t('hilloula_source_toratemet')) : null,
     // Les autres biographies (MyTzadik, המאיר לארץ), chacune suivie de sa source, comme le demande l'accord (12/10).
     ...(x.b ?? []).flatMap(([src, texte, lien]) => {
       const nom = tr.t(src === 'm' ? 'hilloula_source_mytzadik' : 'hilloula_source_hameir');
       // Une longue biographie se replie à huit lignes ; « Lire la suite » la déplie.
       const long = texte.length > 500;
-      const p = h('p', { class: `hilloula-description${long ? ' replie' : ''}`, lang: 'he', dir: 'rtl' }, paragraphes(texte));
+      const p = h('p', { class: `hilloula-description hilloula-bio${long ? ' replie' : ''}`, lang: 'he', dir: 'rtl' }, paragraphes(texte));
       const bascule = long ? h('button', { type: 'button', class: 'lien-bouton hilloula-plus', 'aria-expanded': 'false', onclick: (e) => {
         const ouvert = p.classList.toggle('replie') === false;
         e.currentTarget.setAttribute('aria-expanded', String(ouvert));
         e.currentTarget.textContent = tr.t(ouvert ? 'hilloula_reduire' : 'hilloula_lire_plus');
       } }, tr.t('hilloula_lire_plus')) : null;
-      return [p, bascule,
-        lien ? h('a', { class: 'hilloula-source', href: lien, target: '_blank', rel: 'noopener' }, `${nom} ↗`) : h('p', { class: 'hilloula-source' }, nom)];
+      return [p, bascule, source(nom, lien)];
     }),
-    x.i ? h('a', { class: 'hilloula-source', href: x.i, target: '_blank', rel: 'noopener' }, `${tr.t('hilloula_source_hidabroot')} ↗`) : null);
-  const champ = h('input', { type: 'search', class: 'champ-recherche', placeholder: tr.t('hilloulot_recherche'), value: rechercheHilloulot,
+    x.i ? source(tr.t('hilloula_source_hidabroot'), x.i) : null);
+}
+
+/** Un tsadik : le nom, la traduction et l'année dessous, le chevron s'il y a de quoi déplier. */
+function ligneHilloula(x, id, ouvertParDefaut) {
+  const details = Boolean(x.t || x.b?.length || x.i || x.w);
+  const ouvert = details && (hilloulotDepliees.has(id) || (ouvertParDefaut && !hilloulotRepliees.has(id)));
+  const traduit = nomTraduitHilloula(x);
+  // Isolée (FSI … PDI) : l'année hébraïque ne renverse pas la ligne.
+  const sous = [traduit, x.a ? tr.t('hilloula_annee', `\u2068${x.a}\u2069`) : null].filter(Boolean).join(' · ');
+  const corps = [
+    h('span', { class: 'hilloula-nom', lang: 'he' }, x.he),
+    sous ? h('span', { class: 'hilloula-sous', dir: 'auto' }, sous) : null,
+  ];
+  const tete = details
+    ? h('button', { type: 'button', class: 'hilloula-tete', 'aria-expanded': String(ouvert), onclick: () => {
+      if (ouvert) { hilloulotDepliees.delete(id); hilloulotRepliees.add(id); } else { hilloulotDepliees.add(id); hilloulotRepliees.delete(id); }
+      rendre();
+    } }, h('span', { class: 'hilloula-textes' }, corps), h('span', { class: 'hilloula-chevron', 'aria-hidden': 'true' }))
+    : h('div', { class: 'hilloula-tete' }, h('span', { class: 'hilloula-textes' }, corps));
+  return h('div', { class: `hilloula-ligne${ouvert ? ' ouverte' : ''}`, dir: 'rtl' }, tete, ouvert ? ficheHilloula(x) : null);
+}
+
+function ecranHilloulot() {
+  const table = tableHilloulot() ?? {};
+  const aujourdhui = isoLocal(new Date());
+  const iso = jourHilloulot ?? aujourdhui;
+  const israel = store.inIsrael();
+  const ashkenaz = store.siddurNusah() === 'ashkenaz';
+  const champ = h('input', { type: 'search', class: 'champ-recherche', placeholder: tr.t('hilloulot_recherche'), 'aria-label': tr.t('hilloulot_recherche'), value: rechercheHilloulot, enterkeyhint: 'search',
     oninput: (e) => { rechercheHilloulot = e.target.value; rendre(); setTimeout(() => { const c = app.querySelector('.champ-recherche'); c?.focus(); c?.setSelectionRange(c.value.length, c.value.length); }, 0); } });
   let corps;
   if (rechercheHilloulot.trim().length >= 2) {
-    const trouves = rechercheHilloula(table, rechercheHilloulot);
-    corps = [h('p', { class: 'jour-sous-titre' }, tr.t('hilloulot_resultats', trouves.length)), ...trouves.slice(0, 60).map(([cle, x]) => carte(x, dateHilloula(cle, (n) => Reference.lettres(n))))];
+    const trouves = rechercheHilloula(table, rechercheHilloulot).slice(0, 60);
+    chargeBiosHilloulot(trouves.map(([cle]) => cle));
+    // Par date, dans l'ordre de l'année ; chaque date mène à son jour.
+    const groupes = new Map();
+    for (const [cle, x] of trouves) groupes.set(cle, [...(groupes.get(cle) ?? []), x]);
+    corps = [h('p', { class: 'hilloulot-compte' }, tr.t('hilloulot_resultats', rechercheHilloula(table, rechercheHilloulot).length)),
+      // Une seule carte : chaque date en tête de ses noms.
+      groupes.size ? h('div', { class: 'carte carte-hilloulot' }, [...groupes].flatMap(([cle, noms]) => [
+        h('div', { class: 'hilloulot-date' },
+          h('h2', { lang: 'he' }, dateHilloula(cle, (n) => Reference.lettres(n))),
+          h('button', { type: 'button', class: 'lien-bouton', onclick: () => {
+            const jourIso = prochainJourHilloula(cle, aujourdhui, israel, ashkenaz);
+            if (!jourIso) return;
+            jourHilloulot = jourIso;
+            for (const x of noms) hilloulotDepliees.add(`${jourIso}|${x.he}`);
+            rechercheHilloulot = '';
+            rendre();
+            app.querySelector('.defile')?.scrollTo(0, 0);
+          } }, tr.t('hilloulot_ouvrir_jour'))),
+        ...noms.map((x) => ligneHilloula(x, `r|${cle}|${x.he}`, false)),
+      ])) : null];
   } else {
-    const j = jourJuif(iso, store.inIsrael());
+    const j = jourJuif(iso, israel);
     const decale = (n) => { const [a, m, d] = iso.split('-').map(Number); jourHilloulot = new Date(Date.UTC(a, m - 1, d + n, 12)).toISOString().slice(0, 10); rendre(); };
-    const liste = hilloulotPour(table, iso, store.inIsrael(), store.siddurNusah() === 'ashkenaz');
+    const liste = hilloulotPour(table, iso, israel, ashkenaz);
+    chargeBiosHilloulot(clesHilloulotPour(iso, israel, ashkenaz));
+    const detaillees = liste.some((x) => x.t || x.w || x.i);
     corps = [
-      h('div', { class: 'mois-tete' },
-        h('button', { class: 'icone-bouton mois-precedent', dir: 'ltr', 'aria-label': tr.t('calendrier_precedent'), onclick: () => decale(-1) }, tr.rtl ? '›' : '‹'),
-        h('div', { class: 'mois-titres' }, h('p', { class: 'mois-principal mois-hebreu', lang: 'he', dir: 'rtl' }, j.dateHebraique), h('p', { class: 'mois-second' }, dateCivile(iso))),
-        h('button', { class: 'icone-bouton mois-suivant', dir: 'ltr', 'aria-label': tr.t('calendrier_suivant'), onclick: () => decale(1) }, tr.rtl ? '‹' : '›')),
-      ...(liste.length ? liste.map((x) => carte(x, null)) : [h('p', { class: 'message' }, tr.t('hilloulot_aucune'))]),
+      h('div', { class: 'carte hilloulot-jour' },
+        h('div', { class: 'mois-tete' },
+          h('button', { class: 'icone-bouton mois-precedent', dir: 'ltr', 'aria-label': tr.t('jour_precedent'), onclick: () => decale(-1) }, tr.rtl ? '›' : '‹'),
+          h('div', { class: 'mois-titres' }, h('p', { class: 'mois-principal mois-hebreu', lang: 'he', dir: 'rtl' }, j.dateHebraique), h('p', { class: 'mois-second' }, dateCivile(iso))),
+          h('button', { class: 'icone-bouton mois-suivant', dir: 'ltr', 'aria-label': tr.t('jour_suivant'), onclick: () => decale(1) }, tr.rtl ? '‹' : '›')),
+        iso !== aujourdhui ? h('button', { type: 'button', class: 'lien-bouton hilloulot-aujourdhui', onclick: () => { jourHilloulot = null; rendre(); } }, tr.t('calendrier_aujourdhui')) : null),
+      ...(liste.length ? [
+        h('p', { class: 'hilloulot-compte' }, tr.p('hilloulot_nombre', liste.length, liste.length) + (detaillees && liste.length > 1 ? ` · ${tr.t('hilloulot_toucher')}` : '')),
+        h('div', { class: 'carte carte-hilloulot' }, liste.map((x) => ligneHilloula(x, `${iso}|${x.he}`, liste.length === 1))),
+      ] : [h('p', { class: 'message' }, tr.t('hilloulot_aucune'))]),
       lienExterne(tr.t('hilloula_lien'), lienHyomi(iso)),
     ];
   }
   return h('div', { class: 'ecran avec-bandeau' }, bandeau(tr.t('hilloulot_title')),
-    zoneReglable(h('div', { class: 'contenu' },
+    zoneReglable(h('div', { class: 'contenu ecran-hilloulot' },
+      h('div', { class: 'carte hilloulot-recherche' }, (() => {
+        const loupe = s('svg', { viewBox: '0 0 24 24', 'aria-hidden': 'true', class: 'loupe' });
+        loupe.append(s('path', { d: 'M10.5 4a6.5 6.5 0 1 0 .001 0Z M15.5 15.5 21 21', fill: 'none', stroke: 'currentColor', 'stroke-width': '2', 'stroke-linecap': 'round' }));
+        return loupe;
+      })(), champ),
+      ...corps,
       h('div', { class: 'carte' },
-        h('label', { class: 'ligne' }, h('span', { class: 'corps' }, h('div', { class: 'nom' }, tr.t('hilloulot_afficher'))),
+        h('label', { class: 'ligne' }, h('span', { class: 'corps' }, h('div', { class: 'nom' }, tr.t('hilloulot_afficher')), h('div', { class: 'etat' }, tr.t('hilloulot_afficher_detail'))),
           h('input', { type: 'checkbox', role: 'switch', class: 'interrupteur', checked: store.hilloulotAffichees(), 'aria-label': tr.t('hilloulot_afficher'),
-            onchange: (e) => { store.setHilloulotAffichees(e.target.checked); rendre(); } })),
-        champ),
-      ...corps)));
+            onchange: (e) => { store.setHilloulotAffichees(e.target.checked); rendre(); } }))))));
 }
 
 /** Les horaires d'un jour, chacun avec sa méthode ; ou l'invitation à choisir un lieu. */
@@ -4003,7 +3973,7 @@ function ecranPaliers() {
   const fete = vu !== null && niveau > vu && g !== 'bronze';
   store.setGradeVu(niveau);
   store.setTropheesVus(Trophees.gagnes(p));
-  const ecran = h('div', { class: 'ecran avec-bandeau ecran-trophees' }, bandeau(tr.t('trophees_paliers_titre'), { dessin: 'char_arms_raised' }),
+  const ecran = h('div', { class: 'ecran avec-bandeau ecran-trophees' }, bandeau(tr.t('trophees_paliers_titre'), { dessin: 'char_open_arms' }),
     h('div', { class: 'defile', tabindex: '0' }, h('div', { class: 'contenu' },
       tete, puces,
       h('div', { class: 'ligne-trophees' }, ...ligne),
@@ -5222,10 +5192,7 @@ function rendre() {
   else if (ecran === 'lecture') app.append(ecranLecture());
   else if (ecran === 'siddur') app.append(ecranSiddur());
   else if (ecran === 'priere') app.append(ecranPriere());
-  else if (ecran === 'tikkun') app.append(ecranTikkun());
-  else if (ecran === 'tikkun-trait') app.append(ecranTikkunTrait());
-  else if (ecran === 'tikkun-psaume') app.append(ecranTikkunPsaume());
-  else if (ecran === 'tikkun-partie') app.append(ecranTikkunPartie());
+  else if (ecran === 'tikkun' || ECRANS_TIKKUN.includes(ecran)) app.append(ecranTikkun());
   else if (ecran === 'bibliotheque') app.append(ecranBibliotheque());
   else if (ecran === 'livres') app.append(ecranLivres());
   else if (ecran === 'source') app.append(ecranSource());

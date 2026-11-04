@@ -272,16 +272,6 @@
             android:label="@string/reminders_title" />
 
         <activity
-            android:name=".TikkunActivity"
-            android:exported="false"
-            android:label="@string/tikkun_title" />
-
-        <activity
-            android:name=".LiturgyActivity"
-            android:exported="false"
-            android:label="@string/tikkun_title" />
-
-        <activity
             android:name=".TikkunFlowActivity"
             android:exported="false"
             android:label="@string/tikkun_title" />
@@ -305,11 +295,6 @@
             android:name=".TehilimLectureActivity"
             android:exported="false"
             android:label="@string/tehilim_title" />
-
-        <activity
-            android:name=".PsalmActivity"
-            android:exported="false"
-            android:label="@string/tikkun_title" />
 
         <activity
             android:name=".TefilotActivity"

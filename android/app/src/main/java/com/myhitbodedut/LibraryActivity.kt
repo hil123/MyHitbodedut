@@ -35,7 +35,7 @@ class LibraryActivity : AppCompatActivity() {
 
     private val rows: List<Row> by lazy {
         if (livresSeuls) {
-            val livres = Data.livres(this)
+            val livres = Data.livresIndex(this)
             livres.groupes.flatMap { g -> listOf(Row.TitreLivres(g.titre)) + livres.du(g.cle).map { Row.Livre(it) } }
         } else Data.library(this).sections.flatMap { section ->
             listOf(Row.Header(section)) + section.sousSections.map { Row.Sub(it) }
@@ -125,7 +125,7 @@ class LibraryActivity : AppCompatActivity() {
             view.findViewById<TextView>(R.id.subsection_he).text = texte.titre.he
             bindTranslation(view.findViewById(R.id.subsection_translation), texte.titre, language)
             view.findViewById<TextView>(R.id.subsection_count).text =
-                resources.getQuantityString(R.plurals.livre_chapitres, texte.sections.size, texte.sections.size)
+                resources.getQuantityString(R.plurals.livre_chapitres, texte.chapitres, texte.chapitres)
             view.setOnClickListener { SiddurLectureActivity.ouvrirLivre(this@LibraryActivity, texte.id) }
         }
 

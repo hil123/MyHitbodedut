@@ -19,7 +19,8 @@ object RepriseFavoris {
     fun titre(c: Context, cle: String): String? {
         if (cle == TehilimLectureActivity.CLE) return c.getString(R.string.tehilim_title)
         val id = cle.substringAfter(':')
-        val recueil = if (cle.startsWith("l:")) Data.livres(c) else Data.siddur(c)
+        // Les livres par leur index (04/11) : l'accueil ne lit plus leurs 16 Mo de texte.
+        val recueil = if (cle.startsWith("l:")) Data.livresIndex(c) else Data.siddur(c)
         return recueil.texte(id)?.titre?.he
     }
 
@@ -48,7 +49,7 @@ object RepriseFavoris {
     private fun ordre(c: Context, cle: String): Int {
         if (cle.startsWith("t:")) return 5_000
         val livre = cle.startsWith("l:")
-        val i = (if (livre) Data.livres(c) else Data.siddur(c)).textes.indexOfFirst { it.id == cle.substringAfter(':') }
+        val i = (if (livre) Data.livresIndex(c) else Data.siddur(c)).textes.indexOfFirst { it.id == cle.substringAfter(':') }
         return (if (livre) 10_000 else 0) + i
     }
 
