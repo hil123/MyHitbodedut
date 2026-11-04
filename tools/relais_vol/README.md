@@ -37,6 +37,18 @@ L'édition Android complète construite **sans** relais interroge encore OpenSky
 depuis le téléphone, en anonyme : pour une diffusion publique, la construire
 avec `-PrelaisVol=https://…`.
 
+## Décisions du propriétaire (04/11/2026)
+
+- **Réponse à OpenSky** (ticket 837455) : envoyée.
+- **Fournisseur payant d'horaires de vol** (AeroDataBox, Aviationstack…) :
+  non. Les heures restent saisies à la main ; la route d'un numéro de vol
+  vient d'adsbdb.
+- **Mise en ligne de ce relais** (compte OpenSky avec client API, compte
+  Cloudflare) : possible, pas encore faite.
+- **Accès direct d'Android à OpenSky** : à couper dès que le relais est en
+  ligne (construire avec `-PrelaisVol=https://…`), pour respecter la première
+  condition ci-dessus.
+
 ## Ce qui passe par le relais
 
 - **Reçu** : l'indicatif radio du vol (« ELY1 ») et la position estimée sur la
