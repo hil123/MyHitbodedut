@@ -22,7 +22,7 @@ import * as Trophees from './trophees.js';
 import { FORMES, ICONES } from './trophees-formes.js';
 import { pour as halakhotPour, recherche as rechercheHalakha, source as sourceHalakha } from './halakha.js';
 import { pour as yalkutPour, recherche as rechercheYalkut, source as sourceYalkut, texteCarte, titreCarte } from './yalkut.js';
-import { ajouts as ajoutsDuJour, dateHilloula, debutMoisHebreu, hilloulotPour, lienArticle, rechercheHilloula, horaires, illustration as illustrationDuJour, lienHalakha, lienHyomi, momentDuSiddour, moisHebreuVoisin, semaines, semainesHebreu } from './jour-affiche.js';
+import { ajouts as ajoutsDuJour, dateHilloula, debutMoisHebreu, hilloulotPour, clesHilloulotPour, lienArticle, rechercheHilloula, horaires, illustration as illustrationDuJour, lienHalakha, lienHyomi, momentDuSiddour, moisHebreuVoisin, semaines, semainesHebreu } from './jour-affiche.js';
 import { ALLUMAGES, heure as heureZman, jour as zmanimDuJour } from './zmanim.js';
 import * as Vol from './vol.js';
 import * as Boussole from './boussole.js';
@@ -107,7 +107,7 @@ function duJour(pool, sel) {
   return pool[((jourEpoque % pool.length) + pool.length) % pool.length];
 }
 const APPEL = ['char_praise', 'char_pointing', 'char_walking', 'char_tehilim', 'char_thinking', 'char_welcome', 'char_open_arms'];
-const PENDANT = ['char_arms_raised', 'char_praying', 'char_standing_back', 'char_praise'];
+const PENDANT = ['char_open_arms', 'char_praying', 'char_standing_back', 'char_praise'];
 // Au centre de l'anneau : tant que la hitbodedout du jour reste à faire, celui qui accueille (13/10).
 const salutation = (fait) => (fait ? duJour(JOIE, 3) : 'char_welcome');
 const joie = () => duJour(JOIE, 3);
@@ -2641,19 +2641,22 @@ function tableHilloulot() {
   return hilloulots;
 }
 
-// Les biographies d'autres sources (hilloulot_bios.json, 12/10), à part pour que la carte du
-// jour reste légère : lues à l'écran des hilloulot ; par jour, une entrée par hilloula, dans le même ordre.
-let biosDemandees = false;
-function chargeBiosHilloulot() {
-  if (biosDemandees) return;
-  biosDemandees = true;
-  Promise.all([fetch('data/hilloulot.json').then((r) => r.json()), fetch('data/hilloulot_bios.json').then((r) => r.json())])
-    .then(([d, bios]) => {
-      hilloulots = hilloulots ?? d.jours;
-      hilloulotsDemandees = true;
-      for (const [cle, ligne] of Object.entries(bios)) ligne.forEach((b, i) => { if (b && hilloulots[cle]?.[i]) hilloulots[cle][i].b = b; });
-      rendre();
-    }).catch(() => { biosDemandees = false; });
+// Les biographies d'autres sources (hilloulot_bios, 12/10), à part pour que la carte du jour
+// reste légère ; par jour, une entrée par hilloula, dans le même ordre. Un fichier par mois
+// (04/11) : l'écran ne télécharge plus les 6,9 Mo de l'année pour montrer un jour.
+const biosMois = new Map();
+function chargeBiosHilloulot(cles) {
+  if (!tableHilloulot()) return; // la table arrive, puis un nouveau rendu redemande
+  for (const mois of new Set(cles.map((k) => k.split('-')[0]))) {
+    if (biosMois.has(mois)) continue;
+    biosMois.set(mois, 'attente');
+    fetch(`data/hilloulot_bios/${mois}.json`).then((r) => { if (!r.ok) throw new Error(r.status); return r.json(); })
+      .then((bios) => {
+        for (const [cle, ligne] of Object.entries(bios)) ligne.forEach((b, i) => { if (b && hilloulots[cle]?.[i]) hilloulots[cle][i].b = b; });
+        biosMois.set(mois, 'ok');
+        if (ecranCourant() === 'hilloulot') rendre();
+      }).catch(() => { biosMois.delete(mois); });
+  }
 }
 
 // La halakha du jour (11/10) : ben_ish_hai.json, chargé à la première carte.
@@ -2958,7 +2961,6 @@ let jourHilloulot = null;
 let rechercheHilloulot = '';
 
 function ecranHilloulot() {
-  chargeBiosHilloulot();
   const table = tableHilloulot() ?? {};
   const iso = jourHilloulot ?? isoLocal(new Date());
   const carte = (x, date) => h('div', { class: 'carte carte-hilloula' },
@@ -2992,11 +2994,13 @@ function ecranHilloulot() {
   let corps;
   if (rechercheHilloulot.trim().length >= 2) {
     const trouves = rechercheHilloula(table, rechercheHilloulot);
+    chargeBiosHilloulot(trouves.slice(0, 60).map(([cle]) => cle));
     corps = [h('p', { class: 'jour-sous-titre' }, tr.t('hilloulot_resultats', trouves.length)), ...trouves.slice(0, 60).map(([cle, x]) => carte(x, dateHilloula(cle, (n) => Reference.lettres(n))))];
   } else {
     const j = jourJuif(iso, store.inIsrael());
     const decale = (n) => { const [a, m, d] = iso.split('-').map(Number); jourHilloulot = new Date(Date.UTC(a, m - 1, d + n, 12)).toISOString().slice(0, 10); rendre(); };
     const liste = hilloulotPour(table, iso, store.inIsrael(), store.siddurNusah() === 'ashkenaz');
+    chargeBiosHilloulot(clesHilloulotPour(iso, store.inIsrael(), store.siddurNusah() === 'ashkenaz'));
     corps = [
       h('div', { class: 'mois-tete' },
         h('button', { class: 'icone-bouton mois-precedent', dir: 'ltr', 'aria-label': tr.t('calendrier_precedent'), onclick: () => decale(-1) }, tr.rtl ? '›' : '‹'),
@@ -4009,7 +4013,7 @@ function ecranPaliers() {
   const fete = vu !== null && niveau > vu && g !== 'bronze';
   store.setGradeVu(niveau);
   store.setTropheesVus(Trophees.gagnes(p));
-  const ecran = h('div', { class: 'ecran avec-bandeau ecran-trophees' }, bandeau(tr.t('trophees_paliers_titre'), { dessin: 'char_arms_raised' }),
+  const ecran = h('div', { class: 'ecran avec-bandeau ecran-trophees' }, bandeau(tr.t('trophees_paliers_titre'), { dessin: 'char_open_arms' }),
     h('div', { class: 'defile', tabindex: '0' }, h('div', { class: 'contenu' },
       tete, puces,
       h('div', { class: 'ligne-trophees' }, ...ligne),

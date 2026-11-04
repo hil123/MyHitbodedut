@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Construit android/app/src/main/res/raw/livres.json (demande du 12/10/2026) :
+Construit android/app/src/main/livres/livres.json (demande du 12/10/2026) :
 des livres entiers de Rabbi Na'hman et de Rabbi Natan pour la bibliothèque,
 au format des textes du siddour (sections, paragraphes « t »), pour être
 lus dans le même lecteur.
@@ -37,7 +37,7 @@ Ajouts du 13/10 (demande du propriétaire) :
 import html, json, os, re, sys, unicodedata
 
 NFC = lambda s: unicodedata.normalize("NFC", s)
-SORTIE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "android", "app", "src", "main", "res", "raw", "livres.json")
+SORTIE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "android", "app", "src", "main", "livres", "livres.json")
 
 
 def nettoie(s):
@@ -273,6 +273,10 @@ def main(dossier):
         ],
     }
     json.dump(sortie, open(SORTIE, "w", encoding="utf-8"), ensure_ascii=False, separators=(",", ":"))
+    # Pour l'application : l'index et un fichier par livre (tools/livres_decoupe.py, 04/11).
+    import livres_decoupe
+    livres_decoupe.decoupe(sortie)
+
     for t in sortie["textes"]:
         print(t["id"], len(t["sections"]), "chapitres", sum(len(s["blocs"]) for s in t["sections"]), "paragraphes")
     print(os.path.getsize(SORTIE) // 1024, "ko")

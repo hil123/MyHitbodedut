@@ -176,11 +176,16 @@ export function hilloulotDuJour(table, cles) {
     .sort((x, y) => rang(x[0]) - rang(y[0]) || x[1] - y[1]).map(([h]) => h);
 }
 
-export function hilloulotPour(table, iso, enIsrael, ashkenaz = false) {
+/** Les clés de hilloulot.json d'un jour civil. */
+export function clesHilloulotPour(iso, enIsrael, ashkenaz = false) {
   const j = jour(iso, enIsrael);
   const [a, m, d] = iso.split('-').map(Number);
   const demain = new Date(Date.UTC(a, m - 1, d + 1, 12)).toISOString().slice(0, 10);
-  return hilloulotDuJour(table, clesHilloula(j.moisHebreu, j.jourHebreu, embolismique(j.anneeHebraique), jour(demain, enIsrael).jourHebreu === 1, ashkenaz));
+  return clesHilloula(j.moisHebreu, j.jourHebreu, embolismique(j.anneeHebraique), jour(demain, enIsrael).jourHebreu === 1, ashkenaz);
+}
+
+export function hilloulotPour(table, iso, enIsrael, ashkenaz = false) {
+  return hilloulotDuJour(table, clesHilloulotPour(iso, enIsrael, ashkenaz));
 }
 
 /** La page du jour de החכם היומי, qui prend la date civile. */

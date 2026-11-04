@@ -98,7 +98,8 @@ class HilloulotActivity : AppCompatActivity() {
 
     private fun remplir() {
         liste.removeAllViews()
-        val table = Hilloulot.tableComplete(this)
+        // Sans les biographies le temps qu'elles se préparent en arrière-plan : l'écran s'ouvre tout de suite.
+        val table = Hilloulot.tableCompleteOuPlusTard(this) { if (!isDestroyed) afficher() } ?: Hilloulot.table(this)
         if (recherche.trim().length >= 2) {
             val trouves = Hilloulot.recherche(table, recherche)
             liste.addView(VueJour.texte(this, getString(R.string.hilloulot_resultats, trouves.size), 14f, R.color.muted, gras = true, haut = 14))

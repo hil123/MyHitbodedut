@@ -144,4 +144,25 @@ object Hilloulot {
     /** La table avec les biographies, pour l'écran des hilloulot seulement. */
     fun tableComplete(context: Context): Map<String, List<Hilloula>> =
         complete ?: avecBios(table(context), Json.readRaw(context, R.raw.hilloulot_bios)).also { complete = it }
+
+    private val enAttente = mutableListOf<() -> Unit>()
+    private val fil by lazy { java.util.concurrent.Executors.newSingleThreadExecutor() }
+
+    /**
+     * La table complète si elle est prête ; sinon null, et elle se prépare hors du fil principal
+     * (04/11) : les biographies pèsent 6,9 Mo, lues et analysées à l'ouverture de l'écran, elles
+     * le figeaient (et pouvaient valoir « l'application ne répond pas » sur un téléphone lent).
+     * [pret] est rappelé sur le fil principal quand elle l'est.
+     */
+    fun tableCompleteOuPlusTard(context: Context, pret: () -> Unit): Map<String, List<Hilloula>>? {
+        complete?.let { return it }
+        val app = context.applicationContext
+        val lancer = synchronized(enAttente) { enAttente.add(pret); enAttente.size == 1 }
+        if (lancer) fil.execute {
+            runCatching { tableComplete(app) }
+            val rappels = synchronized(enAttente) { enAttente.toList().also { enAttente.clear() } }
+            android.os.Handler(android.os.Looper.getMainLooper()).post { rappels.forEach { it() } }
+        }
+        return null
+    }
 }
