@@ -1623,3 +1623,22 @@ body.avec-mini .seance .contenu { padding-bottom: calc(104px + env(safe-area-ins
 .ecran.lu.nuit .lecture .traduction:not(.seule) { color: var(--lecture-nuit-discret, #A3A8A5); }
 .chizuk-latin { font-family: Georgia, 'Times New Roman', serif; }
 .lecture-langues { font-weight: 700; }
+
+/* Les boutons, affinés (04/11) : une seule famille — pilule pleine, pilule cerclée, lien —,
+   52 px de haut, texte medium, une ombre douce sous le principal, un anneau de focus net. */
+.principal, .secondaire {
+  display: flex; align-items: center; justify-content: center; gap: 8px; min-height: 52px;
+  padding: 14px 22px; letter-spacing: .01em; line-height: 1.25; text-align: center;
+  -webkit-tap-highlight-color: transparent;
+}
+.principal { font-size: 16px; font-weight: 650;
+  box-shadow: 0 1px 2px rgb(0 0 0 / .08), 0 6px 16px -6px color-mix(in srgb, var(--brand) 45%, transparent); }
+.secondaire { font-weight: 650; border-color: color-mix(in srgb, var(--brand) 28%, var(--line)); }
+.principal:focus-visible, .secondaire:focus-visible, .lien-discret:focus-visible, .lien-bouton:focus-visible {
+  outline: 2px solid var(--brand); outline-offset: 3px; }
+.principal:disabled, .secondaire:disabled { opacity: .45; box-shadow: none; cursor: default; transform: none; }
+@media (hover: hover) {
+  .principal:hover:not(:disabled) { filter: brightness(1.06); }
+  .secondaire:hover:not(:disabled) { background: color-mix(in srgb, var(--brand) 6%, var(--card)); }
+}
+.lecture-nav .principal, .lecture-nav .secondaire { min-height: 48px; padding: 12px 14px; }
