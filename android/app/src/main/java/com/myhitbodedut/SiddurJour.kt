@@ -71,7 +71,7 @@ object SiddurJour {
 
     /** Une ligne de la lecture, le jour donné. */
     sealed class Ligne {
-        data class Titre(val texte: String) : Ligne()
+        data class Titre(val texte: String, val fr: String? = null, val en: String? = null) : Ligne()
         data class Bloc(val bloc: SiddurBloc, val style: Style) : Ligne()
 
         /** « Aujourd'hui · Ya'alé véyavo », au-dessus d'un ajout mis en évidence ; [libelle] : la clé de chaîne. */
@@ -122,7 +122,7 @@ object SiddurJour {
         fun renvoyer(si: Int, bi: Int?) = renvois[si to bi].orEmpty().forEach { sortie += Ligne.Renvoi(it.condition, it.cible!!) }
         texte.sections.forEachIndexed { si, s ->
             // Une section seule porte déjà le nom du texte : pas de titre répété.
-            if (texte.sections.size > 1 && s.titre.isNotBlank()) sortie += Ligne.Titre(s.titre)
+            if (texte.sections.size > 1 && s.titre.isNotBlank()) sortie += Ligne.Titre(s.titre, s.titreFr, s.titreEn)
             val section = sections[si]
             if (section != null) {
                 if (vrai(section.condition, conditions)) {

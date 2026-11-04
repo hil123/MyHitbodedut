@@ -1476,7 +1476,10 @@ function ecranPriere() {
     annotations ? h('p', { class: 'indice note-ajouts' }, tr.t('siddur_jour_ajouts', jourDuTexte.dateHebraique,
       tr.t(store.inIsrael() ? 'region_israel' : 'region_diaspora'))) : null,
     ...x.sections.flatMap((s, si) => {
-      const t = plusieurs && s.titre ? h('h2', { class: 'psaume-titre', lang: 'he', dir: 'rtl' }, s.titre) : null;
+      // Le titre traduit (04/11), sous l'hébreu ou à sa place.
+      const titres = s.titre ? LanguesTexte.textes(languesLecture(), s.titre, s.titre_fr, s.titre_en) : [];
+      const t = plusieurs && s.titre ? h('h2', { class: 'psaume-titre', lang: titres[0][0], dir: titres[0][0] === 'he' ? 'rtl' : 'ltr' }, titres[0][1],
+        ...titres.slice(1).map(([l, x]) => h('span', { class: 'titre-traduit', lang: l, dir: 'ltr' }, x))) : null;
       if (t) titres.push({ titre: s.titre, el: t });
       if (!livre) return [t, ...corpsDe(s, si)];
       // Un livre (02/11) : chaque chapitre dans sa propre boîte, vide tant qu'il n'approche pas de

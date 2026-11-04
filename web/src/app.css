@@ -1642,3 +1642,5 @@ body.avec-mini .seance .contenu { padding-bottom: calc(104px + env(safe-area-ins
   .secondaire:hover:not(:disabled) { background: color-mix(in srgb, var(--brand) 6%, var(--card)); }
 }
 .lecture-nav .principal, .lecture-nav .secondaire { min-height: 48px; padding: 12px 14px; }
+
+.psaume-titre .titre-traduit { display: block; font-size: .72em; font-weight: 600; color: var(--muted); direction: ltr; text-align: start; margin-top: 2px; }

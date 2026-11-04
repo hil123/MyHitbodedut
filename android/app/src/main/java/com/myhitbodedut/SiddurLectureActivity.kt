@@ -477,7 +477,20 @@ class SiddurLectureActivity : AppCompatActivity() {
                 is SiddurJour.Ligne.Titre -> vue.apply {
                     PoliceHebraique.appliquer(this)
                     setPadding(dp(16), dp(if (position == 0) 8 else 32), dp(16), dp(8))
-                    text = ligne.texte
+                    // Le titre traduit (04/11), sous l'hébreu ou à sa place, selon les langues choisies.
+                    val titres = LanguesTexte.textes(langues, ligne.texte, ligne.fr, ligne.en)
+                    text = if (titres.size == 1) titres[0].second else android.text.SpannableStringBuilder().apply {
+                        titres.forEachIndexed { k, (_, t) ->
+                            if (k > 0) append("\n")
+                            val d = length
+                            append(t)
+                            if (k > 0) setSpan(android.text.style.RelativeSizeSpan(0.72f), d, length, android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                        }
+                    }
+                    if (titres.any { it.first != "he" }) {
+                        textDirection = View.TEXT_DIRECTION_FIRST_STRONG
+                        textAlignment = View.TEXT_ALIGNMENT_TEXT_START
+                    }
                     textSize = 20f * e
                     setTypeface(typeface, android.graphics.Typeface.BOLD)
                     setTextColor(rendu.titre)

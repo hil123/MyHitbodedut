@@ -11,7 +11,7 @@ import org.json.JSONObject
  */
 data class SiddurBloc(val texte: String, val consigne: Boolean, val fr: String? = null, val en: String? = null)
 
-data class SiddurSection(val titre: String, val blocs: List<SiddurBloc>)
+data class SiddurSection(val titre: String, val blocs: List<SiddurBloc>, val titreFr: String? = null, val titreEn: String? = null)
 
 data class SiddurTexte(
     val id: String,
@@ -87,6 +87,8 @@ object SiddurLoader {
                     sections = Json.array(t.getJSONArray("sections")) { s ->
                         SiddurSection(
                             titre = s.optString("titre", ""),
+                            titreFr = s.optString("titre_fr", "").ifBlank { null },
+                            titreEn = s.optString("titre_en", "").ifBlank { null },
                             blocs = Json.array(s.getJSONArray("blocs")) { b ->
                                 if (b.has("c")) SiddurBloc(b.getString("c"), true)
                                 else SiddurBloc(b.getString("t"), false, b.optString("fr", "").ifBlank { null }, b.optString("en", "").ifBlank { null })
