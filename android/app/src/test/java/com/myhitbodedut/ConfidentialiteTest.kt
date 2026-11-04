@@ -54,7 +54,7 @@ class ConfidentialiteTest {
         faits.forEach { (langue, mots) ->
             val texte = section(langue)
             mots.forEach { assertTrue("$langue : « $it » manque", texte.contains(it)) }
-            assertTrue("$langue : le contact", texte.contains("<a href=\"mailto:myhitbodedut@gmail.com\">"))
+            assertTrue("$langue : le contact", texte.contains("<a href=\"mailto:myhitbodedut26@gmail.com\">"))
             assertTrue("$langue : l'éditeur", texte.contains("MyHitbodedut Team"))
         }
     }
