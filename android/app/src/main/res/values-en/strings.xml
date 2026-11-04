@@ -1197,7 +1197,7 @@
     <string name="vol_priere_titre">Current prayer</string>
     <string name="vol_jusqua">until %1$s</string>
     <string name="vol_sans_limite">until dawn, no limit shown</string>
-    <string name="vol_dans">in %1$s</string>
+    <string name="vol_dans">%1$s left</string>
     <string name="vol_hors_fenetre">The calculation covers the flight and the 6 hours either side.</string>
     <string name="vol_en_vol_titre">During the flight</string>
     <string name="vol_aucun_zman">No zman during this flight.</string>

@@ -1261,7 +1261,7 @@
     <string name="vol_priere_titre">Prière du moment</string>
     <string name="vol_jusqua">jusqu’à %1$s</string>
     <string name="vol_sans_limite">jusqu’à l’aube, sans limite affichée</string>
-    <string name="vol_dans">dans %1$s</string>
+    <string name="vol_dans">encore %1$s</string>
     <string name="vol_hors_fenetre">Le calcul couvre le vol et les 6 heures qui l’entourent.</string>
     <string name="vol_en_vol_titre">Pendant le vol</string>
     <string name="vol_aucun_zman">Aucun zman pendant ce vol.</string>

@@ -2027,9 +2027,12 @@ function ecranTikkunPsaume() {
   const rang = Tikkun.rang(tikkun, psaume.numero);
   const blocs = [];
   for (const v of psaume.versets) {
-    blocs.push(h('p', { class: 'verset' }, h('span', { class: 'num', 'aria-hidden': 'true' }, `${v.n} `), v.he));
-    // L'indication d'arrêt suit le verset qu'elle concerne : elle n'est pas du texte, elle dit comment le lire.
+    // L'indication d'arrêt se place là où l'on s'arrête, entre « אַתָּה סֵתֶר לִי » et
+    // « מִצַּר » : elle n'est pas du texte, elle dit comment le lire.
+    const c = Tikkun.coupe(v);
+    blocs.push(h('p', { class: 'verset' }, h('span', { class: 'num', 'aria-hidden': 'true' }, `${v.n} `), c ? c[0] : v.he));
     if (v.arret) blocs.push(h('p', { class: 'arret' }, v.arret.note));
+    if (c) blocs.push(h('p', { class: 'verset suite' }, c[1]));
   }
   const dit = store.tikkunDone().has(psaume.numero);
   const suivant = Tikkun.suivant(tikkun, psaume.numero);
@@ -2082,8 +2085,10 @@ function ecranTikkunTrait() {
   for (const p of tikkun.psaumes) {
     blocs.push(titre(tr.t('tikkun_psalm_he', Reference.lettres(p.numero))));
     for (const v of p.versets) {
-      blocs.push(h('p', { class: 'verset' }, v.he));
+      const c = Tikkun.coupe(v);
+      blocs.push(h('p', { class: 'verset' }, c ? c[0] : v.he));
       if (v.arret) blocs.push(h('p', { class: 'arret' }, v.arret.note));
+      if (c) blocs.push(h('p', { class: 'verset suite' }, c[1]));
     }
   }
   if (tikkun.cloture) blocs.push(titre(tikkun.cloture.titre.he), ...tikkun.cloture.paragraphes.map(paragraphe));

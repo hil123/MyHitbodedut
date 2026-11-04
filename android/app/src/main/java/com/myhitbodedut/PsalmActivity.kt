@@ -39,10 +39,18 @@ class PsalmActivity : AppCompatActivity() {
 
         val conteneur = findViewById<LinearLayout>(R.id.psalm_verses)
         psaume.versets.forEachIndexed { index, verset ->
-            conteneur.addView(vue(verset, premier = index == 0))
-            // L'indication d'arret suit le verset qu'elle concerne, avec sa
-            // source : elle n'est pas du texte, elle dit comment le lire.
-            verset.arret?.let { conteneur.addView(vueArret(it)) }
+            // L'indication d'arret se place la ou l'on s'arrete : entre
+            // « אַתָּה סֵתֶר לִי » et « מִצַּר ». Elle n'est pas du texte, elle
+            // dit comment le lire.
+            val coupe = verset.coupe()
+            if (coupe == null) {
+                conteneur.addView(vue(verset, premier = index == 0))
+                verset.arret?.let { conteneur.addView(vueArret(it)) }
+            } else {
+                conteneur.addView(vue(verset, premier = index == 0, texte = coupe.first))
+                conteneur.addView(vueArret(verset.arret!!))
+                conteneur.addView(vue(verset, premier = false, texte = coupe.second, numero = false))
+            }
         }
 
         // Le bouton de lecture : taille des lettres et lecture de nuit.
@@ -89,18 +97,19 @@ class PsalmActivity : AppCompatActivity() {
      * Un verset : son numero en petit, puis le texte en droite-a-gauche.
      * Rien n'est rétréci ici — un psaume se lit, il ne se survole pas.
      */
-    private fun vue(verset: Verse, premier: Boolean): View {
+    private fun vue(verset: Verse, premier: Boolean, texte: String = verset.he, numero: Boolean = true): View {
         val ligne = LinearLayout(this).apply {
             orientation = LinearLayout.HORIZONTAL
             layoutDirection = View.LAYOUT_DIRECTION_RTL
             layoutParams = LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT,
-            ).apply { topMargin = if (premier) 0 else dp(12) }
+            ).apply { topMargin = if (premier) 0 else if (numero) dp(12) else dp(4) }
         }
         ligne.addView(
             ReglagesLecture.marquer(TextView(this).apply {
-                text = verset.numero.toString()
+                // La suite d'un verset coupe garde la colonne du numero, vide.
+                text = if (numero) verset.numero.toString() else ""
                 textSize = 12f
                 setTextColor(Apparence.couleur(context, R.color.brand))
                 // Large selon le nombre : « 45 » tient sur une ligne même à 200 %.
@@ -111,7 +120,7 @@ class PsalmActivity : AppCompatActivity() {
         )
         ligne.addView(
             ReglagesLecture.marquer(TextView(this).apply {
-                text = verset.he
+                text = texte
                 textSize = 19f
                 PoliceHebraique.appliquer(this)
                 textDirection = View.TEXT_DIRECTION_RTL

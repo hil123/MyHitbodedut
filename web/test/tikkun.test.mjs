@@ -85,3 +85,14 @@ test('les marques sont écrites comme Android (tikkun_day, tikkun_done triée) ;
   assert.equal(lu().tikkun_day, '2026-11-02');
   assert.equal(s.tikkunDone().size, 0);
 });
+
+test("l'arrêt de 32:7 coupe le verset entre « אַתָּה סֵתֶר לִי » et « מִצַּר »", () => {
+  const v = T.parNumero(tikkun, 32).versets.find((x) => x.n === 7);
+  const c = T.coupe(v);
+  assert.ok(c, 'pas de coupe en 32:7');
+  assert.equal(c[0], 'אַתָּה סֵתֶר לִי');
+  assert.ok(c[1].startsWith('מִצַּר'));
+  assert.equal(`${c[0]} ${c[1]}`, v.he);
+  assert.equal(T.coupe({ he: 'א ב', arret: { avant: 'ג', note: '' } }), null);
+  assert.equal(T.coupe({ he: 'א ב' }), null);
+});

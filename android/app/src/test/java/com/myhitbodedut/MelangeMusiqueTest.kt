@@ -3,6 +3,7 @@ package com.myhitbodedut
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotEquals
 import org.junit.Assert.assertNull
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import java.io.File
@@ -58,5 +59,18 @@ class MelangeMusiqueTest {
         assertTrue("sans fin de morceau, rien ne s'enchaîne", lecteur.contains("setOnCompletionListener"))
         val ecran = File("src/main/res/layout/activity_music.xml").readText()
         assertTrue(ecran.contains("@+id/music_shuffle"))
+    }
+
+    /**
+     * Sur petit écran (04/11), la liste pondérée tombait à zéro sous les
+     * réglages : elle doit défiler avec eux, à sa hauteur réelle.
+     */
+    @Test
+    fun `la bibliotheque reste accessible sur petit ecran`() {
+        val ecran = File("src/main/res/layout/activity_music.xml").readText()
+        assertTrue(ecran.contains("NestedScrollView"))
+        val liste = ecran.substringAfter("@+id/music_list").substringBefore("/>")
+        assertTrue(liste.contains("android:layout_height=\"wrap_content\""))
+        assertFalse(liste.contains("layout_weight"))
     }
 }

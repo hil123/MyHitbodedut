@@ -1230,7 +1230,7 @@
     <string name="vol_priere_titre">התפילה כעת</string>
     <string name="vol_jusqua">עד %1$s</string>
     <string name="vol_sans_limite">עד עלות השחר, ללא שעה מוצגת</string>
-    <string name="vol_dans">בעוד %1$s</string>
+    <string name="vol_dans">עד %1$s</string>
     <string name="vol_hors_fenetre">החישוב מכסה את הטיסה ואת 6 השעות שלפניה ואחריה.</string>
     <string name="vol_en_vol_titre">במהלך הטיסה</string>
     <string name="vol_aucun_zman">אין זמנים במהלך טיסה זו.</string>

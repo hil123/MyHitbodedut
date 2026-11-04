@@ -17,7 +17,19 @@ import org.json.JSONObject
  */
 data class Pause(val avant: String, val note: String)
 
-data class Verse(val numero: Int, val he: String, val arret: Pause? = null)
+data class Verse(val numero: Int, val he: String, val arret: Pause? = null) {
+    /**
+     * Le verset coupe la ou l'arret se marque : ce qui precede le mot
+     * « avant », puis ce qui commence par lui. Null sans arret, ou si le mot
+     * n'est pas dans le verset (l'indication suit alors le verset entier).
+     */
+    fun coupe(): Pair<String, String>? {
+        val mot = arret?.avant ?: return null
+        val i = he.indexOf(mot)
+        if (i <= 0) return null
+        return he.substring(0, i).trimEnd() to he.substring(i)
+    }
+}
 
 /**
  * Une partie liturgique qui n'est pas un psaume : ce qui se dit avant, ce

@@ -51,8 +51,16 @@ class TikkunFlowActivity : AppCompatActivity() {
             contenu.addView(titre(getString(R.string.tikkun_psalm_he, Reference.lettres(psaume.numero)), premier))
             premier = false
             psaume.versets.forEach { verset ->
-                contenu.addView(vueVerset(verset))
-                verset.arret?.let { contenu.addView(vueArret(it)) }
+                // L'arret se marque dans le verset, avant « מִצַּר ».
+                val coupe = verset.coupe()
+                if (coupe == null) {
+                    contenu.addView(vueVerset(verset.he))
+                    verset.arret?.let { contenu.addView(vueArret(it)) }
+                } else {
+                    contenu.addView(vueVerset(coupe.first))
+                    contenu.addView(vueArret(verset.arret!!))
+                    contenu.addView(vueVerset(coupe.second))
+                }
             }
         }
 
@@ -98,9 +106,9 @@ class TikkunFlowActivity : AppCompatActivity() {
         PoliceHebraique.appliquer(this)
     }, Role.TITRE)
 
-    private fun vueVerset(verset: Verse): View = ReglagesLecture.marquer(TextView(this).apply {
+    private fun vueVerset(texte: String): View = ReglagesLecture.marquer(TextView(this).apply {
         layoutParams = ligneParams()
-        text = verset.he
+        text = texte
         layoutDirection = View.LAYOUT_DIRECTION_RTL
         textAlignment = View.TEXT_ALIGNMENT_VIEW_START
         textSize = 19f
