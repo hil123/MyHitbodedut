@@ -318,6 +318,9 @@ class HilloulotActivity : AppCompatActivity() {
                 texte.maxLines = 8
                 texte.ellipsize = android.text.TextUtils.TruncateAt.END
                 addView(VueJour.texte(context, getString(R.string.hilloula_lire_plus), 13f, R.color.brand, gras = true, haut = 4).apply {
+                    // Du côté du texte qu'il déplie (la ligne est écrite de droite à gauche).
+                    textAlignment = View.TEXT_ALIGNMENT_VIEW_START
+                    gravity = Gravity.CENTER_VERTICAL or Gravity.START
                     setOnClickListener {
                         val replie = texte.maxLines != Int.MAX_VALUE
                         texte.maxLines = if (replie) Int.MAX_VALUE else 8
