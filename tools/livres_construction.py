@@ -273,6 +273,8 @@ def main(dossier):
         ],
     }
     json.dump(sortie, open(SORTIE, "w", encoding="utf-8"), ensure_ascii=False, separators=(",", ":"))
+    # Le Nom abrégé ה' hors des versets (04/11) : tools/noms_abreges.py, à relancer après.
+    print("Ensuite : python3 tools/noms_abreges.py <export Tanakh> (le Nom abrégé ה' hors des versets).")
     for t in sortie["textes"]:
         print(t["id"], len(t["sections"]), "chapitres", sum(len(s["blocs"]) for s in t["sections"]), "paragraphes")
     print(os.path.getsize(SORTIE) // 1024, "ko")
