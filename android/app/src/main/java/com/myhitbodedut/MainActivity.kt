@@ -206,7 +206,7 @@ class MainActivity : AppCompatActivity() {
             startActivity(Intent(this, RechercheActivity::class.java))
         }
         findViewById<View>(R.id.tikkun_button).setOnClickListener {
-            startActivity(Intent(this, TikkunActivity::class.java))
+            startActivity(Intent(this, TikkunFlowActivity::class.java))
         }
         findViewById<View>(R.id.siddur_button).setOnClickListener {
             startActivity(Intent(this, SiddurActivity::class.java))

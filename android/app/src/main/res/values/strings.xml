@@ -421,22 +421,11 @@
 
     <!-- Section Tikoun HaKlali -->
     <string name="tikkun_title">Tikoun HaKlali</string>
-    <string name="tikkun_hint">Les dix Tehilim de Rabbi Na’hman, dans l’ordre : 16, 32, 41, 42, 59, 77, 90, 105, 137, 150.</string>
-    <string name="tikkun_open">Ouvrir le Tikoun</string>
     <string name="tikkun_psalm_he">תהילים %1$s</string>
-    <string name="tikkun_verses">%1$d versets</string>
-    <string name="tikkun_position">Tehilim %1$d sur %2$d · %3$d versets</string>
     <string name="tikkun_progress_none">%1$d Tehilim, %2$d versets</string>
     <string name="tikkun_progress">Tehilim dits aujourd’hui : %1$d sur %2$d</string>
     <string name="tikkun_progress_all">Dit en entier aujourd’hui.</string>
-    <string name="tikkun_next">Tehilim suivant</string>
-    <string name="tikkun_paragraphs">%1$d paragraphes</string>
-    <string name="tikkun_flow_open">Tout lire d’un trait</string>
     <string name="tikkun_flow_done">J’ai dit le Tikoun en entier</string>
-    <string name="tikkun_mark">Marquer comme dit</string>
-    <string name="tikkun_unmark">Retirer la marque</string>
-    <string name="tikkun_said">dit</string>
-    <string name="tikkun_reset">Repartir de zéro</string>
 
     <!-- Rappels de hitbodedout -->
     <string name="reminders_title">Rappels</string>
@@ -878,6 +867,14 @@
     <string name="hilloula_lire_plus">Lire la suite</string>
     <string name="hilloula_reduire">Réduire</string>
     <string name="hilloulot_tout">Toutes les hilloulot ›</string>
+    <!-- L'écran des hilloulot réorganisé (04/11) -->
+    <plurals name="hilloulot_nombre">
+        <item quantity="one">%1$d tsadik ce jour</item>
+        <item quantity="other">%1$d tsadikim ce jour</item>
+    </plurals>
+    <string name="hilloulot_afficher_detail">Sur la carte du jour, à l’accueil</string>
+    <string name="hilloulot_toucher">Touchez un nom pour lire sa biographie.</string>
+    <string name="hilloulot_ouvrir_jour">Voir ce jour ›</string>
     <!-- La halakha du jour hors ligne : le Ben Ish 'Haï (11/10) -->
     <string name="halakha_title">Halakha du jour</string>
     <string name="halakha_afficher">Afficher la halakha du jour</string>

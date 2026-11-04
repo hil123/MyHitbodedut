@@ -82,4 +82,35 @@ class HilloulotTest {
         assertTrue(bios.all { it.lien?.startsWith("https://") == true })
         assertTrue(table.values.flatten().all { it.bios.isEmpty() })
     }
+
+    @Test
+    fun `un jour range les mieux connus d abord, les dates douteuses en dernier`() {
+        val h = { he: String, s: String, t: String?, d: String? -> Hilloulot.Hilloula(he, null, null, "", s, d, t) }
+        val t = mapOf("8-23" to listOf(h("un", "m", null, null), h("doute", "wm", "x", "faux"), h("trois", "hwm", "x", null), h("deux", "wm", null, null), h("deux-notice", "wm", "x", null)))
+        assertEquals(listOf("trois", "deux-notice", "deux", "un", "doute"), Hilloulot.duJour(t, listOf("8-23")).map { it.he })
+    }
+
+    @Test
+    fun `la recherche suit l annee, de Tichri a Eloul`() {
+        assertTrue(Hilloulot.rangDansLAnnee("7-1") < Hilloulot.rangDansLAnnee("11-30"))
+        assertTrue(Hilloulot.rangDansLAnnee("11-30") < Hilloulot.rangDansLAnnee("adar1-1"))
+        assertTrue(Hilloulot.rangDansLAnnee("adar1-30") < Hilloulot.rangDansLAnnee("adar-1"))
+        assertTrue(Hilloulot.rangDansLAnnee("adar-29") < Hilloulot.rangDansLAnnee("adar2-1"))
+        assertTrue(Hilloulot.rangDansLAnnee("adar2-29") < Hilloulot.rangDansLAnnee("1-1"))
+        assertTrue(Hilloulot.rangDansLAnnee("1-1") < Hilloulot.rangDansLAnnee("6-29"))
+        val rangs = Hilloulot.recherche(table, "רבי").map { Hilloulot.rangDansLAnnee(it.first) }
+        assertTrue(rangs.size > 100)
+        assertEquals(rangs.sorted(), rangs)
+    }
+
+    @Test
+    fun `voir ce jour mene au prochain jour de la date`() {
+        // 23 Hechvan 5787 : le 3 novembre 2026 ; depuis le 4, celui de 5788.
+        assertEquals(LocalDate.of(2026, 11, 3), Hilloulot.prochainJour("8-23", LocalDate.of(2026, 10, 1), false))
+        val suivant = Hilloulot.prochainJour("8-23", LocalDate.of(2026, 11, 4), false)!!
+        assertTrue("8-23" in Hilloulot.clesPour(suivant, false))
+        assertTrue(suivant.isAfter(LocalDate.of(2027, 10, 1)) && suivant.isBefore(LocalDate.of(2027, 12, 1)))
+        // Adar II n'existe que les années embolismiques : il se trouve quand même.
+        assertTrue(Hilloulot.prochainJour("adar2-14", LocalDate.of(2026, 11, 4), false) != null)
+    }
 }

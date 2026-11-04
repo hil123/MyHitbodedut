@@ -11,18 +11,17 @@ import com.myhitbodedut.ReglagesLecture.Role
 import androidx.appcompat.app.AppCompatActivity
 
 /**
- * Le Tikoun lu d'un seul trait.
+ * Le Tikoun HaKlali, le seul écran du Tikoun : le texte entier, d'un trait.
  *
- * L'ecran des dix psaumes sert a reprendre ou l'on s'est arrete ; celui-ci
- * sert au cas normal, qui est de tout dire d'affilee. La source est
- * explicite : « להמשיך מזה לזה ברצף אחד, ללא הפסק ». Il n'y a donc aucun
- * bouton entre les psaumes, rien a toucher, rien qui interrompe — on fait
- * defiler et on continue.
+ * La source est explicite : « להמשיך מזה לזה ברצף אחד, ללא הפסק ». Il n'y a
+ * donc aucun bouton entre les psaumes, rien a toucher, rien qui interrompe —
+ * on fait defiler et on continue. Le Tikoun découpé psaume par psaume (liste
+ * des dix, un écran par psaume) est retiré à la demande du 04/11.
  *
  * Tout est construit d'avance dans une seule vue defilante : l'ouverture,
- * les dix psaumes a la suite, les versets de cloture. La kavana et la
- * priere de Rabbi Natan restent a part, sur l'ecran de la liste : elles
- * ne font pas partie du trait.
+ * les dix psaumes a la suite, les versets de cloture ; puis, après un filet,
+ * ce qui se dit après le Tikoun sans en faire partie : la kavana du milouy et
+ * la prière de Rabbi Natan, chacune avec sa note.
  */
 class TikkunFlowActivity : AppCompatActivity() {
 
@@ -58,6 +57,18 @@ class TikkunFlowActivity : AppCompatActivity() {
 
         tikkun.bloc(Tikkun.CLOTURE)?.let { bloc ->
             contenu.addView(titre(bloc.titre.he, false))
+            bloc.paragraphes.forEach { contenu.addView(paragraphe(it)) }
+        }
+
+        // Après le Tikoun (04/11, la liste retirée) : la kavana, puis la prière de Rabbi Natan.
+        val langue = ChizukCard.language(this)
+        listOfNotNull(tikkun.bloc(Tikkun.KAVANA), tikkun.bloc(Tikkun.PRIERE)).forEach { bloc ->
+            contenu.addView(titre(bloc.titre.he, false))
+            (bloc.note?.forLanguage(langue)?.ifBlank { null }
+                ?: bloc.titre.forLanguage(langue).takeIf { it != bloc.titre.he })
+                ?.let { contenu.addView(note(it)) }
+            // La formule de la kavana est centrée : c'est un tableau de lettres, pas une phrase.
+            bloc.formule?.let { contenu.addView(paragraphe(it).apply { (this as TextView).textAlignment = View.TEXT_ALIGNMENT_CENTER }) }
             bloc.paragraphes.forEach { contenu.addView(paragraphe(it)) }
         }
 
@@ -119,6 +130,15 @@ class TikkunFlowActivity : AppCompatActivity() {
         setTextColor(Apparence.couleur(context, R.color.ink))
         PoliceHebraique.appliquer(this)
     }, Role.TEXTE)
+
+    /** La note d'une partie (« נאמרת אחרי התיקון »…), discrète, sous son titre. */
+    private fun note(texte: String): View = ReglagesLecture.marquer(TextView(this).apply {
+        layoutParams = ligneParams().apply { topMargin = dp(2) }
+        text = texte
+        textAlignment = View.TEXT_ALIGNMENT_VIEW_START
+        textSize = 14f
+        setTextColor(Apparence.couleur(context, R.color.muted))
+    }, Role.DISCRET)
 
     private fun vueArret(arret: Pause): View = ReglagesLecture.marquer(TextView(this).apply {
         layoutParams = ligneParams()

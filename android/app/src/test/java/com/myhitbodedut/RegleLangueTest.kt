@@ -129,7 +129,6 @@ class RegleLangueTest {
         // déjà dans les trois langues mais n'était référencée nulle part.
         val ecrans = listOf(
             "src/main/res/layout/activity_main.xml",
-            "src/main/res/layout/activity_tikkun.xml",
             "src/main/res/layout/activity_tikkun_flow.xml",
         )
         ecrans.forEach { chemin ->

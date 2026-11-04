@@ -20,7 +20,7 @@ class LectureTest {
     fun `tous les ecrans de lecture ont le bouton`() {
         listOf(
             "SiddurLectureActivity", "TehilimLectureActivity", "TikkunFlowActivity",
-            "PsalmActivity", "LiturgyActivity", "LibraryEntryActivity",
+            "LibraryEntryActivity",
         ).forEach { assertTrue("$it n'a pas le bouton de lecture", source(it).contains("ReglagesLecture.installer(")) }
         // Le nusah ne se change que dans le siddour, pas dans les livres qu'il lit aussi (12/10).
         assertTrue(source("SiddurLectureActivity").contains("avecNusah = !livre"))

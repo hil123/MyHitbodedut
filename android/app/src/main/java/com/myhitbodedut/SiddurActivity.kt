@@ -76,7 +76,7 @@ class SiddurActivity : AppCompatActivity() {
                 startActivity(Intent(this@SiddurActivity, TehilimActivity::class.java))
             })
             addView(livre(getString(R.string.siddur_tikkun_he), getString(R.string.tikkun_title), R.drawable.char_torah, fin = true) {
-                startActivity(Intent(this@SiddurActivity, TikkunActivity::class.java))
+                startActivity(Intent(this@SiddurActivity, TikkunFlowActivity::class.java))
             })
         })
 

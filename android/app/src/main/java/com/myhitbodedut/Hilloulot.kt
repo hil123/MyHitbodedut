@@ -70,19 +70,45 @@ object Hilloulot {
         return m.flatMap { k -> jours.map { "$k-$it" } }
     }
 
-    /** D'abord ceux que les deux sources donnent, puis ceux sans doute relevé. */
+    /**
+     * L'ordre d'un jour (04/11, « très mal organisé ») : d'abord les mieux connus, ceux que le
+     * plus de sources donnent, puis ceux qui ont une notice ; ceux dont la date est mise en
+     * doute en dernier. À égalité, l'ordre du fichier. La carte du jour en montre les cinq premiers.
+     */
     fun duJour(table: Map<String, List<Hilloula>>, cles: List<String>): List<Hilloula> =
         cles.flatMap { table[it].orEmpty() }
-            .sortedBy { (if (it.sources.length == 2) 0 else 2) + (if (it.doute == null) 0 else 1) }
+            .sortedWith(compareBy<Hilloula>({ it.doute != null }, { -it.sources.length }, { it.description == null }))
+
+    /** Le rang d'une clé « mois-jour » dans l'année, de Tichri à Eloul (Adar I, puis Adar, puis Adar II). */
+    fun rangDansLAnnee(cle: String): Int {
+        val (m, j) = cle.split("-")
+        val mois = when (m) {
+            "adar1" -> 6; "adar" -> 7; "adar2" -> 8
+            else -> m.toIntOrNull()?.let { if (it >= 7) it - 6 else it + 8 } ?: 20
+        }
+        return mois * 100 + (j.toIntOrNull() ?: 0)
+    }
 
     /** Cycle de Méton : 7 années embolismiques sur 19 (3, 6, 8, 11, 14, 17, 19). */
     fun embolismique(annee: Int): Boolean = (7 * annee + 1) % 19 < 7
 
-    fun pour(table: Map<String, List<Hilloula>>, date: LocalDate, enIsrael: Boolean, ashkenaz: Boolean = false): List<Hilloula> {
+    fun pour(table: Map<String, List<Hilloula>>, date: LocalDate, enIsrael: Boolean, ashkenaz: Boolean = false): List<Hilloula> =
+        duJour(table, clesPour(date, enIsrael, ashkenaz))
+
+    /** Les clés de hilloulot.json d'un jour civil. */
+    fun clesPour(date: LocalDate, enIsrael: Boolean, ashkenaz: Boolean = false): List<String> {
         val j = CalendrierJuif.jour(date, enIsrael)
         val dernier = CalendrierJuif.jour(date.plusDays(1), enIsrael).jourHebreu == 1
-        return duJour(table, cles(j.moisHebreu, j.jourHebreu, embolismique(j.anneeHebraique), dernier, ashkenaz))
+        return cles(j.moisHebreu, j.jourHebreu, embolismique(j.anneeHebraique), dernier, ashkenaz)
     }
+
+    /**
+     * Le prochain jour civil, à partir de [depuis], où tombe la clé (« Voir ce jour » d'un
+     * résultat de recherche, 04/11) ; trois ans au plus, pour Adar II ; null sinon.
+     */
+    fun prochainJour(cle: String, depuis: LocalDate, enIsrael: Boolean, ashkenaz: Boolean = false): LocalDate? =
+        generateSequence(depuis) { it.plusDays(1) }.take(3 * 385)
+            .firstOrNull { cle in clesPour(it, enIsrael, ashkenaz) }
 
     private val MOIS = mapOf(
         "1" to "ניסן", "2" to "אייר", "3" to "סיון", "4" to "תמוז", "5" to "אב", "6" to "אלול",
@@ -96,13 +122,14 @@ object Hilloulot {
         return "${Reference.lettres(j.toInt())} ${MOIS[m] ?: m}"
     }
 
-    /** La recherche par nom, sans voyelles ni guillemets, dans toute l'année. */
+    /** La recherche par nom, sans voyelles ni guillemets, dans toute l'année, de Tichri à Eloul (04/11). */
     fun recherche(table: Map<String, List<Hilloula>>, texte: String): List<Pair<String, Hilloula>> {
         val nu = RechercheGlobale::nu
         val q = nu(texte.trim())
         if (q.length < 2) return emptyList()
         return table.entries.flatMap { (cle, l) -> l.map { cle to it } }
             .filter { (_, h) -> nu(h.he).contains(q) || (h.fr?.let { nu(it).contains(q) } ?: false) || (h.en?.let { nu(it).contains(q) } ?: false) }
+            .sortedBy { (cle, _) -> rangDansLAnnee(cle) }
     }
 
     /** L'article de Wikipédia hébreu. */

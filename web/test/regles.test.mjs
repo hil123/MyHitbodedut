@@ -589,6 +589,18 @@ test('hilloulot : date lisible et recherche par nom', async () => {
   assert.ok(J.rechercheHilloula(table, 'Chelah').length > 0);
   assert.ok(J.rechercheHilloula(table, 'Shelah').length > 0);
   assert.equal(J.rechercheHilloula(table, 'Moché').length, J.rechercheHilloula(table, 'moche').length);
+  // Réorganisé (04/11) : la recherche suit l'année, de Tichri à Eloul.
+  const rangs = J.rechercheHilloula(table, 'רבי').map(([cle]) => J.rangDansLAnnee(cle));
+  assert.ok(rangs.length > 100);
+  assert.deepEqual(rangs, [...rangs].sort((a, b) => a - b));
+  assert.ok(J.rangDansLAnnee('11-30') < J.rangDansLAnnee('adar1-1') && J.rangDansLAnnee('adar1-30') < J.rangDansLAnnee('adar-1'));
+  assert.ok(J.rangDansLAnnee('adar2-29') < J.rangDansLAnnee('1-1') && J.rangDansLAnnee('7-1') < J.rangDansLAnnee('8-1'));
+  // Un jour : les mieux connus d'abord, les dates douteuses en dernier (Hilloulot.duJour).
+  const t = { '8-23': [{ he: 'un', s: 'm' }, { he: 'doute', s: 'wm', t: 'x', d: 'faux' }, { he: 'trois', s: 'hwm', t: 'x' }, { he: 'deux', s: 'wm' }, { he: 'deux-notice', s: 'wm', t: 'x' }] };
+  assert.deepEqual(J.hilloulotDuJour(t, ['8-23']).map((x) => x.he), ['trois', 'deux-notice', 'deux', 'un', 'doute']);
+  // « Voir ce jour » : 23 Hechvan 5787 est le 3 novembre 2026.
+  assert.equal(J.prochainJourHilloula('8-23', '2026-10-01', false), '2026-11-03');
+  assert.ok(J.prochainJourHilloula('adar2-14', '2026-11-04', false));
 });
 
 // --- Trophées (Trophees.kt, 11/10) ---

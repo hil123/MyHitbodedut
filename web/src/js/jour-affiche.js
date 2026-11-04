@@ -169,11 +169,34 @@ export function clesHilloula(mois, jourH, emb, dernierJour, ashkenaz = false) {
   return m.flatMap((k) => jours.map((j) => `${k}-${j}`));
 }
 
-/** D'abord ceux que les deux sources donnent, puis ceux sans doute relevé. */
+/**
+ * Hilloulot.duJour (04/11) : d'abord les mieux connus, ceux que le plus de sources donnent,
+ * puis ceux qui ont une notice ; ceux dont la date est mise en doute en dernier. À égalité,
+ * l'ordre du fichier.
+ */
 export function hilloulotDuJour(table, cles) {
-  const rang = (h) => (h.s.length === 2 ? 0 : 2) + (h.d ? 1 : 0);
+  const cle = (h) => [h.d ? 1 : 0, -h.s.length, h.t ? 0 : 1];
+  const compare = (a, b) => { const x = cle(a); const y = cle(b); return x[0] - y[0] || x[1] - y[1] || x[2] - y[2]; };
   return cles.flatMap((k) => table[k] ?? []).map((h, i) => [h, i])
-    .sort((x, y) => rang(x[0]) - rang(y[0]) || x[1] - y[1]).map(([h]) => h);
+    .sort((x, y) => compare(x[0], y[0]) || x[1] - y[1]).map(([h]) => h);
+}
+
+/** Hilloulot.rangDansLAnnee : le rang d'une clé « mois-jour », de Tichri à Eloul (Adar I, Adar, Adar II). */
+export function rangDansLAnnee(cle) {
+  const [m, j] = cle.split('-');
+  const n = Number(m);
+  const mois = m === 'adar1' ? 6 : m === 'adar' ? 7 : m === 'adar2' ? 8 : Number.isInteger(n) && n > 0 ? (n >= 7 ? n - 6 : n + 8) : 20;
+  return mois * 100 + (Number(j) || 0);
+}
+
+/** Hilloulot.prochainJour : le prochain jour civil, depuis [iso], où tombe la clé ; trois ans au plus. */
+export function prochainJourHilloula(cle, iso, enIsrael, ashkenaz = false) {
+  const [a, m, d] = iso.split('-').map(Number);
+  for (let i = 0; i < 3 * 385; i++) {
+    const jourIso = new Date(Date.UTC(a, m - 1, d + i, 12)).toISOString().slice(0, 10);
+    if (clesHilloulotPour(jourIso, enIsrael, ashkenaz).includes(cle)) return jourIso;
+  }
+  return null;
 }
 
 /** Les clés de hilloulot.json d'un jour civil. */
@@ -208,14 +231,15 @@ export function dateHilloula(cle, lettres) {
   return `${lettres(Number(j))} ${MOIS_HILLOULA[m] ?? m}`;
 }
 
-/** La recherche par nom, sans voyelles ni guillemets, dans toute l'année. */
+/** La recherche par nom, sans voyelles ni guillemets, dans toute l'année, de Tichri à Eloul (04/11). */
 export function rechercheHilloula(table, texte) {
   // Comme RechercheGlobale.nu : « Moche » trouve « Moché », « pinhas » trouve « Pin'has ».
   const nu = (t) => t.normalize('NFD').replace(/[\u0300-\u036F’‘]/g, '').replace(/[־׀]/g, ' ').replace(/[\u0591-\u05C7"'״׳]/g, '').toLowerCase();
   const q = nu(texte.trim());
   if (q.length < 2) return [];
   return Object.entries(table).flatMap(([cle, l]) => l.map((x) => [cle, x]))
-    .filter(([, x]) => nu(x.he).includes(q) || (x.fr && nu(x.fr).includes(q)) || (x.en && nu(x.en).includes(q)));
+    .filter(([, x]) => nu(x.he).includes(q) || (x.fr && nu(x.fr).includes(q)) || (x.en && nu(x.en).includes(q)))
+    .map((r, i) => [r, i]).sort((x, y) => rangDansLAnnee(x[0][0]) - rangDansLAnnee(y[0][0]) || x[1] - y[1]).map(([r]) => r);
 }
 
 export const lienArticle = (titre) => `https://he.wikipedia.org/wiki/${encodeURIComponent(titre.replace(/ /g, '_'))}`;

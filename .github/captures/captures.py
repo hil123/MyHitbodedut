@@ -471,23 +471,25 @@ def main():
     def s12():
         lancer()
         onglet_textes()
-        ok = toucher(rid="tikkun_button", defilements=2, attente=2.0)
-        capture("12a-tikkun", ok=ok)
-        ok2 = toucher(rid="tikkun_flow", defilements=1, attente=3.0)
-        if not ok2:
-            ok2 = activite("TikkunFlowActivity")
-        capture("12-tikkun-d-un-trait", ok=ok2)
+        # Le Tikoun s'ouvre sur le texte entier (04/11) : plus de liste des dix psaumes.
+        ok = toucher(rid="tikkun_button", defilements=2, attente=3.0)
+        if not ok:
+            ok = activite("TikkunFlowActivity")
+        capture("12-tikkun-d-un-trait", ok=ok)
     etape("12 tikkun d'un trait", s12)
 
     def s13():
         lancer()
         onglet_textes()
-        toucher(rid="tikkun_button", defilements=2, attente=2.0)
-        ok = toucher(rid="psalm_title", defilements=3, attente=3.0)
+        ok = toucher(rid="tikkun_button", defilements=2, attente=3.0)
         if not ok:
-            ok = activite("PsalmActivity", "--ei psalm_numero 16")
-        capture("13-tikkun-psaume", ok=ok)
-    etape("13 psaume du tikkun", s13)
+            ok = activite("TikkunFlowActivity")
+        # La fin : la clôture, la kavana, la prière de Rabbi Natan, le bouton « dit en entier ».
+        for _ in range(20):
+            sh(f"input swipe {W // 2} {int(H * 0.8)} {W // 2} {int(H * 0.2)} 60")
+        pause(2.0)
+        capture("13-tikkun-fin", ok=ok)
+    etape("13 fin du tikkun", s13)
 
     def s14():
         lancer()
@@ -586,8 +588,16 @@ def main():
         retour()
         ok = activite("HilloulotActivity")
         capture("19c-hilloulot", ok=ok)
-        defiler(True)
-        capture("19d-hilloulot-suite", ok=ok)
+        # Réorganisé (04/11) : un nom touché déplie sa fiche ; la recherche range par date.
+        ok2 = toucher(desc="Lire la suite", contains=True, attente=1.5)
+        capture("19d-hilloulot-fiche", ok=ok2)
+        ok3 = toucher(text="Rechercher un tsadik", attente=1.0)
+        if ok3:
+            sh("input text Nahman")
+            pause(1.5)
+            sh("input keyevent 4")
+            pause(0.8)
+        capture("19d2-hilloulot-recherche", ok=ok3)
         retour()
         ok = activite("LibraryActivity", "--ez livres true")
         capture("19e-livres", ok=ok)
@@ -971,9 +981,7 @@ ECRANS_APP = [
     ("TefilotActivity", ""),
     ("TehilimActivity", ""),
     ("TehilimLectureActivity", "--ei debut 1 --ei fin 1"),
-    ("TikkunActivity", ""),
     ("TikkunFlowActivity", ""),
-    ("PsalmActivity", "--ei psalm_numero 16"),
     ("LibraryActivity", ""),
     ("LibraryEntryActivity", "--es entry_id src-lm2-25"),
     ("ZmanimActivity", ""),

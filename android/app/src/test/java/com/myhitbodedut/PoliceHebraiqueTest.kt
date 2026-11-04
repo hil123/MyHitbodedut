@@ -38,12 +38,11 @@ class PoliceHebraiqueTest {
     @Test
     fun `chaque ecran de texte saint pose la police`() {
         listOf(
-            "TehilimLectureActivity.kt", "TikkunFlowActivity.kt", "PsalmActivity.kt",
-            "LiturgyActivity.kt", "LibraryEntryActivity.kt", "TikkunActivity.kt",
+            "TehilimLectureActivity.kt", "TikkunFlowActivity.kt", "LibraryEntryActivity.kt",
         ).forEach { assertTrue("$it sans la police hébraïque", lire("java/com/myhitbodedut/$it").contains("PoliceHebraique.appliquer(")) }
         listOf(
             "view_chizuk.xml", "view_chizuk_compact.xml", "view_hitbodedut.xml",
-            "item_library_section.xml", "item_library_subsection.xml", "activity_psalm.xml",
+            "item_library_section.xml", "item_library_subsection.xml",
         ).forEach { assertTrue("$it sans la police hébraïque", lire("res/layout/$it").contains("@font/hebreu_serif")) }
     }
 }
