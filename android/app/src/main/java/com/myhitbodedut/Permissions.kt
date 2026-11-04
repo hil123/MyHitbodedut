@@ -22,13 +22,16 @@ import androidx.core.content.ContextCompat
 object Permissions {
 
     /**
-     * Avant Android 13, les notifications ne se demandaient pas : elles
-     * étaient accordées à l'installation. Rien à réclamer, donc.
+     * Avant Android 13, les notifications ne se demandaient pas : elles étaient accordées à
+     * l'installation. Mais on peut toujours les couper dans les réglages du téléphone (04/11) :
+     * on répondait « oui » quand même, et un rappel coupé passait pour actif. On demande donc
+     * à Android si elles s'affichent, sur toutes les versions ; à partir de 13, la permission aussi.
      */
     fun hasNotifications(context: Context): Boolean =
-        Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU ||
-            ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) ==
-            PackageManager.PERMISSION_GRANTED
+        androidx.core.app.NotificationManagerCompat.from(context).areNotificationsEnabled() &&
+            (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU ||
+                ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) ==
+                PackageManager.PERMISSION_GRANTED)
 
     fun isGranted(context: Context, autorisation: Autorisation): Boolean = when (autorisation) {
         Autorisation.NOTIFICATIONS -> hasNotifications(context)

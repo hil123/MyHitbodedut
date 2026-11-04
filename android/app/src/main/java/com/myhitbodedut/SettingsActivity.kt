@@ -519,8 +519,14 @@ class SettingsActivity : AppCompatActivity() {
      * sans que personne comprenne pourquoi.
      */
     private fun askNotifications() {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) return
         if (Permissions.hasNotifications(this)) return
+        // Coupées dans les réglages du téléphone (avant Android 13, ou permission pourtant accordée) :
+        // il n'y a rien à demander, seulement l'écran système à ouvrir (04/11).
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU ||
+            androidx.core.content.ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) == android.content.pm.PackageManager.PERMISSION_GRANTED) {
+            safeStart(Permissions.notificationSettingsIntent(this))
+            return
+        }
         val refuseeDefinitivement = notificationsDemandees &&
             !shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS)
         if (refuseeDefinitivement) {
