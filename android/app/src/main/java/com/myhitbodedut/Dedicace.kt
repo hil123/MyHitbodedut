@@ -3,6 +3,7 @@ package com.myhitbodedut
 import android.app.Activity
 import android.content.Intent
 import android.text.InputType
+import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.LinearLayout
@@ -61,17 +62,20 @@ object Dedicace {
             setPadding(0, px(12), 0, px(4))
             setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_TitleSmall)
         }
+        // Des identifiants engendrés, pas des nombres : chaque choix garde le sien.
+        val idsObjets = Objet.values().map { View.generateViewId() }
+        val idsIntentions = Intention.values().map { View.generateViewId() }
         val objets = RadioGroup(activite).apply {
             Objet.values().forEachIndexed { i, o ->
-                addView(RadioButton(activite).apply { id = 100 + i; setText(o.libelle) })
+                addView(RadioButton(activite).apply { id = idsObjets[i]; setText(o.libelle) })
             }
-            check(100)
+            check(idsObjets[0])
         }
         val intentions = RadioGroup(activite).apply {
             Intention.values().forEachIndexed { i, o ->
-                addView(RadioButton(activite).apply { id = 200 + i; setText(o.libelle) })
+                addView(RadioButton(activite).apply { id = idsIntentions[i]; setText(o.libelle) })
             }
-            check(200)
+            check(idsIntentions[0])
         }
         val nom = EditText(activite).apply {
             setHint(R.string.dedicace_nom)
@@ -107,8 +111,8 @@ object Dedicace {
                     nom.error = activite.getString(R.string.dedicace_nom_manque)
                     return@setOnClickListener
                 }
-                val objet = Objet.values()[objets.checkedRadioButtonId - 100]
-                val intention = Intention.values()[intentions.checkedRadioButtonId - 200]
+                val objet = Objet.values()[idsObjets.indexOf(objets.checkedRadioButtonId).coerceAtLeast(0)]
+                val intention = Intention.values()[idsIntentions.indexOf(intentions.checkedRadioButtonId).coerceAtLeast(0)]
                 val quoi = activite.getString(objet.libelle)
                 val texte = corps(
                     activite.getString(R.string.dedicace_corps_intro),
