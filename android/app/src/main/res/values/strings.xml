@@ -1397,4 +1397,6 @@
 
     <!-- Sous l’interrupteur des services en ligne, dans le formulaire du vol (02/11, VolActivity). -->
     <string name="vol_en_ligne_aide">Désactivés par défaut : rien ne quitte le téléphone. Activés, la loupe 🔍 envoie le seul numéro de vol à adsbdb.com pour remplir l’arrivée, et le suivi en direct interroge OpenSky Network.</string>
+    <string name="vol_en_ligne_titre">Chercher la route en ligne ?</string>
+    <string name="vol_en_ligne_oui">Activer et chercher</string>
 </resources>

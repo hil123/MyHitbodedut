@@ -1332,4 +1332,6 @@
 
     <!-- Sous l’interrupteur des services en ligne, dans le formulaire du vol (02/11, VolActivity). -->
     <string name="vol_en_ligne_aide">Off by default: nothing leaves the phone. When on, the 🔍 sends only the flight number to adsbdb.com to fill in the arrival, and live tracking queries OpenSky Network.</string>
+    <string name="vol_en_ligne_titre">Look up the route online?</string>
+    <string name="vol_en_ligne_oui">Turn on and search</string>
 </resources>

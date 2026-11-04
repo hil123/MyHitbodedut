@@ -111,7 +111,10 @@ class ConfidentialiteTest {
     @Test
     fun `adsbdb aussi attend l interrupteur des services en ligne`() {
         val vol = source("VolActivity.kt")
-        assertTrue("la loupe s'affiche sans l'interrupteur", vol.contains("if (BuildConfig.SUIVI_VOL && Store.suiviDirect(this@VolActivity)) {"))
+        // La loupe est toujours visible (04/11) ; éteinte, elle demande l'accord avant tout envoi.
+        val loupe = vol.substringAfter("private fun loupe() {").substringBefore("\n    }\n")
+        assertTrue("la loupe cherche sans l'interrupteur", loupe.contains("if (Store.suiviDirect(this)) return chercherRoute()"))
+        assertTrue("la loupe n'allume pas l'interrupteur sur accord", loupe.contains("Store.setSuiviDirect(this, true)"))
         val route = vol.substringAfter("private fun chercherRoute() {").substringBefore("RouteVol.chercher(")
         assertTrue("chercherRoute part sans l'interrupteur", route.contains("if (!BuildConfig.SUIVI_VOL || !Store.suiviDirect(this)) return"))
         assertEquals("un seul appel réseau d'adsbdb", 1, vol.split("RouteVol.chercher(").size - 1)

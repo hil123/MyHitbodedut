@@ -1365,4 +1365,6 @@
 
     <!-- Sous l’interrupteur des services en ligne, dans le formulaire du vol (02/11, VolActivity). -->
     <string name="vol_en_ligne_aide">כבויים כברירת מחדל: שום דבר לא יוצא מהטלפון. כשהם פעילים, הזכוכית המגדלת 🔍 שולחת ל־adsbdb.com את מספר הטיסה בלבד כדי למלא את היעד, והמעקב בזמן אמת פונה ל־OpenSky Network.</string>
+    <string name="vol_en_ligne_titre">לחפש את המסלול ברשת?</string>
+    <string name="vol_en_ligne_oui">להפעיל ולחפש</string>
 </resources>

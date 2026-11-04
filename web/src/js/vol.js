@@ -47,12 +47,23 @@ const plier = (s) => s.normalize('NFD').replace(/\p{M}/gu, '').toLowerCase()
 export function chercher(liste, texte, max = 20) {
   const q = plier(texte);
   if (!q) return [];
-  const alias = (a) => (a.alias ?? []).map(plier);
-  const exact = liste.filter((a) => plier(a.iata) === q);
-  const ville = liste.filter((a) => plier(a.ville).startsWith(q) || alias(a).some((x) => x.startsWith(q)));
-  const nom = liste.filter((a) => plier(a.nom).includes(q) || plier(a.ville).includes(q) || alias(a).some((x) => x.includes(q)));
-  return [...new Set([...exact, ...ville, ...nom])].slice(0, max);
+  // Les noms pliés une fois par liste (04/11) : avant, chaque lettre repliait les 3 226 aéroports.
+  let idx = INDEX.get(liste);
+  if (!idx) {
+    idx = liste.map((a) => ({ iata: plier(a.iata), ville: plier(a.ville), nom: plier(a.nom), alias: (a.alias ?? []).map(plier) }));
+    INDEX.set(liste, idx);
+  }
+  const exact = [];
+  const ville = [];
+  const nom = [];
+  idx.forEach((p, i) => {
+    if (p.iata === q) exact.push(i);
+    else if (p.ville.startsWith(q) || p.alias.some((x) => x.startsWith(q))) ville.push(i);
+    else if (p.nom.includes(q) || p.ville.includes(q) || p.alias.some((x) => x.includes(q))) nom.push(i);
+  });
+  return [...exact, ...ville, ...nom].slice(0, max).map((i) => liste[i]);
 }
+const INDEX = new WeakMap();
 
 /** Le nom dans la langue de l'application s'il existe, sinon celui d'OurAirports (Aeroports.nomLocal). */
 export const nomLocal = (a, langue) => a.noms?.[langue === 'iw' ? 'he' : langue] ?? a.nom;

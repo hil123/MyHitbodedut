@@ -3505,8 +3505,23 @@ function positionVol(e) {
     tr.t(e.longitude >= 0 ? 'vol_lon_est' : 'vol_lon_ouest', n(e.longitude)));
 }
 
+/** Ce qui, en changeant, demande de redessiner l'écran du vol : la prière, sa limite, la place de « maintenant ». */
+function signatureVol(c = calculVol, maintenant = new Date()) {
+  if (!c) return null;
+  const p = Vol.priere(c, maintenant);
+  const place = Vol.enVol(c).findIndex((e) => maintenant < e.instant);
+  return `${p?.[0]}|${p?.[1] ? +p[1] : ''}|${place}`;
+}
+let signatureVolAffichee = null;
+
+function texteCompteVol(c = calculVol, maintenant = new Date()) {
+  const limite = c ? Vol.priere(c, maintenant)?.[1] : null;
+  return limite ? tr.t('vol_dans', dureeEnMots(Math.max(0, Math.floor((limite - maintenant) / 60000)))) : null;
+}
+
 function resultatsVol(c) {
   const maintenant = new Date();
+  signatureVolAffichee = signatureVol(c, maintenant);
   const p = Vol.priere(c, maintenant);
   const NOMS = { chaharit: 'widget_zmanim_chaharit', minha: 'widget_zmanim_minha', arvit: 'widget_zmanim_arvit' };
   const enVol = Vol.enVol(c);
@@ -3611,7 +3626,13 @@ function ecranVol() {
   if (!minuterieVol) {
     minuterieVol = setInterval(() => {
       if (ecranCourant() !== 'vol') { clearInterval(minuterieVol); minuterieVol = null; return; }
-      if (!document.querySelector('.voile') && !app.contains(document.activeElement?.closest('input'))) rendre();
+      if (document.querySelector('.voile') || app.contains(document.activeElement?.closest('input'))) return;
+      // Seul le compte à rebours change d'ordinaire (04/11) : on récrit son texte. L'écran entier
+      // n'est redessiné que si la prière ou la place de « maintenant » change — sinon la page sautait.
+      const sig = signatureVol();
+      const compte = app.querySelector('.vol-compte');
+      if (sig === signatureVolAffichee && compte) compte.textContent = texteCompteVol() ?? compte.textContent;
+      else rendre();
     }, 30000);
   }
   const pret = chargeAeroports();
