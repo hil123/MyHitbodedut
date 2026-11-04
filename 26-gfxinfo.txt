@@ -1,0 +1,85 @@
+Total frames rendered: 648
+Janky frames: 600 (92.59%)
+Janky frames (legacy): 635 (97.99%)
+50th percentile: 77ms
+90th percentile: 200ms
+95th percentile: 300ms
+99th percentile: 1600ms
+Number Missed Vsync: 307
+Number High input latency: 80
+Number Slow UI thread: 344
+Number Slow bitmap uploads: 32
+Number Slow issue draw commands: 600
+Number Frame deadline missed: 600
+Number Frame deadline missed (legacy): 601
+50th gpu percentile: 4950ms
+90th gpu percentile: 4950ms
+95th gpu percentile: 4950ms
+99th gpu percentile: 4950ms
+
+Applications Graphics Acceleration Info:
+Uptime: 3705710 Realtime: 3705710
+
+** Graphics info for pid 10206 [com.myhitbodedut.debug] **
+
+Stats since: 3627292751256ns
+Total frames rendered: 648
+Janky frames: 600 (92.59%)
+Janky frames (legacy): 635 (97.99%)
+50th percentile: 77ms
+90th percentile: 200ms
+95th percentile: 300ms
+99th percentile: 1600ms
+Number Missed Vsync: 307
+Number High input latency: 80
+Number Slow UI thread: 344
+Number Slow bitmap uploads: 32
+Number Slow issue draw commands: 600
+Number Frame deadline missed: 600
+Number Frame deadline missed (legacy): 601
+HISTOGRAM: 5ms=0 6ms=0 7ms=0 8ms=0 9ms=0 10ms=0 11ms=0 12ms=0 13ms=1 14ms=2 15ms=0 16ms=3 17ms=1 18ms=2 19ms=2 20ms=1 21ms=0 22ms=0 23ms=0 24ms=0 25ms=0 26ms=0 27ms=0 28ms=0 29ms=1 30ms=1 31ms=2 32ms=8 34ms=7 36ms=5 38ms=7 40ms=8 42ms=7 44ms=8 46ms=6 48ms=31 53ms=29 57ms=35 61ms=38 65ms=34 69ms=29 73ms=33 77ms=34 81ms=29 85ms=23 89ms=23 93ms=19 97ms=17 101ms=10 105ms=10 109ms=12 113ms=10 117ms=13 121ms=12 125ms=7 129ms=9 133ms=7 150ms=40 200ms=16 250ms=14 300ms=12 350ms=5 400ms=4 450ms=5 500ms=1 550ms=1 600ms=1 650ms=0 700ms=0 750ms=1 800ms=0 850ms=0 900ms=1 950ms=0 1000ms=0 1050ms=0 1100ms=0 1150ms=0 1200ms=1 1250ms=0 1300ms=1 1350ms=0 1400ms=0 1450ms=1 1500ms=0 1550ms=1 1600ms=2 1650ms=0 1700ms=0 1750ms=1 1800ms=0 1850ms=0 1900ms=0 1950ms=0 2000ms=0 2050ms=1 2100ms=0 2150ms=0 2200ms=0 2250ms=0 2300ms=0 2350ms=0 2400ms=0 2450ms=0 2500ms=0 2550ms=0 2600ms=0 2650ms=0 2700ms=0 2750ms=0 2800ms=0 2850ms=0 2900ms=0 2950ms=0 3000ms=0 3050ms=0 3100ms=1 3150ms=0 3200ms=0 3250ms=1 3300ms=0 3350ms=0 3400ms=0 3450ms=0 3500ms=0 3550ms=0 3600ms=0 3650ms=0 3700ms=0 3750ms=0 3800ms=0 3850ms=0 3900ms=0 3950ms=1 4000ms=0 4050ms=0 4100ms=0 4150ms=0 4200ms=0 4250ms=0 4300ms=0 4350ms=0 4400ms=0 4450ms=0 4500ms=0 4550ms=0 4600ms=0 4650ms=0 4700ms=0 4750ms=0 4800ms=0 4850ms=0 4900ms=0 4950ms=0
+50th gpu percentile: 4950ms
+90th gpu percentile: 4950ms
+95th gpu percentile: 4950ms
+99th gpu percentile: 4950ms
+GPU HISTOGRAM: 1ms=0 2ms=0 3ms=0 4ms=0 5ms=1 6ms=2 7ms=2 8ms=4 9ms=1 10ms=3 11ms=2 12ms=6 13ms=7 14ms=6 15ms=6 16ms=4 17ms=4 18ms=3 19ms=8 20ms=4 21ms=3 22ms=10 23ms=8 24ms=14 25ms=12 4950ms=538
+
+Pipeline=Skia (OpenGL)
+Memory policy:
+  Max surface area: 2592000
+  Max resource usage: 124.42MB (x48)
+  Background retention: 50% (altUiHidden = true)
+  GPU Context timeout: 10
+Contexts: 2 (stopped = 1)
+CPU Caches:
+  Glyph Cache: 729.00 KB (1 entry)
+  Glyph Count: 171 
+Total CPU memory usage:
+  746496 bytes, 729.00 KB (0.00 bytes is purgeable)
+GPU Caches:
+  Image:
+    Texture: 3.76 MB (25 entries)
+  Scratch:
+    RenderTarget: 24.66 MB (7 entries)
+    Buffer Object: 270.00 KB (8 entries)
+    Texture: 4.33 MB (20 entries)
+  Other:
+    Other: 23.31 KB (1 entry)
+    Buffer Object: 2.50 KB (4 entries)
+    StencilAttachment: 2.16 MB (3 entries)
+Total GPU memory usage:
+  36902768 bytes, 35.19 MB (33.06 MB is purgeable)
+
+Profile data in ms:
+
+	com.myhitbodedut.debug/com.myhitbodedut.MainActivity/android.view.ViewRootImpl@d229f51 (visibility=0)
+View hierarchy:
+
+  com.myhitbodedut.debug/com.myhitbodedut.MainActivity/android.view.ViewRootImpl@d229f51
+  202 views, 342,06 kB of render nodes
+
+
+Total ViewRootImpl   : 1
+Total attached Views : 202
+Total RenderNode     : 342,06 kB (used) / 864,41 kB (capacity)
+

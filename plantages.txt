@@ -1,0 +1,4 @@
+== Plantages (logcat -b crash) ==
+aucun
+
+== ANR et erreurs de l'application ==
