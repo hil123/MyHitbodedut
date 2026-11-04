@@ -67,7 +67,8 @@
         "licence": "Public Domain",
         "source": "http://opensiddur.org/2010/08/the-holy-scriptures-a-new-translation-jps-1917/"
       }
-    }
+    },
+    "traduction_liturgie": "FR et EN originales (Claude, 04/11/2026), relues automatiquement (clés, balises) ; relecture humaine souhaitable."
   },
   "psaumes": [
     {

@@ -46,7 +46,8 @@
         "note": "Texte de Rabbi Natan de Breslev (m. 1844) : domaine public. La vocalisation est un travail editorial de l'edition 2021, dont Sefaria ne declare pas la licence — on ne la reprend donc pas."
       }
     },
-    "noms_divins": "abrégé ה' hors des versets ; en toutes lettres dans les versets cités (décision du propriétaire, 04/11/2026 ; tools/noms_abreges.py)"
+    "noms_divins": "abrégé ה' hors des versets ; en toutes lettres dans les versets cités (décision du propriétaire, 04/11/2026 ; tools/noms_abreges.py)",
+    "traduction_sources": "FR et EN originales (Claude, 04/11/2026), relues automatiquement (clés, balises) ; relecture humaine souhaitable."
   },
   "sections": [
     {
@@ -102,6 +103,34 @@
                 "azamra.org (trad. Greenbaum)",
                 "article ברסלב סיטי (copie avec coquilles)",
                 "feuille Sefaria 203099"
+              ],
+              "paragraphes_fr": [
+                "La hitbodedout est un degré suprême, plus grand que tout. C’est-à-dire : se fixer au moins une heure, ou davantage, pour s’isoler seul dans quelque pièce ou dans les champs, et épancher sa conversation entre soi et son Créateur, avec des arguments et des plaidoyers, avec des paroles de grâce, de conciliation et d’apaisement, pour demander et implorer devant Lui, béni soit-Il, qu’Il le rapproche de Lui, de Son service, en vérité.",
+                "Cette prière et cette conversation doivent se faire dans la langue que l’on parle, c’est-à-dire en yiddish (dans notre pays). Car en langue sainte, il lui est difficile d’exprimer tout ce qu’il a à dire, et de plus le cœur ne suit pas les paroles, parce qu’on n’est pas si habitué à cette langue, puisque nous n’avons pas coutume de parler en langue sainte. Mais en yiddish, la langue dans laquelle on raconte et on parle, il est plus facile et plus proche de briser son cœur, car le cœur est attiré et plus proche du yiddish, puisqu’on y est habitué.",
+                "Et en yiddish, il peut exprimer tout ce qu’il a à dire. Tout ce qu’il a sur le cœur, qu’il l’épanche et le raconte devant Lui, béni soit-Il : aussi bien le regret et le repentir pour le passé, que des supplications pour mériter de se rapprocher de Lui, béni soit-Il, à partir d’aujourd’hui et désormais, en vérité, et ainsi de suite, chacun selon son degré.",
+                "Qu’il veille bien à s’habituer à persévérer en cela chaque jour, pendant une heure fixée, comme on l’a dit plus haut ; et le reste de la journée, qu’il soit dans la joie, comme on l’a dit plus haut.",
+                "Cette pratique est d’un degré très, très élevé. C’est un chemin et un conseil excellents pour se rapprocher de Lui, béni soit-Il, car c’est un conseil général, qui englobe tout.",
+                "Car pour tout ce qui lui manque dans le service de Hachem, ou même s’il est complètement éloigné de Son service, béni soit-Il – sur tout cela il épanchera sa conversation et demandera à Lui, béni soit-Il, comme on l’a dit plus haut.",
+                "Et même si parfois ses paroles se bloquent et qu’il ne peut pas du tout ouvrir la bouche pour parler devant Lui, béni soit-Il, cela même est malgré tout très bon : c’est-à-dire la préparation, le fait qu’il est prêt et se tient devant Lui, béni soit-Il, qu’il veut et désire ardemment parler, mais ne le peut pas – cela même est aussi très bon,",
+                "et il peut aussi faire de cela même une conversation et une prière. Sur cela même, qu’il crie et supplie devant Lui, béni soit-Il, d’être tombé si loin qu’il ne peut même plus parler. Qu’il Lui demande, béni soit-Il, miséricorde et grâce, qu’Il ait pitié de lui et qu’Il lui ouvre la bouche, afin qu’il puisse épancher sa conversation devant Lui.",
+                "Sache que de très nombreux grands tsadikim, bien connus, ont raconté qu’ils ne sont parvenus à leur degré que par cette pratique. L’homme sensé comprendra de lui-même la grandeur de cette pratique, qui s’élève toujours plus haut. C’est une chose accessible à toute âme, du plus petit au plus grand, car tous peuvent adopter cette pratique, et par elle ils parviendront à un très haut degré. Heureux celui qui s’y attache !",
+                "Il est bon aussi de faire de la Torah une prière. C’est-à-dire : lorsqu’on étudie ou qu’on entend un enseignement de Torah d’un vrai tsadik, qu’on en fasse une prière, à savoir demander et implorer devant Lui, béni soit-Il, au sujet de tout ce qui est dit dans cet enseignement : quand mériterai-je, moi aussi, de parvenir à tout cela, et combien j’en suis loin ! Et qu’on Lui demande, béni soit-Il, de nous faire mériter de parvenir à tout ce qui est dit dans cet enseignement.",
+                "Celui qui est sensé et qui le désire en vérité, Hachem le conduira sur le chemin de la vérité, et il comprendra de lui-même, une chose découlant d’une autre, comment s’y prendre, de sorte que ses paroles soient des paroles de grâce et des arguments justes, pour Le rendre favorable, béni soit-Il, afin qu’Il le rapproche de Son service en vérité.",
+                "Cette conversation s’élève à un lieu très élevé, et surtout lorsqu’on fait de la Torah une prière : cela provoque de très grands délices en haut."
+              ],
+              "paragraphes_en": [
+                "Hitbodedut is a supreme level, greater than everything. That is, a person should set aside for himself at least an hour or more to be alone by himself in some room or in the field, and pour out his conversation between himself and his Maker, with claims and pleas, with words of grace, appeasement and conciliation, asking and beseeching before Him, blessed be He, that He draw him close to Him, to His service, in truth.",
+                "This prayer and conversation should be in the language one speaks, that is, in Yiddish (in our country). For in the Holy Tongue it is hard for him to express everything he has to say, and the heart is also not drawn after the words, since he is not so accustomed to the language, for it is not our way to speak in the Holy Tongue. But in Yiddish, in which we talk and converse, it is easier and more natural to break one's heart, for the heart is drawn to and closer to Yiddish, since one is accustomed to it.",
+                "And in Yiddish he can express everything he has to say. Everything that is in his heart he should pour out and tell before Him, blessed be He: whether regret and repentance for the past, or pleas and supplications to merit to draw close to Him, blessed be He, from this day on, in truth, and the like, each person according to his level.",
+                "He should be very careful to accustom himself to persevere in this every single day, for a set hour, as mentioned above, and the rest of the day he should be joyful, as mentioned above.",
+                "This practice is of a very, very great level, and it is a very good path and counsel for drawing close to Him, blessed be He, for it is an all-encompassing counsel that includes everything.",
+                "For whatever he lacks in the service of Hashem, or even if he is completely and utterly far from His service, blessed be He – about everything he should pour out his conversation and ask of Him, blessed be He, as mentioned above.",
+                "And even if at times his words are blocked and he cannot open his mouth at all to speak before Him, blessed be He, nevertheless this itself is very good: that is, the preparation – that he is ready and standing before Him, blessed be He, and wants and yearns to speak, only he cannot – this itself is also very good,",
+                "and he can also make a conversation and a prayer out of this very thing. About this itself he should cry out and plead before Him, blessed be He, that he has become so distant that he cannot even speak. And he should ask of Him, blessed be He, for mercy and grace, that He have compassion on him and open his mouth, so that he can pour out his conversation before Him.",
+                "Know that many, many great and renowned tzaddikim have related that they reached their level only through this practice. The wise will understand on their own the greatness of this practice, which rises higher and higher. It is something open to every soul, from the smallest to the greatest, for all can follow this practice, and through it they will come to a great level. Happy is the one who takes hold of it!",
+                "It is also good to make the Torah into a prayer. That is, when one studies or hears some Torah teaching from a true tzaddik, he should make a prayer out of it: to ask and plead before Him, blessed be He, about everything said there in that teaching – when will he too merit to attain all this, and how far he is from it. And he should ask of Him, blessed be He, to grant him the merit to attain everything said in that teaching.",
+                "Whoever is wise and truly desires it, Hashem will lead him on the path of truth, and he will understand by himself, deducing one thing from another, how to conduct himself in this, so that his words will be words of grace and well-founded pleas, to win His favor, blessed be He, that He draw him close to His service in truth.",
+                "This conversation rises to a very high place, and especially when one makes the Torah into a prayer – this brings about very great delight on high."
               ]
             },
             {
@@ -126,6 +155,16 @@
                 "azamra.org (trad. Greenbaum)",
                 "breslov.org « Hitbodedut: when and where? »",
                 "article ברסלב סיטי (résumé)"
+              ],
+              "paragraphes_fr": [
+                "Il est impossible de parvenir à l’annulation de soi, si ce n’est par la hitbodedout. Car en s’isolant et en épanchant sa conversation entre soi et son Créateur, on mérite par là d’annuler tous les désirs et tous les mauvais traits de caractère, jusqu’à mériter d’annuler toute sa matérialité et d’être inclus dans sa racine.",
+                "Mais l’essentiel de la hitbodedout est la nuit, au moment où le monde est libéré des tracas de ce monde-ci. Car le jour, du fait que les gens courent après ce monde-ci, cela détourne et trouble l’homme, l’empêchant de s’attacher et d’être inclus en Hachem, béni soit-Il. Et même si lui-même n’est pas occupé, néanmoins, puisque les gens sont alors affairés et courent après les vanités de ce monde, il est alors difficile de parvenir à l’annulation de soi.",
+                "Il faut aussi que la hitbodedout se fasse dans un lieu particulier, c’est-à-dire hors de la ville, sur un chemin isolé, dans un lieu où les gens ne passent pas. Car dans un lieu où passent le jour des gens qui courent après ce monde-ci, même s’ils n’y passent pas en ce moment, cela trouble aussi la hitbodedout, et on ne peut pas s’annuler et être inclus en Lui, béni soit-Il. C’est pourquoi il faut aller seul, la nuit, sur un chemin isolé, dans un lieu où il n’y a personne, et là marcher et s’isoler, vider son cœur et son esprit de toutes les affaires de ce monde et tout annuler, jusqu’à mériter le véritable état d’annulation de soi."
+              ],
+              "paragraphes_en": [
+                "It is impossible to come to self-nullification except through hitbodedut. For by being alone and pouring out his conversation between himself and his Maker, a person merits to nullify all the desires and bad traits, until he merits to nullify all his physicality and to be included in his root.",
+                "But the main time for hitbodedut is at night, when the world is free of the busyness of this world. For during the day, because people are chasing after this world, it disrupts and confuses a person, keeping him from cleaving to and being included in Hashem, blessed be He. And even if he himself is not busy, nevertheless, since people are then busy and chasing after the vanities of this world, it is hard at that time to come to self-nullification.",
+                "The hitbodedut must also be in a special place, that is, outside the city, on a solitary path, in a place where people do not go. For in a place where people walk by day – people who chase after this world – even though they are not walking there now, it still disturbs the hitbodedut, and one cannot nullify oneself and be included in Him, blessed be He. Therefore he must go alone at night, on a solitary path, in a place where there is no one, and there go and seclude himself, clear his heart and mind of all the affairs of this world, and nullify everything, until he merits the state of true self-nullification."
               ]
             },
             {
@@ -146,6 +185,12 @@
               "statut_verif": "verifie_texte",
               "recoupement": [
                 "article ברסלב סיטי (même texte, même référence)"
+              ],
+              "paragraphes_fr": [
+                "Une fois, il parlait avec nous, et il parlait longuement de la grandeur de la hitbodedout ; il exaltait énormément la grandeur de cette pratique. Il dit qu’on ne peut prescrire aux gens de suivre cette pratique qu’une heure par jour, car on ne peut pas leur en imposer davantage ; mais en vérité, ils devraient être en hitbodedout toute la journée. Il parla alors beaucoup de ce sujet, et l’on entendit alors de sa bouche sainte bien des propos beaux et gracieux sur la grandeur de la hitbodedout, qui surpasse tout. Il dit : « Ne peut-on pas, par une incantation murmurée, empêcher une arme à feu – ce qu’on appelle biks [un fusil] – de tirer ? “Men kan farshprekhn a biks zi zol nit shisn” (on peut conjurer un fusil pour qu’il ne tire pas). » Car la parole possède une grande force ; comprends bien. Et il prolongea cette conversation toute la journée. Heureux celui qui s’y attache !"
+              ],
+              "paragraphes_en": [
+                "Once he was speaking with us, and he spoke at length about the greatness of hitbodedut, praising the greatness of this practice exceedingly. He said that one cannot instruct people to follow this practice for more than one hour a day, since one cannot burden them more than that; but in truth they ought to be in hitbodedut all day long. He spoke a great deal about this then, and many fine and beautiful words were heard from his holy mouth about the greatness of hitbodedut, which surpasses everything. He said: “Can one not whisper a charm over a firearm – what is called a biks [a rifle] – so that it will not shoot? ‘Men kan farshprekhn a biks zi zol nit shisn’ (one can put a spell on a gun so that it won't fire).” For speech has great power; understand this well. And he continued this conversation the whole day. Happy is the one who takes hold of it!"
               ]
             },
             {
@@ -167,6 +212,12 @@
               "recoupement": [
                 "azamra.org (trad. Greenbaum)",
                 "article ברסלב סיטי"
+              ],
+              "paragraphes_fr": [
+                "Il a dit : même lorsqu’on ne peut dire dans la hitbodedout que les mots « Maître du monde », c’est aussi très bon. Il a dit qu’on peut reconnaître chez quelqu’un d’autre s’il pratique la hitbodedout."
+              ],
+              "paragraphes_en": [
+                "He said: even when one can say nothing in hitbodedut but the words “Master of the world,” that too is very good. He said that one can recognize in another person whether he practices hitbodedut."
               ]
             },
             {
@@ -205,6 +256,26 @@
                 "גם היה רגיל לפעמים לומר בתהלים רק הפסוקים המדברים מתחנות ובקשות וצעקה לה' יתברך, והיה אומר רק פסוקים אלו והשאר לא היה אומר. והיה אומר כל הפסוקים האלו מכל ספר תהלים בפעם אחד.",
                 "ומלבד כל זה, העקר היה, מה שהיה מתפלל מעצמו, דהינו מה שהיה רגיל לדבר מלבו לפני ה' יתברך (בלשון אשכנז), שהיה מתפלל וטוען לפני ה' יתברך בכמה וכמה מיני טענות ותחנות ובקשות שאמר מדעתו ומלבו כנ\"ל שיזכהו ה' יתברך לעבודתו.",
                 "וזהו העקר מה שהועיל לו לזכות למה שזכה. כך שמענו מפיו הקדוש בפרוש."
+              ],
+              "paragraphes_fr": [
+                "Mais l’essentiel de son service, grâce auquel il a mérité ce qu’il a mérité, ce fut uniquement l’abondance des prières, des supplications, des requêtes, des paroles de conciliation et d’apaisement : il avait grande coutume de prier et de supplier devant Lui, béni soit-Il. Il cherchait à Le rendre favorable et à L’apaiser, béni soit-Il, par toutes sortes de supplications et de requêtes, afin qu’Il lui accorde, dans Sa miséricorde, de le rapprocher de Son service, béni soit-Il.",
+                "Et ce qui l’aida le plus, ce furent les prières qu’il disait en yiddish : il avait grande coutume de se réserver quelque endroit qu’il trouvait, où il n’y avait personne, et il y épanchait sa conversation devant Hachem, béni soit-Il, dans la langue que l’on parle (c’est-à-dire en yiddish).",
+                "Il cherchait à Le rendre favorable et à L’apaiser, béni soit-Il, il demandait et suppliait devant Lui, béni soit-Il, avec toutes sortes d’arguments et de plaidoyers, montrant qu’il convenait qu’Il, béni soit-Il, le rapproche de Son service. Il en avait très, très grande coutume, et il y consacra des jours et des années.",
+                "Il se cachait aussi au-dessus de la maison de son père, sous le toit, où il y avait comme une chambre faite d’une cloison de roseaux, où l’on gardait de la paille et du fourrage. Là il se cachait, il récitait des Psaumes et criait à voix basse vers Hachem, béni soit-Il, qu’Il lui fasse mériter de le rapprocher de Lui, béni soit-Il.",
+                "En un mot : toutes les sortes de requêtes au monde qui se trouvent dans n’importe quel livre courant parmi nous, absolument toutes – il n’a laissé aucune supplication ni requête sans la dire de très nombreuses fois : aussi bien les Psaumes que le livre Chaaré Tsion, les requêtes imprimées dans les grands livres de prières et toutes sortes d’autres requêtes et supplications, et même les supplications imprimées en yiddish – il n’a omis de dire aucune d’entre elles. Il avait coutume de dire toutes les supplications qui suivent les Maamadot, imprimées après chaque jour. Et lui avait coutume de dire toutes les supplications de tous les jours d’un seul coup.",
+                "Il avait aussi coutume parfois de dire dans les Psaumes uniquement les versets qui parlent de supplications, de requêtes et de cris vers Hachem, béni soit-Il ; il ne disait que ces versets-là et ne disait pas le reste. Et il disait tous ces versets de tout le livre des Psaumes d’un seul coup.",
+                "Et en plus de tout cela, l’essentiel était ce qu’il priait de lui-même, c’est-à-dire ce qu’il avait coutume de dire du fond du cœur devant Hachem, béni soit-Il (en yiddish) : il priait et plaidait devant Hachem, béni soit-Il, avec toutes sortes d’arguments, de supplications et de requêtes qu’il disait de son propre esprit et de son propre cœur, comme on l’a dit plus haut, pour que Hachem, béni soit-Il, lui accorde de mériter Son service.",
+                "Et c’est cela, l’essentiel, qui l’a aidé à mériter ce qu’il a mérité. C’est ce que nous avons entendu explicitement de sa bouche sainte."
+              ],
+              "paragraphes_en": [
+                "But the main part of his devotion, through which he attained what he attained, was simply an abundance of prayers, supplications, requests, words of conciliation and appeasement; he was very accustomed to pray and plead before Him, blessed be He. He would seek to win His favor and appease Him, blessed be He, with all kinds of supplications and requests, that He grant him in His mercy to be drawn close to His service, blessed be He.",
+                "What helped him most were the prayers he said in Yiddish. He was very accustomed to set aside for himself some place he found where there were no people, and there he would pour out his conversation before Hashem, blessed be He, in the language one speaks (that is, in Yiddish).",
+                "He would seek to win His favor and appease Him, blessed be He, asking and pleading before Him, blessed be He, with all sorts of claims and arguments why it was fitting for Him, blessed be He, to draw him close to His service. He was very, very accustomed to this, and he spent days and years on it.",
+                "He would also hide himself up above his father's house, under the roof, where there was something like a room partitioned off with reeds, where straw and fodder were kept. There he would hide, say Psalms, and cry out in a whisper to Hashem, blessed be He, that He grant him to be drawn close to Him, blessed be He.",
+                "In short: all the kinds of requests in the world found in any book that is common among us, all of them without exception – he did not leave out a single supplication or request without saying it many, many times: the Psalms, the book Sha'arei Tziyon, the requests printed in the large prayer books and all other kinds of requests and supplications, and even the supplications printed in Yiddish – he did not leave out any of them. He was accustomed to say all the supplications that follow the Ma'amadot, printed after each and every day. And he was accustomed to say all the supplications of all the days at one time.",
+                "He was also accustomed at times to say from the Psalms only the verses that speak of supplications, requests and crying out to Hashem, blessed be He; he would say only those verses and not the rest. And he would say all these verses from the entire book of Psalms at one time.",
+                "And besides all this, the main thing was what he prayed on his own, that is, what he was accustomed to speak from his heart before Hashem, blessed be He (in Yiddish): he would pray and plead before Hashem, blessed be He, with all kinds of arguments, supplications and requests that he said from his own mind and his own heart, as mentioned above, that Hashem, blessed be He, grant him to merit His service.",
+                "And this is the main thing that helped him attain what he attained. So we heard explicitly from his holy mouth."
               ]
             },
             {
@@ -230,6 +301,14 @@
               "paragraphes_sans_nikkoud": [
                 "וכמה פעמים היה מדבר לפני ה' יתברך דברי תחנות ובקשות מלבו, ונזדמן לו בתוך דבוריו טענות יפות ותפלות נכונות ומסדרות והוטבו בעיניו, והיה כותבם אצלו לזכרון למען יהיה רגיל להתפלל אותם גם אחר־כך.",
                 "וכן היה רגיל בענין זה לדבר בינו לבין קונו הרבה מאד מאד וכל תפלותיו היו; שיזכה להתקרב לה' יתברך. והיו לו טענות גדולות לה' יתברך על זה."
+              ],
+              "paragraphes_fr": [
+                "Bien des fois, alors qu’il disait devant Hachem, béni soit-Il, des paroles de supplication et de requête venant de son cœur, il lui venait au fil de ses paroles de beaux arguments et des prières justes et bien ordonnées qui lui plaisaient ; il les mettait alors par écrit pour s’en souvenir, afin de prendre l’habitude de les prier aussi par la suite.",
+                "Ainsi avait-il coutume de parler de cette façon entre lui et son Créateur, très, très abondamment ; et toutes ses prières tendaient à ceci : mériter de se rapprocher de Hachem, béni soit-Il. Et il avait à ce sujet de grands arguments devant Hachem, béni soit-Il."
+              ],
+              "paragraphes_en": [
+                "Many times, as he spoke words of supplication and request from his heart before Hashem, blessed be He, there would come to him in the course of his words beautiful arguments and fitting, well-ordered prayers that pleased him, and he would write them down for himself as a reminder, so that he would be used to praying them afterward as well.",
+                "So too he was accustomed in this way to speak between himself and his Maker very, very much, and all his prayers were that he might merit to draw close to Hashem, blessed be He. And he had great arguments to put before Hashem, blessed be He, about this."
               ]
             },
             {
@@ -259,6 +338,18 @@
                 "אך אף־על־פי־כן היה מחזק עצמו מאד ולא הניח את מקומו. וכמה פעמים היה, שהיה נופל בדעתו מחמת זה שראה שהוא מתפלל ומעתיר ומפציר כל כך שיתקרב לעבודת־השם־יתברך ואין מסתכלין עליו כלל.",
                 "ומחמת זה נפל לפעמים בדעתו ולא היה מדבר עוד כל־כך בינו לבין קונו איזה ימים. אחר־כך נזכר בעצמו והתביש בעצמו על שהרהר אחר מדותיו יתברך, כי באמת בודאי ה' יתברך חנון ורחום וכו' ובודאי הוא רוצה לקרבו וכו'.",
                 "וחזר ונתחזק בדעתו, והתחיל שוב להעתיר ולדבר לפני ה' יתברך כנ\"ל. וכן היה כמה פעמים."
+              ],
+              "paragraphes_fr": [
+                "Et malgré tout, il lui semblait sans cesse qu’on ne le regardait pas du tout et qu’on ne l’écoutait pas du tout ; bien au contraire, il lui semblait qu’on l’éloignait du service de Hachem, béni soit-Il, par toutes sortes d’éloignements, et comme si l’on ne voulait absolument pas de lui. Car il voyait passer et s’écouler des jours et des années, et il était encore loin de Hachem, béni soit-Il, sans avoir encore mérité le moindre rapprochement. C’est pourquoi il lui semblait qu’on n’écoutait pas du tout ses paroles et qu’on ne le regardait pas du tout ; bien au contraire – qu’on l’éloignait par toutes sortes d’éloignements du service de Hachem, béni soit-Il.",
+                "Mais malgré tout, il se renforçait beaucoup et ne quittait pas sa place. Il arriva bien des fois qu’il se décourage à cause de cela, voyant qu’il priait, implorait et insistait tant pour se rapprocher du service de Hachem, béni soit-Il, et qu’on ne le regardait pas du tout.",
+                "À cause de cela, il lui arrivait de se décourager et, pendant quelques jours, il ne parlait plus autant entre lui et son Créateur. Puis il se ressaisissait et avait honte d’avoir mis en doute les attributs de Hachem, béni soit-Il, car en vérité Hachem, béni soit-Il, est assurément gracieux et miséricordieux, etc., et Il veut assurément le rapprocher, etc.",
+                "Il se renforçait à nouveau dans son esprit et recommençait à implorer et à parler devant Hachem, béni soit-Il, comme on l’a dit plus haut. Et il en fut ainsi bien des fois."
+              ],
+              "paragraphes_en": [
+                "And nevertheless, it always seemed to him that no one was paying attention to him at all and no one was listening to him at all; on the contrary, it seemed to him that he was being pushed away from His service, blessed be He, in every kind of way, as if he were not wanted at all. For he saw that many, many days and years were passing by and he was still far from Hashem, blessed be He, and had not yet merited any closeness at all. Therefore it seemed to him that his words were not heard at all and no one paid attention to him at all; on the contrary – he was being pushed away from His service, blessed be He, in every kind of way.",
+                "Yet nevertheless he strengthened himself greatly and did not leave his place. Many times it happened that he became dejected because of this, seeing that he prayed, entreated and pleaded so much to draw close to the service of Hashem, blessed be He, and no one paid attention to him at all.",
+                "Because of this he sometimes became dejected and for a few days did not speak as much between himself and his Maker. Afterward he would come to himself and be ashamed of himself for having questioned His ways, blessed be He, for in truth Hashem, blessed be He, is surely gracious and compassionate, etc., and He surely wants to draw him close, etc.",
+                "And he would strengthen himself again in his mind and begin once more to entreat and speak before Hashem, blessed be He, as mentioned above. And so it was many times."
               ]
             },
             {
@@ -284,6 +375,16 @@
               "recoupement": [
                 "tanach.us et MAM (deux éditions indépendantes)",
                 "citation dans la lettre d'Achèr BaNa'hal"
+              ],
+              "paragraphes_fr": [
+                "Les sacrifices agréables à Dieu, c’est un esprit brisé ; un cœur brisé et contrit, ô Dieu, Tu ne le méprises pas. (Psaumes 51, 19)",
+                "L’Éternel est proche de tous ceux qui L’invoquent, de tous ceux qui L’invoquent en vérité. (Psaumes 145, 18)",
+                "L’Éternel est proche de ceux qui ont le cœur brisé, et Il sauve ceux dont l’esprit est abattu. (Psaumes 34, 19)"
+              ],
+              "paragraphes_en": [
+                "The sacrifices of God are a broken spirit; a broken and crushed heart, O God, You will not despise. (Psalms 51:19)",
+                "The LORD is near to all who call upon Him, to all who call upon Him in truth. (Psalms 145:18)",
+                "The LORD is near to the brokenhearted, and He saves those who are crushed in spirit. (Psalms 34:19)"
               ]
             },
             {
@@ -882,7 +983,19 @@
               "statut_verif": "verifie_texte",
               "note": "Extrait : paragraphes 2 à 5 de la prière. La leçon annoncée en tête (Likoutei Moharan II, 25) a été ouverte et vérifiée.",
               "lecon_sur_le_sujet": "oui",
-              "lecon_mesure": "5 occurrences du sujet dans 2204 caractères de leçon"
+              "lecon_mesure": "5 occurrences du sujet dans 2204 caractères de leçon",
+              "paragraphes_fr": [
+                "Maître du monde, aide-moi à épancher toute ma conversation devant Toi, chaque jour et en tout temps, continuellement. Accorde-moi le mérite et viens à mon secours, afin que je mérite de multiplier la conversation entre moi et mon Créateur, jusqu’à mériter de consacrer à cela la plus grande partie du jour et de la nuit, tous les jours de ma vie.",
+                "Aie pitié de moi et ouvre ma bouche en tout temps, et envoie-moi des paroles vraies et saintes de Ta sainte demeure, des cieux, pour implorer, prier et demander devant Toi pour mon âme, en tout temps, avec des paroles nouvelles.",
+                "Aide-moi toujours à multiplier les supplications, avec des paroles de conciliation et d’apaisement, des arguments et des plaidoyers justes, des paroles de grâce et des supplications, de sorte que je mérite toujours d’éveiller sur moi Ta grande miséricorde, pour que Tu m’aides en tout temps à me rapprocher de Toi.",
+                "Et que je mérite à chaque fois de monter de degré en degré, pour me rapprocher de Toi en tout temps d’un rapprochement toujours plus grand."
+              ],
+              "paragraphes_en": [
+                "Master of the world, help me to pour out all my conversation before You every day and at every moment, always. Grant me the merit and save me, so that I may merit to speak abundantly between me and my Maker, until I merit to spend most of the day and night on this, all the days of my life.",
+                "Have mercy on me and open my mouth at all times, and send me true and holy words from Your holy dwelling, from heaven, to entreat, to pray and to ask before You for my soul at all times, with new words.",
+                "And help me always to entreat abundantly, with words of conciliation and appeasement and with well-founded claims and pleas, with words of grace and supplication, so that I may always merit to arouse Your great mercy upon me, that You save me at every moment and bring me close to You.",
+                "And may I merit each time to rise from level to level, to draw close to You at every moment with an ever greater closeness."
+              ]
             },
             {
               "id": "src-lt-simcha",
@@ -919,7 +1032,27 @@
               "statut_verif": "verifie_texte",
               "note": "Extrait : paragraphes 1 à 8 de la prière. La leçon annoncée en tête (Likoutei Moharan II, 23) a été ouverte et vérifiée.",
               "lecon_sur_le_sujet": "oui",
-              "lecon_mesure": "43 occurrences du sujet dans 1096 caractères de leçon"
+              "lecon_mesure": "43 occurrences du sujet dans 1096 caractères de leçon",
+              "paragraphes_fr": [
+                "Réjouis l’âme de Ton serviteur, car vers Toi, Éternel, j’élève mon âme. Je veux exulter et me réjouir de Ta bonté, car Tu as vu ma misère, Tu as connu les détresses de mon âme.",
+                "Fais-moi entendre l’allégresse et la joie ; que les os que Tu as broyés exultent. Rends-moi la joie de Ton salut, et qu’un esprit généreux me soutienne.",
+                "Que tous ceux qui s’abritent en Toi se réjouissent, qu’ils chantent à jamais ; Tu les protégeras, et ceux qui aiment Ton Nom exulteront en Toi. Je me réjouirai et j’exulterai en Toi, je chanterai Ton Nom, ô Très-Haut.",
+                "Fais-moi connaître le chemin de la vie, la plénitude des joies devant Ta face, les délices à Ta droite pour l’éternité.",
+                "En l’Éternel mon âme se glorifiera ; les humbles l’entendront et se réjouiront. Qu’ils chantent et se réjouissent, ceux qui désirent ma justification, et qu’ils disent toujours : Grand est l’Éternel, qui désire la paix de Son serviteur.",
+                "Que tous ceux qui Te cherchent soient dans l’allégresse et se réjouissent en Toi ; que ceux qui aiment Ton salut disent toujours : Grand est l’Éternel !",
+                "Les justes se réjouiront, ils exulteront devant Dieu et seront transportés de joie.",
+                "N’est-ce pas Toi qui nous rendras la vie, afin que Ton peuple se réjouisse en Toi ? Rassasie-nous dès le matin de Ta bonté, et nous chanterons et nous réjouirons tous nos jours. Réjouis-nous autant de jours que Tu nous as affligés, autant d’années que nous avons vu le malheur."
+              ],
+              "paragraphes_en": [
+                "Gladden the soul of Your servant, for to You, O LORD, I lift up my soul. I will exult and rejoice in Your kindness, for You have seen my affliction; You have known the troubles of my soul.",
+                "Let me hear joy and gladness; let the bones You have crushed rejoice. Restore to me the joy of Your salvation, and let a generous spirit sustain me.",
+                "Let all who take refuge in You rejoice; let them sing for joy forever; You will shelter them, and those who love Your Name will exult in You. I will rejoice and exult in You; I will sing praise to Your Name, O Most High.",
+                "Make known to me the path of life, fullness of joys in Your presence, delights at Your right hand forever.",
+                "In the LORD my soul will glory; the humble will hear and rejoice. Let those who desire my vindication sing for joy and be glad, and let them always say: Great is the LORD, who desires the peace of His servant.",
+                "May all who seek You exult and rejoice in You; may those who love Your salvation always say: Great is the LORD!",
+                "And the righteous will rejoice; they will exult before God and be glad with joy.",
+                "Will You not revive us again, so that Your people may rejoice in You? Satisfy us in the morning with Your kindness, and we will sing and rejoice all our days. Gladden us according to the days You afflicted us, the years in which we saw evil."
+              ]
             },
             {
               "id": "src-lt-uman",
@@ -950,7 +1083,21 @@
               "statut_verif": "verifie_texte",
               "note": "Extrait : paragraphes 1 à 5 de la prière. La leçon annoncée en tête (Likoutei Moharan I, 211) a été ouverte et vérifiée.",
               "lecon_sur_le_sujet": "oui",
-              "lecon_mesure": "7 occurrences du sujet dans 464 caractères de leçon"
+              "lecon_mesure": "7 occurrences du sujet dans 464 caractères de leçon",
+              "paragraphes_fr": [
+                "Pour Roch Hachana. Qu’il soit Ta volonté, Hachem notre Dieu et Dieu de nos pères, de me faire mériter, dans Ta grande miséricorde, d’aller et de voyager auprès des vrais tsadikim pour Roch Hachana, et d’être toujours attaché aux vrais tsadikim ; et par là, que je mérite de sanctifier mon esprit et ma pensée d’une grande sainteté.",
+                "Aie compassion de moi dans Ta grande compassion, sois mon aide et délivre-moi de toutes sortes de pensées étrangères et de toute atteinte à l’esprit qui existe au monde. Accorde-moi de Ta part la sagesse, la connaissance, le discernement et l’intelligence, et fais-moi mériter bientôt la sainteté de la pensée, pleinement et en vérité.",
+                "Et dans Ta grande miséricorde, adoucis et annule toutes les rigueurs qui pèsent sur nous et sur tout Ton peuple, la maison d’Israël, dès maintenant et à jamais.",
+                "Et que nous méritions de recevoir la sainteté de Roch Hachana par l’intermédiaire des vrais tsadikim, et de réparer toutes les réparations qu’il faut réparer à Roch Hachana, qui est la source des jugements de toute l’année.",
+                "Que notre pensée soit toujours sainte et pure, et surtout pendant le saint Roch Hachana. De grâce, Toi le Miséricordieux, dans Ta grande miséricorde aie pitié de nous, et fais-nous mériter et accorde-nous alors la sainteté de la pensée au plus haut point. Garde-nous et préserve-nous, afin qu’il ne nous vienne alors à l’esprit aucune pensée étrangère et extérieure, quelle qu’elle soit ; mais qu’en Ton Nom nous exultions tout le jour, avec crainte et révérence, dans une grande sainteté et une grande pureté, avec des pensées saintes, limpides et claires, d’une limpidité et d’une clarté absolues ; jusqu’à ce que nous méritions, par la force de notre attachement aux vrais tsadikim, de réparer et d’accomplir tous les tris à Roch Hachana, de dégager toutes les étincelles de sainteté des profondeurs des écorces, et d’adoucir et d’annuler toutes les rigueurs du monde qui pèsent sur nous et sur tout Ton peuple, la maison d’Israël,"
+              ],
+              "paragraphes_en": [
+                "For Rosh Hashanah. May it be Your will, Hashem our God and God of our fathers, that You grant me in Your great mercy to go and travel to true tzaddikim for Rosh Hashanah, and to be always bound to true tzaddikim, and through this may I merit to sanctify my mind and my thoughts with great holiness.",
+                "Have pity on me in Your great compassion; be my help and save me from all kinds of foreign thoughts and from every kind of blemish of the mind in the world. Graciously grant me from You wisdom, knowledge, understanding and insight, and grant me soon the holiness of thought, completely and in truth.",
+                "And in Your great mercy, sweeten and nullify all the harsh judgments upon us and upon all Your people, the House of Israel, from now and forever.",
+                "And may we merit to receive the holiness of Rosh Hashanah through the true tzaddikim, and to accomplish all the rectifications that must be made on Rosh Hashanah, which is the source of the judgments of the entire year.",
+                "May our thoughts be always holy and pure, and especially on the holy Rosh Hashanah. Please, Merciful One, in Your great mercy have mercy on us, and grant us then the holiness of thought to the highest degree. Guard us and save us so that no foreign or extraneous thought whatsoever should then enter our minds; but rather in Your Name may we rejoice all day long, in awe and reverence, in great holiness and purity, with thoughts that are holy, pure and clear, of the utmost purity and clarity; until we merit, through the power of our bond with the true tzaddikim, to rectify and accomplish all the sifting on Rosh Hashanah, to sift out all the sparks of holiness from the depths of the husks, and to sweeten and nullify all the harsh judgments in the world from upon us and from upon all Your people, the House of Israel,"
+              ]
             },
             {
               "id": "src-lt-kdusha",
@@ -975,7 +1122,15 @@
               "statut_verif": "verifie_texte",
               "note": "Extrait : paragraphes 12 à 13 de la prière. La leçon annoncée en tête (Likoutei Moharan I, 39) a été ouverte et vérifiée.",
               "lecon_sur_le_sujet": "partiel",
-              "lecon_mesure": "2 occurrences du sujet dans 1442 caractères de leçon"
+              "lecon_mesure": "2 occurrences du sujet dans 1442 caractères de leçon",
+              "paragraphes_fr": [
+                "Et que nous méritions de monter à chaque fois de sainteté en sainteté plus haute, jusqu’à mériter d’être inclus dans Ta sainteté suprême, selon Ta bonne volonté, en vérité.",
+                "Que nous méritions de briser tous les désirs animaux – le désir sexuel, le désir de manger, tous les désirs : que nous méritions de les briser tous et de les annuler entièrement, loin de nous et de nos frontières. Fais descendre sur nous sainteté et pureté de la source de toutes les saintetés, et que nous méritions de nous sanctifier toujours de Ta sainteté suprême, de revenir à Toi en vérité, et de mériter de nous écarter entièrement du mal et de faire toujours Ta bonne volonté. Notre Père, notre Roi, aie pitié de nous pour l’amour de Ton Nom, sanctifie-nous de Ta sainteté suprême et purifie notre cœur pour Te servir en vérité,"
+              ],
+              "paragraphes_en": [
+                "And may we merit to rise each time from holiness to higher holiness, until we merit to be included in Your supernal holiness, according to Your good will, in truth.",
+                "And may we merit to break all the animal desires – the sexual desire, the desire for food, all the desires – may we merit to break them all and nullify them completely from us and from our borders. Draw down upon us holiness and purity from the source of all holiness, and may we merit to sanctify ourselves always with Your supernal holiness, and return to You in truth, and merit to turn away from evil completely and always do Your good will. Our Father, our King, have mercy on us for the sake of Your Name, sanctify us with Your supernal holiness and purify our hearts to serve You in truth,"
+              ]
             },
             {
               "id": "src-lt-zera",
@@ -1002,7 +1157,17 @@
               "statut_verif": "verifie_texte",
               "note": "Extrait : paragraphes 13 à 15 de la prière. La leçon annoncée en tête (Likoutei Moharan I, 53) a été ouverte et vérifiée.",
               "lecon_sur_le_sujet": "oui",
-              "lecon_mesure": "13 occurrences du sujet dans 3178 caractères de leçon"
+              "lecon_mesure": "13 occurrences du sujet dans 3178 caractères de leçon",
+              "paragraphes_fr": [
+                "Écoute notre prière et prête l’oreille à notre cri, afin que toutes les femmes stériles soient visitées pour le bien, vite et sans tarder, et qu’elles enfantent, dans Ta miséricorde, des enfants vivants et durables ; et que Ton peuple, les enfants d’Israël, se multiplie comme le sable de la mer, qu’on ne peut ni mesurer ni compter.",
+                "Et de même que Ta miséricorde a prévalu pour notre premier père – « Abraham était un seul » –, Abraham notre père, et pour son épouse Sarah notre mère, dont Tu T’es souvenu pour le bien, que Tu as visités dans leur vieillesse, à qui Tu as donné Isaac et à qui Tu as promis de multiplier sa descendance comme les étoiles du ciel – ainsi, que Tes entrailles et Ta miséricorde s’émeuvent pour toutes les femmes stériles de Ton peuple, la maison d’Israël, dont les yeux sont tournés vers Toi seul, afin que Tu leur donnes une descendance durable, pour Ton service et pour Ta crainte.",
+                "Aie pitié d’eux pour l’amour de Toi, visite-les pour le bien et comble leurs demandes avec miséricorde ; laisse-Toi fléchir par eux, écoute leur prière et accorde-leur une grossesse, vite et sans tarder. Qu’ils méritent d’engendrer une descendance durable, que leur père et leur mère se réjouissent en eux, et qu’ils méritent de les élever pour la Torah, pour le dais nuptial et pour les bonnes actions, pour de longs jours et de bonnes années."
+              ],
+              "paragraphes_en": [
+                "Hear our prayer and give ear to our cry, that all barren women be remembered for good, swiftly and soon, and that they bear, in Your mercy, children who live and endure, and that Your people, the Children of Israel, multiply like the sand of the sea, which cannot be measured or counted.",
+                "And just as Your mercy prevailed for our first father – “Abraham was one” – Abraham our father, and his wife Sarah our mother, whom You remembered for good and visited in their old age, giving them Isaac and promising them to multiply his offspring like the stars of heaven – so may Your compassion and Your mercy now be stirred for all the barren women of Your people, the House of Israel, whose eyes are lifted to You alone, that You give them lasting offspring for Your service and for Your awe.",
+                "Have mercy on them for Your sake, remember them for good and fulfill their requests with mercy; accept their entreaty, hear their prayer and grant them conception swiftly and soon, and may they merit to bear lasting offspring, and may their father and mother rejoice in them, and may they merit to raise them to Torah, to the wedding canopy and to good deeds, for long days and good years."
+              ]
             },
             {
               "id": "src-lt-parnassa",
@@ -1037,7 +1202,25 @@
               "statut_verif": "verifie_texte",
               "note": "Extrait : paragraphes 1 à 7 de la prière. La leçon annoncée en tête (Likoutei Moharan II, 16) a été ouverte et vérifiée.",
               "lecon_sur_le_sujet": "oui",
-              "lecon_mesure": "10 occurrences du sujet dans 3328 caractères de leçon"
+              "lecon_mesure": "10 occurrences du sujet dans 3328 caractères de leçon",
+              "paragraphes_fr": [
+                "Les yeux de tous sont tournés vers Toi avec espoir, et Tu leur donnes leur nourriture en son temps. Tu ouvres Ta main et rassasies tout vivant à souhait.",
+                "Maître du monde, donne-moi une subsistance honorable avant que j’en aie besoin, de sorte que je mérite de m’écarter du mal et de faire toujours ce qui est bien à Tes yeux, et d’être selon Ta bonne volonté, en vérité,",
+                "car Tu sais combien la subsistance me trouble, m’entrave et affaiblit mon esprit, m’empêchant de me renforcer dans Ton service.",
+                "Maître du monde, je sais que je suis très, très loin d’une subsistance honorable, car j’ai beaucoup fauté envers Toi ; j’ai mal agi et j’ai compromis ma subsistance.",
+                "Mais je suis venu devant Toi, Toi qui es plein de miséricorde, comme un pauvre à la porte, comme un indigent et un nécessiteux qui va de porte en porte, tendant les mains, demandant et sollicitant un don gratuit et une offrande de bonté,",
+                "pour que Tu me fasses grâce par Ta seule grande miséricorde, par Tes seules immenses bontés, et que Tu me procures ma subsistance du ciel, et me donnes tous mes besoins et tous les besoins des gens de ma maison, de tous ceux qui dépendent de moi et de tous ceux qui se joignent à nous, avant que nous en ayons besoin. Car nos yeux sont tournés vers Toi seul, nos yeux espèrent et attendent Toi seul.",
+                "Maître du monde, Tu es au-dessus de toutes les causes et de tous les motifs, et Tu peux, dans Ta grande miséricorde, provoquer des causes pour le bien, de sorte que la subsistance nous parvienne facilement, sans aucun trouble, sans aucun tracas ni aucune peine, et sans aucune cause selon les voies de la nature,"
+              ],
+              "paragraphes_en": [
+                "The eyes of all look hopefully to You, and You give them their food in its time. You open Your hand and satisfy the desire of every living thing.",
+                "Master of the world, give me a livelihood with dignity before I need it, so that I may merit to turn from evil and always do what is good in Your eyes, and to be according to Your good will in truth,",
+                "for You know how much the struggle for a livelihood confuses me, holds me back and weakens my mind from strengthening myself in Your service.",
+                "Master of the world, I know that I am very, very far from a dignified livelihood, for I have done much damage against You; I have made my deeds evil and forfeited my livelihood.",
+                "But I have come before You, who are full of mercy, like a poor man at the door, like a needy pauper going from door to door, spreading out his hands, asking and requesting a free gift and a kindly offering,",
+                "that You be gracious to me through Your great mercy alone, through Your immense kindness alone, and provide me my livelihood from heaven and give me all my needs and all the needs of my household and of all who depend on me and all who are joined to us, before we need them. For our eyes are lifted to You alone; our eyes look to You alone, hoping and waiting.",
+                "Master of the world, You are above all causes and reasons, and You can bring about causes for good in Your great mercy, so that our livelihood will reach us easily, without any confusion and without any worries or toil, and without any causes according to the way of nature,"
+              ]
             },
             {
               "id": "src-lt-brit",
@@ -1070,7 +1253,23 @@
               "statut_verif": "verifie_texte",
               "note": "Extrait : paragraphes 1 à 6 de la prière. La leçon annoncée en tête (Likoutei Moharan II, 83) a été ouverte et vérifiée.",
               "lecon_sur_le_sujet": "non",
-              "lecon_mesure": "1 occurrence du sujet dans 4787 caractères de leçon"
+              "lecon_mesure": "1 occurrence du sujet dans 4787 caractères de leçon",
+              "paragraphes_fr": [
+                "Maître du monde, aide-moi et sauve-moi dès maintenant ; agis comme Tu agis, dans Ta grande miséricorde, Tes grandes bontés, Tes merveilles cachées et Tes voies redoutables, et fais-moi mériter dès maintenant de garder la sainte alliance en vérité,",
+                "et que je mérite de faire un repentir complet, en vérité, pour le passé, et de mériter dès maintenant la réparation de l’alliance en vérité, par la force et le mérite des vrais tsadikim qui ont mérité la réparation de l’alliance dans une perfection absolue.",
+                "Maître du monde, plein de miséricorde, Tu nous as fait savoir que toutes les réparations, toute la Torah et toute la réparation des mondes, tout dépend de la réparation de la sainte alliance, qui est le fondement de tout, comme il est expliqué dans tous les livres saints.",
+                "Mais à cause de la force avec laquelle le mauvais penchant s’est acharné sur nous depuis notre jeunesse, nous avons beaucoup porté atteinte à l’alliance, chacun selon ses atteintes, comme chacun le sait en son âme (et en particulier, etc.). C’est pourquoi je n’ai maintenant aucune parole pour savoir comment en parler : « Je suis resté muet, silencieux, je me suis tu, privé de bien, et ma douleur s’est avivée. »",
+                "Mais Tu nous as déjà avertis et fortifiés pour toujours : crier et appeler vers Toi sans cesse, quoi qu’il arrive.",
+                "C’est pourquoi je suis venu tendre mes mains vers Ta miséricorde et Ton salut, pour que Tu m’aides et me sauves, afin que je mérite dès maintenant la réparation de l’alliance en vérité, dans sa plénitude, selon Ta bonne volonté."
+              ],
+              "paragraphes_en": [
+                "Master of the world, help me and save me from now on, and do what You do, in Your great mercy and Your great kindness, Your hidden wonders and Your awesome ways, and grant me from now on to guard the holy covenant in truth,",
+                "and may I merit to return in complete repentance, in truth, for the past, and to merit from now on the rectification of the covenant in truth, by the power and merit of the true tzaddikim who attained the rectification of the covenant in utter perfection.",
+                "Master of the world, full of mercy, You have made known to us that all the rectifications, the entire Torah and all the rectification of the worlds, everything depends on the rectification of the holy covenant, which is the foundation of everything, as is explained in all the holy books.",
+                "But because of the great force with which the evil inclination overpowered us from our youth, we have done much damage through blemishing the covenant, each one according to his blemishes, as each one knows in his own soul (and especially, etc.). Therefore I now have no words for how to speak about this: “I was mute with silence, I held my peace, deprived of good, and my pain was stirred.”",
+                "But You have already warned us and strengthened us forever to cry out and call out to You always, no matter what.",
+                "Therefore I have come to spread out my hands to Your mercy and Your salvation, that You help me and save me so that I may merit from now on the rectification of the covenant in truth, completely, according to Your good will."
+              ]
             },
             {
               "id": "src-lt-geula",
@@ -1101,7 +1300,21 @@
               "statut_verif": "verifie_texte",
               "note": "Extrait : paragraphes 39 à 43 de la prière. La leçon annoncée en tête (Likoutei Moharan I, 250) a été ouverte et vérifiée.",
               "lecon_sur_le_sujet": "non",
-              "lecon_mesure": "0 occurrence du sujet dans 4185 caractères de leçon"
+              "lecon_mesure": "0 occurrence du sujet dans 4185 caractères de leçon",
+              "paragraphes_fr": [
+                "Et que nous méritions de prier et de supplier devant Toi sans cesse, de prendre part aux souffrances d’Israël, de prier et d’implorer abondamment, toujours, chaque jour, pour les souffrances d’Israël, d’un cœur brisé et contrit. Que nous répandions notre cœur comme de l’eau devant Ta face, Hachem, jusqu’à verser devant Toi beaucoup de larmes, en vérité. Avec des pleurs et des supplications je viendrai devant Toi.",
+                "Et que nous méritions, par ces larmes, d’attirer sur nous Ta Providence ; et par là, aie pitié de nous du haut des cieux, veille sur nous avec miséricorde et annule pour nous toutes les détresses et tous les décrets, aussi bien ceux qui ont déjà été décrétés contre nous que ceux que l’on voudrait décréter, à Dieu ne plaise – qu’il n’arrive rien de tel en Israël.",
+                "Aie pitié de nous pour l’amour de Ton Nom, car nous n’avons personne sur qui nous appuyer, si ce n’est sur Toi, notre Père qui es aux cieux. Fais avec nous ce qui est bon à Tes yeux ; quant à nous, nous ne savons que faire, car nos yeux sont tournés vers Toi.",
+                "Mets dans notre cœur de revenir tous vers Toi en vérité, vite et sans tarder. Crée en moi un cœur pur, ô Dieu, et renouvelle en mon sein un esprit ferme.",
+                "Hâte-Toi et presse-Toi de nous délivrer d’une délivrance complète, et amène-nous notre juste Machia’h, bientôt et de nos jours. Amen, sélah."
+              ],
+              "paragraphes_en": [
+                "And may we merit to pray and plead before You always, and to share in the troubles of Israel, and to pray and entreat abundantly, always, every day, over the troubles of Israel, with a broken and crushed heart. And may we pour out our hearts like water before Your face, Hashem, until we shed many tears before You in truth. With weeping and supplication I will come before You.",
+                "And may we merit through the tears to draw Your Providence upon us, and through this have mercy on us from heaven, watch over us with mercy and nullify from upon us all the troubles and all the decrees, both those that have already been decreed against us and those that some wish to decree, Heaven forbid – let nothing like this happen in Israel.",
+                "Have mercy on us for the sake of Your Name, for we have no one to lean on but You, our Father in heaven. Do with us what is good in Your eyes; as for us, we do not know what to do, for our eyes are upon You.",
+                "And put it into our hearts that we all return to You in truth, swiftly and soon. Create in me a pure heart, O God, and renew a steadfast spirit within me.",
+                "And hurry and hasten to redeem us with a complete redemption, and bring us our righteous Mashiach speedily in our days, Amen, Selah."
+              ]
             },
             {
               "id": "src-lt-zivug",
@@ -1138,7 +1351,27 @@
               "statut_verif": "verifie_texte",
               "note": "Extrait : paragraphes 1 à 8 de la prière. La leçon annoncée en tête (Likoutei Moharan II, 89) a été ouverte et vérifiée.",
               "lecon_sur_le_sujet": "oui",
-              "lecon_mesure": "4 occurrences du sujet dans 1432 caractères de leçon"
+              "lecon_mesure": "4 occurrences du sujet dans 1432 caractères de leçon",
+              "paragraphes_fr": [
+                "Dieu béni, grand en connaissance, fais-nous mériter dans Ta grande miséricorde et révèle-nous dans Tes immenses bontés le vrai tsadik, qui possède une grande connaissance. Fais-nous mériter de le trouver, de nous rapprocher de lui en vérité, et d’entendre la Torah de sa bouche sainte,",
+                "et aie pitié de tout Israël, de ceux pour qui il est difficile de trouver leur conjoint (et en particulier de Untel fils d’Unetelle) ; aide-les et sauve-les bientôt, pour que chacun mérite de trouver son vrai conjoint, celui qui lui convient, venu du ciel, vite et sans tarder, sans aucun retard et sans aucune peine ni souffrance.",
+                "Car il n’est personne parmi nous qui sache jusqu’à quand, ni quel conseil ou quel moyen employer pour chercher le conjoint de chacun. Car Tu sais combien il est difficile à l’homme de trouver son vrai conjoint, car toutes les unions sont l’union de deux contraires,",
+                "et surtout que parfois ils sont dans une très grande opposition, si bien qu’il est aussi difficile de les unir que de fendre la mer des Joncs ; et il est impossible de les relier et de les unir si ce n’est par la vraie connaissance, qui arrange toutes les unions.",
+                "C’est pourquoi il faut entendre la Torah de la bouche de celui qui possède la vraie connaissance, qui innove des innovations merveilleuses dans la Torah, qui relie et unit les grandes lettres et les petites lettres, et qui rattache et unit les paroles de Torah d’un endroit à l’autre,",
+                "par qui s’accomplissent toutes les unions du monde, selon le mystère du verset : « Car les lèvres du prêtre gardent la connaissance, et c’est de sa bouche qu’on recherche la Torah », dont les initiales [Sifté, Kohen, Yichmerou, Daat, VeTorah] forment le mot « chidoukh » (union),",
+                "mais à cause de nos nombreuses fautes, cela nous est caché et nous ne savons pas comment trouver ce saint maître de la connaissance et entendre la Torah de sa bouche. Et maintenant, d’où viendra notre secours ?",
+                "C’est pourquoi nos yeux sont tournés vers Toi seul, Toi qui es plein de miséricorde, qui sièges et unis les couples, pour que Tu aies pitié de tout Ton peuple Israël, de ceux qui doivent trouver leur conjoint (et en particulier, etc.), et que Tu envoies bientôt à chacun le conjoint qui lui convient, venu du ciel, en vérité,"
+              ],
+              "paragraphes_en": [
+                "Blessed God, great in knowledge, grant us in Your great mercy and reveal to us in Your immense kindness the true tzaddik, who is a master of great knowledge. Grant us to find him and to draw close to him in truth, and to hear Torah from his holy mouth,",
+                "and have mercy on all of Israel who find it hard to find their match (and especially on So-and-so son of So-and-so), and help them and save them soon, so that each and every one may merit to find his true match, the one fitting for him from heaven, swiftly and soon, without any delay and without any pain or suffering at all.",
+                "For there is none among us who knows how long, nor any counsel or strategy for how to seek the match for each person. For You know how hard it is for a person to find his true match, for all matches are two opposites,",
+                "and especially since at times they are extremely opposite, so that it is as hard to pair them as the splitting of the Red Sea, and it is impossible to join and pair them except through the true knowledge that arranges all matches.",
+                "Therefore one must hear Torah from the mouth of the true master of knowledge, who brings forth wondrous new insights in the Torah, joining and uniting the large letters and the small letters, and connecting and matching words of Torah from one place to another,",
+                "through whom all the matches in the world are completed, according to the secret of the verse: “For the lips of the priest guard knowledge, and they seek Torah from his mouth” – whose initial letters [Sifte, Kohen, Yishmeru, Da'at, VeTorah] spell “shidduch” (match),",
+                "but because of our many sins it is hidden from us, and we do not know how to find this holy master of knowledge and to hear Torah from his mouth. And now, from where will our help come?",
+                "Therefore our eyes are lifted to You alone, who are full of mercy, who sit and make matches, that You have pity on all Your people Israel who need to find their match (and especially, etc.), and that You soon send each one the match fitting for him from heaven, in truth,"
+              ]
             },
             {
               "id": "src-lt-refua",
@@ -1171,7 +1404,23 @@
               "statut_verif": "verifie_texte",
               "note": "Extrait : paragraphes 2 à 7 de la prière. La leçon annoncée en tête (Likoutei Moharan I, 213) a été ouverte et vérifiée.",
               "lecon_sur_le_sujet": "non",
-              "lecon_mesure": "0 occurrence du sujet dans 1134 caractères de leçon"
+              "lecon_mesure": "0 occurrence du sujet dans 1134 caractères de leçon",
+              "paragraphes_fr": [
+                "Toi qui es plein de miséricorde, aie pitié de Ton peuple Israël, et en particulier de toutes les villes d’Israël où circulent et se répandent toutes sortes de maladies et de douleurs, que le Miséricordieux nous en préserve. Aie pitié d’eux pour l’amour de Ton Nom, et dis à l’ange : « Retire ta main ! », et qu’il remette son épée dans son fourreau.",
+                "Épargne-les et aie compassion d’eux et de tout le reste de Ton peuple, la maison d’Israël, et ne laisse pas le destructeur entrer dans leurs maisons pour frapper, pour nuire ou pour affaiblir, à Dieu ne plaise.",
+                "Aie pitié, aie pitié ! Sauve, sauve ! Maître de la miséricorde, Maître des délivrances, Créateur des guérisons, redoutable en louanges, Seigneur des merveilles,",
+                "souviens-Toi de Tes serviteurs, nos pères et nos maîtres, les vrais tsadikim qui ont existé dans chaque génération depuis les jours d’Abraham notre père jusqu’à présent. Pour l’amour d’eux et pour l’amour de Ta grande miséricorde, aie pitié de nous, garde-nous et préserve-nous, nous et tout Ton peuple, la maison d’Israël, de toutes sortes de maladies, de douleurs et de maux, afin qu’ils n’atteignent aucun membre d’Israël.",
+                "Et envoie bientôt une guérison complète du ciel à tous ceux (d’Israël) que Tu as déjà frappés de quelque maladie ou douleur. Aie pitié d’eux et guéris-les bientôt d’une guérison complète, guérison de l’âme et guérison du corps,",
+                "Ô Dieu, de grâce, guéris-les, de grâce, pour l’amour de Ton Nom (et en particulier le malade Untel fils d’Unetelle), car Tu es Dieu, Roi, médecin fidèle et miséricordieux. Dieu vivant et éternel, qui fais vivre les vivants, donne-nous la vie, et nous vivrons et ne mourrons pas ; rachète-nous de la mort, délivre-nous de la tombe."
+              ],
+              "paragraphes_en": [
+                "You who are full of mercy, have mercy on Your people Israel, and especially on all the towns of Israel where all kinds of illnesses and pains are going about and spreading, may the Merciful One save us. Have mercy on them for the sake of Your Name, and say to the angel, “Stay your hand,” and let him return his sword to its sheath.",
+                "Spare them and have compassion on them and on all the remnant of Your people, the House of Israel, and do not let the destroyer enter their houses to strike, or to harm or weaken, Heaven forbid.",
+                "Have mercy, have mercy! Save, save! Master of mercy, Master of salvations, Creator of cures, awesome in praises, Lord of wonders,",
+                "Remember Your servants, our fathers and our teachers, the true tzaddikim who lived in each and every generation from the days of Abraham our father until now. For their sake and for the sake of Your great mercy, have mercy on us, guard us and save us – us and all Your people, the House of Israel – from all kinds of illnesses, pains and aches, that they not come upon a single one of Israel.",
+                "And send soon a complete healing from heaven to all those (of Israel) whom You have already struck with some illness or pain. Have mercy on them and heal them soon with a complete healing, healing of the soul and healing of the body,",
+                "O God, please, heal them, please, for the sake of Your Name (and especially the sick person So-and-so son of So-and-so), for You are God, King, faithful and merciful Healer. Living and everlasting God, who gives life to the living, grant us life, and we shall live and not die; redeem us from death, ransom us from the pit."
+              ]
             },
             {
               "id": "src-lt-hitbodedut-2",
@@ -1204,7 +1453,23 @@
               "statut_verif": "verifie_texte",
               "note": "Extrait : paragraphes 1 à 6 de la prière. La leçon annoncée en tête (Likoutei Moharan II, 11, 1405 caractères) a été ouverte et vérifiée.",
               "lecon_sur_le_sujet": "oui",
-              "lecon_mesure": "4 occurrences du sujet dans 834 caractères de leçon"
+              "lecon_mesure": "4 occurrences du sujet dans 834 caractères de leçon",
+              "paragraphes_fr": [
+                "Viens, mon bien-aimé, sortons dans les champs, passons la nuit dans les villages ; levons-nous tôt pour aller aux vignes, voyons si la vigne a fleuri, si le bourgeon s’est ouvert, si les grenadiers sont en fleur ; là je te donnerai mon amour.",
+                "Maître du monde, fais-moi mériter de multiplier toujours la hitbodedout, et que je mérite de prendre l’habitude de sortir chaque jour dans les champs, parmi les arbres, les herbes et tous les arbustes des champs,",
+                "et que là je mérite de m’isoler et de multiplier cette conversation-prière entre moi et mon Créateur, pour y épancher tout ce que j’ai sur le cœur,",
+                "et que tous les arbustes des champs, toutes les herbes, tous les arbres et toutes les plantes s’éveillent tous à ma rencontre, qu’ils s’élèvent et donnent leur force et leur vitalité dans les paroles de ma conversation et de ma prière,",
+                "jusqu’à ce que ma prière et ma conversation soient accomplies dans une perfection absolue grâce à tous les arbustes des champs, et qu’ils soient tous inclus, avec toutes leurs forces, leur vitalité et leur spiritualité jusqu’à leur racine suprême – qu’ils soient tous inclus dans ma prière,",
+                "et par là, que je mérite d’ouvrir mon cœur pour multiplier la prière, les supplications et la sainte conversation devant Toi, Toi qui es plein d’une grande miséricorde, et devant Toi je répandrai toute ma conversation,"
+              ],
+              "paragraphes_en": [
+                "Come, my beloved, let us go out to the field, let us lodge in the villages; let us rise early to the vineyards, let us see whether the vine has blossomed, whether the bud has opened, whether the pomegranates are in flower; there I will give you my love.",
+                "Master of the world, grant me to do hitbodedut abundantly always, and may I merit to be accustomed to go out every day to the field, among trees and grasses and every shrub of the field,",
+                "and there may I merit to seclude myself and to speak abundantly in this conversation-prayer between me and my Maker, to pour out there everything that is in my heart,",
+                "and may every shrub of the field and all the grasses and trees and all the plants – may they all awaken toward me, and rise and give their strength and their vitality into the words of my conversation and my prayer,",
+                "until my prayer and my conversation are made complete, in utter perfection, through every shrub of the field, so that they are all included, with all their powers, their vitality and their spirituality, up to their supernal root – may they all be included in my prayer,",
+                "and through this may I merit to open my heart to pray abundantly, with supplications and holy conversation before You, who are full of great mercy, and before You I will pour out all my words,"
+              ]
             },
             {
               "id": "src-lt-simcha-2",
@@ -1235,7 +1500,21 @@
               "statut_verif": "verifie_texte",
               "note": "Extrait : paragraphes 10 à 14 de la prière. La leçon annoncée en tête (Likoutei Moharan I, 178, 3411 caractères) a été ouverte et vérifiée.",
               "lecon_sur_le_sujet": "oui",
-              "lecon_mesure": "39 occurrences du sujet dans 2111 caractères de leçon"
+              "lecon_mesure": "39 occurrences du sujet dans 2111 caractères de leçon",
+              "paragraphes_fr": [
+                "Car Tu nous as déjà enseigné, dans Ta grande miséricorde, par l’intermédiaire des saints tsadikim, que même si l’homme est tel qu’il est, même s’il a fait ce qu’il a fait, et que maintenant encore il est tel qu’il est – néanmoins, là où il se trouve, il est tenu de se contraindre de toutes ses forces à éloigner la tristesse et à réjouir son âme en tout temps,",
+                "parce qu’il a au moins mérité d’être de la descendance d’Israël. Il doit aussi chercher, rechercher et trouver en lui des points positifs, issus de toutes les nombreuses mitsvot qu’il a eu le mérite d’accomplir depuis toujours.",
+                "Car chaque Juif possède de nombreuses mitsvot, puisque même les transgresseurs d’Israël sont remplis de mitsvot comme une grenade.",
+                "Et de cela, il convient que tout Juif se réjouisse et exulte beaucoup, même le plus bas d’entre les bas et le pire d’entre les pires.",
+                "Maître du monde entier, Seigneur des merveilles, Père, Père miséricordieux, devant qui sont la force et la joie, sois mon aide et sauve-moi, afin que je mérite de rassembler et de réunir toutes les parcelles de joie de toutes les mitsvot et de tous les points positifs que j’ai mérités, par Ta miséricorde, depuis toujours jusqu’à ce jour,"
+              ],
+              "paragraphes_en": [
+                "For You have already taught us in Your great mercy, through the holy tzaddikim, that even if a person is as he is, even if he has done what he has done, and even now he is as he is – nevertheless, wherever he is, he is obligated to force himself with all his strength to push away sadness and to gladden his soul at all times,",
+                "because he has at least merited to be of the seed of Israel. And he must also search and seek and find within himself good points from all the many mitzvot he has merited to do in his lifetime.",
+                "For each and every Jew has many mitzvot, for even the sinners of Israel are full of mitzvot like a pomegranate.",
+                "And over this every Jew should rejoice and be very glad – even the lowest of the low and the worst of the worst.",
+                "Master of the entire world, Lord of wonders, Father, merciful Father, in whose place are strength and joy, be my help and save me, so that I may merit to gather and collect all the portions of joy from all the mitzvot and good points that I have merited by Your mercy from my earliest days until this day,"
+              ]
             },
             {
               "id": "src-lt-uman-2",
@@ -1268,7 +1547,23 @@
               "statut_verif": "verifie_texte",
               "note": "Extrait : paragraphes 42 à 47 de la prière. La leçon annoncée en tête (Likoutei Moharan II, 40, 7152 caractères) a été ouverte et vérifiée.",
               "lecon_sur_le_sujet": "oui",
-              "lecon_mesure": "13 occurrences du sujet dans 4349 caractères de leçon"
+              "lecon_mesure": "13 occurrences du sujet dans 4349 caractères de leçon",
+              "paragraphes_fr": [
+                "Pour Roch Hachana. Fais-nous mériter, dans Ta grande miséricorde et Tes immenses bontés, de voyager chaque année pour Roch Hachana auprès des vrais tsadikim,",
+                "et que je mérite d’être compté moi aussi parmi Ton peuple Israël, les gens intègres et simples qui se rassemblent et se réunissent auprès des vrais tsadikim pour Roch Hachana,",
+                "car Toi seul connais la grandeur du rassemblement de Ton peuple Israël, à Roch Hachana, auprès des vrais tsadikim.",
+                "Toi seul sais quelle immense fierté et quels délices grands et redoutables Tu reçois, à chaque Roch Hachana, du saint rassemblement de Ton peuple Israël auprès des vrais tsadikim.",
+                "Fais-nous mériter, dans Ta grande miséricorde et Tes immenses bontés, d’être nous aussi inclus dans cette fierté et ces délices ; que rien ne nous en empêche, qu’aucun obstacle ne nous retienne, et qu’aucun tracas au monde ne nous accapare.",
+                "Mais que nous méritions toujours, chaque année, d’aller, de venir et de nous joindre au saint et redoutable rassemblement de Ton peuple Israël, les gens intègres, qui se rassemblent et se réunissent auprès des vrais tsadikim à chaque Roch Hachana,"
+              ],
+              "paragraphes_en": [
+                "For Rosh Hashanah. Grant us in Your great mercy and Your immense kindness that each and every year we may merit to travel to true tzaddikim for Rosh Hashanah,",
+                "and may I too merit to be counted among Your people Israel, the upright and sincere, who gather and assemble with true tzaddikim for Rosh Hashanah,",
+                "for You alone know the greatness of the gathering of Your people Israel on Rosh Hashanah with true tzaddikim.",
+                "You alone know how very much glory and what great and awesome delight You receive each and every Rosh Hashanah from the holy gathering of Your people Israel with the true tzaddikim.",
+                "Grant us in Your great mercy and Your immense kindness that we too be included in this glory and delight, and let no obstacle prevent us from it, let no hindrance hold us back, and let no distraction in the world preoccupy us.",
+                "Rather, may we always merit, each and every year, to go and come and join the holy and awesome gathering of Your upright people Israel, who gather and assemble with the true tzaddikim each and every Rosh Hashanah,"
+              ]
             },
             {
               "id": "src-lt-kdusha-2",
@@ -1293,7 +1588,15 @@
               "statut_verif": "verifie_texte",
               "note": "Extrait : paragraphes 22 à 23 de la prière. La leçon annoncée en tête (Likoutei Moharan I, 17, 37318 caractères) a été ouverte et vérifiée.",
               "lecon_sur_le_sujet": "partiel",
-              "lecon_mesure": "12 occurrences du sujet dans 22649 caractères de leçon"
+              "lecon_mesure": "12 occurrences du sujet dans 22649 caractères de leçon",
+              "paragraphes_fr": [
+                "C’est pourquoi, aie pitié de nous pour l’amour de Toi, aide-nous, sauve-nous et garde notre âme, afin que nous méritions d’être préservés, séparés et totalement éloignés de toutes sortes d’aliments interdits : des bêtes mortes et des bêtes déchirées (névélot et téréfot), des reptiles et des insectes, de la viande cuite dans du lait, du vin de libation, de la graisse interdite et du sang, du nerf sciatique et du membre arraché à un animal vivant, du pain des idolâtres et des mets cuits par des idolâtres, et de toutes les autres sortes d’aliments interdits, d’eux-mêmes et de leurs mélanges, ainsi que de la moindre trace de ’hamets à Pessa’h. De tous ceux-là, garde-nous et préserve-nous dans Ta miséricorde immense, afin qu’ils n’entrent pas dans notre bouche et ne souillent pas nos âmes ; que nous soyons, nous et nos descendants, nets, purs et totalement séparés d’eux, et sanctifie-nous de Ta sainteté suprême. Accomplis en nous le verset qui est écrit : « Vous serez saints pour Moi, car Je suis saint. »",
+                "Épargne-nous et aie compassion de nous ; rachète-nous, délivre-nous et sauve-nous de toutes sortes d’impuretés et de toutes les choses qui rendent l’âme abominable, et sanctifie-nous de toutes sortes de saintetés. Aide-nous et fais-nous mériter une alimentation de sainteté, parfaitement et en vérité, comme il convient à un homme d’Israël ; et que nous méritions de compléter ce qui manque à l’autel de sainteté, par le fait de manger dans la sainteté et la pureté, jusqu’à ce que notre table expie comme l’autel. Fais-nous mériter, dans Ta grande miséricorde, une foi parfaite en vérité ; donne-nous une force et une intelligence de sainteté pour soumettre et annuler toutes sortes de fausses croyances, et pour ramener et faire revenir tous ceux qui s’égarent dans de fausses croyances, afin qu’ils reviennent tous à Ta sainte foi."
+              ],
+              "paragraphes_en": [
+                "Therefore have mercy on us for Your sake, help us and save us and guard our souls, so that we may merit to be saved, separated and completely set apart from all kinds of forbidden foods: from carcasses and torn animals (nevelot and terefot), from creeping and crawling creatures, from meat with milk and from libation wine, from forbidden fat and blood, from the sciatic nerve and a limb from a living animal, from the bread of idolaters and the cooking of idolaters, and from all other kinds of forbidden foods, from them and from their mixtures, and from the slightest trace of chametz on Pesach. Guard us and save us from all of them in Your immense mercy, so that they do not enter our mouths and do not defile our souls, and may we and our descendants be clean and pure and completely separated from them, and sanctify us with Your supernal holiness. And fulfill in us the verse that is written: “You shall be holy to Me, for I am holy.”",
+                "Spare us and have compassion on us; redeem us, rescue us and deliver us from all kinds of impurity and from all the things that make the soul abominable, and sanctify us with every kind of holiness. Help us and grant us holy eating, completely and in truth, as befits a man of Israel, and may we merit to make whole the blemishes of the holy altar through our eating in holiness and purity, until our table atones like the altar. And grant us in Your great mercy complete faith in truth, and give us strength and holy intelligence to subdue and nullify all kinds of false beliefs, and to bring back and return all who stray in false beliefs, so that they all return to Your holy faith."
+              ]
             },
             {
               "id": "src-lt-zera-2",
@@ -1316,7 +1619,13 @@
               "statut_verif": "verifie_texte",
               "note": "Extrait : paragraphe 84 à 84 de la prière. La leçon annoncée en tête (Likoutei Moharan I, 60, 44424 caractères) a été ouverte et vérifiée.",
               "lecon_sur_le_sujet": "oui",
-              "lecon_mesure": "57 occurrences du sujet dans 27561 caractères de leçon"
+              "lecon_mesure": "57 occurrences du sujet dans 27561 caractères de leçon",
+              "paragraphes_fr": [
+                "Et que nous méritions que nos paroles soient dans une grande sainteté, jusqu’à ce que nous ayons la force de faire concevoir les femmes stériles par nos paroles, et que les organes de la parole soient proches des organes de l’enfantement. Que nous méritions d’opérer par nos paroles, dans la sainteté, des naissances saintes ; que Ton peuple Israël se multiplie comme le sable au bord de la mer et comme les étoiles du ciel en abondance ; qu’il n’y ait parmi nous ni homme stérile ni femme stérile, et visite tous ceux qui sont privés d’enfants en leur donnant une descendance durable, pour Ton service et pour Ta crainte. Et par là, que nous méritions que se révèle dans le monde une crainte parfaite, une grande crainte,"
+              ],
+              "paragraphes_en": [
+                "And may we merit that our speech be in great holiness, until we have the power to bring about conception for barren women through our words, and that the organs of speech be adjacent to the organs of birth. And may we merit to bring about, through our speech in holiness, holy births, and may Your people Israel multiply like the sand on the seashore and like the stars of heaven in abundance, and may there be among us no barren man or barren woman; and remember all who are childless with lasting offspring for Your service and Your awe. And through this may we merit that complete awe, great awe, be revealed in the world,"
+              ]
             },
             {
               "id": "src-lt-parnassa-2",
@@ -1343,7 +1652,17 @@
               "statut_verif": "verifie_texte",
               "note": "Extrait : paragraphes 1 à 3 de la prière. La leçon annoncée en tête (Likoutei Moharan I, 47, 16665 caractères) a été ouverte et vérifiée.",
               "lecon_sur_le_sujet": "oui",
-              "lecon_mesure": "29 occurrences du sujet dans 10374 caractères de leçon"
+              "lecon_mesure": "29 occurrences du sujet dans 10374 caractères de leçon",
+              "paragraphes_fr": [
+                "Notre Père, notre Roi, notre Puissant, notre Créateur, notre Rédempteur, notre Façonneur, notre Saint, Saint de Jacob, notre Berger, Berger d’Israël, aide-nous et sauve-nous dans Ta grande miséricorde et Tes grandes bontés, afin que nous méritions d’annuler et de briser entièrement en nous le désir de manger, et de nous contenter de peu, de manger un peu, ce qui est nécessaire à ma vie, avec mesure et une grande rigueur, et d’en être rassasié,",
+                "Écarte, chasse et annule la faim du milieu de nous. Aide-nous à nous faire vivre et à rassasier notre âme d’une nourriture modeste ; que je mérite d’être rigoureux dans ma nourriture, de la mesure d’une olive à celle d’un œuf, et que mon peu de nourriture soit pris dans une grande sainteté et une grande pureté, en vérité, selon Ta bonne volonté.",
+                "Et fais-moi mériter d’attirer ma nourriture, ma subsistance et toutes les bonnes influences de la terre d’Israël, qui est la Terre sainte, la terre de la vie, où se trouve la racine de toutes les influences et de toutes les bénédictions."
+              ],
+              "paragraphes_en": [
+                "Our Father, our King, our Mighty One, our Creator, our Redeemer, our Maker, our Holy One, Holy One of Jacob, our Shepherd, Shepherd of Israel, help us and save us in Your great mercy and Your great kindness, so that we may merit to nullify and break the desire for food in us completely, and be content with little, to eat a little, just what I need to live, sparingly and with great precision, and to be satisfied with it,",
+                "And remove, drive out and nullify hunger from within us. Help us to sustain ourselves and satisfy our souls with little food, and may I merit to be precise in my eating, from an olive's measure to an egg's measure, and may my little eating be in great holiness and purity in truth, according to Your good will.",
+                "And grant me to draw my food and my livelihood and all good blessings of abundance from the Land of Israel, which is the Holy Land, the Land of Life, where the root of all abundance and all blessings is found."
+              ]
             },
             {
               "id": "src-lt-brit-2",
@@ -1370,7 +1689,17 @@
               "statut_verif": "verifie_texte",
               "note": "Extrait : paragraphes 1 à 3 de la prière. La leçon annoncée en tête (Likoutei Moharan I, 264, 828 caractères) a été ouverte et vérifiée.",
               "lecon_sur_le_sujet": "oui",
-              "lecon_mesure": "3 occurrences du sujet dans 506 caractères de leçon"
+              "lecon_mesure": "3 occurrences du sujet dans 506 caractères de leçon",
+              "paragraphes_fr": [
+                "Toi qui es élevé et saint, qui accomplis des actes de puissance, qui fais des choses nouvelles, Maître des combats, qui sèmes la justice, qui fais germer les délivrances, qui agis avec justice envers toute chair et tout esprit,",
+                "agis envers moi avec charité et bonté, et fais-moi mériter de donner beaucoup de tsédaka à des pauvres dignes, de sorte que ce soit pour moi une grande réparation de l’atteinte à l’alliance que j’ai commise envers Toi sans mesure.",
+                "Maître du monde, Tu sais combien j’ai éloigné l’abondance de la sainteté par l’atteinte à l’alliance, et je l’ai attirée là où je l’ai attirée, que le Miséricordieux nous en préserve, vers des lieux qu’il n’est pas permis de mentionner ; et j’ai causé des atteintes telles que je les ai causées, au point qu’on ne peut les évaluer. Or la réparation de cela, c’est la tsédaka donnée précisément à des pauvres dignes, par laquelle on ramène et on attire à nouveau l’abondance vers la sainteté,"
+              ],
+              "paragraphes_en": [
+                "Exalted and Holy One, who performs mighty deeds, who makes new things, Master of battles, who sows righteousness, who causes salvations to sprout, who acts righteously with all flesh and spirit,",
+                "deal with me in charity and kindness, and grant me to give much charity to worthy poor people, so that it be for me a great rectification for the blemish of the covenant that I have caused against You beyond measure.",
+                "Master of the world, You know how very far I have pushed the flow of abundance away from holiness through blemishing the covenant, and drawn it to where I drew it, may the Merciful One save us, to places that may not be mentioned, and I have caused damage as I have, beyond all reckoning. And the rectification for this is charity given specifically to worthy poor people, through which one draws the abundance back to holiness,"
+              ]
             },
             {
               "id": "src-lt-geula-2",
@@ -1395,7 +1724,15 @@
               "statut_verif": "verifie_texte",
               "note": "Extrait : paragraphes 21 à 22 de la prière. La leçon annoncée en tête (Likoutei Moharan I, 247, 532 caractères) a été ouverte et vérifiée.",
               "lecon_sur_le_sujet": "non",
-              "lecon_mesure": "1 occurrence du sujet dans 319 caractères de leçon"
+              "lecon_mesure": "1 occurrence du sujet dans 319 caractères de leçon",
+              "paragraphes_fr": [
+                "Que Ta miséricorde s’émeuve pour Tes enfants ; amène-nous bientôt notre juste Machia’h, et qu’il nous délivre d’une délivrance complète, une délivrance éternelle. Alors il réparera pour nous l’aspect du « TéiKOu » (la question laissée en suspens) en un TiKOuN parfait, d’une perfection absolue : la lettre Noun sera tirée des KiNOt (les lamentations) vers le TéiKOu, et le TéiKOu deviendra TiKOuN. Toutes les lamentations disparaîtront du monde, et les KiNOt se changeront en TiKOuN",
+                "Toi qui es plein de miséricorde, Maître des délivrances, Maître des consolations, console-nous, de grâce, de toutes nos souffrances et aide-nous dans toutes nos affaires et tous nos désirs ; étends sur nous le tabernacle de Ta paix, redresse-nous par un bon conseil venant de Toi, et sauve-nous bientôt pour l’amour de Ton Nom,"
+              ],
+              "paragraphes_en": [
+                "May Your mercy be stirred for Your children, and bring us our righteous Mashiach soon, and may he redeem us with a complete redemption, an eternal redemption. And then he will rectify for us the aspect of TeiKU (the unresolved question) into the ultimate TiKUN (rectification), in utter perfection: the letter Nun will be drawn from the KiNOT (lamentations) to the TeiKU, and from TeiKU will be made TiKUN. And all the lamentations will be abolished from the world, and the KiNOT will be transformed into TiKUN",
+                "Full of mercy, Master of salvations, Master of consolations, please comfort us from all our troubles and help us in all our affairs and desires, spread over us the shelter of Your peace, set us right with good counsel from before You, and save us soon for the sake of Your Name,"
+              ]
             },
             {
               "id": "src-lt-zivug-2",
@@ -1420,7 +1757,15 @@
               "statut_verif": "verifie_texte",
               "note": "Extrait : paragraphes 54 à 55 de la prière. La leçon annoncée en tête (Likoutei Moharan II, 2, 23976 caractères) a été ouverte et vérifiée.",
               "lecon_sur_le_sujet": "non",
-              "lecon_mesure": "1 occurrence du sujet dans 14998 caractères de leçon"
+              "lecon_mesure": "1 occurrence du sujet dans 14998 caractères de leçon",
+              "paragraphes_fr": [
+                "Aie pitié de nous et de tout Ton peuple Israël, et procure à nos fils et à nos filles le conjoint qui leur convient, venu du ciel ; que les unions ne soient pas interverties, à Dieu ne plaise, à cause de nos fautes, mais que chacun mérite de trouver le conjoint qui lui convient, venu du ciel (et en particulier Untel fils d’Unetelle),",
+                "Conduis-nous toujours sur le chemin de la vérité, et que nous méritions de faire des unions bonnes et convenables, en vérité, selon Ta bonne volonté, comme il est écrit : « Et c’est de l’Éternel que vient une femme sensée. »"
+              ],
+              "paragraphes_en": [
+                "And have mercy on us and on all Your people Israel, and prepare for our sons and our daughters their fitting match from heaven, and may the matches not be switched, Heaven forbid, because of our sins; rather, may each one merit to find his fitting match from heaven (and especially So-and-so son of So-and-so),",
+                "And guide us always on the path of truth, and may we merit to make good and fitting matches in truth, according to Your good will, as it is written: “But a sensible wife is from the LORD.”"
+              ]
             },
             {
               "id": "src-lt-zivug-3",
@@ -1451,7 +1796,21 @@
               "statut_verif": "verifie_texte",
               "lecon_sur_le_sujet": "oui",
               "lecon_mesure": "8 occurrences du sujet dans 2133 caractères de leçon",
-              "note": "Extrait : paragraphes 41 à 45 de la prière — le secret d'Eloul rattaché à Avraham envoyant Éliézer chercher l'épouse d'Its'hak. Ajoutée à la demande du propriétaire, après qu'a été signalé que le paragraphe 44 demande « תְּהַפֵּךְ רְצוֹנָהּ אֵלָיו » — que la volonté de l'épouse se tourne vers lui. Le texte est reproduit tel qu'il est imprimé : on ne réécrit pas une prière pour l'adoucir, on dit ce qu'elle contient."
+              "note": "Extrait : paragraphes 41 à 45 de la prière — le secret d'Eloul rattaché à Avraham envoyant Éliézer chercher l'épouse d'Its'hak. Ajoutée à la demande du propriétaire, après qu'a été signalé que le paragraphe 44 demande « תְּהַפֵּךְ רְצוֹנָהּ אֵלָיו » — que la volonté de l'épouse se tourne vers lui. Le texte est reproduit tel qu'il est imprimé : on ne réécrit pas une prière pour l'adoucir, on dit ce qu'elle contient.",
+              "paragraphes_fr": [
+                "Et par le mérite d’Abraham notre père, que la paix soit sur lui, qui a fait allusion à ce secret de l’intention d’Éloul lorsqu’il envoya Éliézer son serviteur chercher le conjoint d’Isaac son fils,",
+                "et par le mérite des tsadikim qui ont révélé ce secret redoutable, protège-les, ainsi que nous et notre descendance ; aie pitié de tout Israël Ton peuple, et mets la paix entre tous les Juifs, et en particulier entre mari et femme (et en particulier, etc.),",
+                "Aide tous ceux d’Israël qui doivent trouver leur conjoint, que chacun mérite de trouver bientôt son conjoint en vérité, et qu’elle soit selon sa volonté et ne s’oppose nullement à lui,",
+                "mais tourne plutôt sa volonté vers lui dans la paix et l’amour, en vérité, sans ruse ni tromperie, et sans aucune haine ni aucun revirement du cœur. Qu’ils se conduisent dans la sainteté et la pureté, et qu’il sorte d’eux de nombreuses générations, des fils et des filles vivants et durables, accomplissant Ta volonté en vérité, et qu’ils s’occupent de Ta Torah et de Ton service en vérité tous leurs jours, à jamais,",
+                "et qu’ils révèlent, publient et fassent connaître Ta divinité et Ta souveraineté dans le monde, comme il est écrit : « Une génération à l’autre louera Tes œuvres, et elles proclameront Tes hauts faits. »"
+              ],
+              "paragraphes_en": [
+                "And in the merit of Abraham our father, peace be upon him, who alluded to this secret of the intention of Elul when he sent Eliezer his servant to seek the match for Isaac his son,",
+                "and in the merit of the tzaddikim who revealed this awesome secret, shield them and us and our offspring, and have mercy on all Israel Your people, and place peace among all of Israel, and especially between husband and wife (and especially, etc.),",
+                "And help all of Israel who need to find their match, that each one merit to find his match in truth soon, and that she be according to his will and not oppose him at all,",
+                "but rather turn her will toward him in peace and love in truth, without cunning or deceit, and without any hatred or change of heart at all, and may they conduct themselves in holiness and purity, and may many generations come forth from them, sons and daughters who live and endure, who do Your will in truth, and may they engage in Your Torah and Your service in truth all their days, forever,",
+                "and may they reveal, publicize and make known Your Godliness and Your dominion in the world, as it is written: “One generation to the next will praise Your works, and they will declare Your mighty deeds.”"
+              ]
             },
             {
               "id": "src-lt-refua-2",
@@ -1474,7 +1833,13 @@
               "statut_verif": "verifie_texte",
               "note": "Extrait : paragraphe 27 à 27 de la prière. La leçon annoncée en tête (Likoutei Moharan I, 41, 4933 caractères) a été ouverte et vérifiée.",
               "lecon_sur_le_sujet": "non",
-              "lecon_mesure": "0 occurrence du sujet dans 3114 caractères de leçon"
+              "lecon_mesure": "0 occurrence du sujet dans 3114 caractères de leçon",
+              "paragraphes_fr": [
+                "Envoie une guérison complète aux malades de Ton peuple (et en particulier à Untel fils d’Unetelle, etc.). Ô Dieu, de grâce, guéris-le, de grâce ; fais monter le remède et la guérison pour toutes leurs maladies et toutes leurs douleurs, rends-leur bientôt leur vigueur, et envoie-leur bientôt une guérison complète du ciel, guérison de l’âme et guérison du corps, car Tu es Dieu, Roi, médecin fidèle et miséricordieux."
+              ],
+              "paragraphes_en": [
+                "And send a complete healing to the sick of Your people (and especially to So-and-so son of So-and-so, etc.). O God, please, heal him, please, and bring relief and cure to all their illnesses and all their pains, and restore them to their full strength soon, and send them soon a complete healing from heaven, healing of the soul and healing of the body, for You are God, King, faithful and merciful Healer."
+              ]
             }
           ]
         }
