@@ -1420,13 +1420,19 @@ function ecranPriere() {
       }
     return [...corps, ...renvois(si)];
   };
+  // Une longue prière (Cha'harit, 04/11) se construit comme un livre, section par section à
+  // l'approche de l'écran : construite et mise en page d'un coup, son ouverture gelait l'écran
+  // (0,5 s mesurée sur un téléphone moyen, Chromium ralenti 4 fois : 0,4 s de construction et
+  // 0,4 s de mise en page forcée par la bande des signets). Une courte reste d'un seul tenant.
+  const parSections = livre || (x.sections.length > 3 &&
+    x.sections.reduce((t, s) => t + hauteurEstimee(s), 0) > 6 * Math.max(600, window.innerHeight));
   const contenu = h('div', { class: 'contenu lecture siddour' },
     annotations ? h('p', { class: 'indice note-ajouts' }, tr.t('siddur_jour_ajouts', jourDuTexte.dateHebraique,
       tr.t(store.inIsrael() ? 'region_israel' : 'region_diaspora'))) : null,
     ...x.sections.flatMap((s, si) => {
       const t = plusieurs && s.titre ? h('h2', { class: 'psaume-titre', lang: 'he', dir: 'rtl' }, s.titre) : null;
       if (t) titres.push({ titre: s.titre, el: t });
-      if (!livre) return [t, ...corpsDe(s, si)];
+      if (!parSections) return [t, ...corpsDe(s, si)];
       // Un livre (02/11) : chaque chapitre dans sa propre boîte, vide tant qu'il n'approche pas de
       // l'écran, à la hauteur estimée. Le livre entier construit et mis en page d'un coup faisait
       // tomber Safari sur iPhone (« Un problème récurrent est survenu »), là où Android ne
@@ -1458,7 +1464,7 @@ function ecranPriere() {
     choisirDans(tr.t('marques_titre'), l.map((m) => `${m.apercu}…`), -1, (k) => allerAMarque(ecran, l[k]));
   } }, iconeMarque(livre));
   ecran.querySelector('.bandeau-actions')?.append(listeMarques, etoile);
-  if (livre) { const d = ecran.querySelector('.defile'); if (d) { d.classList.add('defile-livre'); remplirAuDefilement(d); ancrerChapitres(d); } }
+  if (parSections) { const d = ecran.querySelector('.defile'); if (d) { d.classList.add('defile-livre'); remplirAuDefilement(d); ancrerChapitres(d); } }
   if (marqueAOuvrir?.cle === cleMarque) { const m = { ...marqueAOuvrir, priere }; marqueAOuvrir = null; requestAnimationFrame(() => {
     // Redessiné entre-temps (un livre arrivé, « Aa ») : on vise l'écran qui l'a remplacé, s'il est encore ce texte.
     const e = ecran.isConnected ? ecran : (app.dataset.ecran?.startsWith('priere/') && priere === m.priere) ? app.querySelector('.ecran') : null;
@@ -1469,7 +1475,7 @@ function ecranPriere() {
     const place = store.positionLecture(cle);
     // Un livre reprend au paragraphe (02/11) : ses chapitres hors écran n'ont qu'une hauteur
     // estimée, un nombre de pixels n'y retomberait pas juste.
-    const ancre = livre && place > 0 ? store.ancreLecture(cle) : null;
+    const ancre = parSections && place > 0 ? store.ancreLecture(cle) : null;
     if (place > 0 && !rendreSurPlace) {
       requestAnimationFrame(() => {
         const [section, bloc] = (ancre ?? '').split(':').map(Number);
@@ -1491,7 +1497,7 @@ function ecranPriere() {
       clearTimeout(minuteur);
       minuteur = setTimeout(() => {
         store.setPositionLecture(cle, Math.round(defile.scrollTop));
-        if (livre) store.setAncreLecture(cle, premierVu());
+        if (parSections) store.setAncreLecture(cle, premierVu());
       }, 400);
     }, { passive: true });
   }
