@@ -230,7 +230,7 @@ const ouvrirTexte = (titre, y) => async (p) => {
   // Les titres sont vocalisés : comparés sans voyelles.
   await p.evaluate((t) => [...document.querySelectorAll('.ligne-he')]
     .find((b) => b.querySelector('.nom-he').textContent.replace(/[\u0591-\u05C7]/g, '') .includes(t)).click(), titre);
-  await p.waitForSelector('.siddour .priere');
+  await p.waitForSelector('.siddour .priere >> visible=true');
   await p.evaluate((y) => { const d = document.querySelector('.defile'); d.scrollTop = y < 0 ? d.scrollHeight : y; }, y);
 };
 await capture('priere-aeree-he', { langue: 'he', ecran: 'siddur', actions: ouvrirTexte('תפלת שחרית', 1400) });
