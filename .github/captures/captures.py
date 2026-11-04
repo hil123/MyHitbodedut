@@ -471,23 +471,25 @@ def main():
     def s12():
         lancer()
         onglet_textes()
-        ok = toucher(rid="tikkun_button", defilements=2, attente=2.0)
-        capture("12a-tikkun", ok=ok)
-        ok2 = toucher(rid="tikkun_flow", defilements=1, attente=3.0)
-        if not ok2:
-            ok2 = activite("TikkunFlowActivity")
-        capture("12-tikkun-d-un-trait", ok=ok2)
+        # Le Tikoun s'ouvre sur le texte entier (04/11) : plus de liste des dix psaumes.
+        ok = toucher(rid="tikkun_button", defilements=2, attente=3.0)
+        if not ok:
+            ok = activite("TikkunFlowActivity")
+        capture("12-tikkun-d-un-trait", ok=ok)
     etape("12 tikkun d'un trait", s12)
 
     def s13():
         lancer()
         onglet_textes()
-        toucher(rid="tikkun_button", defilements=2, attente=2.0)
-        ok = toucher(rid="psalm_title", defilements=3, attente=3.0)
+        ok = toucher(rid="tikkun_button", defilements=2, attente=3.0)
         if not ok:
-            ok = activite("PsalmActivity", "--ei psalm_numero 16")
-        capture("13-tikkun-psaume", ok=ok)
-    etape("13 psaume du tikkun", s13)
+            ok = activite("TikkunFlowActivity")
+        # La fin : la clôture, la kavana, la prière de Rabbi Natan, le bouton « dit en entier ».
+        for _ in range(20):
+            sh(f"input swipe {W // 2} {int(H * 0.8)} {W // 2} {int(H * 0.2)} 60")
+        pause(2.0)
+        capture("13-tikkun-fin", ok=ok)
+    etape("13 fin du tikkun", s13)
 
     def s14():
         lancer()
@@ -586,8 +588,16 @@ def main():
         retour()
         ok = activite("HilloulotActivity")
         capture("19c-hilloulot", ok=ok)
-        defiler(True)
-        capture("19d-hilloulot-suite", ok=ok)
+        # Réorganisé (04/11) : un nom touché déplie sa fiche ; la recherche range par date.
+        ok2 = toucher(desc="Lire la suite", contains=True, attente=1.5)
+        capture("19d-hilloulot-fiche", ok=ok2)
+        ok3 = toucher(text="Rechercher un tsadik", attente=1.0)
+        if ok3:
+            sh("input text Nahman")
+            pause(1.5)
+            sh("input keyevent 4")
+            pause(0.8)
+        capture("19d2-hilloulot-recherche", ok=ok3)
         retour()
         ok = activite("LibraryActivity", "--ez livres true")
         capture("19e-livres", ok=ok)
@@ -841,6 +851,56 @@ def main():
         langue("fr")
     etape("25 nuit, hébreu, צדקת", s25)
 
+    def s26():
+        # La fluidité des passages (03/11) : les animations, coupées pour toutes les autres étapes,
+        # sont rétablies ; on filme et on compte les images en retard (dumpsys gfxinfo). Le rendu
+        # de l'émulateur est logiciel (swiftshader) : les chiffres sont pessimistes, la vidéo dit
+        # surtout si chaque passage se déroule ou saute.
+        for k in ("window_animation_scale", "transition_animation_scale", "animator_duration_scale"):
+            sh(f"settings put global {k} 1")
+        try:
+            lancer(attente=5)
+            sh(f"dumpsys gfxinfo {PKG} reset")
+            sh("rm -f /sdcard/film.mp4")
+            film = subprocess.Popen(["adb", "shell", "screenrecord", "--time-limit", "60", "/sdcard/film.mp4"])
+            pause(1.5)
+            for onglet in ("nav_texts", "nav_zmanim", "nav_journal", "nav_settings", "nav_today"):
+                toucher(rid=onglet, attente=1.6)
+                # Journal et Réglages ouvrent leur propre écran, sans la barre d'onglets.
+                if onglet in ("nav_journal", "nav_settings"):
+                    retour(); pause(1.2)
+            toucher(rid="trophees_paliers", defilements=4, attente=2.0)
+            retour(); pause(1.5)
+            onglet_textes()
+            toucher(rid="siddur_button", defilements=2, attente=2.0)
+            retour(); pause(1.5)
+            activite("SiddurLectureActivity", "--es id chaharit")
+            pause(2.0)
+            x = W // 2
+            for i in range(3):  # élans vers le bas : la banderole part, le texte glisse
+                sh(f"input swipe {x} {int(H*0.75)} {x} {int(H*0.30)} 120"); pause(1.4)
+            for i in range(5):  # puis vers le haut, jusqu'en haut : elle revient
+                sh(f"input swipe {x} {int(H*0.30)} {x} {int(H*0.75)} 120"); pause(1.4)
+            retour(); pause(2.0)
+            try:
+                film.wait(timeout=70)
+            except subprocess.TimeoutExpired:
+                film.kill()
+            pause(1.5)
+            video = adb("exec-out", "cat", "/sdcard/film.mp4", binary=True)
+            with open(os.path.join(OUT, "26-passages.mp4"), "wb") as f:
+                f.write(video)
+            stats = sh(f"dumpsys gfxinfo {PKG}")
+            garde = [l for l in stats.splitlines() if any(m in l for m in (
+                "Total frames", "Janky frames", "percentile", "Number Missed", "Number High", "Number Slow", "Number Frame deadline"))]
+            with open(os.path.join(OUT, "26-gfxinfo.txt"), "w") as f:
+                f.write("\n".join(garde) + "\n\n" + stats)
+            log("  gfxinfo :", " | ".join(l.strip() for l in garde))
+        finally:
+            for k in ("window_animation_scale", "transition_animation_scale", "animator_duration_scale"):
+                sh(f"settings put global {k} 0")
+    etape("26 fluidité des passages", s26)
+
     log("\ncaptures :", sorted(os.listdir(OUT)))
 
 
@@ -921,9 +981,7 @@ ECRANS_APP = [
     ("TefilotActivity", ""),
     ("TehilimActivity", ""),
     ("TehilimLectureActivity", "--ei debut 1 --ei fin 1"),
-    ("TikkunActivity", ""),
     ("TikkunFlowActivity", ""),
-    ("PsalmActivity", "--ei psalm_numero 16"),
     ("LibraryActivity", ""),
     ("LibraryEntryActivity", "--es entry_id src-lm2-25"),
     ("ZmanimActivity", ""),

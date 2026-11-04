@@ -99,6 +99,24 @@ android {
          * installe pour comprendre un probleme, et une trace renommee y
          * serait un obstacle de plus.
          */
+        /*
+         * La version publiée, telle que R8 et la réduction des ressources la
+         * font, mais débogable (run-as) pour le parcours de captures (03/11) :
+         * un défaut propre à la version minifiée (PersonnageViewInflater
+         * supprimé, boutons roses) ne se voyait pas sur l'émulateur, qui
+         * tournait en debug. Même paquet que debug, pour les mêmes captures.
+         */
+        create("verifR8") {
+            initWith(getByName("debug"))
+            isMinifyEnabled = true
+            isShrinkResources = true
+            isDebuggable = true
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
+            matchingFallbacks += listOf("release", "debug")
+        }
         release {
             signingConfig = signingConfigs.getByName("release")
             isMinifyEnabled = true

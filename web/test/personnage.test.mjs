@@ -35,3 +35,12 @@ test('une icône d\'écran d\'accueil par combinaison צדיק / צדקת × cou
   const app = readFileSync(new URL('../src/js/app.js', import.meta.url), 'utf8');
   assert.match(app, /apple-touch-icon-\$\{store\.adresse\(\) === 'f' \? 'f' : 'm'\}-\$\{store\.accent\(\)\}\.png/);
 });
+
+test('chaque pose que le site nomme existe (04/11 : char_arms_raised, retirée en 1.390, donnait un 404)', async () => {
+  const { readFileSync, readdirSync: lire } = await import('node:fs');
+  const dossier = new URL('../src/js/', import.meta.url);
+  const sources = lire(dossier).filter((n) => n.endsWith('.js')).map((n) => readFileSync(new URL(n, dossier), 'utf8')).join('\n');
+  const nommes = new Set([...sources.matchAll(/['"`/](char_[a-z_]+)['"`.]/g)].map((m) => m[1]));
+  const manquants = [...nommes].filter((n) => !DESSINS.includes(n));
+  assert.deepEqual(manquants, []);
+});

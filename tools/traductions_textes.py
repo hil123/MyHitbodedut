@@ -14,9 +14,11 @@ Entrée : un ou plusieurs fichiers {clé: {fr, en}}, clés
 Usage (racine du dépôt) : python3 tools/traductions_textes.py sortie_A.json sortie_B.json …
 """
 import json
+import os
 import sys
 
 RAW = "android/app/src/main/res/raw/"
+LIVRES = "android/app/src/main/livres/livres.json"  # la source ; tools/livres_decoupe.py en tire les fichiers par livre
 NOTE = "FR et EN originales (Claude, 04/11/2026), relues automatiquement (clés, balises) ; relecture humaine souhaitable."
 
 
@@ -25,7 +27,7 @@ def main(fichiers):
     for f in fichiers:
         trad.update(json.load(open(f, encoding="utf-8")))
 
-    livres = json.load(open(RAW + "livres.json", encoding="utf-8"))
+    livres = json.load(open(LIVRES, encoding="utf-8"))
     par_id = {t["id"]: t for t in livres["textes"]}
     tikkun = json.load(open(RAW + "tikkun_haklali.json", encoding="utf-8"))
     biblio = json.load(open(RAW + "bibliotheque.json", encoding="utf-8"))
@@ -63,7 +65,10 @@ def main(fichiers):
 
     tikkun["_meta"]["traduction_liturgie"] = NOTE
     biblio["_meta"]["traduction_sources"] = NOTE
-    json.dump(livres, open(RAW + "livres.json", "w", encoding="utf-8"), ensure_ascii=False, separators=(",", ":"))
+    json.dump(livres, open(LIVRES, "w", encoding="utf-8"), ensure_ascii=False, separators=(",", ":"))
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    import livres_decoupe
+    livres_decoupe.decoupe(livres)
     json.dump(tikkun, open(RAW + "tikkun_haklali.json", "w", encoding="utf-8"), ensure_ascii=False, indent=2)
     json.dump(biblio, open(RAW + "bibliotheque.json", "w", encoding="utf-8"), ensure_ascii=False, indent=2)
     print(compte)

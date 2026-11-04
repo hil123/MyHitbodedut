@@ -92,8 +92,24 @@ for (const nom of [...onglets.flatMap((n) => [`${n}_off`, `${n}_on`]), 'ic_chevr
 }
 
 // --- Les textes vérifiés, tels quels ---------------------------------------
-for (const nom of ['chizuk.json', 'bibliotheque.json', 'tikkun_haklali.json', 'tehilim.json', 'siddur_edot.json', 'siddur_sefard.json', 'siddur_ashkenaz.json', 'villes.json', 'aeroports.json', 'aeroports_noms.json', 'siddur_annotations.json', 'hilloulot.json', 'hilloulot_bios.json', 'ben_ish_hai.json', 'yalkut_yosef.json', 'guide_sujets.json']) {
+for (const nom of ['chizuk.json', 'bibliotheque.json', 'tikkun_haklali.json', 'tehilim.json', 'siddur_edot.json', 'siddur_sefard.json', 'siddur_ashkenaz.json', 'villes.json', 'aeroports.json', 'aeroports_noms.json', 'siddur_annotations.json', 'hilloulot.json', 'ben_ish_hai.json', 'yalkut_yosef.json', 'guide_sujets.json']) {
   cpSync(join(RES, 'raw', nom), join(DIST, 'data', nom));
+}
+
+// --- Les biographies des hilloulot, un fichier par mois (04/11) -----------------
+// hilloulot_bios.json pèse 6,9 Mo : l'écran des hilloulot le téléchargeait et l'analysait en entier
+// pour n'afficher qu'un jour (300 ms bloquées sur un téléphone moyen, sans compter le réseau).
+// Ses clés sont « mois-jour » (mois de KosherJava, adar, adar1, adar2) : un fichier par mois.
+{
+  const bios = JSON.parse(readFileSync(join(RES, 'raw', 'hilloulot_bios.json'), 'utf8'));
+  mkdirSync(join(DIST, 'data', 'hilloulot_bios'), { recursive: true });
+  const parMois = {};
+  for (const [cle, ligne] of Object.entries(bios)) {
+    const mois = cle.split('-')[0];
+    if (!/^[a-z0-9]+$/.test(mois)) throw new Error(`Clé de hilloula inattendue : ${cle}`);
+    (parMois[mois] ??= {})[cle] = ligne;
+  }
+  for (const [mois, table] of Object.entries(parMois)) writeFileSync(join(DIST, 'data', 'hilloulot_bios', `${mois}.json`), JSON.stringify(table));
 }
 
 // --- Les livres, un fichier chacun (02/11) --------------------------------------
@@ -101,7 +117,8 @@ for (const nom of ['chizuk.json', 'bibliotheque.json', 'tikkun_haklali.json', 't
 // tomber Safari sur iPhone. Le site lit la table (titres, groupes, nombre de chapitres), puis
 // le seul livre ouvert. Les textes restent ceux d'Android, octet pour octet dans leur contenu.
 {
-  const livres = JSON.parse(readFileSync(join(RES, 'raw', 'livres.json'), 'utf8'));
+  // La source des livres (hors des ressources Android depuis le 04/11 : l'application en reçoit la découpe).
+  const livres = JSON.parse(readFileSync(join(ANDROID, 'livres', 'livres.json'), 'utf8'));
   mkdirSync(join(DIST, 'data', 'livres'), { recursive: true });
   const table = { _meta: livres._meta, groupes: livres.groupes, textes: [] };
   for (const t of livres.textes) {

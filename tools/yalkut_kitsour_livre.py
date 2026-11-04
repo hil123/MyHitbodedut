@@ -17,7 +17,7 @@ Structure du fichier : <!--$@--> ouvre un groupe de halakhot (« הלכות צי
 
   python3 tools/yalkut_kitsour_livre.py <dossier de la branche source> <sortie.json>
 
-Puis le texte sortie.json remplace celui d'id yalkut_yosef_kitsour dans res/raw/livres.json (groupe « halakha »).
+Puis le texte sortie.json remplace celui d'id yalkut_yosef_kitsour dans android/app/src/main/livres/livres.json (groupe « halakha »), puis tools/livres_decoupe.py.
 """
 import html, json, re, sys
 

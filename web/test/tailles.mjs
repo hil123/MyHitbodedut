@@ -93,11 +93,8 @@ const ECRANS = [
   { nom: 'siddur-nusah', ecran: 'siddur', actions: clic('.puce-bandeau') },
   { nom: 'priere', ecran: 'siddur', actions: clic('.carte-sections .ligne') },
   { nom: 'tikkun', ecran: 'tikkun' },
-  // Le Tikoun comme sur Android (02/11) : le trait, un psaume, une partie, la liste en partie dite.
-  { nom: 'tikkun-trait', ecran: 'tikkun', actions: clic('.tikkun-trait') },
-  { nom: 'tikkun-psaume', ecran: 'tikkun', actions: clic('.ligne-tikkun:nth-child(9)') },
-  { nom: 'tikkun-psaume-dit', ecran: 'tikkun', actions: async (p) => { await clic('.ligne-tikkun:nth-child(2)')(p); await clic('.tikkun-marque')(p); await clic('.retour')(p); } },
-  { nom: 'tikkun-partie', ecran: 'tikkun', actions: clic('.ligne-tikkun:nth-child(13)') },
+  // Le Tikoun entier (04/11) : la fin, avec la kavana et la prière de Rabbi Natan.
+  { nom: 'tikkun-fin', ecran: 'tikkun', actions: async (p) => { await p.evaluate(() => { const d = document.querySelector('.defile'); d.scrollTop = d.scrollHeight; }); await p.waitForTimeout(300); } },
   { nom: 'boussole', ecran: 'boussole', prefs: { lieu_zmanim: { nom: 'Paris', latitude: 48.8566, longitude: 2.3522, altitude: 35, fuseau: 'Europe/Paris', ville: 2988507 } } },
   { nom: 'boussole-calibrer', ecran: 'boussole', prefs: { lieu_zmanim: { nom: 'Paris', latitude: 48.8566, longitude: 2.3522, altitude: 35, fuseau: 'Europe/Paris', ville: 2988507 } },
     actions: async (p) => {

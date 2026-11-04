@@ -198,7 +198,8 @@ if __name__ == "__main__":
     json.dump(biblio, open(racine + "bibliotheque.json", "w", encoding="utf-8"), ensure_ascii=False, indent=2)
     print("bibliothèque : abrégés", r[0], "gardés (versets)", r[1])
 
-    livres = json.load(open(racine + "livres.json", encoding="utf-8"))
+    livres_src = os.path.join(racine, "..", "..", "livres", "livres.json")  # la source, hors des ressources (04/11)
+    livres = json.load(open(livres_src, encoding="utf-8"))
     for t in livres["textes"]:
         # Les livres d'étude et de prière personnelle ; pas le Tanakh ni Nichmat (liturgie, comme le siddour).
         if t["id"] in ("meguilat_esther", "chir_hachirim", "nichmat"):
@@ -207,6 +208,9 @@ if __name__ == "__main__":
         if r[0] or r[1]:
             print(f"livres/{t['id']} : abrégés", r[0], "gardés (versets)", r[1])
     livres["_meta"]["noms_divins"] = REGLE + " ; le Tanakh (Esther, Chir HaChirim) et Nichmat restent en toutes lettres"
-    json.dump(livres, open(racine + "livres.json", "w", encoding="utf-8"), ensure_ascii=False, separators=(",", ":"))
+    json.dump(livres, open(livres_src, "w", encoding="utf-8"), ensure_ascii=False, separators=(",", ":"))
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    import livres_decoupe
+    livres_decoupe.decoupe(livres)
 
     json.dump(journal, open("/tmp/noms_abreges_journal.json", "w", encoding="utf-8"), ensure_ascii=False, indent=1)

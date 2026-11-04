@@ -21,6 +21,8 @@ data class SiddurTexte(
     val sections: List<SiddurSection>,
     /** Le nusah d'où vient le texte, quand il manque à celui-ci et a été emprunté. */
     val emprunt: LocalizedText? = null,
+    /** Le nombre de chapitres : celui de [sections], ou celui de l'index des livres, qui n'a pas leur texte. */
+    val chapitres: Int = sections.size,
 )
 
 data class SiddurGroupe(val cle: String, val titre: LocalizedText)
@@ -84,6 +86,7 @@ object SiddurLoader {
                     titre = LocalizedText.parse(t.getJSONObject("titre")),
                     source = t.optString("source", ""),
                     emprunt = t.optJSONObject("nusah")?.let { LocalizedText.parse(it) },
+                    chapitres = t.optInt("chapitres", t.getJSONArray("sections").length()),
                     sections = Json.array(t.getJSONArray("sections")) { s ->
                         SiddurSection(
                             titre = s.optString("titre", ""),

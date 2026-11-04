@@ -12,7 +12,42 @@ import java.io.File
  */
 class LivresTest {
 
-    private val livres = SiddurLoader.parse(File("src/main/res/raw/livres.json").readText())
+    private val source = File("src/main/livres/livres.json").readText()
+    private val livres = SiddurLoader.parse(source)
+
+    /**
+     * La découpe pour l'application (04/11, tools/livres_decoupe.py) redonne exactement la source :
+     * l'index a chaque livre, dans l'ordre, avec son nombre de chapitres et sans texte ; chaque
+     * livre_<id>.json a le livre entier ; LivresBruts nomme chacun de ces fichiers.
+     */
+    @Test
+    fun `la decoupe redonne la source, livre par livre`() {
+        val brut = org.json.JSONObject(source)
+        val index = org.json.JSONObject(File("src/main/res/raw/livres_titres.json").readText())
+        assertEquals(brut.getJSONArray("groupes").toString(), index.getJSONArray("groupes").toString())
+        val textes = brut.getJSONArray("textes")
+        val entetes = index.getJSONArray("textes")
+        assertEquals(textes.length(), entetes.length())
+        val ids = mutableListOf<String>()
+        for (i in 0 until textes.length()) {
+            val t = textes.getJSONObject(i)
+            val e = entetes.getJSONObject(i)
+            val id = t.getString("id")
+            ids += id
+            assertEquals(id, e.getString("id"))
+            assertEquals(id, t.getJSONArray("sections").length(), e.getInt("chapitres"))
+            assertEquals(id, 0, e.getJSONArray("sections").length())
+            val seul = org.json.JSONObject(File("src/main/res/raw/livre_$id.json").readText()).getJSONArray("textes")
+            assertEquals(id, 1, seul.length())
+            assertEquals(id, t.toString(), seul.getJSONObject(0).toString())
+        }
+        assertEquals(ids, LivresBruts.parId.keys.toList())
+        val fichiers = File("src/main/res/raw").list()!!.filter { it.startsWith("livre_") }.map { it.removePrefix("livre_").removeSuffix(".json") }.sorted()
+        assertEquals(ids.sorted(), fichiers)
+        // L'index se lit comme un recueil, chapitres compris.
+        val lu = SiddurLoader.parse(File("src/main/res/raw/livres_titres.json").readText())
+        assertEquals(livres.textes.map { it.sections.size }, lu.textes.map { it.chapitres })
+    }
 
     @Test
     fun `les livres sont la, chapitre par chapitre`() {

@@ -185,7 +185,8 @@ class SiddurLectureActivity : AppCompatActivity() {
     /** Les langues de lecture (LanguesTexte, 04/11). */
     private var langues = LanguesTexte.Mode.HE
 
-    private fun recueil(): Siddur = if (livre) Data.livres(this) else Data.siddur(this)
+    // Un livre seul (04/11) : ouvrir la Méguila ne lit plus les 16 Mo de tous les livres.
+    private fun recueil(): Siddur = if (livre) Data.livre(this, id) ?: Siddur(emptyList(), emptyList()) else Data.siddur(this)
 
     private fun afficher(garderPlace: Boolean) {
         val siddur = recueil()

@@ -19,7 +19,7 @@ livres (réponse « oui tout » du 19/10/2026) :
     (tools/noms_divins.py), sauf dans les consignes.
 
 Les deux textes sont insérés (ou remplacés, par leur id) dans
-android/app/src/main/res/raw/livres.json ; le web le recopie au build.
+android/app/src/main/livres/livres.json ; le web le lit au build, l'application en reçoit la découpe (livres_decoupe.py).
 
   python3 tools/livres_textes_proprietaire.py
 """
@@ -30,7 +30,7 @@ from noms_divins import developpe  # noqa: E402
 
 NFC = lambda s: unicodedata.normalize("NFC", s)
 RACINE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
-LIVRES = os.path.join(RACINE, "android", "app", "src", "main", "res", "raw", "livres.json")
+LIVRES = os.path.join(RACINE, "android", "app", "src", "main", "livres", "livres.json")
 GUIDE = os.path.join(RACINE, "textes", "guide_hitbodedut.md")
 FEUILLETS = os.path.join(RACINE, "textes", "tefila_lishlomo")
 
@@ -181,6 +181,9 @@ def main():
         if s not in d["_meta"]["sources"]:
             d["_meta"]["sources"].append(s)
     json.dump(d, open(LIVRES, "w", encoding="utf-8"), ensure_ascii=False, separators=(",", ":"))
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    import livres_decoupe
+    livres_decoupe.decoupe(d)
     for t in nouveaux.values():
         print(t["id"], len(t["sections"]), "chapitres", sum(len(s["blocs"]) for s in t["sections"]), "paragraphes")
 

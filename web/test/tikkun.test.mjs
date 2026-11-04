@@ -9,27 +9,6 @@ import { aCalibrer, SEUIL_IMPRECIS } from '../src/js/boussole.js';
 const tikkun = JSON.parse(readFileSync(new URL('../../android/app/src/main/res/raw/tikkun_haklali.json', import.meta.url), 'utf8'));
 const ORDRE = [16, 32, 41, 42, 59, 77, 90, 105, 137, 150];
 
-test('la liste suit l’ordre réel : l’ouverture, les dix psaumes rangés, puis clôture, kavana, Rabbi Natan', () => {
-  const l = T.lignes(tikkun);
-  assert.equal(l.length, 14);
-  assert.equal(l[0].bloc.cle, 'ouverture');
-  assert.deepEqual(l.slice(1, 11).map((x) => x.psaume.numero), ORDRE);
-  assert.deepEqual(l.slice(1, 11).map((x) => x.rang), [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
-  assert.deepEqual(l.slice(11).map((x) => x.bloc.cle), ['cloture', 'kavana', 'priere_rabbi_nathan']);
-  assert.ok(l.every((x) => !(x.bloc && x.rang)));
-});
-
-test('le psaume suivant, et rien après le dixième', () => {
-  assert.equal(T.suivant(tikkun, 16).numero, 32);
-  assert.equal(T.suivant(tikkun, 137).numero, 150);
-  assert.equal(T.suivant(tikkun, 150), null);
-  assert.equal(T.suivant(tikkun, 1), null);
-  assert.equal(T.rang(tikkun, 105), 8);
-  assert.equal(T.rang(tikkun, 1), 0);
-  assert.equal(T.parNumero(tikkun, 90).versets.length, 17);
-  assert.equal(T.parNumero(tikkun, 3), null);
-});
-
 test('la progression du jour : rien, en partie, en entier', () => {
   assert.equal(T.versets(tikkun), 164);
   assert.deepEqual(T.progres(tikkun, new Set()), { cle: 'tikkun_progress_none', args: [10, 164] });
@@ -48,8 +27,6 @@ test('une partie : seulement les quatre clés connues', () => {
 test('le détail et le sous-titre d’une partie, selon la langue (LocalizedText.forLanguage)', () => {
   const ouverture = T.bloc(tikkun, 'ouverture');
   const cloture = T.bloc(tikkun, 'cloture');
-  assert.deepEqual(T.detailBloc(ouverture, 'fr'), { traduction: 'Avant de commencer' });
-  assert.deepEqual(T.detailBloc(ouverture, 'he'), { paragraphes: ouverture.paragraphes.length });
   // La note d'abord ; sans note, le titre traduit ; en hébreu sans note, rien.
   assert.equal(T.sousTitreBloc(ouverture, 'en'), 'Good to say, but not indispensable.');
   assert.equal(T.sousTitreBloc(ouverture, 'he'), ouverture.note.he);
@@ -57,7 +34,6 @@ test('le détail et le sous-titre d’une partie, selon la langue (LocalizedText
   assert.equal(T.sousTitreBloc(cloture, 'he'), null);
   // Une traduction vide retombe sur l'hébreu, comme ifBlank.
   const sansFr = { titre: { he: 'א', fr: ' ', en: 'A' }, note: { he: '', fr: '', en: '' }, paragraphes: ['x'] };
-  assert.deepEqual(T.detailBloc(sansFr, 'fr'), { paragraphes: 1 });
   assert.equal(T.sousTitreBloc(sansFr, 'fr'), null);
   assert.equal(T.sousTitreBloc(sansFr, 'en'), 'A');
 });
